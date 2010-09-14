@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Drawings collection" UUID="549F354C6579E82CE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_DRAWINGS definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_DRAWINGS
+*&quot;* do not include other source files here!!!
+public section.
+
+  methods ADD
+    importing
+      !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
+  methods CLEAR .
+  methods CONSTRUCTOR .
+  methods GET
+    importing
+      !IP_INDEX type ZEXCEL_ACTIVE_WORKSHEET
+    returning
+      value(EO_DRAWING) type ref to ZCL_EXCEL_DRAWING .
+  methods GET_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
+  methods IS_EMPTY
+    returning
+      value(IS_EMPTY) type FLAG .
+  methods REMOVE
+    importing
+      !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
+  methods SIZE
+    returning
+      value(EP_SIZE) type I .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_DRAWINGS
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_DRAWINGS
+*&quot;* do not include other source files here!!!
+private section.
+
+  data DRAWINGS type ref to CL_OBJECT_COLLECTION .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="ADD" VERSION="1" LANGU="E" DESCRIPT="Adds an Element to the Collection" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="ADD" SCONAME="IP_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
+  <source>method ADD.
+
+  drawings-&gt;add( ip_drawing ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="CLEAR" VERSION="1" LANGU="E" DESCRIPT="Initializes the Collection" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CLEAR.
+
+  drawings-&gt;clear( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CONSTRUCTOR.
+
+  CREATE OBJECT drawings.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="GET" VERSION="1" LANGU="E" DESCRIPT="Gets Element" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="GET" SCONAME="IP_INDEX" VERSION="1" LANGU="E" DESCRIPT="Active Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ACTIVE_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="GET" SCONAME="EO_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
+  <source>method GET.
+
+  DATA lv_index TYPE i.
+  lv_index = ip_index.
+  eo_drawing ?= drawings-&gt;if_object_collection~get( lv_index ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="GET_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Returns an iterator" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="GET_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
+  <source>method GET_ITERATOR.
+
+  eo_iterator ?= drawings-&gt;if_object_collection~get_iterator( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="IS_EMPTY" VERSION="1" LANGU="E" DESCRIPT="Checks whether elements are contained" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="IS_EMPTY" SCONAME="IS_EMPTY" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="FLAG"/>
+  <source>method IS_EMPTY.
+
+  is_empty = drawings-&gt;if_object_collection~is_empty( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="REMOVE" VERSION="1" LANGU="E" DESCRIPT="Deletes an Element from the Collection" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="REMOVE" SCONAME="IP_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
+  <source>method REMOVE.
+
+  drawings-&gt;remove( ip_drawing ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="SIZE" VERSION="1" LANGU="E" DESCRIPT="Specifies number of contained elements" EXPOSURE="2" STATE="1" EDITORDER="8 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWINGS" CMPNAME="SIZE" SCONAME="EP_SIZE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <source>method SIZE.
+
+  ep_size = drawings-&gt;if_object_collection~size( ).
+endmethod.</source>
+ </method>
+</CLAS>

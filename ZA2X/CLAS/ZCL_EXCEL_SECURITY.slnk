@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_SECURITY" VERSION="1" LANGU="E" DESCRIPT="Security" UUID="4BAF284C304B5E2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_SECURITY definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_SECURITY
+*&quot;* do not include other source files here!!!
+public section.
+  type-pools ABAP .
+
+  data LOCKREVISION type FLAG .
+  data LOCKSTRUCTURE type FLAG .
+  data LOCKWINDOWS type FLAG .
+  data REVISIONSPASSWORD type ZEXCEL_REVISIONSPASSWORD .
+  data WORKBOOKPASSWORD type ZEXCEL_WORKBOOKPASSWORD .
+
+  methods CONSTRUCTOR .
+  methods IS_SECURITY_ENABLED
+    returning
+      value(EP_SECURITY_ENABLED) type FLAG .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZABAP_EXCEL_SECURITY
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZABAP_EXCEL_SECURITY
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <typeUsage CLSNAME="ZCL_EXCEL_SECURITY" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="LOCKREVISION" VERSION="1" LANGU="E" DESCRIPT="General Flag" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="FLAG" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="LOCKSTRUCTURE" VERSION="1" LANGU="E" DESCRIPT="General Flag" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="FLAG" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="LOCKWINDOWS" VERSION="1" LANGU="E" DESCRIPT="General Flag" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="FLAG" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="REVISIONSPASSWORD" VERSION="1" LANGU="E" DESCRIPT="Revisions password" EXPOSURE="2" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_REVISIONSPASSWORD" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="WORKBOOKPASSWORD" VERSION="1" LANGU="E" DESCRIPT="Workbook password" EXPOSURE="2" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_WORKBOOKPASSWORD" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CONSTRUCTOR.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="IS_SECURITY_ENABLED" VERSION="1" LANGU="E" DESCRIPT="Is some sort of dcument security enabled?" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_SECURITY" CMPNAME="IS_SECURITY_ENABLED" SCONAME="EP_SECURITY_ENABLED" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="FLAG"/>
+  <source>method IS_SECURITY_ENABLED.
+  IF lockrevision EQ abap_true OR lockstructure EQ abap_true OR lockwindows EQ abap_true.
+    ep_security_enabled = abap_true.
+  ENDIF.
+endmethod.</source>
+ </method>
+</CLAS>

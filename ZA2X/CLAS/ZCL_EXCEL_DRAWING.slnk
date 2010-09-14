@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" UUID="0FA0354C6579E82CE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_DRAWING definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_DRAWING
+*&quot;* do not include other source files here!!!
+public section.
+  type-pools ABAP .
+
+  data TITLE type ZEXCEL_SHEET_TITLE value &apos;Worksheet&apos;. &quot;#EC NOTEXT .
+  data X_REFERENCES type CHAR1 .
+  data Y_REFERENCES type CHAR1 .
+  data GRAPH_TYPE type ZEXCEL_GRAPH_TYPE .
+
+  methods CONSTRUCTOR
+    importing
+      !IP_TITLE type ZEXCEL_SHEET_TITLE optional .
+  methods GET_GUID
+    returning
+      value(EP_GUID) type GUID_16 .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_DRAWING
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_DRAWING
+*&quot;* do not include other source files here!!!
+private section.
+
+  data GUID type GUID_16 .
+  data LOWER_CELL type ZEXCEL_S_CELL_DATA .
+  data UPPER_CELL type ZEXCEL_S_CELL_DATA .
+  constants C_EXCEL_COL_MODULE type INT2 value 64. &quot;#EC NOTEXT
+
+  methods CONVERT_COLUMN2ALPHA
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN
+    returning
+      value(EP_COLUMN) type ZEXCEL_CELL_COLUMN_ALPHA .
+  methods CONVERT_COLUMN2INT
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
+    returning
+      value(EP_COLUMN) type ZEXCEL_CELL_COLUMN .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <typeUsage CLSNAME="ZCL_EXCEL_DRAWING" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_EXCEL_COL_MODULE" VERSION="1" LANGU="E" DESCRIPT="2 byte integer (signed)" EXPOSURE="0" STATE="1" EDITORDER="8 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="2" ATTVALUE="64" ATTEXPVIRT="0" TYPTYPE="1" TYPE="INT2" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GRAPH_TYPE" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="7 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="GUID_16" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="LOWER_CELL" VERSION="1" LANGU="E" DESCRIPT="Bottom right range cell" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTVALUE="&apos;Worksheet&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="UPPER_CELL" VERSION="1" LANGU="E" DESCRIPT="Top left range cell" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="X_REFERENCES" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" EXPOSURE="2" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="Y_REFERENCES" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" EXPOSURE="2" STATE="1" EDITORDER="6 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONSTRUCTOR" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" PAROPTIONL="X"/>
+  <source>method CONSTRUCTOR.
+
+  CALL FUNCTION &apos;GUID_CREATE&apos;
+    IMPORTING
+      ev_guid_16 = me-&gt;guid.
+
+  IF ip_title IS NOT INITIAL.
+    title = ip_title.
+  ELSE.
+    title = me-&gt;guid.
+  ENDIF.
+
+* inizialize dimension range
+  lower_cell-cell_row     = 1.
+  lower_cell-cell_column  = 1.
+  upper_cell-cell_row     = 1.
+  upper_cell-cell_column  = 1.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONVERT_COLUMN2ALPHA" VERSION="1" LANGU="E" DESCRIPT="Convert column indicator to Alpha" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="EP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <source>method CONVERT_COLUMN2ALPHA.
+  DATA: lo_conv      TYPE REF TO cl_abap_conv_in_ce,
+        lv_uccpi     TYPE i,
+        lv_text      TYPE sychar02,
+        lv_module    TYPE int4,
+        lv_column    TYPE zexcel_cell_column.
+
+  lv_column = ip_column.
+  WHILE lv_column GT 0.
+    lv_module = ( lv_column - 1 ) MOD 26.
+    lv_uccpi  = 65 + lv_module.
+
+    lv_column = ( lv_column - lv_module ) / 26.
+
+    lv_text   = cl_abap_conv_in_ce=&gt;uccpi( lv_uccpi ).
+    CONCATENATE lv_text ep_column INTO ep_column.
+  ENDWHILE.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONVERT_COLUMN2INT" VERSION="1" LANGU="E" DESCRIPT="Convert column indicator to Integer" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONVERT_COLUMN2INT" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONVERT_COLUMN2INT" SCONAME="EP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
+  <source>method CONVERT_COLUMN2INT.
+
+  DATA: lv_uccpi     TYPE i,
+        lv_char      TYPE c,
+        lv_column(2) TYPE c.
+
+* Calculate most significant letter
+  lv_char    = ip_column+1(1).
+  IF lv_char IS NOT INITIAL. &quot;To avoid the first 26 column that have only a char in first position
+    ep_column  = cl_abap_conv_out_ce=&gt;uccpi( lv_char ).
+
+    ep_column  = ep_column MOD ( me-&gt;c_excel_col_module ).
+
+    lv_char    = ip_column(1).
+    lv_uccpi   = cl_abap_conv_out_ce=&gt;uccpi( lv_char ).
+
+    lv_uccpi   = ( lv_uccpi MOD ( me-&gt;c_excel_col_module ) ) * 26.
+
+    ep_column  = ep_column + lv_uccpi.
+  ELSE.
+    lv_char    = ip_column(1).
+    ep_column  = cl_abap_conv_out_ce=&gt;uccpi( lv_char ).
+    ep_column  = ep_column - me-&gt;c_excel_col_module.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_GUID" VERSION="1" LANGU="E" DESCRIPT="Get sheet guid" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_GUID" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="GUID_16"/>
+  <source>method GET_GUID.
+
+  ep_guid = me-&gt;guid.
+
+endmethod.</source>
+ </method>
+</CLAS>

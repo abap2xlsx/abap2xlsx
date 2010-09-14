@@ -1,0 +1,1 @@
+Check out the Installation Guide at http://code.google.com/p/abap2xlsx/wiki/InstallationGuide

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_STYLE_PROTECTION" VERSION="1" LANGU="E" DESCRIPT="Font Style" UUID="96C0274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_STYLE_PROTECTION definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_STYLE_PROTECTION
+*&quot;* do not include other source files here!!!
+public section.
+
+  constants C_PROTECTION_INHERIT type ZEXCEL_PROTECTION value &apos;inherit&apos;. &quot;#EC NOTEXT
+  constants C_PROTECTION_PROTECTED type ZEXCEL_PROTECTION value &apos;protected&apos;. &quot;#EC NOTEXT
+  constants C_PROTECTION_UNPROTECTED type ZEXCEL_PROTECTION value &apos;unprotected&apos;. &quot;#EC NOTEXT
+  data LOCKED type ZEXCEL_PROTECTION .
+  data HIDDEN type ZEXCEL_PROTECTION .
+
+  methods CONSTRUCTOR .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZABAP_EXCEL_STYLE_FONT
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_STYLE_PROTECTION
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_PROTECTION" CMPNAME="C_PROTECTION_INHERIT" VERSION="1" LANGU="E" DESCRIPT="Protection" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="2" ATTVALUE="&apos;inherit&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PROTECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_PROTECTION" CMPNAME="C_PROTECTION_PROTECTED" VERSION="1" LANGU="E" DESCRIPT="Protection" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="2" ATTVALUE="&apos;protected&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PROTECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_PROTECTION" CMPNAME="C_PROTECTION_UNPROTECTED" VERSION="1" LANGU="E" DESCRIPT="Protection" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="2" ATTVALUE="&apos;unprotected&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PROTECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_PROTECTION" CMPNAME="HIDDEN" VERSION="1" LANGU="E" DESCRIPT="Protection" EXPOSURE="2" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PROTECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_PROTECTION" CMPNAME="LOCKED" VERSION="1" LANGU="E" DESCRIPT="Protection" EXPOSURE="2" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PROTECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_STYLE_PROTECTION" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CONSTRUCTOR.
+  locked = me-&gt;c_protection_inherit.
+  hidden = me-&gt;c_protection_inherit.
+endmethod.</source>
+ </method>
+</CLAS>

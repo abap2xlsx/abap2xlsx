@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20100831" VERN="000014" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100831" STIME="204812" IDATE="20100831" ITIME="204812" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel.
+
+SUBMIT zdemo_excel1 AND RETURN. &quot; Hello world
+SUBMIT zdemo_excel2 AND RETURN. &quot; Styles
+SUBMIT zdemo_excel3 AND RETURN. &quot; iTab binding
+SUBMIT zdemo_excel4 AND RETURN. &quot; Multi sheets
+SUBMIT zdemo_excel5 AND RETURN. &quot; Conditional formatting
+SUBMIT zdemo_excel6 AND RETURN. &quot; Formulas
+SUBMIT zdemo_excel7 AND RETURN. &quot; Conditional formatting
+SUBMIT zdemo_excel8 AND RETURN. &quot; Ranges
+SUBMIT zdemo_excel9 AND RETURN. &quot; Data validation
+SUBMIT zdemo_excel10 AND RETURN. &quot; Bind table with field catalog
+&quot; zdemo_excel11 is not added because it has a selection screen and
+&quot; you also need to have business partners maintained in transaction BP
+SUBMIT zdemo_excel12 AND RETURN. &quot; Column size
+SUBMIT zdemo_excel13 AND RETURN. &quot; Merge cell
+SUBMIT zdemo_excel14 AND RETURN. &quot; Alignment
+SUBMIT zdemo_excel15 AND RETURN. &quot; Read Excel and write it back</source>
+</PROG>

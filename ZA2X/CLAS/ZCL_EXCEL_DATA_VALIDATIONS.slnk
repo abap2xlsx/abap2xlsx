@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" VERSION="1" LANGU="E" DESCRIPT="Data validations collection" UUID="D1883C4CA2A25223E1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_DATA_VALIDATIONS definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_DATA_VALIDATIONS
+*&quot;* do not include other source files here!!!
+public section.
+  type-pools ABAP .
+
+  methods ADD
+    importing
+      !IP_DATA_VALIDATION type ref to ZCL_EXCEL_DATA_VALIDATION .
+  methods CLEAR .
+  methods CONSTRUCTOR .
+  methods GET_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
+  methods IS_EMPTY
+    returning
+      value(IS_EMPTY) type FLAG .
+  methods REMOVE
+    importing
+      !IP_DATA_VALIDATION type ref to ZCL_EXCEL_DATA_VALIDATION .
+  methods SIZE
+    returning
+      value(EP_SIZE) type I .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_DATA_VALIDATIONS
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_DATA_VALIDATIONS
+*&quot;* do not include other source files here!!!
+private section.
+
+  data DATA_VALIDATIONS type ref to CL_OBJECT_COLLECTION .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <typeUsage CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="DATA_VALIDATIONS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="ADD" VERSION="1" LANGU="E" DESCRIPT="Adds an Element to the Collection" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="ADD" SCONAME="IP_DATA_VALIDATION" VERSION="1" LANGU="E" DESCRIPT="Data validation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DATA_VALIDATION"/>
+  <source>method ADD.
+  data_validations-&gt;add( ip_data_validation ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="CLEAR" VERSION="1" LANGU="E" DESCRIPT="Initializes the Collection" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CLEAR.
+  data_validations-&gt;clear( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CONSTRUCTOR.
+
+  CREATE OBJECT data_validations.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="GET_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Returns an iterator" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="GET_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
+  <source>method GET_ITERATOR.
+  eo_iterator ?= data_validations-&gt;if_object_collection~get_iterator( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="IS_EMPTY" VERSION="1" LANGU="E" DESCRIPT="Checks whether elements are contained" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="IS_EMPTY" SCONAME="IS_EMPTY" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="FLAG"/>
+  <source>method IS_EMPTY.
+  is_empty = data_validations-&gt;if_object_collection~is_empty( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="REMOVE" VERSION="1" LANGU="E" DESCRIPT="Deletes an Element from the Collection" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="REMOVE" SCONAME="IP_DATA_VALIDATION" VERSION="1" LANGU="E" DESCRIPT="Data validation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DATA_VALIDATION"/>
+  <source>method REMOVE.
+  data_validations-&gt;remove( ip_data_validation ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="SIZE" VERSION="1" LANGU="E" DESCRIPT="Specifies number of contained elements" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DATA_VALIDATIONS" CMPNAME="SIZE" SCONAME="EP_SIZE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <source>method SIZE.
+  ep_size = data_validations-&gt;if_object_collection~size( ).
+endmethod.</source>
+ </method>
+</CLAS>

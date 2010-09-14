@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Font Style" UUID="FFBF274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_STYLE_BORDERS definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_STYLE_BORDERS
+*&quot;* do not include other source files here!!!
+public section.
+
+  data LEFT type ref to ZCL_EXCEL_STYLE_BORDER .
+  data RIGHT type ref to ZCL_EXCEL_STYLE_BORDER .
+  data TOP type ref to ZCL_EXCEL_STYLE_BORDER .
+  data DOWN type ref to ZCL_EXCEL_STYLE_BORDER .
+  data DIAGONAL type ref to ZCL_EXCEL_STYLE_BORDER .
+  data ALLBORDERS type ref to ZCL_EXCEL_STYLE_BORDER .
+
+  methods CONSTRUCTOR .
+  methods GET_STRUCTURE
+    returning
+      value(ES_FILL) type ZEXCEL_S_STYLE_BORDER .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZABAP_EXCEL_STYLE_FONT
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_STYLE_BORDERS
+*&quot;* do not include other source files here!!!
+private section.
+
+  constants C_DIAGONAL_NONE type ZEXCEL_DIAGONAL value 0. &quot;#EC NOTEXT
+  constants C_DIAGONAL_UP type ZEXCEL_DIAGONAL value 1. &quot;#EC NOTEXT
+  constants C_DIAGONAL_DOWN type ZEXCEL_DIAGONAL value 2. &quot;#EC NOTEXT
+  constants C_DIAGONAL_BOTH type ZEXCEL_DIAGONAL value 3. &quot;#EC NOTEXT</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="ALLBORDERS" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="2" STATE="1" EDITORDER="6 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_BORDER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="C_DIAGONAL_BOTH" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="2" ATTVALUE="3" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DIAGONAL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="C_DIAGONAL_DOWN" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="2" ATTVALUE="2" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DIAGONAL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="C_DIAGONAL_NONE" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="2" ATTVALUE="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DIAGONAL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="C_DIAGONAL_UP" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="2" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DIAGONAL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="DIAGONAL" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="2" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_BORDER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="DOWN" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="2" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_BORDER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="LEFT" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_BORDER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="RIGHT" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_BORDER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="TOP" VERSION="1" LANGU="E" DESCRIPT="Diagonal" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_BORDER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100809" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CONSTRUCTOR.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="GET_STRUCTURE" VERSION="1" LANGU="E" DESCRIPT="Get structure" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100809" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="GET_STRUCTURE" SCONAME="ES_FILL" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100706" CHANGEDBY="FEMIA" CHANGEDON="20100809" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_S_STYLE_BORDER"/>
+  <source>method GET_STRUCTURE.
+
+* Check if all borders is set otherwise check single border
+  IF me-&gt;allborders IS BOUND.
+    es_fill-left_color    = me-&gt;allborders-&gt;border_color.
+    es_fill-left_style    = me-&gt;allborders-&gt;border_style.
+    es_fill-right_color   = me-&gt;allborders-&gt;border_color.
+    es_fill-right_style   = me-&gt;allborders-&gt;border_style.
+    es_fill-top_color     = me-&gt;allborders-&gt;border_color.
+    es_fill-top_style     = me-&gt;allborders-&gt;border_style.
+    es_fill-bottom_color  = me-&gt;allborders-&gt;border_color.
+    es_fill-bottom_style  = me-&gt;allborders-&gt;border_style.
+  ELSE.
+    IF me-&gt;left IS BOUND.
+      es_fill-left_color = me-&gt;left-&gt;border_color.
+      es_fill-left_style = me-&gt;left-&gt;border_style.
+    ENDIF.
+    IF me-&gt;right IS BOUND.
+      es_fill-right_color = me-&gt;right-&gt;border_color.
+      es_fill-right_style = me-&gt;right-&gt;border_style.
+    ENDIF.
+    IF me-&gt;top IS BOUND.
+      es_fill-top_color = me-&gt;top-&gt;border_color.
+      es_fill-top_style = me-&gt;top-&gt;border_style.
+    ENDIF.
+    IF me-&gt;down IS BOUND.
+      es_fill-bottom_color = me-&gt;down-&gt;border_color.
+      es_fill-bottom_style = me-&gt;down-&gt;border_style.
+    ENDIF.
+  ENDIF.
+
+* Check if diagonal is set
+  IF me-&gt;diagonal IS BOUND.
+    es_fill-diagonal_color = me-&gt;diagonal-&gt;border_color.
+    es_fill-diagonal_style = me-&gt;diagonal-&gt;border_style.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+</CLAS>

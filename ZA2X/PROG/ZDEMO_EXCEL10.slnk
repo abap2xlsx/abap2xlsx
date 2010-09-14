@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="FEMIA" UDAT="20100905" VERN="000056" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100905" STIME="163956" IDATE="20100905" ITIME="163956" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZIFE_TEST_EXCEL
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel10.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_excel_writer         type ref to zif_excel_writer,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_style_conditional2   TYPE REF TO zcl_excel_style_conditional,
+      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_field_catalog        TYPE zexcel_t_fieldcatalog,
+      ls_field_catalog        TYPE zexcel_s_fieldcatalog,
+      ls_table_settings       TYPE zexcel_s_table_settings,
+      lt_file_tab             TYPE STANDARD TABLE OF solisti1.
+
+FIELD-SYMBOLS: &lt;fs_field_catalog&gt; TYPE zexcel_s_fieldcatalog.
+
+&quot; Creates active sheet
+CREATE OBJECT lo_excel.
+
+&quot; Get active sheet
+lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+lo_worksheet-&gt;title = &apos;Internal table&apos;.
+
+&quot;Conditional style
+lo_style_conditional2 = lo_worksheet-&gt;add_new_conditional_style( ).
+lo_style_conditional2-&gt;rule      = zcl_excel_style_conditional=&gt;c_rule_iconset.
+lo_style_conditional2-&gt;iconset   = zcl_excel_style_conditional=&gt;c_iconset_5arrows.
+lo_style_conditional2-&gt;priority  = 1.
+
+DATA lt_test TYPE TABLE OF sflight.
+SELECT * FROM sflight INTO TABLE lt_test.
+
+lt_field_catalog = zcl_excel_common=&gt;get_fieldcatalog( ip_table = lt_test ).
+
+LOOP AT lt_field_catalog ASSIGNING &lt;fs_field_catalog&gt;.
+  CASE &lt;fs_field_catalog&gt;-fieldname.
+    WHEN &apos;CARRID&apos;.
+      &lt;fs_field_catalog&gt;-position   = 3.
+      &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
+      &lt;fs_field_catalog&gt;-totals_function = zcl_excel_table=&gt;totals_function_count.
+    WHEN &apos;CONNID&apos;.
+      &lt;fs_field_catalog&gt;-position   = 4.
+      &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
+    WHEN &apos;FLDATE&apos;.
+      &lt;fs_field_catalog&gt;-position   = 2.
+      &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
+    WHEN &apos;PRICE&apos;.
+      &lt;fs_field_catalog&gt;-position   = 1.
+      &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
+      &lt;fs_field_catalog&gt;-totals_function = zcl_excel_table=&gt;totals_function_sum.
+      &lt;fs_field_catalog&gt;-cond_style = lo_style_conditional2.
+    WHEN OTHERS.
+      &lt;fs_field_catalog&gt;-dynpfld = abap_false.
+  ENDCASE.
+ENDLOOP.
+
+ls_table_settings-table_style  = zcl_excel_table=&gt;builtinstyle_medium5.
+
+lo_worksheet-&gt;bind_table( ip_table          = lt_test
+                          is_table_settings = ls_table_settings
+                          it_field_catalog  = lt_field_catalog ).
+
+column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;D&apos; ). &quot;make date field a bit wider
+column_dimension-&gt;set_width( 13 ).
+
+create object lo_excel_writer type zcl_excel_writer_2007.
+lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+&quot; Convert to binary
+CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+  EXPORTING
+    buffer        = lv_file
+  IMPORTING
+    output_length = lv_bytecount
+  TABLES
+    binary_tab    = lt_file_tab.
+
+&quot; Save the file
+CALL FUNCTION &apos;GUI_DOWNLOAD&apos;
+  EXPORTING
+    bin_filesize = lv_bytecount
+    filename     = &apos;C:\iTabFieldCatalog.xlsx&apos;
+    filetype     = &apos;BIN&apos;
+  TABLES
+    data_tab     = lt_file_tab.</source>
+</PROG>

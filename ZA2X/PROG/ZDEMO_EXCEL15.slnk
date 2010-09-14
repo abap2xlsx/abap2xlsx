@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="BCUSER" UDAT="20100820" VERN="000005" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100820" STIME="202448" IDATE="20100820" ITIME="202448" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="ABAP2XLSX Reader Demo" LENGTH="21 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL15
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel15.
+
+DATA: excel TYPE REF TO zcl_excel,
+      reader TYPE REF TO zif_excel_reader.
+
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE STANDARD TABLE OF solisti1.
+
+TRY.
+    CREATE OBJECT reader TYPE zcl_excel_reader_2007.
+    excel = reader-&gt;load_file( &apos;C:\iTab.xlsx&apos; ).
+    lv_file = excel-&gt;save_as( zcl_excel=&gt;c_xlsx ).
+
+    &quot; Convert to binary
+    CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+      EXPORTING
+        buffer        = lv_file
+      IMPORTING
+        output_length = lv_bytecount
+      TABLES
+        binary_tab    = lt_file_tab.
+
+    &quot; Save the file
+    CALL FUNCTION &apos;GUI_DOWNLOAD&apos;
+      EXPORTING
+        bin_filesize = lv_bytecount
+        filename     = &apos;C:\iTabFromReader.xlsx&apos;
+        filetype     = &apos;BIN&apos;
+      TABLES
+        data_tab     = lt_file_tab.
+
+  CATCH zcx_excel.    &quot; Exceptions for ABAP2XLSX
+ENDTRY.</source>
+</PROG>

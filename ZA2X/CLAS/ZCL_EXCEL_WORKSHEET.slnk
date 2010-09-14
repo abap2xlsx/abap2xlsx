@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" UUID="C1BF274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100831" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_WORKSHEET definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_WORKSHEET
+*&quot;* do not include other source files here!!!
+public section.
+  type-pools ABAP .
+
+  class-data C_BREAK_COLUMN type ZEXCEL_BREAK value 2. &quot;#EC NOTEXT .
+  class-data C_BREAK_NONE type ZEXCEL_BREAK value 0. &quot;#EC NOTEXT .
+  class-data C_BREAK_ROW type ZEXCEL_BREAK value 1. &quot;#EC NOTEXT .
+  class-data C_SHEET_STATE_HIDDEN type ZEXCEL_SHEET_STATE value &apos;hidden&apos;. &quot;#EC NOTEXT .
+  class-data C_SHEET_STATE_VERYHIDDEN type ZEXCEL_SHEET_STATE value &apos;veryHidden&apos;. &quot;#EC NOTEXT .
+  class-data C_SHEET_STATE_VISIBLE type ZEXCEL_SHEET_STATE value &apos;visible&apos;. &quot;#EC NOTEXT .
+  data SHEET_CONTENT type ZEXCEL_T_CELL_DATA .
+  data SHEET_CONTENT_MERGE type ZEXCEL_T_CELL_DATA .
+  data SHEET_SETUP type ref to ZCL_EXCEL_SHEET_SETUP .
+  data SHEET_STATE type ZEXCEL_SHEET_STATE .
+  data TITLE type ZEXCEL_SHEET_TITLE value &apos;Worksheet&apos;. &quot;#EC NOTEXT .
+
+  methods ADD_NEW_CONDITIONAL_STYLE
+    returning
+      value(EO_CONDITIONAL_STYLE) type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+  methods ADD_NEW_DATA_VALIDATION
+    returning
+      value(EO_DATA_VALIDATION) type ref to ZCL_EXCEL_DATA_VALIDATION .
+  methods BIND_TABLE
+    importing
+      !IP_TABLE type STANDARD TABLE
+      !IT_FIELD_CATALOG type ZEXCEL_T_FIELDCATALOG optional
+      !IS_TABLE_SETTINGS type ZEXCEL_S_TABLE_SETTINGS optional .
+  methods CONSTRUCTOR
+    importing
+      !IP_EXCEL type ref to ZCL_EXCEL
+      !IP_TITLE type ZEXCEL_SHEET_TITLE optional .
+  methods DELETE_MERGE .
+  methods GET_ACTIVE_CELL
+    returning
+      value(EP_ACTIVE_CELL) type STRING .
+  methods GET_CELL
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
+      !IP_ROW type ZEXCEL_CELL_ROW
+    exporting
+      !EP_VALUE type ZEXCEL_CELL_VALUE
+      !EP_RC type SYSUBRC .
+  methods GET_COLUMN_DIMENSION
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
+    returning
+      value(R_COLUMN_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+  methods GET_COLUMN_DIMENSIONS
+    returning
+      value(R_COLUMN_DIMENSION) type ZEXCEL_T_WORKSHEET_COLUMNDIME .
+  methods GET_COND_STYLES_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
+  methods GET_DATA_VALIDATIONS_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
+  methods GET_DATA_VALIDATIONS_SIZE
+    returning
+      value(EP_SIZE) type I .
+  methods GET_DEFAULT_COLUMN_DIMENSION
+    returning
+      value(R_COLUMN_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+  methods GET_DEFAULT_ROW_DIMENSION
+    returning
+      value(R_ROW_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
+  methods GET_DIMENSION_RANGE
+    returning
+      value(EP_DIMENSION_RANGE) type STRING .
+  methods GET_GUID
+    returning
+      value(EP_GUID) type OLTPGUID16 .
+  methods GET_HIGHEST_COLUMN
+    returning
+      value(R_HIGHEST_COLUMN) type ZEXCEL_CELL_COLUMN .
+  methods GET_HIGHEST_ROW
+    returning
+      value(R_HIGHEST_ROW) type INT4 .
+  methods GET_MERGE
+    returning
+      value(MERGE_RANGE) type STRING_TABLE .
+  methods GET_ROW_DIMENSION
+    importing
+      !IP_ROW type INT4
+    returning
+      value(R_ROW_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
+  methods GET_ROW_DIMENSIONS
+    returning
+      value(R_ROW_DIMENSION) type ZEXCEL_T_WORKSHEET_ROWDIMENSIO .
+  methods SET_CELL
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_VALUE type SIMPLE optional
+      !IP_FORMULA type ZEXCEL_CELL_FORMULA optional
+      !IP_STYLE type ZEXCEL_CELL_STYLE optional .
+  methods SET_CELL_STYLE
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_STYLE type ZEXCEL_CELL_STYLE
+    raising
+      ZCX_EXCEL .
+  methods SET_MERGE
+    importing
+      !IP_COLUMN_START type ZEXCEL_CELL_COLUMN_ALPHA optional
+      !IP_COLUMN_END type ZEXCEL_CELL_COLUMN_ALPHA optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional .
+  methods SET_TABLE
+    importing
+      !IP_TABLE type STANDARD TABLE
+      !IP_HDR_STYLE type ZEXCEL_CELL_STYLE optional
+      !IP_BODY_STYLE type ZEXCEL_CELL_STYLE optional
+      !IP_TABLE_TITLE type STRING
+      !IP_TOP_LEFT_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA default &apos;B&apos;
+      !IP_TOP_LEFT_ROW type ZEXCEL_CELL_ROW default 3 .
+  methods GET_TABLES_SIZE
+    returning
+      value(EP_SIZE) type I .
+  methods GET_TABLES_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_WORKSHEET
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_WORKSHEET
+*&quot;* do not include other source files here!!!
+private section.
+
+  data ACTIVE_CELL type ZEXCEL_S_CELL_DATA .
+  data CONDITIONAL_STYLES type ref to ZCL_EXCEL_STYLES_CONDITIONAL .
+  data DATA_VALIDATIONS type ref to ZCL_EXCEL_DATA_VALIDATIONS .
+  data GUID type OLTPGUID16 .
+  data LOWER_CELL type ZEXCEL_S_CELL_DATA .
+  data UPPER_CELL type ZEXCEL_S_CELL_DATA .
+  data COLUMN_DIMENSIONS type ZEXCEL_T_WORKSHEET_COLUMNDIME .
+  data ROW_DIMENSIONS type ZEXCEL_T_WORKSHEET_ROWDIMENSIO .
+  data DEFAULT_COLUMN_DIMENSION type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+  data DEFAULT_ROW_DIMENSION type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
+  data EXCEL type ref to ZCL_EXCEL .
+  data TABLES type ref to CL_OBJECT_COLLECTION .
+
+  methods UPDATE_DIMENSION_RANGE .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <typeUsage CLSNAME="ZCL_EXCEL_WORKSHEET" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ACTIVE_CELL" VERSION="1" LANGU="E" DESCRIPT="Version Number Component" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="COLUMN_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Collection of column dimensions" EXPOSURE="0" STATE="1" EDITORDER="18 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_COLUMNDIME" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONDITIONAL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Styles conditional collection" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100708" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLES_CONDITIONAL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="C_BREAK_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Worksheet Break" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="1" ATTVALUE="2" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_BREAK" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="C_BREAK_NONE" VERSION="1" LANGU="E" DESCRIPT="Worksheet Break" EXPOSURE="2" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="1" ATTVALUE="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_BREAK" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="C_BREAK_ROW" VERSION="1" LANGU="E" DESCRIPT="Worksheet Break" EXPOSURE="2" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="1" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_BREAK" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="C_SHEET_STATE_HIDDEN" VERSION="1" LANGU="E" DESCRIPT="Sheet state" EXPOSURE="2" STATE="1" EDITORDER="6 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="1" ATTVALUE="&apos;hidden&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_STATE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="C_SHEET_STATE_VERYHIDDEN" VERSION="1" LANGU="E" DESCRIPT="Sheet state" EXPOSURE="2" STATE="1" EDITORDER="7 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="1" ATTVALUE="&apos;veryHidden&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_STATE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="C_SHEET_STATE_VISIBLE" VERSION="1" LANGU="E" DESCRIPT="Sheet state" EXPOSURE="2" STATE="1" EDITORDER="8 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="1" ATTVALUE="&apos;visible&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_STATE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="DATA_VALIDATIONS" VERSION="1" LANGU="E" DESCRIPT="Data validations collection" EXPOSURE="0" STATE="1" EDITORDER="9 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_DATA_VALIDATIONS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="DEFAULT_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" EXPOSURE="0" STATE="1" EDITORDER="20 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_COLUMNDIME" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="DEFAULT_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet RowDimension" EXPOSURE="0" STATE="1" EDITORDER="21 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_ROWDIMENSI" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="EXCEL" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="22 " AUTHOR="FEMIA" CREATEDON="20100828" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" EXPOSURE="0" STATE="1" EDITORDER="10 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="OLTPGUID16" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="LOWER_CELL" VERSION="1" LANGU="E" DESCRIPT="Bottom right range cell" EXPOSURE="0" STATE="1" EDITORDER="11 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ROW_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Collection of row dimensions" EXPOSURE="0" STATE="1" EDITORDER="19 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_ROWDIMENSIO" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_CONTENT" VERSION="1" LANGU="E" DESCRIPT="Excel worksheet content" EXPOSURE="2" STATE="1" EDITORDER="12 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_CONTENT_MERGE" VERSION="1" LANGU="E" DESCRIPT="Excel worksheet content" EXPOSURE="2" STATE="1" EDITORDER="13 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_SETUP" VERSION="1" LANGU="E" DESCRIPT="Sheet setup" EXPOSURE="2" STATE="1" EDITORDER="14 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_SHEET_SETUP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_STATE" VERSION="1" LANGU="E" DESCRIPT="Sheet state" EXPOSURE="2" STATE="1" EDITORDER="15 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_STATE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TABLES" VERSION="1" LANGU="E" DESCRIPT="Colletion of tables" EXPOSURE="0" STATE="1" EDITORDER="22 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="2" STATE="1" EDITORDER="16 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTVALUE="&apos;Worksheet&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPPER_CELL" VERSION="1" LANGU="E" DESCRIPT="Top left range cell" EXPOSURE="0" STATE="1" EDITORDER="17 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_CONDITIONAL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Creates a new conditional formatting" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_CONDITIONAL_STYLE" SCONAME="EO_CONDITIONAL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
+  <source>method ADD_NEW_CONDITIONAL_STYLE.
+
+  CREATE OBJECT eo_conditional_style.
+  conditional_styles-&gt;add( eo_conditional_style ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_DATA_VALIDATION" VERSION="1" LANGU="E" DESCRIPT="Creates a new data validation" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_DATA_VALIDATION" SCONAME="EO_DATA_VALIDATION" VERSION="1" LANGU="E" DESCRIPT="Data validation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_DATA_VALIDATION"/>
+  <source>method ADD_NEW_DATA_VALIDATION.
+
+  CREATE OBJECT eo_data_validation.
+  data_validations-&gt;add( eo_data_validation ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" VERSION="1" LANGU="E" DESCRIPT="Set cell value from a table" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IT_FIELD_CATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IS_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS" PAROPTIONL="X"/>
+  <source>METHOD bind_table.
+
+  DATA:
+        lv_row_int            TYPE zexcel_cell_row,
+        lv_first_row          TYPE zexcel_cell_row,
+        lv_last_row           TYPE zexcel_cell_row,
+        lv_column_int         TYPE zexcel_cell_column,
+        lv_column_alpha       TYPE zexcel_cell_column_alpha,
+        lt_field_catalog      TYPE zexcel_t_fieldcatalog,
+        lv_id                 TYPE i,
+        lv_rows               TYPE i,
+        lv_formula            TYPE string,
+        ls_settings           TYPE zexcel_s_table_settings,
+        lo_table              TYPE REF TO zcl_excel_table,
+        lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
+        lv_value              TYPE string,
+        lv_syindex            TYPE char3.
+
+  CONSTANTS:
+        lc_top_left_column  TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
+        lc_top_left_row     TYPE zexcel_cell_row VALUE &apos;3&apos;.
+
+  FIELD-SYMBOLS: &lt;ls_field_catalog&gt; TYPE zexcel_s_fieldcatalog,
+                 &lt;fs_table_line&gt;    TYPE ANY,
+                 &lt;fs_fldval&gt;        TYPE ANY.
+
+  ls_settings = is_table_settings.
+
+  IF ls_settings-top_left_column IS INITIAL.
+    ls_settings-top_left_column = lc_top_left_column.
+  ENDIF.
+
+  IF ls_settings-table_style IS INITIAL.
+    ls_settings-table_style = zcl_excel_table=&gt;builtinstyle_medium2.
+  ENDIF.
+
+  IF ls_settings-top_left_row IS INITIAL.
+    ls_settings-top_left_row = lc_top_left_row.
+  ENDIF.
+
+  IF it_field_catalog IS NOT SUPPLIED.
+    lt_field_catalog = zcl_excel_common=&gt;get_fieldcatalog( ip_table = ip_table ).
+  ELSE.
+    lt_field_catalog = it_field_catalog.
+  ENDIF.
+
+  CREATE OBJECT lo_table.
+  lo_table-&gt;settings = ls_settings.
+  lo_table-&gt;set_data( ir_data = ip_table ).
+  lv_id = me-&gt;excel-&gt;get_next_table_id( ).
+  lo_table-&gt;set_id( iv_id = lv_id ).
+*  lo_table-&gt;fieldcat = lt_field_catalog[].
+
+  me-&gt;tables-&gt;add( lo_table ).
+
+  lv_column_int = zcl_excel_common=&gt;convert_column2int( ls_settings-top_left_column ).
+  lv_row_int    = ls_settings-top_left_row.
+
+  &quot; get the row number
+  DESCRIBE TABLE ip_table LINES lv_rows.
+
+* It is better to loop column by column (only visible column)
+  LOOP AT lt_field_catalog ASSIGNING &lt;ls_field_catalog&gt; WHERE dynpfld EQ abap_true.
+
+    lv_column_alpha = zcl_excel_common=&gt;convert_column2alpha( lv_column_int ).
+
+    &quot; Due restrinction of new table object we cannot have two column with the same name
+    &quot; Check if a column with the same name exists, if exists add a counter
+    lv_value = &lt;ls_field_catalog&gt;-scrtext_m.
+    WHILE 1 = 1.
+      READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value BINARY SEARCH.
+      IF sy-subrc &lt;&gt; 0.
+        &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
+        INSERT lv_value INTO TABLE lt_column_name_buffer.
+        EXIT.
+      ELSE.
+        lv_syindex = sy-index.
+        CONCATENATE &lt;ls_field_catalog&gt;-scrtext_m lv_syindex INTO lv_value.
+      ENDIF.
+    ENDWHILE.
+    &quot; First of all write column header
+    me-&gt;set_cell( ip_column = lv_column_alpha
+                  ip_row    = lv_row_int
+                  ip_value  = lv_value ).
+
+    ADD 1 TO lv_row_int.
+    LOOP AT ip_table ASSIGNING &lt;fs_table_line&gt;.
+      ASSIGN COMPONENT &lt;ls_field_catalog&gt;-fieldname OF STRUCTURE &lt;fs_table_line&gt; TO &lt;fs_fldval&gt;.
+      me-&gt;set_cell( ip_column = lv_column_alpha
+                    ip_row    = lv_row_int
+                    ip_value  = &lt;fs_fldval&gt;
+                      ).
+      ADD 1 TO lv_row_int.
+    ENDLOOP.
+
+    &quot; totals
+    IF &lt;ls_field_catalog&gt;-totals_function IS NOT INITIAL.
+      lv_formula = lo_table-&gt;get_totals_formula( ip_column = &lt;ls_field_catalog&gt;-scrtext_m ip_function = &lt;ls_field_catalog&gt;-totals_function ).
+      me-&gt;set_cell( ip_column = lv_column_alpha
+                    ip_row    = lv_row_int
+                    ip_formula = lv_formula ).
+    ENDIF.
+
+    lv_row_int = ls_settings-top_left_row.
+    ADD 1 TO lv_column_int.
+
+    &quot; conditional formatting
+    IF &lt;ls_field_catalog&gt;-cond_style IS NOT INITIAL.
+      lv_first_row    = ls_settings-top_left_row + 1. &quot; +1 to exclude header
+      lv_last_row     = ls_settings-top_left_row + lv_rows.
+      &lt;ls_field_catalog&gt;-cond_style-&gt;set_range( ip_start_column  = lv_column_alpha
+                                                ip_start_row     = lv_first_row
+                                                ip_stop_column   = lv_column_alpha
+                                                ip_stop_row      = lv_last_row ).
+    ENDIF.
+  ENDLOOP.
+
+  &quot; Set field catalog
+  lo_table-&gt;fieldcat = lt_field_catalog[].
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="2" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Ref to parent document" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100828" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="2" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" PAROPTIONL="X"/>
+  <source>method CONSTRUCTOR.
+
+  me-&gt;excel = ip_excel.
+
+  CALL FUNCTION &apos;GUID_CREATE&apos;
+    IMPORTING
+      ev_guid_16 = me-&gt;guid.
+
+  IF ip_title IS NOT INITIAL.
+    title = ip_title.
+  ELSE.
+    title = me-&gt;guid.
+  ENDIF.
+
+  sheet_state = me-&gt;c_sheet_state_visible.
+
+  CREATE OBJECT sheet_setup.
+  CREATE OBJECT conditional_styles.
+  CREATE OBJECT data_validations.
+  CREATE OBJECT tables.
+
+* initialize active cell coordinates
+  active_cell-cell_row = 1.
+  active_cell-cell_column = 1.
+
+* inizialize dimension range
+  lower_cell-cell_row     = 1.
+  lower_cell-cell_column  = 1.
+  upper_cell-cell_row     = 1.
+  upper_cell-cell_column  = 1.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="DELETE_MERGE" VERSION="1" LANGU="E" DESCRIPT="Delete the used merges" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method DELETE_MERGE.
+
+  DELETE sheet_content_merge INDEX 1.
+  DELETE sheet_content_merge INDEX 1.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ACTIVE_CELL" VERSION="1" LANGU="E" DESCRIPT="Get used range dimension" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ACTIVE_CELL" SCONAME="EP_ACTIVE_CELL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <source>method GET_ACTIVE_CELL.
+
+  DATA: lv_active_column TYPE zexcel_cell_column_alpha,
+        lv_active_row    TYPE string.
+
+  lv_active_column = zcl_excel_common=&gt;convert_column2alpha( active_cell-cell_column ).
+  lv_active_row    = active_cell-cell_row.
+  SHIFT lv_active_row RIGHT DELETING TRAILING space.
+  SHIFT lv_active_row LEFT DELETING LEADING space.
+  CONCATENATE lv_active_column lv_active_row INTO ep_active_cell.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" VERSION="1" LANGU="E" DESCRIPT="Get cell value" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="EP_RC" VERSION="1" LANGU="E" DESCRIPT="Return Value of ABAP Statements" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="SYSUBRC"/>
+  <source>method GET_CELL.
+
+  DATA: lv_column         TYPE zexcel_cell_column,
+        ls_sheet_content  TYPE zexcel_s_cell_data.
+
+  FIELD-SYMBOLS: &lt;fs_sheet_content&gt; TYPE zexcel_s_cell_data.
+
+  lv_column = zcl_excel_common=&gt;convert_column2int( ip_column ).
+
+  READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = ip_row
+                                                                cell_column  = lv_column.
+
+  ep_rc = sy-subrc.
+  ep_value = ls_sheet_content-cell_value.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="8 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSION" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSION" SCONAME="R_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_COLUMNDIME"/>
+  <source>method GET_COLUMN_DIMENSION.
+  FIELD-SYMBOLS: &lt;fs_column_dimension&gt; LIKE LINE OF column_dimensions.
+
+  READ TABLE me-&gt;column_dimensions ASSIGNING &lt;fs_column_dimension&gt;
+    WITH KEY column = ip_column.
+
+  IF NOT &lt;fs_column_dimension&gt; IS ASSIGNED.
+    CREATE OBJECT r_column_dimension
+      EXPORTING
+        ip_index = ip_column.
+    APPEND INITIAL LINE TO me-&gt;column_dimensions ASSIGNING &lt;fs_column_dimension&gt;.
+    &lt;fs_column_dimension&gt;-column = ip_column.
+    &lt;fs_column_dimension&gt;-column_dimension = r_column_dimension.
+  ELSE.
+    r_column_dimension = &lt;fs_column_dimension&gt;-column_dimension.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Get column dimensions" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSIONS" SCONAME="R_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Collection of column dimensions" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_COLUMNDIME"/>
+  <source>method GET_COLUMN_DIMENSIONS.
+  r_column_dimension[] = me-&gt;column_dimensions[].
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COND_STYLES_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get conditional styles iterator" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COND_STYLES_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
+  <source>method GET_COND_STYLES_ITERATOR.
+
+  eo_iterator = me-&gt;conditional_styles-&gt;get_iterator( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get conditional styles iterator" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100713" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
+  <source>method GET_DATA_VALIDATIONS_ITERATOR.
+
+  eo_iterator = me-&gt;data_validations-&gt;get_iterator( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_SIZE" VERSION="1" LANGU="E" DESCRIPT="Get the number of data validation objects" EXPOSURE="2" STATE="1" EDITORDER="12 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100715" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_SIZE" SCONAME="EP_SIZE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100715" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <source>method GET_DATA_VALIDATIONS_SIZE.
+  ep_size = me-&gt;data_validations-&gt;size( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" SCONAME="R_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_COLUMNDIME"/>
+  <source>method GET_DEFAULT_COLUMN_DIMENSION.
+  r_column_dimension = me-&gt;default_column_dimension.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_ROW_DIMENSION" SCONAME="R_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_ROWDIMENSI"/>
+  <source>method GET_DEFAULT_ROW_DIMENSION.
+  r_row_dimension = me-&gt;default_row_dimension.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Get used range dimension" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DIMENSION_RANGE" SCONAME="EP_DIMENSION_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <source>method GET_DIMENSION_RANGE.
+
+  me-&gt;update_dimension_range( ).
+  IF upper_cell EQ lower_cell. &quot;only one cell
+    ep_dimension_range = upper_cell-cell_coords.
+  ELSE.
+    CONCATENATE upper_cell-cell_coords &apos;:&apos; lower_cell-cell_coords INTO ep_dimension_range.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_GUID" VERSION="1" LANGU="E" DESCRIPT="Get sheet guid" EXPOSURE="2" STATE="1" EDITORDER="16 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_GUID" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="OLTPGUID16"/>
+  <source>method GET_GUID.
+
+  ep_guid = me-&gt;guid.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_COLUMN" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="17 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_COLUMN" SCONAME="R_HIGHEST_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
+  <source>method GET_HIGHEST_COLUMN.
+  me-&gt;update_dimension_range( ).
+  r_highest_column = me-&gt;lower_cell-cell_column.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_ROW" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="18 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_ROW" SCONAME="R_HIGHEST_ROW" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
+  <source>method GET_HIGHEST_ROW.
+  me-&gt;update_dimension_range( ).
+  r_highest_row = me-&gt;lower_cell-cell_row.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_MERGE" VERSION="1" LANGU="E" DESCRIPT="Get the merge range" EXPOSURE="2" STATE="1" EDITORDER="19 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_MERGE" SCONAME="MERGE_RANGE" VERSION="1" LANGU="E" DESCRIPT="Table of Strings" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING_TABLE"/>
+  <source>method GET_MERGE.
+
+  DATA: lv_column_start   TYPE string,
+        lv_column_end     TYPE string,
+        lv_row            TYPE string,
+        lv_index          TYPE sy-tabix,
+        ls_sheet_content  TYPE zexcel_s_cell_data,
+        range_from        TYPE string,
+        range_to          TYPE string,
+        lv_merge_range    TYPE string,
+        lv_count          TYPE string.
+
+  FIELD-SYMBOLS: &lt;fs_sheet_content&gt; TYPE zexcel_s_cell_data.
+
+  DESCRIBE TABLE sheet_content_merge LINES lv_count.
+
+  WHILE lv_count GT lv_index.
+*  LOOP AT sheet_content_merge ASSIGNING &lt;fs_sheet_content&gt;.
+    lv_index = lv_index + 1.
+    READ TABLE sheet_content_merge ASSIGNING &lt;fs_sheet_content&gt; INDEX lv_index.
+    lv_column_start = zcl_excel_common=&gt;convert_column2alpha( &lt;fs_sheet_content&gt;-cell_column ).
+    lv_row = &lt;fs_sheet_content&gt;-cell_row.
+    SHIFT lv_column_start RIGHT DELETING TRAILING space.
+    SHIFT lv_column_start LEFT DELETING LEADING space.
+    SHIFT lv_row RIGHT DELETING TRAILING space.
+    SHIFT lv_row LEFT DELETING LEADING space.
+    CONCATENATE lv_column_start lv_row
+    INTO range_from.
+
+    lv_index = lv_index + 1.
+    READ TABLE sheet_content_merge ASSIGNING &lt;fs_sheet_content&gt; INDEX lv_index.
+    lv_column_end = zcl_excel_common=&gt;convert_column2alpha( &lt;fs_sheet_content&gt;-cell_column ).
+    SHIFT lv_column_end RIGHT DELETING TRAILING space.
+    SHIFT lv_column_end LEFT DELETING LEADING space.
+    CONCATENATE lv_column_end lv_row
+    INTO range_to.
+
+    CONCATENATE range_from range_to INTO lv_merge_range
+    SEPARATED BY &apos;:&apos;.
+    APPEND lv_merge_range TO merge_range.
+  ENDWHILE.
+*  ENDLOOP.
+
+*  READ TABLE sheet_content_merge ASSIGNING &lt;fs_sheet_content&gt; INDEX 1.
+*  IF sy-subrc EQ 0 AND &lt;fs_sheet_content&gt; IS ASSIGNED.
+*    lv_column_start = zcl_excel_common=&gt;convert_column2alpha( &lt;fs_sheet_content&gt;-cell_column ).
+*    lv_row = &lt;fs_sheet_content&gt;-cell_row.
+*    SHIFT lv_column_start RIGHT DELETING TRAILING space.
+*    SHIFT lv_column_start LEFT DELETING LEADING space.
+*    SHIFT lv_row RIGHT DELETING TRAILING space.
+*    SHIFT lv_row LEFT DELETING LEADING space.
+*    CONCATENATE lv_column_start lv_row
+*    INTO range_from.
+*  ENDIF.
+*  READ TABLE sheet_content_merge ASSIGNING &lt;fs_sheet_content&gt; INDEX 2.
+*  IF sy-subrc EQ 0 AND &lt;fs_sheet_content&gt; IS ASSIGNED.
+*    lv_column_end = zcl_excel_common=&gt;convert_column2alpha( &lt;fs_sheet_content&gt;-cell_column ).
+*    SHIFT lv_column_end RIGHT DELETING TRAILING space.
+*    SHIFT lv_column_end LEFT DELETING LEADING space.
+*    CONCATENATE lv_column_end lv_row
+*    INTO range_to.
+*  ENDIF.
+
+*  IF range_from NE space AND range_to NE space.
+*    CONCATENATE range_from range_to INTO ep_merge_range
+*    SEPARATED BY &apos;:&apos;.
+*  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="20 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSION" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSION" SCONAME="R_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_ROWDIMENSI"/>
+  <source>method GET_ROW_DIMENSION.
+  FIELD-SYMBOLS: &lt;fs_row_dimension&gt; LIKE LINE OF row_dimensions.
+
+  READ TABLE me-&gt;row_dimensions ASSIGNING &lt;fs_row_dimension&gt;
+    WITH KEY row = ip_row.
+
+  IF NOT &lt;fs_row_dimension&gt; IS ASSIGNED.
+    CREATE OBJECT r_row_dimension
+      EXPORTING
+        ip_index = ip_row.
+    APPEND INITIAL LINE TO me-&gt;row_dimensions ASSIGNING &lt;fs_row_dimension&gt;.
+    &lt;fs_row_dimension&gt;-row = ip_row.
+    &lt;fs_row_dimension&gt;-row_dimension = r_row_dimension.
+  ELSE.
+    r_row_dimension = &lt;fs_row_dimension&gt;-row_dimension.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Get column dimensions" EXPOSURE="2" STATE="1" EDITORDER="21 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSIONS" SCONAME="R_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Collection of column dimensions" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100817" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_ROWDIMENSIO"/>
+  <source>method GET_ROW_DIMENSIONS.
+  r_row_dimension[] = me-&gt;row_dimensions[].
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get iterator for tables collection" EXPOSURE="2" STATE="1" EDITORDER="26 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
+  <source>method GET_TABLES_ITERATOR.
+  eo_iterator = tables-&gt;get_iterator( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_SIZE" VERSION="1" LANGU="E" DESCRIPT="Gets the size of tables collection" EXPOSURE="2" STATE="1" EDITORDER="25 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_SIZE" SCONAME="EP_SIZE" VERSION="1" LANGU="E" DESCRIPT="Size" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <source>method GET_TABLES_SIZE.
+  ep_size = tables-&gt;size( ).
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" VERSION="1" LANGU="E" DESCRIPT="Set cell value" EXPOSURE="2" STATE="1" EDITORDER="22 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Cell Formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_FORMULA" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_STYLE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100705" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE" PAROPTIONL="X"/>
+  <source>method SET_CELL.
+
+  DATA: lv_column                 TYPE zexcel_cell_column,
+        ls_sheet_content          TYPE zexcel_s_cell_data,
+        lv_row_alpha              TYPE string,
+        lv_value                  TYPE zexcel_cell_value,
+        lv_data_type              TYPE zexcel_cell_data_type,
+        lv_value_type             TYPE abap_typekind,
+        lo_style                  TYPE REF TO zcl_excel_style,
+        lv_style_guid             TYPE zexcel_cell_style.
+
+  FIELD-SYMBOLS: &lt;fs_sheet_content&gt; TYPE zexcel_s_cell_data.
+
+  IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED.
+    RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = &apos;Pleas provide the vaue or formula&apos;.
+  ENDIF.
+
+  lv_style_guid = ip_style.
+
+  IF ip_value IS SUPPLIED.
+    DESCRIBE FIELD ip_value TYPE lv_value_type.
+    CASE lv_value_type.
+      WHEN cl_abap_typedescr=&gt;typekind_int OR cl_abap_typedescr=&gt;typekind_int1 OR cl_abap_typedescr=&gt;typekind_int2 OR
+           cl_abap_typedescr=&gt;typekind_float OR cl_abap_typedescr=&gt;typekind_packed.
+        lv_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = ip_value ).
+
+      WHEN cl_abap_typedescr=&gt;typekind_char OR cl_abap_typedescr=&gt;typekind_string OR cl_abap_typedescr=&gt;typekind_num.
+        lv_value = ip_value.
+        lv_data_type = &apos;s&apos;.
+
+      WHEN cl_abap_typedescr=&gt;typekind_date.
+        lv_value = zcl_excel_common=&gt;date_to_excel_string( ip_value = ip_value ).
+
+        IF ip_style IS NOT SUPPLIED. &quot;get default date format for user in case parameter is initial
+          lo_style = excel-&gt;add_new_style( ).
+          cl_abap_datfm=&gt;get_date_format_des( IMPORTING ex_dateformat = lo_style-&gt;number_format-&gt;format_code ).
+          lv_style_guid = lo_style-&gt;get_guid( ).
+        ENDIF.
+
+      WHEN cl_abap_typedescr=&gt;typekind_time.
+        lv_value = zcl_excel_common=&gt;time_to_excel_string( ip_value = ip_value ).
+
+        IF ip_style IS NOT SUPPLIED. &quot;get default time format for user in case parameter is initial
+          lo_style = excel-&gt;add_new_style( ).
+          lo_style-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_date_time6.
+          lv_style_guid = lo_style-&gt;get_guid( ).
+        ENDIF.
+
+      WHEN OTHERS.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = &apos;Invalid data type of input value&apos;.
+    ENDCASE.
+  ENDIF.
+
+  lv_column = zcl_excel_common=&gt;convert_column2int( ip_column ).
+
+  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH KEY cell_row    = ip_row
+                                                                 cell_column = lv_column.
+
+  IF sy-subrc EQ 0.
+    &lt;fs_sheet_content&gt;-cell_value   = lv_value.
+    &lt;fs_sheet_content&gt;-cell_formula = ip_formula.
+    &lt;fs_sheet_content&gt;-cell_style   = lv_style_guid.
+    &lt;fs_sheet_content&gt;-data_type    = lv_data_type.
+  ELSE.
+    ls_sheet_content-cell_row     = ip_row.
+    ls_sheet_content-cell_column  = lv_column.
+    ls_sheet_content-cell_value   = lv_value.
+    ls_sheet_content-cell_formula = ip_formula.
+    ls_sheet_content-cell_style   = lv_style_guid.
+    ls_sheet_content-data_type    = lv_data_type.
+    lv_row_alpha = ip_row.
+    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+    SHIFT lv_row_alpha LEFT DELETING LEADING space.
+    CONCATENATE ip_column lv_row_alpha INTO ls_sheet_content-cell_coords.
+    APPEND ls_sheet_content TO sheet_content.
+    SORT sheet_content BY cell_row cell_column.
+    &quot; me-&gt;update_dimension_range( ).
+
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Set cell style" EXPOSURE="2" STATE="1" EDITORDER="23 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100830" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100830" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100830" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_STYLE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100830" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100830" CHANGEDBY="FEMIA" CHANGEDON="20100831"/>
+  <source>method SET_CELL_STYLE.
+
+  DATA: lv_column                 TYPE zexcel_cell_column,
+        ls_sheet_content          TYPE zexcel_s_cell_data,
+        lv_row_alpha              TYPE string,
+        lo_style                  TYPE REF TO zcl_excel_style,
+        lv_style_guid             TYPE zexcel_cell_style.
+
+  FIELD-SYMBOLS: &lt;fs_sheet_content&gt; TYPE zexcel_s_cell_data.
+
+  lv_style_guid = ip_style.
+
+  lv_column = zcl_excel_common=&gt;convert_column2int( ip_column ).
+
+  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH KEY cell_row    = ip_row
+                                                                 cell_column = lv_column.
+
+  IF sy-subrc EQ 0.
+    &lt;fs_sheet_content&gt;-cell_style   = lv_style_guid.
+  ELSE.
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = &apos;No Data in this cell&apos;.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" VERSION="1" LANGU="E" DESCRIPT="Set the merge range" EXPOSURE="2" STATE="1" EDITORDER="24 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_COLUMN_START" VERSION="1" LANGU="E" DESCRIPT="Cell Column Start" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_COLUMN_END" VERSION="1" LANGU="E" DESCRIPT="Cell Column End" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW" PAROPTIONL="X"/>
+  <source>method SET_MERGE.
+
+  DATA: lv_column_start           TYPE zexcel_cell_column,
+        lv_column_end             TYPE zexcel_cell_column,
+        ls_sheet_content          TYPE zexcel_s_cell_data,
+        lv_row_alpha              TYPE string.
+
+  FIELD-SYMBOLS: &lt;fs_sheet_content&gt; TYPE zexcel_s_cell_data.
+
+  lv_column_start = zcl_excel_common=&gt;convert_column2int( ip_column_start ).
+  lv_column_end   = zcl_excel_common=&gt;convert_column2int( ip_column_end ).
+
+  ls_sheet_content-cell_row     = ip_row.
+  ls_sheet_content-cell_column  = lv_column_start.
+  lv_row_alpha = ip_row.
+  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+  SHIFT lv_row_alpha LEFT DELETING LEADING space.
+  CONCATENATE ip_column_start lv_row_alpha INTO ls_sheet_content-cell_coords.
+  APPEND ls_sheet_content TO sheet_content_merge.
+
+  ls_sheet_content-cell_row     = ip_row.
+  ls_sheet_content-cell_column  = lv_column_end.
+  lv_row_alpha = ip_row.
+  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+  SHIFT lv_row_alpha LEFT DELETING LEADING space.
+  CONCATENATE ip_column_end lv_row_alpha INTO ls_sheet_content-cell_coords.
+  APPEND ls_sheet_content TO sheet_content_merge.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" VERSION="1" LANGU="E" DESCRIPT="Set cell value from a table" EXPOSURE="2" STATE="1" EDITORDER="25 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100706" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100706" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_HDR_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_BODY_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_TABLE_TITLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_TOP_LEFT_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" PARVALUE="&apos;B&apos;"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_TOP_LEFT_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW" PARVALUE="3"/>
+  <source>method SET_TABLE.
+
+  DATA: lo_tabdescr     TYPE REF TO cl_abap_structdescr,
+        lr_data         TYPE REF TO data,
+        ls_newline      TYPE REF TO data,
+        ls_header       TYPE x030l,
+        lt_dfies        TYPE ddfields,
+        lv_row_header   TYPE zexcel_cell_row VALUE &apos;2&apos;,
+        lv_col_header   TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
+        lv_row_int      TYPE zexcel_cell_row,
+        lv_column_int   TYPE zexcel_cell_column,
+        lv_column_alpha TYPE zexcel_cell_column_alpha,
+        lv_cell_value   TYPE zexcel_cell_value.
+
+
+  FIELD-SYMBOLS: &lt;fs_table_line&gt;  TYPE ANY,
+                 &lt;fs_fldval&gt;      TYPE ANY,
+                 &lt;fs_dfies&gt;       TYPE dfies,
+                 &lt;fs_cell_value&gt;  TYPE zexcel_cell_value.
+
+  lv_column_int = zcl_excel_common=&gt;convert_column2int( ip_top_left_column ).
+  lv_row_int    = ip_top_left_row.
+
+  CREATE DATA lr_data LIKE LINE OF ip_table.
+
+  lo_tabdescr ?= cl_abap_structdescr=&gt;describe_by_data_ref( lr_data ).
+
+  ls_header = lo_tabdescr-&gt;get_ddic_header( ).
+
+  lt_dfies = lo_tabdescr-&gt;get_ddic_field_list( ).
+
+* It is better to loop column by column
+  LOOP AT lt_dfies ASSIGNING &lt;fs_dfies&gt;.
+    lv_column_alpha = zcl_excel_common=&gt;convert_column2alpha( lv_column_int ).
+    &quot; First of all write column header
+    lv_cell_value = &lt;fs_dfies&gt;-scrtext_m.
+    me-&gt;set_cell( ip_column = lv_column_alpha
+                  ip_row    = lv_row_int
+                  ip_value  = lv_cell_value
+                  ip_style  = ip_hdr_style ).
+    ADD 1 TO lv_row_int.
+    LOOP AT ip_table ASSIGNING &lt;fs_table_line&gt;.
+      ASSIGN COMPONENT &lt;fs_dfies&gt;-fieldname OF STRUCTURE &lt;fs_table_line&gt; TO &lt;fs_fldval&gt;.
+      MOVE &lt;fs_fldval&gt; TO lv_cell_value.
+      me-&gt;set_cell( ip_column = lv_column_alpha
+                    ip_row    = lv_row_int
+                    ip_value  = lv_cell_value
+                    ip_style  = ip_body_style ).
+      ADD 1 TO lv_row_int.
+    ENDLOOP.
+    lv_row_int = ip_top_left_row.
+    ADD 1 TO lv_column_int.
+  ENDLOOP.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update dimension range" EXPOSURE="0" STATE="1" EDITORDER="26 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method UPDATE_DIMENSION_RANGE.
+
+  DATA: ls_sheet_content TYPE zexcel_s_cell_data,
+        lt_sheet_content TYPE zexcel_t_cell_data_unsorted,
+        lv_row_alpha     TYPE string,
+        lv_column_alpha  TYPE zexcel_cell_column_alpha.
+
+* update dimension range
+  lt_sheet_content = sheet_content.
+  &quot;upper left corner
+  SORT lt_sheet_content BY cell_row.
+  READ TABLE lt_sheet_content INDEX 1 INTO ls_sheet_content.
+  upper_cell-cell_row = ls_sheet_content-cell_row.
+  SORT lt_sheet_content BY cell_column.
+  READ TABLE lt_sheet_content INDEX 1 INTO ls_sheet_content.
+  upper_cell-cell_column = ls_sheet_content-cell_column.
+
+  lv_row_alpha = upper_cell-cell_row.
+  lv_column_alpha = zcl_excel_common=&gt;convert_column2alpha( upper_cell-cell_column ).
+  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+  SHIFT lv_row_alpha LEFT DELETING LEADING space.
+  CONCATENATE lv_column_alpha lv_row_alpha INTO upper_cell-cell_coords.
+
+  &quot;bottom right corner
+  SORT lt_sheet_content BY cell_row DESCENDING.
+  READ TABLE lt_sheet_content INDEX 1 INTO ls_sheet_content.
+  lower_cell-cell_row = ls_sheet_content-cell_row.
+  SORT lt_sheet_content BY cell_column DESCENDING.
+  READ TABLE lt_sheet_content INDEX 1 INTO ls_sheet_content.
+  lower_cell-cell_column = ls_sheet_content-cell_column.
+
+  lv_row_alpha = lower_cell-cell_row.
+  lv_column_alpha = zcl_excel_common=&gt;convert_column2alpha( lower_cell-cell_column ).
+  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+  SHIFT lv_row_alpha LEFT DELETING LEADING space.
+  CONCATENATE lv_column_alpha lv_row_alpha INTO lower_cell-cell_coords.
+
+endmethod.</source>
+ </method>
+</CLAS>

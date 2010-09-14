@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<CLAS CLSNAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" UUID="DFA646E0B030A0F1B39A000C29B7D360" CATEGORY="40" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="CX_STATIC_CHECK">
+ <publicSection>class ZCX_EXCEL definition
+  public
+  inheriting from CX_STATIC_CHECK
+  final
+  create public .
+
+*&quot;* public components of class ZCX_EXCEL
+*&quot;* do not include other source files here!!!
+public section.
+
+  constants ZCX_EXCEL type SOTR_CONC value &apos;DFA64849FDF4F6F1B39A000C29B7D360&apos;. &quot;#EC NOTEXT
+  data ERROR type STRING .
+
+  methods CONSTRUCTOR
+    importing
+      !TEXTID like TEXTID optional
+      !PREVIOUS like PREVIOUS optional
+      !ERROR type STRING optional .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCX_EXCEL
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCX_EXCEL
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <textPool/>
+ <attribute CLSNAME="ZCX_EXCEL" CMPNAME="ERROR" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDBY="BCUSER" CHANGEDON="20100812" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCX_EXCEL" CMPNAME="ZCX_EXCEL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDBY="BCUSER" CHANGEDON="20100812" ATTDECLTYP="2" ATTVALUE="&apos;DFA64849FDF4F6F1B39A000C29B7D360&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="SOTR_CONC" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " LOCKED="X" TYPESRC_LENG="0 ">
+  <sotr PAKET="$TMP" CREA_LAN="E" TRALA_TYPE="1" CREA_NAME="BCUSER" CREA_TSTUT="20100812193211" CHAN_NAME="BCUSER" CHAN_TSTUT="20100812193211" LST_IMPORT="00000000" TRALA_VEC="00000000000000000000" CATGY_VEC="00000000000000000000" OBJID_VEC="08000000000000000000">
+   <sotrText LANGU="E" LFD_NUM="0001" FLAG_CNTXT="X" CREA_NAME="BCUSER" CREA_TSTUT="20100812193211" CHAN_NAME="BCUSER" CHAN_TSTUT="20100812193211" STATUS="R" VERSION="0002" LENGTH="255" TEXT="&amp;ERROR&amp;"/>
+  </sotr>
+ </attribute>
+ <inheritance CLSNAME="ZCX_EXCEL" REFCLSNAME="CX_STATIC_CHECK" VERSION="1" STATE="1" AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDON="00000000"/>
+ <method CLSNAME="ZCX_EXCEL" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDON="00000000" MTDTYPE="2" MTDDECLTYP="0" LOCKED="X" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCX_EXCEL" CMPNAME="CONSTRUCTOR" SCONAME="TEXTID" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDBY="BCUSER" CHANGEDON="20100812" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="0" TYPE="TEXTID" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCX_EXCEL" CMPNAME="CONSTRUCTOR" SCONAME="PREVIOUS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="2" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDBY="BCUSER" CHANGEDON="20100812" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="0" TYPE="PREVIOUS" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCX_EXCEL" CMPNAME="CONSTRUCTOR" SCONAME="ERROR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="2" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100812" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
+  <source>method CONSTRUCTOR.
+CALL METHOD SUPER-&gt;CONSTRUCTOR
+EXPORTING
+TEXTID = TEXTID
+PREVIOUS = PREVIOUS
+.
+ IF textid IS INITIAL.
+   me-&gt;textid = ZCX_EXCEL .
+ ENDIF.
+me-&gt;ERROR = ERROR .
+endmethod.</source>
+ </method>
+</CLAS>

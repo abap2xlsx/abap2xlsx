@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL8" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="FEMIA" UDAT="20100905" VERN="000016" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100905" STIME="163905" IDATE="20100905" ITIME="163905" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZIFE_TEST_EXCEL
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel8.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_excel_writer         type ref to zif_excel_writer,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_range                TYPE REF TO zcl_excel_range,
+      lv_file                 TYPE xstring,
+      lv_style_number_guid    TYPE zexcel_cell_style,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE STANDARD TABLE OF solisti1.
+
+CREATE OBJECT lo_excel.
+
+&quot; Get active sheet
+lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+lo_worksheet-&gt;title = &apos;sheet1&apos;.
+lo_range = lo_excel-&gt;add_new_range( ).
+lo_range-&gt;name = &apos;range&apos;.
+lo_range-&gt;set_value( ip_sheet_name    = lo_worksheet-&gt;title
+                     ip_start_column  = &apos;C&apos;
+                     ip_start_row     = 4
+                     ip_stop_column   = &apos;C&apos;
+                     ip_stop_row      = 8 ).
+
+
+lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = &apos;Apple&apos; ).
+lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = &apos;Banana&apos; ).
+lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = &apos;Blueberry&apos; ).
+lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;C&apos; ip_value = &apos;Ananas&apos; ).
+lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;C&apos; ip_value = &apos;Grapes&apos; ).
+
+create object lo_excel_writer type zcl_excel_writer_2007.
+lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+&quot;convert to table
+CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+  EXPORTING
+    buffer        = lv_file
+  IMPORTING
+    output_length = lv_bytecount
+  TABLES
+    binary_tab    = lt_file_tab.
+&quot;Save the file
+CALL FUNCTION &apos;GUI_DOWNLOAD&apos;
+  EXPORTING
+    bin_filesize = lv_bytecount
+    filename     = &apos;C:\Range.xlsx&apos;
+    filetype     = &apos;BIN&apos;
+  TABLES
+    data_tab     = lt_file_tab.</source>
+</PROG>

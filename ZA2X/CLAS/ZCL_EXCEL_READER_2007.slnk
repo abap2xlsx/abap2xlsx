@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" UUID="DFAC2E4C81CE84F1B39B000C29B7D360" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" RELTYPE="1"/>
+ <publicSection>class ZCL_EXCEL_READER_2007 definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_READER_2007
+*&quot;* do not include other source files here!!!
+public section.
+
+  interfaces ZIF_EXCEL_READER .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_READER_2007
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_READER_2007
+*&quot;* do not include other source files here!!!
+private section.
+
+  data EXCEL2007 type XSTRING .
+  data ZIP type ref to CL_ABAP_ZIP .
+
+  methods GET_FROM_ZIP_ARCHIVE
+    importing
+      !I_FILENAME type STRING
+    returning
+      value(R_CONTENT) type XSTRING
+    raising
+      ZCX_EXCEL .
+  methods GET_IXML_FROM_ZIP_ARCHIVE
+    importing
+      !I_FILENAME type STRING
+    returning
+      value(R_IXML) type ref to IF_IXML_DOCUMENT
+    raising
+      ZCX_EXCEL .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature
+
+  TYPES:
+    BEGIN OF t_splice_entry,
+           name       TYPE string,
+           offset     TYPE i,
+           length     TYPE i,
+           compressed TYPE i,
+         END OF t_splice_entry.
+  TYPES:
+    t_splice_entries TYPE STANDARD TABLE OF t_splice_entry WITH DEFAULT KEY.</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <textPool/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="EXCEL2007" VERSION="1" LANGU="E" DESCRIPT="Excel 2007 data" EXPOSURE="0" STATE="1" EDITORDER="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_ABAP_ZIP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD">
+  <source>METHOD zif_excel_reader~load.
+  TYPES:
+    BEGIN OF t_worksheet,
+           id       TYPE string,
+           target   TYPE string,
+         END OF t_worksheet.
+  TYPES: t_worksheets TYPE TABLE OF t_worksheet.
+
+  CONSTANTS:
+    lc_core_properties TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&apos;,
+    lc_office_document TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&apos;,
+    lc_shared_strings  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
+    lc_worksheet       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
+    lc_relationships   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;.
+
+  TYPE-POOLS: ixml.
+
+  DATA: rels                TYPE REF TO if_ixml_document,
+        rels_coll           TYPE REF TO if_ixml_node_collection,
+        rels_coll_index     TYPE i,
+        workbook_path       TYPE string,
+        rels_workbook_path  TYPE string,
+        rels_workbook       TYPE REF TO if_ixml_document,
+        rels_wb_coll        TYPE REF TO if_ixml_node_collection,
+        rels_wb_coll_index  TYPE i,
+        shared_strings_path TYPE string,
+        shared_strings      TYPE REF TO if_ixml_document,
+        shared_strings_coll TYPE REF TO if_ixml_node_collection,
+        shared_strings_coll_index TYPE i,
+        worksheets          TYPE t_worksheets,
+        workbook            TYPE REF TO if_ixml_document,
+        workbook_coll       TYPE REF TO if_ixml_node_collection,
+        workbook_index      TYPE i,
+        worksheet_path      TYPE string,
+        worksheet           TYPE REF TO if_ixml_document,
+        worksheet_coll      TYPE REF TO if_ixml_node_collection,
+        worksheet_index     TYPE i.
+
+  FIELD-SYMBOLS: &lt;worksheet&gt; TYPE t_worksheet.
+
+  DATA: node          TYPE REF TO if_ixml_node,
+        value_node    TYPE REF TO if_ixml_node,
+        si            TYPE REF TO if_ixml_node_list,
+        row           TYPE REF TO if_ixml_node_list,
+        row_iterator  TYPE REF TO if_ixml_node_iterator,
+        col           TYPE REF TO if_ixml_node,
+        attributes    TYPE REF TO if_ixml_named_node_map,
+        attribute     TYPE REF TO if_ixml_node,
+        col_attributes TYPE REF TO if_ixml_named_node_map,
+        attr_type     TYPE string,
+        attr_target   TYPE string,
+        attr_id       TYPE string,
+        tag_name      TYPE string,
+        r             TYPE string,
+        r_width       TYPE i,
+        cell_data_type TYPE string,
+        cell_column   TYPE zexcel_cell_column_alpha,
+        cell_row      TYPE zexcel_cell_row,
+        value         TYPE string,
+        values        TYPE stringtab,
+        value_index   TYPE i,
+        cell_value    TYPE zexcel_cell_value,
+        stripped_name TYPE chkfile,
+        dirname       TYPE string.
+
+  DATA: lo_worksheet TYPE REF TO zcl_excel_worksheet,
+        worksheet_title TYPE zexcel_sheet_title,
+        worksheet_id TYPE string.
+
+  me-&gt;excel2007 = i_excel2007.
+  rels = me-&gt;get_ixml_from_zip_archive( &apos;_rels/.rels&apos; ).
+
+  CREATE OBJECT r_excel.
+
+  rels_coll = rels-&gt;get_elements_by_tag_name( name = &apos;Relationship&apos; ).
+  rels_coll_index = 0.
+  WHILE rels_coll_index &lt; rels_coll-&gt;get_length( ).
+    node     = rels_coll-&gt;get_item( rels_coll_index ).
+    rels_coll_index = rels_coll_index + 1.
+    attributes ?= node-&gt;get_attributes( ).
+    attribute  ?= attributes-&gt;get_named_item_ns( &apos;Type&apos; ).
+    attr_type = attribute-&gt;get_value( ).
+    CASE attr_type.
+      WHEN lc_core_properties.
+        &quot; TODO Map Document Properties to ZCL_EXCEL
+      WHEN lc_office_document.
+        attribute  ?= attributes-&gt;get_named_item_ns( &apos;Target&apos; ).
+        workbook_path = attribute-&gt;get_value( ).
+
+        CALL FUNCTION &apos;TRINT_SPLIT_FILE_AND_PATH&apos;
+          EXPORTING
+            full_name     = workbook_path
+          IMPORTING
+            stripped_name = stripped_name
+            file_path     = dirname.
+        &quot; Read Workbook Relationships
+        CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos;
+          INTO rels_workbook_path.
+        rels_workbook = me-&gt;get_ixml_from_zip_archive( rels_workbook_path ).
+        rels_wb_coll =
+          rels_workbook-&gt;get_elements_by_tag_name( name = &apos;Relationship&apos; ).
+        rels_wb_coll_index = 0.
+        WHILE rels_wb_coll_index &lt; rels_wb_coll-&gt;get_length( ).
+          node     = rels_wb_coll-&gt;get_item( rels_wb_coll_index ).
+          rels_wb_coll_index = rels_wb_coll_index + 1.
+          attributes ?= node-&gt;get_attributes( ).
+          attribute  ?= attributes-&gt;get_named_item_ns( &apos;Type&apos; ).
+          attr_type = attribute-&gt;get_value( ).
+          CASE attr_type.
+            WHEN lc_shared_strings.
+              &quot; Read Shared Strings
+              attribute  ?= attributes-&gt;get_named_item_ns( &apos;Target&apos; ).
+              attr_target = attribute-&gt;get_value( ).
+              CONCATENATE dirname attr_target INTO shared_strings_path.
+              shared_strings = me-&gt;get_ixml_from_zip_archive( shared_strings_path ).
+              shared_strings_coll =
+                shared_strings-&gt;get_elements_by_tag_name( name = &apos;si&apos; ).
+              shared_strings_coll_index = 0.
+              WHILE shared_strings_coll_index &lt; shared_strings_coll-&gt;get_length( ).
+                node     = shared_strings_coll-&gt;get_item( shared_strings_coll_index ).
+                shared_strings_coll_index = shared_strings_coll_index + 1.
+                si = node-&gt;get_children( ).
+                node = si-&gt;get_item( 0 ).
+                tag_name = node-&gt;get_name( ).
+                IF tag_name = &apos;t&apos;.
+                  value = node-&gt;get_value( ).
+                  APPEND value TO values.
+                ELSEIF tag_name = &apos;r&apos;.
+                  &quot; TODO pharse Ritch text
+                ENDIF.
+              ENDWHILE.
+            WHEN lc_worksheet.
+              &quot; Read worksheets
+              APPEND INITIAL LINE TO worksheets ASSIGNING &lt;worksheet&gt;.
+              attribute  ?= attributes-&gt;get_named_item_ns( &apos;Id&apos; ).
+              &lt;worksheet&gt;-id = attribute-&gt;get_value( ).
+              attribute  ?= attributes-&gt;get_named_item_ns( &apos;Target&apos; ).
+              &lt;worksheet&gt;-target = attribute-&gt;get_value( ).
+              &quot; WRITE: / &lt;worksheet&gt;-id, &apos;:&apos;, &lt;worksheet&gt;-target.
+            WHEN OTHERS.
+          ENDCASE.
+        ENDWHILE.
+        &quot; Read Workbook
+        workbook = me-&gt;get_ixml_from_zip_archive( workbook_path ).
+        workbook_coll = workbook-&gt;get_elements_by_tag_name( name = &apos;sheet&apos; ).
+        workbook_index = 0.
+        WHILE workbook_index &lt; workbook_coll-&gt;get_length( ).
+          node       = workbook_coll-&gt;get_item( workbook_index ).
+          workbook_index = workbook_index + 1.
+          attributes ?= node-&gt;get_attributes( ).
+          attribute  ?= attributes-&gt;get_named_item_ns( &apos;name&apos; ).
+          worksheet_title = attribute-&gt;get_value( ).
+          IF workbook_index &gt; 1.
+            lo_worksheet = r_excel-&gt;add_new_worksheet( worksheet_title ).
+          ELSE.
+            lo_worksheet = r_excel-&gt;get_active_worksheet( ).
+            lo_worksheet-&gt;title = worksheet_title.
+          ENDIF.
+          attribute  ?= attributes-&gt;get_named_item_ns(
+                           name = &apos;id&apos;
+                           uri  = lc_relationships
+                        ).
+          worksheet_id = attribute-&gt;get_value( ).
+          READ TABLE worksheets ASSIGNING &lt;worksheet&gt;
+            WITH KEY id = worksheet_id.
+          &quot; WRITE: / worksheet_id, worksheet_title, &lt;worksheet&gt;-target.
+          CONCATENATE dirname &lt;worksheet&gt;-target INTO worksheet_path.
+          worksheet = me-&gt;get_ixml_from_zip_archive( worksheet_path ).
+          worksheet_coll = worksheet-&gt;get_elements_by_tag_name( name = &apos;row&apos; ).
+          worksheet_index = 0.
+          WHILE worksheet_index &lt; worksheet_coll-&gt;get_length( ).
+            node       = worksheet_coll-&gt;get_item( worksheet_index ).
+            worksheet_index = worksheet_index + 1.
+            row = node-&gt;get_children( ).
+            row_iterator = row-&gt;create_iterator( ).
+            col = row_iterator-&gt;get_next( ).
+            WHILE NOT col IS INITIAL.
+              col_attributes = col-&gt;get_attributes( ).
+              attribute  ?= col_attributes-&gt;get_named_item_ns( &apos;r&apos; ).
+              r = attribute-&gt;get_value( ).
+              CLEAR: cell_data_type, cell_value.
+              attribute  ?= col_attributes-&gt;get_named_item_ns( &apos;t&apos; ).
+              IF attribute IS BOUND.
+                cell_data_type = attribute-&gt;get_value( ).
+              ENDIF.
+              &quot; WRITE: / r, cell_data_type.
+              value_node = col-&gt;get_first_child( ).
+              CASE cell_data_type.
+                WHEN &apos;s&apos;. &quot; String
+                  value_index = value_node-&gt;get_value( ) + 1.
+                  READ TABLE values INTO cell_value INDEX value_index.
+                WHEN &apos;b&apos;. &quot; Boolean
+                  &quot; TODO
+                WHEN &apos;inlineStr&apos;. &quot; inlineStr
+                  &quot; TODO
+                WHEN &apos;e&apos;. &quot; Error
+                  &quot; TODO
+                WHEN OTHERS.
+                  IF value_node IS BOUND.
+                    cell_value = value_node-&gt;get_value( ).
+                  ENDIF.
+              ENDCASE.
+              IF NOT value IS INITIAL.
+                &quot; WRITE: value.
+                &quot; TODO: wite a robust method which splits r into
+                &quot; cell_column and cell_row
+                cell_column = r(1).
+                r_width = STRLEN( r ).
+                r_width = r_width - 1.
+                cell_row    = r+1(r_width).
+                &quot; WRITE: cell_column, cell_row, cell_value.
+                lo_worksheet-&gt;set_cell(
+                  EXPORTING
+                    ip_column  = cell_column  &quot; Cell Column
+                    ip_row     = cell_row     &quot; Cell Row
+                    ip_value   = cell_value   &quot; Cell Value
+                ).
+              ENDIF.
+              col = row_iterator-&gt;get_next( ).
+            ENDWHILE.
+          ENDWHILE.
+        ENDWHILE.
+      WHEN OTHERS.
+    ENDCASE.
+  ENDWHILE.
+
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD_FILE">
+  <source>method ZIF_EXCEL_READER~LOAD_FILE.
+  DATA: excel_data TYPE xstring.
+  DATA filelength TYPE i.
+  DATA bin_tab TYPE TABLE OF x255.
+  &quot; Background processing
+  DATA bin_data LIKE LINE OF bin_tab.
+  DATA len TYPE i.
+  DATA alen TYPE i.
+
+  IF sy-batch = abap_true.
+    DESCRIBE FIELD bin_data LENGTH len IN BYTE MODE.
+    OPEN DATASET i_filename FOR INPUT IN BINARY MODE.
+    WHILE sy-subrc = 0.
+      READ DATASET i_filename INTO bin_data MAXIMUM LENGTH len ACTUAL LENGTH alen.
+      APPEND bin_data TO bin_tab.
+      filelength = filelength + alen.
+    ENDWHILE.
+    CLOSE DATASET i_filename.
+  ELSE.
+    cl_gui_frontend_services=&gt;gui_upload(
+      EXPORTING
+        filename                = i_filename    &quot; Name of file
+        filetype                = &apos;BIN&apos;    &quot; File Type (ASCII, Binary)
+      IMPORTING
+        filelength              = filelength
+      CHANGING
+        data_tab                = bin_tab
+      EXCEPTIONS
+        file_open_error         = 1
+        file_read_error         = 2
+        no_batch                = 3
+        gui_refuse_filetransfer = 4
+        invalid_type            = 5
+        no_authority            = 6
+        unknown_error           = 7
+        bad_data_format         = 8
+        header_not_allowed      = 9
+        separator_not_allowed   = 10
+        header_too_long         = 11
+        unknown_dp_error        = 12
+        access_denied           = 13
+        dp_out_of_memory        = 14
+        disk_full               = 15
+        dp_timeout              = 16
+        not_supported_by_gui    = 17
+        error_no_gui            = 18
+        OTHERS                  = 19
+    ).
+    IF sy-subrc &lt;&gt; 0.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error    = &apos;A problem occured when reading the file&apos;.
+    ENDIF.
+  ENDIF.
+  CALL FUNCTION &apos;SCMS_BINARY_TO_XSTRING&apos;
+    EXPORTING
+      input_length = filelength
+    IMPORTING
+      buffer       = excel_data
+    TABLES
+      binary_tab   = bin_tab.
+  r_excel = me-&gt;zif_excel_reader~load( excel_data ).
+endmethod.</source>
+ </interfaceMethod>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="0" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="R_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823"/>
+  <source>method GET_FROM_ZIP_ARCHIVE.
+
+  IF me-&gt;zip IS NOT BOUND.
+    CREATE OBJECT me-&gt;zip.
+    zip-&gt;load(
+      EXPORTING
+        zip             = me-&gt;excel2007
+      EXCEPTIONS
+        zip_parse_error = 1
+        OTHERS          = 2
+    ).
+    IF sy-subrc &lt;&gt; 0.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = &apos;ZIP parse error&apos;.
+    ENDIF.
+  ENDIF.
+
+  zip-&gt;get(
+    EXPORTING
+      name                    = i_filename
+    IMPORTING
+      content                 = r_content    &quot; Contents
+    EXCEPTIONS
+      zip_index_error         = 1
+      zip_decompression_error = 2
+      OTHERS                  = 3
+  ).
+  IF sy-subrc &lt;&gt; 0.
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = &apos;ZIP index or decompression error&apos;.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="0" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="R_IXML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="BCUSER" CHANGEDON="20100823"/>
+  <source>method GET_IXML_FROM_ZIP_ARCHIVE.
+  TYPE-POOLS: ixml.
+
+  DATA: content TYPE xstring.
+
+  DATA: ixml          TYPE REF TO if_ixml,
+        streamfactory TYPE REF TO if_ixml_stream_factory,
+        istream       TYPE REF TO if_ixml_istream,
+        parser        TYPE REF TO if_ixml_parser.
+
+  content = me-&gt;get_from_zip_archive( i_filename ).
+  ixml     = cl_ixml=&gt;create( ).
+  streamfactory = ixml-&gt;create_stream_factory( ).
+  istream  = streamfactory-&gt;create_istream_xstring( content ).
+  r_ixml   = ixml-&gt;create_document( ).
+  parser   = ixml-&gt;create_parser( stream_factory = streamfactory
+                                 istream         = istream
+                                 document        = r_ixml ).
+  parser-&gt;set_normalizing( ).
+  parser-&gt;set_validating( mode = if_ixml_parser=&gt;co_no_validation ).
+  parser-&gt;parse( ).
+
+endmethod.</source>
+ </method>
+</CLAS>

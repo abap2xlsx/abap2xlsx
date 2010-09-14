@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_COMMON" VERSION="1" LANGU="E" DESCRIPT="Static common methods" UUID="5E42354C6579E82CE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_COMMON definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_COMMON
+*&quot;* do not include other source files here!!!
+public section.
+
+  class-data C_EXCEL_NUMFMT_OFFSET type INT1 value 164. &quot;#EC NOTEXT .
+
+  class-methods GET_FIELDCATALOG
+    importing
+      !IP_TABLE type STANDARD TABLE
+    returning
+      value(EP_FIELDCATALOG) type ZEXCEL_T_FIELDCATALOG .
+  class-methods CONVERT_COLUMN2ALPHA
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN
+    returning
+      value(EP_COLUMN) type ZEXCEL_CELL_COLUMN_ALPHA .
+  class-methods CONVERT_COLUMN2INT
+    importing
+      !IP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
+    returning
+      value(EP_COLUMN) type ZEXCEL_CELL_COLUMN .
+  class-methods NUMBER_TO_EXCEL_STRING
+    importing
+      value(IP_VALUE) type NUMERIC
+    returning
+      value(EP_VALUE) type ZEXCEL_CELL_VALUE .
+  class-methods DATE_TO_EXCEL_STRING
+    importing
+      !IP_VALUE type D
+    returning
+      value(EP_VALUE) type ZEXCEL_CELL_VALUE .
+  class-methods TIME_TO_EXCEL_STRING
+    importing
+      !IP_VALUE type T
+    returning
+      value(EP_VALUE) type ZEXCEL_CELL_VALUE .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_COMMON
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_COMMON
+*&quot;* do not include other source files here!!!
+private section.
+
+  class-data C_EXCEL_COL_MODULE type INT2 value 64. &quot;#EC NOTEXT .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_EXCEL_COL_MODULE" VERSION="1" LANGU="E" DESCRIPT="2 byte integer (signed)" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="1" ATTVALUE="64" ATTEXPVIRT="0" TYPTYPE="1" TYPE="INT2" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_EXCEL_NUMFMT_OFFSET" VERSION="1" LANGU="E" DESCRIPT="2 byte integer (signed)" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20100820" ATTDECLTYP="1" ATTVALUE="164" ATTEXPVIRT="0" TYPTYPE="1" TYPE="INT1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" VERSION="1" LANGU="E" DESCRIPT="Convert column indicator to Alpha" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="EP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <source>method CONVERT_COLUMN2ALPHA.
+
+  DATA: lo_conv      TYPE REF TO cl_abap_conv_in_ce,
+        lv_uccpi     TYPE i,
+        lv_text      TYPE sychar02,
+        lv_module    TYPE int4,
+        lv_column    TYPE zexcel_cell_column.
+
+  lv_column = ip_column.
+  WHILE lv_column GT 0.
+    lv_module = ( lv_column - 1 ) MOD 26.
+    lv_uccpi  = 65 + lv_module.
+
+    lv_column = ( lv_column - lv_module ) / 26.
+
+    lv_text   = cl_abap_conv_in_ce=&gt;uccpi( lv_uccpi ).
+    CONCATENATE lv_text ep_column INTO ep_column.
+  ENDWHILE.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" VERSION="1" LANGU="E" DESCRIPT="Convert column indicator to Integer" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="EP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
+  <source>method CONVERT_COLUMN2INT.
+
+  DATA: lv_uccpi     TYPE i,
+        lv_char      TYPE c,
+        lv_column(2) TYPE c.
+
+* Calculate most significant letter
+  lv_char    = ip_column+1(1).
+  IF lv_char IS NOT INITIAL. &quot;To avoid the first 26 column that have only a char in first position
+    ep_column  = cl_abap_conv_out_ce=&gt;uccpi( lv_char ).
+
+    ep_column  = ep_column MOD ( zcl_excel_common=&gt;c_excel_col_module ).
+
+    lv_char    = ip_column(1).
+    lv_uccpi   = cl_abap_conv_out_ce=&gt;uccpi( lv_char ).
+
+    lv_uccpi   = ( lv_uccpi MOD ( zcl_excel_common=&gt;c_excel_col_module ) ) * 26.
+
+    ep_column  = ep_column + lv_uccpi.
+  ELSE.
+    lv_char    = ip_column(1).
+    ep_column  = cl_abap_conv_out_ce=&gt;uccpi( lv_char ).
+    ep_column  = ep_column - zcl_excel_common=&gt;c_excel_col_module.
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100820" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="EP_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20100820" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG"/>
+  <source>method GET_FIELDCATALOG.
+
+  DATA: lr_data             TYPE REF TO data,
+        lo_tabdescr         TYPE REF TO cl_abap_structdescr,
+        ls_header           TYPE x030l,
+        lt_dfies            TYPE ddfields,
+        ls_dfies            TYPE dfies,
+        ls_fieldcatalog    TYPE zexcel_s_fieldcatalog.
+
+  CREATE DATA lr_data LIKE LINE OF ip_table.
+
+  lo_tabdescr ?= cl_abap_structdescr=&gt;describe_by_data_ref( lr_data ).
+
+  ls_header = lo_tabdescr-&gt;get_ddic_header( ).
+
+  lt_dfies = lo_tabdescr-&gt;get_ddic_field_list( ).
+
+  LOOP AT lt_dfies INTO ls_dfies.
+    MOVE-CORRESPONDING ls_dfies TO ls_fieldcatalog.
+    APPEND ls_fieldcatalog TO ep_fieldcatalog.
+  ENDLOOP.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="D"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" SCONAME="EP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
+  <source>METHOD date_to_excel_string.
+  DATA: lv_date_diff TYPE i,
+        lc_date_baseline TYPE d VALUE &apos;19000101&apos;.
+
+  lv_date_diff = ip_value - lc_date_baseline + 2.
+  ep_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = lv_date_diff ).
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Converts number to string representation in Excel format" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="NUMERIC"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
+  <source>METHOD number_to_excel_string.
+  DATA: lv_value_c TYPE c LENGTH 100.
+
+  WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
+  REPLACE ALL OCCURRENCES OF &apos;,&apos; IN lv_value_c WITH &apos;.&apos;.
+
+  ep_value = lv_value_c.
+  CONDENSE ep_value.
+
+  IF ip_value &lt; 0.
+    CONCATENATE &apos;-&apos; ep_value INTO ep_value.
+  ENDIF.
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" SCONAME="EP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100821" CHANGEDBY="BCUSER" CHANGEDON="20100821" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
+  <source>METHOD time_to_excel_string.
+  DATA: lv_seconds_in_day TYPE i,
+        lv_day_fraction TYPE f,
+        lc_time_baseline TYPE t VALUE &apos;000000&apos;,
+        lc_seconds_in_day TYPE i VALUE 86400.
+
+  lv_seconds_in_day = ip_value - lc_time_baseline.
+  lv_day_fraction = lv_seconds_in_day / lc_seconds_in_day.
+  ep_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = lv_day_fraction ).
+ENDMETHOD.</source>
+ </method>
+</CLAS>

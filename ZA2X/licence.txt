@@ -1,0 +1,20 @@
+
+ abap2xlsx"
+
+ Copyright (c) 2010 - 2011 Plinky.it
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the SAP Community Developer Edition
+ Licence as published by SAP (http://www.sap.com).
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+ @category   ABAP xlsx Manager
+ @package    ZABAP2XLSX
+ @author     Ivan Femia
+ @company    Techedge SpA
+ @homepage   http://www.plinky.it/software
+ @licence    http://www.sdn.sap.com/irj/scn/nw-downloads
+ @copyright  Copyright (c) 2010 - 2011 http://www.plinky.it
