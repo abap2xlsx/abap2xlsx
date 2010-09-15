@@ -38,10 +38,12 @@ ls_table_settings-show_row_stripes = abap_true.
 lo_worksheet-&gt;bind_table( ip_table          = lt_test
                           is_table_settings = ls_table_settings ).
 
+lo_worksheet-&gt;freeze_panes( ip_num_rows = 3 ). &quot;freeze column headers when scrolling
+
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;E&apos; ). &quot;make date field a bit wider
 column_dimension-&gt;set_width( 11 ).
 
-create object lo_excel_writer type zcl_excel_writer_2007.
+CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
 lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
 &quot; Convert to binary

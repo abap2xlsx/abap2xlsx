@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="B9BE2C4C98855D2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20100904" CHANGEDON="00000000" RELTYPE="1"/>
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="B9BE2C4C98855D2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="VONDRUSKA" CREATEDON="20100908" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_WRITER_2007 definition
   public
   final
@@ -97,28 +97,28 @@ private section.
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Content Type XML File Name" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;[Content_Types].xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="App XML File Name" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;docProps/app.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Core XML File Name" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;docProps/core.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Rels XML File Name" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;_rels/.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="xlRels XML File Name" EXPOSURE="0" STATE="1" EDITORDER="6 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;xl/_rels/workbook.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="xlSharedStrings XML File Name" EXPOSURE="0" STATE="1" EDITORDER="7 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;xl/sharedStrings.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="xlSheet XML File Name Template" EXPOSURE="0" STATE="1" EDITORDER="8 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/sheet#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="xlSheetRels XML File Name Template" EXPOSURE="0" STATE="1" EDITORDER="9 " AUTHOR="FEMIA" CREATEDON="20100705" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/_rels/sheet#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="xlStyles XML File Name" EXPOSURE="0" STATE="1" EDITORDER="10 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;xl/styles.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="xlTheme XML File Name" EXPOSURE="0" STATE="1" EDITORDER="11 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;xl/theme/theme1.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="0" STATE="1" EDITORDER="12 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="0" STATE="1" EDITORDER="13 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="0" STATE="1" EDITORDER="14 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="0" STATE="1" EDITORDER="15 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Content Type XML File Name" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;[Content_Types].xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="App XML File Name" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;docProps/app.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Core XML File Name" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;docProps/core.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Rels XML File Name" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;_rels/.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="xlRels XML File Name" EXPOSURE="0" STATE="1" EDITORDER="6 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;xl/_rels/workbook.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="xlSharedStrings XML File Name" EXPOSURE="0" STATE="1" EDITORDER="7 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;xl/sharedStrings.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="xlSheet XML File Name Template" EXPOSURE="0" STATE="1" EDITORDER="8 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/sheet#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="xlSheetRels XML File Name Template" EXPOSURE="0" STATE="1" EDITORDER="9 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/_rels/sheet#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="xlStyles XML File Name" EXPOSURE="0" STATE="1" EDITORDER="10 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;xl/styles.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="xlTheme XML File Name" EXPOSURE="0" STATE="1" EDITORDER="11 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;xl/theme/theme1.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="0" STATE="1" EDITORDER="12 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="0" STATE="1" EDITORDER="13 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="0" STATE="1" EDITORDER="14 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="0" STATE="1" EDITORDER="15 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WRITER_2007" CPDNAME="ZIF_EXCEL_WRITER~WRITE_FILE">
-  <source>METHOD zif_excel_writer~write_file.
+  <source>method ZIF_EXCEL_WRITER~WRITE_FILE.
   me-&gt;excel = io_excel.
   ep_file = me-&gt;create( ).
-ENDMETHOD.</source>
+endmethod.</source>
  </interfaceMethod>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE.
 
 
@@ -246,8 +246,8 @@ ENDMETHOD.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;[Content_Types].xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;[Content_Types].xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_CONTENT_TYPES.
 
 
@@ -331,7 +331,7 @@ endmethod.</source>
                                 value = lc_xml_node_theme_pn ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_theme_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Styles node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_override
@@ -340,7 +340,7 @@ endmethod.</source>
                                 value = lc_xml_node_styles_pn ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_styles_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; rels node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_default
@@ -349,7 +349,7 @@ endmethod.</source>
                                 value = lc_xml_node_rels_ext ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_rels_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; extension node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_default
@@ -358,7 +358,7 @@ endmethod.</source>
                                 value = lc_xml_node_xml_ext ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_xml_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Workbook node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_override
@@ -367,7 +367,7 @@ endmethod.</source>
                                 value = lc_xml_node_workb_pn ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_workb_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Properties node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_override
@@ -376,7 +376,7 @@ endmethod.</source>
                                 value = lc_xml_node_props_pn ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_props_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Worksheet node
   lv_worksheets_num = excel-&gt;get_worksheets_size( ).
@@ -392,12 +392,12 @@ endmethod.</source>
                                   value = lv_xml_node_worksheet_pn ).
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                   value = lc_xml_node_worksheet_ct ).
-    lo_element_root-&gt;append_child( lo_element ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDDO.
 
   lo_iterator = me-&gt;excel-&gt;get_worksheets_iterator( ).
-  WHILE lo_iterator-&gt;has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator-&gt;get_next( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
 
     lo_nested_iterator = lo_worksheet-&gt;get_tables_iterator( ).
 
@@ -413,7 +413,7 @@ endmethod.</source>
                                 value = lv_value ).
       lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_table_ct ).
-      lo_element_root-&gt;append_child( lo_element ).
+      lo_element_root-&gt;append_child( new_child = lo_element ).
     ENDWHILE.
   ENDWHILE.
 
@@ -424,7 +424,7 @@ endmethod.</source>
                                 value = lc_xml_node_strings_pn ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_strings_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Strings node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_override
@@ -433,7 +433,7 @@ endmethod.</source>
                                 value = lc_xml_node_core_pn ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_core_ct ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -444,8 +444,8 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/app.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/app.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_DOCPROPS_APP.
 
 
@@ -517,22 +517,22 @@ endmethod.</source>
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_application
                                                    parent = lo_document ).
   lv_value = excel-&gt;properties-&gt;application.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; DocSecurity
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_docsecurity
                                                             parent = lo_document ).
   lv_value = excel-&gt;properties-&gt;docsecurity.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; ScaleCrop
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_scalecrop
                                                    parent = lo_document ).
   lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;scalecrop ).
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; HeadingPairs
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_headingpairs
@@ -558,10 +558,10 @@ endmethod.</source>
                                                                 prefix = lc_vt_ns
                                                                 parent = lo_document ).
   lv_value = excel-&gt;get_worksheets_name( ).
-  lo_sub_element_lpstr-&gt;set_value( lv_value ).
-  lo_sub_element_variant-&gt;append_child( lo_sub_element_lpstr ). &quot; lpstr node
+  lo_sub_element_lpstr-&gt;set_value( value = lv_value ).
+  lo_sub_element_variant-&gt;append_child( new_child = lo_sub_element_lpstr ). &quot; lpstr node
 
-  lo_sub_element_vector-&gt;append_child( lo_sub_element_variant ). &quot; variant node
+  lo_sub_element_vector-&gt;append_child( new_child = lo_sub_element_variant ). &quot; variant node
 
   &quot; ** variant node
   lo_sub_element_variant = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_variant
@@ -575,14 +575,14 @@ endmethod.</source>
   lv_value = excel-&gt;get_worksheets_size( ).
   SHIFT lv_value RIGHT DELETING TRAILING space.
   SHIFT lv_value LEFT DELETING LEADING space.
-  lo_sub_element_i4-&gt;set_value( lv_value ).
-  lo_sub_element_variant-&gt;append_child( lo_sub_element_i4 ). &quot; lpstr node
+  lo_sub_element_i4-&gt;set_value( value = lv_value ).
+  lo_sub_element_variant-&gt;append_child( new_child = lo_sub_element_i4 ). &quot; lpstr node
 
-  lo_sub_element_vector-&gt;append_child( lo_sub_element_variant ). &quot; variant node
+  lo_sub_element_vector-&gt;append_child( new_child = lo_sub_element_variant ). &quot; variant node
 
-  lo_element-&gt;append_child( lo_sub_element_vector ). &quot; vector node
+  lo_element-&gt;append_child( new_child = lo_sub_element_vector ). &quot; vector node
 
-  lo_element_root-&gt;append_child( lo_element ). &quot; HeadingPairs
+  lo_element_root-&gt;append_child( new_child = lo_element ). &quot; HeadingPairs
 
 
   &quot; TitlesOfParts
@@ -611,13 +611,13 @@ endmethod.</source>
                                                                   parent = lo_document ).
     lo_worksheet ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
     lv_value = lo_worksheet-&gt;title.
-    lo_sub_element_lpstr-&gt;set_value( lv_value ).
-    lo_sub_element_vector-&gt;append_child( lo_sub_element_lpstr ). &quot; lpstr node
+    lo_sub_element_lpstr-&gt;set_value( value = lv_value ).
+    lo_sub_element_vector-&gt;append_child( new_child = lo_sub_element_lpstr ). &quot; lpstr node
   ENDWHILE.
 
-  lo_element-&gt;append_child( lo_sub_element_vector ). &quot; vector node
+  lo_element-&gt;append_child( new_child = lo_sub_element_vector ). &quot; vector node
 
-  lo_element_root-&gt;append_child( lo_element ). &quot; TitlesOfParts
+  lo_element_root-&gt;append_child( new_child = lo_element ). &quot; TitlesOfParts
 
 
 
@@ -625,36 +625,36 @@ endmethod.</source>
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_company
                                                    parent = lo_document ).
   lv_value = excel-&gt;properties-&gt;company.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; LinksUpToDate
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_linksuptodate
                                                    parent = lo_document ).
   lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;linksuptodate ).
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; SharedDoc
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_shareddoc
                                                    parent = lo_document ).
   lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;shareddoc ).
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; HyperlinksChanged
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_hyperlinkschanged
                                                    parent = lo_document ).
   lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;hyperlinkschanged ).
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; AppVersion
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_appversion
                                                    parent = lo_document ).
   lv_value = excel-&gt;properties-&gt;appversion.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -665,8 +665,8 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/core.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/core.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_DOCPROPS_CORE.
 
 
@@ -737,16 +737,16 @@ endmethod.</source>
                                                       prefix = lc_dc_ns
                                                       parent = lo_document ).
   lv_value = excel-&gt;properties-&gt;creator.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; lastModifiedBy node
   lo_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_lastmodifiedby
                                                       prefix = lc_cp_ns
                                                       parent = lo_document ).
   lv_value = excel-&gt;properties-&gt;lastmodifiedby.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Created node
   lo_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_created
@@ -757,8 +757,8 @@ endmethod.</source>
                                 value   = lc_xml_attr_target ).
   lv_value = excel-&gt;properties-&gt;created.
   lv_value = &apos;2010-07-04T14:58:53Z&apos;.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Modified node
   lo_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_modified
@@ -769,8 +769,8 @@ endmethod.</source>
                                 value   = lc_xml_attr_target ).
   lv_value = excel-&gt;properties-&gt;modified.
   lv_value = &apos;2010-07-04T14:58:53Z&apos;.
-  lo_element-&gt;set_value( lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -781,8 +781,8 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;_rels/.rels&apos;" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;_rels/.rels&apos;" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_RELATIONSHIPS.
 
 
@@ -847,7 +847,7 @@ endmethod.</source>
                                 value = lc_xml_node_rId3_tp ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                                 value = lc_xml_node_rId3_tg ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; Styles node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
@@ -858,7 +858,7 @@ endmethod.</source>
                                 value = lc_xml_node_rId2_tp ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                                 value = lc_xml_node_rId2_tg ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; rels node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
@@ -869,7 +869,7 @@ endmethod.</source>
                                 value = lc_xml_node_rId1_tp ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                                 value = lc_xml_node_rId1_tg ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -880,8 +880,8 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/_rels/workbook.xml.rels&apos;" EXPOSURE="0" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/_rels/workbook.xml.rels&apos;" EXPOSURE="0" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_RELATIONSHIPS.
 
 
@@ -960,7 +960,7 @@ endmethod.</source>
                                 value = lc_xml_node_rid_styles_tp ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                                 value = lc_xml_node_rid_styles_tg ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
 
   &quot; Relationship node
@@ -978,7 +978,7 @@ endmethod.</source>
                                 value = lc_xml_node_rid_theme_tp ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                                 value = lc_xml_node_rid_theme_tg ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   lv_size = excel-&gt;get_worksheets_size( ).
 
@@ -999,7 +999,7 @@ endmethod.</source>
     value = lc_xml_node_rid_sheet_tp ).
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
     value = lv_xml_node_ridx_tg ).
-    lo_element_root-&gt;append_child( lo_element ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDDO.
 
   &quot; Relationship node
@@ -1017,7 +1017,7 @@ endmethod.</source>
                                 value = lc_xml_node_rid_shared_tp ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                                 value = lc_xml_node_rid_shared_tg ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -1028,8 +1028,8 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sharedStrings.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="7 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sharedStrings.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="7 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_SHAREDSTRINGS.
 
 
@@ -1131,9 +1131,9 @@ endmethod.</source>
                                                      parent = lo_document ).
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_t
                                                          parent = lo_document ).
-    lo_sub_element-&gt;set_value( &lt;fs_sheet_string&gt;-string_value ).
-    lo_element-&gt;append_child( lo_sub_element ).
-    lo_element_root-&gt;append_child( lo_element ).
+    lo_sub_element-&gt;set_value( value = &lt;fs_sheet_string&gt;-string_value ).
+    lo_element-&gt;append_child( new_child = lo_sub_element ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDLOOP.
 
 **********************************************************************
@@ -1145,10 +1145,10 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sheet.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sheet.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_SHEET.
 **********************************************************************
 * abap2xlsx
@@ -1187,6 +1187,7 @@ endmethod.</source>
         lc_xml_node_sheetviews        TYPE string VALUE &apos;sheetViews&apos;,
         lc_xml_node_sheetview         TYPE string VALUE &apos;sheetView&apos;,
         lc_xml_node_selection         TYPE string VALUE &apos;selection&apos;,
+        lc_xml_node_pane              TYPE string VALUE &apos;pane&apos;,
         lc_xml_node_sheetformatpr     TYPE string VALUE &apos;sheetFormatPr&apos;,
         lc_xml_node_cols              TYPE string VALUE &apos;cols&apos;,
         lc_xml_node_col               TYPE string VALUE &apos;col&apos;,
@@ -1285,7 +1286,10 @@ endmethod.</source>
         ls_percent_val    TYPE string,
         lv_cell_row_s     TYPE string,
         ls_last_row       TYPE zexcel_s_cell_data,
-        ls_style_mapping  TYPE zexcel_s_styles_mapping.
+        ls_style_mapping  TYPE zexcel_s_styles_mapping,
+        lv_freeze_cell_row TYPE zexcel_cell_row,
+        lv_freeze_cell_column TYPE zexcel_cell_column,
+        lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha.
 
   DATA: default_col_dimension TYPE REF TO zcl_excel_worksheet_columndime,
         default_row_dimension TYPE REF TO zcl_excel_worksheet_rowdimensi.
@@ -1346,17 +1350,17 @@ endmethod.</source>
   lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_summaryright
                                   value = &apos;1&apos; ).
 
-  lo_element-&gt;append_child( lo_element_2 ).
+  lo_element-&gt;append_child( new_child = lo_element_2 ).
   &quot; TODO pageSetUpPr
 
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
   &quot; dimension node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dimension
                                                    parent = lo_document ).
   lv_value = io_worksheet-&gt;get_dimension_range( ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_ref
                                 value = lv_value ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; sheetViews node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_sheetviews
@@ -1377,6 +1381,43 @@ endmethod.</source>
   lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_showrowcolheaders
                                           value = &apos;1&apos; ).
 
+  &quot; freeze panes
+  io_worksheet-&gt;get_freeze_cell( IMPORTING ep_row = lv_freeze_cell_row
+                                 ep_column = lv_freeze_cell_column ).
+
+  IF lv_freeze_cell_row IS NOT INITIAL AND lv_freeze_cell_column IS NOT INITIAL.
+    lo_element_3 = lo_document-&gt;create_simple_element( name   = lc_xml_node_pane
+                                                       parent = lo_element_2 ).
+
+    IF lv_freeze_cell_row &gt; 1.
+      lv_value = lv_freeze_cell_row - 1.
+      CONDENSE lv_value.
+      lo_element_3-&gt;set_attribute_ns( name  = &apos;ySplit&apos;
+                                  value = lv_value ).
+    ENDIF.
+
+    IF lv_freeze_cell_column &gt; 1.
+      lv_value = lv_freeze_cell_column - 1.
+      CONDENSE lv_value.
+      lo_element_3-&gt;set_attribute_ns( name  = &apos;xSplit&apos;
+                                  value = lv_value ).
+    ENDIF.
+
+    lv_freeze_cell_column_alpha = zcl_excel_common=&gt;convert_column2alpha( ip_column = lv_freeze_cell_column ).
+    lv_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = lv_freeze_cell_row  ).
+    CONCATENATE lv_freeze_cell_column_alpha lv_value INTO lv_value.
+    lo_element_3-&gt;set_attribute_ns( name  = &apos;topLeftCell&apos;
+                                  value = lv_value ).
+
+    lo_element_3-&gt;set_attribute_ns( name  = &apos;activePane&apos;
+                                  value = &apos;bottomRight&apos; ).
+
+    lo_element_3-&gt;set_attribute_ns( name  = &apos;state&apos;
+                                  value = &apos;frozen&apos; ).
+
+    lo_element_2-&gt;append_child( lo_element_3 ).
+  ENDIF.
+
   &quot; selection node
   lo_element_3 = lo_document-&gt;create_simple_element( name   = lc_xml_node_selection
                                                      parent = lo_document ).
@@ -1387,11 +1428,11 @@ endmethod.</source>
   lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_sqref
                                   value = lv_value ).
 
-  lo_element_2-&gt;append_child( lo_element_3 ). &quot; sheetView node
+  lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; sheetView node
 
-  lo_element-&gt;append_child( lo_element_2 ). &quot; sheetView node
+  lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; sheetView node
 
-  lo_element_root-&gt;append_child( lo_element ). &quot; sheetViews node
+  lo_element_root-&gt;append_child( new_child = lo_element ). &quot; sheetViews node
 
 
   column_dimensions[] = io_worksheet-&gt;get_column_dimensions( ).
@@ -1446,7 +1487,7 @@ endmethod.</source>
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_outlinelevelcol
                                 value = lv_value ).
 
-  lo_element_root-&gt;append_child( lo_element ). &quot; sheetFormatPr node
+  lo_element_root-&gt;append_child( new_child = lo_element ). &quot; sheetFormatPr node
   &quot; cols node
   IF NOT column_dimensions IS INITIAL.
     lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_cols
@@ -1511,10 +1552,10 @@ endmethod.</source>
       lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_style
                                       value = lv_value ).
 
-      lo_element-&gt;append_child( lo_element_2 ). &quot; col node
+      lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; col node
     ENDLOOP.
   ENDIF.
-  lo_element_root-&gt;append_child( lo_element ). &quot; cols node
+  lo_element_root-&gt;append_child( new_child = lo_element ). &quot; cols node
   &quot; sheetData node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_sheetdata
                                                    parent = lo_document ).
@@ -1593,8 +1634,8 @@ endmethod.</source>
       lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_f
                                                          parent = lo_document ).
       lv_value = &lt;ls_sheet_content&gt;-cell_formula.
-      lo_element_4-&gt;set_value( lv_value ).
-      lo_element_3-&gt;append_child( lo_element_4 ). &quot; fomula node
+      lo_element_4-&gt;set_value( value = lv_value ).
+      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
     ELSE.
       IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
       lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
@@ -1607,28 +1648,28 @@ endmethod.</source>
 
       IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos;.
         lv_value = me-&gt;get_shared_string_index( &lt;ls_sheet_content&gt;-cell_value ).
-        lo_element_4-&gt;set_value( lv_value ).
+        lo_element_4-&gt;set_value( value = lv_value ).
         ELSE.
           lv_value = &lt;ls_sheet_content&gt;-cell_value.
-          lo_element_4-&gt;set_value( lv_value ).
+          lo_element_4-&gt;set_value( value = lv_value ).
           ENDIF.
 
-      lo_element_3-&gt;append_child( lo_element_4 ). &quot; value node
+      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; value node
     ENDIF.
 
-    lo_element_2-&gt;append_child( lo_element_3 ). &quot; column node
+    lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; column node
     IF ls_last_row-cell_row NE &lt;ls_sheet_content&gt;-cell_row.
-      lo_element-&gt;append_child( lo_element_2 ). &quot; row node
+      lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; row node
       ls_last_row = &lt;ls_sheet_content&gt;.
     ENDIF.
 
   ENDLOOP.
-  lo_element_root-&gt;append_child( lo_element ). &quot; sheetData node
+  lo_element_root-&gt;append_child( new_child = lo_element ). &quot; sheetData node
 
   &quot; Conditional formatting node
   lo_iterator = io_worksheet-&gt;get_cond_styles_iterator( ).
-  WHILE lo_iterator-&gt;has_next( ) EQ abap_true.
-    lo_style_conditional ?= lo_iterator-&gt;get_next( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_style_conditional ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
     IF lo_style_conditional-&gt;rule IS INITIAL.
       CONTINUE.
     ENDIF.
@@ -1705,11 +1746,11 @@ endmethod.</source>
                                           value = &apos;percent&apos; ).
           lo_element_4-&gt;set_attribute_ns( name  = lc_xml_attr_val
                                           value = ls_percent_val ).
-          lo_element_3-&gt;append_child( lo_element_4 ). &quot; cfvo node
+          lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; cfvo node
         ENDLOOP.
 
 
-        lo_element_2-&gt;append_child( lo_element_3 ). &quot; iconset node
+        lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; iconset node
       WHEN zcl_excel_style_conditional=&gt;c_rule_cellis.
         lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_dxfid
                                         value = &apos;0&apos; ). &quot; @TODO &lt;*****************************
@@ -1720,14 +1761,14 @@ endmethod.</source>
         lo_element_3 = lo_document-&gt;create_simple_element( name   = lc_xml_node_formula
                                                            parent = lo_document ).
         lv_value = lo_style_conditional-&gt;formula.
-        lo_element_3-&gt;set_value( lv_value ).
-        lo_element_2-&gt;append_child( lo_element_3 ). &quot; formula node
+        lo_element_3-&gt;set_value( value = lv_value ).
+        lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; formula node
 
     ENDCASE.
 
-    lo_element-&gt;append_child( lo_element_2 ). &quot; cfRule node
+    lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; cfRule node
 
-    lo_element_root-&gt;append_child( lo_element ). &quot; Conditional formatting node
+    lo_element_root-&gt;append_child( new_child = lo_element ). &quot; Conditional formatting node
   ENDWHILE.
 
 
@@ -1737,8 +1778,8 @@ endmethod.</source>
                                                      parent = lo_document ).
     &quot; Conditional formatting node
     lo_iterator = io_worksheet-&gt;get_data_validations_iterator( ).
-    WHILE lo_iterator-&gt;has_next( ) EQ abap_true.
-      lo_data_validation ?= lo_iterator-&gt;get_next( ).
+    WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+      lo_data_validation ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
       &quot; dataValidation node
       lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_datavalidation
                                                          parent = lo_document ).
@@ -1776,13 +1817,13 @@ endmethod.</source>
       lo_element_3 = lo_document-&gt;create_simple_element( name   = lc_xml_node_formula1
                                                          parent = lo_document ).
       lv_value = lo_data_validation-&gt;value.
-      lo_element_3-&gt;set_value( lv_value ).
+      lo_element_3-&gt;set_value( value = lv_value ).
 
-      lo_element_2-&gt;append_child( lo_element_3 ). &quot; formula1 node
+      lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; formula1 node
 
-      lo_element-&gt;append_child( lo_element_2 ). &quot; dataValidation node
+      lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; dataValidation node
     ENDWHILE.
-    lo_element_root-&gt;append_child( lo_element ). &quot; dataValidations node
+    lo_element_root-&gt;append_child( new_child = lo_element ). &quot; dataValidations node
   ENDIF.
 
   t_range_merge = io_worksheet-&gt;get_merge( ).
@@ -1797,8 +1838,8 @@ endmethod.</source>
 
       lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_ref
                                       value = &lt;fs_range_merge&gt; ).
-      lo_element-&gt;append_child( lo_element_2 ).
-      lo_element_root-&gt;append_child( lo_element ).
+      lo_element-&gt;append_child( new_child = lo_element_2 ).
+      lo_element_root-&gt;append_child( new_child = lo_element ).
       io_worksheet-&gt;delete_merge( ).
     ENDLOOP.
   ENDIF.
@@ -1819,7 +1860,7 @@ endmethod.</source>
                                 value = &apos;0.3&apos; ). &quot; @TODO &lt;*****************************
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_footer
                                 value = &apos;0.3&apos; ). &quot; @TODO &lt;*****************************
-  lo_element_root-&gt;append_child( lo_element ). &quot; sheetFormatPr node
+  lo_element_root-&gt;append_child( new_child = lo_element ). &quot; sheetFormatPr node
 
 * tables
   DATA lv_table_count TYPE i.
@@ -1835,8 +1876,8 @@ endmethod.</source>
 
     lv_table_count = 0.
     lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
-    WHILE lo_iterator-&gt;has_next( ) EQ abap_true.
-      lo_table ?= lo_iterator-&gt;get_next( ).
+    WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+      lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
       add 1 to lv_table_count.
 
       lv_value = lv_table_count.
@@ -1846,11 +1887,11 @@ endmethod.</source>
                                                       parent = lo_element ).
       lo_element_2-&gt;set_attribute_ns( name  = &apos;r:id&apos;
                                      value = lv_value ).
-      lo_element-&gt;append_child( lo_element_2 ).
+      lo_element-&gt;append_child( new_child = lo_element_2 ).
 
     ENDWHILE.
 
-    lo_element_root-&gt;append_child( lo_element ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
 
   ENDIF.
 
@@ -1863,9 +1904,9 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="0" STATE="1" EDITORDER="9 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100705" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100705" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="0" STATE="1" EDITORDER="9 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100908" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_SHEET_RELS.
 
 
@@ -1919,8 +1960,8 @@ endmethod.</source>
   &quot; Add sheet Relationship nodes here
   lv_counter = 0.
   lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
-  WHILE lo_iterator-&gt;has_next( ) EQ abap_true.
-    lo_table ?= lo_iterator-&gt;get_next( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
     ADD 1 TO lv_counter.
 
     lv_value = lv_counter.
@@ -1938,7 +1979,7 @@ endmethod.</source>
     CONCATENATE &apos;../tables/&apos; lv_value &apos;.xml&apos; INTO lv_value.
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                               value = lv_value ).
-    lo_element_root-&gt;append_child( lo_element ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDWHILE.
 
 **********************************************************************
@@ -1950,9 +1991,9 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="10 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD create_xl_styles.
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="10 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>method CREATE_XL_STYLES.
 
 
 ** Constant node name
@@ -2123,8 +2164,8 @@ endmethod.</source>
 
 * Compress styles
   lo_iterator = excel-&gt;get_styles_iterator( ).
-  WHILE lo_iterator-&gt;has_next( ) EQ abap_true.
-    lo_style ?= lo_iterator-&gt;get_next( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_style ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
     ls_font       = lo_style-&gt;font-&gt;get_structure( ).
     ls_fill       = lo_style-&gt;fill-&gt;get_structure( ).
     ls_border     = lo_style-&gt;borders-&gt;get_structure( ).
@@ -2235,7 +2276,7 @@ endmethod.</source>
     lv_value = ls_numfmt-numfmt.
     lo_element_numfmt-&gt;set_attribute_ns( name  = lc_xml_attr_formatcode
                                       value = lv_value ).
-    lo_element_numfmts-&gt;append_child( lo_element_numfmt ).
+    lo_element_numfmts-&gt;append_child( new_child = lo_element_numfmt ).
   ENDLOOP.
 
   &quot; create font elements
@@ -2245,12 +2286,12 @@ endmethod.</source>
     IF ls_font-bold EQ abap_true.
       lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_b
                                                            parent = lo_document ).
-      lo_element_font-&gt;append_child( lo_sub_element ).
+      lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     ENDIF.
     IF ls_font-italic EQ abap_true.
       lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_i
                                                            parent = lo_document ).
-      lo_element_font-&gt;append_child( lo_sub_element ).
+      lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     ENDIF.
     IF ls_font-underline EQ abap_true.
       lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_u
@@ -2258,12 +2299,12 @@ endmethod.</source>
       lv_value = ls_font-underline_mode.
       lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_val
                                         value = lv_value ).
-      lo_element_font-&gt;append_child( lo_sub_element ).
+      lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     ENDIF.
     IF ls_font-strikethrough EQ abap_true.
       lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_strike
                                                            parent = lo_document ).
-      lo_element_font-&gt;append_child( lo_sub_element ).
+      lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     ENDIF.
     &quot;size
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_sz
@@ -2273,21 +2314,21 @@ endmethod.</source>
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_val
                                       value = lv_value ).
-    lo_element_font-&gt;append_child( lo_sub_element ).
+    lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     &quot;color
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_color
                                                          parent = lo_document ).
     lv_value = ls_font-color.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                       value = lv_value ).
-    lo_element_font-&gt;append_child( lo_sub_element ).
+    lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     &quot;name
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_name
                                                          parent = lo_document ).
     lv_value = ls_font-name.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_val
                                       value = lv_value ).
-    lo_element_font-&gt;append_child( lo_sub_element ).
+    lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     &quot;family
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_family
                                                          parent = lo_document ).
@@ -2296,15 +2337,15 @@ endmethod.</source>
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_val
                                       value = lv_value ).
-    lo_element_font-&gt;append_child( lo_sub_element ).
+    lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     &quot;scheme
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_scheme
                                                          parent = lo_document ).
     lv_value = ls_font-scheme.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_val
                                       value = lv_value ).
-    lo_element_font-&gt;append_child( lo_sub_element ).
-    lo_element_fonts-&gt;append_child( lo_element_font ).
+    lo_element_font-&gt;append_child( new_child = lo_sub_element ).
+    lo_element_fonts-&gt;append_child( new_child = lo_element_font ).
     APPEND ls_font-color TO lt_colors.
   ENDLOOP.
 
@@ -2326,7 +2367,7 @@ endmethod.</source>
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
 
-      lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; fgcolor
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; fgcolor
     ENDIF.
     &quot; bgcolor
     IF ls_fill-bgcolor IS NOT INITIAL.
@@ -2336,11 +2377,11 @@ endmethod.</source>
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_indexed
                                           value = lv_value ).
 
-      lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; bgcolor
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; bgcolor
     ENDIF.
 
-    lo_element_fill-&gt;append_child( lo_sub_element ).&quot;pattern
-    lo_element_fills-&gt;append_child( lo_element_fill ).
+    lo_element_fill-&gt;append_child( new_child = lo_sub_element ).&quot;pattern
+    lo_element_fills-&gt;append_child( new_child = lo_element_fill ).
     &quot; Collect color
     IF ls_fill-fgcolor IS NOT INITIAL.
       APPEND ls_fill-fgcolor TO lt_colors.
@@ -2365,11 +2406,11 @@ endmethod.</source>
       lv_value = ls_border-left_color.
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
-      lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; color
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
 *     Collect color
       APPEND ls_border-left_color TO lt_colors.
     ENDIF.
-    lo_element_border-&gt;append_child( lo_sub_element ).
+    lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
     &quot;right
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_right
@@ -2385,11 +2426,11 @@ endmethod.</source>
       lv_value = ls_border-right_color.
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
-      lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; color
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
 *     Collect color
       APPEND ls_border-right_color TO lt_colors.
     ENDIF.
-    lo_element_border-&gt;append_child( lo_sub_element ).
+    lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
     &quot;top
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_top
@@ -2405,11 +2446,11 @@ endmethod.</source>
       lv_value = ls_border-top_color.
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
-      lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; color
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
 *     Collect color
       APPEND ls_border-top_color TO lt_colors.
     ENDIF.
-    lo_element_border-&gt;append_child( lo_sub_element ).
+    lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
     &quot;bottom
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_bottom
@@ -2425,11 +2466,11 @@ endmethod.</source>
       lv_value = ls_border-bottom_color.
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
-      lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; color
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
 *     Collect color
       APPEND ls_border-bottom_color TO lt_colors.
     ENDIF.
-    lo_element_border-&gt;append_child( lo_sub_element ).
+    lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
     &quot;diagonal
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_diagonal
@@ -2445,12 +2486,12 @@ endmethod.</source>
       lv_value = ls_border-diagonal_color.
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
-      lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; color
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
 *     Collect color
       APPEND ls_border-diagonal_color TO lt_colors.
     ENDIF.
-    lo_element_border-&gt;append_child( lo_sub_element ).
-    lo_element_borders-&gt;append_child( lo_element_border ).
+    lo_element_border-&gt;append_child( new_child = lo_sub_element ).
+    lo_element_borders-&gt;append_child( new_child = lo_element_border ).
   ENDLOOP.
 
   &quot; update attribute &quot;count&quot;
@@ -2480,10 +2521,10 @@ endmethod.</source>
                                         value = lv_value ).
 
   &quot; Append to root node
-  lo_element_root-&gt;append_child( lo_element_numfmts ).
-  lo_element_root-&gt;append_child( lo_element_fonts ).
-  lo_element_root-&gt;append_child( lo_element_fills ).
-  lo_element_root-&gt;append_child( lo_element_borders ).
+  lo_element_root-&gt;append_child( new_child = lo_element_numfmts ).
+  lo_element_root-&gt;append_child( new_child = lo_element_fonts ).
+  lo_element_root-&gt;append_child( new_child = lo_element_fills ).
+  lo_element_root-&gt;append_child( new_child = lo_element_borders ).
 
   &quot; cellstylexfs node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_cellstylexfs
@@ -2502,8 +2543,8 @@ endmethod.</source>
   lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_borderid
                                     value = lc_off ).
 
-  lo_element-&gt;append_child( lo_sub_element ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;append_child( new_child = lo_sub_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   LOOP AT lt_cellxfs INTO ls_cellxfs.
     lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_xf
@@ -2605,12 +2646,12 @@ endmethod.</source>
                                             value = lv_value ).
       ENDIF.
 
-      lo_element-&gt;append_child( lo_sub_element_2 ).
+      lo_element-&gt;append_child( new_child = lo_sub_element_2 ).
     ENDIF.
-    lo_element_cellxfs-&gt;append_child( lo_element ).
+    lo_element_cellxfs-&gt;append_child( new_child = lo_element ).
   ENDLOOP.
 
-  lo_element_root-&gt;append_child( lo_element_cellxfs ).
+  lo_element_root-&gt;append_child( new_child = lo_element_cellxfs ).
 
   &quot; cellStyles node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_cellstyles
@@ -2627,15 +2668,15 @@ endmethod.</source>
   lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_builtinid
                                     value = lc_off ).
 
-  lo_element-&gt;append_child( lo_sub_element ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element-&gt;append_child( new_child = lo_sub_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; dxfs node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxfs
                                                    parent = lo_document ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_count
                                 value = &apos;0&apos; ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; tableStyles node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_tablestyles
@@ -2646,7 +2687,7 @@ endmethod.</source>
                                 value = zcl_excel_table=&gt;builtinstyle_medium9 ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_defaultpivotstyle
                                 value = zcl_excel_table=&gt;builtinstyle_pivot_light16 ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; colors node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_colors
@@ -2665,11 +2706,11 @@ endmethod.</source>
     lv_value = ls_color.
     lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                         value = lv_value ).
-    lo_sub_element-&gt;append_child( lo_sub_element_2 ).&quot; color node
+    lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color node
   ENDLOOP.
 
-  lo_element-&gt;append_child( lo_sub_element ).&quot; mruColors node
-  lo_element_root-&gt;append_child( lo_element ).&quot; colors node
+  lo_element-&gt;append_child( new_child = lo_sub_element ).&quot; mruColors node
+  lo_element_root-&gt;append_child( new_child = lo_element ).&quot; colors node
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -2678,12 +2719,12 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="12 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD create_xl_table.
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="12 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100908" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100908" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100908" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>method CREATE_XL_TABLE.
 
   DATA: lc_xml_node_table         TYPE string VALUE &apos;table&apos;,
         lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
@@ -2772,7 +2813,7 @@ ENDMETHOD.</source>
   lo_element-&gt;set_attribute_ns( name  = &apos;ref&apos;
                                 value = lv_ref ).
 
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot;columns
   lo_element = lo_document-&gt;create_simple_element( name   = &apos;tableColumns&apos;
@@ -2788,7 +2829,7 @@ ENDMETHOD.</source>
   lo_element-&gt;set_attribute_ns( name  = &apos;count&apos;
                                 value = lv_value ).
 
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   LOOP AT io_table-&gt;fieldcat INTO ls_fieldcat WHERE dynpfld = abap_true.
     lo_element2 = lo_document-&gt;create_simple_element_ns( name   = &apos;tableColumn&apos;
@@ -2807,7 +2848,7 @@ ENDMETHOD.</source>
                                         value = ls_fieldcat-totals_function ).
     ENDIF.
 
-    lo_element-&gt;append_child( lo_element2 ).
+    lo_element-&gt;append_child( new_child = lo_element2 ).
   ENDLOOP.
 
 
@@ -2841,7 +2882,7 @@ ENDMETHOD.</source>
   lo_element-&gt;set_attribute_ns( name  = &apos;showColumnStripes&apos;
                                      value = lv_value ).
 
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 **********************************************************************
 * STEP 5: Create xstring stream
   lo_streamfactory = lo_ixml-&gt;create_stream_factory( ).
@@ -2849,10 +2890,10 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="11 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="11 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_THEME.
 
 
@@ -2940,8 +2981,8 @@ ENDMETHOD.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="13 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="13 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_WORKBOOK.
 
 
@@ -3028,14 +3069,14 @@ endmethod.</source>
                                 value = &apos;4&apos; ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_rupbuild
                                 value = &apos;4506&apos; ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; fileVersion node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_workbookpr
                                                    parent = lo_document ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_themeversion
                                 value = &apos;124226&apos; ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; bookviews node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_bookviews
@@ -3051,8 +3092,8 @@ endmethod.</source>
                                     value = &apos;19035&apos; ).
   lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_windowheight
                                     value = &apos;8445&apos; ).
-  lo_element-&gt;append_child( lo_sub_element ).&quot; bookview node
-  lo_element_root-&gt;append_child( lo_element ).&quot; bookviews node
+  lo_element-&gt;append_child( new_child = lo_sub_element ).&quot; bookview node
+  lo_element_root-&gt;append_child( new_child = lo_element ).&quot; bookviews node
 
   &quot; sheets node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_sheets
@@ -3077,9 +3118,9 @@ endmethod.</source>
     lo_sub_element-&gt;set_attribute_ns( name    = lc_xml_attr_id
                                       prefix  = lc_r_ns
                                       value   = lv_xml_node_ridx_id ).
-    lo_element-&gt;append_child( lo_sub_element ). &quot; sheet node
+    lo_element-&gt;append_child( new_child = lo_sub_element ). &quot; sheet node
   ENDWHILE.
-  lo_element_root-&gt;append_child( lo_element ).&quot; sheets node
+  lo_element_root-&gt;append_child( new_child = lo_element ).&quot; sheets node
 
 
   &quot; ranges node
@@ -3096,17 +3137,17 @@ endmethod.</source>
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_name
                                       value = lv_value ).
     lv_value = lo_range-&gt;get_value( ).
-    lo_sub_element-&gt;set_value( lv_value ).
-    lo_element-&gt;append_child( lo_sub_element ). &quot; range node
+    lo_sub_element-&gt;set_value( value = lv_value ).
+    lo_element-&gt;append_child( new_child = lo_sub_element ). &quot; range node
   ENDWHILE.
-  lo_element_root-&gt;append_child( lo_element ).&quot; ranges node
+  lo_element_root-&gt;append_child( new_child = lo_element ).&quot; ranges node
 
   &quot; calcPr node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_calcpr
                                                    parent = lo_document ).
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_calcid
                                 value = &apos;125725&apos; ).
-  lo_element_root-&gt;append_child( lo_element ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
 
 **********************************************************************
@@ -3118,9 +3159,9 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="14 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="EP_BOOLEAN" VERSION="1" LANGU="E" DESCRIPT="Boolean value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="CHAR5"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="14 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="EP_BOOLEAN" VERSION="1" LANGU="E" DESCRIPT="Boolean value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="CHAR5"/>
   <source>method FLAG2BOOL.
 
 
@@ -3131,9 +3172,9 @@ endmethod.</source>
   ENDIF.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="0" STATE="1" EDITORDER="15 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100904" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="IP_CELL_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="EP_INDEX" VERSION="1" LANGU="E" DESCRIPT="Natural Number" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20100831" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="0" STATE="1" EDITORDER="15 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="IP_CELL_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="EP_INDEX" VERSION="1" LANGU="E" DESCRIPT="Natural Number" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20100823" CHANGEDBY="VONDRUSKA" CHANGEDON="20100913" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
   <source>method GET_SHARED_STRING_INDEX.
 
 
