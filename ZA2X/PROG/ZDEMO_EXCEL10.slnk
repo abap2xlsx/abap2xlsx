@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="FEMIA" UDAT="20100905" VERN="000056" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100905" STIME="163956" IDATE="20100905" ITIME="163956" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="VONDRUSKA" UDAT="20100917" VERN="000058" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100917" STIME="105913" IDATE="20100917" ITIME="105913" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
@@ -77,7 +77,7 @@ lo_worksheet-&gt;bind_table( ip_table          = lt_test
                           it_field_catalog  = lt_field_catalog ).
 
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;D&apos; ). &quot;make date field a bit wider
-column_dimension-&gt;set_width( 13 ).
+column_dimension-&gt;set_width( ip_width = 13 ).
 
 create object lo_excel_writer type zcl_excel_writer_2007.
 lv_file = lo_excel_writer-&gt;write_file( lo_excel ).

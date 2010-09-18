@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL16" VARCL="X" SUBC="1" CNAM="VONDRUSKA" CDAT="20100914" UNAM="VONDRUSKA" UDAT="20100917" VERN="000051" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100917" STIME="082516" IDATE="20100917" ITIME="082516" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="Test for excel - drawings" LENGTH="25 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZIFE_TEST_EXCEL
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel16.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_drawing              TYPE REF TO zcl_excel_drawing,
+      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE STANDARD TABLE OF solisti1.
+
+&quot; Creates active sheet
+CREATE OBJECT lo_excel.
+
+&quot;Load samle image
+DATA: lt_bin TYPE solix_tab,
+      lv_len TYPE i,
+      lv_content TYPE xstring,
+      ls_key TYPE wwwdatatab.
+
+CALL METHOD cl_gui_frontend_services=&gt;gui_upload
+  EXPORTING
+    filename                = &apos;c:\Program Files\SAP\FrontEnd\SAPgui\wwi\graphics\W_bio.bmp&apos;
+    filetype                = &apos;BIN&apos;
+  IMPORTING
+    filelength              = lv_len
+  CHANGING
+    data_tab                = lt_bin
+  EXCEPTIONS
+    file_open_error         = 1
+    file_read_error         = 2
+    no_batch                = 3
+    gui_refuse_filetransfer = 4
+    invalid_type            = 5
+    no_authority            = 6
+    unknown_error           = 7
+    bad_data_format         = 8
+    header_not_allowed      = 9
+    separator_not_allowed   = 10
+    header_too_long         = 11
+    unknown_dp_error        = 12
+    access_denied           = 13
+    dp_out_of_memory        = 14
+    disk_full               = 15
+    dp_timeout              = 16
+    not_supported_by_gui    = 17
+    error_no_gui            = 18
+    OTHERS                  = 19.
+IF sy-subrc &lt;&gt; 0.
+* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
+*            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+ENDIF.
+
+CALL FUNCTION &apos;SCMS_BINARY_TO_XSTRING&apos;
+  EXPORTING
+    input_length = lv_len
+  IMPORTING
+    buffer       = lv_content
+  TABLES
+    binary_tab   = lt_bin
+  EXCEPTIONS
+    failed       = 1
+    OTHERS       = 2.
+
+&quot; Get active sheet
+lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+lo_worksheet-&gt;title = &apos;Sheet1&apos;.
+lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Image from web repository (SMW0)&apos; ).
+
+&quot; create global drawing, set position and media from web repository
+lo_drawing = lo_excel-&gt;add_new_drawing( ).
+lo_drawing-&gt;set_position( ip_from_row = 3
+                          ip_from_col = &apos;B&apos; ).
+
+ls_key-relid = &apos;MI&apos;.
+ls_key-objid = &apos;SAPLOGO.GIF&apos;.
+lo_drawing-&gt;set_media_www( ip_key = ls_key
+                           ip_width = 166
+                           ip_height = 75 ).
+
+&quot; assign drawing to the worksheet
+lo_worksheet-&gt;add_drawing( lo_drawing ).
+
+&quot; another drawing from a XSTRING read from a file
+lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 8 ip_value = &apos;Image from a file (c:\Program Files\SAP\FrontEnd\SAPgui\wwi\graphics\W_bio.bmp)&apos; ).
+lo_drawing = lo_excel-&gt;add_new_drawing( ).
+lo_drawing-&gt;set_position( ip_from_row = 9
+                          ip_from_col = &apos;B&apos; ).
+lo_drawing-&gt;set_media( ip_media       = lv_content
+                       ip_media_type = &apos;bmp&apos;
+                       ip_width = 83
+                       ip_height = 160 ).
+
+lo_worksheet-&gt;add_drawing( lo_drawing ).
+
+
+CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+&quot; Convert to binary
+CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+  EXPORTING
+    buffer        = lv_file
+  IMPORTING
+    output_length = lv_bytecount
+  TABLES
+    binary_tab    = lt_file_tab.
+
+&quot; Save the file
+CALL FUNCTION &apos;GUI_DOWNLOAD&apos;
+  EXPORTING
+    bin_filesize = lv_bytecount
+    filename     = &apos;C:\Drawings.xlsx&apos;
+    filetype     = &apos;BIN&apos;
+  TABLES
+    data_tab     = lt_file_tab.</source>
+</PROG>

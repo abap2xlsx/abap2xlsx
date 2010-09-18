@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="FEMIA" UDAT="20100905" VERN="000022" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100905" STIME="164141" IDATE="20100905" ITIME="164141" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="VONDRUSKA" UDAT="20100917" VERN="000024" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100917" STIME="110247" IDATE="20100917" ITIME="110247" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Hide Columns" LENGTH="12 "/>
@@ -47,11 +47,11 @@ lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 8 ip_value = &apos
 
 &quot; Column Settings
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
-column_dimension-&gt;set_auto_size( abap_true ).
+column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
-column_dimension-&gt;set_width( 50 ).
+column_dimension-&gt;set_width( ip_width = 50 ).
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;D&apos; ).
-column_dimension-&gt;set_visible( abap_false ).
+column_dimension-&gt;set_visible( ip_visible = abap_false ).
 &quot; Implementation in the Writer is not working yet ===== TODO =====
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;F&apos; ).
 column_dimension-&gt;set_outline_level( 0 ).
