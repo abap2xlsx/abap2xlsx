@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20100831" VERN="000014" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100831" STIME="204812" IDATE="20100831" ITIME="204812" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="VONDRUSKA" UDAT="20100920" VERN="000016" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100920" STIME="110528" IDATE="20100920" ITIME="110528" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -18,7 +18,7 @@ REPORT  zdemo_excel.
 SUBMIT zdemo_excel1 AND RETURN. &quot; Hello world
 SUBMIT zdemo_excel2 AND RETURN. &quot; Styles
 SUBMIT zdemo_excel3 AND RETURN. &quot; iTab binding
-SUBMIT zdemo_excel4 AND RETURN. &quot; Multi sheets
+SUBMIT zdemo_excel4 AND RETURN. &quot; Multi sheets and page setup
 SUBMIT zdemo_excel5 AND RETURN. &quot; Conditional formatting
 SUBMIT zdemo_excel6 AND RETURN. &quot; Formulas
 SUBMIT zdemo_excel7 AND RETURN. &quot; Conditional formatting

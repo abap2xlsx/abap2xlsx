@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20100905" VERN="000015" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100905" STIME="163710" IDATE="20100905" ITIME="163710" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="VONDRUSKA" UDAT="20100921" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100921" STIME="073036" IDATE="20100921" ITIME="073036" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
@@ -16,7 +16,7 @@
 REPORT  zdemo_excel4.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         type ref to zif_excel_writer,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet.
 
 DATA: lv_file                 TYPE xstring,
@@ -31,11 +31,23 @@ lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
 lo_worksheet-&gt;title = &apos;Sheet1&apos;.
 lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the first sheet&apos; ).
 
+lo_worksheet-&gt;sheet_setup-&gt;set_page_margins( ip_header = &apos;1&apos; ip_footer = &apos;1&apos; ip_unit = &apos;cm&apos; ).
+lo_worksheet-&gt;sheet_setup-&gt;black_and_white   = &apos;X&apos;.
+lo_worksheet-&gt;sheet_setup-&gt;fit_to_page       = &apos;X&apos;.  &quot; you should turn this on to activate fit_to_height and fit_to_width
+lo_worksheet-&gt;sheet_setup-&gt;fit_to_height     = 0.    &quot; used only if ip_fit_to_page = &apos;X&apos;
+lo_worksheet-&gt;sheet_setup-&gt;fit_to_width      = 2.    &quot; used only if ip_fit_to_page = &apos;X&apos;
+lo_worksheet-&gt;sheet_setup-&gt;orientation       = zcl_excel_sheet_setup=&gt;c_orientation_landscape.
+lo_worksheet-&gt;sheet_setup-&gt;page_order        = zcl_excel_sheet_setup=&gt;c_ord_downthenover.
+lo_worksheet-&gt;sheet_setup-&gt;paper_size        = zcl_excel_sheet_setup=&gt;c_papersize_a4.
+lo_worksheet-&gt;sheet_setup-&gt;scale             = 80.   &quot; used only if ip_fit_to_page = SPACE
+
+
+
 lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
 lo_worksheet-&gt;title = &apos;Sheet2&apos;.
 lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the second sheet&apos; ).
 
-create object lo_excel_writer type zcl_excel_writer_2007.
+CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
 lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
 &quot; Convert to binary
