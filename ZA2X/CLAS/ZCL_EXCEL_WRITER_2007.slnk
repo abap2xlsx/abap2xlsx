@@ -3657,34 +3657,40 @@ endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="15 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100921" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100702" CHANGEDBY="FEMIA" CHANGEDON="20100921" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_WORKBOOK.
+  <source>METHOD create_xl_workbook.
 
 
 ** Constant node name
-  DATA: lc_xml_node_workbook      TYPE string VALUE &apos;workbook&apos;,
-        lc_xml_node_fileversion   TYPE string VALUE &apos;fileVersion&apos;,
-        lc_xml_node_workbookpr    TYPE string VALUE &apos;workbookPr&apos;,
-        lc_xml_node_bookviews     TYPE string VALUE &apos;bookViews&apos;,
-        lc_xml_node_workbookview  TYPE string VALUE &apos;workbookView&apos;,
-        lc_xml_node_sheets        TYPE string VALUE &apos;sheets&apos;,
-        lc_xml_node_sheet         TYPE string VALUE &apos;sheet&apos;,
-        lc_xml_node_calcpr        TYPE string VALUE &apos;calcPr&apos;,
-        lc_xml_node_definednames  TYPE string VALUE &apos;definedNames&apos;,
-        lc_xml_node_definedname   TYPE string VALUE &apos;definedName&apos;,
+  DATA: lc_xml_node_workbook            TYPE string VALUE &apos;workbook&apos;,
+        lc_xml_node_fileversion         TYPE string VALUE &apos;fileVersion&apos;,
+        lc_xml_node_workbookpr          TYPE string VALUE &apos;workbookPr&apos;,
+        lc_xml_node_bookviews           TYPE string VALUE &apos;bookViews&apos;,
+        lc_xml_node_workbookview        TYPE string VALUE &apos;workbookView&apos;,
+        lc_xml_node_sheets              TYPE string VALUE &apos;sheets&apos;,
+        lc_xml_node_sheet               TYPE string VALUE &apos;sheet&apos;,
+        lc_xml_node_calcpr              TYPE string VALUE &apos;calcPr&apos;,
+        lc_xml_node_workbookprotection  TYPE string VALUE &apos;workbookProtection&apos;,
+        lc_xml_node_definednames        TYPE string VALUE &apos;definedNames&apos;,
+        lc_xml_node_definedname         TYPE string VALUE &apos;definedName&apos;,
         &quot; Node attributes
-        lc_xml_attr_appname       TYPE string VALUE &apos;appName&apos;,
-        lc_xml_attr_lastedited    TYPE string VALUE &apos;lastEdited&apos;,
-        lc_xml_attr_lowestedited  TYPE string VALUE &apos;lowestEdited&apos;,
-        lc_xml_attr_rupbuild      TYPE string VALUE &apos;rupBuild&apos;,
-        lc_xml_attr_themeversion  TYPE string VALUE &apos;defaultThemeVersion&apos;,
-        lc_xml_attr_xwindow       TYPE string VALUE &apos;xWindow&apos;,
-        lc_xml_attr_ywindow       TYPE string VALUE &apos;yWindow&apos;,
-        lc_xml_attr_windowwidth   TYPE string VALUE &apos;windowWidth&apos;,
-        lc_xml_attr_windowheight  TYPE string VALUE &apos;windowHeight&apos;,
-        lc_xml_attr_name          TYPE string VALUE &apos;name&apos;,
-        lc_xml_attr_sheetid       TYPE string VALUE &apos;sheetId&apos;,
-        lc_xml_attr_id            TYPE string VALUE &apos;id&apos;,
-        lc_xml_attr_calcid        TYPE string VALUE &apos;calcId&apos;,
+        lc_xml_attr_appname             TYPE string VALUE &apos;appName&apos;,
+        lc_xml_attr_lastedited          TYPE string VALUE &apos;lastEdited&apos;,
+        lc_xml_attr_lowestedited        TYPE string VALUE &apos;lowestEdited&apos;,
+        lc_xml_attr_rupbuild            TYPE string VALUE &apos;rupBuild&apos;,
+        lc_xml_attr_themeversion        TYPE string VALUE &apos;defaultThemeVersion&apos;,
+        lc_xml_attr_xwindow             TYPE string VALUE &apos;xWindow&apos;,
+        lc_xml_attr_ywindow             TYPE string VALUE &apos;yWindow&apos;,
+        lc_xml_attr_windowwidth         TYPE string VALUE &apos;windowWidth&apos;,
+        lc_xml_attr_windowheight        TYPE string VALUE &apos;windowHeight&apos;,
+        lc_xml_attr_name                TYPE string VALUE &apos;name&apos;,
+        lc_xml_attr_sheetid             TYPE string VALUE &apos;sheetId&apos;,
+        lc_xml_attr_id                  TYPE string VALUE &apos;id&apos;,
+        lc_xml_attr_calcid              TYPE string VALUE &apos;calcId&apos;,
+        lc_xml_attr_lockrevision        TYPE string VALUE &apos;lockRevision&apos;,
+        lc_xml_attr_lockstructure       TYPE string VALUE &apos;lockStructure&apos;,
+        lc_xml_attr_lockwindows         TYPE string VALUE &apos;lockWindows&apos;,
+        lc_xml_attr_revisionspassword   TYPE string VALUE &apos;revisionsPassword&apos;,
+        lc_xml_attr_workbookpassword    TYPE string VALUE &apos;workbookPassword&apos;,
         &quot; Node namespace
         lc_r_ns                   TYPE string VALUE &apos;r&apos;,
         lc_xml_node_ns            TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
@@ -3752,6 +3758,35 @@ endmethod.</source>
                                 value = &apos;124226&apos; ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
+  &quot; workbookProtection node
+  IF me-&gt;excel-&gt;zif_excel_book_protection~protected EQ abap_true.
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_workbookprotection
+                                                     parent = lo_document ).
+    MOVE me-&gt;excel-&gt;zif_excel_book_protection~workbookpassword TO lv_value.
+    IF lv_value IS NOT INITIAL.
+      lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_workbookpassword
+                                    value = lv_value ).
+    ENDIF.
+    MOVE me-&gt;excel-&gt;zif_excel_book_protection~revisionspassword TO lv_value.
+    IF lv_value IS NOT INITIAL.
+      lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_revisionspassword
+                                    value = lv_value ).
+    ENDIF.
+    MOVE me-&gt;excel-&gt;zif_excel_book_protection~lockrevision TO lv_value.
+    CONDENSE lv_value NO-GAPS.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_lockrevision
+                                  value = lv_value ).
+    MOVE me-&gt;excel-&gt;zif_excel_book_protection~lockstructure TO lv_value.
+    CONDENSE lv_value NO-GAPS.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_lockstructure
+                                  value = lv_value ).
+    MOVE me-&gt;excel-&gt;zif_excel_book_protection~lockwindows TO lv_value.
+    CONDENSE lv_value NO-GAPS.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_lockwindows
+                                  value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
+
   &quot; bookviews node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_bookviews
                                                    parent = lo_document ).
@@ -3798,13 +3833,13 @@ endmethod.</source>
 
 
   &quot; ranges node
-  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_definedNames
+  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_definednames
                                                    parent = lo_document ).
   lo_iterator = excel-&gt;get_ranges_iterator( ).
 
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
     &quot; range node
-    lo_sub_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_definedName
+    lo_sub_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_definedname
                                                             parent = lo_document ).
     lo_range ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
     lv_value = lo_range-&gt;name.
@@ -3823,7 +3858,6 @@ endmethod.</source>
                                 value = &apos;125725&apos; ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
-
 **********************************************************************
 * STEP 5: Create xstring stream
   lo_streamfactory = lo_ixml-&gt;create_stream_factory( ).
@@ -3831,7 +3865,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="16 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100921" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="FEMIA" CHANGEDON="20100921" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>

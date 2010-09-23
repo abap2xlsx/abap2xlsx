@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="VONDRUSKA" UDAT="20100920" VERN="000016" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100920" STIME="110528" IDATE="20100920" ITIME="110528" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20100923" VERN="000018" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100923" STIME="233645" IDATE="20100923" ITIME="233645" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -30,5 +30,8 @@ SUBMIT zdemo_excel10 AND RETURN. &quot; Bind table with field catalog
 SUBMIT zdemo_excel12 AND RETURN. &quot; Column size
 SUBMIT zdemo_excel13 AND RETURN. &quot; Merge cell
 SUBMIT zdemo_excel14 AND RETURN. &quot; Alignment
-SUBMIT zdemo_excel15 AND RETURN. &quot; Read Excel and write it back</source>
+SUBMIT zdemo_excel15 AND RETURN. &quot; Read Excel and write it back
+SUBMIT zdemo_excel16 AND RETURN. &quot; Read Excel and write it back
+SUBMIT zdemo_excel17 AND RETURN. &quot; Lock sheet
+SUBMIT zdemo_excel18 AND RETURN. &quot; Lock workbook</source>
 </PROG>
