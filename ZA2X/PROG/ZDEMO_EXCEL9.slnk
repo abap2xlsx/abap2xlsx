@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="FEMIA" UDAT="20100905" VERN="000017" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100905" STIME="163927" IDATE="20100905" ITIME="163927" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="FEMIA" UDAT="20100924" VERN="000021" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
@@ -16,58 +16,80 @@
 REPORT  zdemo_excel9.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         type ref to zif_excel_writer,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_range                TYPE REF TO zcl_excel_range,
       lo_data_validation      TYPE REF TO zcl_excel_data_validation,
-      lv_file                 TYPE xstring,
-      lv_style_number_guid    TYPE zexcel_cell_style,
+      lv_style_number_guid    TYPE zexcel_cell_style.
+
+DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
-      lt_file_tab             TYPE STANDARD TABLE OF solisti1.
+      lt_file_tab             TYPE solix_tab.
 
-CREATE OBJECT lo_excel.
+DATA: lv_file_name      TYPE string,
+      lv_file_path      TYPE string,
+      lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
+      lv_file_separator TYPE c.
 
-&quot; Get active sheet
-lo_worksheet        = lo_excel-&gt;get_active_worksheet( ).
-lo_worksheet-&gt;title = &apos;sheet1&apos;.
-lo_range            = lo_excel-&gt;add_new_range( ).
-lo_range-&gt;name      = &apos;range&apos;.
-lo_range-&gt;set_value( ip_sheet_name    = lo_worksheet-&gt;title
-                     ip_start_column  = &apos;C&apos;
-                     ip_start_row     = 4
-                     ip_stop_column   = &apos;C&apos;
-                     ip_stop_row      = 8 ).
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;09_DataValidation.xlsx&apos;.
 
-lo_data_validation              = lo_worksheet-&gt;add_new_data_validation( ).
-lo_data_validation-&gt;value       = lo_range-&gt;name.
-lo_data_validation-&gt;cell_row    = 4.
-lo_data_validation-&gt;cell_column = &apos;A&apos;.
+PARAMETERS: p_path TYPE string.
 
-lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;A&apos; ip_value = &apos;Select a value&apos; ).
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
-lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = &apos;Apple&apos; ).
-lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = &apos;Banana&apos; ).
-lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = &apos;Blueberry&apos; ).
-lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;C&apos; ip_value = &apos;Ananas&apos; ).
-lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;C&apos; ip_value = &apos;Grapes&apos; ).
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
+  CHANGING selected_folder = p_path ).
 
-create object lo_excel_writer type zcl_excel_writer_2007.
-lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  p_path = lv_workdir.
 
-&quot;convert to table
-CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-  EXPORTING
-    buffer        = lv_file
-  IMPORTING
-    output_length = lv_bytecount
-  TABLES
-    binary_tab    = lt_file_tab.
-&quot;Save the file
-CALL FUNCTION &apos;GUI_DOWNLOAD&apos;
-  EXPORTING
-    bin_filesize = lv_bytecount
-    filename     = &apos;C:\DataValidation.xlsx&apos;
+START-OF-SELECTION.
+
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+
+
+  CREATE OBJECT lo_excel.
+
+  &quot; Get active sheet
+  lo_worksheet        = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;title = &apos;sheet1&apos;.
+  lo_range            = lo_excel-&gt;add_new_range( ).
+  lo_range-&gt;name      = &apos;range&apos;.
+  lo_range-&gt;set_value( ip_sheet_name    = lo_worksheet-&gt;title
+                       ip_start_column  = &apos;C&apos;
+                       ip_start_row     = 4
+                       ip_stop_column   = &apos;C&apos;
+                       ip_stop_row      = 8 ).
+
+  lo_data_validation              = lo_worksheet-&gt;add_new_data_validation( ).
+  lo_data_validation-&gt;value       = lo_range-&gt;name.
+  lo_data_validation-&gt;cell_row    = 4.
+  lo_data_validation-&gt;cell_column = &apos;A&apos;.
+
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;A&apos; ip_value = &apos;Select a value&apos; ).
+
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = &apos;Apple&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = &apos;Banana&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = &apos;Blueberry&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;C&apos; ip_value = &apos;Ananas&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;C&apos; ip_value = &apos;Grapes&apos; ).
+
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+*   Convert to binary
+  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+  lv_bytecount = XSTRLEN( lv_file ).
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+    filename     = p_path
     filetype     = &apos;BIN&apos;
-  TABLES
-    data_tab     = lt_file_tab.</source>
+  CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>

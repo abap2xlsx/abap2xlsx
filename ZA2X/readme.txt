@@ -1,1 +1,1 @@
-Check out the Installation Guide at http://code.google.com/p/abap2xlsx/wiki/InstallationGuide
+Check out the Installation Guide at http://wiki.sdn.sap.com/wiki/display/ABAP/Installation+Guide

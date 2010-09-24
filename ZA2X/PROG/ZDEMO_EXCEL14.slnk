@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL14" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100817" UNAM="FEMIA" UDAT="20100912" VERN="000038" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100912" STIME="205336" IDATE="20100912" ITIME="205336" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL14" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100817" UNAM="FEMIA" UDAT="20100924" VERN="000041" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
@@ -18,9 +18,6 @@ REPORT  zdemo_excel14.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE STANDARD TABLE OF solisti1,
       lo_style_center         TYPE REF TO zcl_excel_style,
       lo_style_right          TYPE REF TO zcl_excel_style,
       lo_style_left           TYPE REF TO zcl_excel_style,
@@ -48,121 +45,144 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
 
 DATA: lo_row_dimension        TYPE REF TO zcl_excel_worksheet_rowdimensi.
 
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE solix_tab.
 
-CREATE OBJECT lo_excel.
+DATA: lv_file_name      TYPE string,
+      lv_file_path      TYPE string,
+      lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
+      lv_file_separator TYPE c.
 
-&quot; Get active sheet
-lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
-lo_worksheet-&gt;title = &apos;sheet1&apos;.
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;14_Alignment.xlsx&apos;.
 
-&quot;Center
-lo_style_center = lo_excel-&gt;add_new_style( ).
-lo_style_center-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_center.
-lv_style_center_guid = lo_style_center-&gt;get_guid( ).
-&quot;Right
-lo_style_right = lo_excel-&gt;add_new_style( ).
-lo_style_right-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_right.
-lv_style_right_guid = lo_style_right-&gt;get_guid( ).
-&quot;Left
-lo_style_left = lo_excel-&gt;add_new_style( ).
-lo_style_left-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_left.
-lv_style_left_guid = lo_style_left-&gt;get_guid( ).
-&quot;General
-lo_style_general = lo_excel-&gt;add_new_style( ).
-lo_style_general-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_general.
-lv_style_general_guid = lo_style_general-&gt;get_guid( ).
-&quot;Bottom
-lo_style_bottom = lo_excel-&gt;add_new_style( ).
-lo_style_bottom-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_bottom.
-lv_style_bottom_guid = lo_style_bottom-&gt;get_guid( ).
-&quot;Middle
-lo_style_middle = lo_excel-&gt;add_new_style( ).
-lo_style_middle-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_center.
-lv_style_middle_guid = lo_style_middle-&gt;get_guid( ).
-&quot;Top
-lo_style_top = lo_excel-&gt;add_new_style( ).
-lo_style_top-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_top.
-lv_style_top_guid = lo_style_top-&gt;get_guid( ).
-&quot;Justify
-lo_style_justify = lo_excel-&gt;add_new_style( ).
-lo_style_justify-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_justify.
-lv_style_justify_guid = lo_style_justify-&gt;get_guid( ).
+PARAMETERS: p_path TYPE string.
 
-&quot;Shrink
-lo_style_shrink = lo_excel-&gt;add_new_style( ).
-lo_style_shrink-&gt;alignment-&gt;shrinktofit = abap_true.
-lv_style_shrink_guid = lo_style_shrink-&gt;get_guid( ).
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
-&quot;Indent
-lo_style_indent = lo_excel-&gt;add_new_style( ).
-lo_style_indent-&gt;alignment-&gt;indent = 5.
-lv_style_indent_guid = lo_style_indent-&gt;get_guid( ).
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
+  CHANGING selected_folder = p_path ).
 
-&quot;Middle / Centered / Wrap
-lo_style_mixed = lo_excel-&gt;add_new_style( ).
-lo_style_mixed-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
-lo_style_mixed-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
-lo_style_mixed-&gt;alignment-&gt;wraptext     = abap_true.
-lv_style_mixed_guid = lo_style_mixed-&gt;get_guid( ).
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  p_path = lv_workdir.
 
-&quot;Center
-lo_style_rotated = lo_excel-&gt;add_new_style( ).
-lo_style_rotated-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
-lo_style_rotated-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
-lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75° == 90° + 75°
-lv_style_rotated_guid = lo_style_rotated-&gt;get_guid( ).
+START-OF-SELECTION.
+
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+
+  CREATE OBJECT lo_excel.
+
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;title = &apos;sheet1&apos;.
+
+  &quot;Center
+  lo_style_center = lo_excel-&gt;add_new_style( ).
+  lo_style_center-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_center.
+  lv_style_center_guid = lo_style_center-&gt;get_guid( ).
+  &quot;Right
+  lo_style_right = lo_excel-&gt;add_new_style( ).
+  lo_style_right-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_right.
+  lv_style_right_guid = lo_style_right-&gt;get_guid( ).
+  &quot;Left
+  lo_style_left = lo_excel-&gt;add_new_style( ).
+  lo_style_left-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_left.
+  lv_style_left_guid = lo_style_left-&gt;get_guid( ).
+  &quot;General
+  lo_style_general = lo_excel-&gt;add_new_style( ).
+  lo_style_general-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_general.
+  lv_style_general_guid = lo_style_general-&gt;get_guid( ).
+  &quot;Bottom
+  lo_style_bottom = lo_excel-&gt;add_new_style( ).
+  lo_style_bottom-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_bottom.
+  lv_style_bottom_guid = lo_style_bottom-&gt;get_guid( ).
+  &quot;Middle
+  lo_style_middle = lo_excel-&gt;add_new_style( ).
+  lo_style_middle-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_center.
+  lv_style_middle_guid = lo_style_middle-&gt;get_guid( ).
+  &quot;Top
+  lo_style_top = lo_excel-&gt;add_new_style( ).
+  lo_style_top-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_top.
+  lv_style_top_guid = lo_style_top-&gt;get_guid( ).
+  &quot;Justify
+  lo_style_justify = lo_excel-&gt;add_new_style( ).
+  lo_style_justify-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_justify.
+  lv_style_justify_guid = lo_style_justify-&gt;get_guid( ).
+
+  &quot;Shrink
+  lo_style_shrink = lo_excel-&gt;add_new_style( ).
+  lo_style_shrink-&gt;alignment-&gt;shrinktofit = abap_true.
+  lv_style_shrink_guid = lo_style_shrink-&gt;get_guid( ).
+
+  &quot;Indent
+  lo_style_indent = lo_excel-&gt;add_new_style( ).
+  lo_style_indent-&gt;alignment-&gt;indent = 5.
+  lv_style_indent_guid = lo_style_indent-&gt;get_guid( ).
+
+  &quot;Middle / Centered / Wrap
+  lo_style_mixed = lo_excel-&gt;add_new_style( ).
+  lo_style_mixed-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
+  lo_style_mixed-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
+  lo_style_mixed-&gt;alignment-&gt;wraptext     = abap_true.
+  lv_style_mixed_guid = lo_style_mixed-&gt;get_guid( ).
+
+  &quot;Center
+  lo_style_rotated = lo_excel-&gt;add_new_style( ).
+  lo_style_rotated-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
+  lo_style_rotated-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
+  lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75° == 90° + 75°
+  lv_style_rotated_guid = lo_style_rotated-&gt;get_guid( ).
 
 
-&quot; Set row size for first 7 rows to 40
-DO 7 TIMES.
-  lo_row_dimension = lo_worksheet-&gt;get_row_dimension( sy-index ).
-  lo_row_dimension-&gt;set_row_height( 40 ).
-ENDDO.
+  &quot; Set row size for first 7 rows to 40
+  DO 7 TIMES.
+    lo_row_dimension = lo_worksheet-&gt;get_row_dimension( sy-index ).
+    lo_row_dimension-&gt;set_row_height( 40 ).
+  ENDDO.
 
-&quot;Horizontal alignment
-lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;B&apos; ip_value = &apos;Centered Text&apos; ip_style = lv_style_center_guid ).
-lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;B&apos; ip_value = &apos;Right Text&apos;    ip_style = lv_style_right_guid ).
-lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;B&apos; ip_value = &apos;Left Text&apos;     ip_style = lv_style_left_guid ).
-lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;B&apos; ip_value = &apos;General Text&apos;  ip_style = lv_style_general_guid ).
+  &quot;Horizontal alignment
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;B&apos; ip_value = &apos;Centered Text&apos; ip_style = lv_style_center_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;B&apos; ip_value = &apos;Right Text&apos;    ip_style = lv_style_right_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;B&apos; ip_value = &apos;Left Text&apos;     ip_style = lv_style_left_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;B&apos; ip_value = &apos;General Text&apos;  ip_style = lv_style_general_guid ).
 
-&quot; Shrink &amp; indent
-lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;F&apos; ip_value = &apos;Text shrinked&apos; ip_style = lv_style_shrink_guid ).
-lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;F&apos; ip_value = &apos;Text indented&apos; ip_style = lv_style_indent_guid ).
+  &quot; Shrink &amp; indent
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;F&apos; ip_value = &apos;Text shrinked&apos; ip_style = lv_style_shrink_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;F&apos; ip_value = &apos;Text indented&apos; ip_style = lv_style_indent_guid ).
 
-&quot;Vertical alignment
+  &quot;Vertical alignment
 
-lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;D&apos; ip_value = &apos;Bottom Text&apos;    ip_style = lv_style_bottom_guid ).
-lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;D&apos; ip_value = &apos;Middle Text&apos;    ip_style = lv_style_middle_guid ).
-lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;D&apos; ip_value = &apos;Top Text&apos;       ip_style = lv_style_top_guid ).
-lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;D&apos; ip_value = &apos;Justify Text&apos;   ip_style = lv_style_justify_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;D&apos; ip_value = &apos;Bottom Text&apos;    ip_style = lv_style_bottom_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;D&apos; ip_value = &apos;Middle Text&apos;    ip_style = lv_style_middle_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;D&apos; ip_value = &apos;Top Text&apos;       ip_style = lv_style_top_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;D&apos; ip_value = &apos;Justify Text&apos;   ip_style = lv_style_justify_guid ).
 
-&quot; Wrapped
-lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;B&apos;
-                        ip_value = &apos;This is a wrapped text centered in the middle&apos;
-                        ip_style = lv_style_mixed_guid ).
+  &quot; Wrapped
+  lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;B&apos;
+                          ip_value = &apos;This is a wrapped text centered in the middle&apos;
+                          ip_style = lv_style_mixed_guid ).
 
-&quot; Rotated
-lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;D&apos;
-                        ip_value = &apos;This is a centered text rotated by -75°&apos;
-                        ip_style = lv_style_rotated_guid ).
+  &quot; Rotated
+  lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;D&apos;
+                          ip_value = &apos;This is a centered text rotated by -75°&apos;
+                          ip_style = lv_style_rotated_guid ).
 
-CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-&quot;convert to table
-CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-  EXPORTING
-    buffer        = lv_file
-  IMPORTING
-    output_length = lv_bytecount
-  TABLES
-    binary_tab    = lt_file_tab.
-&quot;Save the file
-CALL FUNCTION &apos;GUI_DOWNLOAD&apos;
-  EXPORTING
-    bin_filesize = lv_bytecount
-    filename     = &apos;C:\Alignment.xlsx&apos;
-    filetype     = &apos;BIN&apos;
-  TABLES
-    data_tab     = lt_file_tab.</source>
+*   Convert to binary
+  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+  lv_bytecount = XSTRLEN( lv_file ).
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+                                                    filename     = p_path
+                                                    filetype     = &apos;BIN&apos;
+                                           CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20100923" VERN="000018" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100923" STIME="233645" IDATE="20100923" ITIME="233645" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20100924" VERN="000023" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153901" IDATE="20100924" ITIME="153901" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="        Select output path" LENGTH="26 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
@@ -15,23 +16,42 @@
 
 REPORT  zdemo_excel.
 
-SUBMIT zdemo_excel1 AND RETURN. &quot; Hello world
-SUBMIT zdemo_excel2 AND RETURN. &quot; Styles
-SUBMIT zdemo_excel3 AND RETURN. &quot; iTab binding
-SUBMIT zdemo_excel4 AND RETURN. &quot; Multi sheets and page setup
-SUBMIT zdemo_excel5 AND RETURN. &quot; Conditional formatting
-SUBMIT zdemo_excel6 AND RETURN. &quot; Formulas
-SUBMIT zdemo_excel7 AND RETURN. &quot; Conditional formatting
-SUBMIT zdemo_excel8 AND RETURN. &quot; Ranges
-SUBMIT zdemo_excel9 AND RETURN. &quot; Data validation
-SUBMIT zdemo_excel10 AND RETURN. &quot; Bind table with field catalog
-&quot; zdemo_excel11 is not added because it has a selection screen and
-&quot; you also need to have business partners maintained in transaction BP
-SUBMIT zdemo_excel12 AND RETURN. &quot; Column size
-SUBMIT zdemo_excel13 AND RETURN. &quot; Merge cell
-SUBMIT zdemo_excel14 AND RETURN. &quot; Alignment
-SUBMIT zdemo_excel15 AND RETURN. &quot; Read Excel and write it back
-SUBMIT zdemo_excel16 AND RETURN. &quot; Read Excel and write it back
-SUBMIT zdemo_excel17 AND RETURN. &quot; Lock sheet
-SUBMIT zdemo_excel18 AND RETURN. &quot; Lock workbook</source>
+DATA: lv_workdir TYPE string.
+
+PARAMETERS: p_path TYPE string.
+
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
+
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
+                                              CHANGING selected_folder = p_path ).
+
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+                                                         p_path = lv_workdir.
+
+START-OF-SELECTION.
+
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+
+  SUBMIT zdemo_excel1 with p_path = p_path AND RETURN. &quot; Hello world
+  SUBMIT zdemo_excel2 with p_path = p_path AND RETURN. &quot; Styles
+  SUBMIT zdemo_excel3 with p_path = p_path AND RETURN. &quot; iTab binding
+  SUBMIT zdemo_excel4 with p_path = p_path AND RETURN. &quot; Multi sheets and page setup
+  SUBMIT zdemo_excel5 with p_path = p_path AND RETURN. &quot; Conditional formatting
+  SUBMIT zdemo_excel6 with p_path = p_path AND RETURN. &quot; Formulas
+  SUBMIT zdemo_excel7 with p_path = p_path AND RETURN. &quot; Conditional formatting
+  SUBMIT zdemo_excel8 with p_path = p_path AND RETURN. &quot; Ranges
+  SUBMIT zdemo_excel9 with p_path = p_path AND RETURN. &quot; Data validation
+  SUBMIT zdemo_excel10 with p_path = p_path AND RETURN. &quot; Bind table with field catalog
+  &quot; zdemo_excel11 is not added because it has a selection screen and
+  &quot; you also need to have business partners maintained in transaction BP
+  SUBMIT zdemo_excel12 with p_path = p_path AND RETURN. &quot; Column size
+  SUBMIT zdemo_excel13 with p_path = p_path AND RETURN. &quot; Merge cell
+  SUBMIT zdemo_excel14 with p_path = p_path AND RETURN. &quot; Alignment
+  SUBMIT zdemo_excel15 with p_path = p_path AND RETURN. &quot; Read Excel and write it back
+  SUBMIT zdemo_excel16 with p_path = p_path AND RETURN. &quot; Drawing
+  SUBMIT zdemo_excel17 with p_path = p_path AND RETURN. &quot; Lock sheet
+  SUBMIT zdemo_excel18 with p_path = p_path AND RETURN. &quot; Lock workbook</source>
 </PROG>

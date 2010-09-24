@@ -1,5 +1,5 @@
 
- abap2xlsx"
+ abap2xlsx
 
  Copyright (c) 2010 - 2011 Plinky.it
 
@@ -12,7 +12,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
  @category   ABAP xlsx Manager
- @package    ZABAP2XLSX
+ @package    ZA2X
  @author     Ivan Femia
  @company    Techedge SpA
  @homepage   http://www.plinky.it/software

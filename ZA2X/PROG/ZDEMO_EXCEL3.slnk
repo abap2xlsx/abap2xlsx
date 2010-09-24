@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20100905" VERN="000019" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100905" STIME="163630" IDATE="20100905" ITIME="163630" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20100924" VERN="000024" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
  <textPool/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZIFE_TEST_EXCEL
@@ -12,7 +12,7 @@
 REPORT  zdemo_excel3.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         type ref to zif_excel_writer,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
 
@@ -20,47 +20,66 @@ DATA: ls_table_settings       TYPE zexcel_s_table_settings.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
-      lt_file_tab             TYPE STANDARD TABLE OF solisti1.
+      lt_file_tab             TYPE solix_tab.
 
-&quot; Creates active sheet
-CREATE OBJECT lo_excel.
+DATA: lv_file_name      TYPE string,
+      lv_file_path      TYPE string,
+      lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
+      lv_file_separator TYPE c.
 
-&quot; Get active sheet
-lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
-lo_worksheet-&gt;title = &apos;Internal table&apos;.
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;03_iTab.xlsx&apos;.
 
-DATA lt_test TYPE TABLE OF sflight.
-SELECT * FROM sflight INTO TABLE lt_test.
+PARAMETERS: p_path TYPE string.
 
-ls_table_settings-table_style  = zcl_excel_table=&gt;builtinstyle_medium2.
-ls_table_settings-show_row_stripes = abap_true.
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
-lo_worksheet-&gt;bind_table( ip_table          = lt_test
-                          is_table_settings = ls_table_settings ).
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
+  CHANGING selected_folder = p_path ).
 
-lo_worksheet-&gt;freeze_panes( ip_num_rows = 3 ). &quot;freeze column headers when scrolling
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  p_path = lv_workdir.
 
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;E&apos; ). &quot;make date field a bit wider
-column_dimension-&gt;set_width( 11 ).
+START-OF-SELECTION.
 
-CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
 
-&quot; Convert to binary
-CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-  EXPORTING
-    buffer        = lv_file
-  IMPORTING
-    output_length = lv_bytecount
-  TABLES
-    binary_tab    = lt_file_tab.
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
 
-&quot; Save the file
-CALL FUNCTION &apos;GUI_DOWNLOAD&apos;
-  EXPORTING
-    bin_filesize = lv_bytecount
-    filename     = &apos;C:\iTab.xlsx&apos;
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;title = &apos;Internal table&apos;.
+
+  DATA lt_test TYPE TABLE OF sflight.
+  SELECT * FROM sflight INTO TABLE lt_test.
+
+  ls_table_settings-table_style  = zcl_excel_table=&gt;builtinstyle_medium2.
+  ls_table_settings-show_row_stripes = abap_true.
+
+  lo_worksheet-&gt;bind_table( ip_table          = lt_test
+                            is_table_settings = ls_table_settings ).
+
+  lo_worksheet-&gt;freeze_panes( ip_num_rows = 3 ). &quot;freeze column headers when scrolling
+
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;E&apos; ). &quot;make date field a bit wider
+  column_dimension-&gt;set_width( 11 ).
+
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+*   Convert to binary
+  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+  lv_bytecount = XSTRLEN( lv_file ).
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+    filename     = p_path
     filetype     = &apos;BIN&apos;
-  TABLES
-    data_tab     = lt_file_tab.</source>
+  CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>
