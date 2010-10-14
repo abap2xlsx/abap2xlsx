@@ -1722,7 +1722,8 @@ endmethod.</source>
         ls_style_mapping  TYPE zexcel_s_styles_mapping,
         lv_freeze_cell_row TYPE zexcel_cell_row,
         lv_freeze_cell_column TYPE zexcel_cell_column,
-        lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha.
+        lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
+        lv_relation_id    TYPE i.
 
   DATA: default_col_dimension TYPE REF TO zcl_excel_worksheet_columndime,
         default_row_dimension TYPE REF TO zcl_excel_worksheet_rowdimensi.
@@ -2307,6 +2308,49 @@ endmethod.</source>
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDIF.
 
+* links
+  DATA: lv_hyperlinks_count TYPE i,
+        lo_link TYPE REF TO zcl_excel_hyperlink.
+
+  lv_hyperlinks_count = io_worksheet-&gt;get_hyperlinks_size( ).
+  IF lv_hyperlinks_count &gt; 0.
+    lo_element = lo_document-&gt;create_simple_element( name   = &apos;hyperlinks&apos;
+                                                      parent = lo_document ).
+
+    lv_relation_id = io_worksheet-&gt;get_tables_size( ). &quot;need to count tables
+    lo_iterator = io_worksheet-&gt;get_hyperlinks_iterator( ).
+    WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+      lo_link ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+
+      lo_element_2 = lo_document-&gt;create_simple_element( name   = &apos;hyperlink&apos;
+                                                    parent = lo_element ).
+
+      lv_value = lo_link-&gt;get_ref( ).
+      lo_element_2-&gt;set_attribute_ns( name  = &apos;ref&apos;
+                                     value = lv_value ).
+
+      IF lo_link-&gt;is_internal( ) = abap_true.
+        lv_value = lo_link-&gt;get_url( ).
+        lo_element_2-&gt;set_attribute_ns( name  = &apos;location&apos;
+                                     value = lv_value ).
+      ELSE.
+        ADD 1 TO lv_relation_id.
+
+        lv_value = lv_relation_id.
+        CONDENSE lv_value.
+        CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+
+        lo_element_2-&gt;set_attribute_ns( name  = &apos;r:id&apos;
+                                      value = lv_value ).
+
+      ENDIF.
+
+      lo_element-&gt;append_child( new_child = lo_element_2 ).
+    ENDWHILE.
+
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
+
   &quot; pageMargins node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_pagemargins
                                                    parent = lo_document ).
@@ -2467,13 +2511,13 @@ endmethod.</source>
     lo_element-&gt;set_attribute_ns( name  = &apos;count&apos;
                                    value = lv_value ).
 
-    lv_table_count = 0.
+    lv_relation_id = 0.
     lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
     WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
       lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-      ADD 1 TO lv_table_count.
+      ADD 1 TO lv_relation_id.
 
-      lv_value = lv_table_count.
+      lv_value = lv_relation_id.
       CONDENSE lv_value.
       CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
       lo_element_2 = lo_document-&gt;create_simple_element( name   = &apos;tablePart&apos;
@@ -2523,10 +2567,13 @@ ENDMETHOD.</source>
         lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,
         lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,
         lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,
+        lc_xml_attr_target_mode   TYPE string VALUE &apos;TargetMode&apos;,
+        lc_xml_val_external       TYPE string VALUE &apos;External&apos;,
         &quot; Node namespace
         lc_xml_node_rels_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
         lc_xml_node_rid_table_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/table&apos;,
         lc_xml_node_rid_drawing_tp TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;.
+        lc_xml_node_rid_link_tp   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;.
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -2537,7 +2584,8 @@ ENDMETHOD.</source>
         lo_ostream        TYPE REF TO if_ixml_ostream,
         lo_renderer       TYPE REF TO if_ixml_renderer,
         lo_iterator       TYPE REF TO cl_object_collection_iterator,
-        lo_table          TYPE REF TO zcl_excel_table.
+        lo_table          TYPE REF TO zcl_excel_table,
+        lo_link           TYPE REF TO zcl_excel_hyperlink.
 
   DATA: lv_value          TYPE string,
         lv_counter        TYPE i,
@@ -2587,6 +2635,30 @@ ENDMETHOD.</source>
     CONCATENATE &apos;../tables/&apos; lv_value &apos;.xml&apos; INTO lv_value.
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                               value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDWHILE.
+
+  lo_iterator = io_worksheet-&gt;get_hyperlinks_iterator( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_link ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+    ADD 1 TO lv_counter.
+
+    lv_value = lv_counter.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_link_tp ).
+
+    lv_value = lo_link-&gt;get_url( ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
+                                  value = lv_value ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target_mode
+                                  value = lc_xml_val_external ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDWHILE.
 
