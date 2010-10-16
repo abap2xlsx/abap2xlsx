@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL17" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100921" UNAM="FEMIA" UDAT="20100924" VERN="000018" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL17" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100921" UNAM="FEMIA" UDAT="20101016" VERN="000021" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101016" STIME="200211" IDATE="20101016" ITIME="195159" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
+   <textElement ID="R" ENTRY="Sheet Protection" LENGTH="16 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
@@ -53,8 +53,11 @@ START-OF-SELECTION.
 
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
-  lo_worksheet-&gt;zif_excel_sheet_protection~protected = zif_excel_sheet_protection=&gt;c_protected.
-  lo_worksheet-&gt;zif_excel_sheet_protection~password = &apos;DAA7&apos;. &quot;it is the encoded word &quot;secret&quot;
+  lo_worksheet-&gt;zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=&gt;c_protected.
+  lo_worksheet-&gt;zif_excel_sheet_protection~password   = &apos;DAA7&apos;. &quot;it is the encoded word &quot;secret&quot;
+  lo_worksheet-&gt;zif_excel_sheet_protection~sheet      = zif_excel_sheet_protection=&gt;c_active.
+  lo_worksheet-&gt;zif_excel_sheet_protection~objects    = zif_excel_sheet_protection=&gt;c_active.
+  lo_worksheet-&gt;zif_excel_sheet_protection~scenarios  = zif_excel_sheet_protection=&gt;c_active.
 
   &quot;Center
   lo_style_protection = lo_excel-&gt;add_new_style( ).
