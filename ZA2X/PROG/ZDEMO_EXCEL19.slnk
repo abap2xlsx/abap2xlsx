@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL19" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="BCUSER" UDAT="20101030" VERN="000016" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="202715" IDATE="20101030" ITIME="202715" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL19" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="FEMIA" UDAT="20101030" VERN="000018" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="234803" IDATE="20101030" ITIME="234803" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Set active sheet" LENGTH="32 "/>
+   <textElement ID="S" KEY="P_NOOUT" ENTRY="        Hide output" LENGTH="19 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="        Select output path" LENGTH="26 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
@@ -13,8 +15,9 @@
 *&amp;
 *&amp;---------------------------------------------------------------------*
 
-REPORT  ZDEMO_EXCEL19.
+REPORT  zdemo_excel19.
 
+TYPE-POOLS: abap.
 
 DATA: lo_excel                  TYPE REF TO zcl_excel,
       lo_excel_writer           TYPE REF TO zif_excel_writer,
@@ -31,7 +34,8 @@ DATA: lv_workdir        TYPE string,
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;19_SetActiveSheet.xlsx&apos;.
 
-PARAMETERS: p_path TYPE string.
+PARAMETERS: p_path TYPE string,
+            p_noout TYPE xfeld DEFAULT abap_true.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
@@ -67,14 +71,17 @@ START-OF-SELECTION.
   lo_worksheet-&gt;title = &apos;Third&apos;.
   lo_worksheet-&gt;set_cell( ip_row = 1 ip_column = &apos;A&apos; ip_value = &apos;This is Sheet 3&apos; ).
 
-  &quot; lo_excel-&gt;set_active_sheet_index_by_name( data_sheet_name ).
-  DATA: active_sheet_index TYPE ZEXCEL_ACTIVE_WORKSHEET.
-  active_sheet_index = lo_excel-&gt;get_active_sheet_index( ).
-  write: &apos;Sheet Index before: &apos;, active_sheet_index.
+  IF p_noout EQ abap_false.
+    &quot; lo_excel-&gt;set_active_sheet_index_by_name( data_sheet_name ).
+    DATA: active_sheet_index TYPE zexcel_active_worksheet.
+    active_sheet_index = lo_excel-&gt;get_active_sheet_index( ).
+    WRITE: &apos;Sheet Index before: &apos;, active_sheet_index.
+  ENDIF.
   lo_excel-&gt;set_active_sheet_index( &apos;2&apos; ).
-  active_sheet_index = lo_excel-&gt;get_active_sheet_index( ).
-  write: &apos;Sheet Index after: &apos;, active_sheet_index.
-
+  IF p_noout EQ abap_false.
+    active_sheet_index = lo_excel-&gt;get_active_sheet_index( ).
+    WRITE: &apos;Sheet Index after: &apos;, active_sheet_index.
+  ENDIF.
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 

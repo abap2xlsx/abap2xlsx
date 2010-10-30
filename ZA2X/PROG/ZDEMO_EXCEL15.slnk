@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="BCUSER" UDAT="20101030" VERN="000019" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="142409" IDATE="20101030" ITIME="142409" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="FEMIA" UDAT="20101030" VERN="000021" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="234140" IDATE="20101030" ITIME="234140" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="ABAP2XLSX Reader Demo" LENGTH="21 "/>
+   <textElement ID="S" KEY="P_NOOUT" ENTRY="        Hide output" LENGTH="19 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="        Select output path" LENGTH="26 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
@@ -14,6 +16,8 @@
 *&amp;---------------------------------------------------------------------*
 
 REPORT  zdemo_excel15.
+
+TYPE-POOLS: abap.
 
 DATA: excel           TYPE REF TO zcl_excel,
       lo_excel_writer TYPE REF TO zif_excel_writer,
@@ -39,7 +43,8 @@ DATA: worksheet      TYPE REF TO zcl_excel_worksheet,
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;15_iTabFromReader.xlsx&apos;,
            lv_default_input TYPE string VALUE &apos;03_iTab.xlsx&apos;.
 
-PARAMETERS: p_path TYPE string.
+PARAMETERS: p_path  TYPE string,
+            p_noout TYPE xfeld DEFAULT abap_true.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
@@ -63,30 +68,31 @@ START-OF-SELECTION.
       CREATE OBJECT reader TYPE zcl_excel_reader_2007.
       excel = reader-&gt;load_file( input_file_path ).
 
-      worksheet = excel-&gt;get_active_worksheet( ).
-      highest_column = worksheet-&gt;get_highest_column( ).
-      highest_row    = worksheet-&gt;get_highest_row( ).
+      IF p_noout EQ abap_false.
+        worksheet = excel-&gt;get_active_worksheet( ).
+        highest_column = worksheet-&gt;get_highest_column( ).
+        highest_row    = worksheet-&gt;get_highest_row( ).
 
-      WRITE: &apos;Highest column: &apos;, highest_column, &apos;Highest row: &apos;, highest_row.
+        WRITE: &apos;Highest column: &apos;, highest_column, &apos;Highest row: &apos;, highest_row.
 
-      WHILE row &lt;= highest_row.
-        WHILE column &lt;= highest_column.
-          col_str = zcl_excel_common=&gt;convert_column2alpha( column ).
-          worksheet-&gt;get_cell(
-            EXPORTING
-              ip_column = col_str
-              ip_row    = row
-            IMPORTING
-              ep_value = value
-          ).
-          WRITE: value.
-          column = column + 1.
+        WHILE row &lt;= highest_row.
+          WHILE column &lt;= highest_column.
+            col_str = zcl_excel_common=&gt;convert_column2alpha( column ).
+            worksheet-&gt;get_cell(
+              EXPORTING
+                ip_column = col_str
+                ip_row    = row
+              IMPORTING
+                ep_value = value
+            ).
+            WRITE: value.
+            column = column + 1.
+          ENDWHILE.
+          WRITE: /.
+          column = 1.
+          row = row + 1.
         ENDWHILE.
-        WRITE: /.
-        column = 1.
-        row = row + 1.
-      ENDWHILE.
-
+      ENDIF.
       CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
       lv_file = lo_excel_writer-&gt;write_file( excel ).
 
