@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL19" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="BCUSER" UDAT="20101030" VERN="000016" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="202715" IDATE="20101030" ITIME="202715" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Set active sheet" LENGTH="32 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL19
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  ZDEMO_EXCEL19.
+
+
+DATA: lo_excel                  TYPE REF TO zcl_excel,
+      lo_excel_writer           TYPE REF TO zif_excel_writer,
+      lo_worksheet              TYPE REF TO zcl_excel_worksheet,
+      lo_style_protection       TYPE REF TO zcl_excel_style,
+      lv_style_protection_guid  TYPE zexcel_cell_style.
+
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE solix_tab.
+
+DATA: lv_workdir        TYPE string,
+      lv_file_separator TYPE c.
+
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;19_SetActiveSheet.xlsx&apos;.
+
+PARAMETERS: p_path TYPE string.
+
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
+
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
+  CHANGING selected_folder = p_path ).
+
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  p_path = lv_workdir.
+
+START-OF-SELECTION.
+
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+
+  CREATE OBJECT lo_excel.
+
+  &quot; First Worksheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;title = &apos;First&apos;.
+  lo_worksheet-&gt;set_cell( ip_row = 1 ip_column = &apos;A&apos; ip_value = &apos;This is Sheet 1&apos; ).
+
+  &quot; Second Worksheet
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;title = &apos;Second&apos;.
+  lo_worksheet-&gt;set_cell( ip_row = 1 ip_column = &apos;A&apos; ip_value = &apos;This is Sheet 2&apos; ).
+
+  &quot; Third Worksheet
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;title = &apos;Third&apos;.
+  lo_worksheet-&gt;set_cell( ip_row = 1 ip_column = &apos;A&apos; ip_value = &apos;This is Sheet 3&apos; ).
+
+  &quot; lo_excel-&gt;set_active_sheet_index_by_name( data_sheet_name ).
+  DATA: active_sheet_index TYPE ZEXCEL_ACTIVE_WORKSHEET.
+  active_sheet_index = lo_excel-&gt;get_active_sheet_index( ).
+  write: &apos;Sheet Index before: &apos;, active_sheet_index.
+  lo_excel-&gt;set_active_sheet_index( &apos;2&apos; ).
+  active_sheet_index = lo_excel-&gt;get_active_sheet_index( ).
+  write: &apos;Sheet Index after: &apos;, active_sheet_index.
+
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+*   Convert to binary
+  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+  lv_bytecount = XSTRLEN( lv_file ).
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+    filename     = p_path
+    filetype     = &apos;BIN&apos;
+  CHANGING data_tab     = lt_file_tab ).</source>
+</PROG>
