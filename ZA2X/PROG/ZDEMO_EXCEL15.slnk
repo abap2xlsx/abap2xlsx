@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="FEMIA" UDAT="20100924" VERN="000012" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="BCUSER" UDAT="20101030" VERN="000019" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="142409" IDATE="20101030" ITIME="142409" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="ABAP2XLSX Reader Demo" LENGTH="21 "/>
@@ -9,8 +9,8 @@
 *&amp; Report  ZDEMO_EXCEL15
 *&amp;
 *&amp;---------------------------------------------------------------------*
-*&amp;
-*&amp;
+*&amp; 2010-10-30, Gregor Wolf:
+*&amp; Added the functionality to ouput the read table content
 *&amp;---------------------------------------------------------------------*
 
 REPORT  zdemo_excel15.
@@ -24,8 +24,17 @@ DATA: lv_file                 TYPE xstring,
       lt_file_tab             TYPE solix_tab.
 
 DATA: lv_workdir        TYPE string,
-      lv_path           TYPE string,
+      output_file_path  TYPE string,
+      input_file_path   TYPE string,
       lv_file_separator TYPE c.
+
+DATA: worksheet      TYPE REF TO zcl_excel_worksheet,
+      highest_column TYPE zexcel_cell_column,
+      highest_row    TYPE int4,
+      column         TYPE zexcel_cell_column VALUE 1,
+      col_str        TYPE zexcel_cell_column_alpha,
+      row            TYPE int4               VALUE 1,
+      value          TYPE zexcel_cell_value.
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;15_iTabFromReader.xlsx&apos;,
            lv_default_input TYPE string VALUE &apos;03_iTab.xlsx&apos;.
@@ -47,12 +56,36 @@ START-OF-SELECTION.
     p_path = lv_workdir.
   ENDIF.
   cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO output_file_path.
+  CONCATENATE p_path lv_file_separator lv_default_input INTO input_file_path.
 
   TRY.
-      CONCATENATE p_path lv_file_separator lv_default_input INTO lv_path.
       CREATE OBJECT reader TYPE zcl_excel_reader_2007.
-      excel = reader-&gt;load_file( lv_path ).
+      excel = reader-&gt;load_file( input_file_path ).
+
+      worksheet = excel-&gt;get_active_worksheet( ).
+      highest_column = worksheet-&gt;get_highest_column( ).
+      highest_row    = worksheet-&gt;get_highest_row( ).
+
+      WRITE: &apos;Highest column: &apos;, highest_column, &apos;Highest row: &apos;, highest_row.
+
+      WHILE row &lt;= highest_row.
+        WHILE column &lt;= highest_column.
+          col_str = zcl_excel_common=&gt;convert_column2alpha( column ).
+          worksheet-&gt;get_cell(
+            EXPORTING
+              ip_column = col_str
+              ip_row    = row
+            IMPORTING
+              ep_value = value
+          ).
+          WRITE: value.
+          column = column + 1.
+        ENDWHILE.
+        WRITE: /.
+        column = 1.
+        row = row + 1.
+      ENDWHILE.
 
       CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
       lv_file = lo_excel_writer-&gt;write_file( excel ).
@@ -63,7 +96,7 @@ START-OF-SELECTION.
 
       &quot; Save the file
       cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                        filename     = p_path
+                                                        filename     = output_file_path
                                                         filetype     = &apos;BIN&apos;
                                                CHANGING data_tab     = lt_file_tab ).
 
