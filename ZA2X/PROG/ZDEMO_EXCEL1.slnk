@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL1" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101014" VERN="000040" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101014" STIME="222501" IDATE="20101014" ITIME="222501" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL1" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101030" VERN="000042" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="182346" IDATE="20101030" ITIME="172414" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Hello World" LENGTH="27 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
@@ -18,7 +18,7 @@ REPORT  zdemo_excel1.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,      
+      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
       column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
 
 DATA: lv_file                 TYPE xstring,

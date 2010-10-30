@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL13" VARCL="X" SUBC="1" CNAM="ATEJADA" CDAT="20100812" UNAM="FEMIA" UDAT="20100924" VERN="000022" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL13" VARCL="X" SUBC="1" CNAM="ATEJADA" CDAT="20100812" UNAM="BCUSER" UDAT="20101030" VERN="000024" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="191309" IDATE="20101030" ITIME="191309" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="Test for excel" LENGTH="14 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Merge cells" LENGTH="27 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*

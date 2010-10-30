@@ -1,6 +1,10 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20100924" VERN="000024" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
- <textPool/>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101030" VERN="000026" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="182346" IDATE="20101030" ITIME="172544" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
+  </language>
+ </textPool>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZIFE_TEST_EXCEL
 *&amp;
