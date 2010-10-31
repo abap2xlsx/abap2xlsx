@@ -3959,6 +3959,7 @@ endmethod.</source>
   IF lv_active_sheet &gt; 1.
     lv_active_sheet = lv_active_sheet - 1.
     lv_value = lv_active_sheet.
+	CONDENSE lv_value.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_activetab
                                       value = lv_value ).
   ENDIF.
