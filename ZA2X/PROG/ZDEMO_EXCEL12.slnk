@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="FEMIA" UDAT="20100924" VERN="000027" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100924" STIME="153902" IDATE="20100924" ITIME="153902" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="BCUSER" UDAT="20101106" VERN="000029" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101106" STIME="103546" IDATE="20101106" ITIME="103546" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Hide Columns" LENGTH="12 "/>
@@ -65,6 +65,7 @@ lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 4 ip_value = &apos
 lo_worksheet-&gt;set_cell( ip_column = &apos;F&apos; ip_row = 2 ip_value = &apos;Outline column level 0&apos; ).
 lo_worksheet-&gt;set_cell( ip_column = &apos;G&apos; ip_row = 2 ip_value = &apos;Outline column level 1&apos; ).
 lo_worksheet-&gt;set_cell( ip_column = &apos;H&apos; ip_row = 2 ip_value = &apos;Outline column level 2&apos; ).
+lo_worksheet-&gt;set_cell( ip_column = &apos;I&apos; ip_row = 2 ip_value = &apos;Small&apos; ).
 
 
 lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 1 ip_value = &apos;Hello world (hidden row)&apos; ).
@@ -74,10 +75,14 @@ lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 7 ip_value = &apos
 lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 8 ip_value = &apos;Outline row level 2&apos; ).
 
 &quot; Column Settings
+&quot; Auto size
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
-column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
+column_dimension-&gt;set_auto_size( abap_true ).
+column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;I&apos; ).
+column_dimension-&gt;set_auto_size( abap_true ).
+&quot; Manual Width
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
-column_dimension-&gt;set_width( ip_width = 50 ).
+column_dimension-&gt;set_width( 50 ).
 column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;D&apos; ).
 column_dimension-&gt;set_visible( ip_visible = abap_false ).
 &quot; Implementation in the Writer is not working yet ===== TODO =====
