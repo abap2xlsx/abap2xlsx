@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20101106" VERN="000046" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101106" STIME="101338" IDATE="20101106" ITIME="090931" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20101116" VERN="000048" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101116" STIME="225119" IDATE="20101116" ITIME="225119" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Export Organisation and Contact Persons using ABAP2XLSX" LENGTH="55 "/>
@@ -430,45 +430,45 @@ START-OF-SELECTION.
   highest_column = lo_worksheet-&gt;get_highest_column( ).
   count = 1.
   WHILE count &lt;= highest_column.
-    col_alpha = zcl_excel_common=&gt;convert_column2alpha( count ).
-    column_dimension = lo_worksheet-&gt;get_column_dimension( col_alpha ).
-    column_dimension-&gt;set_auto_size( abap_true ).
+    col_alpha = zcl_excel_common=&gt;convert_column2alpha( ip_column = count ).
+    column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = col_alpha ).
+    column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
     count = count + 1.
   ENDWHILE.
 *  &quot; Set Column width manuall
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;A&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;A&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 11 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;B&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 11 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;C&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 35 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;E&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;E&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 18 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;F&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;F&apos; ).
 *  column_dimension-&gt;set_width( ip_width =  5 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;G&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;G&apos; ).
 *  column_dimension-&gt;set_width( ip_width =  6 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;H&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;H&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 12 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;I&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;I&apos; ).
 *  column_dimension-&gt;set_width( ip_width =  3 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;J&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;J&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;K&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;K&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;L&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;L&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;M&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;M&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;N&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;N&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 12 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;O&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;O&apos; ).
 *  column_dimension-&gt;set_width( ip_width =  9 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;P&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;P&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 12 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;Q&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;Q&apos; ).
 *  column_dimension-&gt;set_width( ip_width =  9 ).
-*  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;R&apos; ).
+*  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;R&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 40 ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
