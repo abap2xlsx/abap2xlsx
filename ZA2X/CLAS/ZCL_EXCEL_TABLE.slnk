@@ -164,10 +164,8 @@ endmethod.</source>
       add 1 to lv_bottom_row.
     ENDIF.
 
-    WRITE settings-top_left_row TO lv_top_row_string.
-    CONDENSE lv_top_row_string.
-    WRITE lv_bottom_row TO lv_bottom_row_string.
-    CONDENSE lv_bottom_row_string.
+    lv_top_row_string = zcl_excel_common=&gt;number_to_excel_string( settings-top_left_row ).
+    lv_bottom_row_string = zcl_excel_common=&gt;number_to_excel_string( lv_bottom_row ).
 
     CONCATENATE settings-top_left_column lv_top_row_string
                 &apos;:&apos;
