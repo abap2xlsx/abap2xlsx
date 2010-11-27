@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PROG NAME="ZDEMO_EXCEL21" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101127" UNAM="BCUSER" UDAT="20101127" VERN="000013" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101127" STIME="171918" IDATE="20101127" ITIME="171918" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Backgound Color Picker" LENGTH="38 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL21
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel21.
+
+TYPES: BEGIN OF t_color_style,
+  color TYPE zexcel_style_color_argb,
+  style TYPE zexcel_cell_style,
+  END OF t_color_style.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_style_filled         TYPE REF TO zcl_excel_style.
+
+DATA: color_styles TYPE TABLE OF t_color_style.
+
+FIELD-SYMBOLS: &lt;color_style&gt; LIKE LINE OF color_styles.
+
+CONSTANTS: max  TYPE i VALUE 255,
+           step TYPE i VALUE 51.
+
+DATA: red          TYPE i,
+      green        TYPE i,
+      blue         TYPE i,
+      red_hex(1)   TYPE x,
+      green_hex(1) TYPE x,
+      blue_hex(1)  TYPE x,
+      red_str      TYPE string,
+      green_str    TYPE string,
+      blue_str     TYPE string.
+
+DATA: color TYPE zexcel_style_color_argb.
+
+DATA: row     TYPE i,
+      column  TYPE zexcel_cell_column VALUE 1,
+      col_str TYPE zexcel_cell_column_alpha.
+
+DATA: lv_file           TYPE xstring,
+      lv_bytecount      TYPE i,
+      lt_file_tab       TYPE solix_tab.
+
+DATA: lv_file_name      TYPE string,
+      lv_file_path      TYPE string,
+      lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
+      lv_file_separator TYPE c.
+
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;21_BackgroundColorPicker.xlsx&apos;.
+
+PARAMETERS: p_path TYPE string.
+
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
+
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
+  CHANGING selected_folder = p_path ).
+
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  p_path = lv_workdir.
+
+START-OF-SELECTION.
+
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
+
+  WHILE red &lt;= max.
+    green = 0.
+    WHILE green &lt;= max.
+      blue = 0.
+      WHILE blue &lt;= max.
+        red_hex = red.
+        red_str = red_hex.
+        green_hex = green.
+        green_str = green_hex.
+        blue_hex = blue.
+        blue_str = blue_hex.
+        &quot; Create filled
+        CONCATENATE &apos;FF&apos; red_str green_str blue_str INTO color.
+        APPEND INITIAL LINE TO color_styles ASSIGNING &lt;color_style&gt;.
+        lo_style_filled                 = lo_excel-&gt;add_new_style( ).
+        lo_style_filled-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
+        lo_style_filled-&gt;fill-&gt;fgcolor  = color.
+        &lt;color_style&gt;-color = color.
+        &lt;color_style&gt;-style = lo_style_filled-&gt;get_guid( ).
+        blue = blue + step.
+      ENDWHILE.
+      green = green + step.
+    ENDWHILE.
+    red = red + step.
+  ENDWHILE.
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;title = &apos;Color Picker&apos;.
+  LOOP AT color_styles ASSIGNING &lt;color_style&gt;.
+    IF row = ( max / step + 1 ) * 3.
+      row = 0.
+      column = column + 1.
+    ENDIF.
+    row = row + 1.
+    col_str = zcl_excel_common=&gt;convert_column2alpha( column ).
+
+    &quot; Fill the cell and apply one style
+    lo_worksheet-&gt;set_cell( ip_column = col_str
+                            ip_row    = row
+                            ip_value  = &lt;color_style&gt;-color
+                            ip_style  = &lt;color_style&gt;-style ).
+  ENDLOOP.
+
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+*   Convert to binary
+  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+  lv_bytecount = XSTRLEN( lv_file ).
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+    filename     = p_path
+    filetype     = &apos;BIN&apos;
+  CHANGING data_tab     = lt_file_tab ).</source>
+</PROG>
