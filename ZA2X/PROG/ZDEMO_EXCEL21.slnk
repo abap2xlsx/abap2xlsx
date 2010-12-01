@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL21" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101127" UNAM="BCUSER" UDAT="20101127" VERN="000013" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101127" STIME="171918" IDATE="20101127" ITIME="171918" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL21" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101127" UNAM="BCUSER" UDAT="20101201" VERN="000015" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101201" STIME="234838" IDATE="20101201" ITIME="234838" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Backgound Color Picker" LENGTH="38 "/>
   </language>
  </textPool>
+ <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL21
 *&amp;
@@ -45,6 +46,7 @@ DATA: red          TYPE i,
 DATA: color TYPE zexcel_style_color_argb.
 
 DATA: row     TYPE i,
+      row_tmp type i,
       column  TYPE zexcel_cell_column VALUE 1,
       col_str TYPE zexcel_cell_column_alpha.
 
@@ -111,7 +113,8 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;title = &apos;Color Picker&apos;.
   LOOP AT color_styles ASSIGNING &lt;color_style&gt;.
-    IF row = ( max / step + 1 ) * 3.
+    row_tmp = ( max / step + 1 ) * 3.
+    IF row = row_tmp.
       row = 0.
       column = column + 1.
     ENDIF.
