@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="B9BE2C4C98855D2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="BCUSER" CHANGEDON="20101031" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="BCUSER" CREATEDON="20100923" CHANGEDBY="BCUSER" CHANGEDON="20101031" RELTYPE="1"/>
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="B9BE2C4C98855D2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100701" CHANGEDBY="BCUSER" CHANGEDON="20101021" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="BCUSER" CREATEDON="20100909" CHANGEDBY="BCUSER" CHANGEDON="20101021" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_WRITER_2007 definition
   public
   final
@@ -2904,9 +2904,7 @@ endmethod.</source>
         ls_alignment      TYPE zexcel_s_style_alignment,
         lt_cellxfs        TYPE zexcel_t_cellxfs,
         ls_cellxfs        TYPE zexcel_s_cellxfs,
-        ls_styles_mapping TYPE zexcel_s_styles_mapping,
-        lt_colors         TYPE TABLE OF zexcel_style_color_argb,
-        ls_color          TYPE zexcel_style_color_argb.
+        ls_styles_mapping TYPE zexcel_s_styles_mapping.
 
   DATA: lv_value          TYPE string,
         lv_fonts_count    TYPE i,
@@ -3152,7 +3150,6 @@ endmethod.</source>
                                       value = lv_value ).
     lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     lo_element_fonts-&gt;append_child( new_child = lo_element_font ).
-    APPEND ls_font-color TO lt_colors.
   ENDLOOP.
 
   &quot; create fill elements
@@ -3188,10 +3185,6 @@ endmethod.</source>
 
     lo_element_fill-&gt;append_child( new_child = lo_sub_element ).&quot;pattern
     lo_element_fills-&gt;append_child( new_child = lo_element_fill ).
-    &quot; Collect color
-    IF ls_fill-fgcolor IS NOT INITIAL.
-      APPEND ls_fill-fgcolor TO lt_colors.
-    ENDIF.
   ENDLOOP.
 
   &quot; create border elements
@@ -3213,8 +3206,6 @@ endmethod.</source>
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
       lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
-*     Collect color
-      APPEND ls_border-left_color TO lt_colors.
     ENDIF.
     lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
@@ -3233,8 +3224,6 @@ endmethod.</source>
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
       lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
-*     Collect color
-      APPEND ls_border-right_color TO lt_colors.
     ENDIF.
     lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
@@ -3253,8 +3242,6 @@ endmethod.</source>
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
       lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
-*     Collect color
-      APPEND ls_border-top_color TO lt_colors.
     ENDIF.
     lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
@@ -3273,8 +3260,6 @@ endmethod.</source>
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
       lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
-*     Collect color
-      APPEND ls_border-bottom_color TO lt_colors.
     ENDIF.
     lo_element_border-&gt;append_child( new_child = lo_sub_element ).
 
@@ -3293,8 +3278,6 @@ endmethod.</source>
       lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
                                           value = lv_value ).
       lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color
-*     Collect color
-      APPEND ls_border-diagonal_color TO lt_colors.
     ENDIF.
     lo_element_border-&gt;append_child( new_child = lo_sub_element ).
     lo_element_borders-&gt;append_child( new_child = lo_element_border ).
@@ -3518,29 +3501,6 @@ endmethod.</source>
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_defaultpivotstyle
                                 value = zcl_excel_table=&gt;builtinstyle_pivot_light16 ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
-
-  &quot; colors node
-  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_colors
-                                                   parent = lo_document ).
-  &quot; mruColors node
-  lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_mrucolors
-                                                       parent = lo_document ).
-
-  SORT lt_colors.
-  DELETE ADJACENT DUPLICATES FROM lt_colors.
-
-  LOOP AT lt_colors INTO ls_color.
-    &quot; color node
-    lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_color
-                                                           parent = lo_document ).
-    lv_value = ls_color.
-    lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
-                                        value = lv_value ).
-    lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).&quot; color node
-  ENDLOOP.
-
-  lo_element-&gt;append_child( new_child = lo_sub_element ).&quot; mruColors node
-  lo_element_root-&gt;append_child( new_child = lo_element ).&quot; colors node
 
 **********************************************************************
 * STEP 5: Create xstring stream
