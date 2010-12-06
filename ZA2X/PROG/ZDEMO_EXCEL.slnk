@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="BCUSER" UDAT="20101030" VERN="000025" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="202824" IDATE="20101030" ITIME="202824" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20101206" VERN="000029" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101206" STIME="133934" IDATE="20101206" ITIME="133934" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -27,7 +27,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-                                                         p_path = lv_workdir.
+  p_path = lv_workdir.
 
 START-OF-SELECTION.
 
@@ -35,24 +35,26 @@ START-OF-SELECTION.
     p_path = lv_workdir.
   ENDIF.
 
-  SUBMIT zdemo_excel1 with p_path = p_path AND RETURN. &quot; Hello world
-  SUBMIT zdemo_excel2 with p_path = p_path AND RETURN. &quot; Styles
-  SUBMIT zdemo_excel3 with p_path = p_path AND RETURN. &quot; iTab binding
-  SUBMIT zdemo_excel4 with p_path = p_path AND RETURN. &quot; Multi sheets and page setup
-  SUBMIT zdemo_excel5 with p_path = p_path AND RETURN. &quot; Conditional formatting
-  SUBMIT zdemo_excel6 with p_path = p_path AND RETURN. &quot; Formulas
-  SUBMIT zdemo_excel7 with p_path = p_path AND RETURN. &quot; Conditional formatting
-  SUBMIT zdemo_excel8 with p_path = p_path AND RETURN. &quot; Ranges
-  SUBMIT zdemo_excel9 with p_path = p_path AND RETURN. &quot; Data validation
-  SUBMIT zdemo_excel10 with p_path = p_path AND RETURN. &quot; Bind table with field catalog
+  SUBMIT zdemo_excel1 WITH p_path = p_path AND RETURN. &quot; Hello world
+  SUBMIT zdemo_excel2 WITH p_path = p_path AND RETURN. &quot; Styles
+  SUBMIT zdemo_excel3 WITH p_path = p_path AND RETURN. &quot; iTab binding
+  SUBMIT zdemo_excel4 WITH p_path = p_path AND RETURN. &quot; Multi sheets and page setup
+  SUBMIT zdemo_excel5 WITH p_path = p_path AND RETURN. &quot; Conditional formatting
+  SUBMIT zdemo_excel6 WITH p_path = p_path AND RETURN. &quot; Formulas
+  SUBMIT zdemo_excel7 WITH p_path = p_path AND RETURN. &quot; Conditional formatting
+  SUBMIT zdemo_excel8 WITH p_path = p_path AND RETURN. &quot; Ranges
+  SUBMIT zdemo_excel9 WITH p_path = p_path AND RETURN. &quot; Data validation
+  SUBMIT zdemo_excel10 WITH p_path = p_path AND RETURN. &quot; Bind table with field catalog
   &quot; zdemo_excel11 is not added because it has a selection screen and
   &quot; you also need to have business partners maintained in transaction BP
-  SUBMIT zdemo_excel12 with p_path = p_path AND RETURN. &quot; Column size
-  SUBMIT zdemo_excel13 with p_path = p_path AND RETURN. &quot; Merge cell
-  SUBMIT zdemo_excel14 with p_path = p_path AND RETURN. &quot; Alignment
-  SUBMIT zdemo_excel15 with p_path = p_path AND RETURN. &quot; Read Excel and write it back
-  SUBMIT zdemo_excel16 with p_path = p_path AND RETURN. &quot; Drawing
-  SUBMIT zdemo_excel17 with p_path = p_path AND RETURN. &quot; Lock sheet
-  SUBMIT zdemo_excel18 with p_path = p_path AND RETURN. &quot; Lock workbook
-  SUBMIT zdemo_excel19 with p_path = p_path AND RETURN. &quot; Set active sheet</source>
+  SUBMIT zdemo_excel12 WITH p_path = p_path AND RETURN. &quot; Column size
+  SUBMIT zdemo_excel13 WITH p_path = p_path AND RETURN. &quot; Merge cell
+  SUBMIT zdemo_excel14 WITH p_path = p_path AND RETURN. &quot; Alignment
+  SUBMIT zdemo_excel15 WITH p_path = p_path AND RETURN. &quot; Read Excel and write it back
+  SUBMIT zdemo_excel16 WITH p_path = p_path AND RETURN. &quot; Drawing
+  SUBMIT zdemo_excel17 WITH p_path = p_path AND RETURN. &quot; Lock sheet
+  SUBMIT zdemo_excel18 WITH p_path = p_path AND RETURN. &quot; Lock workbook
+  SUBMIT zdemo_excel19 WITH p_path = p_path AND RETURN. &quot; Set active sheet
+  &quot; zdemo_excel20 is not added because it uses ALV and cannot be processed
+  SUBMIT zdemo_excel21 WITH p_path = p_path AND RETURN. &quot; Color Picker</source>
 </PROG>
