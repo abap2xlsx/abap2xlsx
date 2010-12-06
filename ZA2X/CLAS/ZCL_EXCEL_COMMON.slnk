@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<CLAS CLSNAME="ZCL_EXCEL_COMMON" VERSION="1" LANGU="E" DESCRIPT="Static common methods" UUID="5E42354C6579E82CE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="BCUSER" CHANGEDON="20101123" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_COMMON" VERSION="1" LANGU="E" DESCRIPT="Static common methods" UUID="5E42354C6579E82CE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100710" CHANGEDBY="BCUSER" CHANGEDON="20101127" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <publicSection>class ZCL_EXCEL_COMMON definition
   public
   final
@@ -163,6 +163,7 @@ endmethod.</source>
   DATA: lv_date_diff TYPE i,
         lc_date_baseline TYPE d VALUE &apos;19000101&apos;.
 
+  CHECK ip_value IS NOT INITIAL.
   lv_date_diff = ip_value - lc_date_baseline + 2.
   ep_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = lv_date_diff ).
 endmethod.</source>
