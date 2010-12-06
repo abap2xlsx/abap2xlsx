@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="BCUSER" UDAT="20101030" VERN="000023" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="182346" IDATE="20101030" ITIME="173253" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="DEVELOPER" UDAT="20101127" VERN="000029" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101127" STIME="151643" IDATE="20101127" ITIME="151643" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Data validation (Dropdown list)" LENGTH="47 "/>
   </language>
  </textPool>
+ <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZIFE_TEST_EXCEL
 *&amp;
@@ -58,7 +59,14 @@ START-OF-SELECTION.
 
   &quot; Get active sheet
   lo_worksheet        = lo_excel-&gt;get_active_worksheet( ).
-  lo_worksheet-&gt;title = &apos;sheet1&apos;.
+  lo_worksheet-&gt;title = &apos;value table&apos;.
+  &quot; Set values for dropdown
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = &apos;Apple&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = &apos;Banana&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = &apos;Blueberry&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;C&apos; ip_value = &apos;Ananas&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;C&apos; ip_value = &apos;Grapes&apos; ).
+
   lo_range            = lo_excel-&gt;add_new_range( ).
   lo_range-&gt;name      = &apos;range&apos;.
   lo_range-&gt;set_value( ip_sheet_name    = lo_worksheet-&gt;title
@@ -67,18 +75,15 @@ START-OF-SELECTION.
                        ip_stop_column   = &apos;C&apos;
                        ip_stop_row      = 8 ).
 
+  lo_worksheet        = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;title = &apos;dropdown&apos;.
+
   lo_data_validation              = lo_worksheet-&gt;add_new_data_validation( ).
   lo_data_validation-&gt;value       = lo_range-&gt;name.
   lo_data_validation-&gt;cell_row    = 4.
   lo_data_validation-&gt;cell_column = &apos;A&apos;.
 
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;A&apos; ip_value = &apos;Select a value&apos; ).
-
-  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = &apos;Apple&apos; ).
-  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = &apos;Banana&apos; ).
-  lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = &apos;Blueberry&apos; ).
-  lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;C&apos; ip_value = &apos;Ananas&apos; ).
-  lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;C&apos; ip_value = &apos;Grapes&apos; ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
