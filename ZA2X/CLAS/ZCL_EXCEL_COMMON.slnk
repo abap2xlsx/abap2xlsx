@@ -86,6 +86,106 @@ protected section.</protectedSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
+ <localTestClasses>*----------------------------------------------------------------------*
+*       CLASS zcl_Excel_Common_Test DEFINITION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS zcl_excel_common_test DEFINITION FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS
+.
+*?#&lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;
+*?&lt;asx:values&gt;
+*?&lt;TESTCLASS_OPTIONS&gt;
+*?&lt;TEST_CLASS&gt;zcl_Excel_Common_Test
+*?&lt;/TEST_CLASS&gt;
+*?&lt;TEST_MEMBER&gt;f_Cut
+*?&lt;/TEST_MEMBER&gt;
+*?&lt;OBJECT_UNDER_TEST&gt;ZCL_EXCEL_COMMON
+*?&lt;/OBJECT_UNDER_TEST&gt;
+*?&lt;OBJECT_IS_LOCAL/&gt;
+*?&lt;GENERATE_FIXTURE/&gt;
+*?&lt;GENERATE_CLASS_FIXTURE/&gt;
+*?&lt;GENERATE_INVOCATION&gt;X
+*?&lt;/GENERATE_INVOCATION&gt;
+*?&lt;GENERATE_ASSERT_EQUAL&gt;X
+*?&lt;/GENERATE_ASSERT_EQUAL&gt;
+*?&lt;/TESTCLASS_OPTIONS&gt;
+*?&lt;/asx:values&gt;
+*?&lt;/asx:abap&gt;
+  PRIVATE SECTION.
+* ================
+    DATA:
+      f_cut TYPE REF TO zcl_excel_common.  &quot;class under test
+
+    METHODS: convert_columnrow2column_a_row FOR TESTING.
+ENDCLASS.       &quot;zcl_Excel_Common_Test
+
+
+*----------------------------------------------------------------------*
+*       CLASS zcl_Excel_Common_Test IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS zcl_excel_common_test IMPLEMENTATION.
+* ===========================================
+
+  METHOD convert_columnrow2column_a_row.
+* ======================================
+    DATA i_columnrow TYPE string VALUE &apos;AB344&apos;.
+    DATA e_column TYPE zexcel_cell_column_alpha.
+    DATA e_row TYPE zexcel_cell_row.
+
+    zcl_excel_common=&gt;convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow = i_columnrow
+     IMPORTING
+       e_column = e_column
+       e_row = e_row
+    ).
+
+    cl_abap_unit_assert=&gt;assert_equals(
+      act   = e_column
+      exp   = &apos;AB&apos;
+     msg   = &apos;Testing value e_Column&apos;
+*     level =
+    ).
+    cl_abap_unit_assert=&gt;assert_equals(
+      act   = e_row
+      exp   = 344
+     msg   = &apos;Testing value e_Row&apos;
+*     level =
+    ).
+
+    i_columnrow = &apos;B3&apos;.
+
+    zcl_excel_common=&gt;convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow = i_columnrow
+     IMPORTING
+       e_column = e_column
+       e_row = e_row
+    ).
+
+    cl_abap_unit_assert=&gt;assert_equals(
+      act   = e_column
+      exp   = &apos;B&apos;
+     msg   = &apos;Testing value e_Column&apos;
+*     level =
+    ).
+    cl_abap_unit_assert=&gt;assert_equals(
+      act   = e_row
+      exp   = 3
+     msg   = &apos;Testing value e_Row&apos;
+*     level =
+    ).
+  ENDMETHOD.       &quot;convert_Columnrow2column_A_Row
+
+
+
+
+ENDCLASS.       &quot;zcl_Excel_Common_Test</localTestClasses>
  <textPool/>
  <classDocumentation/>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_EXCEL_COL_MODULE" VERSION="1" LANGU="E" DESCRIPT="2 byte integer (signed)" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="DEVELOPER" CREATEDON="20101126" CHANGEDBY="DEVELOPER" CHANGEDON="20101127" ATTDECLTYP="1" ATTVALUE="64" ATTEXPVIRT="0" TYPTYPE="1" TYPE="INT2" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
