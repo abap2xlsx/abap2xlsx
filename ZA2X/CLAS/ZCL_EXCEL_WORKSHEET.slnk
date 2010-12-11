@@ -3092,7 +3092,7 @@ endmethod.</source>
   IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED.
     RAISE EXCEPTION TYPE zcx_excel
           EXPORTING
-            error = &apos;Pleas provide the vaue or formula&apos;.
+            error = &apos;Pleas provide the value or formula&apos;.
   ENDIF.
 
   lv_style_guid = ip_style.
@@ -3194,9 +3194,7 @@ endmethod.</source>
   IF sy-subrc EQ 0.
     &lt;fs_sheet_content&gt;-cell_style   = lv_style_guid.
   ELSE.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = &apos;No Data in this cell&apos;.
+    set_cell( ip_column = ip_column ip_row = ip_row ip_value = &apos;&apos; ip_style = ip_style ).
   ENDIF.
 
 endmethod.</source>
