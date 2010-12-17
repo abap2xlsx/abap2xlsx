@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="DEVELOPER" UDAT="20101127" VERN="000029" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101127" STIME="151643" IDATE="20101127" ITIME="151643" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="FEMIA" UDAT="20101217" VERN="000031" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101217" STIME="230307" IDATE="20101217" ITIME="230307" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Data validation (Dropdown list)" LENGTH="47 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZIFE_TEST_EXCEL
 *&amp;
@@ -31,6 +30,7 @@ DATA: lv_file_name      TYPE string,
       lv_file_path      TYPE string,
       lv_full_path      TYPE string,
       lv_workdir        TYPE string,
+      lv_title          TYPE ZEXCEL_SHEET_TITLE,
       lv_file_separator TYPE c.
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;09_DataValidation.xlsx&apos;.
@@ -59,7 +59,8 @@ START-OF-SELECTION.
 
   &quot; Get active sheet
   lo_worksheet        = lo_excel-&gt;get_active_worksheet( ).
-  lo_worksheet-&gt;title = &apos;value table&apos;.
+  lv_title = &apos;Data Validation&apos;.
+  lo_worksheet-&gt;set_title( lv_title ).
   &quot; Set values for dropdown
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = &apos;Apple&apos; ).
   lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = &apos;Banana&apos; ).
@@ -69,14 +70,15 @@ START-OF-SELECTION.
 
   lo_range            = lo_excel-&gt;add_new_range( ).
   lo_range-&gt;name      = &apos;range&apos;.
-  lo_range-&gt;set_value( ip_sheet_name    = lo_worksheet-&gt;title
+  lo_range-&gt;set_value( ip_sheet_name    = lv_title
                        ip_start_column  = &apos;C&apos;
                        ip_start_row     = 4
                        ip_stop_column   = &apos;C&apos;
                        ip_stop_row      = 8 ).
 
   lo_worksheet        = lo_excel-&gt;add_new_worksheet( ).
-  lo_worksheet-&gt;title = &apos;dropdown&apos;.
+  lv_title = &apos;Dropdown&apos;.
+  lo_worksheet-&gt;set_title( lv_title ).
 
   lo_data_validation              = lo_worksheet-&gt;add_new_data_validation( ).
   lo_data_validation-&gt;value       = lo_range-&gt;name.

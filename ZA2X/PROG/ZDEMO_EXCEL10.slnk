@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="BCUSER" UDAT="20101116" VERN="000064" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101116" STIME="224916" IDATE="20101116" ITIME="224916" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="FEMIA" UDAT="20101217" VERN="000066" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101217" STIME="230340" IDATE="20101217" ITIME="230340" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Format internal table with field catalog" LENGTH="56 "/>
@@ -64,7 +64,7 @@ START-OF-SELECTION.
 
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
-  lo_worksheet-&gt;title = &apos;Internal table&apos;.
+  lo_worksheet-&gt;set_title( &apos;Internal table&apos; ).
 
   &quot;Conditional style
   lo_style_conditional2 = lo_worksheet-&gt;add_new_conditional_style( ).

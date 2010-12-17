@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20101116" VERN="000048" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101116" STIME="225119" IDATE="20101116" ITIME="225119" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="FEMIA" UDAT="20101217" VERN="000050" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101217" STIME="230410" IDATE="20101217" ITIME="230410" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Export Organisation and Contact Persons using ABAP2XLSX" LENGTH="55 "/>
@@ -294,7 +294,7 @@ START-OF-SELECTION.
 
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
-  lo_worksheet-&gt;title = &apos;Internal table&apos;.
+  lo_worksheet-&gt;set_title( &apos;Internal table&apos; ).
 
   lt_field_catalog = zcl_excel_common=&gt;get_fieldcatalog( ip_table = lt_download ).
 
