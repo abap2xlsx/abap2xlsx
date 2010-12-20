@@ -23,6 +23,7 @@ public section.
   data SHEET_CONTENT_MERGE type ZEXCEL_T_CELL_DATA .
   data SHEET_SETUP type ref to ZCL_EXCEL_SHEET_SETUP .
   data SHEET_STATE type ZEXCEL_SHEET_STATE .
+  data STYLES type ZEXCEL_T_SHEET_STYLE .
 
   methods ADD_DRAWING
     importing
@@ -404,6 +405,7 @@ endclass.</localTypes>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_CONTENT_MERGE" VERSION="1" LANGU="E" DESCRIPT="Excel worksheet content" EXPOSURE="2" STATE="1" EDITORDER="21 " AUTHOR="FEMIA" CREATEDON="20100812" CHANGEDBY="FEMIA" CHANGEDON="20101217" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_SETUP" VERSION="1" LANGU="E" DESCRIPT="Sheet setup" EXPOSURE="2" STATE="1" EDITORDER="22 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20101217" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_SHEET_SETUP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_STATE" VERSION="1" LANGU="E" DESCRIPT="Sheet state" EXPOSURE="2" STATE="1" EDITORDER="23 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20101217" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_STATE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="STYLES" VERSION="1" LANGU="E" DESCRIPT="Sheet style table type" EXPOSURE="2" STATE="1" EDITORDER="29 " AUTHOR="FEMIA" CREATEDON="20101220" CHANGEDON="00000000" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHEET_STYLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TABLES" VERSION="1" LANGU="E" DESCRIPT="Colletion of tables" EXPOSURE="0" STATE="1" EDITORDER="24 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDBY="FEMIA" CHANGEDON="20101217" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="0" STATE="1" EDITORDER="25 " AUTHOR="FEMIA" CREATEDON="20100629" CHANGEDBY="FEMIA" CHANGEDON="20101217" ATTDECLTYP="0" ATTVALUE="&apos;Worksheet&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPPER_CELL" VERSION="1" LANGU="E" DESCRIPT="Top left range cell" EXPOSURE="0" STATE="1" EDITORDER="26 " AUTHOR="FEMIA" CREATEDON="20100704" CHANGEDBY="FEMIA" CHANGEDON="20101217" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
@@ -2548,7 +2550,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20101217" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IT_FIELD_CATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20101217" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IS_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20101217" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS" PAROPTIONL="X"/>
-  <source>method BIND_TABLE.
+  <source>METHOD bind_table.
 
   DATA:
         lv_row_int            TYPE zexcel_cell_row,
@@ -2570,9 +2572,10 @@ endmethod.</source>
         lc_top_left_column  TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
         lc_top_left_row     TYPE zexcel_cell_row VALUE &apos;3&apos;.
 
-  FIELD-SYMBOLS: &lt;ls_field_catalog&gt; TYPE zexcel_s_fieldcatalog,
-                 &lt;fs_table_line&gt;    TYPE ANY,
-                 &lt;fs_fldval&gt;        TYPE ANY.
+  FIELD-SYMBOLS: &lt;ls_field_catalog&gt;         TYPE zexcel_s_fieldcatalog,
+                 &lt;ls_field_catalog_custom&gt;  TYPE zexcel_s_fieldcatalog,
+                 &lt;fs_table_line&gt;            TYPE ANY,
+                 &lt;fs_fldval&gt;                TYPE ANY.
 
   ls_settings = is_table_settings.
 
@@ -2588,11 +2591,11 @@ endmethod.</source>
     ls_settings-top_left_row = lc_top_left_row.
   ENDIF.
 
-  IF it_field_catalog IS NOT SUPPLIED.
+  if it_field_catalog is not supplied.
     lt_field_catalog = zcl_excel_common=&gt;get_fieldcatalog( ip_table = ip_table ).
-  ELSE.
+  else.
     lt_field_catalog = it_field_catalog.
-  ENDIF.
+  endif.
 
   CREATE OBJECT lo_table.
   lo_table-&gt;settings = ls_settings.
@@ -2636,10 +2639,16 @@ endmethod.</source>
     ADD 1 TO lv_row_int.
     LOOP AT ip_table ASSIGNING &lt;fs_table_line&gt;.
       ASSIGN COMPONENT &lt;ls_field_catalog&gt;-fieldname OF STRUCTURE &lt;fs_table_line&gt; TO &lt;fs_fldval&gt;.
-      me-&gt;set_cell( ip_column = lv_column_alpha
-                    ip_row    = lv_row_int
-                    ip_value  = &lt;fs_fldval&gt;
-                      ).
+      IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
+        me-&gt;set_cell( ip_column = lv_column_alpha
+                      ip_row    = lv_row_int
+                      ip_value  = &lt;fs_fldval&gt;
+                      ip_style  = &lt;ls_field_catalog&gt;-style ).
+      ELSE.
+        me-&gt;set_cell( ip_column = lv_column_alpha
+                      ip_row    = lv_row_int
+                      ip_value  = &lt;fs_fldval&gt; ).
+      ENDIF.
       ADD 1 TO lv_row_int.
     ENDLOOP.
 
@@ -2668,7 +2677,7 @@ endmethod.</source>
   &quot; Set field catalog
   lo_table-&gt;fieldcat = lt_field_catalog[].
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_COLUMN_WIDTHS" VERSION="1" LANGU="E" DESCRIPT="Calculate widths for auto-size columns" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20101112" CHANGEDBY="FEMIA" CHANGEDON="20101217" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CALCULATE_COLUMN_WIDTHS.
@@ -3283,7 +3292,7 @@ endmethod.</source>
   SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
   SHIFT lv_row_alpha LEFT DELETING LEADING space.
   CONCATENATE ip_column_start lv_row_alpha INTO ls_sheet_content-cell_coords.
-  APPEND ls_sheet_content TO sheet_content_merge.
+  INSERT ls_sheet_content INTO TABLE sheet_content_merge.
 
   ls_sheet_content-cell_row     = ip_row.
   ls_sheet_content-cell_column  = lv_column_end.
@@ -3291,7 +3300,7 @@ endmethod.</source>
   SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
   SHIFT lv_row_alpha LEFT DELETING LEADING space.
   CONCATENATE ip_column_end lv_row_alpha INTO ls_sheet_content-cell_coords.
-  APPEND ls_sheet_content TO sheet_content_merge.
+   INSERT ls_sheet_content INTO TABLE sheet_content_merge.
 
 endmethod.</source>
  </method>

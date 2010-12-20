@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20101206" VERN="000029" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101206" STIME="133934" IDATE="20101206" ITIME="133934" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20101220" VERN="000030" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101220" STIME="214615" IDATE="20101220" ITIME="214615" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -56,5 +56,6 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel18 WITH p_path = p_path AND RETURN. &quot; Lock workbook
   SUBMIT zdemo_excel19 WITH p_path = p_path AND RETURN. &quot; Set active sheet
   &quot; zdemo_excel20 is not added because it uses ALV and cannot be processed
-  SUBMIT zdemo_excel21 WITH p_path = p_path AND RETURN. &quot; Color Picker</source>
+  SUBMIT zdemo_excel21 WITH p_path = p_path AND RETURN. &quot; Color Picker
+  SUBMIT zdemo_excel22 WITH p_path = p_path AND RETURN. &quot; Bind table with field catalog &amp; style</source>
 </PROG>
