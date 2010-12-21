@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="FEMIA" UDAT="20101220" VERN="000013" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101220" STIME="213947" IDATE="20101220" ITIME="213947" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="FEMIA" UDAT="20101221" VERN="000018" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101221" STIME="161716" IDATE="20101221" ITIME="161716" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
@@ -20,12 +20,15 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_style                TYPE REF TO zcl_excel_style,
       lo_style_editable       TYPE REF TO zcl_excel_style,
+      lo_data_validation      TYPE REF TO zcl_excel_data_validation,
       column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
 
 DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
-      ls_table_settings       TYPE zexcel_s_table_settings.
+      ls_table_settings       TYPE zexcel_s_table_settings,
+      ls_table_settings_out   TYPE zexcel_s_table_settings.
 
 DATA: lv_file                 TYPE xstring,
+      lv_style_guid           TYPE zexcel_cell_style,
       lv_bytecount            TYPE i,
       lt_file_tab             TYPE solix_tab.
 
@@ -33,7 +36,8 @@ DATA: lv_file_name      TYPE string,
       lv_file_path      TYPE string,
       lv_full_path      TYPE string,
       lv_workdir        TYPE string,
-      lv_file_separator TYPE c.
+      lv_file_separator TYPE c,
+      lv_row            TYPE char10.
 
 FIELD-SYMBOLS: &lt;fs_field_catalog&gt; TYPE zexcel_s_fieldcatalog.
 
@@ -48,7 +52,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-                                                         p_path = lv_workdir.
+  p_path = lv_workdir.
 
 START-OF-SELECTION.
 
@@ -68,10 +72,17 @@ START-OF-SELECTION.
   DATA lt_test TYPE TABLE OF sflight.
   SELECT * FROM sflight INTO TABLE lt_test.
 
+  &quot; sheet style (white background)
+  lo_style = lo_excel-&gt;add_new_style( ).
+  lo_style-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_white.
+  lv_style_guid = lo_style-&gt;get_guid( ).
+
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;zif_excel_sheet_properties~set_style( lv_style_guid ).
   lo_worksheet-&gt;zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=&gt;c_protected.
-  lo_worksheet-&gt;zif_excel_sheet_protection~password   = zcl_excel_common=&gt;encrypt_password( &apos;capman&apos; ).
+  lo_worksheet-&gt;zif_excel_sheet_protection~password   = zcl_excel_common=&gt;encrypt_password( &apos;test&apos; ).
   lo_worksheet-&gt;zif_excel_sheet_protection~sheet      = zif_excel_sheet_protection=&gt;c_active.
   lo_worksheet-&gt;zif_excel_sheet_protection~objects    = zif_excel_sheet_protection=&gt;c_active.
   lo_worksheet-&gt;zif_excel_sheet_protection~scenarios  = zif_excel_sheet_protection=&gt;c_active.
@@ -86,38 +97,51 @@ START-OF-SELECTION.
 
   lt_field_catalog = zcl_excel_common=&gt;get_fieldcatalog( ip_table = lt_test ).
 
-  loop at lt_field_catalog assigning &lt;fs_field_catalog&gt;.
-    case &lt;fs_field_catalog&gt;-fieldname.
-      when &apos;CARRID&apos;.
+  LOOP AT lt_field_catalog ASSIGNING &lt;fs_field_catalog&gt;.
+    CASE &lt;fs_field_catalog&gt;-fieldname.
+      WHEN &apos;CARRID&apos;.
         &lt;fs_field_catalog&gt;-position   = 3.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
         &lt;fs_field_catalog&gt;-style      = lo_style-&gt;get_guid( ).
-      when &apos;CONNID&apos;.
+      WHEN &apos;CONNID&apos;.
         &lt;fs_field_catalog&gt;-position   = 1.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
         &lt;fs_field_catalog&gt;-style      = lo_style-&gt;get_guid( ).
-      when &apos;FLDATE&apos;.
+      WHEN &apos;FLDATE&apos;.
         &lt;fs_field_catalog&gt;-position   = 2.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
         &lt;fs_field_catalog&gt;-style      = lo_style-&gt;get_guid( ).
-      when &apos;PRICE&apos;.
+      WHEN &apos;PRICE&apos;.
         &lt;fs_field_catalog&gt;-position   = 4.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
         &lt;fs_field_catalog&gt;-style      = lo_style_editable-&gt;get_guid( )..
         &lt;fs_field_catalog&gt;-totals_function = zcl_excel_table=&gt;totals_function_sum.
-      when others.
+      WHEN OTHERS.
         &lt;fs_field_catalog&gt;-dynpfld = abap_false.
-    endcase.
-  endloop.
+    ENDCASE.
+  ENDLOOP.
 
   ls_table_settings-table_style  = zcl_excel_table=&gt;builtinstyle_medium2.
   ls_table_settings-show_row_stripes = abap_true.
 
-  lo_worksheet-&gt;bind_table( ip_table          = lt_test
-                            it_field_catalog  = lt_field_catalog
-                            is_table_settings = ls_table_settings ).
+  lo_worksheet-&gt;bind_table( EXPORTING
+                              ip_table          = lt_test
+                              it_field_catalog  = lt_field_catalog
+                              is_table_settings = ls_table_settings
+                            IMPORTING
+                              es_table_settings = ls_table_settings_out ).
 
   lo_worksheet-&gt;freeze_panes( ip_num_rows = 3 ). &quot;freeze column headers when scrolling
+
+  lo_data_validation                  = lo_worksheet-&gt;add_new_data_validation( ).
+  lo_data_validation-&gt;type            = zcl_excel_data_validation=&gt;c_custom.
+  lv_row = ls_table_settings_out-top_left_row.
+  CONDENSE lv_row.
+  CONCATENATE &apos;ISNUMBER(&apos; ls_table_settings_out-top_left_column lv_row &apos;)&apos; INTO lo_data_validation-&gt;value.
+  lo_data_validation-&gt;cell_row        = ls_table_settings_out-top_left_row.
+  lo_data_validation-&gt;cell_column     = ls_table_settings_out-top_left_column.
+  lo_data_validation-&gt;cell_row_to     = ls_table_settings_out-bottom_right_row.
+  lo_data_validation-&gt;cell_column_to  = ls_table_settings_out-bottom_right_column.
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
