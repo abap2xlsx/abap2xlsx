@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Represents Excel Table" UUID="A1497B4C00CDF215E1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20100731" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Represents Excel Table" UUID="A1497B4C00CDF215E1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20100731" CHANGEDBY="BCUSER" CHANGEDON="20101021" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <publicSection>class ZCL_EXCEL_TABLE definition
   public
   final
@@ -135,7 +135,7 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" SCONAME="IP_INCLUDE_TOTALS_ROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_BOOL" PARVALUE="ABAP_TRUE"/>
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" SCONAME="OV_REFERENCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
-  <source>method GET_REFERENCE.
+  <source>METHOD get_reference.
   DATA: lv_column         TYPE zexcel_cell_column,
         lv_table_lines TYPE i,
         lv_right_column TYPE zexcel_cell_column_alpha,
@@ -147,31 +147,34 @@ endmethod.</source>
   FIELD-SYMBOLS: &lt;fs_table&gt; TYPE STANDARD TABLE.
 
 *column
-    lv_column = zcl_excel_common=&gt;convert_column2int( settings-top_left_column ).
-    lv_table_lines = 0.
-    LOOP AT fieldcat INTO ls_field_catalog WHERE dynpfld EQ abap_true.
-      ADD 1 TO lv_table_lines.
-    ENDLOOP.
-    lv_column = lv_column + lv_table_lines - 1.
-    lv_right_column  = zcl_excel_common=&gt;convert_column2alpha( lv_column ).
+  lv_column = zcl_excel_common=&gt;convert_column2int( settings-top_left_column ).
+  lv_table_lines = 0.
+  LOOP AT fieldcat INTO ls_field_catalog WHERE dynpfld EQ abap_true.
+    ADD 1 TO lv_table_lines.
+  ENDLOOP.
+  lv_column = lv_column + lv_table_lines - 1.
+  lv_right_column  = zcl_excel_common=&gt;convert_column2alpha( lv_column ).
 
 *row
-    ASSIGN table_data-&gt;* TO &lt;fs_table&gt;.
-    DESCRIBE TABLE &lt;fs_table&gt; LINES lv_table_lines.
-    lv_bottom_row = settings-top_left_row + lv_table_lines .
+  ASSIGN table_data-&gt;* TO &lt;fs_table&gt;.
+  DESCRIBE TABLE &lt;fs_table&gt; LINES lv_table_lines.
+  IF lv_table_lines = 0.
+    lv_table_lines = 1. &quot;table needs at least 1 data row
+  ENDIF.
+  lv_bottom_row = settings-top_left_row + lv_table_lines .
 
-    IF me-&gt;has_totals( ) = abap_true AND ip_include_totals_row = abap_true.
-      add 1 to lv_bottom_row.
-    ENDIF.
+  IF me-&gt;has_totals( ) = abap_true AND ip_include_totals_row = abap_true.
+    ADD 1 TO lv_bottom_row.
+  ENDIF.
 
-    lv_top_row_string = zcl_excel_common=&gt;number_to_excel_string( settings-top_left_row ).
-    lv_bottom_row_string = zcl_excel_common=&gt;number_to_excel_string( lv_bottom_row ).
+  lv_top_row_string = zcl_excel_common=&gt;number_to_excel_string( settings-top_left_row ).
+  lv_bottom_row_string = zcl_excel_common=&gt;number_to_excel_string( lv_bottom_row ).
 
-    CONCATENATE settings-top_left_column lv_top_row_string
-                &apos;:&apos;
-                lv_right_column lv_bottom_row_string INTO ov_reference.
+  CONCATENATE settings-top_left_column lv_top_row_string
+              &apos;:&apos;
+              lv_right_column lv_bottom_row_string INTO ov_reference.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Returns formula for totals row based on column  name and fun" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100831" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>

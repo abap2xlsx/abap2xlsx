@@ -2670,6 +2670,12 @@ endmethod.</source>
       ENDIF.
       ADD 1 TO lv_row_int.
     ENDLOOP.
+    IF sy-subrc &lt;&gt; 0. &quot;create empty row if table has no data
+      me-&gt;set_cell( ip_column = lv_column_alpha
+                    ip_row    = lv_row_int
+                    ip_value  = space ).
+      ADD 1 TO lv_row_int.
+    ENDIF.
 
     &quot; totals
     IF &lt;ls_field_catalog&gt;-totals_function IS NOT INITIAL.
