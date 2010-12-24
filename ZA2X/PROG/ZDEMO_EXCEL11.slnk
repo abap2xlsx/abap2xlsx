@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="FEMIA" UDAT="20101217" VERN="000050" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101217" STIME="230410" IDATE="20101217" ITIME="230410" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20101224" VERN="000054" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="110436" IDATE="20101224" ITIME="110436" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="Export Organisation and Contact Persons using ABAP2XLSX" LENGTH="55 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="55 "/>
    <textElement ID="S" KEY="COUNTRY" ENTRY="D       ." LENGTH="19 "/>
    <textElement ID="S" KEY="MAXSEL" ENTRY="D       ." LENGTH="27 "/>
    <textElement ID="S" KEY="MD" ENTRY="        Select by master data" LENGTH="29 "/>
-   <textElement ID="S" KEY="PARTNER" ENTRY="D       ." LENGTH="24 "/>
+   <textElement ID="S" KEY="PARTNER" ENTRY="D       ." LENGTH="17 "/>
    <textElement ID="S" KEY="PARTNERC" ENTRY="D       ." LENGTH="19 "/>
    <textElement ID="S" KEY="POSTLCOD" ENTRY="D       ." LENGTH="19 "/>
-   <textElement ID="S" KEY="P_PATH" ENTRY="        Download path" LENGTH="21 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="21 "/>
    <textElement ID="S" KEY="REL" ENTRY="        Select by relationship" LENGTH="30 "/>
    <textElement ID="S" KEY="RELTYP" ENTRY="D       ." LENGTH="25 "/>
   </language>
  </textPool>
+ <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL11
 *&amp; Export Organisation and Contact Persons using ABAP2XLSX
@@ -46,15 +47,13 @@ FIELD-SYMBOLS: &lt;relationship_address&gt; LIKE LINE OF relationship_addresses.
 DATA: lt_download TYPE TABLE OF zexcel_s_org_rel.
 FIELD-SYMBOLS: &lt;download&gt; LIKE LINE OF lt_download.
 
-DATA: lv_file_name      TYPE string,
-      lv_file_path      TYPE string,
-      lv_full_path      TYPE string,
+DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;11_Export_Org_and_Contact.xlsx&apos;.
 
-PARAMETERS: p_path TYPE string.
+PARAMETERS: p_path TYPE zexcel_export_dir.
 
 PARAMETERS: md TYPE flag RADIOBUTTON GROUP act.
 
@@ -73,9 +72,11 @@ PARAMETERS: reltyp TYPE bu_reltyp DEFAULT &apos;BUR011&apos;,
 SELECTION-SCREEN END OF BLOCK b.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
+  lv_workdir = p_path.
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
+                                              CHANGING  selected_folder = lv_workdir ).
+  p_path = lv_workdir.
 
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
-                                               CHANGING selected_folder = p_path ).
 
 INITIALIZATION.
   a = &apos;Select by master data&apos;.
@@ -88,7 +89,7 @@ START-OF-SELECTION.
     p_path = lv_workdir.
   ENDIF.
   cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
   IF md = abap_true.
     &quot; Read all Companies by Master Data
@@ -231,15 +232,11 @@ START-OF-SELECTION.
         lo_worksheet            TYPE REF TO zcl_excel_worksheet,
         lo_style_body           TYPE REF TO zcl_excel_style,
         lo_border_dark          TYPE REF TO zcl_excel_style_border,
-        lo_border_light         TYPE REF TO zcl_excel_style_border,
         column_dimension        TYPE REF TO zcl_excel_worksheet_columndime,
         row_dimension           TYPE REF TO zcl_excel_worksheet_rowdimensi.
 
-  DATA: lv_style_body_odd_guid    TYPE zexcel_cell_style,
-        lv_style_body_even_guid   TYPE zexcel_cell_style,
-        lv_style_body_green       TYPE zexcel_cell_style,
-        lv_style_body_odd_n_guid  TYPE zexcel_cell_style,
-        lv_style_body_even_n_guid TYPE zexcel_cell_style.
+  DATA: lv_style_body_even_guid   TYPE zexcel_cell_style,
+        lv_style_body_green       TYPE zexcel_cell_style.
 
   DATA: row TYPE zexcel_cell_row.
 
@@ -263,12 +260,6 @@ START-OF-SELECTION.
   CREATE OBJECT lo_border_dark.
   lo_border_dark-&gt;border_color = zcl_excel_style_color=&gt;c_black.
   lo_border_dark-&gt;border_style = zcl_excel_style_border=&gt;c_border_thin.
-  &quot;Create style with border odd
-  lo_style_body                       = lo_excel-&gt;add_new_style( ).
-  lo_style_body-&gt;fill-&gt;filltype       = zcl_excel_style_fill=&gt;c_fill_solid.
-  lo_style_body-&gt;fill-&gt;fgcolor        = zcl_excel_style_color=&gt;c_gray.
-  lo_style_body-&gt;borders-&gt;allborders  = lo_border_dark.
-  lv_style_body_odd_guid              = lo_style_body-&gt;get_guid( ).
   &quot;Create style with border even
   lo_style_body                       = lo_excel-&gt;add_new_style( ).
   lo_style_body-&gt;fill-&gt;fgcolor        = zcl_excel_style_color=&gt;c_yellow.
@@ -279,18 +270,6 @@ START-OF-SELECTION.
   lo_style_body-&gt;fill-&gt;fgcolor        = zcl_excel_style_color=&gt;c_green.
   lo_style_body-&gt;borders-&gt;allborders  = lo_border_dark.
   lv_style_body_green                 = lo_style_body-&gt;get_guid( ).
-  &quot;Create style numeric with border odd
-  lo_style_body                             = lo_excel-&gt;add_new_style( ).
-  lo_style_body-&gt;fill-&gt;filltype             = zcl_excel_style_fill=&gt;c_fill_solid.
-  lo_style_body-&gt;fill-&gt;fgcolor              = zcl_excel_style_color=&gt;c_gray.
-  lo_style_body-&gt;borders-&gt;allborders        = lo_border_dark.
-  lo_style_body-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_number.
-  lv_style_body_odd_n_guid                  = lo_style_body-&gt;get_guid( ).
-  &quot;Create style numeric with border odd
-  lo_style_body                              = lo_excel-&gt;add_new_style( ).
-  lo_style_body-&gt;borders-&gt;allborders         = lo_border_dark.
-  lo_style_body-&gt;number_format-&gt;format_code  = zcl_excel_style_number_format=&gt;c_format_number.
-  lv_style_body_even_n_guid                  = lo_style_body-&gt;get_guid( ).
 
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
@@ -474,13 +453,21 @@ START-OF-SELECTION.
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-*   Convert to binary
-  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-  lv_bytecount = XSTRLEN( lv_file ).
+  &quot; Convert to binary
+  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+    EXPORTING
+      buffer        = lv_file
+    IMPORTING
+      output_length = lv_bytecount
+    TABLES
+      binary_tab    = lt_file_tab.
+*  &quot; This method is only available on AS ABAP &gt; 6.40
+*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+*  lv_bytecount = xstrlen( lv_file ).
 
   &quot; Save the file
   cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                    filename     = p_path
+                                                    filename     = lv_full_path
                                                     filetype     = &apos;BIN&apos;
                                            CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>

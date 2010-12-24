@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="FEMIA" UDAT="20101217" VERN="000031" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101217" STIME="230524" IDATE="20101217" ITIME="230524" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="BCUSER" UDAT="20101224" VERN="000034" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="110720" IDATE="20101224" ITIME="110720" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="Hide Columns" LENGTH="12 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Hide Columns" LENGTH="28 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
+ <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL12
 *&amp;
@@ -16,7 +18,7 @@
 REPORT  zdemo_excel12.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         type ref to zif_excel_writer,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       column_dimension        TYPE REF TO zcl_excel_worksheet_columndime,
       row_dimension           TYPE REF TO zcl_excel_worksheet_rowdimensi.
@@ -25,96 +27,103 @@ DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
       lt_file_tab             TYPE solix_tab.
 
-DATA: lv_file_name      TYPE string,
-      lv_file_path      TYPE string,
-      lv_full_path      TYPE string,
+DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;12_HideSizeOutlineRowsAndColumns.xlsx&apos;.
 
-PARAMETERS: p_path TYPE string.
+PARAMETERS: p_path TYPE zexcel_export_dir.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-
-cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
-CHANGING selected_folder = p_path ).
+  lv_workdir = p_path.
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
+                                              CHANGING  selected_folder = lv_workdir ).
+  p_path = lv_workdir.
 
 INITIALIZATION.
-cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-p_path = lv_workdir.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  p_path = lv_workdir.
 
 START-OF-SELECTION.
 
-IF p_path IS INITIAL.
-p_path = lv_workdir.
-ENDIF.
-cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
 
-&quot; Creates active sheet
-CREATE OBJECT lo_excel.
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
 
-&quot; Get active sheet
-lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
-lo_worksheet-&gt;set_title( &apos;Sheet1&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Hello world in AutoSize column&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 3 ip_value = &apos;Hello world in a column width size 50&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 4 ip_value = &apos;Hello world (hidden column)&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;F&apos; ip_row = 2 ip_value = &apos;Outline column level 0&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;G&apos; ip_row = 2 ip_value = &apos;Outline column level 1&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;H&apos; ip_row = 2 ip_value = &apos;Outline column level 2&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;I&apos; ip_row = 2 ip_value = &apos;Small&apos; ).
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;set_title( &apos;Sheet1&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Hello world in AutoSize column&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 3 ip_value = &apos;Hello world in a column width size 50&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 4 ip_value = &apos;Hello world (hidden column)&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;F&apos; ip_row = 2 ip_value = &apos;Outline column level 0&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;G&apos; ip_row = 2 ip_value = &apos;Outline column level 1&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;H&apos; ip_row = 2 ip_value = &apos;Outline column level 2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;I&apos; ip_row = 2 ip_value = &apos;Small&apos; ).
 
 
-lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 1 ip_value = &apos;Hello world (hidden row)&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;E&apos; ip_row = 5 ip_value = &apos;Hello world in a row height size 20&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 6 ip_value = &apos;Outline row level 0&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 7 ip_value = &apos;Outline row level 1&apos; ).
-lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 8 ip_value = &apos;Outline row level 2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 1 ip_value = &apos;Hello world (hidden row)&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;E&apos; ip_row = 5 ip_value = &apos;Hello world in a row height size 20&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 6 ip_value = &apos;Outline row level 0&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 7 ip_value = &apos;Outline row level 1&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 8 ip_value = &apos;Outline row level 2&apos; ).
 
-&quot; Column Settings
-&quot; Auto size
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
-column_dimension-&gt;set_auto_size( abap_true ).
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;I&apos; ).
-column_dimension-&gt;set_auto_size( abap_true ).
-&quot; Manual Width
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
-column_dimension-&gt;set_width( 50 ).
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;D&apos; ).
-column_dimension-&gt;set_visible( ip_visible = abap_false ).
-&quot; Implementation in the Writer is not working yet ===== TODO =====
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;F&apos; ).
-column_dimension-&gt;set_outline_level( 0 ).
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;G&apos; ).
-column_dimension-&gt;set_outline_level( 1 ).
-column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;H&apos; ).
-column_dimension-&gt;set_outline_level( 2 ).
+  &quot; Column Settings
+  &quot; Auto size
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
+  column_dimension-&gt;set_auto_size( abap_true ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;I&apos; ).
+  column_dimension-&gt;set_auto_size( abap_true ).
+  &quot; Manual Width
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
+  column_dimension-&gt;set_width( 50 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;D&apos; ).
+  column_dimension-&gt;set_visible( ip_visible = abap_false ).
+  &quot; Implementation in the Writer is not working yet ===== TODO =====
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;F&apos; ).
+  column_dimension-&gt;set_outline_level( 0 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;G&apos; ).
+  column_dimension-&gt;set_outline_level( 1 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;H&apos; ).
+  column_dimension-&gt;set_outline_level( 2 ).
 
-row_dimension = lo_worksheet-&gt;get_row_dimension( 1 ).
-row_dimension-&gt;set_visible( abap_false ).
-row_dimension = lo_worksheet-&gt;get_row_dimension( 5 ).
-row_dimension-&gt;set_row_height( 20 ).
-&quot; Implementation in the Writer is not working yet ===== TODO =====
-row_dimension = lo_worksheet-&gt;get_row_dimension( 6 ).
-row_dimension-&gt;set_outline_level( 0 ).
-row_dimension = lo_worksheet-&gt;get_row_dimension( 7 ).
-row_dimension-&gt;set_outline_level( 1 ).
-row_dimension = lo_worksheet-&gt;get_row_dimension( 8 ).
-row_dimension-&gt;set_outline_level( 2 ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( 1 ).
+  row_dimension-&gt;set_visible( abap_false ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( 5 ).
+  row_dimension-&gt;set_row_height( 20 ).
+  &quot; Implementation in the Writer is not working yet ===== TODO =====
+  row_dimension = lo_worksheet-&gt;get_row_dimension( 6 ).
+  row_dimension-&gt;set_outline_level( 0 ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( 7 ).
+  row_dimension-&gt;set_outline_level( 1 ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( 8 ).
+  row_dimension-&gt;set_outline_level( 2 ).
 
-create object lo_excel_writer type zcl_excel_writer_2007.
-lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-*   Convert to binary
-lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-lv_bytecount = xstrlen( lv_file ).
+  &quot; Convert to binary
+  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+    EXPORTING
+      buffer        = lv_file
+    IMPORTING
+      output_length = lv_bytecount
+    TABLES
+      binary_tab    = lt_file_tab.
+*  &quot; This method is only available on AS ABAP &gt; 6.40
+*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+*  lv_bytecount = xstrlen( lv_file ).
 
-&quot; Save the file
-cl_gui_frontend_services=&gt;gui_download( exporting bin_filesize = lv_bytecount
-  filename     = p_path
-  filetype     = &apos;BIN&apos;
-changing data_tab     = lt_file_tab ).</source>
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+                                                    filename     = lv_full_path
+                                                    filetype     = &apos;BIN&apos;
+                                           CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL16" VARCL="X" SUBC="1" CNAM="VONDRUSKA" CDAT="20100914" UNAM="FEMIA" UDAT="20101217" VERN="000056" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101217" STIME="230849" IDATE="20101217" ITIME="230849" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL16" VARCL="X" SUBC="1" CNAM="VONDRUSKA" CDAT="20100914" UNAM="BCUSER" UDAT="20101224" VERN="000059" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="122147" IDATE="20101224" ITIME="122147" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="Test for excel - drawings" LENGTH="25 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Drawings" LENGTH="24 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
+ <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
-*&amp; Report  ZIFE_TEST_EXCEL
+*&amp; Report  ZDEMO_EXCEL16
 *&amp;
 *&amp;---------------------------------------------------------------------*
 *&amp;
@@ -18,24 +20,25 @@ REPORT  zdemo_excel16.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_drawing              TYPE REF TO zcl_excel_drawing,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+      lo_drawing              TYPE REF TO zcl_excel_drawing.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
       lt_file_tab             TYPE solix_tab.
 
-DATA: lv_workdir        TYPE string,
+DATA: lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;16_Drawings.xlsx&apos;.
 
-PARAMETERS: p_path TYPE string.
+PARAMETERS: p_path TYPE zexcel_export_dir.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
-  CHANGING selected_folder = p_path ).
+  lv_workdir = p_path.
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
+                                              CHANGING  selected_folder = lv_workdir ).
+  p_path = lv_workdir.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
@@ -47,7 +50,7 @@ START-OF-SELECTION.
     p_path = lv_workdir.
   ENDIF.
   cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
   &quot; Creates active sheet
   CREATE OBJECT lo_excel.
@@ -87,8 +90,8 @@ START-OF-SELECTION.
       error_no_gui            = 18
       OTHERS                  = 19.
   IF sy-subrc &lt;&gt; 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+               WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
   ENDIF.
 
   CALL FUNCTION &apos;SCMS_BINARY_TO_XSTRING&apos;
@@ -101,6 +104,10 @@ START-OF-SELECTION.
     EXCEPTIONS
       failed       = 1
       OTHERS       = 2.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+               WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+  ENDIF.
 
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
@@ -137,13 +144,21 @@ START-OF-SELECTION.
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-*   Convert to binary
-  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-  lv_bytecount = XSTRLEN( lv_file ).
+  &quot; Convert to binary
+  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+    EXPORTING
+      buffer        = lv_file
+    IMPORTING
+      output_length = lv_bytecount
+    TABLES
+      binary_tab    = lt_file_tab.
+*  &quot; This method is only available on AS ABAP &gt; 6.40
+*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+*  lv_bytecount = xstrlen( lv_file ).
 
   &quot; Save the file
   cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-    filename     = p_path
-    filetype     = &apos;BIN&apos;
-  CHANGING data_tab     = lt_file_tab ).</source>
+                                                    filename     = lv_full_path
+                                                    filetype     = &apos;BIN&apos;
+                                           CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>

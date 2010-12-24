@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="FEMIA" UDAT="20101217" VERN="000031" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101217" STIME="230307" IDATE="20101217" ITIME="230307" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="BCUSER" UDAT="20101224" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="105525" IDATE="20101224" ITIME="105525" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Data validation (Dropdown list)" LENGTH="47 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
+ <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
-*&amp; Report  ZIFE_TEST_EXCEL
+*&amp; Report  ZDEMO_EXCEL9
 *&amp;
 *&amp;---------------------------------------------------------------------*
 *&amp;
@@ -19,28 +21,26 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_range                TYPE REF TO zcl_excel_range,
-      lo_data_validation      TYPE REF TO zcl_excel_data_validation,
-      lv_style_number_guid    TYPE zexcel_cell_style.
+      lo_data_validation      TYPE REF TO zcl_excel_data_validation.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
       lt_file_tab             TYPE solix_tab.
 
-DATA: lv_file_name      TYPE string,
-      lv_file_path      TYPE string,
-      lv_full_path      TYPE string,
+DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
-      lv_title          TYPE ZEXCEL_SHEET_TITLE,
+      lv_title          TYPE zexcel_sheet_title,
       lv_file_separator TYPE c.
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;09_DataValidation.xlsx&apos;.
 
-PARAMETERS: p_path TYPE string.
+PARAMETERS: p_path TYPE zexcel_export_dir.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = p_path
-  CHANGING selected_folder = p_path ).
+  lv_workdir = p_path.
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
+                                              CHANGING  selected_folder = lv_workdir ).
+  p_path = lv_workdir.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
@@ -52,9 +52,9 @@ START-OF-SELECTION.
     p_path = lv_workdir.
   ENDIF.
   cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
-
+  &quot; Creates active sheet
   CREATE OBJECT lo_excel.
 
   &quot; Get active sheet
@@ -90,13 +90,21 @@ START-OF-SELECTION.
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-*   Convert to binary
-  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-  lv_bytecount = XSTRLEN( lv_file ).
+  &quot; Convert to binary
+  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+    EXPORTING
+      buffer        = lv_file
+    IMPORTING
+      output_length = lv_bytecount
+    TABLES
+      binary_tab    = lt_file_tab.
+*  &quot; This method is only available on AS ABAP &gt; 6.40
+*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+*  lv_bytecount = xstrlen( lv_file ).
 
   &quot; Save the file
   cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-    filename     = p_path
-    filetype     = &apos;BIN&apos;
-  CHANGING data_tab     = lt_file_tab ).</source>
+                                                    filename     = lv_full_path
+                                                    filetype     = &apos;BIN&apos;
+                                           CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>
