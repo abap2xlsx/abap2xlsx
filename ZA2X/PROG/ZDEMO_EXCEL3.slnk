@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101224" VERN="000031" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="104803" IDATE="20101224" ITIME="104803" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101224" VERN="000033" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="142151" IDATE="20101224" ITIME="142151" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
-   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
+   <textElement ID="S" KEY="P_EMPTY" ENTRY="        Leave Table Empty" LENGTH="25 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="24 "/>
   </language>
  </textPool>
  <programDocumentation/>
@@ -16,6 +17,8 @@
 *&amp;---------------------------------------------------------------------*
 
 REPORT  zdemo_excel3.
+
+TYPE-POOLS: abap.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
@@ -34,7 +37,8 @@ DATA: lv_full_path      TYPE string,
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;03_iTab.xlsx&apos;.
 
-PARAMETERS: p_path TYPE zexcel_export_dir.
+PARAMETERS: p_path  TYPE zexcel_export_dir,
+            p_empty TYPE flag.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
   lv_workdir = p_path.
@@ -62,7 +66,10 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_title( ip_title = &apos;Internal table&apos;).
 
   DATA lt_test TYPE TABLE OF sflight.
-  SELECT * FROM sflight INTO TABLE lt_test.
+
+  IF p_empty &lt;&gt; abap_true.
+    SELECT * FROM sflight INTO TABLE lt_test.
+  ENDIF.
 
   ls_table_settings-table_style  = zcl_excel_table=&gt;builtinstyle_medium2.
   ls_table_settings-show_row_stripes = abap_true.
