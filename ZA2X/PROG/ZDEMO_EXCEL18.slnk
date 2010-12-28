@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL18" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100923" UNAM="BCUSER" UDAT="20101224" VERN="000025" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="122554" IDATE="20101224" ITIME="122554" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL18" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100923" UNAM="BCUSER" UDAT="20101228" VERN="000027" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110604" IDATE="20101228" ITIME="110604" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Book protection" LENGTH="31 "/>
@@ -42,6 +42,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  cl_gui_cfw=&gt;flush( ).
   p_path = lv_workdir.
 
 START-OF-SELECTION.

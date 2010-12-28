@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL1" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101224" VERN="000051" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="101943" IDATE="20101224" ITIME="101943" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL1" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101228" VERN="000054" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="105109" IDATE="20101228" ITIME="105109" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Hello World" LENGTH="27 "/>
@@ -8,7 +8,7 @@
  </textPool>
  <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
-*&amp; Report  ZIFE_TEST_EXCEL
+*&amp; Report  ZDEMO_EXCEL1
 *&amp;
 *&amp;---------------------------------------------------------------------*
 *&amp;
@@ -43,6 +43,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  cl_gui_cfw=&gt;flush( ).
   p_path = lv_workdir.
 
 START-OF-SELECTION.

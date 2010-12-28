@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL7" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101224" VERN="000028" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="105126" IDATE="20101224" ITIME="105126" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL7" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101228" VERN="000030" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110415" IDATE="20101228" ITIME="110415" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: All conditional formating possibilities" LENGTH="55 "/>
@@ -42,6 +42,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  cl_gui_cfw=&gt;flush( ).
   p_path = lv_workdir.
 
 START-OF-SELECTION.

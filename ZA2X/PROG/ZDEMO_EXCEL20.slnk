@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="BCUSER" UDAT="20101218" VERN="000036" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="102757" IDATE="20101218" ITIME="172118" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="BCUSER" UDAT="20101228" VERN="000038" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110629" IDATE="20101228" ITIME="110629" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Bind ALV" LENGTH="24 "/>
@@ -874,6 +874,7 @@ FORM user_command .
 
 * get save file path
     cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = l_path ).
+    cl_gui_cfw=&gt;flush( ).
     cl_gui_frontend_services=&gt;directory_browse(
       EXPORTING initial_folder = l_path
       CHANGING selected_folder = l_path ).

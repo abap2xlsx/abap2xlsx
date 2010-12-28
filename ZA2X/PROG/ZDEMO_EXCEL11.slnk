@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20101224" VERN="000054" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101224" STIME="110436" IDATE="20101224" ITIME="110436" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20101228" VERN="000056" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110455" IDATE="20101228" ITIME="110455" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="55 "/>
@@ -82,6 +82,7 @@ INITIALIZATION.
   a = &apos;Select by master data&apos;.
   b = &apos;Select by relationship&apos;.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  cl_gui_cfw=&gt;flush( ).
   p_path = lv_workdir.
 
 START-OF-SELECTION.
