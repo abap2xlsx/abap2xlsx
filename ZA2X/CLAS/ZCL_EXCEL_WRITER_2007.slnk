@@ -2606,6 +2606,23 @@ endmethod.</source>
 
   lo_element_root-&gt;append_child( new_child = lo_element ). &quot; pageSetup node
 
+* drawing
+  DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
+
+  lo_drawings = io_worksheet-&gt;get_drawings( ).
+  IF lo_drawings-&gt;is_empty( ) = abap_false.
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_drawing
+                                                     parent = lo_document ).
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    lo_element-&gt;set_attribute( name = &apos;r:id&apos;
+                               value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
+
 * tables
   DATA lv_table_count TYPE i.
 
@@ -2638,22 +2655,7 @@ endmethod.</source>
 
   ENDIF.
 
-* drawing
-  DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
 
-  lo_drawings = io_worksheet-&gt;get_drawings( ).
-  IF lo_drawings-&gt;is_empty( ) = abap_false.
-    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_drawing
-                                                     parent = lo_document ).
-    ADD 1 TO lv_relation_id.
-
-    lv_value = lv_relation_id.
-    CONDENSE lv_value.
-    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
-    lo_element-&gt;set_attribute( name = &apos;r:id&apos;
-                               value = lv_value ).
-    lo_element_root-&gt;append_child( new_child = lo_element ).
-  ENDIF.
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -2750,29 +2752,6 @@ ENDMETHOD.</source>
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDWHILE.
 
-  lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
-  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-    ADD 1 TO lv_relation_id.
-
-    lv_value = lv_relation_id.
-    CONDENSE lv_value.
-    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
-
-    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
-                                                 parent = lo_document ).
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
-                              value = lv_value ).
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
-                              value = lc_xml_node_rid_table_tp ).
-
-    lv_value = lo_table-&gt;get_name( ).
-    CONCATENATE &apos;../tables/&apos; lv_value &apos;.xml&apos; INTO lv_value.
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
-                              value = lv_value ).
-    lo_element_root-&gt;append_child( new_child = lo_element ).
-  ENDWHILE.
-
 * drawing
   DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
 
@@ -2799,6 +2778,29 @@ ENDMETHOD.</source>
                               value = lv_value ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDIF.
+
+  lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
+                                                 parent = lo_document ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
+                              value = lv_value ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
+                              value = lc_xml_node_rid_table_tp ).
+
+    lv_value = lo_table-&gt;get_name( ).
+    CONCATENATE &apos;../tables/&apos; lv_value &apos;.xml&apos; INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
+                              value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDWHILE.
 
 **********************************************************************
 * STEP 5: Create xstring stream
