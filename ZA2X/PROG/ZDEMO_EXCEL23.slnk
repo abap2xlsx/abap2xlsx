@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="BCUSER" UDAT="20110116" VERN="000021" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110116" STIME="180328" IDATE="20110116" ITIME="180328" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options" LENGTH="70 "/>
+  </language>
+ </textPool>
+ <programDocumentation/>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL23
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel23.
+
+TYPE-POOLS: abap.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
+
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE solix_tab.
+
+DATA: lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
+      lv_file_separator TYPE c.
+
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;23_Sheets_with_and_without_grid_lines.xlsx&apos;.
+
+PARAMETERS: p_path TYPE zexcel_export_dir.
+
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
+  lv_workdir = p_path.
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
+                                              CHANGING  selected_folder = lv_workdir ).
+  p_path = lv_workdir.
+
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  cl_gui_cfw=&gt;flush( ).
+  p_path = lv_workdir.
+
+START-OF-SELECTION.
+
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
+
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
+
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Sheet1&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the first sheet with grid lines and print centered horizontal &amp; vertical&apos; ).
+  lo_worksheet-&gt;set_show_gridlines( i_show_gridlines = abap_true ).
+
+  lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet2!B2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is a link to the second sheet&apos; ip_hyperlink = lo_hyperlink ).
+
+  lo_worksheet-&gt;zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=&gt;c_protected.
+  lo_worksheet-&gt;sheet_setup-&gt;vertical_centered   = abap_true.
+  lo_worksheet-&gt;sheet_setup-&gt;horizontal_centered = abap_true.
+
+  &quot; Second sheet
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Sheet2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the second sheet with grid lines in display and print&apos; ).
+  lo_worksheet-&gt;set_show_gridlines(  i_show_gridlines  = abap_true ).
+  lo_worksheet-&gt;set_print_gridlines( i_print_gridlines = abap_true ).
+
+  lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet3!B2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to the third sheet&apos; ip_hyperlink = lo_hyperlink ).
+
+  lo_worksheet-&gt;zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=&gt;c_protected.
+
+  &quot; Third sheet
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Sheet3&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the third sheet without grid lines in display and print&apos; ).
+  lo_worksheet-&gt;set_show_gridlines(  i_show_gridlines  = abap_false ).
+  lo_worksheet-&gt;set_print_gridlines( i_print_gridlines = abap_false ).
+
+  lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet1!B2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to the first sheet&apos; ip_hyperlink = lo_hyperlink ).
+
+
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+  &quot; Convert to binary
+  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+    EXPORTING
+      buffer        = lv_file
+    IMPORTING
+      output_length = lv_bytecount
+    TABLES
+      binary_tab    = lt_file_tab.
+*  &quot; This method is only available on AS ABAP &gt; 6.40
+*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+*  lv_bytecount = xstrlen( lv_file ).
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+                                                    filename     = lv_full_path
+                                                    filetype     = &apos;BIN&apos;
+                                           CHANGING data_tab     = lt_file_tab ).</source>
+</PROG>
