@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL1" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101228" VERN="000054" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="105109" IDATE="20101228" ITIME="105109" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL1" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20110119" VERN="000056" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110119" STIME="192131" IDATE="20110119" ITIME="192131" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Hello World" LENGTH="27 "/>
@@ -66,8 +66,8 @@ START-OF-SELECTION.
   lo_hyperlink = zcl_excel_hyperlink=&gt;create_external_link( iv_url = &apos;https://cw.sdn.sap.com/cw/groups/abap2xlsx&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 4 ip_value = &apos;Click here to visit abap2xlsx homepage&apos; ip_hyperlink = lo_hyperlink ).
 
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
-  column_dimension-&gt;set_width( 11 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;B&apos; ).
+  column_dimension-&gt;set_width( ip_width = 11 ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).

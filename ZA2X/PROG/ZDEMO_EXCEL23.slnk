@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="BCUSER" UDAT="20110116" VERN="000021" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110116" STIME="180328" IDATE="20110116" ITIME="180328" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="BCUSER" UDAT="20110119" VERN="000022" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110119" STIME="193230" IDATE="20110119" ITIME="193230" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options" LENGTH="70 "/>
@@ -94,7 +94,7 @@ START-OF-SELECTION.
 
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+  lv_file = lo_excel_writer-&gt;write_file( io_excel = lo_excel ).
 
   &quot; Convert to binary
   CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="BCUSER" UDAT="20101228" VERN="000038" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110629" IDATE="20101228" ITIME="110629" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="BCUSER" UDAT="20110119" VERN="000040" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20110119" STIME="193103" IDATE="20110119" ITIME="193103" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Bind ALV" LENGTH="24 "/>
@@ -849,11 +849,11 @@ START-OF-SELECTION.
   ENDTRY.
 
   TRY.
-      CALL METHOD lo_salv-&gt;set_screen_status
+      lo_salv-&gt;set_screen_status(
         EXPORTING
           report        = sy-repid
           pfstatus      = &apos;ALV_STATUS&apos;
-          set_functions = lo_salv-&gt;c_functions_all.
+          set_functions = lo_salv-&gt;c_functions_all ).
     CATCH cx_salv_msg .
   ENDTRY.
 
@@ -933,7 +933,7 @@ FORM export_to_excel.
 
 * write to excel using method Bin_ALV
 
-  CALL METHOD lo_worksheet-&gt;bind_alv
+  lo_worksheet-&gt;bind_alv(
     EXPORTING
 *      I_DOCUMENT_URL          = SPACE &quot; excel template
 *      I_XLS                   = &apos;X&apos; &quot; create in xls format?
@@ -956,7 +956,7 @@ FORM export_to_excel.
       dim_mismatch_sema       = 6
       error_in_sema           = 7
       OTHERS                  = 8
-          .
+          ).
   IF sy-subrc &lt;&gt; 0.
     MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
                WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.

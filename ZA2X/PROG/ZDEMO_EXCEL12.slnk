@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="BCUSER" UDAT="20101228" VERN="000036" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110507" IDATE="20101228" ITIME="110507" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL12" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100811" UNAM="BCUSER" UDAT="20110119" VERN="000038" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110119" STIME="192846" IDATE="20110119" ITIME="192846" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Hide Columns" LENGTH="28 "/>
@@ -77,37 +77,37 @@ START-OF-SELECTION.
 
   &quot; Column Settings
   &quot; Auto size
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
-  column_dimension-&gt;set_auto_size( abap_true ).
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;I&apos; ).
-  column_dimension-&gt;set_auto_size( abap_true ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;B&apos; ).
+  column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;I&apos; ).
+  column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
   &quot; Manual Width
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
-  column_dimension-&gt;set_width( 50 ).
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;D&apos; ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;C&apos; ).
+  column_dimension-&gt;set_width( ip_width = 50 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;D&apos; ).
   column_dimension-&gt;set_visible( ip_visible = abap_false ).
   &quot; Implementation in the Writer is not working yet ===== TODO =====
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;F&apos; ).
-  column_dimension-&gt;set_outline_level( 0 ).
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;G&apos; ).
-  column_dimension-&gt;set_outline_level( 1 ).
-  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;H&apos; ).
-  column_dimension-&gt;set_outline_level( 2 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;F&apos; ).
+  column_dimension-&gt;set_outline_level( ip_outline_level = 0 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;G&apos; ).
+  column_dimension-&gt;set_outline_level( ip_outline_level = 1 ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;H&apos; ).
+  column_dimension-&gt;set_outline_level( ip_outline_level = 2 ).
 
-  row_dimension = lo_worksheet-&gt;get_row_dimension( 1 ).
-  row_dimension-&gt;set_visible( abap_false ).
-  row_dimension = lo_worksheet-&gt;get_row_dimension( 5 ).
-  row_dimension-&gt;set_row_height( 20 ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( ip_row = 1 ).
+  row_dimension-&gt;set_visible( ip_visible = abap_false ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( ip_row = 5 ).
+  row_dimension-&gt;set_row_height( ip_row_height = 20 ).
   &quot; Implementation in the Writer is not working yet ===== TODO =====
-  row_dimension = lo_worksheet-&gt;get_row_dimension( 6 ).
-  row_dimension-&gt;set_outline_level( 0 ).
-  row_dimension = lo_worksheet-&gt;get_row_dimension( 7 ).
-  row_dimension-&gt;set_outline_level( 1 ).
-  row_dimension = lo_worksheet-&gt;get_row_dimension( 8 ).
-  row_dimension-&gt;set_outline_level( 2 ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( ip_row = 6 ).
+  row_dimension-&gt;set_outline_level( ip_outline_level = 0 ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( ip_row = 7 ).
+  row_dimension-&gt;set_outline_level( ip_outline_level = 1 ).
+  row_dimension = lo_worksheet-&gt;get_row_dimension( ip_row = 8 ).
+  row_dimension-&gt;set_outline_level( ip_outline_level = 2 ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+  lv_file = lo_excel_writer-&gt;write_file( io_excel = lo_excel ).
 
   &quot; Convert to binary
   CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
