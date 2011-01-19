@@ -296,32 +296,57 @@ lc_seconds_in_day TYPE i VALUE 86400.
   ENDTRY.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20101221" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20101215" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
-  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="EP_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100809" CHANGEDBY="FEMIA" CHANGEDON="20101215" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG"/>
-  <source>method GET_FIELDCATALOG.
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Creates field catalog for BIND_TABLE based on internal table" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100816" CHANGEDBY="BCUSER" CHANGEDON="20110119" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100816" CHANGEDBY="BCUSER" CHANGEDON="20101222" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="EP_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20100816" CHANGEDBY="BCUSER" CHANGEDON="20101222" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG"/>
+  <source>METHOD get_fieldcatalog.
 
   DATA: lr_data             TYPE REF TO data,
-        lo_tabdescr         TYPE REF TO cl_abap_structdescr,
-        ls_header           TYPE x030l,
+        lo_structdescr      TYPE REF TO cl_abap_structdescr,
+        lo_elemdescr        TYPE REF TO cl_abap_elemdescr,
         lt_dfies            TYPE ddfields,
         ls_dfies            TYPE dfies,
-        ls_fieldcatalog    TYPE zexcel_s_fieldcatalog.
+        ls_fieldcatalog     TYPE zexcel_s_fieldcatalog,
+        lt_components       TYPE abap_component_tab,
+        ls_component        LIKE LINE OF lt_components.
 
   CREATE DATA lr_data LIKE LINE OF ip_table.
 
-  lo_tabdescr ?= cl_abap_structdescr=&gt;describe_by_data_ref( lr_data ).
+  lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data_ref( lr_data ).
 
-  ls_header = lo_tabdescr-&gt;get_ddic_header( ).
+  &quot;for DDIC structure get the info directly
+  IF lo_structdescr-&gt;is_ddic_type( ) = abap_true.
+    lt_dfies = lo_structdescr-&gt;get_ddic_field_list( ).
 
-  lt_dfies = lo_tabdescr-&gt;get_ddic_field_list( ).
+    LOOP AT lt_dfies INTO ls_dfies.
+      CLEAR ls_fieldcatalog.
+      MOVE-CORRESPONDING ls_dfies TO ls_fieldcatalog.
+      APPEND ls_fieldcatalog TO ep_fieldcatalog.
+    ENDLOOP.
+  ELSE.
+    &quot;if structure is not DDIC check components
+    lt_components = lo_structdescr-&gt;get_components( ).
+    LOOP AT lt_components INTO ls_component.
+      CLEAR ls_fieldcatalog.
+      lo_elemdescr ?= ls_component-type.
+      &quot;component is DDIC
+      IF lo_elemdescr-&gt;is_ddic_type( ) = abap_true.
+        ls_dfies = lo_elemdescr-&gt;get_ddic_field( ).
+        MOVE-CORRESPONDING ls_dfies TO ls_fieldcatalog.
+        ls_fieldcatalog-fieldname = ls_component-name.
+      ELSE.
+        &quot;component is not DDIC -&gt; return minimum information required
+        ls_fieldcatalog-fieldname = ls_component-name.
+        ls_fieldcatalog-position = sy-tabix.
+        ls_fieldcatalog-dynpfld  = abap_true.
+        ls_fieldcatalog-scrtext_m = ls_component-name.
+      ENDIF.
+      APPEND ls_fieldcatalog TO ep_fieldcatalog.
+    ENDLOOP.
+  ENDIF.
 
-  LOOP AT lt_dfies INTO ls_dfies.
-    MOVE-CORRESPONDING ls_dfies TO ls_fieldcatalog.
-    APPEND ls_fieldcatalog TO ep_fieldcatalog.
-  ENDLOOP.
-
-endmethod.</source>
+ENDMETHOD.</source>
+  <methodDocumentation/>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Converts number to string representation in Excel format" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100828" CHANGEDBY="FEMIA" CHANGEDON="20101221" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20100828" CHANGEDBY="FEMIA" CHANGEDON="20101215" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="NUMERIC"/>
