@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20101228" VERN="000024" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110728" IDATE="20101228" ITIME="110728" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20110123" VERN="000029" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110123" STIME="114400" IDATE="20110123" ITIME="114400" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
@@ -21,6 +21,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_style                TYPE REF TO zcl_excel_style,
+      lo_style_date           TYPE REF TO zcl_excel_style,
       lo_style_editable       TYPE REF TO zcl_excel_style,
       lo_data_validation      TYPE REF TO zcl_excel_data_validation.
 
@@ -88,11 +89,18 @@ START-OF-SELECTION.
   lo_worksheet-&gt;zif_excel_sheet_protection~objects    = zif_excel_sheet_protection=&gt;c_active.
   lo_worksheet-&gt;zif_excel_sheet_protection~scenarios  = zif_excel_sheet_protection=&gt;c_active.
 
-  &quot;Set Cell Style
+  &quot; Create cell style for display only fields
   lo_style = lo_excel-&gt;add_new_style( ).
   lo_style-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
   lo_style-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_gray.
 
+  &quot; Create cell style for display only date field
+  lo_style_date = lo_excel-&gt;add_new_style( ).
+  lo_style_date-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style_date-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_gray.
+  lo_style_date-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_date_ddmmyyyy.
+
+  &quot; Create cell style for editable fields
   lo_style_editable = lo_excel-&gt;add_new_style( ).
   lo_style_editable-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_unlocked.
 
@@ -111,7 +119,7 @@ START-OF-SELECTION.
       WHEN &apos;FLDATE&apos;.
         &lt;fs_field_catalog&gt;-position   = 2.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
-        &lt;fs_field_catalog&gt;-style      = lo_style-&gt;get_guid( ).
+        &lt;fs_field_catalog&gt;-style      = lo_style_date-&gt;get_guid( ).
       WHEN &apos;PRICE&apos;.
         &lt;fs_field_catalog&gt;-position   = 4.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
