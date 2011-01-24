@@ -2140,7 +2140,7 @@ endmethod.</source>
       lv_value = &lt;ls_sheet_content&gt;-cell_formula.
       lo_element_4-&gt;set_value( value = lv_value ).
       lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
-    ELSE.
+    ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL. &quot;cell can have just style or formula
       IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
         lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
                                         value = &lt;ls_sheet_content&gt;-data_type ).
