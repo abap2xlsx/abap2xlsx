@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL13" VARCL="X" SUBC="1" CNAM="ATEJADA" CDAT="20100812" UNAM="BCUSER" UDAT="20101228" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110516" IDATE="20101228" ITIME="110516" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL13" VARCL="X" SUBC="1" CNAM="ATEJADA" CDAT="20100812" UNAM="BCUSER" UDAT="20110129" VERN="000037" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110129" STIME="221311" IDATE="20110129" ITIME="221311" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Merge cells" LENGTH="27 "/>
@@ -87,9 +87,13 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;E&apos; ip_value = &apos;&apos; ip_style = lv_style_bold_border_guid ).
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;F&apos; ip_value = &apos;&apos; ip_style = lv_style_bold_border_guid ).
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;G&apos; ip_value = &apos;&apos; ip_style = lv_style_bold_border_guid ).
-  lo_worksheet-&gt;set_merge( ip_row = 4 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ).
-  lo_worksheet-&gt;set_merge( ip_row = 2 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ).
 
+  lo_worksheet-&gt;set_merge( ip_row = 4 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ).
+  lo_worksheet-&gt;set_merge( ip_row = 6 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ).
+
+  &quot; Test also if merge works when oher merged chells are empty
+  lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;B&apos; ip_value = &apos;Tomato&apos; ).
+  lo_worksheet-&gt;set_merge( ip_row = 2 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
