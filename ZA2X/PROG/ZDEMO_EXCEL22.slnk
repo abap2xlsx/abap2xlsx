@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20110123" VERN="000029" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110123" STIME="114400" IDATE="20110123" ITIME="114400" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20110129" VERN="000031" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110129" STIME="170804" IDATE="20110129" ITIME="170804" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
@@ -93,6 +93,7 @@ START-OF-SELECTION.
   lo_style = lo_excel-&gt;add_new_style( ).
   lo_style-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
   lo_style-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_gray.
+  lo_style-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_text.
 
   &quot; Create cell style for display only date field
   lo_style_date = lo_excel-&gt;add_new_style( ).
