@@ -1593,7 +1593,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101212" CHANGEDBY="BCUSER" CHANGEDON="20110129" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101212" CHANGEDBY="BCUSER" CHANGEDON="20110129" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101212" CHANGEDBY="BCUSER" CHANGEDON="20110129" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_SHEET.
+  <source>METHOD create_xl_sheet.
 
 ** Constant node name
   DATA: lc_xml_node_worksheet           TYPE string VALUE &apos;worksheet&apos;,
@@ -2365,6 +2365,27 @@ endmethod.</source>
     lo_element_root-&gt;append_child( new_child = lo_element ). &quot; Conditional formatting node
   ENDWHILE.
 
+  &quot; Merged cells
+  t_range_merge = io_worksheet-&gt;get_merge( ).
+  IF t_range_merge IS NOT INITIAL.
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecells
+                                                     parent = lo_document ).
+    DESCRIBE TABLE t_range_merge LINES merge_count.
+    lv_value = merge_count.
+    CONDENSE lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_count
+                                  value = lv_value ).
+    LOOP AT t_range_merge ASSIGNING &lt;fs_range_merge&gt;.
+      lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecell
+                                                         parent = lo_document ).
+
+      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_ref
+                                      value = &lt;fs_range_merge&gt; ).
+      lo_element-&gt;append_child( new_child = lo_element_2 ).
+      lo_element_root-&gt;append_child( new_child = lo_element ).
+      io_worksheet-&gt;delete_merge( ).
+    ENDLOOP.
+  ENDIF.
 
   IF io_worksheet-&gt;get_data_validations_size( ) GT 0.
     &quot; dataValidations node
@@ -2422,26 +2443,6 @@ endmethod.</source>
       lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; dataValidation node
     ENDWHILE.
     lo_element_root-&gt;append_child( new_child = lo_element ). &quot; dataValidations node
-  ENDIF.
-
-  t_range_merge = io_worksheet-&gt;get_merge( ).
-  IF t_range_merge IS NOT INITIAL.
-    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecells
-                                                     parent = lo_document ).
-    DESCRIBE TABLE t_range_merge LINES merge_count.
-    lv_value = merge_count.
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_count
-                                  value = lv_value ).
-    LOOP AT t_range_merge ASSIGNING &lt;fs_range_merge&gt;.
-      lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecell
-                                                         parent = lo_document ).
-
-      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_ref
-                                      value = &lt;fs_range_merge&gt; ).
-      lo_element-&gt;append_child( new_child = lo_element_2 ).
-      lo_element_root-&gt;append_child( new_child = lo_element ).
-      io_worksheet-&gt;delete_merge( ).
-    ENDLOOP.
   ENDIF.
 
   &quot; Hyperlinks
@@ -2717,7 +2718,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
   <methodDocumentation/>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="0" STATE="1" EDITORDER="11 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101212" CHANGEDBY="BCUSER" CHANGEDON="20110129" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
