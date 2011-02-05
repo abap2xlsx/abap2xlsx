@@ -3011,7 +3011,7 @@ endmethod.</source>
   me-&gt;update_dimension_range( ).
   IF upper_cell EQ lower_cell. &quot;only one cell
     &quot; Worksheet not filled
-    IF upper_cell-cell_coords = 0.
+    IF upper_cell-cell_coords = &apos;0&apos;.
       ep_dimension_range = &apos;A1&apos;.
     ELSE.
       ep_dimension_range = upper_cell-cell_coords.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="BCUSER" UDAT="20101228" VERN="000036" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110430" IDATE="20101228" ITIME="110430" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="BCUSER" UDAT="20110205" VERN="000039" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110205" STIME="183245" IDATE="20110205" ITIME="183245" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Data validation (Dropdown list)" LENGTH="47 "/>
@@ -78,13 +78,17 @@ START-OF-SELECTION.
                        ip_stop_row      = 8 ).
 
   lo_worksheet        = lo_excel-&gt;add_new_worksheet( ).
-  lv_title = &apos;Dropdown&apos;.
+  lv_title = &apos;Dropdown List&apos;.
   lo_worksheet-&gt;set_title( lv_title ).
 
   lo_data_validation              = lo_worksheet-&gt;add_new_data_validation( ).
   lo_data_validation-&gt;value       = lo_range-&gt;name.
   lo_data_validation-&gt;cell_row    = 4.
   lo_data_validation-&gt;cell_column = &apos;A&apos;.
+
+  &quot; There was an error when data validation was combined with cell merges this should test that:
+  lo_worksheet-&gt;set_cell(  ip_row = 1 ip_column = &apos;A&apos; ip_value = &apos;Demo for data validation with a dropdown list&apos; ).
+  lo_worksheet-&gt;set_merge( ip_row = 1 ip_column_start = &apos;A&apos; ip_column_end = &apos;F&apos; ).
 
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;A&apos; ip_value = &apos;Select a value&apos; ).
 
