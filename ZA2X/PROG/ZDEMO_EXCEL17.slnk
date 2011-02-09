@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL17" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100921" UNAM="BCUSER" UDAT="20101228" VERN="000027" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110557" IDATE="20101228" ITIME="110557" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL17" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100921" UNAM="BCUSER" UDAT="20110209" VERN="000030" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110209" STIME="214328" IDATE="20110209" ITIME="214328" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Sheet Protection" LENGTH="32 "/>
@@ -22,7 +22,10 @@ DATA: lo_excel                  TYPE REF TO zcl_excel,
       lo_excel_writer           TYPE REF TO zif_excel_writer,
       lo_worksheet              TYPE REF TO zcl_excel_worksheet,
       lo_style_protection       TYPE REF TO zcl_excel_style,
-      lv_style_protection_guid  TYPE zexcel_cell_style.
+      lv_style_protection_guid  TYPE zexcel_cell_style,
+      lo_style                  TYPE REF TO zcl_excel_style,
+      lv_style                  TYPE zexcel_cell_style.
+
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
@@ -66,12 +69,16 @@ START-OF-SELECTION.
   lo_worksheet-&gt;zif_excel_sheet_protection~sheet      = zif_excel_sheet_protection=&gt;c_active.
   lo_worksheet-&gt;zif_excel_sheet_protection~objects    = zif_excel_sheet_protection=&gt;c_active.
   lo_worksheet-&gt;zif_excel_sheet_protection~scenarios  = zif_excel_sheet_protection=&gt;c_active.
-
-  &quot;Center
+  &quot; First style to unlock a cell
   lo_style_protection = lo_excel-&gt;add_new_style( ).
   lo_style_protection-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_unlocked.
   lv_style_protection_guid = lo_style_protection-&gt;get_guid( ).
-
+  &quot; Another style which should not affect the unlock style
+  lo_style = lo_excel-&gt;add_new_style( ).
+  lo_style-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style-&gt;fill-&gt;fgcolor  = &apos;FFCC3333&apos;.
+  lv_style = lo_style-&gt;get_guid( ).
+  lo_worksheet-&gt;set_cell( ip_row = 3 ip_column = &apos;C&apos; ip_value = &apos;This cell is locked locked and has the second formating&apos; ip_style = lv_style ).
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = &apos;This cell is unlocked&apos; ip_style = lv_style_protection_guid ).
   lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = &apos;This cell is locked as all the others empty cell&apos; ).
   lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = &apos;This cell is unlocked&apos; ip_style = lv_style_protection_guid ).
