@@ -3851,7 +3851,7 @@ endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="D" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="15 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110205" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110205" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_WORKBOOK.
+  <source>METHOD create_xl_workbook.
 
 
 ** Constant node name
@@ -4002,7 +4002,7 @@ endmethod.</source>
   IF lv_active_sheet &gt; 1.
     lv_active_sheet = lv_active_sheet - 1.
     lv_value = lv_active_sheet.
-  CONDENSE lv_value.
+    CONDENSE lv_value.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_activetab
                                       value = lv_value ).
   ENDIF.
@@ -4070,7 +4070,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="D" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="16 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110205" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="D" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110205" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
