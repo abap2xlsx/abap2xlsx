@@ -4093,7 +4093,7 @@ endmethod.</source>
 
   DATA ls_shared_string TYPE zexcel_s_shared_string.
 
-  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value.
+  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
   ep_index = ls_shared_string-string_no.
 
 endmethod.</source>
