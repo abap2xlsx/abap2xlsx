@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20110129" VERN="000031" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110129" STIME="170804" IDATE="20110129" ITIME="170804" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20110218" VERN="000033" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110218" STIME="010031" IDATE="20110218" ITIME="010031" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
@@ -144,10 +144,10 @@ START-OF-SELECTION.
   lo_worksheet-&gt;freeze_panes( ip_num_rows = 3 ). &quot;freeze column headers when scrolling
 
   lo_data_validation                  = lo_worksheet-&gt;add_new_data_validation( ).
-  lo_data_validation-&gt;type            = zcl_excel_data_validation=&gt;c_custom.
+  lo_data_validation-&gt;type            = zcl_excel_data_validation=&gt;c_type_custom.
   lv_row = ls_table_settings_out-top_left_row.
   CONDENSE lv_row.
-  CONCATENATE &apos;ISNUMBER(&apos; ls_table_settings_out-top_left_column lv_row &apos;)&apos; INTO lo_data_validation-&gt;value.
+  CONCATENATE &apos;ISNUMBER(&apos; ls_table_settings_out-top_left_column lv_row &apos;)&apos; INTO lo_data_validation-&gt;formula1.
   lo_data_validation-&gt;cell_row        = ls_table_settings_out-top_left_row.
   lo_data_validation-&gt;cell_column     = ls_table_settings_out-top_left_column.
   lo_data_validation-&gt;cell_row_to     = ls_table_settings_out-bottom_right_row.

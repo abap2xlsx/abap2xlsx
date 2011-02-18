@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20110213" VERN="000038" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110213" STIME="122550" IDATE="20110213" ITIME="122550" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20110218" VERN="000040" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110218" STIME="010410" IDATE="20110218" ITIME="010410" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
@@ -112,7 +112,8 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
 
   lo_data_validation              = lo_worksheet-&gt;add_new_data_validation( ).
-  lo_data_validation-&gt;value       = c_airlines.
+  lo_data_validation-&gt;type        = zcl_excel_data_validation=&gt;c_type_list.
+  lo_data_validation-&gt;formula1    = c_airlines.
   lo_data_validation-&gt;cell_row    = 4.
   lo_data_validation-&gt;cell_column = &apos;C&apos;.
 
