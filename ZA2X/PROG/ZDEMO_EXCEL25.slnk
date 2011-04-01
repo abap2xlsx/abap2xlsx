@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL25" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20110317" UNAM="FEMIA" UDAT="20110401" VERN="000017" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110401" STIME="154408" IDATE="20110401" ITIME="154408" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Hello World" LENGTH="27 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL1
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel25.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
+      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE solix_tab,
+      ls_file_tab             TYPE solix.
+
+DATA: lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
+      lv_filename       TYPE string,
+      lv_file_separator TYPE c.
+
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;/tmp/25_HelloWorld.xlsx&apos;.
+
+&quot; Creates active sheet
+CREATE OBJECT lo_excel.
+
+&quot; Get active sheet
+lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+lo_worksheet-&gt;set_title( ip_title = &apos;Sheet1&apos; ).
+lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Hello world&apos; ).
+
+CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+&quot; Convert to binary
+CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+  EXPORTING
+    buffer        = lv_file
+  IMPORTING
+    output_length = lv_bytecount
+  TABLES
+    binary_tab    = lt_file_tab.
+
+OPEN DATASET lv_default_file_name FOR OUTPUT IN BINARY MODE.
+LOOP AT lt_file_tab INTO ls_file_tab.
+  TRANSFER ls_file_tab  TO lv_default_file_name.
+ENDLOOP.
+CLOSE DATASET lv_default_file_name.</source>
+</PROG>
