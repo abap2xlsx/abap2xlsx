@@ -100,6 +100,7 @@ START-OF-SELECTION.
     lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;A&apos; ip_value = &lt;carr&gt;-carrid ).
     row = row + 1.
   ENDLOOP.
+  row = row - 1.
   lo_range            = lo_excel-&gt;add_new_range( ).
   lo_range-&gt;name      = c_airlines.
   lo_range-&gt;set_value( ip_sheet_name    = lv_title
