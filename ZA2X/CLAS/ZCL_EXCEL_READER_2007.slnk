@@ -99,11 +99,12 @@ private section.
   FIELD-SYMBOLS: &lt;worksheet&gt; TYPE t_worksheet.
 
   DATA: node          TYPE REF TO if_ixml_node,
-        value_node    TYPE REF TO if_ixml_node,
+        value_elem    TYPE REF TO if_ixml_element,
+        formula_elem  TYPE REF TO if_ixml_element,
         si            TYPE REF TO if_ixml_node_list,
         row           TYPE REF TO if_ixml_node_list,
         row_iterator  TYPE REF TO if_ixml_node_iterator,
-        col           TYPE REF TO if_ixml_node,
+        cell          TYPE REF TO if_ixml_element,
         attributes    TYPE REF TO if_ixml_named_node_map,
         attribute     TYPE REF TO if_ixml_node,
         col_attributes TYPE REF TO if_ixml_named_node_map,
@@ -119,6 +120,7 @@ private section.
         values        TYPE stringtab,
         value_index   TYPE i,
         cell_value    TYPE zexcel_cell_value,
+        cell_formula  TYPE zexcel_cell_formula,
         stripped_name TYPE chkfile,
         dirname       TYPE string.
 
@@ -232,34 +234,40 @@ private section.
             worksheet_index = worksheet_index + 1.
             row = node-&gt;get_children( ).
             row_iterator = row-&gt;create_iterator( ).
-            col = row_iterator-&gt;get_next( ).
-            WHILE NOT col IS INITIAL.
-              col_attributes = col-&gt;get_attributes( ).
+            cell ?= row_iterator-&gt;get_next( ).
+            WHILE NOT cell IS INITIAL.
+              col_attributes = cell-&gt;get_attributes( ).
               attribute  ?= col_attributes-&gt;get_named_item_ns( &apos;r&apos; ).
               r = attribute-&gt;get_value( ).
-              CLEAR: cell_data_type, cell_value.
+              CLEAR: cell_data_type, cell_value, cell_formula.
               attribute  ?= col_attributes-&gt;get_named_item_ns( &apos;t&apos; ).
               IF attribute IS BOUND.
                 cell_data_type = attribute-&gt;get_value( ).
               ENDIF.
-              &quot; WRITE: / r, cell_data_type.
-              value_node = col-&gt;get_first_child( ).
+
+              value_elem = cell-&gt;find_from_name( name = &apos;v&apos; ).
+
               CASE cell_data_type.
-                WHEN &apos;s&apos;. &quot; String
-                  value_index = value_node-&gt;get_value( ) + 1.
+                WHEN &apos;s&apos;. &quot; String values are stored as index in shared string table
+                  value_index = value_elem-&gt;get_value( ) + 1.
                   READ TABLE values INTO cell_value INDEX value_index.
-                WHEN &apos;b&apos;. &quot; Boolean
-                  &quot; TODO
-                WHEN &apos;inlineStr&apos;. &quot; inlineStr
-                  &quot; TODO
-                WHEN &apos;e&apos;. &quot; Error
-                  &quot; TODO
-                WHEN OTHERS.
-                  IF value_node IS BOUND.
-                    cell_value = value_node-&gt;get_value( ).
+                WHEN &apos;inlineStr&apos;. &quot; inlineStr values are kept in special node
+                  value_elem = cell-&gt;find_from_name( name = &apos;is&apos; ).
+                  IF value_elem IS BOUND.
+                    cell_value = value_elem-&gt;get_value( ).
+                  ENDIF.
+                WHEN OTHERS. &quot;other types are stored directly
+                  IF value_elem IS BOUND.
+                    cell_value = value_elem-&gt;get_value( ).
                   ENDIF.
               ENDCASE.
-              IF NOT cell_value IS INITIAL.
+
+              formula_elem = cell-&gt;find_from_name( name = &apos;f&apos; ).
+              IF formula_elem IS BOUND.
+                cell_formula = formula_elem-&gt;get_value( ).
+              ENDIF.
+
+              IF NOT cell_value IS INITIAL or NOT cell_formula is INITIAL.
                 zcl_excel_common=&gt;convert_columnrow2column_a_row(
                   EXPORTING
                     i_columnrow = r
@@ -272,9 +280,11 @@ private section.
                     ip_column  = cell_column  &quot; Cell Column
                     ip_row     = cell_row     &quot; Cell Row
                     ip_value   = cell_value   &quot; Cell Value
+                    ip_formula = cell_formula
+                    ip_data_type = cell_data_type
                 ).
               ENDIF.
-              col = row_iterator-&gt;get_next( ).
+              cell ?= row_iterator-&gt;get_next( ).
             ENDWHILE.
           ENDWHILE.
         ENDWHILE.
