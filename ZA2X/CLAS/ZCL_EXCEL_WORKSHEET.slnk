@@ -2660,10 +2660,13 @@ endmethod.</source>
       lv_value = &lt;ls_field_catalog&gt;-scrtext_m.
     ELSEIF &lt;ls_field_catalog&gt;-scrtext_s IS NOT INITIAL.
       lv_value = &lt;ls_field_catalog&gt;-scrtext_s.
+      &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
     ELSEIF &lt;ls_field_catalog&gt;-scrtext_l IS NOT INITIAL.
       lv_value = &lt;ls_field_catalog&gt;-scrtext_l.
+      &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
     ELSE.
       lv_value = &apos;Column&apos;.  &quot; default value as Excel does
+      &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
     ENDIF.
     WHILE 1 = 1.
       READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value BINARY SEARCH.
