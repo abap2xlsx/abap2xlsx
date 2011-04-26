@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL2" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110205" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110414" STIME="095128" IDATE="20110205" ITIME="113106" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL27" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110426" VERN="000044" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110426" STIME="050557" IDATE="20110426" ITIME="050557" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="25 "/>
-   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="22 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="24 "/>
+   <textElement ID="S" KEY="P_READER" ENTRY="        Write back after using Reader" LENGTH="37 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
-*&amp; Report  ZDEMO_EXCEL2
+*&amp; Report  ZDEMO_EXCEL27
 *&amp; Test Styles for ABAP2XLSX
 *&amp;---------------------------------------------------------------------*
 *&amp;
 *&amp;
 *&amp;---------------------------------------------------------------------*
 
-REPORT  zdemo_excel2.
+REPORT  zdemo_excel27.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
+      lo_excel_reader         TYPE REF TO zif_excel_reader,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_style_bold           TYPE REF TO zcl_excel_style,
       lo_style_underline      TYPE REF TO zcl_excel_style,
@@ -42,9 +44,10 @@ DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
-CONSTANTS: lv_default_file_name TYPE string VALUE &apos;02_Styles.xlsx&apos;.
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;27_Styles.xlsx&apos;.
 
-PARAMETERS: p_path TYPE zexcel_export_dir.
+PARAMETERS: p_path TYPE zexcel_export_dir,
+            p_reader TYPE abap_bool AS CHECKBOX.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
   lv_workdir = p_path.
@@ -145,5 +148,28 @@ START-OF-SELECTION.
   cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
                                                     filename     = lv_full_path
                                                     filetype     = &apos;BIN&apos;
-                                           CHANGING data_tab     = lt_file_tab ).</source>
+                                           CHANGING data_tab     = lt_file_tab ).
+
+  IF p_reader = abap_true.
+    CREATE OBJECT lo_excel_reader TYPE zcl_excel_reader_2007.
+    CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+    lo_excel = lo_excel_reader-&gt;load_file( lv_full_path ).
+    lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+    REPLACE &apos;.xlsx&apos; IN lv_full_path WITH &apos;FromReader.xlsx&apos;.
+
+    &quot; Convert to binary
+    CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+      EXPORTING
+        buffer        = lv_file
+      IMPORTING
+        output_length = lv_bytecount
+      TABLES
+        binary_tab    = lt_file_tab.
+
+    &quot; Save the file
+    cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+                                                      filename     = lv_full_path
+                                                      filetype     = &apos;BIN&apos;
+                                             CHANGING data_tab     = lt_file_tab ).
+  ENDIF.</source>
 </PROG>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110401" VERN="000042" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110401" STIME="154539" IDATE="20110401" ITIME="154539" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110426" VERN="000043" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110426" STIME="050556" IDATE="20110426" ITIME="050556" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -61,5 +61,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel22 WITH p_path = p_path AND RETURN. &quot; Bind table with field catalog &amp; sheet style
   SUBMIT zdemo_excel23 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options
   SUBMIT zdemo_excel24 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with different default date formats
-  SUBMIT zdemo_excel25 AND RETURN. &quot; abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)</source>
+  SUBMIT zdemo_excel25 AND RETURN. &quot; abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
+  SUBMIT zdemo_excel26 WITH p_path = p_path WITH p_reader = abap_true AND RETURN. &quot; abap2xlsx Demo: Read cell format
+  SUBMIT zdemo_excel27 WITH p_path = p_path WITH p_reader = abap_true AND RETURN. &quot; abap2xlsx Demo: Read style format</source>
 </PROG>
