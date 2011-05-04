@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL21" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101127" UNAM="BCUSER" UDAT="20110429" VERN="000027" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="220456" IDATE="20110429" ITIME="001347" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL21" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101127" UNAM="BCUSER" UDAT="20110505" VERN="000041" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110505" STIME="000536" IDATE="20110505" ITIME="000536" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Backgound Color Picker" LENGTH="38 "/>
@@ -45,7 +45,8 @@ DATA: red          TYPE i,
       green_str    TYPE string,
       blue_str     TYPE string.
 
-DATA: color TYPE zexcel_style_color_argb.
+DATA: color TYPE zexcel_style_color_argb,
+      tint TYPE zexcel_style_color_tint.
 
 DATA: row     TYPE i,
       row_tmp TYPE i,
@@ -130,10 +131,31 @@ START-OF-SELECTION.
                             ip_style  = &lt;color_style&gt;-style ).
   ENDLOOP.
 
+  row = row + 2.
+  tint = &apos;-0.5&apos;.
+  DO 10 TIMES.
+    column = 1.
+    DO 10 TIMES.
+      lo_style_filled                 = lo_excel-&gt;add_new_style( ).
+      lo_style_filled-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
+      lo_style_filled-&gt;fill-&gt;fgcolor-theme  = sy-index - 1.
+      lo_style_filled-&gt;fill-&gt;fgcolor-tint  = tint.
+      &lt;color_style&gt;-style = lo_style_filled-&gt;get_guid( ).
+      col_str = zcl_excel_common=&gt;convert_column2alpha( column ).
+      lo_worksheet-&gt;set_cell_style( ip_column = col_str
+                                    ip_row    = row
+                                    ip_style  = &lt;color_style&gt;-style ).
+
+      ADD 1 TO column.
+    ENDDO.
+    ADD &apos;0.1&apos; TO tint.
+    ADD 1 TO row.
+  ENDDO.
+
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
- &quot; Convert to binary
+  &quot; Convert to binary
   CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
     EXPORTING
       buffer        = lv_file
