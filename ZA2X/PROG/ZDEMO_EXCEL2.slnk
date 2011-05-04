@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL2" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110205" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110414" STIME="095128" IDATE="20110205" ITIME="113106" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL2" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20110429" VERN="000035" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="231949" IDATE="20110429" ITIME="003654" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="25 "/>
@@ -70,16 +70,16 @@ START-OF-SELECTION.
 
   &quot; Create border object
   CREATE OBJECT lo_border_dark.
-  lo_border_dark-&gt;border_color = zcl_excel_style_color=&gt;c_black.
+  lo_border_dark-&gt;border_color-rgb = zcl_excel_style_color=&gt;c_black.
   lo_border_dark-&gt;border_style = zcl_excel_style_border=&gt;c_border_thin.
   CREATE OBJECT lo_border_light.
-  lo_border_light-&gt;border_color = zcl_excel_style_color=&gt;c_gray.
+  lo_border_light-&gt;border_color-rgb = zcl_excel_style_color=&gt;c_gray.
   lo_border_light-&gt;border_style = zcl_excel_style_border=&gt;c_border_thin.
   &quot; Create a bold / italic style
   lo_style_bold               = lo_excel-&gt;add_new_style( ).
   lo_style_bold-&gt;font-&gt;bold   = abap_true.
   lo_style_bold-&gt;font-&gt;italic = abap_true.
-  lo_style_bold-&gt;font-&gt;color  = zcl_excel_style_color=&gt;c_red.
+  lo_style_bold-&gt;font-&gt;color-rgb  = zcl_excel_style_color=&gt;c_red.
   lv_style_bold_guid          = lo_style_bold-&gt;get_guid( ).
   &quot; Create an underline double style
   lo_style_underline                        = lo_excel-&gt;add_new_style( ).
@@ -89,7 +89,7 @@ START-OF-SELECTION.
   &quot; Create filled style yellow
   lo_style_filled                 = lo_excel-&gt;add_new_style( ).
   lo_style_filled-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
-  lo_style_filled-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_yellow.
+  lo_style_filled-&gt;fill-&gt;fgcolor-theme  = zcl_excel_style_color=&gt;c_theme_accent6.
   lv_style_filled_guid            = lo_style_filled-&gt;get_guid( ).
   &quot; Create border with button effects
   lo_style_button                   = lo_excel-&gt;add_new_style( ).
@@ -105,7 +105,7 @@ START-OF-SELECTION.
   &quot; Create filled style green
   lo_style_filled                 = lo_excel-&gt;add_new_style( ).
   lo_style_filled-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
-  lo_style_filled-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_green.
+  lo_style_filled-&gt;fill-&gt;fgcolor-rgb  = zcl_excel_style_color=&gt;c_green.
   lv_style_filled_green_guid            = lo_style_filled-&gt;get_guid( ).
 
   &quot; Get active sheet

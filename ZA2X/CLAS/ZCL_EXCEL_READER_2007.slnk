@@ -437,13 +437,13 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="0" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110425" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110425" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="EP_BORDERS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110425" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_BORDERS"/>
-  <source>METHOD LOAD_STYLE_BORDERS.
-DATA:   node            TYPE REF TO if_ixml_element,
-        node2           TYPE REF TO if_ixml_element,
-        node3           TYPE REF TO if_ixml_element,
-        cell_border     TYPE REF TO zcl_excel_style_borders,
-        border          TYPE REF TO zcl_excel_style_border,
-        color           TYPE t_color.
+  <source>METHOD load_style_borders.
+  DATA:   node            TYPE REF TO if_ixml_element,
+          node2           TYPE REF TO if_ixml_element,
+          node3           TYPE REF TO if_ixml_element,
+          cell_border     TYPE REF TO zcl_excel_style_borders,
+          border          TYPE REF TO zcl_excel_style_border,
+          color           TYPE t_color.
 
   node ?= ip_xml-&gt;find_from_name( &apos;border&apos; ).
   WHILE node IS BOUND.
@@ -475,7 +475,15 @@ DATA:   node            TYPE REF TO if_ixml_element,
                     CHANGING
                       cp_structure = color ).
 
-        border-&gt;border_color = color-rgb.
+        border-&gt;border_color-rgb = color-rgb.
+        IF color-indexed IS NOT INITIAL.
+          border-&gt;border_color-indexed = color-indexed.
+        ENDIF.
+
+        IF color-theme IS NOT INITIAL.
+          border-&gt;border_color-theme = color-theme.
+        ENDIF.
+        border-&gt;border_color-tint = color-tint.
       ENDIF.
 
       node2 ?= node2-&gt;get_next( ).
@@ -489,13 +497,13 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110425" CHANGEDBY="BCUSER" CHANGEDON="20110425" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110425" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="EP_FILLS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110425" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FILLS"/>
-  <source>METHOD LOAD_STYLE_FILLS.
- DATA:  value TYPE string,
-        node            TYPE REF TO if_ixml_element,
-        node2           TYPE REF TO if_ixml_element,
-        node3           TYPE REF TO if_ixml_element,
-        fill            TYPE REF TO zcl_excel_style_fill,
-        color           TYPE t_color.
+  <source>METHOD load_style_fills.
+  DATA:  value TYPE string,
+         node            TYPE REF TO if_ixml_element,
+         node2           TYPE REF TO if_ixml_element,
+         node3           TYPE REF TO if_ixml_element,
+         fill            TYPE REF TO zcl_excel_style_fill,
+         color           TYPE t_color.
 
   node ?= ip_xml-&gt;find_from_name( &apos;fill&apos; ).
   WHILE node IS BOUND.
@@ -513,9 +521,16 @@ ENDMETHOD.</source>
               ip_element   =  node3
             CHANGING
               cp_structure = color ).
+
+          fill-&gt;bgcolor-rgb = color-rgb.
           IF color-indexed IS NOT INITIAL.
-            fill-&gt;bgcolor = color-indexed.
+            fill-&gt;bgcolor-indexed = color-indexed.
           ENDIF.
+
+          IF color-theme IS NOT INITIAL.
+            fill-&gt;bgcolor-theme = color-theme.
+          ENDIF.
+          fill-&gt;bgcolor-tint = color-tint.
         ENDIF.
 
         node3 = node-&gt;find_from_name( &apos;fgColor&apos; ).
@@ -526,9 +541,15 @@ ENDMETHOD.</source>
             CHANGING
               cp_structure = color ).
 
-          fill-&gt;fgcolor = color-rgb.
-          &quot;fill-&gt; = color-theme.
-          &quot;fill-&gt; = color-tint.
+          fill-&gt;fgcolor-rgb = color-rgb.
+          IF color-indexed IS NOT INITIAL.
+            fill-&gt;fgcolor-indexed = color-indexed.
+          ENDIF.
+
+          IF color-theme IS NOT INITIAL.
+            fill-&gt;fgcolor-theme = color-theme.
+          ENDIF.
+          fill-&gt;fgcolor-tint = color-tint.
         ENDIF.
       WHEN &apos;gradientFill&apos;.
         &quot;TODO
@@ -602,7 +623,15 @@ ENDMETHOD.</source>
                   CHANGING
                     cp_structure = color ).
 
-      font-&gt;color = color-rgb.
+      font-&gt;color-rgb = color-rgb.
+      IF color-indexed IS NOT INITIAL.
+        font-&gt;color-indexed = color-indexed.
+      ENDIF.
+
+      IF color-theme IS NOT INITIAL.
+        font-&gt;color-theme = color-theme.
+      ENDIF.
+      font-&gt;color-tint = color-tint.
     ENDIF.
 
     INSERT font INTO TABLE ep_fonts.
@@ -637,11 +666,11 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110415" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20110415" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <source>METHOD load_workbook.
-TYPES: BEGIN OF t_sheet,
-  name TYPE string,
-  sheetId TYPE string,
-  id TYPE string,
-  END OF t_sheet.
+  TYPES: BEGIN OF t_sheet,
+    name TYPE string,
+    sheetid TYPE string,
+    id TYPE string,
+    END OF t_sheet.
 
   CONSTANTS: lc_shared_strings  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
              lc_worksheet       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
@@ -679,7 +708,7 @@ TYPES: BEGIN OF t_sheet,
   rels_workbook = me-&gt;get_ixml_from_zip_archive( rels_workbook_path ).
 
   node ?= rels_workbook-&gt;find_from_name( &apos;Relationship&apos; ).
-  WHILE node is BOUND.
+  WHILE node IS BOUND.
     fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
 
     CASE relationship-type.
@@ -707,7 +736,8 @@ TYPES: BEGIN OF t_sheet,
   &quot; Read Workbook
   workbook = me-&gt;get_ixml_from_zip_archive( ip_path ).
   node ?=  workbook-&gt;find_from_name( &apos;sheet&apos; ).
-  WHILE node is BOUND.
+  workbook_index = 1.
+  WHILE node IS BOUND.
 
     fill_struct_from_attributes(
       EXPORTING
@@ -732,6 +762,7 @@ TYPES: BEGIN OF t_sheet,
         io_worksheet = lo_worksheet ).
 
     node ?= node-&gt;get_next( ).
+    ADD 1 TO workbook_index.
   ENDWHILE.
 ENDMETHOD.</source>
  </method>

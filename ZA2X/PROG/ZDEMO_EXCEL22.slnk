@@ -77,7 +77,7 @@ START-OF-SELECTION.
   &quot; sheet style (white background)
   lo_style = lo_excel-&gt;add_new_style( ).
   lo_style-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
-  lo_style-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_white.
+  lo_style-&gt;fill-&gt;fgcolor-rgb  = zcl_excel_style_color=&gt;c_white.
   lv_style_guid = lo_style-&gt;get_guid( ).
 
   &quot; Get active sheet
@@ -92,13 +92,13 @@ START-OF-SELECTION.
   &quot; Create cell style for display only fields
   lo_style = lo_excel-&gt;add_new_style( ).
   lo_style-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
-  lo_style-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_gray.
+  lo_style-&gt;fill-&gt;fgcolor-rgb  = zcl_excel_style_color=&gt;c_gray.
   lo_style-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_text.
 
   &quot; Create cell style for display only date field
   lo_style_date = lo_excel-&gt;add_new_style( ).
   lo_style_date-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
-  lo_style_date-&gt;fill-&gt;fgcolor  = zcl_excel_style_color=&gt;c_gray.
+  lo_style_date-&gt;fill-&gt;fgcolor-rgb  = zcl_excel_style_color=&gt;c_gray.
   lo_style_date-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_date_ddmmyyyy.
 
   &quot; Create cell style for editable fields

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20101228" VERN="000056" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110455" IDATE="20101228" ITIME="110455" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20110429" VERN="000061" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="231949" IDATE="20110429" ITIME="001315" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="55 "/>
@@ -259,16 +259,16 @@ START-OF-SELECTION.
 
   &quot; Create border object
   CREATE OBJECT lo_border_dark.
-  lo_border_dark-&gt;border_color = zcl_excel_style_color=&gt;c_black.
+  lo_border_dark-&gt;border_color-rgb = zcl_excel_style_color=&gt;c_black.
   lo_border_dark-&gt;border_style = zcl_excel_style_border=&gt;c_border_thin.
   &quot;Create style with border even
   lo_style_body                       = lo_excel-&gt;add_new_style( ).
-  lo_style_body-&gt;fill-&gt;fgcolor        = zcl_excel_style_color=&gt;c_yellow.
+  lo_style_body-&gt;fill-&gt;fgcolor-rgb    = zcl_excel_style_color=&gt;c_yellow.
   lo_style_body-&gt;borders-&gt;allborders  = lo_border_dark.
   lv_style_body_even_guid             = lo_style_body-&gt;get_guid( ).
   &quot;Create style with border and green fill
   lo_style_body                       = lo_excel-&gt;add_new_style( ).
-  lo_style_body-&gt;fill-&gt;fgcolor        = zcl_excel_style_color=&gt;c_green.
+  lo_style_body-&gt;fill-&gt;fgcolor-rgb    = zcl_excel_style_color=&gt;c_green.
   lo_style_body-&gt;borders-&gt;allborders  = lo_border_dark.
   lv_style_body_green                 = lo_style_body-&gt;get_guid( ).
 
