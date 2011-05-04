@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110426" VERN="000043" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110426" STIME="050556" IDATE="20110426" ITIME="050556" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110504" VERN="000044" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="211211" IDATE="20110504" ITIME="211211" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -62,6 +62,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel23 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options
   SUBMIT zdemo_excel24 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with different default date formats
   SUBMIT zdemo_excel25 AND RETURN. &quot; abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
-  SUBMIT zdemo_excel26 WITH p_path = p_path WITH p_reader = abap_true AND RETURN. &quot; abap2xlsx Demo: Read cell format
-  SUBMIT zdemo_excel27 WITH p_path = p_path WITH p_reader = abap_true AND RETURN. &quot; abap2xlsx Demo: Read style format</source>
+  SUBMIT zdemo_excel26 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Reader demo
+*  SUBMIT zdemo_excel27 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: empty
+  SUBMIT zdemo_excel28 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Read style format</source>
 </PROG>

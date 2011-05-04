@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_CSV" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="ADD4B74D93C52E57E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="JACQUED" CREATEDON="20110420" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_CSV" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDON="00000000" RELTYPE="1"/>
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_CSV" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="4DADD1E5BEEA005BE1008000AC17C0C6" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="JACQUED" CREATEDON="20110420" CHANGEDBY="FEMIA" CHANGEDON="20110504" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_CSV" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDBY="FEMIA" CHANGEDON="20110504" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_WRITER_CSV definition
   public
   final
@@ -10,7 +10,18 @@
 *&quot;* do not include other source files here!!!
 public section.
 
-  interfaces ZIF_EXCEL_WRITER .</publicSection>
+  interfaces ZIF_EXCEL_WRITER .
+
+  class-methods SET_DELIMITER
+    importing
+      value(IP_VALUE) type CHAR01 default &apos;;&apos; .
+  class-methods SET_ENCLOSURE
+    importing
+      value(IP_VALUE) type CHAR01 default &apos;&quot;&apos; .
+  class CL_ABAP_CHAR_UTILITIES definition load .
+  class-methods SET_ENDOFLINE
+    importing
+      value(IP_VALUE) type ANY default CL_ABAP_CHAR_UTILITIES=&gt;CR_LF .</publicSection>
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_WRITER_2007
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
@@ -19,6 +30,9 @@ protected section.</protectedSection>
 private section.
 
   data EXCEL type ref to ZCL_EXCEL .
+  class-data DELIMITER type CHAR01 value &apos;;&apos;. &quot;#EC NOTEXT .
+  class-data ENCLOSURE type CHAR01 value &apos;&quot;&apos;. &quot;#EC NOTEXT .
+  class-data EOL type CHAR01 value CL_ABAP_CHAR_UTILITIES=&gt;CR_LF. &quot;#EC NOTEXT .
 
   methods CREATE
     returning
@@ -34,15 +48,18 @@ private section.
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDON="00000000" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="DELIMITER" VERSION="1" LANGU="E" DESCRIPT="Delimiter" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" ATTDECLTYP="1" ATTVALUE="&apos;;&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR01" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="ENCLOSURE" VERSION="1" LANGU="E" DESCRIPT="Text inclusure character" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" ATTDECLTYP="1" ATTVALUE="&apos;&quot;&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR01" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="EOL" VERSION="1" LANGU="E" DESCRIPT="End Of line" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" ATTDECLTYP="1" ATTVALUE="CL_ABAP_CHAR_UTILITIES=&gt;CR_LF" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR01" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDBY="FEMIA" CHANGEDON="20110504" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WRITER_CSV" CPDNAME="ZIF_EXCEL_WRITER~WRITE_FILE">
   <source>method ZIF_EXCEL_WRITER~WRITE_FILE.
   me-&gt;excel = io_excel.
   ep_file = me-&gt;create( ).
 endmethod.</source>
  </interfaceMethod>
- <method CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDBY="FEMIA" CHANGEDON="20110504" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDBY="FEMIA" CHANGEDON="20110504" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE.
 
 * .csv format with ; delimiter
@@ -51,8 +68,8 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE_CSV" VERSION="1" LANGU="E" DESCRIPT="Create CSV ; Delimited format" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE_CSV" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE_CSV" VERSION="1" LANGU="E" DESCRIPT="Create CSV ; Delimited format" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDBY="FEMIA" CHANGEDON="20110504" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="CREATE_CSV" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110428" CHANGEDBY="FEMIA" CHANGEDON="20110504" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_CSV.
 
   TYPES: BEGIN OF lty_format,
@@ -60,7 +77,10 @@ endmethod.</source>
             attvalue TYPE SEOVALUE,
          END OF lty_format.
   DATA: lt_format TYPE STANDARD TABLE OF lty_format,
-        ls_format LIKE LINE OF lt_format.
+        ls_format LIKE LINE OF lt_format,
+        lv_date   TYPE DATS,
+        lv_tmp    TYPE string,
+        lv_time   TYPE CHAR08.
 
   DATA: lo_iterator       TYPE REF TO cl_object_collection_iterator,
         lo_worksheet      TYPE REF TO zcl_excel_worksheet.
@@ -85,10 +105,22 @@ endmethod.</source>
      AND typtype  = 1
      AND type     = &apos;ZEXCEL_NUMBER_FORMAT&apos;.
 
+* --- Retrieve SAP date format
+  CLEAR ls_format.
+  SELECT ddtext INTO ls_format-attvalue FROM dd07t WHERE domname    = &apos;XUDATFM&apos;
+                                                     AND ddlanguage = sy-langu.
+    ls_format-cmpname = &apos;DATE&apos;.
+    CONDENSE ls_format-attvalue.
+    CONCATENATE &apos;&apos;&apos;&apos; ls_format-attvalue &apos;&apos;&apos;&apos; INTO ls_format-attvalue.
+    APPEND ls_format TO lt_format.
+  ENDSELECT.
+
+
   LOOP AT lt_format INTO ls_format.
     TRANSLATE ls_format-attvalue TO UPPER CASE.
     MODIFY lt_format FROM ls_format.
   ENDLOOP.
+
 
 * STEP 1: Collect strings from the first worksheet
   lo_iterator = excel-&gt;get_worksheets_iterator( ).
@@ -163,14 +195,17 @@ endmethod.</source>
 
 * --- Add empty rows
     WHILE lv_row &lt; &lt;fs_sheet_content&gt;-cell_row.
-      CONCATENATE lv_string cl_abap_char_utilities=&gt;newline INTO lv_string.
+*      CONCATENATE lv_string cl_abap_char_utilities=&gt;newline INTO lv_string.
+*      CONCATENATE lv_string cl_abap_char_utilities=&gt;cr_lf INTO lv_string.
+      CONCATENATE lv_string zcl_excel_writer_csv=&gt;eol INTO lv_string.
       lv_row = lv_row + 1.
       lv_col = 1.
     ENDWHILE.
 
 * --- Add empty columns
     WHILE lv_col &lt; &lt;fs_sheet_content&gt;-cell_column.
-      CONCATENATE lv_string &apos;;&apos; INTO lv_string. &quot; ls_shared_string-string_value.
+*      CONCATENATE lv_string &apos;;&apos; INTO lv_string.
+      CONCATENATE lv_string zcl_excel_writer_csv=&gt;delimiter INTO lv_string.
       lv_col = lv_col + 1.
     ENDWHILE.
 
@@ -181,18 +216,43 @@ endmethod.</source>
 
       WHEN &apos;d&apos; OR &apos;D&apos;.
         lc_value = zcl_excel_common=&gt;excel_string_to_date( ip_value = &lt;fs_sheet_content&gt;-cell_value ).
+        TRY.
+          lv_date = lc_value.
+          CALL FUNCTION &apos;CONVERT_DATE_TO_EXTERNAL&apos;
+            EXPORTING
+              DATE_INTERNAL                  = lv_date
+            IMPORTING
+              DATE_EXTERNAL                  = lv_tmp
+            EXCEPTIONS
+              DATE_INTERNAL_IS_INVALID       = 1
+              OTHERS                         = 2
+                  .
+          IF SY-SUBRC = 0.
+            lc_value = lv_tmp.
+          ENDIF.
+
+        CATCH CX_SY_CONVERSION_NO_NUMBER.
+
+        ENDTRY.
 
       WHEN &apos;t&apos; OR &apos;T&apos;.
         lc_value = zcl_excel_common=&gt;excel_string_to_time( ip_value = &lt;fs_sheet_content&gt;-cell_value ).
-
+        write lc_value to lv_time USING EDIT MASK &apos;__:__:__&apos;.
+        lc_value = lv_time.
       WHEN OTHERS.
         lc_value = &lt;fs_sheet_content&gt;-cell_value.
 
     ENDCASE.
-    REPLACE ALL OCCURRENCES OF &apos;&quot;&apos; in lc_value with &apos;&quot;&quot;&apos;.
-    FIND FIRST OCCURRENCE OF &apos;;&apos; IN lc_value. &quot; &lt;fs_sheet_content&gt;-cell_value.
+
+*    REPLACE ALL OCCURRENCES OF &apos;&quot;&apos; in lc_value with &apos;&quot;&quot;&apos;.
+    CONCATENATE zcl_excel_writer_csv=&gt;enclosure zcl_excel_writer_csv=&gt;enclosure INTO lv_tmp.
+    CONDENSE lv_tmp.
+    REPLACE ALL OCCURRENCES OF zcl_excel_writer_csv=&gt;enclosure in lc_value with lv_tmp.
+
+*    FIND FIRST OCCURRENCE OF &apos;;&apos; IN lc_value.
+    FIND FIRST OCCURRENCE OF zcl_excel_writer_csv=&gt;delimiter IN lc_value.
     IF sy-subrc = 0.
-      CONCATENATE lv_string &apos;&quot;&apos; lc_value &apos;&quot;&apos; INTO lv_string.
+      CONCATENATE lv_string zcl_excel_writer_csv=&gt;enclosure lc_value zcl_excel_writer_csv=&gt;enclosure INTO lv_string.
     ELSE.
       CONCATENATE lv_string lc_value INTO lv_string.
     ENDIF.
@@ -213,6 +273,24 @@ endmethod.</source>
       OTHERS         = 2
           .
 
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="SET_DELIMITER" VERSION="1" LANGU="E" DESCRIPT="Set Delimiter value" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="SET_DELIMITER" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Delimiter Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="CHAR01" PARVALUE="&apos;;&apos;"/>
+  <source>method SET_DELIMITER.
+  delimiter = ip_value.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="SET_ENCLOSURE" VERSION="1" LANGU="E" DESCRIPT="Set Enclosure character" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="SET_ENCLOSURE" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Text field enclosure character" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="CHAR01" PARVALUE="&apos;&quot;&apos;"/>
+  <source>method SET_ENCLOSURE.
+  zcl_excel_writer_csv=&gt;enclosure = ip_value.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="SET_ENDOFLINE" VERSION="1" LANGU="E" DESCRIPT="Set End Of Line character" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_CSV" CMPNAME="SET_ENDOFLINE" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="End Of Line Character" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110504" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="ANY" PARVALUE="CL_ABAP_CHAR_UTILITIES=&gt;CR_LF"/>
+  <source>method SET_ENDOFLINE.
+  zcl_excel_writer_csv=&gt;eol = ip_value.
 endmethod.</source>
  </method>
 </CLAS>

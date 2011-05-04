@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL28" VARCL="X" SUBC="1" CNAM="JACQUED" CDAT="20110427" UNAM="FEMIA" UDAT="20110428" VERN="000017" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110428" STIME="212317" IDATE="20110428" ITIME="212317" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL28" VARCL="X" SUBC="1" CNAM="JACQUED" CDAT="20110427" UNAM="FEMIA" UDAT="20110504" VERN="000020" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="210429" IDATE="20110504" ITIME="210429" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" LENGTH="27 "/>
@@ -42,6 +42,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
 INITIALIZATION.
   cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  cl_gui_cfw=&gt;flush( ).
   p_path = lv_workdir.
 
 START-OF-SELECTION.
@@ -50,7 +51,7 @@ START-OF-SELECTION.
     p_path = lv_workdir.
   ENDIF.
   cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO p_path.
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
   &quot; Creates active sheet
   CREATE OBJECT lo_excel.
@@ -58,7 +59,7 @@ START-OF-SELECTION.
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;set_title( ip_title = &apos;Sheet1&apos; ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Hello ;&quot;; world&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Hello world&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = sy-datum ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 3 ip_value = sy-uzeit ).
   lo_hyperlink = zcl_excel_hyperlink=&gt;create_external_link( iv_url = &apos;https://cw.sdn.sap.com/cw/groups/abap2xlsx&apos; ).
@@ -68,15 +69,28 @@ START-OF-SELECTION.
   column_dimension-&gt;set_width( 11 ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_csv.
+  zcl_excel_writer_csv=&gt;set_delimiter( ip_value = cl_abap_char_utilities=&gt;horizontal_tab ).
+  zcl_excel_writer_csv=&gt;set_enclosure( ip_value = &apos;&apos;&apos;&apos; ).
+  zcl_excel_writer_csv=&gt;set_endofline( ip_value = cl_abap_char_utilities=&gt;cr_lf ).
+
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-*   Convert to binary
-  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-  lv_bytecount = xstrlen( lv_file ).
+
+  &quot; Convert to binary
+  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+    EXPORTING
+      buffer        = lv_file
+    IMPORTING
+      output_length = lv_bytecount
+    TABLES
+      binary_tab    = lt_file_tab.
+*  &quot; This method is only available on AS ABAP &gt; 6.40
+*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+*  lv_bytecount = xstrlen( lv_file ).
 
   &quot; Save the file
   cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                    filename     = p_path
+                                                    filename     = lv_full_path
                                                     filetype     = &apos;BIN&apos;
                                            CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>
