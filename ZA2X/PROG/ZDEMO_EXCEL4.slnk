@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110505" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110505" STIME="212258" IDATE="20110505" ITIME="212258" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110505" VERN="000036" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110505" STIME="215537" IDATE="20110505" ITIME="215537" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Create XLXS with multiple sheets" LENGTH="48 "/>
@@ -81,8 +81,14 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 4 ip_value = &apos;Sheet3 is hidden&apos; ).
 
   lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
-  lo_worksheet-&gt;set_title( ip_title = &apos;Hidden sheet&apos; ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Sheet3&apos; ).
   lo_worksheet-&gt;zif_excel_sheet_properties~hidden = zif_excel_sheet_properties=&gt;c_hidden.
+
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Sheet4&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Cell B3 has value 0&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = 0 ).
+  lo_worksheet-&gt;zif_excel_sheet_properties~show_zeros = zif_excel_sheet_properties=&gt;c_hidezero.
 
   lo_excel-&gt;set_active_sheet_index_by_name( &apos;Sheet1&apos; ).
 

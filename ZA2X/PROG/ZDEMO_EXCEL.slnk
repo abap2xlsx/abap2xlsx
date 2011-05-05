@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110504" VERN="000044" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="211211" IDATE="20110504" ITIME="211211" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110505" VERN="000045" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110505" STIME="215448" IDATE="20110505" ITIME="215448" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -39,7 +39,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel1 WITH p_path = p_path AND RETURN. &quot; Hello world
   SUBMIT zdemo_excel2 WITH p_path = p_path AND RETURN. &quot; Styles
   SUBMIT zdemo_excel3 WITH p_path = p_path AND RETURN. &quot; iTab binding
-  SUBMIT zdemo_excel4 WITH p_path = p_path AND RETURN. &quot; Multi sheets and page setup
+  SUBMIT zdemo_excel4 WITH p_path = p_path AND RETURN. &quot; Multi sheets, page setup and sheet properties
   SUBMIT zdemo_excel5 WITH p_path = p_path AND RETURN. &quot; Conditional formatting
   SUBMIT zdemo_excel6 WITH p_path = p_path AND RETURN. &quot; Formulas
   SUBMIT zdemo_excel7 WITH p_path = p_path AND RETURN. &quot; Conditional formatting
