@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL25" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20110317" UNAM="BCUSER" UDAT="20110410" VERN="000024" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110410" STIME="230852" IDATE="20110410" ITIME="230852" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL25" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20110317" UNAM="BCUSER" UDAT="20110506" VERN="000028" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110506" STIME="004057" IDATE="20110506" ITIME="004057" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Hello World" LENGTH="27 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Write Hello World using Logical Path on the App Server" LENGTH="70 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
+ <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL25
 *&amp;
@@ -22,8 +23,15 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
 
 DATA: lv_file                 TYPE xstring.
 
+CONSTANTS: lv_file_name TYPE string VALUE &apos;25_HelloWorld.xlsx&apos;.
+DATA: lv_default_file_name TYPE string.
 
-CONSTANTS: lv_default_file_name TYPE string VALUE &apos;/tmp/25_HelloWorld.xlsx&apos;.
+CALL FUNCTION &apos;FILE_GET_NAME_USING_PATH&apos;
+  EXPORTING
+    logical_path        = &apos;LOCAL_TEMPORARY_FILES&apos;  &quot; Logical path&apos;
+    file_name           = lv_file_name    &quot; File name
+  IMPORTING
+    file_name_with_path = lv_default_file_name.    &quot; File name with path
 &quot; Creates active sheet
 CREATE OBJECT lo_excel.
 
