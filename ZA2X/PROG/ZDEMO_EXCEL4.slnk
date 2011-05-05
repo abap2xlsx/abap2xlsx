@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20101228" VERN="000028" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110348" IDATE="20101228" ITIME="110348" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110505" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110505" STIME="212258" IDATE="20110505" ITIME="212258" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Create XLXS with multiple sheets" LENGTH="48 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL4
 *&amp;
@@ -79,6 +78,13 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the second sheet&apos; ).
   lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet1!B2&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to first sheet&apos; ip_hyperlink = lo_hyperlink ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 4 ip_value = &apos;Sheet3 is hidden&apos; ).
+
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Hidden sheet&apos; ).
+  lo_worksheet-&gt;zif_excel_sheet_properties~hidden = zif_excel_sheet_properties=&gt;c_hidden.
+
+  lo_excel-&gt;set_active_sheet_index_by_name( &apos;Sheet1&apos; ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
