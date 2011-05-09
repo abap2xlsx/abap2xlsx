@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="BCUSER" UDAT="20110218" VERN="000064" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110218" STIME="004430" IDATE="20110218" ITIME="004430" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="BCUSER" UDAT="20110509" VERN="000066" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110509" STIME="191531" IDATE="20110509" ITIME="191531" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Data validations" LENGTH="47 "/>
@@ -11,7 +11,7 @@
 *&amp; Report  ZDEMO_EXCEL9
 *&amp;
 *&amp;---------------------------------------------------------------------*
-*&amp;
+*&amp; abap2xlsx Demo: Data validations
 *&amp;
 *&amp;---------------------------------------------------------------------*
 
