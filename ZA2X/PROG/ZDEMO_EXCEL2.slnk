@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL2" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20110429" VERN="000035" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="231949" IDATE="20110429" ITIME="003654" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL2" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110511" VERN="000038" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110511" STIME="232234" IDATE="20110511" ITIME="232234" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="25 "/>
@@ -99,9 +99,11 @@ START-OF-SELECTION.
   lo_style_button-&gt;borders-&gt;top     = lo_border_light.
   lv_style_button_guid              = lo_style_button-&gt;get_guid( ).
   &quot;Create style with border
-  lo_style_border                       = lo_excel-&gt;add_new_style( ).
-  lo_style_border-&gt;borders-&gt;allborders  = lo_border_dark.
-  lv_style_border_guid                  = lo_style_border-&gt;get_guid( ).
+  lo_style_border                         = lo_excel-&gt;add_new_style( ).
+  lo_style_border-&gt;borders-&gt;allborders    = lo_border_dark.
+  lo_style_border-&gt;borders-&gt;diagonal      = lo_border_dark.
+  lo_style_border-&gt;borders-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_both.
+  lv_style_border_guid                    = lo_style_border-&gt;get_guid( ).
   &quot; Create filled style green
   lo_style_filled                 = lo_excel-&gt;add_new_style( ).
   lo_style_filled-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.

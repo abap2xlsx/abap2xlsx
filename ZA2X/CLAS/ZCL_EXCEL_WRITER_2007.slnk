@@ -2992,6 +2992,8 @@ endmethod.</source>
               lc_xml_attr_indent            TYPE string VALUE &apos;indent&apos;,
               lc_xml_attr_locked            TYPE string VALUE &apos;locked&apos;,
               lc_xml_attr_hidden            TYPE string VALUE &apos;hidden&apos;,
+              lc_xml_attr_diagonalUp        TYPE string VALUE &apos;diagonalUp&apos;,
+              lc_xml_attr_diagonalDown      TYPE string VALUE &apos;diagonalDown&apos;,
               &quot; Node namespace
               lc_xml_node_ns                TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;.
 
@@ -3312,6 +3314,21 @@ endmethod.</source>
   LOOP AT lt_borders INTO ls_border.
     lo_element_border = lo_document-&gt;create_simple_element( name   = lc_xml_node_border
                                                             parent = lo_document ).
+
+    IF ls_border-diagonalup IS NOT INITIAL.
+      lv_value = ls_border-diagonalup.
+      CONDENSE lv_value.
+      lo_element_border-&gt;set_attribute_ns( name  = lc_xml_attr_diagonalup
+                                        value = lv_value ).
+    ENDIF.
+
+    IF ls_border-diagonaldown IS NOT INITIAL.
+      lv_value = ls_border-diagonaldown.
+      CONDENSE lv_value.
+      lo_element_border-&gt;set_attribute_ns( name  = lc_xml_attr_diagonaldown
+                                        value = lv_value ).
+    ENDIF.
+
     &quot;left
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_left
                                                          parent = lo_document ).
