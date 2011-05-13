@@ -371,6 +371,12 @@ ENDMETHOD.</source>
     wraptext TYPE string,
     END OF t_alignment.
 
+  TYPES: BEGIN OF t_protection,
+   hidden  TYPE string,
+   locked TYPE string,
+ END OF t_protection.
+
+
   DATA: styles_xml      TYPE REF TO if_ixml_document,
         iterator        TYPE REF TO if_ixml_node_iterator,
         nodes           TYPE REF TO if_ixml_node_collection,
@@ -387,6 +393,7 @@ ENDMETHOD.</source>
         style           TYPE REF TO zcl_excel_style,
         xf              TYPE t_xf,
         alignment       TYPE t_alignment,
+        protection      TYPE t_protection,
         index           TYPE i.
 
   styles_xml = me-&gt;get_ixml_from_zip_archive( ip_path ).
@@ -471,6 +478,27 @@ ENDMETHOD.</source>
 
         IF alignment-indent IS NOT INITIAL.
           style-&gt;alignment-&gt;indent = alignment-indent.
+        ENDIF.
+      ENDIF.
+
+      node2 ?= node-&gt;find_from_name( &apos;protection&apos; ).
+      IF node2 IS BOUND.
+        fill_struct_from_attributes(
+        EXPORTING
+          ip_element   =  node2
+        CHANGING
+          cp_structure = protection ).
+
+        IF protection-locked = &apos;1&apos; OR protection-locked = &apos;true&apos;.
+          style-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_locked.
+        ELSE.
+          style-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_unlocked.
+        ENDIF.
+
+        IF protection-hidden = &apos;1&apos; OR protection-hidden = &apos;true&apos;.
+          style-&gt;protection-&gt;hidden = zcl_excel_style_protection=&gt;c_protection_hidden.
+        ELSE.
+          style-&gt;protection-&gt;hidden = zcl_excel_style_protection=&gt;c_protection_unhidden.
         ENDIF.
 
       ENDIF.
