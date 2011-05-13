@@ -359,10 +359,23 @@ ENDMETHOD.</source>
     xfid TYPE string,
     END OF t_xf.
 
+  TYPES: BEGIN OF t_alignment,
+    horizontal  TYPE string,
+    indent TYPE string,
+    justifylastline TYPE string,
+    readingorder TYPE string,
+    relativeindent TYPE string,
+    shrinktofit TYPE string,
+    textrotation TYPE string,
+    vertical TYPE string,
+    wraptext TYPE string,
+    END OF t_alignment.
+
   DATA: styles_xml      TYPE REF TO if_ixml_document,
         iterator        TYPE REF TO if_ixml_node_iterator,
         nodes           TYPE REF TO if_ixml_node_collection,
         node            TYPE REF TO if_ixml_element,
+        node2           TYPE REF TO if_ixml_element,
         fills           TYPE t_fills,
         fill            TYPE REF TO zcl_excel_style_fill,
         num_formats     TYPE t_num_formats,
@@ -373,6 +386,7 @@ ENDMETHOD.</source>
         font            TYPE REF TO zcl_excel_style_font,
         style           TYPE REF TO zcl_excel_style,
         xf              TYPE t_xf,
+        alignment       TYPE t_alignment,
         index           TYPE i.
 
   styles_xml = me-&gt;get_ixml_from_zip_archive( ip_path ).
@@ -419,12 +433,46 @@ ENDMETHOD.</source>
         ENDIF.
       ENDIF.
 
-       IF xf-applyfont = &apos;1&apos; AND xf-fontid IS NOT INITIAL.
+      IF xf-applyfont = &apos;1&apos; AND xf-fontid IS NOT INITIAL.
         index = xf-fontid + 1.
         READ TABLE fonts INTO font INDEX index.
         IF sy-subrc = 0.
           style-&gt;font = font.
         ENDIF.
+      ENDIF.
+
+      node2 ?= node-&gt;find_from_name( &apos;alignment&apos; ).
+      IF node2 IS BOUND.
+        fill_struct_from_attributes(
+                EXPORTING
+                  ip_element   =  node2
+                CHANGING
+                  cp_structure = alignment ).
+
+        IF alignment-horizontal IS NOT INITIAL.
+          style-&gt;alignment-&gt;horizontal = alignment-horizontal.
+        ENDIF.
+
+        IF alignment-vertical IS NOT INITIAL.
+          style-&gt;alignment-&gt;vertical = alignment-vertical.
+        ENDIF.
+
+        IF alignment-textrotation IS NOT INITIAL.
+          style-&gt;alignment-&gt;textrotation = alignment-textrotation.
+        ENDIF.
+
+        IF alignment-wraptext = &apos;1&apos; OR alignment-wraptext = &apos;true&apos;.
+          style-&gt;alignment-&gt;wraptext = abap_true.
+        ENDIF.
+
+        IF alignment-shrinktofit = &apos;1&apos; OR alignment-shrinktofit = &apos;true&apos;.
+          style-&gt;alignment-&gt;shrinktofit = abap_true.
+        ENDIF.
+
+        IF alignment-indent IS NOT INITIAL.
+          style-&gt;alignment-&gt;indent = alignment-indent.
+        ENDIF.
+
       ENDIF.
 
       INSERT style INTO TABLE styles.
@@ -448,6 +496,18 @@ ENDMETHOD.</source>
   node ?= ip_xml-&gt;find_from_name( &apos;border&apos; ).
   WHILE node IS BOUND.
     CREATE OBJECT cell_border.
+
+    IF node-&gt;get_attribute( &apos;diagonalDown&apos; ) IS NOT INITIAL.
+      cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
+    ENDIF.
+
+    IF node-&gt;get_attribute( &apos;diagonalUp&apos; ) IS NOT INITIAL.
+      IF cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
+        cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_both.
+      ELSE.
+        cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_up.
+      ENDIF.
+    ENDIF.
 
     node2 ?= node-&gt;get_first_child( ).
     WHILE node2 IS BOUND.

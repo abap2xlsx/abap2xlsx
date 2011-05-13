@@ -57,6 +57,17 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="GET_STRUCTURE" VERSION="1" LANGU="E" DESCRIPT="Get structure" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110205" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_STYLE_BORDERS" CMPNAME="GET_STRUCTURE" SCONAME="ES_FILL" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110205" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_S_STYLE_BORDER"/>
   <source>METHOD get_structure.
+*initialize colors to &apos;not set&apos;
+  es_fill-left_color-indexed = zcl_excel_style_color=&gt;c_indexed_not_set.
+  es_fill-left_color-theme = zcl_excel_style_color=&gt;c_theme_not_set.
+  es_fill-right_color-indexed = zcl_excel_style_color=&gt;c_indexed_not_set.
+  es_fill-right_color-theme = zcl_excel_style_color=&gt;c_theme_not_set.
+  es_fill-top_color-indexed = zcl_excel_style_color=&gt;c_indexed_not_set.
+  es_fill-top_color-theme = zcl_excel_style_color=&gt;c_theme_not_set.
+  es_fill-bottom_color-indexed = zcl_excel_style_color=&gt;c_indexed_not_set.
+  es_fill-bottom_color-theme = zcl_excel_style_color=&gt;c_theme_not_set.
+  es_fill-diagonal_color-indexed = zcl_excel_style_color=&gt;c_indexed_not_set.
+  es_fill-diagonal_color-theme = zcl_excel_style_color=&gt;c_theme_not_set.
 
 * Check if all borders is set otherwise check single border
   IF me-&gt;allborders IS BOUND.
