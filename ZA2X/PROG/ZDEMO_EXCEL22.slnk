@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20110218" VERN="000033" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110218" STIME="010031" IDATE="20110218" ITIME="010031" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL22" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20101220" UNAM="BCUSER" UDAT="20110519" VERN="000035" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110519" STIME="221820" IDATE="20110519" ITIME="221820" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
@@ -72,7 +72,7 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_title( ip_title = &apos;PN_MASSIVE&apos;).
 
   DATA lt_test TYPE TABLE OF sflight.
-  SELECT * FROM sflight INTO TABLE lt_test.
+  SELECT * FROM sflight INTO TABLE lt_test. &quot;#EC CI_NOWHERE
 
   &quot; sheet style (white background)
   lo_style = lo_excel-&gt;add_new_style( ).

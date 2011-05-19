@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="BCUSER" UDAT="20101228" VERN="000071" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110439" IDATE="20101228" ITIME="110439" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="BCUSER" UDAT="20110519" VERN="000073" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110519" STIME="221730" IDATE="20110519" ITIME="221730" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Format internal table with field catalog" LENGTH="56 "/>
@@ -74,7 +74,7 @@ START-OF-SELECTION.
   lo_style_conditional2-&gt;priority  = 1.
 
   DATA lt_test TYPE TABLE OF sflight.
-  SELECT * FROM sflight INTO TABLE lt_test.
+  SELECT * FROM sflight INTO TABLE lt_test. &quot;#EC CI_NOWHERE
 
   lt_field_catalog = zcl_excel_common=&gt;get_fieldcatalog( ip_table = lt_test ).
 
