@@ -433,8 +433,9 @@ endclass.</localTypes>
 endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE">
-  <source>method ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE.
-endmethod.</source>
+  <source>METHOD zif_excel_sheet_properties~initialize.
+  zif_excel_sheet_properties~show_zeros = zif_excel_sheet_properties=&gt;c_showzero.
+ENDMETHOD.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE">
   <source>method ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE.
