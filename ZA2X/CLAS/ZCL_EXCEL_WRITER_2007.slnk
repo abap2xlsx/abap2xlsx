@@ -2276,6 +2276,28 @@ endmethod.</source>
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDIF.
 
+  &quot; Merged cells
+  t_range_merge = io_worksheet-&gt;get_merge( ).
+  IF t_range_merge IS NOT INITIAL.
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecells
+                                                     parent = lo_document ).
+    DESCRIBE TABLE t_range_merge LINES merge_count.
+    lv_value = merge_count.
+    CONDENSE lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_count
+                                  value = lv_value ).
+    LOOP AT t_range_merge ASSIGNING &lt;fs_range_merge&gt;.
+      lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecell
+                                                         parent = lo_document ).
+
+      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_ref
+                                      value = &lt;fs_range_merge&gt; ).
+      lo_element-&gt;append_child( new_child = lo_element_2 ).
+      lo_element_root-&gt;append_child( new_child = lo_element ).
+      io_worksheet-&gt;delete_merge( ).
+    ENDLOOP.
+  ENDIF.
+
   &quot; Conditional formatting node
   lo_iterator = io_worksheet-&gt;get_cond_styles_iterator( ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
@@ -2418,28 +2440,6 @@ endmethod.</source>
 
     lo_element_root-&gt;append_child( new_child = lo_element ). &quot; Conditional formatting node
   ENDWHILE.
-
-  &quot; Merged cells
-  t_range_merge = io_worksheet-&gt;get_merge( ).
-  IF t_range_merge IS NOT INITIAL.
-    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecells
-                                                     parent = lo_document ).
-    DESCRIBE TABLE t_range_merge LINES merge_count.
-    lv_value = merge_count.
-    CONDENSE lv_value.
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_count
-                                  value = lv_value ).
-    LOOP AT t_range_merge ASSIGNING &lt;fs_range_merge&gt;.
-      lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_mergecell
-                                                         parent = lo_document ).
-
-      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_ref
-                                      value = &lt;fs_range_merge&gt; ).
-      lo_element-&gt;append_child( new_child = lo_element_2 ).
-      lo_element_root-&gt;append_child( new_child = lo_element ).
-      io_worksheet-&gt;delete_merge( ).
-    ENDLOOP.
-  ENDIF.
 
   IF io_worksheet-&gt;get_data_validations_size( ) GT 0.
     &quot; dataValidations node
