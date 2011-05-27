@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL27" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110504" VERN="000047" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="211236" IDATE="20110504" ITIME="211236" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL27" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110527" VERN="000052" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110527" STIME="150345" IDATE="20110527" ITIME="150345" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="22 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Data conditional formatting with styles" LENGTH="55 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="24 "/>
    <textElement ID="S" KEY="P_READER" ENTRY="        Write back after using Reader" LENGTH="37 "/>
   </language>
@@ -16,60 +16,138 @@
 *&amp;---------------------------------------------------------------------*
 
 REPORT  zdemo_excel27.
-*
-*DATA: lo_excel                TYPE REF TO zcl_excel,
-*      lo_excel_writer         TYPE REF TO zif_excel_writer,
-*      lo_excel_reader         TYPE REF TO zif_excel_reader.
-*
-*DATA: lv_file                 TYPE xstring,
-*      lv_bytecount            TYPE i,
-*      lt_file_tab             TYPE solix_tab.
-*
-*DATA: lv_full_path      TYPE string,
-*      lv_workdir        TYPE string,
-*      lv_file_separator TYPE c.
-*
-*CONSTANTS: lv_default_file_name TYPE string VALUE &apos;27_Styles.xlsx&apos;.
-*
-*PARAMETERS: p_path TYPE zexcel_export_dir.
-*
-*AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-*  lv_workdir = p_path.
-*  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
-*                                              CHANGING  selected_folder = lv_workdir ).
-*  p_path = lv_workdir.
-*
-*INITIALIZATION.
-*  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-*  cl_gui_cfw=&gt;flush( ).
-*  p_path = lv_workdir.
-*
-*START-OF-SELECTION.
-*
-*  IF p_path IS INITIAL.
-*    p_path = lv_workdir.
-*  ENDIF.
-*  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-*  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
-*
-*  CREATE OBJECT lo_excel_reader TYPE zcl_excel_reader_2007.
-*  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-*  lo_excel = lo_excel_reader-&gt;load_file( lv_full_path ).
-*  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
-*  REPLACE &apos;.xlsx&apos; IN lv_full_path WITH &apos;FromReader.xlsx&apos;.
-*
-*  &quot; Convert to binary
-*  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-*    EXPORTING
-*      buffer        = lv_file
-*    IMPORTING
-*      output_length = lv_bytecount
-*    TABLES
-*      binary_tab    = lt_file_tab.
-*
-*  &quot; Save the file
-*  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-*                                                    filename     = lv_full_path
-*                                                    filetype     = &apos;BIN&apos;
-*                                           CHANGING data_tab     = lt_file_tab ).</source>
+
+CONSTANTS: c_fish       TYPE string VALUE &apos;Fish&apos;.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_excel_writer         TYPE REF TO zif_excel_writer,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_range                TYPE REF TO zcl_excel_range,
+      lo_data_validation      TYPE REF TO zcl_excel_data_validation,
+      lo_style_conditional    TYPE REF TO zcl_excel_style_conditional,
+      lo_style_1              TYPE REF TO zcl_excel_style,
+      lo_style_2              TYPE REF TO zcl_excel_style,
+      lv_style_1_guid         TYPE zexcel_cell_style,
+      lv_style_2_guid         TYPE zexcel_cell_style,
+      ls_cellis               TYPE zexcel_conditional_cellis.
+
+DATA: lv_file                 TYPE xstring,
+      lv_bytecount            TYPE i,
+      lt_file_tab             TYPE solix_tab.
+
+DATA: lv_full_path      TYPE string,
+      lv_workdir        TYPE string,
+      lv_title          TYPE zexcel_sheet_title,
+      lv_file_separator TYPE c.
+
+CONSTANTS: lv_default_file_name TYPE string VALUE &apos;27_ConditionalFormatting.xlsx&apos;.
+
+PARAMETERS: p_path TYPE zexcel_export_dir.
+
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
+  lv_workdir = p_path.
+  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
+                                              CHANGING  selected_folder = lv_workdir ).
+  p_path = lv_workdir.
+
+INITIALIZATION.
+  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
+  cl_gui_cfw=&gt;flush( ).
+  p_path = lv_workdir.
+
+START-OF-SELECTION.
+
+  IF p_path IS INITIAL.
+    p_path = lv_workdir.
+  ENDIF.
+  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
+  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
+
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
+
+  lo_style_1                        = lo_excel-&gt;add_new_style( ).
+  lo_style_1-&gt;fill-&gt;filltype        = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style_1-&gt;fill-&gt;bgcolor-rgb   = zcl_excel_style_color=&gt;c_green.
+  lv_style_1_guid                   = lo_style_1-&gt;get_guid( ).
+
+  lo_style_2                        = lo_excel-&gt;add_new_style( ).
+  lo_style_2-&gt;fill-&gt;filltype        = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style_2-&gt;fill-&gt;bgcolor-rgb     = zcl_excel_style_color=&gt;c_red.
+  lv_style_2_guid                   = lo_style_2-&gt;get_guid( ).
+
+  &quot; Get active sheet
+  lo_worksheet        = lo_excel-&gt;get_active_worksheet( ).
+  lv_title = &apos;Data Validation&apos;.
+  lo_worksheet-&gt;set_title( lv_title ).
+  &quot; Set values for dropdown
+  lo_worksheet-&gt;set_cell( ip_row = 2 ip_column = &apos;A&apos; ip_value = c_fish ).
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;A&apos; ip_value = &apos;Anchovy&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;A&apos; ip_value = &apos;Carp&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;A&apos; ip_value = &apos;Catfish&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;A&apos; ip_value = &apos;Cod&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;A&apos; ip_value = &apos;Eel&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 9 ip_column = &apos;A&apos; ip_value = &apos;Haddock&apos; ).
+
+  lo_range            = lo_excel-&gt;add_new_range( ).
+  lo_range-&gt;name      = c_fish.
+  lo_range-&gt;set_value( ip_sheet_name    = lv_title
+                       ip_start_column  = &apos;A&apos;
+                       ip_start_row     = 4
+                       ip_stop_column   = &apos;A&apos;
+                       ip_stop_row      = 9 ).
+
+  &quot; 1st validation
+  lo_data_validation              = lo_worksheet-&gt;add_new_data_validation( ).
+  lo_data_validation-&gt;type        = zcl_excel_data_validation=&gt;c_type_list.
+  lo_data_validation-&gt;formula1    = c_fish.
+  lo_data_validation-&gt;cell_row    = 2.
+  lo_data_validation-&gt;cell_column = &apos;C&apos;.
+  lo_worksheet-&gt;set_cell( ip_row = 2 ip_column = &apos;C&apos; ip_value = &apos;Select a value&apos; ).
+
+  lo_style_conditional = lo_worksheet-&gt;add_new_conditional_style( ).
+  lo_style_conditional-&gt;rule      = zcl_excel_style_conditional=&gt;c_rule_cellis.
+  ls_cellis-formula     = &apos;&quot;Anchovy&quot;&apos;.
+  ls_cellis-operator    = zcl_excel_style_conditional=&gt;c_operator_equal.
+  ls_cellis-cell_style  = lv_style_1_guid.
+  lo_style_conditional-&gt;mode_cellis = ls_cellis.
+  lo_style_conditional-&gt;priority  = 1.
+  lo_style_conditional-&gt;set_range( ip_start_column  = &apos;C&apos;
+                                   ip_start_row     = 2
+                                   ip_stop_column   = &apos;C&apos;
+                                   ip_stop_row      = 2 ).
+
+  lo_style_conditional = lo_worksheet-&gt;add_new_conditional_style( ).
+  lo_style_conditional-&gt;rule        = zcl_excel_style_conditional=&gt;c_rule_cellis.
+  ls_cellis-formula     = &apos;&quot;Carp&quot;&apos;.
+  ls_cellis-operator    = zcl_excel_style_conditional=&gt;c_operator_equal.
+  ls_cellis-cell_style  = lv_style_2_guid.
+  lo_style_conditional-&gt;mode_cellis = ls_cellis.
+  lo_style_conditional-&gt;priority    = 2.
+  lo_style_conditional-&gt;set_range( ip_start_column  = &apos;C&apos;
+                                   ip_start_row     = 2
+                                   ip_stop_column   = &apos;C&apos;
+                                   ip_stop_row      = 2 ).
+
+
+  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
+
+  &quot; Convert to binary
+  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
+    EXPORTING
+      buffer        = lv_file
+    IMPORTING
+      output_length = lv_bytecount
+    TABLES
+      binary_tab    = lt_file_tab.
+*  &quot; This method is only available on AS ABAP &gt; 6.40
+*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
+*  lv_bytecount = xstrlen( lv_file ).
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
+                                                    filename     = lv_full_path
+                                                    filetype     = &apos;BIN&apos;
+                                           CHANGING data_tab     = lt_file_tab ).</source>
 </PROG>

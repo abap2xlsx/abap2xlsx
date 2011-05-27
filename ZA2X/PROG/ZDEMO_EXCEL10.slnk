@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="BCUSER" UDAT="20110519" VERN="000073" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110519" STIME="221730" IDATE="20110519" ITIME="221730" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100719" UNAM="FEMIA" UDAT="20110527" VERN="000074" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110527" STIME="151826" IDATE="20110527" ITIME="151826" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Format internal table with field catalog" LENGTH="56 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL10
 *&amp;
@@ -24,7 +23,8 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
 
 DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
-      ls_table_settings       TYPE zexcel_s_table_settings.
+      ls_table_settings       TYPE zexcel_s_table_settings,
+      ls_iconset              TYPE zexcel_conditional_iconset.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
@@ -67,11 +67,24 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;set_title( &apos;Internal table&apos; ).
 
+  ls_iconset-iconset                  = zcl_excel_style_conditional=&gt;c_iconset_5arrows.
+  ls_iconset-cfvo1_type               = zcl_excel_style_conditional=&gt;c_cfvo_type_percent.
+  ls_iconset-cfvo1_value              = &apos;0&apos;.
+  ls_iconset-cfvo2_type               = zcl_excel_style_conditional=&gt;c_cfvo_type_percent.
+  ls_iconset-cfvo2_value              = &apos;20&apos;.
+  ls_iconset-cfvo3_type               = zcl_excel_style_conditional=&gt;c_cfvo_type_percent.
+  ls_iconset-cfvo3_value              = &apos;40&apos;.
+  ls_iconset-cfvo4_type               = zcl_excel_style_conditional=&gt;c_cfvo_type_percent.
+  ls_iconset-cfvo4_value              = &apos;60&apos;.
+  ls_iconset-cfvo5_type               = zcl_excel_style_conditional=&gt;c_cfvo_type_percent.
+  ls_iconset-cfvo5_value              = &apos;80&apos;.
+  ls_iconset-showvalue                = zcl_excel_style_conditional=&gt;c_showvalue_true.
+
   &quot;Conditional style
   lo_style_conditional2 = lo_worksheet-&gt;add_new_conditional_style( ).
-  lo_style_conditional2-&gt;rule      = zcl_excel_style_conditional=&gt;c_rule_iconset.
-  lo_style_conditional2-&gt;iconset   = zcl_excel_style_conditional=&gt;c_iconset_5arrows.
-  lo_style_conditional2-&gt;priority  = 1.
+  lo_style_conditional2-&gt;rule         = zcl_excel_style_conditional=&gt;c_rule_iconset.
+  lo_style_conditional2-&gt;mode_iconset = ls_iconset.
+  lo_style_conditional2-&gt;priority     = 1.
 
   DATA lt_test TYPE TABLE OF sflight.
   SELECT * FROM sflight INTO TABLE lt_test. &quot;#EC CI_NOWHERE
