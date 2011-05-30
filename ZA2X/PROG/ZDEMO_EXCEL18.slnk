@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL18" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100923" UNAM="BCUSER" UDAT="20101228" VERN="000027" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110604" IDATE="20101228" ITIME="110604" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL18" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100923" UNAM="FEMIA" UDAT="20110528" VERN="000030" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181954" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Book protection" LENGTH="31 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL18
 *&amp;

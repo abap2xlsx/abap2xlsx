@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="BCUSER" UDAT="20110429" VERN="000061" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110504" STIME="231949" IDATE="20110429" ITIME="001315" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="FEMIA" UDAT="20110528" VERN="000063" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110528" STIME="181954" IDATE="20110528" ITIME="181954" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="55 "/>
@@ -14,7 +14,6 @@
    <textElement ID="S" KEY="RELTYP" ENTRY="D       ." LENGTH="25 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL11
 *&amp; Export Organisation and Contact Persons using ABAP2XLSX

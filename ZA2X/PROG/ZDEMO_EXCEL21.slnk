@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL21" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101127" UNAM="BCUSER" UDAT="20110505" VERN="000041" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110505" STIME="000536" IDATE="20110505" ITIME="000536" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL21" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101127" UNAM="FEMIA" UDAT="20110528" VERN="000043" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181955" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Backgound Color Picker" LENGTH="38 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL21
 *&amp;

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="BCUSER" UDAT="20110119" VERN="000022" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110119" STIME="193230" IDATE="20110119" ITIME="193230" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="FEMIA" UDAT="20110528" VERN="000025" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181955" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options" LENGTH="70 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL23
 *&amp;

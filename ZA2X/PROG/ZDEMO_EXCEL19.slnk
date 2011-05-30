@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL19" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="BCUSER" UDAT="20101228" VERN="000024" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101228" STIME="110612" IDATE="20101228" ITIME="110612" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL19" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="FEMIA" UDAT="20110528" VERN="000027" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181954" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Set active sheet" LENGTH="32 "/>
@@ -7,7 +7,6 @@
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="26 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL19
 *&amp;

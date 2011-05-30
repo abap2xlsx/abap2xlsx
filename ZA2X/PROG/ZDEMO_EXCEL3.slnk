@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="BCUSER" UDAT="20110519" VERN="000043" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110519" STIME="221948" IDATE="20110519" ITIME="221948" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110528" VERN="000045" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181955" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="37 "/>
@@ -7,7 +7,6 @@
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="24 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL3
 *&amp;
