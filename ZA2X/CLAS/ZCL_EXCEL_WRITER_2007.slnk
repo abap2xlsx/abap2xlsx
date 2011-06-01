@@ -14,9 +14,9 @@ public section.
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_WRITER_2007
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_WRITER_2007
+ <privateSection>private section.
+*&quot;* private components of class ZCL_EXCEL_WRITER_2007
 *&quot;* do not include other source files here!!!
-private section.
 
   constants C_CONTENT_TYPES type STRING value &apos;[Content_Types].xml&apos;. &quot;#EC NOTEXT
   constants C_DOCPROPS_APP type STRING value &apos;docProps/app.xml&apos;. &quot;#EC NOTEXT
@@ -35,7 +35,7 @@ private section.
   constants C_XL_WORKBOOK type STRING value &apos;xl/workbook.xml&apos;. &quot;#EC NOTEXT
   data EXCEL type ref to ZCL_EXCEL .
   data SHARED_STRINGS type ZEXCEL_T_SHARED_STRING .
-  data STYLES_COND_MAPPING type ZEXCEL_T_STYLES_MAPPING .
+  data STYLES_COND_MAPPING type ZEXCEL_T_STYLES_COND_MAPPING .
   data STYLES_MAPPING type ZEXCEL_T_STYLES_MAPPING .
 
   methods CREATE
@@ -136,7 +136,7 @@ private section.
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="0" STATE="1" EDITORDER="15 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="0" STATE="1" EDITORDER="16 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="0" STATE="1" EDITORDER="17 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_COND_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="0" STATE="1" EDITORDER="18 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_COND_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="0" STATE="1" EDITORDER="18 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110530" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_COND_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="0" STATE="1" EDITORDER="19 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WRITER_2007" CPDNAME="ZIF_EXCEL_WRITER~WRITE_FILE">
   <source>method ZIF_EXCEL_WRITER~WRITE_FILE.
@@ -1766,7 +1766,7 @@ endmethod.</source>
         lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
         column_dimensions           TYPE zexcel_t_worksheet_columndime,
         row_dimensions              TYPE zexcel_t_worksheet_rowdimensio,
-        ls_style_cond_mapping       TYPE zexcel_s_styles_mapping,
+        ls_style_cond_mapping       TYPE zexcel_s_styles_cond_mapping,
         lv_relation_id              TYPE i VALUE 0,
         outline_level_row           TYPE i VALUE 0,
         outline_level_col           TYPE i VALUE 0,
@@ -2429,7 +2429,7 @@ endmethod.</source>
       WHEN zcl_excel_style_conditional=&gt;c_rule_cellis.
         ls_cellis = lo_style_conditional-&gt;mode_cellis.
         READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_cellis-cell_style.
-        lv_value = ls_style_cond_mapping-style.
+        lv_value = ls_style_cond_mapping-dxf.
         CONDENSE lv_value.
         lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_dxfid
                                         value = lv_value ).
@@ -2445,7 +2445,7 @@ endmethod.</source>
       WHEN zcl_excel_style_conditional=&gt;c_rule_expression.
         ls_expression = lo_style_conditional-&gt;mode_expression.
         READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_expression-cell_style.
-        lv_value = ls_style_cond_mapping-style.
+        lv_value = ls_style_cond_mapping-dxf.
         CONDENSE lv_value.
         lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_dxfid
                                         value = lv_value ).
@@ -2976,7 +2976,7 @@ endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="0" STATE="1" EDITORDER="13 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_STYLES.
+  <source>METHOD create_xl_styles.
 
 
 ** Constant node name
@@ -3109,8 +3109,9 @@ endmethod.</source>
         lt_cellxfs        TYPE zexcel_t_cellxfs,
         ls_cellxfs        TYPE zexcel_s_cellxfs,
         ls_styles_mapping TYPE zexcel_s_styles_mapping,
-        ls_style_cond_mapping TYPE zexcel_s_styles_mapping,
-        ls_cellis         TYPE zexcel_conditional_cellis.
+        ls_style_cond_mapping TYPE zexcel_s_styles_cond_mapping,
+        ls_cellis         TYPE zexcel_conditional_cellis,
+        ls_expression     TYPE zexcel_conditional_expression.
 
   DATA: lv_value          TYPE string,
         lv_dfx_count      TYPE i,
@@ -3713,43 +3714,109 @@ endmethod.</source>
           READ TABLE lt_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
           ADD 1 TO ls_cellxfs-fillid.       &quot; the numbering starts from 0
 
-          ls_style_cond_mapping-guid = ls_cellis-cell_style.
-          ls_style_cond_mapping-style = lv_dfx_count.
-          APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
-          ADD 1 TO lv_dfx_count.
+          &quot; Style already mapped?
+          READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
+          IF sy-subrc EQ 0.
+            ls_style_cond_mapping-guid  = ls_cellis-cell_style.
+            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
+          ELSE.
+            ls_style_cond_mapping-guid  = ls_cellis-cell_style.
+            ls_style_cond_mapping-style = ls_styles_mapping-style.
+            ls_style_cond_mapping-dxf   = lv_dfx_count.
+            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
+            ADD 1 TO lv_dfx_count.
 
-          &quot; dxf node
-          lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
-                                                               parent = lo_document ).
-
-          READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
-          IF ls_fill IS NOT INITIAL.
-            &quot; fill properties
-            lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
-                                                                     parent = lo_document ).
-            &quot;pattern
-            lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
+            &quot; dxf node
+            lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
                                                                  parent = lo_document ).
-            lv_value = ls_fill-filltype.
-            lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
-                                                value = lv_value ).
-            &quot; fgcolor
-            create_xl_styles_color_node(
-                io_document        = lo_document
-                io_parent          = lo_sub_element_2
-                is_color           = ls_fill-fgcolor
-                iv_color_elem_name = lc_xml_node_fgcolor ).
 
-            &quot; bgcolor
-            create_xl_styles_color_node(
-                io_document        = lo_document
-                io_parent          = lo_sub_element_2
-                is_color           = ls_fill-bgcolor
-                iv_color_elem_name = lc_xml_node_bgcolor ).
+            READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
+            IF ls_fill IS NOT INITIAL.
+              &quot; fill properties
+              lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
+                                                                       parent = lo_document ).
+              &quot;pattern
+              lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
+                                                                   parent = lo_document ).
+              lv_value = ls_fill-filltype.
+              lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
+                                                  value = lv_value ).
+              &quot; fgcolor
+              create_xl_styles_color_node(
+                  io_document        = lo_document
+                  io_parent          = lo_sub_element_2
+                  is_color           = ls_fill-fgcolor
+                  iv_color_elem_name = lc_xml_node_fgcolor ).
 
-            lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
+              &quot; bgcolor
+              create_xl_styles_color_node(
+                  io_document        = lo_document
+                  io_parent          = lo_sub_element_2
+                  is_color           = ls_fill-bgcolor
+                  iv_color_elem_name = lc_xml_node_bgcolor ).
 
-            lo_sub_element-&gt;append_child( new_child = lo_element_fill ).
+              lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
+
+              lo_sub_element-&gt;append_child( new_child = lo_element_fill ).
+            ENDIF.
+          ENDIF.
+
+          lo_element-&gt;append_child( new_child = lo_sub_element ).
+        WHEN zcl_excel_style_conditional=&gt;c_rule_expression.
+          &quot;if style defined
+          ls_expression = lo_style_conditional-&gt;mode_expression.
+          IF ls_expression-cell_style IS INITIAL.
+            CONTINUE.
+          ENDIF.
+          READ TABLE me-&gt;styles_mapping INTO ls_styles_mapping WITH KEY guid = ls_expression-cell_style.
+          ADD 1 TO ls_styles_mapping-style. &quot; the numbering starts from 0
+          READ TABLE lt_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
+          ADD 1 TO ls_cellxfs-fillid.       &quot; the numbering starts from 0
+
+          READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
+          IF sy-subrc EQ 0.
+            ls_style_cond_mapping-guid  = ls_expression-cell_style.
+            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
+          ELSE.
+            ls_style_cond_mapping-guid  = ls_expression-cell_style.
+            ls_style_cond_mapping-style = ls_styles_mapping-style.
+            ls_style_cond_mapping-dxf   = lv_dfx_count.
+            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
+            ADD 1 TO lv_dfx_count.
+
+            &quot; dxf node
+            lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
+                                                                 parent = lo_document ).
+
+            READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
+            IF ls_fill IS NOT INITIAL.
+              &quot; fill properties
+              lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
+                                                                       parent = lo_document ).
+              &quot;pattern
+              lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
+                                                                   parent = lo_document ).
+              lv_value = ls_fill-filltype.
+              lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
+                                                  value = lv_value ).
+              &quot; fgcolor
+              create_xl_styles_color_node(
+                  io_document        = lo_document
+                  io_parent          = lo_sub_element_2
+                  is_color           = ls_fill-fgcolor
+                  iv_color_elem_name = lc_xml_node_fgcolor ).
+
+              &quot; bgcolor
+              create_xl_styles_color_node(
+                  io_document        = lo_document
+                  io_parent          = lo_sub_element_2
+                  is_color           = ls_fill-bgcolor
+                  iv_color_elem_name = lc_xml_node_bgcolor ).
+
+              lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
+
+              lo_sub_element-&gt;append_child( new_child = lo_element_fill ).
+            ENDIF.
           ENDIF.
 
           lo_element-&gt;append_child( new_child = lo_sub_element ).
@@ -3783,7 +3850,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos; color node" EXPOSURE="0" STATE="1" EDITORDER="12 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
