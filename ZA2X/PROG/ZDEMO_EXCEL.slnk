@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110528" VERN="000048" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110528" STIME="183344" IDATE="20110528" ITIME="183344" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20110602" VERN="000049" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110602" STIME="111342" IDATE="20110602" ITIME="111342" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -64,5 +64,6 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel25 AND RETURN. &quot; abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
   SUBMIT zdemo_excel26 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Reader demo
   SUBMIT zdemo_excel27 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Conditional Formatting
-  SUBMIT zdemo_excel28 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: CSV writer</source>
+  SUBMIT zdemo_excel28 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: CSV writer
+*  SUBMIT zdemo_excel29 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Macro enabled workbook</source>
 </PROG>
