@@ -2599,9 +2599,9 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" VERSION="1" LANGU="E" DESCRIPT="Set cell value from a table" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IT_FIELD_CATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG" PAROPTIONL="X"/>
-  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IS_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS" PAROPTIONL="X"/>
-  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ES_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS"/>
-  <source>method BIND_TABLE.
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IS_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110608" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ES_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110608" PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS"/>
+  <source>METHOD bind_table.
 
   DATA:
         lv_row_int            TYPE zexcel_cell_row,
@@ -2625,8 +2625,8 @@ endmethod.</source>
 
   FIELD-SYMBOLS: &lt;ls_field_catalog&gt;         TYPE zexcel_s_fieldcatalog,
                  &lt;ls_field_catalog_custom&gt;  TYPE zexcel_s_fieldcatalog,
-                 &lt;fs_table_line&gt;            TYPE ANY,
-                 &lt;fs_fldval&gt;                TYPE ANY.
+                 &lt;fs_table_line&gt;            TYPE any,
+                 &lt;fs_fldval&gt;                TYPE any.
 
   ls_settings = is_table_settings.
 
@@ -2698,9 +2698,16 @@ endmethod.</source>
       ENDIF.
     ENDWHILE.
     &quot; First of all write column header
-    me-&gt;set_cell( ip_column = lv_column_alpha
-                  ip_row    = lv_row_int
-                  ip_value  = lv_value ).
+    IF &lt;ls_field_catalog&gt;-style_header IS NOT INITIAL.
+      me-&gt;set_cell( ip_column = lv_column_alpha
+                    ip_row    = lv_row_int
+                    ip_value  = lv_value
+                    ip_style  = &lt;ls_field_catalog&gt;-style_header ).
+    ELSE.
+      me-&gt;set_cell( ip_column = lv_column_alpha
+                    ip_row    = lv_row_int
+                    ip_value  = lv_value ).
+    ENDIF.
 
     ADD 1 TO lv_row_int.
     LOOP AT ip_table ASSIGNING &lt;fs_table_line&gt;.
@@ -2727,9 +2734,16 @@ endmethod.</source>
     &quot; totals
     IF &lt;ls_field_catalog&gt;-totals_function IS NOT INITIAL.
       lv_formula = lo_table-&gt;get_totals_formula( ip_column = &lt;ls_field_catalog&gt;-scrtext_m ip_function = &lt;ls_field_catalog&gt;-totals_function ).
-      me-&gt;set_cell( ip_column = lv_column_alpha
-                    ip_row    = lv_row_int
-                    ip_formula = lv_formula ).
+      IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
+        me-&gt;set_cell( ip_column   = lv_column_alpha
+                      ip_row      = lv_row_int
+                      ip_formula  = lv_formula
+                      ip_style    = &lt;ls_field_catalog&gt;-style ).
+      ELSE.
+        me-&gt;set_cell( ip_column   = lv_column_alpha
+                      ip_row      = lv_row_int
+                      ip_formula  = lv_formula ).
+      ENDIF.
     ENDIF.
 
     lv_row_int = ls_settings-top_left_row.
@@ -2754,7 +2768,7 @@ endmethod.</source>
   es_table_settings-bottom_right_row    = ls_settings-top_left_row + lv_rows + 1. &quot;Last rows
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_COLUMN_WIDTHS" VERSION="1" LANGU="E" DESCRIPT="Calculate widths for auto-size columns" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CALCULATE_COLUMN_WIDTHS.
