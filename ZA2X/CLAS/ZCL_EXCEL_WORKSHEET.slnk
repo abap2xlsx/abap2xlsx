@@ -2734,11 +2734,11 @@ endmethod.</source>
     &quot; totals
     IF &lt;ls_field_catalog&gt;-totals_function IS NOT INITIAL.
       lv_formula = lo_table-&gt;get_totals_formula( ip_column = &lt;ls_field_catalog&gt;-scrtext_m ip_function = &lt;ls_field_catalog&gt;-totals_function ).
-      IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
+      IF &lt;ls_field_catalog&gt;-style_total IS NOT INITIAL.
         me-&gt;set_cell( ip_column   = lv_column_alpha
                       ip_row      = lv_row_int
                       ip_formula  = lv_formula
-                      ip_style    = &lt;ls_field_catalog&gt;-style ).
+                      ip_style    = &lt;ls_field_catalog&gt;-style_total ).
       ELSE.
         me-&gt;set_cell( ip_column   = lv_column_alpha
                       ip_row      = lv_row_int
