@@ -2676,25 +2676,25 @@ endmethod.</source>
 *    lv_value = &lt;ls_field_catalog&gt;-scrtext_m.
     IF &lt;ls_field_catalog&gt;-scrtext_m IS NOT INITIAL.
       lv_value = &lt;ls_field_catalog&gt;-scrtext_m.
+      &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
     ELSEIF &lt;ls_field_catalog&gt;-scrtext_s IS NOT INITIAL.
       lv_value = &lt;ls_field_catalog&gt;-scrtext_s.
-      &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
+      &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
     ELSEIF &lt;ls_field_catalog&gt;-scrtext_l IS NOT INITIAL.
       lv_value = &lt;ls_field_catalog&gt;-scrtext_l.
-      &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
     ELSE.
       lv_value = &apos;Column&apos;.  &quot; default value as Excel does
-      &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
+      &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
     ENDIF.
     WHILE 1 = 1.
       READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value BINARY SEARCH.
       IF sy-subrc &lt;&gt; 0.
-        &lt;ls_field_catalog&gt;-scrtext_m = lv_value.
+        &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
         INSERT lv_value INTO TABLE lt_column_name_buffer.
         EXIT.
       ELSE.
         lv_syindex = sy-index.
-        CONCATENATE &lt;ls_field_catalog&gt;-scrtext_m lv_syindex INTO lv_value.
+        CONCATENATE &lt;ls_field_catalog&gt;-scrtext_l lv_syindex INTO lv_value.
       ENDIF.
     ENDWHILE.
     &quot; First of all write column header
@@ -2733,7 +2733,7 @@ endmethod.</source>
 
     &quot; totals
     IF &lt;ls_field_catalog&gt;-totals_function IS NOT INITIAL.
-      lv_formula = lo_table-&gt;get_totals_formula( ip_column = &lt;ls_field_catalog&gt;-scrtext_m ip_function = &lt;ls_field_catalog&gt;-totals_function ).
+      lv_formula = lo_table-&gt;get_totals_formula( ip_column = &lt;ls_field_catalog&gt;-scrtext_l ip_function = &lt;ls_field_catalog&gt;-totals_function ).
       IF &lt;ls_field_catalog&gt;-style_total IS NOT INITIAL.
         me-&gt;set_cell( ip_column   = lv_column_alpha
                       ip_row      = lv_row_int

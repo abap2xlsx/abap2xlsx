@@ -4023,7 +4023,7 @@ endmethod.</source>
     SHIFT lv_value LEFT DELETING LEADING &apos;0&apos;.
     lo_element2-&gt;set_attribute_ns( name  = &apos;id&apos;
                                   value = lv_value ).
-    lv_value = ls_fieldcat-scrtext_m.
+    lv_value = ls_fieldcat-scrtext_l.
     lo_element2-&gt;set_attribute_ns( name  = &apos;name&apos;
                                   value = lv_value ).
 
