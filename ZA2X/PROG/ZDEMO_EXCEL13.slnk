@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL13" VARCL="X" SUBC="1" CNAM="ATEJADA" CDAT="20100812" UNAM="FEMIA" UDAT="20110528" VERN="000046" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181954" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL13" VARCL="X" SUBC="1" CNAM="ATEJADA" CDAT="20100812" UNAM="FEMIA" UDAT="20110611" VERN="000054" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110611" STIME="103640" IDATE="20110611" ITIME="103640" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Merge cells" LENGTH="27 "/>
@@ -88,7 +88,6 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;G&apos; ip_value = &apos;&apos; ip_style = lv_style_bold_border_guid ).
 
   lo_worksheet-&gt;set_merge( ip_row = 4 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ).
-  lo_worksheet-&gt;set_merge( ip_row = 6 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ).
 
   &quot; Test also if merge works when oher merged chells are empty
   lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;B&apos; ip_value = &apos;Tomato&apos; ).
@@ -97,6 +96,21 @@ START-OF-SELECTION.
   &quot; Test the patch provided by Victor Alekhin to merge cells in one column
   lo_worksheet-&gt;set_cell(  ip_row = 8 ip_column       = &apos;B&apos; ip_value = &apos;Merge cells also over multiple rows by Victor Alekhin&apos; ).
   lo_worksheet-&gt;set_merge( ip_row = 8 ip_column_start = &apos;B&apos; ip_column_end = &apos;G&apos; ip_row_to = 10 ).
+
+  &quot; Test the patch provided by Alexander Budeyev with different column merges
+  lo_worksheet-&gt;set_cell( ip_row = 12 ip_column = &apos;B&apos; ip_value = &apos;Merge cells with different merges by Alexander Budeyev&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 13 ip_column = &apos;B&apos; ip_value = &apos;Test&apos; ).
+
+  lo_worksheet-&gt;set_cell( ip_row = 13 ip_column = &apos;D&apos; ip_value = &apos;Banana&apos; ip_style = lv_style_bold_border_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 14 ip_column = &apos;D&apos; ip_value = &apos;&apos; ip_style = lv_style_bold_border_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 13 ip_column = &apos;E&apos; ip_value = &apos;Apple&apos; ip_style = lv_style_bold_border_guid ).
+  lo_worksheet-&gt;set_cell( ip_row = 13 ip_column = &apos;F&apos; ip_value = &apos;&apos; ip_style = lv_style_bold_border_guid ).
+
+  &quot; Test merge (issue)
+  lo_worksheet-&gt;set_merge( ip_row = 13 ip_column_start = &apos;B&apos; ip_column_end = &apos;C&apos; ip_row_to = 15 ).
+  lo_worksheet-&gt;set_merge( ip_row = 13 ip_column_start = &apos;D&apos; ip_column_end = &apos;D&apos; ip_row_to = 14 ).
+  lo_worksheet-&gt;set_merge( ip_row = 13 ip_column_start = &apos;E&apos; ip_column_end = &apos;F&apos; ).
+
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
