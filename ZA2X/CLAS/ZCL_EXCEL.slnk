@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-16"?>
 <CLAS CLSNAME="ZCL_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" UUID="E150494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20100628" CHANGEDBY="FEMIA" CHANGEDON="20110528" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20110611" CHANGEDON="00000000" RELTYPE="1" EDITORDER="3 "/>
  <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110601" RELTYPE="1" EDITORDER="1 "/>
  <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDON="00000000" RELTYPE="1" EDITORDER="2 "/>
  <publicSection>class ZCL_EXCEL definition
@@ -13,8 +14,17 @@ public section.
 
   interfaces ZIF_EXCEL_BOOK_PROTECTION .
   interfaces ZIF_EXCEL_BOOK_VBA_PROJECT .
+  interfaces ZIF_EXCEL_BOOK_PROPERTIES
+      data values APPLICATION = &apos;Microsoft Excel&apos;
+                  APPVERSION = &apos;12.0000&apos;
+                  COMPANY = &apos;abap2xlsx&apos;
+                  CREATOR = &apos;Ivan Femia&apos;
+                  DESCRIPTION = &apos;Created using abap2xlsx&apos;
+                  DOCSECURITY = &apos;0&apos;
+                  LASTMODIFIEDBY = &apos;Ivan Femia&apos;
+                  SCALECROP = &apos;&apos;
+                  TITLE = &apos;abap2xlsx&apos; .
 
-  data PROPERTIES type ref to ZCL_EXCEL_PROPERTIES .
   data SECURITY type ref to ZCL_EXCEL_SECURITY .
 
   methods ADD_NEW_DRAWING
@@ -70,9 +80,9 @@ public section.
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL
+ <privateSection>private section.
+*&quot;* private components of class ZCL_EXCEL
 *&quot;* do not include other source files here!!!
-private section.
 
   data DRAWINGS type ref to ZCL_EXCEL_DRAWINGS .
   data RANGES type ref to ZCL_EXCEL_RANGES .
@@ -87,11 +97,10 @@ private section.
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <attribute CLSNAME="ZCL_EXCEL" CMPNAME="DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Worksheets collection" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWINGS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL" CMPNAME="PROPERTIES" VERSION="1" LANGU="E" DESCRIPT="Document properties" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_PROPERTIES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL" CMPNAME="RANGES" VERSION="1" LANGU="E" DESCRIPT="Ranges collection" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_RANGES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL" CMPNAME="SECURITY" VERSION="1" LANGU="E" DESCRIPT="Security" EXPOSURE="2" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_SECURITY" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL" CMPNAME="STYLES" VERSION="1" LANGU="E" DESCRIPT="Styles collection" EXPOSURE="0" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL" CMPNAME="WORKSHEETS" VERSION="1" LANGU="E" DESCRIPT="Worksheets collection" EXPOSURE="0" STATE="1" EDITORDER="6 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEETS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL" CMPNAME="RANGES" VERSION="1" LANGU="E" DESCRIPT="Ranges collection" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110611" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_RANGES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL" CMPNAME="SECURITY" VERSION="1" LANGU="E" DESCRIPT="Security" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110611" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_SECURITY" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL" CMPNAME="STYLES" VERSION="1" LANGU="E" DESCRIPT="Styles collection" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110611" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL" CMPNAME="WORKSHEETS" VERSION="1" LANGU="E" DESCRIPT="Worksheets collection" EXPOSURE="0" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110611" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEETS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL" CPDNAME="ZIF_EXCEL_BOOK_PROTECTION~INITIALIZE">
   <source>method ZIF_EXCEL_BOOK_PROTECTION~INITIALIZE.
   me-&gt;zif_excel_book_protection~protected      = zif_excel_book_protection=&gt;c_unprotected.
@@ -115,6 +124,15 @@ endmethod.</source>
  <interfaceMethod CLSNAME="ZCL_EXCEL" CPDNAME="ZIF_EXCEL_BOOK_VBA_PROJECT~SET_VBAPROJECT">
   <source>METHOD zif_excel_book_vba_project~set_vbaproject.
   me-&gt;zif_excel_book_vba_project~vbaproject = ip_vbaproject.
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL" CPDNAME="ZIF_EXCEL_BOOK_PROPERTIES~INITIALIZE">
+  <source>METHOD zif_excel_book_properties~initialize.
+  DATA: lv_timestamp TYPE timestampl.
+
+  GET TIME STAMP FIELD lv_timestamp.
+  me-&gt;zif_excel_book_properties~created   = lv_timestamp.
+  me-&gt;zif_excel_book_properties~modified  = lv_timestamp.
 ENDMETHOD.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL" CMPNAME="ADD_NEW_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Create a new drawing" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
@@ -166,7 +184,6 @@ endmethod.</source>
         lo_style      TYPE REF TO zcl_excel_style.
 
 * Inizialize instance objects
-  CREATE OBJECT properties.
   CREATE OBJECT security.
   CREATE OBJECT worksheets.
   CREATE OBJECT ranges.
@@ -174,11 +191,13 @@ endmethod.</source>
   CREATE OBJECT drawings.
 
   me-&gt;zif_excel_book_protection~initialize( ).
+  me-&gt;zif_excel_book_properties~initialize( ).
 
   me-&gt;add_new_worksheet( ).
   me-&gt;add_new_style( ). &quot; Standard style
   lo_style = me-&gt;add_new_style( ). &quot; Standard style with fill gray125
   lo_style-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_pattern_gray125.
+
 endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL" CMPNAME="GET_ACTIVE_SHEET_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get active worksheet  index" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">

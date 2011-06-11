@@ -573,7 +573,7 @@ endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/app.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110601" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_DOCPROPS_APP.
+  <source>METHOD create_docprops_app.
 
 
 ** Constant node name
@@ -643,21 +643,21 @@ endmethod.</source>
   &quot; Application
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_application
                                                    parent = lo_document ).
-  lv_value = excel-&gt;properties-&gt;application.
+  lv_value = excel-&gt;zif_excel_book_properties~application.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; DocSecurity
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_docsecurity
                                                             parent = lo_document ).
-  lv_value = excel-&gt;properties-&gt;docsecurity.
+  lv_value = excel-&gt;zif_excel_book_properties~docsecurity.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; ScaleCrop
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_scalecrop
                                                    parent = lo_document ).
-  lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;scalecrop ).
+  lv_value = me-&gt;flag2bool( excel-&gt;zif_excel_book_properties~scalecrop ).
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
@@ -751,35 +751,35 @@ endmethod.</source>
   &quot; Company
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_company
                                                    parent = lo_document ).
-  lv_value = excel-&gt;properties-&gt;company.
+  lv_value = excel-&gt;zif_excel_book_properties~company.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; LinksUpToDate
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_linksuptodate
                                                    parent = lo_document ).
-  lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;linksuptodate ).
+  lv_value = me-&gt;flag2bool( excel-&gt;zif_excel_book_properties~linksuptodate ).
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; SharedDoc
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_shareddoc
                                                    parent = lo_document ).
-  lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;shareddoc ).
+  lv_value = me-&gt;flag2bool( excel-&gt;zif_excel_book_properties~shareddoc ).
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; HyperlinksChanged
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_hyperlinkschanged
                                                    parent = lo_document ).
-  lv_value = me-&gt;flag2bool( excel-&gt;properties-&gt;hyperlinkschanged ).
+  lv_value = me-&gt;flag2bool( excel-&gt;zif_excel_book_properties~hyperlinkschanged ).
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot; AppVersion
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_appversion
                                                    parent = lo_document ).
-  lv_value = excel-&gt;properties-&gt;appversion.
+  lv_value = excel-&gt;zif_excel_book_properties~appversion.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
@@ -790,11 +790,11 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/core.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110601" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_DOCPROPS_CORE.
+  <source>METHOD create_docprops_core.
 
 
 ** Constant node name
@@ -810,7 +810,7 @@ endmethod.</source>
         lc_cp_ns                    TYPE string VALUE &apos;cp&apos;,
         lc_dc_ns                    TYPE string VALUE &apos;dc&apos;,
         lc_dcterms_ns               TYPE string VALUE &apos;dcterms&apos;,
-        lc_dcmitype_ns              TYPE string VALUE &apos;dcmitype&apos;,
+*        lc_dcmitype_ns              TYPE string VALUE &apos;dcmitype&apos;,
         lc_xsi_ns                   TYPE string VALUE &apos;xsi&apos;,
         lc_xml_node_cp_ns           TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/metadata/core-properties&apos;,
         lc_xml_node_dc_ns           TYPE string VALUE &apos;http://purl.org/dc/elements/1.1/&apos;,
@@ -827,7 +827,9 @@ endmethod.</source>
         lo_ostream        TYPE REF TO if_ixml_ostream,
         lo_renderer       TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_value          TYPE string.
+  DATA: lv_value          TYPE string,
+        lv_date           TYPE sydatum,
+        lv_time           TYPE syuzeit.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -863,7 +865,7 @@ endmethod.</source>
   lo_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_creator
                                                       prefix = lc_dc_ns
                                                       parent = lo_document ).
-  lv_value = excel-&gt;properties-&gt;creator.
+  lv_value = excel-&gt;zif_excel_book_properties~creator.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
@@ -871,7 +873,7 @@ endmethod.</source>
   lo_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_lastmodifiedby
                                                       prefix = lc_cp_ns
                                                       parent = lo_document ).
-  lv_value = excel-&gt;properties-&gt;lastmodifiedby.
+  lv_value = excel-&gt;zif_excel_book_properties~lastmodifiedby.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
@@ -882,8 +884,12 @@ endmethod.</source>
   lo_element-&gt;set_attribute_ns( name    = lc_xml_attr_type
                                 prefix  = lc_xsi_ns
                                 value   = lc_xml_attr_target ).
-  lv_value = excel-&gt;properties-&gt;created.
-  lv_value = &apos;2010-07-04T14:58:53Z&apos;.
+
+  CONVERT TIME STAMP excel-&gt;zif_excel_book_properties~created TIME ZONE sy-zonlo INTO DATE lv_date TIME lv_time.
+  CONCATENATE lv_date lv_time INTO lv_value RESPECTING BLANKS.
+  REPLACE ALL OCCURRENCES OF REGEX &apos;([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})&apos; IN lv_value WITH &apos;$1-$2-$3T$4:$5:$6Z&apos;.
+* lv_value = excel-&gt;zif_excel_book_properties~created.
+*  lv_value = &apos;2010-07-04T14:58:53Z&apos;.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
@@ -894,8 +900,11 @@ endmethod.</source>
   lo_element-&gt;set_attribute_ns( name    = lc_xml_attr_type
                                 prefix  = lc_xsi_ns
                                 value   = lc_xml_attr_target ).
-  lv_value = excel-&gt;properties-&gt;modified.
-  lv_value = &apos;2010-07-04T14:58:53Z&apos;.
+  CONVERT TIME STAMP excel-&gt;zif_excel_book_properties~modified TIME ZONE sy-zonlo INTO DATE lv_date TIME lv_time.
+  CONCATENATE lv_date lv_time INTO lv_value RESPECTING BLANKS.
+  REPLACE ALL OCCURRENCES OF REGEX &apos;([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})&apos; IN lv_value WITH &apos;$1-$2-$3T$4:$5:$6Z&apos;.
+*  lv_value = excel-&gt;zif_excel_book_properties~modified.
+*  lv_value = &apos;2010-07-04T14:58:53Z&apos;.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
@@ -906,7 +915,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;_rels/.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110601" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
