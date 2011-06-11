@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL2" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110528" VERN="000039" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181954" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL2" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110611" VERN="000044" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110611" STIME="095240" IDATE="20110611" ITIME="095240" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="25 "/>
@@ -79,12 +79,17 @@ START-OF-SELECTION.
   lo_style_bold               = lo_excel-&gt;add_new_style( ).
   lo_style_bold-&gt;font-&gt;bold   = abap_true.
   lo_style_bold-&gt;font-&gt;italic = abap_true.
+  lo_style_bold-&gt;font-&gt;name   = zcl_excel_style_font=&gt;c_name_arial.
+  lo_style_bold-&gt;font-&gt;scheme = zcl_excel_style_font=&gt;c_scheme_none.
   lo_style_bold-&gt;font-&gt;color-rgb  = zcl_excel_style_color=&gt;c_red.
   lv_style_bold_guid          = lo_style_bold-&gt;get_guid( ).
   &quot; Create an underline double style
   lo_style_underline                        = lo_excel-&gt;add_new_style( ).
   lo_style_underline-&gt;font-&gt;underline       = abap_true.
   lo_style_underline-&gt;font-&gt;underline_mode  = zcl_excel_style_font=&gt;c_underline_double.
+  lo_style_underline-&gt;font-&gt;name            = zcl_excel_style_font=&gt;c_name_roman.
+  lo_style_underline-&gt;font-&gt;scheme          = zcl_excel_style_font=&gt;c_scheme_none.
+  lo_style_underline-&gt;font-&gt;family          = zcl_excel_style_font=&gt;c_family_roman.
   lv_style_underline_guid                   = lo_style_underline-&gt;get_guid( ).
   &quot; Create filled style yellow
   lo_style_filled                 = lo_excel-&gt;add_new_style( ).
@@ -105,10 +110,12 @@ START-OF-SELECTION.
   lo_style_border-&gt;borders-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_both.
   lv_style_border_guid                    = lo_style_border-&gt;get_guid( ).
   &quot; Create filled style green
-  lo_style_filled                 = lo_excel-&gt;add_new_style( ).
-  lo_style_filled-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style_filled                     = lo_excel-&gt;add_new_style( ).
+  lo_style_filled-&gt;fill-&gt;filltype     = zcl_excel_style_fill=&gt;c_fill_solid.
   lo_style_filled-&gt;fill-&gt;fgcolor-rgb  = zcl_excel_style_color=&gt;c_green.
-  lv_style_filled_green_guid            = lo_style_filled-&gt;get_guid( ).
+  lo_style_filled-&gt;font-&gt;name         = zcl_excel_style_font=&gt;c_name_cambria.
+  lo_style_filled-&gt;font-&gt;scheme       = zcl_excel_style_font=&gt;c_scheme_major.
+  lv_style_filled_green_guid          = lo_style_filled-&gt;get_guid( ).
 
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).

@@ -3353,12 +3353,14 @@ endmethod.</source>
                                       value = lv_value ).
     lo_element_font-&gt;append_child( new_child = lo_sub_element ).
     &quot;scheme
-    lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_scheme
-                                                         parent = lo_document ).
-    lv_value = ls_font-scheme.
-    lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_val
-                                      value = lv_value ).
-    lo_element_font-&gt;append_child( new_child = lo_sub_element ).
+    IF ls_font-scheme IS NOT INITIAL.
+      lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_scheme
+                                                           parent = lo_document ).
+      lv_value = ls_font-scheme.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_val
+                                        value = lv_value ).
+      lo_element_font-&gt;append_child( new_child = lo_sub_element ).
+    ENDIF.
     lo_element_fonts-&gt;append_child( new_child = lo_element_font ).
   ENDLOOP.
 
