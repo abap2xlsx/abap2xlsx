@@ -2186,6 +2186,7 @@ endmethod.</source>
       lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_f
                                                          parent = lo_document ).
       lv_value = &lt;ls_sheet_content&gt;-cell_formula.
+      CONDENSE lv_value.
       lo_element_4-&gt;set_value( value = lv_value ).
       lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
     ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL. &quot;cell can have just style or formula
@@ -2200,9 +2201,11 @@ endmethod.</source>
 
       IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos;.
         lv_value = me-&gt;get_shared_string_index( &lt;ls_sheet_content&gt;-cell_value ).
+        CONDENSE lv_value.
         lo_element_4-&gt;set_value( value = lv_value ).
       ELSE.
         lv_value = &lt;ls_sheet_content&gt;-cell_value.
+        CONDENSE lv_value.
         lo_element_4-&gt;set_value( value = lv_value ).
       ENDIF.
 
