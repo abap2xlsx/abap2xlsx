@@ -3037,6 +3037,8 @@ endmethod.</source>
               lc_xml_node_tablestyles   TYPE string VALUE &apos;tableStyles&apos;,
               &quot; Colors
               lc_xml_node_colors        TYPE string VALUE &apos;colors&apos;,
+              lc_xml_node_indexedcolors TYPE string VALUE &apos;indexedColors&apos;,
+              lc_xml_node_rgbcolor      TYPE string VALUE &apos;rgbColor&apos;,
               lc_xml_node_mrucolors     TYPE string VALUE &apos;mruColors&apos;,
               &quot; Alignment
               lc_xml_node_alignment     TYPE string VALUE &apos;alignment&apos;,
@@ -3125,7 +3127,9 @@ endmethod.</source>
         ls_styles_mapping TYPE zexcel_s_styles_mapping,
         ls_style_cond_mapping TYPE zexcel_s_styles_cond_mapping,
         ls_cellis         TYPE zexcel_conditional_cellis,
-        ls_expression     TYPE zexcel_conditional_expression.
+        ls_expression     TYPE zexcel_conditional_expression,
+        lt_colors         TYPE zexcel_t_style_color_argb,
+        ls_color          LIKE LINE OF lt_colors.
 
   DATA: lv_value          TYPE string,
         lv_dfx_count      TYPE i,
@@ -3858,6 +3862,27 @@ endmethod.</source>
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_defaultpivotstyle
                                 value = zcl_excel_table=&gt;builtinstyle_pivot_light16 ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
+
+  &quot;write legacy color palette in case any indexed color was changed
+  IF excel-&gt;legacy_palette-&gt;is_modified( ) = abap_true.
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_colors
+                                                   parent   = lo_document ).
+    lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_indexedcolors
+                                                       parent   = lo_document ).
+    lo_element-&gt;append_child( new_child = lo_sub_element ).
+
+    lt_colors = excel-&gt;legacy_palette-&gt;get_colors( ).
+    LOOP AT lt_colors INTO ls_color.
+      lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_rgbcolor
+                                                             parent = lo_document ).
+      lv_value = ls_color.
+      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_rgb
+                                          value = lv_value ).
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+    ENDLOOP.
+
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
 
 **********************************************************************
 * STEP 5: Create xstring stream

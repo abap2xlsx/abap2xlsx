@@ -32,7 +32,8 @@ DATA: lv_style_bold_guid         TYPE zexcel_cell_style,
       lv_style_filled_guid       TYPE zexcel_cell_style,
       lv_style_filled_green_guid TYPE zexcel_cell_style,
       lv_style_border_guid       TYPE zexcel_cell_style,
-      lv_style_button_guid       TYPE zexcel_cell_style.
+      lv_style_button_guid       TYPE zexcel_cell_style,
+      lv_style_filled_turquoise_guid TYPE zexcel_cell_style.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
@@ -117,6 +118,16 @@ START-OF-SELECTION.
   lo_style_filled-&gt;font-&gt;scheme       = zcl_excel_style_font=&gt;c_scheme_major.
   lv_style_filled_green_guid          = lo_style_filled-&gt;get_guid( ).
 
+  &quot; Create filled style turquoise using legacy excel ver &lt;= 2003 palette. (https://code.sdn.sap.com/spaces/abap2xlsx/tickets/92)
+  lo_style_filled                 = lo_excel-&gt;add_new_style( ).
+  lo_excel-&gt;legacy_palette-&gt;set_color( &quot;replace built-in color from palette with out custom RGB turquoise
+      ip_index =     16
+      ip_color =     &apos;0040E0D0&apos; ).
+
+  lo_style_filled-&gt;fill-&gt;filltype = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style_filled-&gt;fill-&gt;fgcolor-indexed  = 16.
+  lv_style_filled_turquoise_guid            = lo_style_filled-&gt;get_guid( ).
+
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;set_title( ip_title = &apos;Styles&apos; ).
@@ -126,6 +137,7 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 5 ip_value = &apos;Filled text&apos;          ip_style = lv_style_filled_guid ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 6 ip_value = &apos;Borders&apos;              ip_style = lv_style_border_guid ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 7 ip_value = &apos;I&apos;&apos;m not a button :)&apos; ip_style = lv_style_button_guid ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 9 ip_value = &apos;Modified color for Excel 2003&apos; ip_style = lv_style_filled_turquoise_guid ).
   &quot; Fill the cell and apply one style
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 6 ip_value = &apos;Filled text&apos;          ip_style = lv_style_filled_guid ).
   &quot; Change the style
