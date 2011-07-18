@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="utf-16"?>
 <CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" UUID="DFAC2E4C81CE84F1B39B000C29B7D360" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20100820" CHANGEDBY="FEMIA" CHANGEDON="20110601" CHGDANYON="00000000" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="10 " SRCCOLUMN2="29 " TYPESRC_LENG="154 " TYPESRC="BEGIN OF t_relationship,
-           id     TYPE string,
-           type   TYPE string,
-           target TYPE string,
-         END OF t_relationship
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="10 " SRCCOLUMN2="29 " TYPESRC_LENG="154 " TYPESRC="BEGIN OF t_relationship,
+
+           id     TYPE string,
+
+           type   TYPE string,
+
+           target TYPE string,
+
+         END OF t_relationship
+
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="18 " SRCCOLUMN2="26 " TYPESRC_LENG="254 " TYPESRC="BEGIN OF t_fileversion,
-            appname       TYPE string,
-            lastedited    TYPE string,
-            lowestedited  TYPE string,
-            rupbuild      TYPE string,
-            codename      TYPE string,
-       END OF t_fileversion
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="18 " SRCCOLUMN2="26 " TYPESRC_LENG="254 " TYPESRC="BEGIN OF t_fileversion,
+
+            appname       TYPE string,
+
+            lastedited    TYPE string,
+
+            lowestedited  TYPE string,
+
+            rupbuild      TYPE string,
+
+            codename      TYPE string,
+
+       END OF t_fileversion
+
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="20 " SRCCOLUMN1="4 " SRCROW2="24 " SRCCOLUMN2="22 " TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
-              name    TYPE string,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="20 " SRCCOLUMN1="4 " SRCROW2="24 " SRCCOLUMN2="22 " TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
+
+              name    TYPE string,
+
               sheetid TYPE string,
               id      TYPE string,
          END OF t_sheet
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
-              codename            TYPE string,
-              defaultthemeversion TYPE string,
-         END OF t_workbookpr
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
+
+              codename            TYPE string,
+
+              defaultthemeversion TYPE string,
+
+         END OF t_workbookpr
+
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="31 " SRCCOLUMN1="4 " SRCROW2="33 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
-              codename            TYPE string,
-         END OF t_sheetpr
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" TYPTYPE="4" SRCROW1="31 " SRCCOLUMN1="4 " SRCROW2="33 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
+
+              codename            TYPE string,
+
+         END OF t_sheetpr
+
 "/>
  <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110528" RELTYPE="1" EDITORDER="0 "/>
  <publicSection>class ZCL_EXCEL_READER_2007 definition
@@ -813,6 +834,10 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110602" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110602" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <source>METHOD load_workbook.
+  TYPES: BEGIN OF t_workbookview,
+    activetab  TYPE string,
+    minimized TYPE string,
+  END OF t_workbookview.
 
   CONSTANTS: lc_shared_strings  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
              lc_worksheet       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
@@ -832,7 +857,8 @@ endmethod.</source>
         dirname             TYPE string,
         relationship        TYPE t_relationship,
         lo_worksheet        TYPE REF TO zcl_excel_worksheet,
-        worksheet_title     TYPE zexcel_sheet_title.
+        worksheet_title     TYPE zexcel_sheet_title,
+        workbookview      TYPE t_workbookview.
 
   FIELD-SYMBOLS: &lt;worksheet&gt; TYPE t_relationship.
 
@@ -906,6 +932,12 @@ endmethod.</source>
     node ?= node-&gt;get_next( ).
     ADD 1 TO workbook_index.
   ENDWHILE.
+
+  node ?=  workbook-&gt;find_from_name( &apos;workbookView&apos; ).
+  IF node IS BOUND.
+    fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = workbookview ).
+    ip_excel-&gt;set_active_sheet_index( workbookview-activetab + 1 ).
+  ENDIF.
 ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20110602" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
