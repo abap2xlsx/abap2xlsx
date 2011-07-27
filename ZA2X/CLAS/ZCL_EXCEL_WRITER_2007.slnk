@@ -1991,6 +1991,8 @@ endmethod.</source>
     ENDIF.
   ENDLOOP.
   lv_value = outline_level_row.
+  SHIFT lv_value RIGHT DELETING TRAILING space.
+  SHIFT lv_value LEFT DELETING LEADING space.
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_outlinelevelrow
                                 value = lv_value ).
   &quot; outlineLevelCol
@@ -2069,6 +2071,8 @@ endmethod.</source>
         &quot; outlineLevel
         IF &lt;column_dimension&gt;-column_dimension-&gt;get_outline_level( ) &gt; 0.
           lv_value = &lt;column_dimension&gt;-column_dimension-&gt;get_outline_level( ).
+          SHIFT lv_value RIGHT DELETING TRAILING space.
+          SHIFT lv_value LEFT DELETING LEADING space.
           lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_outlinelevel
                                           value = lv_value ).
         ENDIF.
@@ -2155,6 +2159,8 @@ endmethod.</source>
         &quot; Outline level
         IF row_dimension-&gt;get_outline_level( ) &gt; 0.
           lv_value = row_dimension-&gt;get_outline_level( ).
+          SHIFT lv_value RIGHT DELETING TRAILING space.
+          SHIFT lv_value LEFT DELETING LEADING space.
           lo_element_2-&gt;set_attribute_ns( name  = &apos;outlineLevel&apos; value = lv_value ).
         ENDIF.
         &quot; Style
