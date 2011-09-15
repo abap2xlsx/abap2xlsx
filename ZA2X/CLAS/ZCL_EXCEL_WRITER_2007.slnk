@@ -3353,13 +3353,13 @@ endmethod.</source>
     lo_element_numfmt = lo_document-&gt;create_simple_element( name   = lc_xml_node_numfmt
                                                             parent = lo_document ).
     lv_value = sy-tabix + zcl_excel_common=&gt;c_excel_numfmt_offset.
-    SHIFT lv_value RIGHT DELETING TRAILING space.
-    SHIFT lv_value LEFT DELETING LEADING space.
+    CONDENSE lv_value.
     lo_element_numfmt-&gt;set_attribute_ns( name  = lc_xml_attr_numfmtid
                                       value = lv_value ).
     lv_value = ls_numfmt-numfmt.
+    REPLACE ALL OCCURRENCES OF &apos;.&apos; IN lv_value WITH &apos;\.&apos;.
     lo_element_numfmt-&gt;set_attribute_ns( name  = lc_xml_attr_formatcode
-                                      value = lv_value ).
+                                         value = lv_value ).
     lo_element_numfmts-&gt;append_child( new_child = lo_element_numfmt ).
   ENDLOOP.
 
