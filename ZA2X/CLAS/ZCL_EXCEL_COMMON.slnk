@@ -322,6 +322,7 @@ endmethod.</source>
         lo_elemdescr        TYPE REF TO cl_abap_elemdescr,
         lt_dfies            TYPE ddfields,
         ls_dfies            TYPE dfies,
+        lv_sytabix          TYPE sytabix,
         ls_fieldcatalog     TYPE zexcel_s_fieldcatalog,
         lt_components       TYPE abap_component_tab,
         ls_component        LIKE LINE OF lt_components.
@@ -343,6 +344,7 @@ endmethod.</source>
     &quot;if structure is not DDIC check components
     lt_components = lo_structdescr-&gt;get_components( ).
     LOOP AT lt_components INTO ls_component.
+      lv_sytabix = sy-tabix.
       CLEAR ls_fieldcatalog.
       lo_elemdescr ?= ls_component-type.
       &quot;component is DDIC
@@ -356,7 +358,7 @@ endmethod.</source>
         ls_fieldcatalog-dynpfld  = abap_true.
         ls_fieldcatalog-scrtext_m = ls_component-name.
       ENDIF.
-      ls_fieldcatalog-position = sy-tabix.  &quot; Fix issue #119
+      ls_fieldcatalog-position = lv_sytabix.
       APPEND ls_fieldcatalog TO ep_fieldcatalog.
     ENDLOOP.
   ENDIF.
