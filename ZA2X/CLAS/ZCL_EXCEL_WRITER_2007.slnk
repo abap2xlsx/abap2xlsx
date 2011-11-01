@@ -1834,12 +1834,16 @@ endmethod.</source>
   &quot; outlinePr
   lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_outlinepr
                                                      parent = lo_document ).
-  &quot; TODO read attribute summaryBelow and set the attribute to 0
+
+  lv_value = io_worksheet-&gt;zif_excel_sheet_properties~summarybelow.
+  CONDENSE lv_value.
   lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_summarybelow
-                                  value = &apos;1&apos; ).
-  &quot; TODO read attribute summaryRight and set the attribute to 0
+                                  value = lv_value ).
+
+  lv_value = io_worksheet-&gt;zif_excel_sheet_properties~summaryright.
+  CONDENSE lv_value.
   lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_summaryright
-                                  value = &apos;1&apos; ).
+                                  value = lv_value ).
 
   lo_element-&gt;append_child( new_child = lo_element_2 ).
 
