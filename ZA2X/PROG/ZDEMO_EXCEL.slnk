@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="BCUSER" UDAT="20110822" VERN="000051" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110822" STIME="204339" IDATE="20110822" ITIME="204339" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="DEVELOPER" UDAT="20111208" VERN="000053" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20111208" STIME="002638" IDATE="20111208" ITIME="002638" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="        Select output path" LENGTH="26 "/>
   </language>
  </textPool>
- <programDocumentation/>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZDEMO_EXCEL
 *&amp;
@@ -62,10 +61,11 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel22 WITH p_path = p_path AND RETURN. &quot; Bind table with field catalog &amp; sheet style
   SUBMIT zdemo_excel23 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options
   SUBMIT zdemo_excel24 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with different default date formats
-  SUBMIT zdemo_excel25 AND RETURN. &quot; abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
+  SUBMIT zdemo_excel25 AND RETURN.                      &quot; abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
   SUBMIT zdemo_excel26 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Reader demo
   SUBMIT zdemo_excel27 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Conditional Formatting
   SUBMIT zdemo_excel28 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: CSV writer
   &quot; SUBMIT zdemo_excel29 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Macro enabled workbook
-  SUBMIT zdemo_excel30 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: ABAP Cell data types</source>
+  SUBMIT zdemo_excel30 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: ABAP Cell data types
+  SUBMIT zdemo_excel31 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Autosize Column with different Font sizes</source>
 </PROG>
