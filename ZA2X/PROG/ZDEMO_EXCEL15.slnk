@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="MYSSHT" UDAT="20111219" VERN="000035" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20111219" STIME="051805" IDATE="20111219" ITIME="051805" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="DEVELOPER" UDAT="20111223" VERN="000039" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20111223" STIME="122713" IDATE="20111223" ITIME="122713" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Reader" LENGTH="22 "/>
@@ -24,7 +24,6 @@ TYPE-POOLS: abap.
 TYPES:
   BEGIN OF t_demo_excel15,
     input TYPE string,
-    output TYPE string,
   END OF t_demo_excel15.
 
 DATA: excel           TYPE REF TO zcl_excel,
@@ -71,11 +70,15 @@ INITIALIZATION.
   p_path = lv_workdir.
 
   APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
+  &lt;wa_files&gt;-input  = &apos;01_HelloWorld.xlsx&apos;.
+  APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
+  &lt;wa_files&gt;-input  = &apos;02_Styles.xlsx&apos;.
+  APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
   &lt;wa_files&gt;-input  = &apos;03_iTab.xlsx&apos;.
-  &lt;wa_files&gt;-output = &apos;15_iTabFromReader.xlsx&apos;.
+  APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
+  &lt;wa_files&gt;-input  = &apos;04_Sheets.xlsx&apos;.
   APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
   &lt;wa_files&gt;-input  = &apos;08_Range.xlsx&apos;.
-  &lt;wa_files&gt;-output = &apos;15_RangeFromReader.xlsx&apos;.
 
 START-OF-SELECTION.
 
@@ -85,8 +88,9 @@ START-OF-SELECTION.
   cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
 
   LOOP AT lt_files ASSIGNING &lt;wa_files&gt;.
-    CONCATENATE p_path lv_file_separator &lt;wa_files&gt;-output INTO output_file_path.
     CONCATENATE p_path lv_file_separator &lt;wa_files&gt;-input INTO input_file_path.
+    CONCATENATE p_path lv_file_separator &apos;15_&apos; &lt;wa_files&gt;-input INTO output_file_path.
+    REPLACE &apos;.xlsx&apos; IN output_file_path WITH &apos;FromReader.xlsx&apos;.
 
     TRY.
         CREATE OBJECT reader TYPE zcl_excel_reader_2007.
