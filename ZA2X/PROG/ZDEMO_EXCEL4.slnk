@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="FEMIA" UDAT="20110528" VERN="000037" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181955" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL4" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="DEVELOPER" UDAT="20111229" VERN="000039" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20111229" STIME="193218" IDATE="20111229" ITIME="193218" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Create XLXS with multiple sheets" LENGTH="48 "/>
@@ -57,6 +57,7 @@ START-OF-SELECTION.
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;set_title( ip_title = &apos;Sheet1&apos; ).
+  lo_worksheet-&gt;zif_excel_sheet_properties~selected = zif_excel_sheet_properties=&gt;c_selected.
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the first sheet&apos; ).
   lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet2!B2&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to second sheet&apos; ip_hyperlink = lo_hyperlink ).
@@ -75,6 +76,7 @@ START-OF-SELECTION.
 
   lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
   lo_worksheet-&gt;set_title( ip_title = &apos;Sheet2&apos; ).
+  lo_worksheet-&gt;zif_excel_sheet_properties~selected = zif_excel_sheet_properties=&gt;c_selected.
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the second sheet&apos; ).
   lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet1!B2&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to first sheet&apos; ip_hyperlink = lo_hyperlink ).
