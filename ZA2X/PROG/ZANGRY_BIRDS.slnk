@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZANGRY_BIRDS" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20111120" UNAM="FEMIA" UDAT="20111121" VERN="000044" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20111121" STIME="004451" IDATE="20111121" ITIME="004451" UCCHECK="X">
+<PROG NAME="ZANGRY_BIRDS" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20111120" UNAM="FEMIA" UDAT="20120102" VERN="000045" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120102" STIME="210855" IDATE="20120102" ITIME="210855" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="25 "/>
@@ -29,8 +29,10 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_style_color6         TYPE REF TO zcl_excel_style,
       lo_style_color7         TYPE REF TO zcl_excel_style,
       lo_style_credit         TYPE REF TO zcl_excel_style,
+      lo_style_link           TYPE REF TO zcl_excel_style,
       lo_column_dimension     TYPE REF TO zcl_excel_worksheet_columndime,
-      lo_row_dimension        TYPE REF TO zcl_excel_worksheet_rowdimensi.
+      lo_row_dimension        TYPE REF TO zcl_excel_worksheet_rowdimensi,
+      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
 
 DATA: lv_style_color0_guid    TYPE zexcel_cell_style,
       lv_style_color1_guid    TYPE zexcel_cell_style,
@@ -41,6 +43,7 @@ DATA: lv_style_color0_guid    TYPE zexcel_cell_style,
       lv_style_color6_guid    TYPE zexcel_cell_style,
       lv_style_color7_guid    TYPE zexcel_cell_style,
       lv_style_credit_guid    TYPE zexcel_cell_style,
+      lv_style_link_guid      TYPE zexcel_cell_style,
       lv_style                TYPE zexcel_cell_style.
 
 DATA: lv_col_str        TYPE zexcel_cell_column_alpha,
@@ -149,6 +152,13 @@ START-OF-SELECTION.
   lo_style_credit-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_center.
   lo_style_credit-&gt;font-&gt;size   = 20.
   lv_style_credit_guid = lo_style_credit-&gt;get_guid( ).
+
+  &quot; Link
+  lo_style_link = lo_excel-&gt;add_new_style( ).
+  lo_style_link-&gt;alignment-&gt;horizontal = zcl_excel_style_alignment=&gt;c_horizontal_center.
+  lo_style_link-&gt;alignment-&gt;vertical = zcl_excel_style_alignment=&gt;c_vertical_center.
+*  lo_style_link-&gt;font-&gt;size   = 20.
+  lv_style_link_guid = lo_style_link-&gt;get_guid( ).
 
   &quot; Create image map                                                          &quot; line 2
   DO 30 TIMES. APPEND lv_style_color0_guid TO lt_mapper. ENDDO.
@@ -720,10 +730,18 @@ START-OF-SELECTION.
                           ip_row    = 15
                           ip_value  = &apos;Created with abap2xlsx&apos;
                           ip_style  = lv_style_credit_guid ).
+
+  lo_hyperlink = zcl_excel_hyperlink=&gt;create_external_link( iv_url = &apos;http://www.abap2xlsx.org&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column    = &apos;AP&apos;
+                          ip_row       = 24
+                          ip_value     = &apos;http://www.abap2xlsx.org&apos;
+                          ip_style     = lv_style_link_guid
+                          ip_hyperlink = lo_hyperlink ).
+
   lo_column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;AP&apos; ).
   lo_column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
   lo_worksheet-&gt;set_merge( ip_row = 15 ip_column_start = &apos;AP&apos; ip_row_to = 22 ip_column_end = &apos;AR&apos; ).
-
+  lo_worksheet-&gt;set_merge( ip_row = 24 ip_column_start = &apos;AP&apos; ip_row_to = 26 ip_column_end = &apos;AR&apos; ).
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
