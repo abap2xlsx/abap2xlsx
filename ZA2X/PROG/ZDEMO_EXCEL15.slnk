@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="DEVELOPER" UDAT="20111223" VERN="000039" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20111223" STIME="122713" IDATE="20111223" ITIME="122713" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL15" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100820" UNAM="DEVELOPER" UDAT="20120103" VERN="000040" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120103" STIME="183855" IDATE="20120103" ITIME="183855" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Reader" LENGTH="22 "/>
@@ -79,6 +79,10 @@ INITIALIZATION.
   &lt;wa_files&gt;-input  = &apos;04_Sheets.xlsx&apos;.
   APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
   &lt;wa_files&gt;-input  = &apos;08_Range.xlsx&apos;.
+  APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
+  &lt;wa_files&gt;-input  = &apos;13_MergedCells.xlsx&apos;.
+  APPEND INITIAL LINE TO lt_files ASSIGNING &lt;wa_files&gt;.
+  &lt;wa_files&gt;-input  = &apos;31_AutosizeWithDifferentFontSizes.xlsx&apos;.
 
 START-OF-SELECTION.
 

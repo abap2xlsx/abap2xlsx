@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="DEVELOPER" UDAT="20111208" VERN="000053" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20111208" STIME="002638" IDATE="20111208" ITIME="002638" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="DEVELOPER" UDAT="20120103" VERN="000054" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120103" STIME="183556" IDATE="20120103" ITIME="183556" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -51,7 +51,6 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel12 WITH p_path = p_path AND RETURN. &quot; Column size
   SUBMIT zdemo_excel13 WITH p_path = p_path AND RETURN. &quot; Merge cell
   SUBMIT zdemo_excel14 WITH p_path = p_path AND RETURN. &quot; Alignment
-  SUBMIT zdemo_excel15 WITH p_path = p_path AND RETURN. &quot; Read Excel and write it back
   SUBMIT zdemo_excel16 WITH p_path = p_path AND RETURN. &quot; Drawing
   SUBMIT zdemo_excel17 WITH p_path = p_path AND RETURN. &quot; Lock sheet
   SUBMIT zdemo_excel18 WITH p_path = p_path AND RETURN. &quot; Lock workbook
@@ -67,5 +66,10 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel28 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: CSV writer
   &quot; SUBMIT zdemo_excel29 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Macro enabled workbook
   SUBMIT zdemo_excel30 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: ABAP Cell data types
-  SUBMIT zdemo_excel31 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Autosize Column with different Font sizes</source>
+  SUBMIT zdemo_excel31 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Autosize Column with different Font sizes
+  &quot;
+  &quot; Reader/Writer Demo must always run at the end
+  &quot; to make sure all documents where created
+  &quot;
+  SUBMIT zdemo_excel15 WITH p_path = p_path AND RETURN. &quot; Read Excel and write it back</source>
 </PROG>
