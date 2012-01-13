@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="FEMIA" UDAT="20110825" VERN="000030" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110825" STIME="214526" IDATE="20110825" ITIME="214526" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="DEVELOPER" UDAT="20120109" VERN="000032" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120109" STIME="064922" IDATE="20120109" ITIME="064922" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options" LENGTH="70 "/>
@@ -93,12 +93,28 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_show_gridlines(  i_show_gridlines  = abap_false ).
   lo_worksheet-&gt;set_print_gridlines( i_print_gridlines = abap_false ).
 
-  lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet1!B2&apos; ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to the first sheet&apos; ip_hyperlink = lo_hyperlink ).
+  lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet4!B2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to the fourth sheet&apos; ip_hyperlink = lo_hyperlink ).
 
   lo_worksheet-&gt;zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=&gt;c_protected.
   lo_worksheet-&gt;zif_excel_sheet_properties~zoomscale                  = 170.
   lo_worksheet-&gt;ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_SHEETLAYOUTVIEW  = 150.
+
+  &quot; Fourth sheet
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Sheet4&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;This is the fourth sheet with grid lines and print centered ONLY horizontal&apos; ).
+  lo_worksheet-&gt;set_show_gridlines( i_show_gridlines = abap_true ).
+
+  lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet1!B2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;This is link to the first sheet&apos; ip_hyperlink = lo_hyperlink ).
+
+  lo_worksheet-&gt;zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=&gt;c_protected.
+  lo_worksheet-&gt;zif_excel_sheet_properties~zoomscale        = 150.
+  lo_worksheet-&gt;ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_NORMAL = 150.
+
+&quot;  lo_worksheet-&gt;sheet_setup-&gt;vertical_centered   = abap_true.
+  lo_worksheet-&gt;sheet_setup-&gt;horizontal_centered = abap_true.
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( io_excel = lo_excel ).
