@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="DEVELOPER" UDAT="20120103" VERN="000054" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120103" STIME="183556" IDATE="20120103" ITIME="183556" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20120120" VERN="000057" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120120" STIME="210140" IDATE="20120120" ITIME="210140" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -55,13 +55,13 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel17 WITH p_path = p_path AND RETURN. &quot; Lock sheet
   SUBMIT zdemo_excel18 WITH p_path = p_path AND RETURN. &quot; Lock workbook
   SUBMIT zdemo_excel19 WITH p_path = p_path AND RETURN. &quot; Set active sheet
-  &quot; zdemo_excel20 is not added because it uses ALV and cannot be processed
+  &quot; zdemo_excel20 is not added because it uses ALV and cannot be processed (OLE2)
   SUBMIT zdemo_excel21 WITH p_path = p_path AND RETURN. &quot; Color Picker
   SUBMIT zdemo_excel22 WITH p_path = p_path AND RETURN. &quot; Bind table with field catalog &amp; sheet style
   SUBMIT zdemo_excel23 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options
   SUBMIT zdemo_excel24 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Multiple sheets with different default date formats
   SUBMIT zdemo_excel25 AND RETURN.                      &quot; abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
-  SUBMIT zdemo_excel26 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Reader demo
+  &quot; zdemo_excel26 is not added because it uses ALV and cannot be processed (Native)
   SUBMIT zdemo_excel27 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Conditional Formatting
   SUBMIT zdemo_excel28 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: CSV writer
   &quot; SUBMIT zdemo_excel29 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Macro enabled workbook

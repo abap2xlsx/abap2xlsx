@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F037FA9DF490087E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120106" CHANGEDBY="FEMIA" CHANGEDON="20120120" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZIF_EXCEL_CONVERTER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" RELTYPE="1" EDITORDER="0 "/>
+ <publicSection>class ZCL_EXCEL_CONVERTER_ALV_GRID definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_CONVERTER_ALV_GRID
+*&quot;* do not include other source files here!!!
+public section.
+
+  interfaces ZIF_EXCEL_CONVERTER .
+
+  aliases CAN_CONVERT_OBJECT
+    for ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT .
+  aliases CREATE_FIELDCATALOG
+    for ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_ALV_GRID
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_ALV_GRID
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" CPDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT">
+  <source>method ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
+  data: lo_alv type REF TO cl_gui_alv_grid.
+
+  try.
+      lo_alv ?= io_object.
+    catch cx_sy_move_cast_error .
+      raise exception type zcx_excel.
+  endtry.
+
+endmethod.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
+  <source>method ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG.
+  data: lo_alv type ref to cl_gui_alv_grid.
+  data: ls_converter_fcat type zexcel_s_converter_fcat,
+        lt_fcat           type lvc_t_fcat,
+        ls_fcat           type lvc_s_fcat,
+        ls_layout         type lvc_s_layo.
+
+  field-symbols: &lt;fs_stable&gt; type any.
+  try.
+    can_convert_object( io_object = io_object ).
+  endtry.
+
+  lo_alv ?= io_object.
+
+  clear: es_layout,
+         et_fieldcatalog.
+
+  if lo_alv is bound.
+    lo_alv-&gt;get_frontend_fieldcatalog( importing et_fieldcatalog = lt_fcat ).
+    lo_alv-&gt;get_frontend_layout( importing es_layout = ls_layout ).
+    if ls_layout-zebra is not initial.
+      es_layout-is_stripped = abap_true.
+    endif.
+    if ls_layout-no_keyfix is initial or
+       ls_layout-no_keyfix = &apos;0&apos;.
+      es_layout-is_fixed = abap_true.
+    endif.
+    loop at lt_fcat into ls_fcat.
+      clear ls_converter_fcat.
+      if ls_fcat-tech = abap_false.
+        ls_converter_fcat-tabname         = ls_fcat-tabname.
+        ls_converter_fcat-fieldname       = ls_fcat-fieldname .
+        ls_converter_fcat-columnname      = ls_fcat-fieldname .
+        ls_converter_fcat-position        = ls_fcat-col_pos.
+        ls_converter_fcat-inttype         = ls_fcat-inttype.
+        ls_converter_fcat-scrtext_s       = ls_fcat-scrtext_s .
+        ls_converter_fcat-scrtext_m       = ls_fcat-scrtext_m .
+        ls_converter_fcat-scrtext_l       = ls_fcat-scrtext_l.
+        if ls_fcat-do_sum is not initial.
+          ls_converter_fcat-totals_function = zcl_excel_table=&gt;totals_function_sum.
+        endif.
+        ls_converter_fcat-fix_column       = ls_fcat-fix_column.
+        if ls_layout-cwidth_opt is initial.
+          if ls_fcat-col_opt is not initial.
+            ls_converter_fcat-is_optimized = abap_true.
+          endif.
+        else.
+          ls_converter_fcat-is_optimized = abap_true.
+        endif.
+        if ls_fcat-no_out is not initial.
+          clear ls_converter_fcat-is_visible.
+        else.
+          ls_converter_fcat-is_visible = abap_true.
+        endif.
+        case ls_fcat-just.
+          when &apos;R&apos;.
+            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_right.
+          when &apos;L&apos;.
+            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_left.
+          when &apos;C&apos;.
+            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_center.
+          when others.
+            clear ls_converter_fcat-alignment.
+        endcase.
+        append ls_converter_fcat to et_fieldcatalog.
+      endif.
+    endloop.
+  endif.
+
+endmethod.</source>
+ </interfaceMethod>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" CMPNAME="CAN_CONVERT_OBJECT" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_CONVERTER" REFCMPNAME="CAN_CONVERT_OBJECT" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <exception CLSNAME="ZIF_EXCEL_CONVERTER" CMPNAME="CAN_CONVERT_OBJECT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDON="00000000"/>
+  <source>method ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
+  data: lo_alv type REF TO cl_gui_alv_grid.
+
+  try.
+      lo_alv ?= io_object.
+    catch cx_sy_move_cast_error .
+      raise exception type zcx_excel.
+  endtry.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" CMPNAME="CREATE_FIELDCATALOG" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_CONVERTER" REFCMPNAME="CREATE_FIELDCATALOG" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <exception CLSNAME="ZIF_EXCEL_CONVERTER" CMPNAME="CREATE_FIELDCATALOG" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDON="00000000"/>
+  <source>method ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG.
+  data: lo_alv type ref to cl_gui_alv_grid.
+  data: ls_converter_fcat type zexcel_s_converter_fcat,
+        lt_fcat           type lvc_t_fcat,
+        ls_fcat           type lvc_s_fcat,
+        ls_layout         type lvc_s_layo.
+
+  field-symbols: &lt;fs_stable&gt; type any.
+  try.
+    can_convert_object( io_object = io_object ).
+  endtry.
+
+  lo_alv ?= io_object.
+
+  clear: es_layout,
+         et_fieldcatalog.
+
+  if lo_alv is bound.
+    lo_alv-&gt;get_frontend_fieldcatalog( importing et_fieldcatalog = lt_fcat ).
+    lo_alv-&gt;get_frontend_layout( importing es_layout = ls_layout ).
+    if ls_layout-zebra is not initial.
+      es_layout-is_stripped = abap_true.
+    endif.
+    if ls_layout-no_keyfix is initial or
+       ls_layout-no_keyfix = &apos;0&apos;.
+      es_layout-is_fixed = abap_true.
+    endif.
+    loop at lt_fcat into ls_fcat.
+      clear ls_converter_fcat.
+      if ls_fcat-tech = abap_false.
+        ls_converter_fcat-tabname         = ls_fcat-tabname.
+        ls_converter_fcat-fieldname       = ls_fcat-fieldname .
+        ls_converter_fcat-columnname      = ls_fcat-fieldname .
+        ls_converter_fcat-position        = ls_fcat-col_pos.
+        ls_converter_fcat-inttype         = ls_fcat-inttype.
+        ls_converter_fcat-scrtext_s       = ls_fcat-scrtext_s .
+        ls_converter_fcat-scrtext_m       = ls_fcat-scrtext_m .
+        ls_converter_fcat-scrtext_l       = ls_fcat-scrtext_l.
+        if ls_fcat-do_sum is not initial.
+          ls_converter_fcat-totals_function = zcl_excel_table=&gt;totals_function_sum.
+        endif.
+        ls_converter_fcat-fix_column       = ls_fcat-fix_column.
+        if ls_layout-cwidth_opt is initial.
+          if ls_fcat-col_opt is not initial.
+            ls_converter_fcat-is_optimized = abap_true.
+          endif.
+        else.
+          ls_converter_fcat-is_optimized = abap_true.
+        endif.
+        if ls_fcat-no_out is not initial.
+          clear ls_converter_fcat-is_visible.
+        else.
+          ls_converter_fcat-is_visible = abap_true.
+        endif.
+        case ls_fcat-just.
+          when &apos;R&apos;.
+            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_right.
+          when &apos;L&apos;.
+            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_left.
+          when &apos;C&apos;.
+            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_center.
+          when others.
+            clear ls_converter_fcat-alignment.
+        endcase.
+        append ls_converter_fcat to et_fieldcatalog.
+      endif.
+    endloop.
+  endif.
+
+endmethod.</source>
+ </method>
+</CLAS>

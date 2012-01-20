@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="FEMIA" UDAT="20110528" VERN="000043" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20110528" STIME="181955" IDATE="20110528" ITIME="181955" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="FEMIA" UDAT="20120120" VERN="000045" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120120" STIME="212455" IDATE="20120120" ITIME="212455" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Bind ALV" LENGTH="24 "/>
@@ -818,7 +818,7 @@ DATA: l_path            TYPE string,  &quot; local dir
       lv_file_separator TYPE c.
 
 CONSTANTS:
-      lv_default_file_name TYPE string VALUE &apos;20_BindAlv.xlsx&apos;.
+      lv_default_file_name TYPE string VALUE &apos;20_Bind_Alv_Ole2.xlsx&apos;.
 *--------------------------------------------------------------------*
 *START-OF-SELECTION
 *--------------------------------------------------------------------*
@@ -932,7 +932,7 @@ FORM export_to_excel.
 
 * write to excel using method Bin_ALV
 
-  lo_worksheet-&gt;bind_alv(
+  lo_worksheet-&gt;bind_alv_ole2(
     EXPORTING
 *      I_DOCUMENT_URL          = SPACE &quot; excel template
 *      I_XLS                   = &apos;X&apos; &quot; create in xls format?

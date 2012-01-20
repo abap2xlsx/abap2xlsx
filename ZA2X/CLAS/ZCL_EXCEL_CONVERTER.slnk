@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER" VERSION="1" LANGU="E" DESCRIPT="Salv converter" UUID="4F03DF55DA5D00BFE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120106" CHANGEDBY="FEMIA" CHANGEDON="20120120" CHGDANYON="00000000" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="10 " SRCCOLUMN2="29 " R3RELEASE="702" TYPESRC_LENG="154 " TYPESRC="BEGIN OF t_relationship,
+           id     TYPE string,
+           type   TYPE string,
+           target TYPE string,
+         END OF t_relationship
+"/>
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="18 " SRCCOLUMN2="26 " R3RELEASE="702" TYPESRC_LENG="254 " TYPESRC="BEGIN OF t_fileversion,
+            appname       TYPE string,
+            lastedited    TYPE string,
+            lowestedited  TYPE string,
+            rupbuild      TYPE string,
+            codename      TYPE string,
+       END OF t_fileversion
+"/>
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" TYPTYPE="4" SRCROW1="20 " SRCCOLUMN1="4 " SRCROW2="24 " SRCCOLUMN2="22 " R3RELEASE="702" TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
+              name    TYPE string,
+              sheetid TYPE string,
+              id      TYPE string,
+         END OF t_sheet
+"/>
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="27 " R3RELEASE="702" TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
+              codename            TYPE string,
+              defaultthemeversion TYPE string,
+         END OF t_workbookpr
+"/>
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" TYPTYPE="4" SRCROW1="31 " SRCCOLUMN1="4 " SRCROW2="33 " SRCCOLUMN2="24 " R3RELEASE="702" TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
+              codename            TYPE string,
+         END OF t_sheetpr
+"/>
+ <publicSection>class ZCL_EXCEL_CONVERTER definition
+  public
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_CONVERTER
+*&quot;* do not include other source files here!!!
+public section.
+  type-pools ABAP .
+
+  class-methods CLASS_CONSTRUCTOR .
+    methods CONVERT
+    importing
+      !IO_ALV type ref to OBJECT optional
+      !IT_TABLE type STANDARD TABLE
+      !I_ROW_INT type I default 1
+      !I_COLUMN_INT type I default 1
+      !I_TABLE type FLAG optional
+      !I_STYLE_TABLE type ZEXCEL_TABLE_STYLE optional
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
+    changing
+      !CO_EXCEL type ref to ZCL_EXCEL optional
+    raising
+      ZCX_EXCEL .
+  methods GET_FILE
+    exporting
+      !E_BYTECOUNT type I
+      !ET_FILE type SOLIX_TAB
+      !E_FILE type XSTRING .
+  methods OPEN_FILE .
+  methods WRITE_FILE
+    importing
+      !I_PATH type STRING optional .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER
+*&quot;* do not include other source files here!!!
+protected section.
+
+  types:
+    BEGIN OF t_relationship,
+           id     TYPE string,
+           type   TYPE string,
+           target TYPE string,
+         END OF t_relationship .
+  types:
+    BEGIN OF t_fileversion,
+            appname       TYPE string,
+            lastedited    TYPE string,
+            lowestedited  TYPE string,
+            rupbuild      TYPE string,
+            codename      TYPE string,
+       END OF t_fileversion .
+  types:
+    BEGIN OF t_sheet,
+              name    TYPE string,
+              sheetid TYPE string,
+              id      TYPE string,
+         END OF t_sheet .
+  types:
+    BEGIN OF t_workbookpr,
+              codename            TYPE string,
+              defaultthemeversion TYPE string,
+         END OF t_workbookpr .
+  types:
+    BEGIN OF t_sheetpr,
+              codename            TYPE string,
+         END OF t_sheetpr .
+
+  data W_ROW_INT type ZEXCEL_CELL_ROW value 1. &quot;#EC NOTEXT .
+  data W_COL_INT type ZEXCEL_CELL_COLUMN value 1. &quot;#EC NOTEXT .</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER
+*&quot;* do not include other source files here!!!
+private section.
+
+  data wo_excel type ref to zcl_excel .
+  data wo_worksheet type ref to zcl_excel_worksheet .
+  data wo_data type ref to data .
+  data wt_fieldcatalog type zexcel_t_converter_fcat .
+  data ws_layout type zexcel_s_converter_layo .
+  class-data wt_objects type tt_alv_types .
+  data w_fcount type numc3 .
+
+  methods bind_table
+    importing
+      !i_style_table type zexcel_table_style .
+  methods bind_cells
+    raising
+      zcx_excel .
+  methods create_formular_total
+    importing
+      !i_row_int type zexcel_cell_row
+      !i_column type zexcel_cell_column_alpha
+      !i_totals_function type zexcel_table_totals_function
+    returning
+      value(r_formula) type string .
+  methods create_style_hdr
+    importing
+      !i_alignment type zexcel_alignment optional
+    returning
+      value(r_style) type zexcel_cell_style .
+  methods create_style_normal
+    importing
+      !i_alignment type zexcel_alignment optional
+      !i_inttype type inttype optional
+    returning
+      value(r_style) type zexcel_cell_style .
+  methods create_style_stripped
+    importing
+      !i_alignment type zexcel_alignment optional
+      !i_inttype type inttype optional
+    returning
+      value(r_style) type zexcel_cell_style .
+  methods create_style_total
+    importing
+      !i_alignment type zexcel_alignment optional
+      !i_inttype type inttype optional
+    returning
+      value(r_style) type zexcel_cell_style .
+  methods create_path
+    returning
+      value(r_path) type string .
+  methods create_table
+    importing
+      !it_table type standard table .
+  methods create_worksheet
+    importing
+      !i_table type flag default &apos;X&apos;
+      !i_style_table type zexcel_table_style .
+  methods execute_converter
+    importing
+      !io_object type ref to object
+      !it_table type standard table
+    raising
+      zcx_excel .
+  methods set_fieldcatalog .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature
+
+types:   begin of ts_alv_types,
+           seoclass   type SEOCLSNAME,
+           clsname    type seoclsname,
+         end of ts_alv_types,
+         tt_alv_types type hashed table of ts_alv_types with unique key seoclass.</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <typeUsage CLSNAME="ZCL_EXCEL_CONVERTER" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
+ <typeUsage CLSNAME="ZCL_EXCEL_CONVERTER" TYPEGROUP="SLIS" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
+ <typeUsage CLSNAME="ZCL_EXCEL_CONVERTER" TYPEGROUP="SOI" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <forwardDeclaration>SLIS</forwardDeclaration>
+ <forwardDeclaration>SOI</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WO_DATA" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WS_LAYOUT" VERSION="1" LANGU="E" DESCRIPT="Converter settings for table" EXPOSURE="0" STATE="1" EDITORDER="5 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_LAYO" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WT_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Conter table for tabel fields" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_FCAT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WT_OBJECTS" VERSION="1" LANGU="E" DESCRIPT="ALV object list" EXPOSURE="0" STATE="1" EDITORDER="6 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TT_ALV_TYPES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="W_COL_INT" VERSION="1" LANGU="E" DESCRIPT="Cell Column" EXPOSURE="1" STATE="1" EDITORDER="2 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="W_FCOUNT" VERSION="1" LANGU="E" DESCRIPT="Two digit number" EXPOSURE="0" STATE="1" EDITORDER="7 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="NUMC3" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="W_ROW_INT" VERSION="1" LANGU="E" DESCRIPT="Cell Row" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" ATTDECLTYP="0" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_CELLS" VERSION="1" LANGU="E" DESCRIPT="Create table with set cell method" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_CELLS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120"/>
+  <source>method BIND_CELLS.
+
+  data: lo_tabdescr     type ref to cl_abap_structdescr,
+        lo_data         type ref to data,
+        l_row_header    type zexcel_cell_row value &apos;2&apos;,
+        l_col_header    type zexcel_cell_column_alpha value &apos;B&apos;,
+        l_row_int       type zexcel_cell_row,
+        l_col_int       type zexcel_cell_column,
+        l_col_alpha     type zexcel_cell_column_alpha,
+        l_cell_value    type zexcel_cell_value,
+        l_hdr           type zexcel_cell_style,
+        l_stripped      type zexcel_cell_style,
+        l_normal        type zexcel_cell_style,
+        l_total         type zexcel_cell_style,
+        l_s_color       type abap_bool,
+        i_num_columns   type i,
+        lo_col_dim      type ref to zcl_excel_worksheet_columndime,
+        l_formula       type zexcel_cell_formula.
+
+
+  field-symbols: &lt;fs_stab&gt;        type any,
+                 &lt;fs_tab&gt;         type any table,
+                 &lt;fs_sfcat&gt;       type zexcel_s_converter_fcat,
+                 &lt;fs_fldval&gt;      type any,
+                 &lt;fs_cell_value&gt;  type zexcel_cell_value.
+
+  assign wo_data-&gt;* to &lt;fs_tab&gt; .
+
+  l_col_int = w_col_int.
+  l_row_int = w_row_int.
+* First lets check if we fiedl catalog ready or we need conversion from table.
+  if wt_fieldcatalog is initial.
+    set_fieldcatalog( ).
+  endif.
+  clear ws_layout.
+* It is better to loop column by column
+  loop at wt_fieldcatalog assigning &lt;fs_sfcat&gt;.
+* Default stype with alignment and format
+    l_hdr      = create_style_hdr( i_alignment = &lt;fs_sfcat&gt;-alignment ).
+    if ws_layout-is_stripped = abap_true.
+      l_stripped = create_style_stripped( i_alignment = &lt;fs_sfcat&gt;-alignment
+                                          i_inttype   = &lt;fs_sfcat&gt;-inttype ).
+    endif.
+    l_normal   = create_style_normal( i_alignment = &lt;fs_sfcat&gt;-alignment
+                                      i_inttype   = &lt;fs_sfcat&gt;-inttype ).
+    l_total    = create_style_total( i_alignment = &lt;fs_sfcat&gt;-alignment
+                                     i_inttype   = &lt;fs_sfcat&gt;-inttype ).
+* Freeze panes
+    if &lt;fs_sfcat&gt;-fix_column = abap_true.
+      add 1 to i_num_columns.
+    endif.
+    l_s_color = abap_true.
+    l_col_alpha = zcl_excel_common=&gt;convert_column2alpha( l_col_int ).
+    &quot; First of all write column header
+    l_cell_value = &lt;fs_sfcat&gt;-scrtext_m.
+    wo_worksheet-&gt;set_cell( ip_column    = l_col_alpha
+                            ip_row       = l_row_int
+                            ip_value     = l_cell_value
+                            ip_abap_type = cl_abap_typedescr=&gt;typekind_string
+                            ip_style     = l_hdr ).
+    add 1 to l_row_int.
+    loop at &lt;fs_tab&gt; assigning &lt;fs_stab&gt;.
+* Now the cell values
+      assign component &lt;fs_sfcat&gt;-columnname of structure &lt;fs_stab&gt; to &lt;fs_fldval&gt;.
+      if ws_layout-is_stripped = abap_true and l_s_color = abap_true.
+        wo_worksheet-&gt;set_cell( ip_column    = l_col_alpha
+                                ip_row       = l_row_int
+                                ip_value     = &lt;fs_fldval&gt;
+                                ip_abap_type = &lt;fs_sfcat&gt;-inttype
+                                ip_style     = l_stripped ).
+        clear l_s_color.
+      else.
+        wo_worksheet-&gt;set_cell( ip_column    = l_col_alpha
+                                ip_row       = l_row_int
+                                ip_value     = &lt;fs_fldval&gt;
+                                ip_abap_type = &lt;fs_sfcat&gt;-inttype
+                                ip_style     = l_normal   ).
+        l_s_color = abap_true.
+      endif.
+      add 1 to l_row_int.
+    endloop.
+* Now let&apos;s check for optimized
+    if &lt;fs_sfcat&gt;-is_optimized = abap_true.
+      lo_col_dim = wo_worksheet-&gt;get_column_dimension( ip_column = l_col_alpha ).
+      lo_col_dim-&gt;set_auto_size( ip_auto_size = abap_true ) .
+    endif.
+* Now let&apos;s check for visible
+    if &lt;fs_sfcat&gt;-is_visible = abap_false.
+      lo_col_dim = wo_worksheet-&gt;get_column_dimension( ip_column = l_col_alpha ).
+      lo_col_dim-&gt;set_visible( ip_visible = abap_false ) .
+    endif.
+* Now let&apos;s check for total
+    if &lt;fs_sfcat&gt;-totals_function is not initial.
+      l_row_int = l_row_int - 1.
+
+      l_formula = create_formular_total( i_row_int         = l_row_int
+                                         i_column          = l_col_alpha
+                                         i_totals_function = &lt;fs_sfcat&gt;-totals_function ).
+      add 1 to l_row_int.
+      wo_worksheet-&gt;set_cell( ip_column    = l_col_alpha
+                              ip_row       = l_row_int
+                              ip_formula   = l_formula
+                              ip_style     = l_total ).
+    endif.
+    l_row_int = w_row_int.
+    add 1 to l_col_int.
+  endloop.
+* Check for freeze panes
+  if ws_layout-is_fixed = abap_true.
+    if i_num_columns = 0.
+      i_num_columns = w_col_int.
+    endif.
+    wo_worksheet-&gt;freeze_panes( exporting ip_num_columns = i_num_columns
+                                          ip_num_rows    = w_row_int ) .
+  endif.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create table with bind table method" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_TABLE" SCONAME="I_STYLE_TABLE" VERSION="1" LANGU="E" DESCRIPT="Name of the table style" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_TABLE_STYLE"/>
+  <source>method BIND_TABLE.
+  data: lt_field_catalog  type zexcel_t_fieldcatalog,
+        ls_field_catalog  type zexcel_s_fieldcatalog,
+        ls_fcat           type zexcel_s_converter_fcat,
+        ls_settings       type zexcel_s_table_settings,
+        l_line            type i.
+
+  field-symbols: &lt;fs_tab&gt;         type any table.
+
+  assign wo_data-&gt;* to &lt;fs_tab&gt; .
+
+  if wt_fieldcatalog is initial.
+    set_fieldcatalog( ) .
+  endif.
+  ls_settings-table_style      = i_style_table.
+  ls_settings-top_left_column  = zcl_excel_common=&gt;convert_column2alpha( ip_column = w_col_int ).
+  ls_settings-top_left_row     = w_row_int.
+  ls_settings-show_row_stripes = ws_layout-is_stripped.
+
+  describe table  wt_fieldcatalog  lines l_line.
+  l_line = l_line + 1 + w_col_int.
+  ls_settings-bottom_right_column = zcl_excel_common=&gt;convert_column2alpha( ip_column = l_line ).
+
+  describe table &lt;fs_tab&gt; lines l_line.
+  ls_settings-bottom_right_row = l_line + 1 + w_row_int.
+  sort wt_fieldcatalog by position.
+  loop at wt_fieldcatalog into ls_fcat.
+    move-corresponding ls_fcat to ls_field_catalog.
+    ls_field_catalog-dynpfld = abap_true.
+    insert ls_field_catalog into table lt_field_catalog.
+  endloop.
+
+  wo_worksheet-&gt;bind_table(
+    exporting
+      ip_table          = &lt;fs_tab&gt;
+      it_field_catalog  = lt_field_catalog
+      is_table_settings = ls_settings
+    importing
+      es_table_settings = ls_settings
+         ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CLASS_CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CLASS_CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="2" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CLASS_CONSTRUCTOR.
+  data: ls_objects type ts_alv_types.
+
+* Object CL_GUI_ALV_GRID
+  ls_objects-seoclass  = &apos;CL_GUI_ALV_GRID&apos;.
+  ls_objects-clsname   = &apos;ZCL_EXCEL_CONVERTER_ALV_GRID&apos;.
+  insert ls_objects into table wt_objects.
+
+* Object CL_SALV_TABLE
+  ls_objects-seoclass  = &apos;CL_SALV_TABLE&apos;.
+  ls_objects-clsname   = &apos;ZCL_EXCEL_CONVERTER_SALV_TABLE&apos;.
+  insert ls_objects into table wt_objects.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" VERSION="1" LANGU="E" DESCRIPT="Convert" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="IO_ALV" VERSION="1" LANGU="E" DESCRIPT="ALV List Viewer" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="OBJECT" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="IT_TABLE" VERSION="1" LANGU="E" DESCRIPT="Data table" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="I_ROW_INT" VERSION="1" LANGU="E" DESCRIPT="Top edge of data block" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I" PARVALUE="1" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="I_COLUMN_INT" VERSION="1" LANGU="E" DESCRIPT="Left-hand edge of data block" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I" PARVALUE="1" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="I_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create as TABLE in workbook" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="I_STYLE_TABLE" VERSION="1" LANGU="E" DESCRIPT="Name of the table style" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_TABLE_STYLE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="CO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="8 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL" PAROPTIONL="X"/>
+  <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120"/>
+  <source>method CONVERT.
+
+  try.
+    execute_converter( io_object   = io_alv
+                       it_table    = it_table ) .
+  endtry.
+
+  if io_worksheet is supplied and io_worksheet is bound.
+    wo_worksheet = io_worksheet.
+  endif.
+  if co_excel is supplied.
+    if co_excel is not bound.
+      create object co_excel.
+      co_excel-&gt;zif_excel_book_properties~creator = sy-uname.
+    endif.
+    wo_excel = co_excel.
+  endif.
+
+* Move table to data object and clean it up
+  if wt_fieldcatalog is not initial.
+    create_table( it_table = it_table ).
+  else.
+    get reference of it_table into wo_data.
+  endif.
+
+  if wo_excel is not bound.
+    create object wo_excel.
+    wo_excel-&gt;zif_excel_book_properties~creator = sy-uname.
+  endif.
+  if wo_worksheet is not bound.
+    &quot; Get active sheet
+    wo_worksheet = wo_excel-&gt;get_active_worksheet( ).
+    wo_worksheet-&gt;set_title( ip_title = &apos;Sheet1&apos;(001) ).
+  endif.
+
+  w_row_int = i_row_int.
+  w_col_int = i_column_int.
+
+  create_worksheet( i_table       = i_table
+                    i_style_table = i_style_table ) .
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_TOTAL" VERSION="1" LANGU="E" DESCRIPT="Create formular for column total" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_TOTAL" SCONAME="I_ROW_INT" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_TOTAL" SCONAME="I_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_TOTAL" SCONAME="I_TOTALS_FUNCTION" VERSION="1" LANGU="E" DESCRIPT="Totals function for table column (xml ST_TotalsRowFunction)" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_TOTAL" SCONAME="R_FORMULA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <source>method CREATE_FORMULAR_TOTAL.
+  data: l_row_alpha    type string,
+        l_row_e_alpha  type string.
+
+  l_row_alpha   = w_row_int.
+  l_row_e_alpha = i_row_int.
+
+  concatenate i_totals_function &apos;(&apos; i_column l_row_alpha &apos;:&apos; i_column l_row_e_alpha &apos;)&apos; into r_formula.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_PATH" VERSION="1" LANGU="E" DESCRIPT="Create file path for download" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_PATH" SCONAME="R_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <source>method CREATE_PATH.
+  data:   l_sep                   type c .
+
+  clear r_path.
+
+  &quot; Save the file
+  cl_gui_frontend_services=&gt;get_sapgui_workdir(
+    changing
+      sapworkdir            = r_path
+*        exceptions
+*          get_sapworkdir_failed = 1
+*          cntl_error            = 2
+*          error_no_gui          = 3
+*          not_supported_by_gui  = 4
+         ).
+  if sy-subrc &lt;&gt; 0.
+*       MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
+*                  WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+  endif.
+
+  add 1 to w_fcount.
+*-obtain file separator character---------------------------------------
+  call method cl_gui_frontend_services=&gt;get_file_separator
+    changing
+      file_separator       = l_sep
+    exceptions
+      cntl_error           = 1
+      error_no_gui         = 2
+      not_supported_by_gui = 3
+      others               = 4.
+
+  if sy-subrc &lt;&gt; 0.
+    l_sep = &apos;&apos;.
+  endif.
+
+  concatenate r_path l_sep &apos;Excel_&apos; w_fcount &apos;.xlsx&apos; into r_path.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_HDR" VERSION="1" LANGU="E" DESCRIPT="Create header  style" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_HDR" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_HDR" SCONAME="R_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <source>method CREATE_STYLE_HDR.
+  data: lo_style type ref to zcl_excel_style.
+
+  lo_style                       = wo_excel-&gt;add_new_style( ).
+  lo_style-&gt;font-&gt;bold           = abap_true.
+  lo_style-&gt;font-&gt;color-rgb      = zcl_excel_style_color=&gt;c_white.
+  lo_style-&gt;fill-&gt;filltype       = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style-&gt;fill-&gt;fgcolor-rgb    = &apos;FF4F81BD&apos;.
+  if i_alignment is supplied and i_alignment is not initial.
+    lo_style-&gt;alignment-&gt;horizontal = i_alignment.
+  endif.
+  r_style = lo_style-&gt;get_guid( ) .
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_NORMAL" VERSION="1" LANGU="E" DESCRIPT="Create line style for stripped" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_NORMAL" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_NORMAL" SCONAME="I_INTTYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type (C,D,N,...)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INTTYPE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_NORMAL" SCONAME="R_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <source>method CREATE_STYLE_NORMAL.
+  data:   lo_style    type ref to zcl_excel_style.
+
+  lo_style                       = wo_excel-&gt;add_new_style( ).
+  if i_alignment is supplied and i_alignment is not initial.
+    lo_style-&gt;alignment-&gt;horizontal = i_alignment.
+  endif.
+  if i_inttype is supplied and i_inttype is not initial.
+    case i_inttype.
+      when cl_abap_typedescr=&gt;typekind_date.
+        lo_style-&gt;number_format-&gt;format_code = wo_worksheet-&gt;get_default_excel_date_format( ).
+      when cl_abap_typedescr=&gt;typekind_time.
+        lo_style-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_date_time6.
+    endcase.
+  endif.
+  r_style = lo_style-&gt;get_guid( ) .
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_STRIPPED" VERSION="1" LANGU="E" DESCRIPT="Create line style for stripped" EXPOSURE="0" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_STRIPPED" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_STRIPPED" SCONAME="I_INTTYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type (C,D,N,...)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INTTYPE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_STRIPPED" SCONAME="R_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <source>method CREATE_STYLE_STRIPPED.
+  data:   lo_style    type ref to zcl_excel_style.
+
+  lo_style                       = wo_excel-&gt;add_new_style( ).
+  lo_style-&gt;fill-&gt;filltype       = zcl_excel_style_fill=&gt;c_fill_solid.
+  lo_style-&gt;fill-&gt;fgcolor-rgb    = &apos;FFDBE5F1&apos;.
+  if i_alignment is supplied and i_alignment is not initial.
+    lo_style-&gt;alignment-&gt;horizontal = i_alignment.
+  endif.
+  if i_inttype is supplied and i_inttype is not initial.
+    case i_inttype.
+      when cl_abap_typedescr=&gt;typekind_date.
+        lo_style-&gt;number_format-&gt;format_code = wo_worksheet-&gt;get_default_excel_date_format( ).
+      when cl_abap_typedescr=&gt;typekind_time.
+        lo_style-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_date_time6.
+    endcase.
+  endif.
+  r_style = lo_style-&gt;get_guid( ) .
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_TOTAL" VERSION="1" LANGU="E" DESCRIPT="Create totals style" EXPOSURE="0" STATE="1" EDITORDER="7 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_TOTAL" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_TOTAL" SCONAME="I_INTTYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type (C,D,N,...)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INTTYPE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_TOTAL" SCONAME="R_STYLE" VERSION="1" LANGU="E" DESCRIPT="Globally Unique Identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <source>method CREATE_STYLE_TOTAL.
+  data:   lo_style    type ref to zcl_excel_style.
+
+  lo_style                                   = wo_excel-&gt;add_new_style( ).
+
+  create object lo_style-&gt;borders-&gt;top.
+  lo_style-&gt;borders-&gt;top-&gt;border_style       = zcl_excel_style_border=&gt;c_border_thin.
+  lo_style-&gt;borders-&gt;top-&gt;border_color-rgb   = zcl_excel_style_color=&gt;c_black.
+
+  create object lo_style-&gt;borders-&gt;right.
+  lo_style-&gt;borders-&gt;right-&gt;border_style       = zcl_excel_style_border=&gt;c_border_none.
+  lo_style-&gt;borders-&gt;right-&gt;border_color-rgb   = zcl_excel_style_color=&gt;c_black.
+
+  create object lo_style-&gt;borders-&gt;down.
+  lo_style-&gt;borders-&gt;down-&gt;border_style      = zcl_excel_style_border=&gt;c_border_double.
+  lo_style-&gt;borders-&gt;down-&gt;border_color-rgb  = zcl_excel_style_color=&gt;c_black.
+
+  create object lo_style-&gt;borders-&gt;left.
+  lo_style-&gt;borders-&gt;left-&gt;border_style       = zcl_excel_style_border=&gt;c_border_none.
+  lo_style-&gt;borders-&gt;left-&gt;border_color-rgb   = zcl_excel_style_color=&gt;c_black.
+
+  if i_alignment is supplied and i_alignment is not initial.
+    lo_style-&gt;alignment-&gt;horizontal = i_alignment.
+  endif.
+  if i_inttype is supplied and i_inttype is not initial.
+    case i_inttype.
+      when cl_abap_typedescr=&gt;typekind_date.
+        lo_style-&gt;number_format-&gt;format_code = wo_worksheet-&gt;get_default_excel_date_format( ).
+      when cl_abap_typedescr=&gt;typekind_time.
+        lo_style-&gt;number_format-&gt;format_code = zcl_excel_style_number_format=&gt;c_format_date_time6.
+    endcase.
+  endif.
+
+  r_style = lo_style-&gt;get_guid( ) .
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create table based on fieldcatalog" EXPOSURE="0" STATE="1" EDITORDER="9 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_TABLE" SCONAME="IT_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <source>method CREATE_TABLE.
+  data: lo_data type ref to data.
+  data: lo_addit                type ref to cl_abap_elemdescr,
+        lt_components_tab       type cl_abap_structdescr=&gt;component_table,
+        ls_components           type abap_componentdescr,
+        lo_table                type ref to cl_abap_tabledescr,
+        lo_struc                type ref to cl_abap_structdescr.
+
+  field-symbols: &lt;fs_scat&gt;  type zexcel_s_converter_fcat,
+                 &lt;fs_stab&gt;  type any,
+                 &lt;fs_ttab&gt;  type standard table,
+                 &lt;fs&gt;       type any.
+
+  sort wt_fieldcatalog by position.
+  read table it_table assigning &lt;fs_stab&gt; index 1.
+  if sy-subrc eq 0 .
+    loop at wt_fieldcatalog assigning &lt;fs_scat&gt;.
+      assign component &lt;fs_scat&gt;-columnname of structure &lt;fs_stab&gt; to &lt;fs&gt;.
+      if sy-subrc = 0.
+        ls_components-name   = &lt;fs_scat&gt;-columnname.
+        lo_addit            ?= cl_abap_typedescr=&gt;describe_by_data( &lt;fs&gt; ).
+        ls_components-type   = lo_addit           .
+        insert ls_components into table lt_components_tab.
+      endif.
+    endloop.
+    &quot;create new line type
+    lo_struc = cl_abap_structdescr=&gt;create( lt_components_tab ).
+
+    lo_table = cl_abap_tabledescr=&gt;create( lo_struc ).
+
+    create data wo_data   type handle lo_table.
+    create data lo_data   type handle lo_struc.
+
+    assign wo_data-&gt;* to &lt;fs_ttab&gt;.
+    assign lo_data-&gt;* to &lt;fs_stab&gt;.
+    loop at it_table  assigning &lt;fs&gt;.
+      clear &lt;fs_stab&gt;.
+      move-corresponding &lt;fs&gt; to &lt;fs_stab&gt;.
+      append &lt;fs_stab&gt; to &lt;fs_ttab&gt;.
+    endloop.
+  endif.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Create table in worksheet" EXPOSURE="0" STATE="1" EDITORDER="10 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120108" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_WORKSHEET" SCONAME="I_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create as TABLE in workbook" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;X&apos;" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_WORKSHEET" SCONAME="I_STYLE_TABLE" VERSION="1" LANGU="E" DESCRIPT="Name of the table style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_TABLE_STYLE"/>
+  <source>method CREATE_WORKSHEET.
+
+  if wo_data is bound and wo_worksheet is bound.
+    if i_table = abap_true.
+      bind_table( i_style_table = i_style_table ) .
+    else.
+      bind_cells( ) .
+    endif.
+  endif.
+  wo_worksheet-&gt;zif_excel_sheet_properties~zoomscale = 100.
+  wo_worksheet-&gt;zif_excel_sheet_properties~zoomscale_normal = 100.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="EXECUTE_CONVERTER" VERSION="1" LANGU="E" DESCRIPT="Execute the converter based on object provided" EXPOSURE="0" STATE="1" EDITORDER="11 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="EXECUTE_CONVERTER" SCONAME="IO_OBJECT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="OBJECT"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="EXECUTE_CONVERTER" SCONAME="IT_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="EXECUTE_CONVERTER" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120"/>
+  <source>method EXECUTE_CONVERTER.
+  data: lt_fieldcatalog         type zexcel_t_fieldcatalog,
+        ls_fieldcatalog         type zexcel_s_converter_fcat,
+        lo_if                   type ref to zif_excel_converter,
+        ls_types                type ts_alv_types,
+        lo_addit                type ref to cl_abap_classdescr.
+
+  if io_object is bound.
+    try.
+        lo_addit            ?= cl_abap_typedescr=&gt;describe_by_object_ref( io_object ).
+      catch cx_sy_move_cast_error.
+        raise exception type zcx_excel.
+    endtry.
+    ls_types-seoclass = lo_addit-&gt;get_relative_name( ).
+    read table wt_objects into ls_types with table key seoclass = ls_types-seoclass.
+    if sy-subrc = 0.
+      create object lo_if type (ls_types-clsname).
+
+      try.
+        lo_if-&gt;create_fieldcatalog(
+          exporting
+            io_object       = io_object
+            it_table        = it_table
+          importing
+            es_layout       = ws_layout
+            et_fieldcatalog = wt_fieldcatalog
+               ).
+      endtry.
+    else.
+      raise exception type zcx_excel.
+    endif.
+  else.
+    refresh wt_fieldcatalog.
+  endif.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" VERSION="1" LANGU="E" DESCRIPT="Create excel file" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="E_BYTECOUNT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="ET_FILE" VERSION="1" LANGU="E" DESCRIPT="GBT: SOLIX as Table Type" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="SOLIX_TAB"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="E_FILE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>method GET_FILE.
+  data: lo_excel_writer         type ref to zif_excel_writer,
+        lo_excel                type ref to zcl_excel.
+
+  data: ls_seoclass type seoclass.
+
+
+  if wo_excel is bound.
+    create object lo_excel_writer type zcl_excel_writer_2007.
+    e_file = lo_excel_writer-&gt;write_file( wo_excel ).
+
+    select single * into ls_seoclass
+      from seoclass
+      where clsname = &apos;CL_BCS_CONVERT&apos;.
+
+    if sy-subrc = 0.
+      call method (ls_seoclass-clsname)=&gt;xstring_to_solix
+        exporting
+          iv_xstring = e_file
+        receiving
+          et_solix   = et_file.
+      e_bytecount = xstrlen( e_file ).
+    else.
+      &quot; Convert to binary
+      call function &apos;SCMS_XSTRING_TO_BINARY&apos;
+        exporting
+          buffer        = e_file
+        importing
+          output_length = e_bytecount
+        tables
+          binary_tab    = et_file.
+    endif.
+  endif.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="OPEN_FILE" VERSION="1" LANGU="E" DESCRIPT="Open excel file" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method OPEN_FILE.
+  data: l_bytecount             type i,
+        lt_file                 type solix_tab,
+        l_dir                   type string,
+        l_sep                   type c.
+
+  field-symbols: &lt;fs_data&gt; type any table.
+
+  assign wo_data-&gt;* to &lt;fs_data&gt;.
+
+* catch zcx_excel .
+*endtry.
+  if wo_excel is bound.
+    get_file( importing e_bytecount  = l_bytecount
+                        et_file      = lt_file ) .
+
+    l_dir =  create_path( ) .
+
+    cl_gui_frontend_services=&gt;gui_download( exporting bin_filesize = l_bytecount
+                                                      filename     = l_dir
+                                                      filetype     = &apos;BIN&apos;
+                                             changing data_tab     = lt_file ).
+    cl_gui_frontend_services=&gt;execute(
+      exporting
+        document               = l_dir
+*        application            =
+*        parameter              =
+*        default_directory      =
+*        maximized              =
+*        minimized              =
+*        synchronous            =
+*        operation              = &apos;OPEN&apos;
+      exceptions
+        cntl_error             = 1
+        error_no_gui           = 2
+        bad_parameter          = 3
+        file_not_found         = 4
+        path_not_found         = 5
+        file_extension_unknown = 6
+        error_execute_failed   = 7
+        synchronous_failed     = 8
+        not_supported_by_gui   = 9
+           ).
+    if sy-subrc &lt;&gt; 0.
+      message id sy-msgid type sy-msgty number sy-msgno
+                 with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+    endif.
+
+  endif.
+
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Set fieldcatalog from table" EXPOSURE="0" STATE="1" EDITORDER="12 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method SET_FIELDCATALOG.
+  data: lt_fieldcat type zexcel_t_fieldcatalog,
+        ls_fieldcat type zexcel_s_fieldcatalog,
+        ls_fcat     type zexcel_s_converter_fcat.
+
+
+  field-symbols: &lt;fs_tab&gt;         type any table.
+
+  assign wo_data-&gt;* to &lt;fs_tab&gt; .
+
+  lt_fieldcat = zcl_excel_common=&gt;get_fieldcatalog( ip_table = &lt;fs_tab&gt; ).
+
+  loop at lt_fieldcat into ls_fieldcat.
+    move-corresponding ls_fieldcat to ls_fcat.
+    insert ls_fcat into table wt_fieldcatalog.
+  endloop.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" VERSION="1" LANGU="E" DESCRIPT="Write excel file" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" SCONAME="I_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
+  <source>method WRITE_FILE.
+  data: l_bytecount             type i,
+      lt_file                 type solix_tab,
+      l_dir                   type string.
+
+  field-symbols: &lt;fs_data&gt; type any table.
+
+  assign wo_data-&gt;* to &lt;fs_data&gt;.
+
+* catch zcx_excel .
+*endtry.
+  if wo_excel is bound.
+    get_file( importing e_bytecount  = l_bytecount
+                        et_file      = lt_file ) .
+    if i_path is initial.
+      l_dir =  create_path( ) .
+    else.
+      l_dir = i_path.
+    endif.
+    cl_gui_frontend_services=&gt;gui_download( exporting bin_filesize = l_bytecount
+                                                      filename     = l_dir
+                                                      filetype     = &apos;BIN&apos;
+                                             changing data_tab     = lt_file ).
+  endif.
+endmethod.</source>
+ </method>
+</CLAS>
