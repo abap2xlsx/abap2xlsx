@@ -6,16 +6,11 @@
   final
   create public .
 
+public section.
 *&quot;* public components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *&quot;* do not include other source files here!!!
-public section.
 
-  interfaces ZIF_EXCEL_CONVERTER .
-
-  aliases CAN_CONVERT_OBJECT
-    for ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT .
-  aliases CREATE_FIELDCATALOG
-    for ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG .</publicSection>
+  interfaces ZIF_EXCEL_CONVERTER .</publicSection>
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
@@ -43,244 +38,114 @@ private section.</privateSection>
 endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
-  <source>method ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG.
-  data: lo_salv type ref to cl_salv_table.
+  <source>METHOD zif_excel_converter~create_fieldcatalog.
+  DATA: lo_salv TYPE REF TO cl_salv_table.
 
-  data: lo_columns      type ref to cl_salv_columns_table,
-        lo_column       type ref to cl_salv_column_table,
-        lo_aggregations type ref to cl_salv_aggregations,
-        lo_aggregation  type ref to cl_salv_aggregation,
-        lo_sorts        type ref to cl_salv_sorts,
-        lo_sort         type ref to cl_salv_sort,
-        lo_display      type ref to cl_salv_display_settings,
-        l_agre          type salv_de_aggregation,
-        lt_column       type salv_t_column_ref,
-        ls_column       type salv_s_column_ref,
-        ls_fieldcatalog type zexcel_s_converter_fcat,
-        ls_ref          type salv_s_ddic_reference,
-        l_alignment     type salv_de_alignment,
-        l_fix           type sap_bool,
-        l_optimized     type sap_bool.
+  DATA: lo_columns      TYPE REF TO cl_salv_columns_table,
+        lo_column       TYPE REF TO cl_salv_column_table,
+        lo_aggregations TYPE REF TO cl_salv_aggregations,
+        lo_aggregation  TYPE REF TO cl_salv_aggregation,
+        lo_sorts        TYPE REF TO cl_salv_sorts,
+        lo_sort         TYPE REF TO cl_salv_sort,
+        lo_display      TYPE REF TO cl_salv_display_settings,
+        l_agre          TYPE salv_de_aggregation,
+        lt_column       TYPE salv_t_column_ref,
+        ls_column       TYPE salv_s_column_ref,
+        ls_fieldcatalog TYPE zexcel_s_converter_fcat,
+        ls_ref          TYPE salv_s_ddic_reference,
+        l_alignment     TYPE salv_de_alignment,
+        l_fix           TYPE sap_bool,
+        l_optimized     TYPE sap_bool.
 
-  field-symbols: &lt;fs_stable&gt; type any.
-  try.
-    can_convert_object( io_object = io_object ).
-  endtry.
+  FIELD-SYMBOLS: &lt;fs_stable&gt; TYPE any.
+  TRY.
+    zif_excel_converter~can_convert_object( io_object = io_object ).
+  ENDTRY.
 
   lo_salv ?= io_object.
 
-  clear: es_layout,
+  CLEAR: es_layout,
          et_fieldcatalog.
 
-  if lo_salv is bound.
+  IF lo_salv IS BOUND.
     lo_columns              = lo_salv-&gt;get_columns( ).
     lt_column               = lo_columns-&gt;get( ) .
     lo_aggregations         = lo_salv-&gt;get_aggregations( ) .
     lo_display              = lo_salv-&gt;get_display_settings( ) .
     es_layout-is_stripped = lo_display-&gt;is_striped_pattern( ) .
     l_optimized             = lo_columns-&gt;is_optimized( ).
-    loop at lt_column into ls_column.
-      clear ls_fieldcatalog.
-      if ls_column-r_column-&gt;is_technical( ) = abap_false.
-        try.
+    LOOP AT lt_column INTO ls_column.
+      CLEAR ls_fieldcatalog.
+      IF ls_column-r_column-&gt;is_technical( ) = abap_false.
+        TRY.
             lo_column ?= lo_columns-&gt;get_column( columnname = ls_column-columnname ).
-          catch cx_salv_not_found.
-            raise exception type zcx_excel.
-        endtry.
+          CATCH cx_salv_not_found.
+            RAISE EXCEPTION TYPE zcx_excel.
+        ENDTRY.
         ls_ref = ls_column-r_column-&gt;get_ddic_reference( ).
         ls_fieldcatalog-tabname         = ls_ref-table.
         ls_fieldcatalog-fieldname       = ls_ref-field.
         ls_fieldcatalog-columnname      = ls_column-columnname.
-        try.
+        TRY.
             ls_fieldcatalog-position        = lo_columns-&gt;get_column_position( columnname = ls_column-columnname ).
-          catch cx_salv_not_found.
-            raise exception type zcx_excel.
-        endtry.
+          CATCH cx_salv_not_found.
+            RAISE EXCEPTION TYPE zcx_excel.
+        ENDTRY.
         ls_fieldcatalog-inttype         = ls_column-r_column-&gt;get_ddic_inttype( ).
         ls_fieldcatalog-scrtext_s       = ls_column-r_column-&gt;get_short_text( ) .
         ls_fieldcatalog-scrtext_m       = ls_column-r_column-&gt;get_medium_text( ) .
         ls_fieldcatalog-scrtext_l       = ls_column-r_column-&gt;get_long_text( ).
-        try.
+        TRY.
             lo_aggregation = lo_aggregations-&gt;get_aggregation( columnname  =  ls_column-columnname ) .
-          catch cx_salv_not_found.
-            clear lo_aggregation.
-        endtry.
-        if lo_aggregation is bound.
+          CATCH cx_salv_not_found.
+            CLEAR lo_aggregation.
+        ENDTRY.
+        IF lo_aggregation IS BOUND.
           l_agre = lo_aggregation-&gt;get( ).
-          case l_agre.
-            when if_salv_c_aggregation=&gt;total.    &quot; Total
+          CASE l_agre.
+            WHEN if_salv_c_aggregation=&gt;total.    &quot; Total
               ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_sum.
-            when if_salv_c_aggregation=&gt;minimum. &quot; Minimum
+            WHEN if_salv_c_aggregation=&gt;minimum. &quot; Minimum
               ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_min.
-            when if_salv_c_aggregation=&gt;maximum. &quot; Maximum
+            WHEN if_salv_c_aggregation=&gt;maximum. &quot; Maximum
               ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_max.
-            when if_salv_c_aggregation=&gt;average. &quot; Mean Value
+            WHEN if_salv_c_aggregation=&gt;average. &quot; Mean Value
               ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_average.
-            when others.
-              clear ls_fieldcatalog-totals_function.
-          endcase.
-        endif.
+            WHEN OTHERS.
+              CLEAR ls_fieldcatalog-totals_function.
+          ENDCASE.
+        ENDIF.
         ls_fieldcatalog-is_visible      = ls_column-r_column-&gt;is_visible( ).
         ls_fieldcatalog-fix_column      = lo_column-&gt;is_key( ).
         l_fix     = lo_column-&gt;is_key_presence_required( ).
 
-        if l_optimized = &apos;1&apos; or l_optimized = abap_true.
+        IF l_optimized = &apos;1&apos; OR l_optimized = abap_true.
           ls_fieldcatalog-is_optimized = abap_true.
-        else.
+        ELSE.
           l_optimized             = ls_column-r_column-&gt;is_optimized( ).
-          if l_optimized = &apos;1&apos; or l_optimized = abap_true.
+          IF l_optimized = &apos;1&apos; OR l_optimized = abap_true.
             ls_fieldcatalog-is_optimized = abap_true.
-          endif.
-        endif.
+          ENDIF.
+        ENDIF.
         l_alignment = ls_column-r_column-&gt;get_alignment( ) .
-        case l_alignment.
-          when if_salv_c_alignment=&gt;left. &quot;	Align left
+        CASE l_alignment.
+          WHEN if_salv_c_alignment=&gt;left. &quot;	Align left
             ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_left.
-          when if_salv_c_alignment=&gt;right. &quot;  Align right
+          WHEN if_salv_c_alignment=&gt;right. &quot;  Align right
             ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_right.
-          when if_salv_c_alignment=&gt;centered. &quot;	Centered
+          WHEN if_salv_c_alignment=&gt;centered. &quot;	Centered
             ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_center.
-          when others.
-            clear ls_fieldcatalog-alignment.
-        endcase.
-        append ls_fieldcatalog to et_fieldcatalog.
-      endif.
-    endloop.
-    if l_fix is not initial.
+          WHEN OTHERS.
+            CLEAR ls_fieldcatalog-alignment.
+        ENDCASE.
+        APPEND ls_fieldcatalog TO et_fieldcatalog.
+      ENDIF.
+    ENDLOOP.
+    IF l_fix IS NOT INITIAL.
       es_layout-is_fixed    = abap_true.
-    endif.
-  endif.
+    ENDIF.
+  ENDIF.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </interfaceMethod>
- <method CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CMPNAME="CAN_CONVERT_OBJECT" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_CONVERTER" REFCMPNAME="CAN_CONVERT_OBJECT" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
-  <exception CLSNAME="ZIF_EXCEL_CONVERTER" CMPNAME="CAN_CONVERT_OBJECT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDON="00000000"/>
-  <source>method ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
-  data: lo_salv type ref to cl_salv_table.
-
-  try.
-      lo_salv ?= io_object.
-    catch cx_sy_move_cast_error .
-      raise exception type zcx_excel.
-  endtry.
-
-endmethod.</source>
- </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CMPNAME="CREATE_FIELDCATALOG" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_CONVERTER" REFCMPNAME="CREATE_FIELDCATALOG" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
-  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
-  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
-  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
-  <exception CLSNAME="ZIF_EXCEL_CONVERTER" CMPNAME="CREATE_FIELDCATALOG" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDON="00000000"/>
-  <source>method ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG.
-  data: lo_salv type ref to cl_salv_table.
-
-  data: lo_columns      type ref to cl_salv_columns_table,
-        lo_column       type ref to cl_salv_column_table,
-        lo_aggregations type ref to cl_salv_aggregations,
-        lo_aggregation  type ref to cl_salv_aggregation,
-        lo_sorts        type ref to cl_salv_sorts,
-        lo_sort         type ref to cl_salv_sort,
-        lo_display      type ref to cl_salv_display_settings,
-        l_agre          type salv_de_aggregation,
-        lt_column       type salv_t_column_ref,
-        ls_column       type salv_s_column_ref,
-        ls_fieldcatalog type zexcel_s_converter_fcat,
-        ls_ref          type salv_s_ddic_reference,
-        l_alignment     type salv_de_alignment,
-        l_fix           type sap_bool,
-        l_optimized     type sap_bool.
-
-  field-symbols: &lt;fs_stable&gt; type any.
-  try.
-    can_convert_object( io_object = io_object ).
-  endtry.
-
-  lo_salv ?= io_object.
-
-  clear: es_layout,
-         et_fieldcatalog.
-
-  if lo_salv is bound.
-    lo_columns              = lo_salv-&gt;get_columns( ).
-    lt_column               = lo_columns-&gt;get( ) .
-    lo_aggregations         = lo_salv-&gt;get_aggregations( ) .
-    lo_display              = lo_salv-&gt;get_display_settings( ) .
-    es_layout-is_stripped = lo_display-&gt;is_striped_pattern( ) .
-    l_optimized             = lo_columns-&gt;is_optimized( ).
-    loop at lt_column into ls_column.
-      clear ls_fieldcatalog.
-      if ls_column-r_column-&gt;is_technical( ) = abap_false.
-        try.
-            lo_column ?= lo_columns-&gt;get_column( columnname = ls_column-columnname ).
-          catch cx_salv_not_found.
-            raise exception type zcx_excel.
-        endtry.
-        ls_ref = ls_column-r_column-&gt;get_ddic_reference( ).
-        ls_fieldcatalog-tabname         = ls_ref-table.
-        ls_fieldcatalog-fieldname       = ls_ref-field.
-        ls_fieldcatalog-columnname      = ls_column-columnname.
-        try.
-            ls_fieldcatalog-position        = lo_columns-&gt;get_column_position( columnname = ls_column-columnname ).
-          catch cx_salv_not_found.
-            raise exception type zcx_excel.
-        endtry.
-        ls_fieldcatalog-inttype         = ls_column-r_column-&gt;get_ddic_inttype( ).
-        ls_fieldcatalog-scrtext_s       = ls_column-r_column-&gt;get_short_text( ) .
-        ls_fieldcatalog-scrtext_m       = ls_column-r_column-&gt;get_medium_text( ) .
-        ls_fieldcatalog-scrtext_l       = ls_column-r_column-&gt;get_long_text( ).
-        try.
-            lo_aggregation = lo_aggregations-&gt;get_aggregation( columnname  =  ls_column-columnname ) .
-          catch cx_salv_not_found.
-            clear lo_aggregation.
-        endtry.
-        if lo_aggregation is bound.
-          l_agre = lo_aggregation-&gt;get( ).
-          case l_agre.
-            when if_salv_c_aggregation=&gt;total.    &quot; Total
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_sum.
-            when if_salv_c_aggregation=&gt;minimum. &quot; Minimum
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_min.
-            when if_salv_c_aggregation=&gt;maximum. &quot; Maximum
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_max.
-            when if_salv_c_aggregation=&gt;average. &quot; Mean Value
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_average.
-            when others.
-              clear ls_fieldcatalog-totals_function.
-          endcase.
-        endif.
-        ls_fieldcatalog-is_visible      = ls_column-r_column-&gt;is_visible( ).
-        ls_fieldcatalog-fix_column      = lo_column-&gt;is_key( ).
-        l_fix     = lo_column-&gt;is_key_presence_required( ).
-
-        if l_optimized = &apos;1&apos; or l_optimized = abap_true.
-          ls_fieldcatalog-is_optimized = abap_true.
-        else.
-          l_optimized             = ls_column-r_column-&gt;is_optimized( ).
-          if l_optimized = &apos;1&apos; or l_optimized = abap_true.
-            ls_fieldcatalog-is_optimized = abap_true.
-          endif.
-        endif.
-        l_alignment = ls_column-r_column-&gt;get_alignment( ) .
-        case l_alignment.
-          when if_salv_c_alignment=&gt;left. &quot;	Align left
-            ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_left.
-          when if_salv_c_alignment=&gt;right. &quot;  Align right
-            ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_right.
-          when if_salv_c_alignment=&gt;centered. &quot;	Centered
-            ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_center.
-          when others.
-            clear ls_fieldcatalog-alignment.
-        endcase.
-        append ls_fieldcatalog to et_fieldcatalog.
-      endif.
-    endloop.
-    if l_fix is not initial.
-      es_layout-is_fixed    = abap_true.
-    endif.
-  endif.
-
-endmethod.</source>
- </method>
 </CLAS>
