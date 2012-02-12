@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="FEMIA" UDAT="20120120" VERN="000045" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120120" STIME="212455" IDATE="20120120" ITIME="212455" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="RTURNHEIM" UDAT="20120212" VERN="000046" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120212" STIME="174116" IDATE="20120212" ITIME="174116" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Bind ALV" LENGTH="24 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Bind ALV OLE2" LENGTH="29 "/>
   </language>
  </textPool>
  <pfstatus>
@@ -818,7 +818,7 @@ DATA: l_path            TYPE string,  &quot; local dir
       lv_file_separator TYPE c.
 
 CONSTANTS:
-      lv_default_file_name TYPE string VALUE &apos;20_Bind_Alv_Ole2.xlsx&apos;.
+      lv_default_file_name TYPE string VALUE &apos;20_BindAlv.xlsx&apos;.
 *--------------------------------------------------------------------*
 *START-OF-SELECTION
 *--------------------------------------------------------------------*
@@ -830,7 +830,7 @@ START-OF-SELECTION.
 
   SELECT *
       INTO TABLE gt_sbook[]
-      FROM sbook            &quot;#EC CI_NOWHERE
+      FROM sbook                                        &quot;#EC CI_NOWHERE
       UP TO 10 ROWS.
 
 * Display ALV
