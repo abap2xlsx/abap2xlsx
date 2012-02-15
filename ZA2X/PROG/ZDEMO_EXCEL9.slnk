@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="FEMIA" UDAT="20110528" VERN="000068" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181955" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL9" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="DEVELOPER" UDAT="20120112" VERN="000074" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120112" STIME="084137" IDATE="20120112" ITIME="084137" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Data validations" LENGTH="47 "/>
-   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Data validations" LENGTH="32 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="24 "/>
+   <textElement ID="S" KEY="P_SBOOK" ENTRY="        Export SBOOK to Excel?" LENGTH="30 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
@@ -40,7 +41,8 @@ DATA: lv_full_path      TYPE string,
 
 CONSTANTS: lv_default_file_name TYPE string VALUE &apos;09_DataValidation.xlsx&apos;.
 
-PARAMETERS: p_path TYPE zexcel_export_dir.
+PARAMETERS: p_path  TYPE zexcel_export_dir,
+            p_sbook TYPE flag.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
   lv_workdir = p_path.
@@ -128,7 +130,7 @@ START-OF-SELECTION.
                        ip_stop_row      = 6 ).
 
   lo_worksheet        = lo_excel-&gt;add_new_worksheet( ).
-  lv_title = &apos;Data Validations&apos;.
+  lv_title = &apos;Table with Data Validation&apos;.
   lo_worksheet-&gt;set_title( lv_title ).
 
   &quot; Maximum Text length
@@ -197,6 +199,25 @@ START-OF-SELECTION.
     &quot; Increment row
     row = row + 1.
   ENDWHILE.
+
+  IF p_sbook = abap_true.
+    DATA: bookings type TABLE OF sbook.
+
+    lo_worksheet        = lo_excel-&gt;add_new_worksheet( ).
+    lv_title = &apos;SBOOK&apos;.
+    lo_worksheet-&gt;set_title( lv_title ).
+
+    SELECT * from sbook INTO TABLE bookings UP TO 4000 ROWS.
+
+    lo_worksheet-&gt;bind_table(
+      EXPORTING
+        ip_table          = bookings
+*        it_field_catalog  =     &quot; Table binding field catalog
+*        is_table_settings =     &quot; Excel table binding settings
+*      IMPORTING
+*        es_table_settings =     &quot; Excel table binding settings
+    ).
+  ENDIF.
 
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
   lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
