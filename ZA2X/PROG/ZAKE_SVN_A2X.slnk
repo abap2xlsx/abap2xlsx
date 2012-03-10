@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZAKE_SVN_A2X" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="FEMIA" UDAT="20100809" VERN="000015" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20100809" STIME="215723" IDATE="20100809" ITIME="215723" UCCHECK="X">
+<PROG NAME="ZAKE_SVN_A2X" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="DEVELOPER" UDAT="20120310" VERN="000020" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120310" STIME="172535" IDATE="20120310" ITIME="172535" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Program Z_ZAKE_SVN" LENGTH="18 "/>
@@ -21,7 +21,8 @@ CONSTANTS cl_tortoise_svn TYPE seoclsname VALUE &apos;ZCL_ZAKE_TORTOISE_SVN&apos
 DATA package TYPE devclass.
 DATA zake    TYPE REF TO zake.
 
-DATA zake_objects TYPE scts_tadir.
+DATA objects TYPE scts_tadir.
+DATA object  LIKE LINE OF objects.
 
 DATA files TYPE string_table.
 DATA file  LIKE LINE OF files.
@@ -43,6 +44,9 @@ SELECTION-SCREEN BEGIN OF BLOCK a WITH FRAME TITLE a.
 PARAMETERS:
   checkout TYPE flag RADIOBUTTON GROUP act,
   update   TYPE flag RADIOBUTTON GROUP act DEFAULT &apos;X&apos;,
+  install  TYPE flag RADIOBUTTON GROUP act,
+  export   TYPE flag RADIOBUTTON GROUP act,
+  build    TYPE flag RADIOBUTTON GROUP act,
   checkin  TYPE flag RADIOBUTTON GROUP act.
 SELECTION-SCREEN END OF BLOCK a.
 
@@ -54,10 +58,9 @@ SELECTION-SCREEN END OF BLOCK b.
 
 SELECTION-SCREEN BEGIN OF BLOCK c WITH FRAME TITLE c.
 PARAMETERS:
-  loclpath TYPE char512 DEFAULT &apos;C:\ZAKE_SVN\Projects\abap2xlsx&apos; LOWER CASE OBLIGATORY,
-  zakebuil TYPE char512 DEFAULT &apos;C:\ZAKE_SVN\Projects\abap2xlsx\build\NUGG_ABAP2XLSX_V_1_0.nugg&apos; LOWER CASE OBLIGATORY,
-  zakenugg TYPE char512 DEFAULT &apos;C:\ZAKE_SVN\Projects\abap2xlsx\nuggs\NUGG_ABAP2XLSX_V_1_0.nugg&apos; LOWER CASE OBLIGATORY,
-  svnpath  TYPE char512 DEFAULT &apos;https://abap2xlsx.googlecode.com/svn/trunk/abap2xlsx&apos; LOWER CASE OBLIGATORY,
+  loclpath TYPE char512 DEFAULT &apos;C:\Projects\abap2xlsx\trunk&apos; LOWER CASE OBLIGATORY,
+  zakenugg TYPE char512 DEFAULT &apos;C:\Projects\abap2xlsx\nuggs\abap2xlsx_Daily.nugg&apos; LOWER CASE OBLIGATORY,
+  svnpath  TYPE char512 DEFAULT &apos;https://code.sdn.sap.com/svn/abap2xlsx/trunk&apos; LOWER CASE OBLIGATORY,
   comment  TYPE char512 DEFAULT &apos;&apos; LOWER CASE,
   username TYPE char512 LOWER CASE,
   password TYPE char512 LOWER CASE,
@@ -73,12 +76,11 @@ START-OF-SELECTION.
 
   svnpath_str               = svnpath.
   loclpath_str              = loclpath.
-  zake_build                = zakebuil.
   zake_nuggetname           = zakenugg.
   comment_str               = comment.
 
-  SELECT * INTO TABLE zake_objects FROM tadir WHERE devclass = &apos;ZABAP2XLSX&apos;.
-  DELETE zake_objects WHERE object = &apos;DEVC&apos;.
+  &quot; SELECT * INTO TABLE objects FROM tadir WHERE devclass = &apos;ZABAP2XLSX&apos;.
+  &quot; DELETE zake_objects WHERE object = &apos;DEVC&apos;.
 
   TRY.
       IF svn = &apos;X&apos;.
@@ -89,41 +91,46 @@ START-OF-SELECTION.
 
       CREATE OBJECT zake
         TYPE
-          (class)
+        (class)
         EXPORTING
           i_svnpath   = svnpath_str
           i_localpath = loclpath_str.
       zake-&gt;set_testrun( testrun ).
+      zake-&gt;set_package( &apos;ZA2X&apos; ).
 
-      IF checkin = &apos;X&apos;.
-        zake-&gt;set_package( &apos;ZA2X&apos; ).
-        zake-&gt;set_checkin_objects( zake_objects ).
+      IF checkout = &apos;X&apos;.
+        zake-&gt;checkout( ).
+      ELSEIF update = &apos;X&apos;.
+        zake-&gt;update( ).
+      ELSEIF install = &apos;X&apos;.
+        zake-&gt;install_slinkees_from_lm( testrun ).
+        &quot; zake-&gt;install_objects( zake_objects ).
+      ELSEIF export = &apos;X&apos;.
+        &quot; Build Object list for Export
+        &quot; Programs
+        object-object   = &apos;PROG&apos;.
+        object-obj_name = &apos;ZAKE_SVN_A2X&apos;.
+        APPEND object TO objects.
+        zake-&gt;set_checkin_objects( objects ).
+        zake-&gt;download_slinkees_to_lm = abap_true.
+        zake-&gt;download_nugget_to_lm   = space.
+        zake-&gt;download_zip_to_lm_flag = space.
         zake-&gt;create_slinkees( zake_nuggetname ).
+      ELSEIF build = &apos;X&apos;.
         &quot; Build a complete package for download
-*        zake-&gt;set_package( &apos;ZA2X&apos; ).
-*        zake-&gt;set_checkin_objects( zake_objects ).
-*        &quot; Let&apos;s add the CMD Scripts to the complete package
-*        CONCATENATE loclpath &apos;bin/svn-script.cmd&apos; INTO file.
-*        APPEND file TO files.
-*        CONCATENATE loclpath &apos;bin/tortoise-svn-script.cmd&apos; INTO file.
-*        APPEND file TO files.
-*        zake-&gt;add_files_to_zip( files ).
-*        &quot; We don&apos;t want that for the complete Package Slinkees are created
-*        &quot; in the ZAKE folder
-*        zake-&gt;download_slinkees_to_lm = space.
-*        zake-&gt;download_nugget_to_lm   = space.
-*        zake-&gt;create_slinkees( zake_nuggetname ).
+        zake-&gt;set_checkin_objects( objects ).
+        &quot; We don&apos;t want that for the complete Package Slinkees are created
+        &quot; in the ZAKE folder
+        zake-&gt;download_slinkees_to_lm = space.
+        zake-&gt;download_nugget_to_lm   = space.
+        zake-&gt;create_slinkees( zake_nuggetname ).
+      ELSEIF checkin = &apos;X&apos;.
+        zake-&gt;set_package( &apos;ZA2X&apos; ).
+        zake-&gt;set_checkin_objects( objects ).
+        zake-&gt;create_slinkees( zake_nuggetname ).
         IF testrun IS INITIAL.
           zake-&gt;checkin( comment_str ).
         ENDIF.
-      ELSE.
-        IF update = &apos;X&apos;.
-          zake-&gt;update( ).
-        ELSE.
-          zake-&gt;checkout( ).
-        ENDIF.
-        &quot; zake-&gt;install_slinkees_from_lm( testrun ).
-        zake-&gt;install_objects( zake_objects ).
       ENDIF.
     CATCH zcx_saplink INTO ex.
       message = ex-&gt;msg.
