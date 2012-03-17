@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL32" VARCL="X" SUBC="1" CNAM="RTURNHEIM" CDAT="20120212" UNAM="RTURNHEIM" UDAT="20120212" VERN="000012" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120212" STIME="174140" IDATE="20120212" ITIME="174140" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL32" VARCL="X" SUBC="1" CNAM="RTURNHEIM" CDAT="20120212" UNAM="RTURNHEIM" UDAT="20120317" VERN="000025" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120317" STIME="174011" IDATE="20120317" ITIME="174011" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Bind ALV OLE2" LENGTH="29 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Export ALV" LENGTH="26 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
@@ -66,6 +66,9 @@
   <pfstatus_fun CODE="&amp;XPA" TEXTNO="001" TEXT_TYPE="S" TEXT_NAME="ICON_EXPAND" ICON_ID="@3S@" FUN_TEXT="Expand"/>
   <pfstatus_fun CODE="&amp;XXL" TEXTNO="001" TEXT_TYPE="S" TEXT_NAME="ICON_XXL" ICON_ID="@DJ@" FUN_TEXT="Spreadsheet..." PATH="A"/>
   <pfstatus_fun CODE="EXCEL" TEXTNO="001" TEXT_TYPE="S" TEXT_NAME="ICON_XLV" ICON_ID="@J3@" FUN_TEXT="Excel" ICON_TEXT="Export to Excel"/>
+  <pfstatus_fun CODE="EXCELBIND" TEXTNO="001" TEXT_TYPE="S" TEXT_NAME="ICON_XLS" ICON_ID="@J2@" FUN_TEXT="Excel bind" ICON_TEXT="Excel bind"/>
+  <pfstatus_fun CODE="EXCELCELL" TEXTNO="001" TEXT_TYPE="S" TEXT_NAME="ICON_XXL" ICON_ID="@DJ@" FUN_TEXT="Excel converter"/>
+  <pfstatus_fun CODE="EXCELCONV" TEXTNO="001" TEXT_TYPE="S" ICON_ID="@DJ@" FUN_TEXT="Excel converter" ICON_TEXT="Excel converter"/>
   <pfstatus_fun CODE="P+" TEXTNO="001" TEXT_TYPE="S" FUN_TEXT="Next page"/>
   <pfstatus_fun CODE="P++" TEXTNO="001" TEXT_TYPE="S" FUN_TEXT="Last Page"/>
   <pfstatus_fun CODE="P-" TEXTNO="001" TEXT_TYPE="S" FUN_TEXT="Previous Page"/>
@@ -164,14 +167,15 @@
   <pfstatus_but PFK_CODE="000001" CODE="0001" NO="18" PFNO="33"/>
   <pfstatus_but PFK_CODE="000001" CODE="0001" NO="19" PFNO="34"/>
   <pfstatus_but PFK_CODE="000001" CODE="0001" NO="20" PFNO="09"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="21" PFNO="S"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="22" PFNO="41"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="23" PFNO="07"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="24" PFNO="S"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="25" PFNO="18"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="26" PFNO="26"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="27" PFNO="27"/>
-  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="28" PFNO="19"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="21" PFNO="13"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="22" PFNO="S"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="23" PFNO="41"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="24" PFNO="07"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="25" PFNO="S"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="26" PFNO="18"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="27" PFNO="26"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="28" PFNO="27"/>
+  <pfstatus_but PFK_CODE="000001" CODE="0001" NO="29" PFNO="19"/>
   <pfstatus_pfk CODE="000001" PFNO="01" FUNCODE="&amp;ELP" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="02" FUNCODE="&amp;IC1" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="03" FUNCODE="&amp;F03" FUNNO="001"/>
@@ -179,8 +183,9 @@
   <pfstatus_pfk CODE="000001" PFNO="06" FUNCODE="&amp;SAL" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="07" FUNCODE="&amp;NFO" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="08" FUNCODE="&amp;NTE" FUNNO="001"/>
-  <pfstatus_pfk CODE="000001" PFNO="09" FUNCODE="EXCEL" FUNNO="001"/>
+  <pfstatus_pfk CODE="000001" PFNO="09" FUNCODE="EXCELBIND" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="12" FUNCODE="&amp;F12" FUNNO="001"/>
+  <pfstatus_pfk CODE="000001" PFNO="13" FUNCODE="EXCELCONV" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="15" FUNCODE="&amp;F15" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="18" FUNCODE="&amp;CRB" FUNNO="001"/>
   <pfstatus_pfk CODE="000001" PFNO="19" FUNCODE="&amp;CRE" FUNNO="001"/>
@@ -290,6 +295,9 @@
   <pfstatus_set STATUS="ALV_STATUS" FUNCTION="DSAL"/>
   <pfstatus_set STATUS="ALV_STATUS" FUNCTION="ENTE"/>
   <pfstatus_set STATUS="ALV_STATUS" FUNCTION="EXCEL"/>
+  <pfstatus_set STATUS="ALV_STATUS" FUNCTION="EXCELBIND"/>
+  <pfstatus_set STATUS="ALV_STATUS" FUNCTION="EXCELCELL"/>
+  <pfstatus_set STATUS="ALV_STATUS" FUNCTION="EXCELCONV"/>
   <pfstatus_set STATUS="ALV_STATUS" FUNCTION="EXIT"/>
   <pfstatus_set STATUS="ALV_STATUS" FUNCTION="EXPA"/>
   <pfstatus_set STATUS="ALV_STATUS" FUNCTION="FILD"/>
@@ -324,11 +332,11 @@
   <pfstatus_set STATUS="ALV_STATUS" FUNCTION="ZSUM"/>
   <pfstatus_doc OBJ_TYPE="A" OBJ_CODE="000001" MODAL="D" INT_NOTE="Standard User Interface         STANDARD"/>
   <pfstatus_doc OBJ_TYPE="P" OBJ_CODE="000001" MODAL="D" NORM="X" INT_NOTE="Standard Maximum Interaction"/>
-  <pfstatus_doc OBJ_TYPE="B" OBJ_CODE="000001" SUB_CODE="0001" MODAL="D" NORM="X" INT_NOTE="Standard Maximum Interaction"/>
+  <pfstatus_doc OBJ_TYPE="B" OBJ_CODE="000001" SUB_CODE="0001" MODAL="D" INT_NOTE="Standard Maximum Interaction"/>
  </pfstatus>
  <source>*--------------------------------------------------------------------*
 * REPORT  ZDEMO_EXCEL32
-* Demo for method zcl_excel_worksheet-bind_object:
+* Demo for export options from ALV GRID:
 * export data from ALV (CL_GUI_ALV_GRID) object or cl_salv_table object
 * to Excel.
 *--------------------------------------------------------------------*
@@ -373,7 +381,7 @@ DATA: l_path            TYPE string,  &quot; local dir
       lv_file_separator TYPE c.
 
 CONSTANTS:
-      lv_default_file_name TYPE string VALUE &apos;90_Bind_Object.xlsx&apos;.
+      lv_default_file_name TYPE string VALUE &apos;32_Export_ALV.xlsx&apos;.
 *--------------------------------------------------------------------*
 *START-OF-SELECTION
 *--------------------------------------------------------------------*
@@ -386,7 +394,7 @@ START-OF-SELECTION.
   SELECT *
       INTO TABLE gt_sbook[]
       FROM sbook                                        &quot;#EC CI_NOWHERE
-      UP TO 10 ROWS.
+      UP TO 100 ROWS.
 
 * Display ALV
 * ------------------------------------------
@@ -424,43 +432,74 @@ START-OF-SELECTION.
 *      ALV user command
 *--------------------------------------------------------------------*
 FORM user_command .
-  IF sy-ucomm = &apos;EXCEL&apos;.
 
 * get save file path
-    cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = l_path ).
-    cl_gui_cfw=&gt;flush( ).
-    cl_gui_frontend_services=&gt;directory_browse(
-      EXPORTING initial_folder = l_path
-      CHANGING selected_folder = l_path ).
+      cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = l_path ).
+      cl_gui_cfw=&gt;flush( ).
+      cl_gui_frontend_services=&gt;directory_browse(
+        EXPORTING initial_folder = l_path
+        CHANGING selected_folder = l_path ).
 
-    IF l_path IS INITIAL.
-      cl_gui_frontend_services=&gt;get_sapgui_workdir(
-        CHANGING sapworkdir = lv_workdir ).
-      l_path = lv_workdir.
-    ENDIF.
+      IF l_path IS INITIAL.
+        cl_gui_frontend_services=&gt;get_sapgui_workdir(
+          CHANGING sapworkdir = lv_workdir ).
+        l_path = lv_workdir.
+      ENDIF.
 
-    cl_gui_frontend_services=&gt;get_file_separator(
-      CHANGING file_separator = lv_file_separator ).
+      cl_gui_frontend_services=&gt;get_file_separator(
+        CHANGING file_separator = lv_file_separator ).
 
-    CONCATENATE l_path lv_file_separator lv_default_file_name
-                INTO l_path.
+      CONCATENATE l_path lv_file_separator lv_default_file_name
+                  INTO l_path.
 
+
+  CASE sy-ucomm.
+    WHEN &apos;EXCELBIND&apos;.
 * export file to save file path
 
-    PERFORM export_to_excel.
+      PERFORM export_to_excel_bind.
 
-  ENDIF.
+    WHEN &apos;EXCELCONV&apos;.
+
+      PERFORM export_to_excel_conv.
+
+  ENDCASE.
 ENDFORM.                    &quot; USER_COMMAND
-
 *--------------------------------------------------------------------*
-* FORM EXPORT_TO_EXCEL
+* FORM EXPORT_TO_EXCEL_CONV
 *--------------------------------------------------------------------*
 * This subroutine is principal demo session
 *--------------------------------------------------------------------*
-FORM export_to_excel.
+FORM export_to_excel_conv.
   DATA: lo_converter TYPE REF TO zcl_excel_converter.
-* create zcl_excel_worksheet object
 
+  CREATE OBJECT lo_converter.
+*TRY.
+  lo_converter-&gt;convert(
+    EXPORTING
+      io_alv        = lo_salv
+      it_table      = gt_sbook
+      i_row_int     = 2
+      i_column_int  = 2
+*    i_table       =
+*    i_style_table =
+*    io_worksheet  =
+*  CHANGING
+*    co_excel      =
+         ).
+* CATCH zcx_excel .
+*ENDTRY.
+  lo_converter-&gt;write_file( i_path = l_path ).
+
+ENDFORM.                    &quot;EXPORT_TO_EXCEL_CONV
+
+*--------------------------------------------------------------------*
+* FORM EXPORT_TO_EXCEL_BIND
+*--------------------------------------------------------------------*
+* This subroutine is principal demo session
+*--------------------------------------------------------------------*
+FORM export_to_excel_bind.
+* create zcl_excel_worksheet object
   CREATE OBJECT lo_excel.
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;set_title( ip_title = &apos;Sheet1&apos; ).
@@ -479,7 +518,7 @@ FORM export_to_excel.
 
   PERFORM write_file.
 
-ENDFORM.                    &quot;EXPORT_TO_EXCEL
+ENDFORM.                    &quot;EXPORT_TO_EXCEL_BIND
 *&amp;---------------------------------------------------------------------*
 *&amp;      Form  WRITE_FILE
 *&amp;---------------------------------------------------------------------*
