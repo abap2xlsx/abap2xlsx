@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_AUTOFILTERS" VERSION="1" LANGU="E" DESCRIPT="Autofilters collection" UUID="4F5A38B75D730125E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDBY="RTURNHEIM" CHANGEDON="20120310" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_AUTOFILTERS definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_AUTOFILTERS
+*&quot;* do not include other source files here!!!
+public section.
+  type-pools ABAP .
+
+  constants C_AUTOFILTER type STRING value &apos;_xlnm._FilterDatabase&apos;. &quot;#EC NOTEXT
+
+  methods ADD
+    importing
+      !IO_SHEET type ref to ZCL_EXCEL_WORKSHEET
+    returning
+      value(RO_AUTOFILTER) type ref to ZCL_EXCEL_AUTOFILTER .
+  methods CLEAR .
+  methods GET
+    importing
+      !I_SHEET_GUID type OLTPGUID16
+    returning
+      value(RO_AUTOFILTER) type ref to ZCL_EXCEL_AUTOFILTER .
+  methods IS_EMPTY
+    returning
+      value(R_EMPTY) type FLAG .
+  methods REMOVE
+    importing
+      !I_SHEET_GUID type OLTPGUID16 .
+  methods SIZE
+    returning
+      value(R_SIZE) type I .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZABAP_EXCEL_WORKSHEETS
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_AUTOFILTERS
+*&quot;* do not include other source files here!!!
+private section.
+
+  data AUTOFILTERS type TT_OBJECTS .</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature
+TYPES: BEGIN OF ts_objects,
+       sheet_guid   TYPE oltpguid16,
+       autofilter   TYPE REF TO zcl_excel_autofilter,
+       END OF ts_objects,
+
+       tt_objects TYPE HASHED TABLE OF ts_objects WITH UNIQUE KEY sheet_guid.</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <typeUsage CLSNAME="ZCL_EXCEL_AUTOFILTERS" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="AUTOFILTERS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TT_OBJECTS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="700" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="C_AUTOFILTER" VERSION="1" LANGU="E" DESCRIPT="Excel Autofilter range name" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDBY="RTURNHEIM" CHANGEDON="20120310" ATTDECLTYP="2" ATTVALUE="&apos;_xlnm._FilterDatabase&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="700" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="ADD" VERSION="1" LANGU="E" DESCRIPT="Adds an Element to the Collection" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="ADD" SCONAME="IO_SHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="ADD" SCONAME="RO_AUTOFILTER" VERSION="1" LANGU="E" DESCRIPT="Autofilter" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_AUTOFILTER"/>
+  <source>METHOD add.
+  DATA: ls_autofilters TYPE ts_objects,
+        l_guid         TYPE oltpguid16.
+  l_guid = io_sheet-&gt;get_guid( ) .
+  READ TABLE autofilters INTO ls_autofilters WITH TABLE KEY sheet_guid = l_guid.
+  IF sy-subrc = 0.
+    ro_autofilter = ls_autofilters-autofilter.
+  ELSE.
+    CREATE OBJECT ro_autofilter
+      EXPORTING
+        io_sheet = io_sheet.
+    ls_autofilters-autofilter = ro_autofilter.
+    ls_autofilters-sheet_guid = l_guid.
+    INSERT ls_autofilters INTO TABLE autofilters .
+  ENDIF.
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="CLEAR" VERSION="1" LANGU="E" DESCRIPT="Initializes the Collection" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <source>METHOD clear.
+
+  REFRESH autofilters.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="GET" VERSION="1" LANGU="E" DESCRIPT="Gets Element" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDBY="RTURNHEIM" CHANGEDON="20120310" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="GET" SCONAME="I_SHEET_GUID" VERSION="1" LANGU="E" DESCRIPT="GUID for the OLTP System (RAW16)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="OLTPGUID16"/>
+  <parameter CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="GET" SCONAME="RO_AUTOFILTER" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_AUTOFILTER"/>
+  <source>METHOD get.
+
+  DATA: ls_autofilters TYPE ts_objects.
+
+  READ TABLE autofilters INTO ls_autofilters WITH TABLE KEY sheet_guid = i_sheet_guid.
+  IF sy-subrc = 0.
+    ro_autofilter = ls_autofilters-autofilter.
+  ELSE.
+    CLEAR ro_autofilter.
+  ENDIF.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="IS_EMPTY" VERSION="1" LANGU="E" DESCRIPT="Checks whether elements are contained" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDBY="RTURNHEIM" CHANGEDON="20120310" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="IS_EMPTY" SCONAME="R_EMPTY" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="FLAG"/>
+  <source>METHOD is_empty.
+  IF autofilters IS INITIAL.
+    r_empty = abap_true.
+  ENDIF.
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="REMOVE" VERSION="1" LANGU="E" DESCRIPT="Deletes an Element from the Collection" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDBY="RTURNHEIM" CHANGEDON="20120310" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="REMOVE" SCONAME="I_SHEET_GUID" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="OLTPGUID16"/>
+  <source>METHOD remove.
+  DATA: ls_autofilters TYPE ts_objects.
+
+  DELETE autofilters WHERE sheet_guid = i_sheet_guid.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="SIZE" VERSION="1" LANGU="E" DESCRIPT="Specifies number of contained elements" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDBY="RTURNHEIM" CHANGEDON="20120310" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_AUTOFILTERS" CMPNAME="SIZE" SCONAME="R_SIZE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120310" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <source>METHOD size.
+  DESCRIBE TABLE autofilters LINES r_size.
+ENDMETHOD.</source>
+ </method>
+</CLAS>
