@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F037FA9DF490087E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120106" CHANGEDBY="FEMIA" CHANGEDON="20120120" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZIF_EXCEL_CONVERTER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" RELTYPE="1" EDITORDER="0 "/>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F037FA9DF490087E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120131" CHANGEDON="20120131" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" CHANGEDBY="RTURNHEIM">
  <publicSection>class ZCL_EXCEL_CONVERTER_ALV_GRID definition
   public
+  inheriting from ZCL_EXCEL_CONVERTER_ALV
   final
   create public .
 
-public section.
 *&quot;* public components of class ZCL_EXCEL_CONVERTER_ALV_GRID
 *&quot;* do not include other source files here!!!
+public section.
 
-  interfaces ZIF_EXCEL_CONVERTER .</publicSection>
+  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
+    redefinition .
+  methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
+    redefinition .</publicSection>
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_ALV_GRID
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
@@ -25,6 +28,10 @@ private section.</privateSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
+ <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120131" CHANGEDBY="RTURNHEIM" CHANGEDON="20120131">
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT"/>
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG"/>
+ </inheritance>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" CPDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT">
   <source>method ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
   data: lo_alv type REF TO cl_gui_alv_grid.
@@ -40,12 +47,7 @@ endmethod.</source>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
   <source>METHOD zif_excel_converter~create_fieldcatalog.
   DATA: lo_alv TYPE REF TO cl_gui_alv_grid.
-  DATA: ls_converter_fcat TYPE zexcel_s_converter_fcat,
-        lt_fcat           TYPE lvc_t_fcat,
-        ls_fcat           TYPE lvc_s_fcat,
-        ls_layout         TYPE lvc_s_layo.
 
-  FIELD-SYMBOLS: &lt;fs_stable&gt; TYPE any.
   TRY.
     zif_excel_converter~can_convert_object( io_object = io_object ).
   ENDTRY.
@@ -56,57 +58,23 @@ endmethod.</source>
          et_fieldcatalog.
 
   IF lo_alv IS BOUND.
-    lo_alv-&gt;get_frontend_fieldcatalog( IMPORTING et_fieldcatalog = lt_fcat ).
-    lo_alv-&gt;get_frontend_layout( IMPORTING es_layout = ls_layout ).
-    IF ls_layout-zebra IS NOT INITIAL.
-      es_layout-is_stripped = abap_true.
-    ENDIF.
-    IF ls_layout-no_keyfix IS INITIAL OR
-       ls_layout-no_keyfix = &apos;0&apos;.
-      es_layout-is_fixed = abap_true.
-    ENDIF.
-    LOOP AT lt_fcat INTO ls_fcat.
-      CLEAR ls_converter_fcat.
-      IF ls_fcat-tech = abap_false.
-        ls_converter_fcat-tabname         = ls_fcat-tabname.
-        ls_converter_fcat-fieldname       = ls_fcat-fieldname .
-        ls_converter_fcat-columnname      = ls_fcat-fieldname .
-        ls_converter_fcat-position        = ls_fcat-col_pos.
-        ls_converter_fcat-inttype         = ls_fcat-inttype.
-        ls_converter_fcat-scrtext_s       = ls_fcat-scrtext_s .
-        ls_converter_fcat-scrtext_m       = ls_fcat-scrtext_m .
-        ls_converter_fcat-scrtext_l       = ls_fcat-scrtext_l.
-        IF ls_fcat-do_sum IS NOT INITIAL.
-          ls_converter_fcat-totals_function = zcl_excel_table=&gt;totals_function_sum.
-        ENDIF.
-        ls_converter_fcat-fix_column       = ls_fcat-fix_column.
-        IF ls_layout-cwidth_opt IS INITIAL.
-          IF ls_fcat-col_opt IS NOT INITIAL.
-            ls_converter_fcat-is_optimized = abap_true.
-          ENDIF.
-        ELSE.
-          ls_converter_fcat-is_optimized = abap_true.
-        ENDIF.
-        IF ls_fcat-no_out IS NOT INITIAL.
-          CLEAR ls_converter_fcat-is_visible.
-        ELSE.
-          ls_converter_fcat-is_visible = abap_true.
-        ENDIF.
-        CASE ls_fcat-just.
-          WHEN &apos;R&apos;.
-            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_right.
-          WHEN &apos;L&apos;.
-            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_left.
-          WHEN &apos;C&apos;.
-            ls_converter_fcat-alignment = zcl_excel_style_alignment=&gt;c_horizontal_center.
-          WHEN OTHERS.
-            CLEAR ls_converter_fcat-alignment.
-        ENDCASE.
-        APPEND ls_converter_fcat TO et_fieldcatalog.
-      ENDIF.
-    ENDLOOP.
-  ENDIF.
+    lo_alv-&gt;get_frontend_fieldcatalog( IMPORTING et_fieldcatalog = wt_fcat ).
+    lo_alv-&gt;get_frontend_layout( IMPORTING es_layout = ws_layo ).
+    lo_alv-&gt;get_sort_criteria( IMPORTING et_sort = wt_sort ) .
+    lo_alv-&gt;get_filter_criteria( IMPORTING et_filter = wt_filt ) .
 
+    apply_sort( EXPORTING it_table = it_table
+                IMPORTING eo_table = eo_table ) .
+
+    get_color( EXPORTING io_table    = eo_table
+               IMPORTING et_colors   = et_colors ) .
+
+    get_filter( EXPORTING io_table   = eo_table
+                IMPORTING et_filter  = et_filter ) .
+
+    update_catalog( CHANGING  cs_layout       = es_layout
+                              ct_fieldcatalog = et_fieldcatalog ).
+  ENDIF.
 ENDMETHOD.</source>
  </interfaceMethod>
 </CLAS>

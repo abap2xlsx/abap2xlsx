@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F03DFB5DA5D00BFE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120106" CHANGEDBY="FEMIA" CHANGEDON="20120120" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" REFCLSNAME="ZIF_EXCEL_CONVERTER" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20120120" CHANGEDBY="FEMIA" CHANGEDON="20120120" RELTYPE="1" EDITORDER="0 "/>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F03DFB5DA5D00BFE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120131" CHANGEDBY="RTURNHEIM" CHANGEDON="20120131" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
  <publicSection>class ZCL_EXCEL_CONVERTER_SALV_TABLE definition
   public
+  inheriting from ZCL_EXCEL_CONVERTER_ALV
   final
   create public .
 
-public section.
 *&quot;* public components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *&quot;* do not include other source files here!!!
+public section.
 
-  interfaces ZIF_EXCEL_CONVERTER .</publicSection>
+  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
+    redefinition .
+  methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
+    redefinition .</publicSection>
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
  <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *&quot;* do not include other source files here!!!
-private section.</privateSection>
+private section.
+
+  methods LOAD_DATA
+    importing
+      !IO_SALV type ref to CL_SALV_TABLE
+      !IT_TABLE type STANDARD TABLE .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -25,39 +33,27 @@ private section.</privateSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
+ <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120131" CHANGEDBY="RTURNHEIM" CHANGEDON="20120131">
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT"/>
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG"/>
+ </inheritance>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CPDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT">
-  <source>method ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
-  data: lo_salv type ref to cl_salv_table.
+  <source>METHOD zif_excel_converter~can_convert_object.
 
-  try.
+  DATA: lo_salv TYPE REF TO cl_salv_table.
+
+  TRY.
       lo_salv ?= io_object.
-    catch cx_sy_move_cast_error .
-      raise exception type zcx_excel.
-  endtry.
+    CATCH cx_sy_move_cast_error .
+      RAISE EXCEPTION TYPE zcx_excel.
+  ENDTRY.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
   <source>METHOD zif_excel_converter~create_fieldcatalog.
   DATA: lo_salv TYPE REF TO cl_salv_table.
 
-  DATA: lo_columns      TYPE REF TO cl_salv_columns_table,
-        lo_column       TYPE REF TO cl_salv_column_table,
-        lo_aggregations TYPE REF TO cl_salv_aggregations,
-        lo_aggregation  TYPE REF TO cl_salv_aggregation,
-        lo_sorts        TYPE REF TO cl_salv_sorts,
-        lo_sort         TYPE REF TO cl_salv_sort,
-        lo_display      TYPE REF TO cl_salv_display_settings,
-        l_agre          TYPE salv_de_aggregation,
-        lt_column       TYPE salv_t_column_ref,
-        ls_column       TYPE salv_s_column_ref,
-        ls_fieldcatalog TYPE zexcel_s_converter_fcat,
-        ls_ref          TYPE salv_s_ddic_reference,
-        l_alignment     TYPE salv_de_alignment,
-        l_fix           TYPE sap_bool,
-        l_optimized     TYPE sap_bool.
-
-  FIELD-SYMBOLS: &lt;fs_stable&gt; TYPE any.
   TRY.
     zif_excel_converter~can_convert_object( io_object = io_object ).
   ENDTRY.
@@ -65,87 +61,206 @@ endmethod.</source>
   lo_salv ?= io_object.
 
   CLEAR: es_layout,
-         et_fieldcatalog.
+         et_fieldcatalog,
+         et_colors .
 
   IF lo_salv IS BOUND.
-    lo_columns              = lo_salv-&gt;get_columns( ).
-    lt_column               = lo_columns-&gt;get( ) .
-    lo_aggregations         = lo_salv-&gt;get_aggregations( ) .
-    lo_display              = lo_salv-&gt;get_display_settings( ) .
-    es_layout-is_stripped = lo_display-&gt;is_striped_pattern( ) .
-    l_optimized             = lo_columns-&gt;is_optimized( ).
-    LOOP AT lt_column INTO ls_column.
-      CLEAR ls_fieldcatalog.
-      IF ls_column-r_column-&gt;is_technical( ) = abap_false.
-        TRY.
-            lo_column ?= lo_columns-&gt;get_column( columnname = ls_column-columnname ).
-          CATCH cx_salv_not_found.
-            RAISE EXCEPTION TYPE zcx_excel.
-        ENDTRY.
-        ls_ref = ls_column-r_column-&gt;get_ddic_reference( ).
-        ls_fieldcatalog-tabname         = ls_ref-table.
-        ls_fieldcatalog-fieldname       = ls_ref-field.
-        ls_fieldcatalog-columnname      = ls_column-columnname.
-        TRY.
-            ls_fieldcatalog-position        = lo_columns-&gt;get_column_position( columnname = ls_column-columnname ).
-          CATCH cx_salv_not_found.
-            RAISE EXCEPTION TYPE zcx_excel.
-        ENDTRY.
-        ls_fieldcatalog-inttype         = ls_column-r_column-&gt;get_ddic_inttype( ).
-        ls_fieldcatalog-scrtext_s       = ls_column-r_column-&gt;get_short_text( ) .
-        ls_fieldcatalog-scrtext_m       = ls_column-r_column-&gt;get_medium_text( ) .
-        ls_fieldcatalog-scrtext_l       = ls_column-r_column-&gt;get_long_text( ).
-        TRY.
-            lo_aggregation = lo_aggregations-&gt;get_aggregation( columnname  =  ls_column-columnname ) .
-          CATCH cx_salv_not_found.
-            CLEAR lo_aggregation.
-        ENDTRY.
-        IF lo_aggregation IS BOUND.
-          l_agre = lo_aggregation-&gt;get( ).
-          CASE l_agre.
-            WHEN if_salv_c_aggregation=&gt;total.    &quot; Total
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_sum.
-            WHEN if_salv_c_aggregation=&gt;minimum. &quot; Minimum
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_min.
-            WHEN if_salv_c_aggregation=&gt;maximum. &quot; Maximum
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_max.
-            WHEN if_salv_c_aggregation=&gt;average. &quot; Mean Value
-              ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_average.
-            WHEN OTHERS.
-              CLEAR ls_fieldcatalog-totals_function.
-          ENDCASE.
-        ENDIF.
-        ls_fieldcatalog-is_visible      = ls_column-r_column-&gt;is_visible( ).
-        ls_fieldcatalog-fix_column      = lo_column-&gt;is_key( ).
-        l_fix     = lo_column-&gt;is_key_presence_required( ).
+    load_data( EXPORTING io_salv   = lo_salv
+                         it_table  = it_table ).
+    apply_sort( EXPORTING it_table = it_table
+                IMPORTING eo_table = eo_table ) .
 
-        IF l_optimized = &apos;1&apos; OR l_optimized = abap_true.
-          ls_fieldcatalog-is_optimized = abap_true.
-        ELSE.
-          l_optimized             = ls_column-r_column-&gt;is_optimized( ).
-          IF l_optimized = &apos;1&apos; OR l_optimized = abap_true.
-            ls_fieldcatalog-is_optimized = abap_true.
-          ENDIF.
-        ENDIF.
-        l_alignment = ls_column-r_column-&gt;get_alignment( ) .
-        CASE l_alignment.
-          WHEN if_salv_c_alignment=&gt;left. &quot;	Align left
-            ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_left.
-          WHEN if_salv_c_alignment=&gt;right. &quot;  Align right
-            ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_right.
-          WHEN if_salv_c_alignment=&gt;centered. &quot;	Centered
-            ls_fieldcatalog-alignment = zcl_excel_style_alignment=&gt;c_horizontal_center.
-          WHEN OTHERS.
-            CLEAR ls_fieldcatalog-alignment.
-        ENDCASE.
-        APPEND ls_fieldcatalog TO et_fieldcatalog.
-      ENDIF.
-    ENDLOOP.
-    IF l_fix IS NOT INITIAL.
-      es_layout-is_fixed    = abap_true.
+    get_color( EXPORTING io_table    = eo_table
+               IMPORTING et_colors   = et_colors ) .
+
+    get_filter( EXPORTING io_table   = eo_table
+                IMPORTING et_filter  = et_filter ) .
+
+    update_catalog( CHANGING  cs_layout       = es_layout
+                              ct_fieldcatalog = et_fieldcatalog ).
+  ENDIF.
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CMPNAME="LOAD_DATA" VERSION="1" LANGU="E" DESCRIPT="Fill internal layout tables" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120130" CHANGEDBY="RTURNHEIM" CHANGEDON="20120131" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CMPNAME="LOAD_DATA" SCONAME="IO_SALV" VERSION="1" LANGU="E" DESCRIPT="Basis Class for Simple Tables" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120130" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="CL_SALV_TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_SALV_TABLE" CMPNAME="LOAD_DATA" SCONAME="IT_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120130" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <source>METHOD load_data.
+  DATA: lo_columns        TYPE REF TO cl_salv_columns_table,
+        lo_aggregations   TYPE REF TO cl_salv_aggregations,
+        lo_sorts          TYPE REF TO cl_salv_sorts,
+        lo_filters        TYPE REF TO cl_salv_filters,
+        lo_functional     TYPE REF TO cl_salv_functional_settings,
+        lo_display        TYPE REF TO cl_salv_display_settings,
+        lo_selections     TYPE REF TO cl_salv_selections.
+
+  DATA: ls_vari   TYPE disvariant,
+        lo_layout TYPE REF TO cl_salv_layout.
+
+  DATA: lr_form_tol TYPE REF TO cl_salv_form,
+        lr_form_eol TYPE REF TO cl_salv_form.
+
+  DATA lt_kkblo_fieldcat TYPE kkblo_t_fieldcat.
+  DATA ls_kkblo_layout   TYPE kkblo_layout.
+  DATA lt_kkblo_filter   TYPE kkblo_t_filter.
+  DATA lt_kkblo_sort     TYPE kkblo_t_sortinfo.
+
+  lo_layout               = io_salv-&gt;get_layout( ) .
+  lo_columns              = io_salv-&gt;get_columns( ).
+  lo_aggregations         = io_salv-&gt;get_aggregations( ) .
+  lo_sorts                = io_salv-&gt;get_sorts( ) .
+  lo_filters              = io_salv-&gt;get_filters( ) .
+  lo_display              = io_salv-&gt;get_display_settings( ) .
+  lo_functional           = io_salv-&gt;get_functional_settings( ) .
+
+  REFRESH: wt_fcat,
+           wt_sort,
+           wt_filt.
+
+* First update metadata if we can.
+  IF io_salv-&gt;is_offline( ) = abap_false.
+    io_salv-&gt;get_metadata( ) .
+  ELSE.
+* If we are offline we need to build this.
+    cl_salv_controller_metadata=&gt;get_variant(
+      EXPORTING
+        r_layout  = lo_layout
+      CHANGING
+        s_variant = ls_vari ).
+  ENDIF.
+
+*... get the column information
+  wt_fcat = cl_salv_controller_metadata=&gt;get_lvc_fieldcatalog(
+                         r_columns      = lo_columns
+                         r_aggregations = lo_aggregations ).
+
+*... get the layout information
+  cl_salv_controller_metadata=&gt;get_lvc_layout(
+    EXPORTING
+      r_functional_settings = lo_functional
+      r_display_settings    = lo_display
+      r_columns             = lo_columns
+      r_aggregations        = lo_aggregations
+    CHANGING
+      s_layout              = ws_layo ).
+
+* the fieldcatalog is not complete yet!
+  CALL FUNCTION &apos;LVC_FIELDCAT_COMPLETE&apos;
+   EXPORTING
+     i_complete             = &apos;X&apos;
+     i_refresh_buffer       = space
+     i_buffer_active        = space
+     is_layout              = ws_layo
+     i_test                 = &apos;1&apos;
+     i_fcat_complete        = &apos;X&apos;
+   IMPORTING
+*            E_EDIT                 =
+     es_layout              = ws_layo
+    CHANGING
+      ct_fieldcat            = wt_fcat.
+
+
+  IF ls_vari IS NOT INITIAL AND io_salv-&gt;is_offline( ) = abap_true.
+    CALL FUNCTION &apos;LVC_TRANSFER_TO_KKBLO&apos;
+      EXPORTING
+        it_fieldcat_lvc         = wt_fcat
+        is_layout_lvc           = ws_layo
+      IMPORTING
+        et_fieldcat_kkblo       = lt_kkblo_fieldcat
+        es_layout_kkblo         = ls_kkblo_layout
+      TABLES
+        it_data                 = it_table
+      EXCEPTIONS
+        it_data_missing         = 1
+        it_fieldcat_lvc_missing = 2
+        OTHERS                  = 3.
+    IF sy-subrc &lt;&gt; 0.
+* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
+*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
     ENDIF.
+
+    CALL FUNCTION &apos;LT_VARIANT_LOAD&apos;
+      EXPORTING
+*       I_TOOL                      = &apos;LT&apos;
+        i_tabname                   = &apos;1&apos;
+*       I_TABNAME_SLAVE             =
+        i_dialog                    = &apos; &apos;
+*       I_USER_SPECIFIC             = &apos; &apos;
+*       I_DEFAULT                   = &apos;X&apos;
+*       I_NO_REPTEXT_OPTIMIZE       =
+*       I_VIA_GRID                  =
+        i_fcat_complete             = &apos;X&apos;
+      IMPORTING
+*       E_EXIT                      =
+        et_fieldcat                 = lt_kkblo_fieldcat
+        et_sort                     = lt_kkblo_sort
+        et_filter                   = lt_kkblo_filter
+      CHANGING
+        cs_layout                   = ls_kkblo_layout
+        ct_default_fieldcat         = lt_kkblo_fieldcat
+        cs_variant                  = ls_vari
+     EXCEPTIONS
+       wrong_input                 = 1
+       fc_not_complete             = 2
+       not_found                   = 3
+       OTHERS                      = 4
+              .
+    IF sy-subrc &lt;&gt; 0.
+* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
+*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+    ENDIF.
+
+    CALL FUNCTION &apos;LVC_TRANSFER_FROM_KKBLO&apos;
+      EXPORTING
+*       I_TECH_COMPLETE                 =
+*       I_STRUCTURE_NAME                =
+        it_fieldcat_kkblo               = lt_kkblo_fieldcat
+        it_sort_kkblo                   = lt_kkblo_sort
+        it_filter_kkblo                 = lt_kkblo_filter
+*       IT_SPECIAL_GROUPS_KKBLO         =
+*       IT_FILTERED_ENTRIES_KKBLO       =
+*       IT_GROUPLEVELS_KKBLO            =
+*       IS_SUBTOT_OPTIONS_KKBLO         =
+        is_layout_kkblo                 = ls_kkblo_layout
+*       IS_REPREP_ID_KKBLO              =
+*       I_CALLBACK_PROGRAM_KKBLO        =
+*       IT_ADD_FIELDCAT                 =
+*       IT_EXCLUDING_KKBLO              =
+*       IT_EXCEPT_QINFO_KKBLO           =
+      IMPORTING
+        et_fieldcat_lvc                 = wt_fcat
+        et_sort_lvc                     = wt_sort
+        et_filter_lvc                   = wt_filt
+*       ET_SPECIAL_GROUPS_LVC           =
+*       ET_FILTER_INDEX_LVC             =
+*       ET_GROUPLEVELS_LVC              =
+*       ES_TOTAL_OPTIONS_LVC            =
+        es_layout_lvc                   = ws_layo
+*       ES_VARIANT_LVC                  =
+*       E_VARIANT_SAVE_LVC              =
+*       ES_PRINT_INFO_LVC               =
+*       ES_REPREP_LVC                   =
+*       E_REPREP_ACTIVE_LVC             =
+*       ET_EXCLUDING_LVC                =
+*       ET_EXCEPT_QINFO_LVC             =
+      TABLES
+        it_data                         = it_table
+     EXCEPTIONS
+       it_data_missing                 = 1
+       OTHERS                          = 2
+              .
+    IF sy-subrc &lt;&gt; 0.
+* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
+*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+    ENDIF.
+
+  ELSE.
+*  ... get the sort information
+    wt_sort = cl_salv_controller_metadata=&gt;get_lvc_sort( lo_sorts ).
+
+*  ... get the filter information
+    wt_filt = cl_salv_controller_metadata=&gt;get_lvc_filter( lo_filters ).
   ENDIF.
 
 ENDMETHOD.</source>
- </interfaceMethod>
+ </method>
 </CLAS>
