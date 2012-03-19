@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F2FC25C1097003CE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120208" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F2FC25C1097003CE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDBY="FEMIA" CHANGEDON="20120319" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
  <publicSection>class ZCL_EXCEL_CONVERTER_EX_RESULT definition
   public
   inheriting from ZCL_EXCEL_CONVERTER_ALV
   final
   create public .
 
+public section.
 *&quot;* public components of class ZCL_EXCEL_CONVERTER_EX_RESULT
 *&quot;* do not include other source files here!!!
-public section.
 
-  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
-    redefinition .
   methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
+    redefinition .
+  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
     redefinition .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
-*&quot;* do not include other source files here!!!
-protected section.</protectedSection>
+ <protectedSection>protected section.
+*&quot;* protected components of class ZCL_EXCEL_CONVERTER_EX_RESULT
+*&quot;* do not include other source files here!!!</protectedSection>
  <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_EX_RESULT
 *&quot;* do not include other source files here!!!
 private section.</privateSection>
@@ -28,13 +28,12 @@ private section.</privateSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120208" CHANGEDON="00000000">
-  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT"/>
-  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG"/>
+ <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1" AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDBY="FEMIA" CHANGEDON="20120319">
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT" EXPOSURE="2"/>
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG" EXPOSURE="0"/>
  </inheritance>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" CPDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT">
   <source>METHOD zif_excel_converter~can_convert_object.
-
   DATA: lo_result TYPE REF TO cl_salv_ex_result_data_table.
 
   TRY.
@@ -42,15 +41,14 @@ private section.</privateSection>
     CATCH cx_sy_move_cast_error .
       RAISE EXCEPTION TYPE zcx_excel.
   ENDTRY.
-
 ENDMETHOD.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_EX_RESULT" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
   <source>METHOD zif_excel_converter~create_fieldcatalog.
   DATA: lo_result  TYPE REF TO cl_salv_ex_result_data_table,
-        lo_bs_data TYPE REF TO cl_salv_bs_data_table,
-        lo_ex_cm   TYPE REF TO cl_salv_ex_cm,
-        lo_data    TYPE REF TO data.
+          lo_bs_data TYPE REF TO cl_salv_bs_data_table,
+          lo_ex_cm   TYPE REF TO cl_salv_ex_cm,
+          lo_data    TYPE REF TO data.
 
   FIELD-SYMBOLS: &lt;fs_table&gt; TYPE STANDARD TABLE.
 
@@ -65,7 +63,7 @@ ENDMETHOD.</source>
 
   IF lo_result IS BOUND.
     lo_bs_data ?= lo_result-&gt;r_model-&gt;r_data.
-    lo_data = lo_bs_data-&gt;get_ref_to_table( ) .
+    lo_data = lo_bs_data-&gt;if_salv_bs_data_source~get_table_ref( ) .
     ASSIGN lo_data-&gt;* TO &lt;fs_table&gt; .
 
     lo_ex_cm ?= lo_result-&gt;r_model-&gt;r_model.
