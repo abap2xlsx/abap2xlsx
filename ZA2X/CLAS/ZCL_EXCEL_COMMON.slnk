@@ -76,6 +76,18 @@ public section.
       value(IP_VALUE) type NUMERIC
     returning
       value(EP_VALUE) type ZEXCEL_CELL_VALUE .
+  class-methods RECURSIVE_CLASS_TO_STRUCT
+    importing
+      !I_SOURCE type ANY
+    changing
+      !E_TARGET type DATA
+      !E_TARGETX type DATA .
+  class-methods RECURSIVE_STRUCT_TO_CLASS
+    importing
+      !I_SOURCE type DATA
+      !I_SOURCEX type DATA
+    changing
+      !E_TARGET type ANY .
   class-methods TIME_TO_EXCEL_STRING
     importing
       !IP_VALUE type T
@@ -127,7 +139,7 @@ protected section.</protectedSection>
 
   IF o_conv IS NOT BOUND.
     o_conv = cl_abap_conv_out_ce=&gt;create( endian   = &apos;L&apos;
-                                          ignore_cerr = &apos;X&apos;
+                                          ignore_cerr = abap_true
                                           replacement = &apos;#&apos; ).
   ENDIF.
 
@@ -440,7 +452,126 @@ endmethod.</source>
   ENDIF.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="13 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" VERSION="1" LANGU="E" DESCRIPT="Move class to structure" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDBY="FEMIA" CHANGEDON="20120319" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" SCONAME="E_TARGET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" SCONAME="E_TARGETX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
+  <source>METHOD recursive_class_to_struct.
+  &quot; # issue 139
+* is working for me - but after looking through this coding I guess
+* I&apos;ll rewrite this to a version w/o recursion
+* This is private an no one using it so far except me, so no need to hurry
+  DATA: descr           TYPE REF TO cl_abap_structdescr,
+        wa_component    LIKE LINE OF descr-&gt;components,
+        attribute_name  TYPE fieldname,
+        flag_class      TYPE flag,
+        o_border        TYPE REF TO zcl_excel_style_border.
+
+  FIELD-SYMBOLS: &lt;field&gt;      TYPE any,
+                 &lt;fieldx&gt;     TYPE any,
+                 &lt;class&gt;      TYPE REF TO object,
+                 &lt;attribute&gt;  TYPE any.
+
+
+  descr ?= cl_abap_structdescr=&gt;describe_by_data( e_target ).
+
+  LOOP AT descr-&gt;components INTO wa_component.
+
+* Assign structure and X-structure
+    ASSIGN COMPONENT wa_component-name OF STRUCTURE e_target  TO &lt;field&gt;.
+    ASSIGN COMPONENT wa_component-name OF STRUCTURE e_targetx TO &lt;fieldx&gt;.
+* At least one field in the structure should be marked - otherwise continue with next field
+    CLEAR flag_class.
+* maybe source is just a structure - try assign component...
+    ASSIGN COMPONENT wa_component-name OF STRUCTURE i_source  TO &lt;attribute&gt;.
+    IF sy-subrc &lt;&gt; 0.
+* not - then it is an attribute of the class - use different assign then
+      CONCATENATE &apos;i_source-&gt;&apos; wa_component-name INTO attribute_name.
+      ASSIGN (attribute_name) TO &lt;attribute&gt;.
+      IF sy-subrc &lt;&gt; 0.
+        EXIT.
+      ENDIF.  &quot; Should not happen if structure is built properly - otherwise just exit to create no dumps
+      flag_class = abap_true.
+    ENDIF.
+
+    CASE wa_component-type_kind.
+      WHEN cl_abap_structdescr=&gt;typekind_struct1.  &quot; Structure --&gt; use recursio
+*        IF flag_class = abap_true.
+** Only borders will be passed as unbound references.  But since we want to set a value we have to create an instance
+*        ENDIF.
+        zcl_excel_common=&gt;recursive_class_to_struct( EXPORTING i_source  = &lt;attribute&gt;
+                                                     CHANGING  e_target  = &lt;field&gt;
+                                                               e_targetx = &lt;fieldx&gt; ).
+      WHEN OTHERS.
+        &lt;field&gt; = &lt;attribute&gt;.
+        &lt;fieldx&gt; = abap_true.
+
+    ENDCASE.
+  ENDLOOP.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" VERSION="1" LANGU="E" DESCRIPT="Move structure to class" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="E_TARGET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
+  <source>METHOD recursive_struct_to_class.
+  &quot; # issue 139
+* is working for me - but after looking through this coding I guess
+* I&apos;ll rewrite this to a version w/o recursion
+* This is private an no one using it so far except me, so no need to hurry
+  DATA: descr           TYPE REF TO cl_abap_structdescr,
+        wa_component    LIKE LINE OF descr-&gt;components,
+        attribute_name  TYPE fieldname,
+        flag_class      TYPE flag,
+        o_border        TYPE REF TO zcl_excel_style_border.
+
+  FIELD-SYMBOLS: &lt;field&gt;      TYPE any,
+                 &lt;fieldx&gt;     TYPE any,
+                 &lt;class&gt;      TYPE REF TO object,
+                 &lt;attribute&gt;  TYPE any.
+
+
+  descr ?= cl_abap_structdescr=&gt;describe_by_data( i_source ).
+
+  LOOP AT descr-&gt;components INTO wa_component.
+
+* Assign structure and X-structure
+    ASSIGN COMPONENT wa_component-name OF STRUCTURE i_source  TO &lt;field&gt;.
+    ASSIGN COMPONENT wa_component-name OF STRUCTURE i_sourcex TO &lt;fieldx&gt;.
+* At least one field in the structure should be marked - otherwise continue with next field
+    CHECK &lt;fieldx&gt; CA abap_true.
+    CLEAR flag_class.
+* maybe target is just a structure - try assign component...
+    ASSIGN COMPONENT wa_component-name OF STRUCTURE e_target  TO &lt;attribute&gt;.
+    IF sy-subrc &lt;&gt; 0.
+* not - then it is an attribute of the class - use different assign then
+      CONCATENATE &apos;E_TARGET-&gt;&apos; wa_component-name INTO attribute_name.
+      ASSIGN (attribute_name) TO &lt;attribute&gt;.
+      IF sy-subrc &lt;&gt; 0.EXIT.ENDIF.  &quot; Should not happen if structure is built properly - otherwise just exit to create no dumps
+      flag_class = abap_true.
+    ENDIF.
+
+    CASE wa_component-type_kind.
+      WHEN cl_abap_structdescr=&gt;typekind_struct1.  &quot; Structure --&gt; use recursion
+        IF flag_class = abap_true AND &lt;attribute&gt; IS INITIAL.
+* Only borders will be passed as unbound references.  But since we want to set a value we have to create an instance
+          CREATE OBJECT o_border.
+          &lt;attribute&gt; = o_border.
+        ENDIF.
+        zcl_excel_common=&gt;recursive_struct_to_class( EXPORTING i_source  = &lt;field&gt;
+                                                               i_sourcex = &lt;fieldx&gt;
+                                                     CHANGING  e_target  = &lt;attribute&gt; ).
+      WHEN OTHERS.
+        CHECK &lt;fieldx&gt; = abap_true.  &quot; Marked for change
+        &lt;attribute&gt; = &lt;field&gt;.
+
+    ENDCASE.
+  ENDLOOP.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="15 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120319" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" SCONAME="I_PWD_HASH" VERSION="1" LANGU="E" DESCRIPT="Password hash" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_PWD_HASH"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" SCONAME="R_PWD_HASH" VERSION="1" LANGU="E" DESCRIPT="Password hash" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_PWD_HASH"/>
   <source>method SHL01.
@@ -460,7 +591,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHR14" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="14 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHR14" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="16 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120319" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHR14" SCONAME="I_PWD_HASH" VERSION="1" LANGU="E" DESCRIPT="Password hash" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_PWD_HASH"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHR14" SCONAME="R_PWD_HASH" VERSION="1" LANGU="E" DESCRIPT="Password hash" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_PWD_HASH"/>
   <source>method SHR14.
@@ -487,7 +618,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert time from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert time from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="17 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120319" MTDTYPE="0" MTDDECLTYP="1" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" SCONAME="EP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120103" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <source>method TIME_TO_EXCEL_STRING.

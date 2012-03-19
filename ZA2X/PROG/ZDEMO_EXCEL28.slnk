@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL28" VARCL="X" SUBC="1" CNAM="JACQUED" CDAT="20110427" UNAM="FEMIA" UDAT="20110925" VERN="000033" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110925" STIME="122527" IDATE="20110925" ITIME="122527" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL28" VARCL="X" SUBC="1" CNAM="JACQUED" CDAT="20110427" UNAM="FEMIA" UDAT="20120319" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120319" STIME="222025" IDATE="20120319" ITIME="215133" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" LENGTH="27 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: export in CSV" LENGTH="29 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*

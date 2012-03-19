@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" UUID="0202322174CD1EE0A391D25CAFCCC6E6" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDON="20110602" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_WRITER_2007" CHANGEDBY="FEMIA">
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" UUID="0202322174CD1EE0A391D25CAFCCC6E6" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20120319" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_WRITER_2007">
  <publicSection>class ZCL_EXCEL_WRITER_XLSM definition
   public
   inheriting from ZCL_EXCEL_WRITER_2007
@@ -8,17 +8,14 @@
 
 public section.
 *&quot;* public components of class ZCL_EXCEL_WRITER_XLSM
-*&quot;* do not include other source files here!!!
-
-  methods ZIF_EXCEL_WRITER~WRITE_FILE
-    redefinition .</publicSection>
+*&quot;* do not include other source files here!!!</publicSection>
  <protectedSection>protected section.
 *&quot;* protected components of class ZCL_EXCEL_WRITER_XLSM
 *&quot;* do not include other source files here!!!
 
   constants C_XL_VBAPROJECT type STRING value &apos;xl/vbaProject.bin&apos;. &quot;#EC NOTEXT
 
-  methods CREATE
+  methods CREATE_CONTENT_TYPES
     redefinition .
   methods CREATE_XL_RELATIONSHIPS
     redefinition .
@@ -26,7 +23,7 @@ public section.
     redefinition .
   methods CREATE_XL_WORKBOOK
     redefinition .
-  methods CREATE_CONTENT_TYPES
+  methods CREATE
     redefinition .</protectedSection>
  <privateSection>private section.
 *&quot;* private components of class ZCL_EXCEL_WRITER_XLSM
@@ -39,23 +36,16 @@ public section.
 *&quot;* components in the private section</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_XLSM" CMPNAME="C_XL_VBAPROJECT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDON="00000000" ATTDECLTYP="2" ATTVALUE="&apos;xl/vbaProject.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <inheritance CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" STATE="1" AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20110602">
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_XLSM" CMPNAME="C_XL_VBAPROJECT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20120319" ATTDECLTYP="2" ATTVALUE="&apos;xl/vbaProject.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
+ <inheritance CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" STATE="1" AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20120319">
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_CONTENT_TYPES" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_RELATIONSHIPS" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_SHEET" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_WORKBOOK" EXPOSURE="1"/>
-  <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="ZIF_EXCEL_WRITER~WRITE_FILE" EXPOSURE="2"/>
  </inheritance>
- <interfaceMethod CLSNAME="ZCL_EXCEL_WRITER_XLSM" CPDNAME="ZIF_EXCEL_WRITER~WRITE_FILE">
-  <source>METHOD zif_excel_writer~write_file.
-  me-&gt;excel = io_excel.
-  ep_file = me-&gt;create( ).
-ENDMETHOD.</source>
- </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD create.
+  <source>method CREATE.
 
 
 * Office 2007 file format is a cab of several xml files with extension .xlsx
@@ -79,6 +69,10 @@ ENDMETHOD.</source>
         lv_value           TYPE string,
         lv_drawing_index   TYPE i.
 
+**********************************************************************
+* Start of insertion # issue 139 - Dateretention of cellstyles
+    me-&gt;excel-&gt;add_static_styles( ).
+* End of insertion # issue 139 - Dateretention of cellstyles
 
 **********************************************************************
 * STEP 1: Create archive object file (ZIP)
@@ -227,10 +221,10 @@ ENDMETHOD.</source>
 * STEP 12: Create the final zip
   ep_excel = lo_zip-&gt;save( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD create_content_types.
+  <source>method CREATE_CONTENT_TYPES.
 ** Constant node name
   DATA: lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.ms-excel.sheet.macroEnabled.main+xml&apos;,
         lc_xml_node_default       TYPE string VALUE &apos;Default&apos;,
@@ -309,10 +303,10 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD create_xl_relationships.
+  <source>method CREATE_XL_RELATIONSHIPS.
 
 ** Constant node name
   DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,
@@ -387,10 +381,10 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD create_xl_sheet.
+  <source>method CREATE_XL_SHEET.
 
 ** Constant node name
   DATA: lc_xml_attr_codename      TYPE string VALUE &apos;codeName&apos;.
@@ -451,10 +445,10 @@ ENDMETHOD.</source>
   lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD create_xl_workbook.
+  <source>method CREATE_XL_WORKBOOK.
 
 ** Constant node name
   DATA: lc_xml_attr_codename      TYPE string VALUE &apos;codeName&apos;.
@@ -514,6 +508,6 @@ ENDMETHOD.</source>
   lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
 </CLAS>
