@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL32" VARCL="X" SUBC="1" CNAM="RTURNHEIM" CDAT="20120212" UNAM="RTURNHEIM" UDAT="20120317" VERN="000025" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120317" STIME="174011" IDATE="20120317" ITIME="174011" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL32" VARCL="X" SUBC="1" CNAM="RTURNHEIM" CDAT="20120212" UNAM="FEMIA" UDAT="20120319" VERN="000027" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120319" STIME="193719" IDATE="20120319" ITIME="193719" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export ALV" LENGTH="26 "/>
@@ -381,7 +381,8 @@ DATA: l_path            TYPE string,  &quot; local dir
       lv_file_separator TYPE c.
 
 CONSTANTS:
-      lv_default_file_name TYPE string VALUE &apos;32_Export_ALV.xlsx&apos;.
+      lv_default_file_name TYPE string VALUE &apos;32_Export_ALV.xlsx&apos;,
+      lv_default_file_name2 TYPE string VALUE &apos;32_Export_Convert.xlsx&apos;.
 *--------------------------------------------------------------------*
 *START-OF-SELECTION
 *--------------------------------------------------------------------*
@@ -449,18 +450,19 @@ FORM user_command .
       cl_gui_frontend_services=&gt;get_file_separator(
         CHANGING file_separator = lv_file_separator ).
 
-      CONCATENATE l_path lv_file_separator lv_default_file_name
-                  INTO l_path.
 
 
+* export file to save file path
   CASE sy-ucomm.
     WHEN &apos;EXCELBIND&apos;.
-* export file to save file path
-
+      CONCATENATE l_path lv_file_separator lv_default_file_name
+                  INTO l_path.
       PERFORM export_to_excel_bind.
 
     WHEN &apos;EXCELCONV&apos;.
 
+      CONCATENATE l_path lv_file_separator lv_default_file_name2
+                  INTO l_path.
       PERFORM export_to_excel_conv.
 
   ENDCASE.

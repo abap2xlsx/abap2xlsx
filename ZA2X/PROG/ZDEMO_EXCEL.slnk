@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20120120" VERN="000057" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120120" STIME="210140" IDATE="20120120" ITIME="210140" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20120319" VERN="000058" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120319" STIME="194008" IDATE="20120319" ITIME="194008" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -67,6 +67,8 @@ START-OF-SELECTION.
   &quot; SUBMIT zdemo_excel29 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Macro enabled workbook
   SUBMIT zdemo_excel30 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: ABAP Cell data types
   SUBMIT zdemo_excel31 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Autosize Column with different Font sizes
+  &quot; zdemo_excel32 is not added because it uses ALV and cannot be processed (Native)
+  SUBMIT zdemo_excel33 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Table autofilter
   &quot;
   &quot; Reader/Writer Demo must always run at the end
   &quot; to make sure all documents where created
