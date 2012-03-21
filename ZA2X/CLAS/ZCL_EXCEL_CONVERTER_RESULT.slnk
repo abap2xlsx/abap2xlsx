@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" LANGU="E" DESCRIPT="Result object for table reference" UUID="4F6658A2949E0125E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDBY="RTURNHEIM" CHANGEDON="20120319" CHGDANYON="00000000" CLSABSTRCT="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
+ <publicSection>class ZCL_EXCEL_CONVERTER_RESULT definition
+  public
+  inheriting from ZCL_EXCEL_CONVERTER_ALV
+  abstract
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_CONVERTER_RESULT
+*&quot;* do not include other source files here!!!
+public section.</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_RESULT
+*&quot;* do not include other source files here!!!
+protected section.
+
+  methods GET_TABLE
+    importing
+      !IO_OBJECT type ref to OBJECT
+    returning
+      value(RO_DATA) type ref to DATA .</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_RESULT
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDBY="RTURNHEIM" CHANGEDON="20120319"/>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_RESULT" CMPNAME="GET_TABLE" VERSION="1" LANGU="E" DESCRIPT="Get table" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDBY="RTURNHEIM" CHANGEDON="20120319" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="700" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_RESULT" CMPNAME="GET_TABLE" SCONAME="IO_OBJECT" VERSION="1" LANGU="E" DESCRIPT="Data reference object" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="OBJECT"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_RESULT" CMPNAME="GET_TABLE" SCONAME="RO_DATA" VERSION="1" LANGU="E" DESCRIPT="Data table" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDON="00000000" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="DATA"/>
+  <source>METHOD get_table.
+  DATA: lo_object    TYPE REF TO object,
+        ls_seoclass  TYPE seoclass,
+        l_method     TYPE string.
+
+  SELECT SINGLE * INTO ls_seoclass
+    FROM seoclass
+    WHERE clsname = &apos;IF_SALV_BS_DATA_SOURCE&apos;.
+
+  IF sy-subrc = 0.
+    l_method = &apos;GET_TABLE_REF&apos;.
+    lo_object ?= io_object.
+    CALL METHOD lo_object-&gt;(l_method)
+      RECEIVING
+        value = ro_data.
+  ELSE.
+    l_method = &apos;GET_REF_TO_TABLE&apos;.
+    lo_object ?= io_object.
+    CALL METHOD lo_object-&gt;(l_method)
+      RECEIVING
+        value = ro_data.
+  ENDIF.
+
+ENDMETHOD.</source>
+ </method>
+</CLAS>

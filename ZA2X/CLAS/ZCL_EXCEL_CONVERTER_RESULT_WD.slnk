@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_WD_RESULT" VERSION="1" LANGU="E" DESCRIPT="SALV converter for web dynpro" UUID="4F62526AFD6A0125E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120316" CHANGEDBY="RTURNHEIM" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
- <publicSection>class ZCL_EXCEL_CONVERTER_WD_RESULT definition
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" VERSION="1" LANGU="E" DESCRIPT="SALV converter for web dynpro" UUID="4F6071D6C832018FE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDBY="RTURNHEIM" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT">
+ <publicSection>class ZCL_EXCEL_CONVERTER_RESULT_WD definition
   public
-  inheriting from ZCL_EXCEL_CONVERTER_ALV
+  inheriting from ZCL_EXCEL_CONVERTER_RESULT
   final
   create public .
 
-*&quot;* public components of class ZCL_EXCEL_CONVERTER_WD_RESULT
+*&quot;* public components of class ZCL_EXCEL_CONVERTER_RESULT_WD
 *&quot;* do not include other source files here!!!
 public section.
 
@@ -14,7 +14,7 @@ public section.
     redefinition .
   methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
     redefinition .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
+ <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_RESULT_WD
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
  <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_EX_RESULT
@@ -28,12 +28,12 @@ private section.</privateSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_WD_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120316" CHANGEDON="00000000">
-  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_WD_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT"/>
-  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_WD_RESULT" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG"/>
+ <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDON="00000000">
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT"/>
+  <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG"/>
  </inheritance>
- <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_WD_RESULT" CPDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT">
-  <source>METHOD zif_excel_converter~can_convert_object.
+ <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CPDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT">
+  <source>METHOD ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
 
   DATA: lo_result TYPE REF TO cl_salv_wd_result_data_table.
 
@@ -45,10 +45,9 @@ private section.</privateSection>
 
 ENDMETHOD.</source>
  </interfaceMethod>
- <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_WD_RESULT" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
+ <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
   <source>METHOD zif_excel_converter~create_fieldcatalog.
   DATA: lo_result  TYPE REF TO cl_salv_wd_result_data_table,
-        lo_bs_data TYPE REF TO cl_salv_bs_data_table,
         lo_ex_cm   TYPE REF TO cl_salv_ex_cm,
         lo_data    TYPE REF TO data.
 
@@ -64,10 +63,9 @@ ENDMETHOD.</source>
          et_fieldcatalog.
 
   IF lo_result IS BOUND.
-    lo_bs_data ?= lo_result-&gt;r_model-&gt;r_data.
-    lo_data = lo_bs_data-&gt;get_ref_to_table( ) .
-    ASSIGN lo_data-&gt;* TO &lt;fs_table&gt; .
-
+    lo_data = get_table( io_object = lo_result-&gt;r_model-&gt;r_data ).
+    IF lo_data IS BOUND.
+      ASSIGN lo_data-&gt;* TO &lt;fs_table&gt; .
 * CL_SALV_WD_C_TABLE_V_TABLE  &quot; If we want to do it we need this
 *      if_salv_wd_comp_table_events~on_export_excel( ).
 *    lo_ex_cm ?= lo_result-&gt;r_model-&gt;r_model.
@@ -80,17 +78,20 @@ ENDMETHOD.</source>
 * T_SELECTED_COLUMNS  Instance Attribute  Public  Type  LVC_T_COL
 *    wt_sort = lo_ex_cm-&gt;t_sort.
 
-    apply_sort( EXPORTING it_table = &lt;fs_table&gt;
-                IMPORTING eo_table = eo_table ) .
+      apply_sort( EXPORTING it_table = &lt;fs_table&gt;
+                  IMPORTING eo_table = eo_table ) .
 
-    get_color( EXPORTING io_table    = eo_table
-               IMPORTING et_colors   = et_colors ) .
+      get_color( EXPORTING io_table    = eo_table
+                 IMPORTING et_colors   = et_colors ) .
 
-    get_filter( EXPORTING io_table   = eo_table
-                IMPORTING et_filter  = et_filter ) .
+      get_filter( EXPORTING io_table   = eo_table
+                  IMPORTING et_filter  = et_filter ) .
 
-    update_catalog( CHANGING  cs_layout       = es_layout
-                              ct_fieldcatalog = et_fieldcatalog ).
+      update_catalog( CHANGING  cs_layout       = es_layout
+                                ct_fieldcatalog = et_fieldcatalog ).
+    ELSE.
+* We have a problem and should stop here
+    ENDIF.
   ENDIF.
 ENDMETHOD.</source>
  </interfaceMethod>

@@ -269,10 +269,12 @@ TYPES:   BEGIN OF ts_alv_types,
          tt_alv_types TYPE HASHED TABLE OF ts_alv_types WITH UNIQUE KEY seoclass.
 
 TYPES:   BEGIN OF ts_sort_values,
-            fieldname   TYPE fieldname,
-            row_int     TYPE zexcel_cell_row,
-            value       TYPE REF TO data,
-            new         TYPE flag,
+            fieldname      TYPE fieldname,
+            row_int        TYPE zexcel_cell_row,
+            value          TYPE REF TO data,
+            new            TYPE flag,
+            sort_level     TYPE int4,
+            is_collapsed   type flag,
          END OF ts_sort_values,
 
          tt_sort_values TYPE HASHED TABLE OF ts_sort_values WITH UNIQUE KEY fieldname.
@@ -443,11 +445,11 @@ endmethod.</source>
 
 * Object CL_SALV_RESULT
   ls_objects-seoclass  = &apos;CL_SALV_EX_RESULT_DATA_TABLE &apos;.
-  ls_objects-clsname   = &apos;ZCL_EXCEL_CONVERTER_EX_RESULT&apos;.
+  ls_objects-clsname   = &apos;ZCL_EXCEL_CONVERTER_RESULT_EX&apos;.
   INSERT ls_objects INTO TABLE wt_objects.
 * Object CL_SALV_WD_RESULT
   ls_objects-seoclass  = &apos;CL_SALV_WD_RESULT_DATA_TABLE &apos;.
-  ls_objects-clsname   = &apos;ZCL_EXCEL_CONVERTER_WD_RESULT&apos;.
+  ls_objects-clsname   = &apos;ZCL_EXCEL_CONVERTER_RESULT_WD&apos;.
   INSERT ls_objects INTO TABLE wt_objects.
 
 ENDMETHOD.</source>
@@ -1296,16 +1298,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_SUBTOTAL" SCONAME="R_FREEZE_COL" VERSION="1" LANGU="E" DESCRIPT="Byte Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120122" CHANGEDBY="RTURNHEIM" CHANGEDON="20120313" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT1"/>
   <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_SUBTOTAL" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="RTURNHEIM" CREATEDON="20120125" CHANGEDON="00000000"/>
   <source>METHOD loop_subtotal.
-  TYPES: BEGIN OF ts_line,
-            sort_level    TYPE int4,
-            text          TYPE string,
-            is_collapsed  TYPE flag,
-            is_visible    TYPE flag,
-            row_int_start TYPE zexcel_cell_row,
-            col_alpha     TYPE zexcel_cell_column_alpha,
-            columnname    TYPE fieldname,
-         END OF ts_line,
-         tt_line TYPE STANDARD TABLE OF ts_line.
+
   DATA: lo_tabdescr       TYPE REF TO cl_abap_structdescr,
         lo_data           TYPE REF TO data,
         l_row_header      TYPE zexcel_cell_row VALUE &apos;2&apos;,
@@ -1327,14 +1320,14 @@ ENDMETHOD.</source>
         ls_sort_values    TYPE ts_sort_values,
         ls_subtotal_rows  TYPE ts_subtotal_rows,
         l_sort_level      TYPE int4,
-        ls_line           TYPE ts_line,
-        lt_line           TYPE tt_line,
+        l_hidden          TYPE int4,
         l_line            TYPE i,
         l_guid            TYPE guid_22,
         l_tabix           TYPE sy-tabix,
         l_cells           TYPE i,
         l_count           TYPE i,
-        l_table_row       TYPE i.
+        l_table_row       TYPE i,
+        lt_fcat           TYPE zexcel_t_converter_fcat.
 
   FIELD-SYMBOLS: &lt;fs_stab&gt;        TYPE ANY,
                  &lt;fs_tab&gt;         TYPE STANDARD TABLE,
@@ -1356,10 +1349,14 @@ ENDMETHOD.</source>
   READ TABLE &lt;fs_tab&gt; ASSIGNING &lt;fs_stab&gt; INDEX 1.
   IF sy-subrc = 0.
     l_row_int = i_row_int + 1.
-    LOOP AT wt_fieldcatalog ASSIGNING &lt;fs_sfcat&gt; WHERE is_subtotalled = abap_true.
+    lt_fcat =  wt_fieldcatalog.
+    SORT lt_fcat BY sort_level DESCENDING.
+    LOOP AT lt_fcat ASSIGNING &lt;fs_sfcat&gt; WHERE is_subtotalled = abap_true.
       ASSIGN COMPONENT &lt;fs_sfcat&gt;-columnname OF STRUCTURE &lt;fs_stab&gt; TO &lt;fs_fldval&gt;.
-      ls_sort_values-fieldname  = &lt;fs_sfcat&gt;-columnname.
-      ls_sort_values-row_int    = l_row_int.
+      ls_sort_values-fieldname    = &lt;fs_sfcat&gt;-columnname.
+      ls_sort_values-row_int      = l_row_int.
+      ls_sort_values-sort_level   = &lt;fs_sfcat&gt;-sort_level.
+      ls_sort_values-is_collapsed = &lt;fs_sfcat&gt;-is_collapsed.
       CREATE DATA ls_sort_values-value LIKE &lt;fs_fldval&gt;.
       ASSIGN ls_sort_values-value-&gt;* TO &lt;fs_sortval&gt;.
       &lt;fs_sortval&gt; =  &lt;fs_fldval&gt;.
@@ -1367,12 +1364,24 @@ ENDMETHOD.</source>
     ENDLOOP.
   ENDIF.
   l_row_int = i_row_int.
+* Let&apos;s check if we need to hide a sort level.
+  DESCRIBE TABLE wt_sort_values LINES l_line.
+  IF  l_line &lt;= 1.
+    CLEAR l_hidden.
+  ELSE.
+    LOOP AT wt_sort_values INTO ls_sort_values WHERE is_collapsed = abap_false.
+      IF l_hidden &lt; ls_sort_values-sort_level.
+        l_hidden = ls_sort_values-sort_level.
+      ENDIF.
+    ENDLOOP.
+  ENDIF.
+  ADD 1 TO l_hidden. &quot; As this is the first level we show.
 * First loop without formular only addtional rows with subtotal text.
   LOOP AT &lt;fs_tab&gt; ASSIGNING &lt;fs_stab&gt;.
-    l_table_row = sy-tabix.
     ADD 1 TO l_row_int.  &quot; 1 is for header row.
-    REFRESH lt_line.
-    LOOP AT wt_fieldcatalog ASSIGNING &lt;fs_sfcat&gt; WHERE is_subtotalled = abap_true.
+    l_row_int_start = l_row_int.
+    SORT lt_fcat BY sort_level DESCENDING.
+    LOOP AT lt_fcat ASSIGNING &lt;fs_sfcat&gt; WHERE is_subtotalled = abap_true.
       l_col_int   = i_col_int + &lt;fs_sfcat&gt;-position - 1.
       l_col_alpha = zcl_excel_common=&gt;convert_column2alpha( l_col_int ).
 * Now the cell values
@@ -1382,102 +1391,79 @@ ENDMETHOD.</source>
         IF sy-subrc = 0.
           ASSIGN &lt;fs_sortv&gt;-value-&gt;* TO &lt;fs_sortval&gt;.
           IF &lt;fs_sortval&gt; &lt;&gt; &lt;fs_fldval&gt; OR &lt;fs_sortv&gt;-new = abap_true.
-* First let&apos;s write the value as it has to appear.
-            CLEAR ls_line.
-            ls_line-text  = create_text_subtotal( i_value = &lt;fs_sortval&gt;
-                                    i_totals_function     = &lt;fs_sfcat&gt;-totals_function ).
-            ls_line-col_alpha     = l_col_alpha.
-            ls_line-sort_level    = &lt;fs_sfcat&gt;-sort_level.
-            ls_line-is_collapsed  = &lt;fs_sfcat&gt;-is_collapsed.
-            ls_line-row_int_start = &lt;fs_sortv&gt;-row_int.
-            ls_line-columnname    = &lt;fs_sfcat&gt;-columnname.
-
-            INSERT ls_line INTO TABLE lt_line.
+* First let&apos;s remmember the subtotal values as it has to appear later.
+            ls_subtotal_rows-row_int       = l_row_int.
+            ls_subtotal_rows-row_int_start = &lt;fs_sortv&gt;-row_int.
+            ls_subtotal_rows-columnname    = &lt;fs_sfcat&gt;-columnname.
+            INSERT ls_subtotal_rows INTO TABLE wt_subtotal_rows.
+* Now let&apos;s write the subtotal line
+            l_cell_value = create_text_subtotal( i_value = &lt;fs_sortval&gt;
+                                   i_totals_function     = &lt;fs_sfcat&gt;-totals_function ).
+            wo_worksheet-&gt;set_cell( ip_column    = l_col_alpha
+                                    ip_row       = l_row_int
+                                    ip_value     = l_cell_value
+                                    ip_abap_type = cl_abap_typedescr=&gt;typekind_string
+                                    ip_style     = &lt;fs_sfcat&gt;-style_subtotal  ).
+            lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
+            lo_row_dim-&gt;set_outline_level( ip_outline_level = &lt;fs_sfcat&gt;-sort_level ) .
+            IF &lt;fs_sfcat&gt;-is_collapsed = abap_true.
+              IF &lt;fs_sfcat&gt;-sort_level &gt;  l_hidden.
+                lo_row_dim-&gt;set_visible( ip_visible =  abap_false ) .
+              ENDIF.
+              lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ) .
+            ENDIF.
 * Now let&apos;s change the key
+            ADD 1 TO l_row_int.
             &lt;fs_sortval&gt; =  &lt;fs_fldval&gt;.
             &lt;fs_sortv&gt;-new = abap_false.
-            &lt;fs_sortv&gt;-row_int = l_row_int.
+            l_line = &lt;fs_sortv&gt;-sort_level.
+            LOOP AT wt_sort_values ASSIGNING &lt;fs_sortv&gt; WHERE sort_level &gt;= l_line.
+              &lt;fs_sortv&gt;-row_int = l_row_int.
+            ENDLOOP.
           ENDIF.
         ENDIF.
       ENDIF.
     ENDLOOP.
-* Now we must write the lines in correct sequence.
-    l_row_int_start = l_row_int.
-    SORT lt_line BY sort_level DESCENDING.
-    DESCRIBE TABLE lt_line LINES l_line.
-    LOOP AT lt_line INTO ls_line.
-      l_tabix = sy-tabix.
-      ls_subtotal_rows-row_int       = l_row_int.
-      ls_subtotal_rows-row_int_start = ls_line-row_int_start.
-      ls_subtotal_rows-columnname    = ls_line-columnname.
-      INSERT ls_subtotal_rows INTO TABLE wt_subtotal_rows.
-
-      wo_worksheet-&gt;set_cell( ip_column    = ls_line-col_alpha
-                              ip_row       = l_row_int
-                              ip_value     = ls_line-text
-                              ip_abap_type = cl_abap_typedescr=&gt;typekind_string
-                              ip_style     = &lt;fs_sfcat&gt;-style_subtotal  ).
-      READ TABLE wt_sort_values ASSIGNING &lt;fs_sortv&gt; WITH TABLE KEY fieldname = ls_line-columnname.
-      IF sy-subrc = 0.
-        IF l_line &gt; l_tabix .  &quot; Only if we have more than 1 and subtotal does not change on lower level but on higher does
-          &lt;fs_sortv&gt;-new     = abap_true.
-        ENDIF.
-        &lt;fs_sortv&gt;-row_int = l_row_int_start + l_line.
-      ENDIF.
-      l_sort_level = ls_line-sort_level.
-      lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
-      lo_row_dim-&gt;set_outline_level( ip_outline_level = l_sort_level ) .
-      lo_row_dim-&gt;set_collapsed( ip_collapsed =  ls_line-is_collapsed ) .
-      ADD 1 TO l_row_int.
-    ENDLOOP.
   ENDLOOP.
   ADD 1 TO l_row_int.
-  REFRESH lt_line.
-  LOOP AT wt_fieldcatalog ASSIGNING &lt;fs_sfcat&gt; WHERE is_subtotalled = abap_true.
+  l_row_int_start = l_row_int.
+  SORT lt_fcat BY sort_level DESCENDING.
+  LOOP AT lt_fcat ASSIGNING &lt;fs_sfcat&gt; WHERE is_subtotalled = abap_true.
     l_col_int   = i_col_int + &lt;fs_sfcat&gt;-position - 1.
     l_col_alpha = zcl_excel_common=&gt;convert_column2alpha( l_col_int ).
     READ TABLE wt_sort_values ASSIGNING &lt;fs_sortv&gt; WITH TABLE KEY fieldname = &lt;fs_sfcat&gt;-columnname.
     IF sy-subrc = 0.
       ASSIGN &lt;fs_sortv&gt;-value-&gt;* TO &lt;fs_sortval&gt;.
+      ls_subtotal_rows-row_int       = l_row_int.
+      ls_subtotal_rows-row_int_start = &lt;fs_sortv&gt;-row_int.
+      ls_subtotal_rows-columnname    = &lt;fs_sfcat&gt;-columnname.
+      INSERT ls_subtotal_rows INTO TABLE wt_subtotal_rows.
 * First let&apos;s write the value as it has to appear.
-      CLEAR ls_line.
-      ls_line-text  = create_text_subtotal( i_value = &lt;fs_sortval&gt;
-                              i_totals_function     = &lt;fs_sfcat&gt;-totals_function ).
-      ls_line-col_alpha     = l_col_alpha.
-      ls_line-sort_level    = &lt;fs_sfcat&gt;-sort_level.
-      ls_line-is_collapsed  = &lt;fs_sfcat&gt;-is_collapsed.
-      ls_line-row_int_start = &lt;fs_sortv&gt;-row_int.
-      ls_line-columnname    = &lt;fs_sfcat&gt;-columnname.
-      INSERT ls_line INTO TABLE lt_line.
+      l_cell_value = create_text_subtotal( i_value = &lt;fs_sortval&gt;
+                             i_totals_function     = &lt;fs_sfcat&gt;-totals_function ).
+      wo_worksheet-&gt;set_cell( ip_column    = l_col_alpha
+                              ip_row       = l_row_int
+                              ip_value     = l_cell_value
+                              ip_abap_type = cl_abap_typedescr=&gt;typekind_string
+                              ip_style     = &lt;fs_sfcat&gt;-style_subtotal ).
+
+      l_sort_level = &lt;fs_sfcat&gt;-sort_level.
+      lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
+      lo_row_dim-&gt;set_outline_level( ip_outline_level = l_sort_level ) .
+      IF &lt;fs_sfcat&gt;-is_collapsed = abap_true.
+        IF &lt;fs_sfcat&gt;-sort_level &gt;  l_hidden.
+          lo_row_dim-&gt;set_visible( ip_visible =  abap_false ) .
+        ENDIF.
+        lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ) .
+      ENDIF.
+      ADD 1 TO l_row_int.
     ENDIF.
-  ENDLOOP.
-* Now we must write the lines in correct sequence.
-  l_row_int_start = l_row_int.
-  SORT lt_line BY sort_level DESCENDING.
-  DESCRIBE TABLE lt_line LINES l_line.
-  LOOP AT lt_line INTO ls_line.
-    ls_subtotal_rows-row_int       = l_row_int.
-    ls_subtotal_rows-row_int_start = ls_line-row_int_start.
-    ls_subtotal_rows-columnname    = ls_line-columnname.
-    INSERT ls_subtotal_rows INTO TABLE wt_subtotal_rows.
-
-    wo_worksheet-&gt;set_cell( ip_column    = ls_line-col_alpha
-                            ip_row       = l_row_int
-                            ip_value     = ls_line-text
-                            ip_abap_type = cl_abap_typedescr=&gt;typekind_string
-                            ip_style     = &lt;fs_sfcat&gt;-style_subtotal ).
-
-    l_sort_level = ls_line-sort_level.
-    lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
-    lo_row_dim-&gt;set_outline_level( ip_outline_level = l_sort_level ) .
-    lo_row_dim-&gt;set_collapsed( ip_collapsed =  ls_line-is_collapsed ) .
-    ADD 1 TO l_row_int.
   ENDLOOP.
 * Let&apos;s write the Grand total
   l_sort_level = 0.
   lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
   lo_row_dim-&gt;set_outline_level( ip_outline_level = l_sort_level ) .
-  lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ) .
+*  lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ) . Not on grand total
 
   l_text    = create_text_subtotal( i_value = &apos;Grand&apos;(002)
                                     i_totals_function     = &lt;fs_sfcat&gt;-totals_function ).
@@ -1532,6 +1518,13 @@ ENDMETHOD.</source>
                                         ip_row       = l_row_int
                                         ip_formula   = l_formula
                                         ip_style     = &lt;fs_sfcat&gt;-style_subtotal ).
+                IF &lt;fs_sfcat&gt;-is_collapsed = abap_true.
+                  lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
+                  lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ).
+                  IF &lt;fs_sfcat&gt;-sort_level &gt;  l_hidden.
+                    lo_row_dim-&gt;set_visible( ip_visible =  abap_false ) .
+                  ENDIF.
+                ENDIF.
                 ADD 1 TO l_row_int.
               ELSE.
                 EXIT.
@@ -1544,9 +1537,13 @@ ENDMETHOD.</source>
           EXIT.
         ENDIF.
       ENDDO.
+* Let&apos;s set the row dimension values
       lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
       lo_row_dim-&gt;set_outline_level( ip_outline_level = ws_layout-max_subtotal_level ) .
-      lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ) .
+      IF &lt;fs_sfcat&gt;-is_collapsed  = abap_true.
+        lo_row_dim-&gt;set_visible( ip_visible =  abap_false ) .
+        lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ) .
+      ENDIF.
 * Now let&apos;s write the cell values
       IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
         l_style = get_color_style( i_row       = l_table_row
@@ -1600,6 +1597,10 @@ ENDMETHOD.</source>
                                       ip_row       = l_row_int
                                       ip_formula   = l_formula
                                       ip_style     = &lt;fs_sfcat&gt;-style_subtotal ).
+              IF &lt;fs_sfcat&gt;-is_collapsed = abap_true.
+                lo_row_dim = wo_worksheet-&gt;get_row_dimension( ip_row = l_row_int ).
+                lo_row_dim-&gt;set_collapsed( ip_collapsed =  &lt;fs_sfcat&gt;-is_collapsed ).
+              ENDIF.
               ADD 1 TO l_row_int.
             ELSE.
               EXIT.
@@ -1725,25 +1726,27 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_CELL_FORMAT" SCONAME="I_INTTYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type (C,D,N,...)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120127" CHANGEDBY="RTURNHEIM" CHANGEDON="20120313" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INTTYPE"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_CELL_FORMAT" SCONAME="I_DECIMALS" VERSION="1" LANGU="E" DESCRIPT="Byte Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120127" CHANGEDBY="RTURNHEIM" CHANGEDON="20120313" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT1"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_CELL_FORMAT" SCONAME="R_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120127" CHANGEDBY="RTURNHEIM" CHANGEDON="20120313" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_NUMBER_FORMAT"/>
-  <source>method set_cell_format.
-  data:  l_format    type zexcel_number_format.
+  <source>METHOD set_cell_format.
+  DATA:  l_format    TYPE zexcel_number_format.
 
-  clear r_format.
-  case i_inttype.
-    when cl_abap_typedescr=&gt;typekind_date.
+  CLEAR r_format.
+  CASE i_inttype.
+    WHEN cl_abap_typedescr=&gt;typekind_date.
       r_format = wo_worksheet-&gt;get_default_excel_date_format( ).
-    when cl_abap_typedescr=&gt;typekind_time.
+    WHEN cl_abap_typedescr=&gt;typekind_time.
       r_format = zcl_excel_style_number_format=&gt;c_format_date_time6.
-    when cl_abap_typedescr=&gt;typekind_float or cl_abap_typedescr=&gt;typekind_packed.
-      if i_decimals &gt; 0 .
+    WHEN cl_abap_typedescr=&gt;typekind_float OR cl_abap_typedescr=&gt;typekind_packed.
+      IF i_decimals &gt; 0 .
         l_format = &apos;#,##0.&apos;.
-        do i_decimals times.
-          concatenate l_format &apos;0&apos; into l_format.
-        enddo.
+        DO i_decimals TIMES.
+          CONCATENATE l_format &apos;0&apos; INTO l_format.
+        ENDDO.
         r_format = l_format.
-      endif.
-  endcase.
-endmethod.</source>
+      ENDIF.
+    WHEN cl_abap_typedescr=&gt;typekind_int OR cl_abap_typedescr=&gt;typekind_int1 OR cl_abap_typedescr=&gt;typekind_int2.
+      r_format = &apos;#,##0&apos;.
+  ENDCASE.
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Set fieldcatalog from table" EXPOSURE="0" STATE="1" EDITORDER="23 " DISPID="0 " AUTHOR="RTURNHEIM" CREATEDON="20120112" CHANGEDBY="RTURNHEIM" CHANGEDON="20120313" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>METHOD set_fieldcatalog.

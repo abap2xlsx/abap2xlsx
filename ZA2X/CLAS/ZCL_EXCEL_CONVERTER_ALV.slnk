@@ -506,9 +506,9 @@ ENDMETHOD.</source>
         WHEN &apos;A&apos;.
           ls_fieldcatalog-totals_function =  zcl_excel_table=&gt;totals_function_min.
         WHEN &apos;B&apos; .
-          ls_fieldcatalog-totals_function =  zcl_excel_table=&gt;totals_function_average.
-        WHEN &apos;C&apos; .
           ls_fieldcatalog-totals_function =  zcl_excel_table=&gt;totals_function_max.
+        WHEN &apos;C&apos; .
+          ls_fieldcatalog-totals_function =  zcl_excel_table=&gt;totals_function_average.
         WHEN OTHERS.
           CLEAR ls_fieldcatalog-totals_function .
       ENDCASE.
@@ -540,7 +540,7 @@ ENDMETHOD.</source>
       IF sy-subrc = 0.
         ls_fieldcatalog-sort_level      = 0 .
         ls_fieldcatalog-is_subtotalled  = ls_sort-subtot.
-        ls_fieldcatalog-is_collapsed    = ls_sort-comp.
+        ls_fieldcatalog-is_collapsed    = ls_sort-expa.
         IF ls_fieldcatalog-is_subtotalled = abap_true.
           ls_fieldcatalog-sort_level      = ls_sort-spos.
           ls_fieldcatalog-totals_function = zcl_excel_table=&gt;totals_function_sum. &quot; we need function for text
