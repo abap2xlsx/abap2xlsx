@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL14" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100817" UNAM="FEMIA" UDAT="20110528" VERN="000054" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181954" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-2"?>
+<PROG NAME="ZDEMO_EXCEL14" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100817" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000056" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="211219" IDATE="20120323" ITIME="210022" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Alignment" LENGTH="25 "/>
+   <textElement ID="R" LENGTH="25 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
@@ -17,7 +17,6 @@
 REPORT  zdemo_excel14.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_style_center         TYPE REF TO zcl_excel_style,
       lo_style_right          TYPE REF TO zcl_excel_style,
@@ -46,36 +45,11 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
 
 DATA: lo_row_dimension        TYPE REF TO zcl_excel_worksheet_rowdimensi.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;14_Alignment.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
 
-DATA: lv_full_path      TYPE string,
-      lv_workdir        TYPE string,
-      lv_file_separator TYPE c.
-
-CONSTANTS: lv_default_file_name TYPE string VALUE &apos;14_Alignment.xlsx&apos;.
-
-PARAMETERS: p_path TYPE zexcel_export_dir.
-
-AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-  lv_workdir = p_path.
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
-                                              CHANGING  selected_folder = lv_workdir ).
-  p_path = lv_workdir.
-
-INITIALIZATION.
-  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-  cl_gui_cfw=&gt;flush( ).
-  p_path = lv_workdir.
 
 START-OF-SELECTION.
-
-  IF p_path IS INITIAL.
-    p_path = lv_workdir.
-  ENDIF.
-  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
   CREATE OBJECT lo_excel.
 
@@ -137,7 +111,7 @@ START-OF-SELECTION.
   lo_style_rotated = lo_excel-&gt;add_new_style( ).
   lo_style_rotated-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
   lo_style_rotated-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
-  lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75° == 90° + 75°
+  lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75Â° == 90Â° + 75Â°
   lv_style_rotated_guid = lo_style_rotated-&gt;get_guid( ).
 
 
@@ -171,27 +145,11 @@ START-OF-SELECTION.
 
   &quot; Rotated
   lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;D&apos;
-                          ip_value = &apos;This is a centered text rotated by -75°&apos;
+                          ip_value = &apos;This is a centered text rotated by -75Â°&apos;
                           ip_style = lv_style_rotated_guid ).
 
-  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-  &quot; Convert to binary
-  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-    EXPORTING
-      buffer        = lv_file
-    IMPORTING
-      output_length = lv_bytecount
-    TABLES
-      binary_tab    = lt_file_tab.
-*  &quot; This method is only available on AS ABAP &gt; 6.40
-*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
-  &quot; Save the file
-  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                    filename     = lv_full_path
-                                                    filetype     = &apos;BIN&apos;
-                                           CHANGING data_tab     = lt_file_tab ).</source>
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
 </PROG>

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL16" VARCL="X" SUBC="1" CNAM="VONDRUSKA" CDAT="20100914" UNAM="FEMIA" UDAT="20110528" VERN="000075" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110530" STIME="095303" IDATE="20110528" ITIME="181954" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-2"?>
+<PROG NAME="ZDEMO_EXCEL16" VARCL="X" SUBC="1" CNAM="VONDRUSKA" CDAT="20100914" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000077" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="211219" IDATE="20120323" ITIME="210450" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Drawings" LENGTH="24 "/>
+   <textElement ID="R" LENGTH="24 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
@@ -17,45 +17,21 @@
 REPORT  zdemo_excel16.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_drawing              TYPE REF TO zcl_excel_drawing.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
-
-DATA: lv_full_path      TYPE string,
-      lv_workdir        TYPE string,
-      lv_file_separator TYPE c.
 
 DATA: ls_io TYPE skwf_io.
 
-CONSTANTS: lv_default_file_name TYPE string VALUE &apos;16_Drawings.xlsx&apos;.
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;16_Drawings.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
 
-PARAMETERS: p_path    TYPE zexcel_export_dir,
-            p_objid   TYPE sdok_docid DEFAULT &apos;456694429165174BE10000000A1550C0&apos;, &quot; Question mark in standard Web Dynpro WDT_QUIZ
+PARAMETERS: p_objid   TYPE sdok_docid DEFAULT &apos;456694429165174BE10000000A1550C0&apos;, &quot; Question mark in standard Web Dynpro WDT_QUIZ
             p_class   TYPE sdok_class DEFAULT &apos;M_IMAGE_P&apos;,
             pobjtype  TYPE skwf_ioty  DEFAULT &apos;P&apos;.
 
-AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-  lv_workdir = p_path.
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
-                                              CHANGING  selected_folder = lv_workdir ).
-  p_path = lv_workdir.
-
-INITIALIZATION.
-  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-  cl_gui_cfw=&gt;flush( ).
-  p_path = lv_workdir.
 
 START-OF-SELECTION.
-
-  IF p_path IS INITIAL.
-    p_path = lv_workdir.
-  ENDIF.
-  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
   &quot; Creates active sheet
   CREATE OBJECT lo_excel.
@@ -162,24 +138,8 @@ START-OF-SELECTION.
   ENDIF.
 
 
-  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-  &quot; Convert to binary
-  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-    EXPORTING
-      buffer        = lv_file
-    IMPORTING
-      output_length = lv_bytecount
-    TABLES
-      binary_tab    = lt_file_tab.
-*  &quot; This method is only available on AS ABAP &gt; 6.40
-*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
-  &quot; Save the file
-  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                    filename     = lv_full_path
-                                                    filetype     = &apos;BIN&apos;
-                                           CHANGING data_tab     = lt_file_tab ).</source>
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
 </PROG>

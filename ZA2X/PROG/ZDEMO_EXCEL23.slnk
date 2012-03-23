@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="DEVELOPER" UDAT="20120109" VERN="000032" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120109" STIME="064922" IDATE="20120109" ITIME="064922" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-2"?>
+<PROG NAME="ZDEMO_EXCEL23" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110116" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000034" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="212443" IDATE="20120323" ITIME="212443" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options" LENGTH="70 "/>
+   <textElement ID="R" LENGTH="70 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
@@ -18,40 +18,16 @@ REPORT  zdemo_excel23.
 TYPE-POOLS: abap.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
 
-DATA: lv_full_path      TYPE string,
-      lv_workdir        TYPE string,
-      lv_file_separator TYPE c.
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;23_Sheets_with_and_without_grid_lines.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
 
-CONSTANTS: lv_default_file_name TYPE string VALUE &apos;23_Sheets_with_and_without_grid_lines.xlsx&apos;.
-
-PARAMETERS: p_path TYPE zexcel_export_dir.
-
-AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-  lv_workdir = p_path.
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
-                                              CHANGING  selected_folder = lv_workdir ).
-  p_path = lv_workdir.
-
-INITIALIZATION.
-  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-  cl_gui_cfw=&gt;flush( ).
-  p_path = lv_workdir.
 
 START-OF-SELECTION.
 
-  IF p_path IS INITIAL.
-    p_path = lv_workdir.
-  ENDIF.
-  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
 
   &quot; Creates active sheet
   CREATE OBJECT lo_excel.
@@ -116,24 +92,8 @@ START-OF-SELECTION.
 &quot;  lo_worksheet-&gt;sheet_setup-&gt;vertical_centered   = abap_true.
   lo_worksheet-&gt;sheet_setup-&gt;horizontal_centered = abap_true.
 
-  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  lv_file = lo_excel_writer-&gt;write_file( io_excel = lo_excel ).
 
-  &quot; Convert to binary
-  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-    EXPORTING
-      buffer        = lv_file
-    IMPORTING
-      output_length = lv_bytecount
-    TABLES
-      binary_tab    = lt_file_tab.
-*  &quot; This method is only available on AS ABAP &gt; 6.40
-*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
-  &quot; Save the file
-  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                    filename     = lv_full_path
-                                                    filetype     = &apos;BIN&apos;
-                                           CHANGING data_tab     = lt_file_tab ).</source>
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
 </PROG>

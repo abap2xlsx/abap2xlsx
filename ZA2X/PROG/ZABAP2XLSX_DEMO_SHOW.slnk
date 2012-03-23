@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="iso-8859-2"?>
+<PROG NAME="ZABAP2XLSX_DEMO_SHOW" VARCL="X" SUBC="1" CNAM="K2_SCHMOECK" CDAT="20120322" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000032" RSTAT="T" RMAND="007" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="205058" IDATE="20120323" ITIME="205058" UCCHECK="X">
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZABAP2XLSX_DEMO_SHOW
+*&amp;---------------------------------------------------------------------*
+REPORT  zabap2xlsx_demo_like_se83.
+
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_perform DEFINITION
+*----------------------------------------------------------------------*
+CLASS lcl_perform DEFINITION CREATE PRIVATE.
+  PUBLIC SECTION.
+    CLASS-METHODS: setup_objects,
+                   collect_reports,
+
+                   handle_nav FOR EVENT double_click OF cl_gui_alv_grid
+                              IMPORTING e_row.
+
+  PRIVATE SECTION.
+    TYPES: BEGIN OF ty_reports,
+             progname TYPE reposrc-progname,
+             sort     TYPE reposrc-progname,
+             filename TYPE string,
+           END OF ty_reports.
+
+    CLASS-DATA:
+            lo_grid       TYPE REF TO cl_gui_alv_grid,
+            lo_text       TYPE REF TO cl_gui_textedit,
+            cl_document   TYPE REF TO i_oi_document_proxy,
+
+            t_reports     TYPE STANDARD TABLE OF ty_reports WITH NON-UNIQUE DEFAULT KEY.
+    CLASS-DATA:error         TYPE REF TO i_oi_error,
+         t_errors      TYPE STANDARD TABLE OF REF TO i_oi_error WITH NON-UNIQUE DEFAULT KEY,
+         cl_control    TYPE REF TO i_oi_container_control.   &quot;Office Dokument
+
+ENDCLASS.                    &quot;lcl_perform DEFINITION
+
+
+START-OF-SELECTION.
+  lcl_perform=&gt;collect_reports( ).
+  lcl_perform=&gt;setup_objects( ).
+
+END-OF-SELECTION.
+
+  WRITE &apos;.&apos;.  &quot; Force output
+
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_perform IMPLEMENTATION
+*----------------------------------------------------------------------*
+CLASS lcl_perform IMPLEMENTATION.
+  METHOD setup_objects.
+    DATA: lo_split      TYPE REF TO cl_gui_splitter_container,
+          lo_container  TYPE REF TO cl_gui_container.
+
+    DATA: it_fieldcat TYPE lvc_t_fcat,
+          is_layout   TYPE lvc_s_layo,
+          is_variant  TYPE disvariant.
+    FIELD-SYMBOLS: &lt;fc&gt; LIKE LINE OF it_fieldcat.
+
+
+    CREATE OBJECT lo_split
+      EXPORTING
+        parent                  = cl_gui_container=&gt;screen0
+        rows                    = 1
+        columns                 = 3
+        no_autodef_progid_dynnr = &apos;X&apos;.
+    lo_split-&gt;set_column_width(  EXPORTING id                = 1
+                                           width             = 20 ).
+    lo_split-&gt;set_column_width(  EXPORTING id                = 2
+                                           width             = 40 ).
+
+* Left:   List of reports
+    lo_container = lo_split-&gt;get_container( row       = 1
+                                            column    = 1 ).
+
+    CREATE OBJECT lo_grid
+      EXPORTING
+        i_parent = lo_container.
+    SET HANDLER lcl_perform=&gt;handle_nav FOR lo_grid.
+
+    is_variant-report = sy-repid.
+    is_variant-handle = &apos;0001&apos;.
+
+    is_layout-cwidth_opt = &apos;X&apos;.
+
+    APPEND INITIAL LINE TO it_fieldcat ASSIGNING &lt;fc&gt;.
+    &lt;fc&gt;-fieldname = &apos;PROGNAME&apos;.
+    &lt;fc&gt;-tabname   = &apos;REPOSRC&apos;.
+
+    APPEND INITIAL LINE TO it_fieldcat ASSIGNING &lt;fc&gt;.
+    &lt;fc&gt;-fieldname   = &apos;SORT&apos;.
+    &lt;fc&gt;-ref_field   = &apos;PROGNAME&apos;.
+    &lt;fc&gt;-ref_table   = &apos;REPOSRC&apos;.
+
+
+    lo_grid-&gt;set_table_for_first_display( EXPORTING
+                                            is_variant                    = is_variant
+                                            i_save                        = &apos;A&apos;
+                                            is_layout                     = is_layout
+                                          CHANGING
+                                            it_outtab                     = t_reports
+                                            it_fieldcatalog               = it_fieldcat
+                                          EXCEPTIONS
+                                            invalid_parameter_combination = 1
+                                            program_error                 = 2
+                                            too_many_lines                = 3
+                                            OTHERS                        = 4 ).
+
+* Middle: Text with coding
+    lo_container = lo_split-&gt;get_container( row       = 1
+                                            column    = 2 ).
+    CREATE OBJECT lo_text
+      EXPORTING
+        parent = lo_container.
+    lo_text-&gt;set_readonly_mode( cl_gui_textedit=&gt;true ).
+    lo_text-&gt;set_font_fixed( ).
+
+
+
+* right:  DemoOutput
+    lo_container = lo_split-&gt;get_container( row       = 1
+                                            column    = 3 ).
+
+    c_oi_container_control_creator=&gt;get_container_control( IMPORTING control = cl_control
+                                                                     error   = error ).
+    APPEND error TO t_errors.
+
+    cl_control-&gt;init_control( EXPORTING  inplace_enabled     = &apos;X&apos;
+                                         no_flush            = &apos;X&apos;
+                                         r3_application_name = &apos;Demo Document Container&apos;
+                                         parent              = lo_container
+                              IMPORTING  error               = error
+                              EXCEPTIONS OTHERS              = 2 ).
+    APPEND error TO t_errors.
+
+    cl_control-&gt;get_document_proxy( EXPORTING document_type  = &apos;Excel.Sheet&apos;                &quot; EXCEL
+                                              no_flush       = &apos; &apos;
+                                    IMPORTING document_proxy = cl_document
+                                              error          = error ).
+    APPEND error TO t_errors.
+* Errorhandling should be inserted here
+
+
+  ENDMETHOD.                    &quot;setup_objects
+
+  &quot;collect_reports
+  METHOD collect_reports.
+    FIELD-SYMBOLS:&lt;report&gt; LIKE LINE OF t_reports.
+    DATA: t_source TYPE STANDARD TABLE OF text255 WITH NON-UNIQUE DEFAULT KEY.
+
+* Get all demoreports
+    SELECT progname
+      INTO CORRESPONDING FIELDS OF TABLE t_reports
+      FROM reposrc
+      WHERE progname LIKE &apos;ZDEMO_EXCEL%&apos;
+        AND progname &lt;&gt; sy-repid
+        AND subc     = &apos;1&apos;.
+
+    LOOP AT t_reports ASSIGNING &lt;report&gt;.
+
+* Check if already switched to new outputoptions
+      READ REPORT &lt;report&gt;-progname INTO t_source.
+      IF sy-subrc = 0.
+        FIND &apos;INCLUDE zdemo_excel_outputopt_incl.&apos; IN TABLE t_source IGNORING CASE.
+      ENDIF.
+      IF sy-subrc &lt;&gt; 0.
+        DELETE t_reports.
+        CONTINUE.
+      ENDIF.
+
+
+* Build half-numeric sort
+      &lt;report&gt;-sort = &lt;report&gt;-progname.
+      REPLACE REGEX &apos;(ZDEMO_EXCEL)(\d\d)\s*$&apos; IN &lt;report&gt;-sort WITH &apos;$1\0$2&apos;. &quot;      REPLACE REGEX &apos;(ZDEMO_EXCEL)([^][^])*$&apos; IN &lt;report&gt;-sort WITH &apos;$1$2&apos;.REPLACE REGEX &apos;(ZDEMO_EXCEL)([^][^])*$&apos; IN &lt;report&gt;-sort WITH &apos;$1$2&apos;.REPLACE
+
+      REPLACE REGEX &apos;(ZDEMO_EXCEL)(\d)\s*$&apos;      IN &lt;report&gt;-sort WITH &apos;$1\0\0$2&apos;.
+    ENDLOOP.
+    SORT t_reports BY sort progname.
+
+  ENDMETHOD.  &quot;collect_reports
+
+  METHOD handle_nav.
+    CONSTANTS: filename TYPE text80 VALUE &apos;ZABAP2XLSX_DEMO_SHOW.xlsx&apos;.
+    DATA: wa_report   LIKE LINE OF t_reports,
+          t_source    TYPE STANDARD TABLE OF text255,
+          t_rawdata   TYPE solix_tab,
+          wa_rawdata  LIKE LINE OF t_rawdata,
+          bytecount   TYPE i,
+          length      TYPE i,
+          add_selopt  TYPE flag.
+
+
+    READ TABLE t_reports INTO wa_report INDEX e_row-index.
+    CHECK sy-subrc = 0.
+
+* Set new text into middle frame
+    READ REPORT wa_report-progname INTO t_source.
+    lo_text-&gt;set_text_as_r3table( EXPORTING table = t_source ).
+
+
+* Unload old xls-file
+    cl_document-&gt;close_document( ).
+
+* Get the demo
+* If additional parameters found on selection screen, start via selection screen , otherwise start w/o
+    CLEAR add_selopt.
+    FIND &apos;PARAMETERS&apos; IN TABLE t_source.
+    IF sy-subrc = 0.
+      add_selopt = &apos;X&apos;.
+    ELSE.
+      FIND &apos;SELECT-OPTIONS&apos; IN TABLE t_source.
+      IF sy-subrc = 0.
+        add_selopt = &apos;X&apos;.
+      ENDIF.
+    ENDIF.
+    IF add_selopt IS INITIAL.
+      SUBMIT (wa_report-progname) AND RETURN
+              WITH p_backfn = filename
+              WITH rb_back  = &apos;X&apos;
+              WITH rb_down  = &apos; &apos;
+              WITH rb_send  = &apos; &apos;
+              WITH rb_show  = &apos; &apos;.
+    ELSE.
+      SUBMIT (wa_report-progname) VIA SELECTION-SCREEN AND RETURN
+              WITH p_backfn = filename
+              WITH rb_back  = &apos;X&apos;
+              WITH rb_down  = &apos; &apos;
+              WITH rb_send  = &apos; &apos;
+              WITH rb_show  = &apos; &apos;.
+    ENDIF.
+
+    OPEN DATASET filename FOR INPUT IN BINARY MODE.
+    IF sy-subrc = 0.
+      DO.
+        CLEAR wa_rawdata.
+        READ DATASET filename INTO wa_rawdata LENGTH length.
+        IF sy-subrc &lt;&gt; 0.
+          APPEND wa_rawdata TO t_rawdata.
+          ADD length TO bytecount.
+          EXIT.
+        ENDIF.
+        APPEND wa_rawdata TO t_rawdata.
+        ADD length TO bytecount.
+      ENDDO.
+      CLOSE DATASET filename.
+    ENDIF.
+
+    cl_control-&gt;get_document_proxy( EXPORTING document_type  = &apos;Excel.Sheet&apos;                &quot; EXCEL
+                                              no_flush       = &apos; &apos;
+                                    IMPORTING document_proxy = cl_document
+                                              error          = error ).
+
+    cl_document-&gt;open_document_from_table( EXPORTING document_size    = bytecount
+                                                     document_table   = t_rawdata
+                                                     open_inplace     = &apos;X&apos; ).
+
+  ENDMETHOD.                    &quot;handle_nav
+
+ENDCLASS.                    &quot;lcl_perform IMPLEMENTATION</source>
+</PROG>

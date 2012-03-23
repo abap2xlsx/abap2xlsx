@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="FEMIA" UDAT="20110528" VERN="000063" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20110528" STIME="181954" IDATE="20110528" ITIME="181954" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-2"?>
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000065" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="211219" IDATE="20120323" ITIME="204502" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="55 "/>
+   <textElement ID="R" LENGTH="55 "/>
    <textElement ID="S" KEY="COUNTRY" ENTRY="D       ." LENGTH="19 "/>
    <textElement ID="S" KEY="MAXSEL" ENTRY="D       ." LENGTH="27 "/>
    <textElement ID="S" KEY="MD" ENTRY="        Select by master data" LENGTH="29 "/>
@@ -46,13 +46,9 @@ FIELD-SYMBOLS: &lt;relationship_address&gt; LIKE LINE OF relationship_addresses.
 DATA: lt_download TYPE TABLE OF zexcel_s_org_rel.
 FIELD-SYMBOLS: &lt;download&gt; LIKE LINE OF lt_download.
 
-DATA: lv_full_path      TYPE string,
-      lv_workdir        TYPE string,
-      lv_file_separator TYPE c.
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;11_Export_Org_and_Contact.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
 
-CONSTANTS: lv_default_file_name TYPE string VALUE &apos;11_Export_Org_and_Contact.xlsx&apos;.
-
-PARAMETERS: p_path TYPE zexcel_export_dir.
 
 PARAMETERS: md TYPE flag RADIOBUTTON GROUP act.
 
@@ -70,27 +66,11 @@ PARAMETERS: reltyp TYPE bu_reltyp DEFAULT &apos;BUR011&apos;,
             partner TYPE bu_partner DEFAULT &apos;191&apos;.
 SELECTION-SCREEN END OF BLOCK b.
 
-AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-  lv_workdir = p_path.
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
-                                              CHANGING  selected_folder = lv_workdir ).
-  p_path = lv_workdir.
-
-
 INITIALIZATION.
   a = &apos;Select by master data&apos;.
   b = &apos;Select by relationship&apos;.
-  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-  cl_gui_cfw=&gt;flush( ).
-  p_path = lv_workdir.
 
 START-OF-SELECTION.
-  IF p_path IS INITIAL.
-    p_path = lv_workdir.
-  ENDIF.
-  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
-
   IF md = abap_true.
     &quot; Read all Companies by Master Data
     central_search-partnercategory = partnerc.
@@ -228,7 +208,6 @@ START-OF-SELECTION.
   ENDLOOP.
 
   DATA: lo_excel                TYPE REF TO zcl_excel,
-        lo_excel_writer         TYPE REF TO zif_excel_writer,
         lo_worksheet            TYPE REF TO zcl_excel_worksheet,
         lo_style_body           TYPE REF TO zcl_excel_style,
         lo_border_dark          TYPE REF TO zcl_excel_style_border,
@@ -450,24 +429,7 @@ START-OF-SELECTION.
 *  column_dimension = lo_worksheet-&gt;get_column_dimension( ip_column = &apos;R&apos; ).
 *  column_dimension-&gt;set_width( ip_width = 40 ).
 
-  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-  &quot; Convert to binary
-  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-    EXPORTING
-      buffer        = lv_file
-    IMPORTING
-      output_length = lv_bytecount
-    TABLES
-      binary_tab    = lt_file_tab.
-*  &quot; This method is only available on AS ABAP &gt; 6.40
-*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
-
-  &quot; Save the file
-  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                    filename     = lv_full_path
-                                                    filetype     = &apos;BIN&apos;
-                                           CHANGING data_tab     = lt_file_tab ).</source>
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
 </PROG>
