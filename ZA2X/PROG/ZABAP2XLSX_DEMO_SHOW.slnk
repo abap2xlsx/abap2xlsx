@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZABAP2XLSX_DEMO_SHOW" VARCL="X" SUBC="1" CNAM="K2_SCHMOECK" CDAT="20120322" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000032" RSTAT="T" RMAND="007" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="205058" IDATE="20120323" ITIME="205058" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZABAP2XLSX_DEMO_SHOW" VARCL="X" SUBC="1" CNAM="K2_SCHMOECK" CDAT="20120322" UNAM="FEMIA" UDAT="20120323" VERN="000033" RSTAT="T" RMAND="007" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="233029" IDATE="20120323" ITIME="233029" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo Show" LENGTH="19 "/>
+  </language>
+ </textPool>
  <source>*&amp;---------------------------------------------------------------------*
 *&amp; Report  ZABAP2XLSX_DEMO_SHOW
 *&amp;---------------------------------------------------------------------*
