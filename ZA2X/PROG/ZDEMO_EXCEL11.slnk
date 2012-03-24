@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000065" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120323" STIME="211219" IDATE="20120323" ITIME="204502" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000067" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111821" IDATE="20120324" ITIME="111821" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" LENGTH="55 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="56 "/>
    <textElement ID="S" KEY="COUNTRY" ENTRY="D       ." LENGTH="19 "/>
    <textElement ID="S" KEY="MAXSEL" ENTRY="D       ." LENGTH="27 "/>
    <textElement ID="S" KEY="MD" ENTRY="        Select by master data" LENGTH="29 "/>

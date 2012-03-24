@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL5" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000038" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="002352" IDATE="20120324" ITIME="002352" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL5" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000040" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111822" IDATE="20120324" ITIME="111822" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" LENGTH="36 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Conditinal formating" LENGTH="37 "/>
   </language>
  </textPool>
  <source>*&amp;---------------------------------------------------------------------*
