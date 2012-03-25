@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL34" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20120319" UNAM="FEMIA" UDAT="20120319" VERN="000013" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120319" STIME="222025" IDATE="20120319" ITIME="215102" UCCHECK="X">
+<?xml version="1.0" encoding="iso-8859-2"?>
+<PROG NAME="ZDEMO_EXCEL34" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20120319" UNAM="K2_SCHMOECK" UDAT="20120325" VERN="000017" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120325" STIME="233306" IDATE="20120325" ITIME="233306" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: static styles" LENGTH="33 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Static Styles (Chess)" LENGTH="37 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
   </language>
  </textPool>
@@ -16,147 +16,209 @@
 
 REPORT  zdemo_excel34.
 
+CONSTANTS: width            TYPE f VALUE &apos;10.14&apos;.
+CONSTANTS: height           TYPE f VALUE &apos;57.75&apos;.
+
+DATA:      current_row      TYPE i,
+           col              TYPE i,
+           col_alpha        TYPE zexcel_cell_column_alpha,
+           row              TYPE i,
+           row_board        TYPE i,
+           colorflag        TYPE i,
+           color            TYPE zexcel_style_color_argb,
+
+           column_dimension TYPE REF TO zcl_excel_worksheet_columndime,
+           row_dimension    TYPE REF TO zcl_excel_worksheet_rowdimensi,
+
+           writing1         TYPE string,
+           writing2         TYPE string.
+
+
+
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;34_Static Styles_Chess.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
 
-DATA: lv_full_path      TYPE string,
-      lv_workdir        TYPE string,
-      lv_file_separator TYPE c.
-
-CONSTANTS: lv_default_file_name TYPE string VALUE &apos;34_Static_Styles.xlsx&apos;.
-
-PARAMETERS: p_path TYPE zexcel_export_dir.
-
-AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-  lv_workdir = p_path.
-  cl_gui_frontend_services=&gt;directory_browse( EXPORTING initial_folder  = lv_workdir
-                                              CHANGING  selected_folder = lv_workdir ).
-  p_path = lv_workdir.
-
-INITIALIZATION.
-  cl_gui_frontend_services=&gt;get_desktop_directory( CHANGING desktop_directory = lv_workdir ).
-  cl_gui_cfw=&gt;flush( ).
-  p_path = lv_workdir.
-
-  sy-title = &apos;ZDEMO_EXCEL2;Issue 139: Static styles instead of dynamic styles&apos;.
 
 START-OF-SELECTION.
-
-  IF p_path IS INITIAL.
-    p_path = lv_workdir.
-  ENDIF.
-  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE p_path lv_file_separator lv_default_file_name INTO lv_full_path.
-
   &quot; Creates active sheet
   CREATE OBJECT lo_excel.
 
-
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
-  lo_worksheet-&gt;set_title( ip_title = &apos;Styles&apos; ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Hello world&apos; ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 3 ip_value = &apos;Bold text&apos;             ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                    = &apos;C&apos;
-                                    ip_row                       = 3
-                                    ip_font_bold                 = abap_true
-                                    ip_font_italic               = abap_true
-                                    ip_font_name                 = zcl_excel_style_font=&gt;c_name_arial
-                                    ip_font_scheme               = zcl_excel_style_font=&gt;c_scheme_none
-                                    ip_font_color_rgb            = zcl_excel_style_color=&gt;c_red
-                                    ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 4 ip_value = &apos;Underlined text&apos;      ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                    = &apos;D&apos;
-                                    ip_row                       = 4
-                                    ip_font_underline            = abap_true
-                                    ip_font_underline_mode       = zcl_excel_style_font=&gt;c_underline_double
-                                    ip_font_name                 = zcl_excel_style_font=&gt;c_name_roman
-                                    ip_font_scheme               = zcl_excel_style_font=&gt;c_scheme_none
-                                    ip_font_family               = zcl_excel_style_font=&gt;c_family_roman
-                                    ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 5 ip_value = &apos;Filled text&apos;           ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                    = &apos;B&apos;
-                                    ip_row                       = 5
-                                    ip_fill_filltype             = zcl_excel_style_fill=&gt;c_fill_solid
-                                    ip_fill_fgcolor_theme        = zcl_excel_style_color=&gt;c_theme_accent6
-                                    ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 6 ip_value = &apos;Borders&apos;              ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                     = &apos;C&apos;
-                                    ip_row                        = 6
-                                    ip_borders_allbo_color_rgb    = zcl_excel_style_color=&gt;c_black
-                                    ip_borders_allborders_style   = zcl_excel_style_border=&gt;c_border_thin
-                                    ip_borders_diagonal_color_rgb = zcl_excel_style_color=&gt;c_black
-                                    ip_borders_diagonal_style     =  zcl_excel_style_border=&gt;c_border_thin
-                                    ip_borders_diagonal_mode      =  zcl_excel_style_borders=&gt;c_diagonal_both
-                                    ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 7 ip_value = &apos;I&apos;&apos;m not a button :)&apos;  ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                     = &apos;D&apos;
-                                    ip_row                        = 7
-                                    ip_borders_down_color_rgb     = zcl_excel_style_color=&gt;c_black
-                                    ip_borders_down_style         = zcl_excel_style_border=&gt;c_border_thin
-                                    ip_borders_right_color_rgb    = zcl_excel_style_color=&gt;c_black
-                                    ip_borders_right_style        = zcl_excel_style_border=&gt;c_border_thin
-                                    ip_borders_top_color_rgb      = zcl_excel_style_color=&gt;c_gray
-                                    ip_borders_top_style          = zcl_excel_style_border=&gt;c_border_thin
-                                    ip_borders_left_color_rgb     = zcl_excel_style_color=&gt;c_gray
-                                    ip_borders_left_style         = zcl_excel_style_border=&gt;c_border_thin
-                                    ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 9 ip_value = &apos;Modified color for Excel 2003&apos; ).
-  lo_excel-&gt;legacy_palette-&gt;set_color( &quot;replace built-in color from palette with out custom RGB turquoise
-      ip_index =     16
-      ip_color =     &apos;0040E0D0&apos; ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                    = &apos;B&apos;
-                                    ip_row                       = 9
-                                    ip_fill_filltype             = zcl_excel_style_fill=&gt;c_fill_solid
-                                    ip_fill_fgcolor_indexed      = 16
-                                    ).
-  &quot; Fill the cell and apply one style
-  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 6 ip_value = &apos;Filled text&apos;           ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                    = &apos;B&apos;
-                                    ip_row                       = 6
-                                    ip_fill_filltype             = zcl_excel_style_fill=&gt;c_fill_solid
-                                    ip_fill_fgcolor_rgb          = zcl_excel_style_color=&gt;c_green
-                                    ip_font_name                 = zcl_excel_style_font=&gt;c_name_cambria
-                                    ip_font_scheme               = zcl_excel_style_font=&gt;c_scheme_major
-                                    ).
-  &quot; Change the style
-*  lo_worksheet-&gt;set_cell_style( ip_column = &apos;B&apos; ip_row = 6 ).
-  &quot; Add Style to an empty cell to test Fix for Issue
-  &quot;#44 Exception ZCX_EXCEL thrown when style is set for an empty cell
-  &quot; https://code.sdn.sap.com/spaces/abap2xlsx/tickets/44-exception-zcx_excel-thrown-when-style-is-set-for-an-empty-cell
-*  lo_worksheet-&gt;set_cell_style( ip_column = &apos;E&apos; ip_row = 6 ).
-  lo_worksheet-&gt;change_cell_style(  ip_column                    = &apos;E&apos;
-                                    ip_row                       = 6
-                                    ip_fill_filltype             = zcl_excel_style_fill=&gt;c_fill_solid
-                                    ip_fill_fgcolor_rgb          = zcl_excel_style_color=&gt;c_green
-                                    ip_font_name                 = zcl_excel_style_font=&gt;c_name_cambria
-                                    ip_font_scheme               = zcl_excel_style_font=&gt;c_scheme_major
-                                    ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Spassky_vs_Bronstein&apos; ).
+
+* Header
+  current_row = 1.
+
+  ADD 1 TO current_row.
+  lo_worksheet-&gt;set_cell( ip_row = current_row ip_column = &apos;B&apos; ip_value = &apos;White&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = current_row ip_column = &apos;C&apos; ip_value = &apos;Spassky, Boris V   --  wins in turn 23&apos; ).
+
+  ADD 1 TO current_row.
+  lo_worksheet-&gt;set_cell( ip_row = current_row ip_column = &apos;B&apos; ip_value = &apos;Black&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = current_row ip_column = &apos;C&apos; ip_value = &apos;Bronstein, David I&apos; ).
+
+  ADD 1 TO current_row.
+* Set size of column + Writing above chessboard
+  DO 8 TIMES.
+
+    writing1 = zcl_excel_common=&gt;convert_column2alpha( sy-index ).
+    writing2 =  sy-index .
+    row = current_row + sy-index.
+
+    col = sy-index + 1.
+    col_alpha = zcl_excel_common=&gt;convert_column2alpha( col ).
+
+* Set size of column
+    column_dimension = lo_worksheet-&gt;get_column_dimension( col_alpha ).
+    column_dimension-&gt;set_width( width ).
+
+* Set size of row
+    row_dimension = lo_worksheet-&gt;get_row_dimension( row ).
+    row_dimension-&gt;set_row_height( height ).
+
+* Set writing on chessboard
+    lo_worksheet-&gt;set_cell( ip_row = row
+                            ip_column = &apos;A&apos;
+                            ip_value = writing2 ).
+    lo_worksheet-&gt;change_cell_style(  ip_column               = &apos;A&apos;
+                                      ip_row                  = row
+                                      ip_alignment_vertical   = zcl_excel_style_alignment=&gt;c_vertical_center  ).
+    lo_worksheet-&gt;set_cell( ip_row = row
+                            ip_column = &apos;J&apos;
+                            ip_value = writing2 ).
+    lo_worksheet-&gt;change_cell_style(  ip_column               = &apos;J&apos;
+                                      ip_row                  = row
+                                      ip_alignment_vertical   = zcl_excel_style_alignment=&gt;c_vertical_center  ).
+
+    row = current_row + 9.
+    lo_worksheet-&gt;set_cell( ip_row = current_row
+                            ip_column = col_alpha
+                            ip_value = writing1 ).
+    lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                      ip_row                  = current_row
+                                      ip_alignment_horizontal = zcl_excel_style_alignment=&gt;c_horizontal_center ).
+    lo_worksheet-&gt;set_cell( ip_row = row
+                            ip_column = col_alpha
+                            ip_value = writing1 ).
+    lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                      ip_row                  = row
+                                      ip_alignment_horizontal = zcl_excel_style_alignment=&gt;c_horizontal_center ).
+  ENDDO.
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;A&apos; ).
+  column_dimension-&gt;set_auto_size( abap_true ).
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;J&apos; ).
+  column_dimension-&gt;set_auto_size( abap_true ).
+
+* Set win-position
+  CONSTANTS: c_pawn   TYPE string VALUE &apos;Pawn&apos;.
+  CONSTANTS: c_rook   TYPE string VALUE &apos;Rook&apos;.
+  CONSTANTS: c_knight TYPE string VALUE &apos;Knight&apos;.
+  CONSTANTS: c_bishop TYPE string VALUE &apos;Bishop&apos;.
+  CONSTANTS: c_queen  TYPE string VALUE &apos;Queen&apos;.
+  CONSTANTS: c_king   TYPE string VALUE &apos;King&apos;.
+
+  row = current_row + 1.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;B&apos; ip_value = c_rook ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;F&apos; ip_value = c_rook ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;G&apos; ip_value = c_knight ).
+  row = current_row + 2.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;B&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;C&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;D&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;F&apos; ip_value = c_queen ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;H&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;I&apos; ip_value = c_king ).
+  row = current_row + 3.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;I&apos; ip_value = c_pawn ).
+  row = current_row + 4.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;D&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;F&apos; ip_value = c_knight ).
+  row = current_row + 5.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;E&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;F&apos; ip_value = c_queen ).
+  row = current_row + 6.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;C&apos; ip_value = c_bishop ).
+  row = current_row + 7.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;B&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;C&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;H&apos; ip_value = c_pawn ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;I&apos; ip_value = c_pawn ).
+  row = current_row + 8.
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;G&apos; ip_value = c_rook ).
+  lo_worksheet-&gt;set_cell( ip_row = row ip_column = &apos;H&apos; ip_value = c_king ).
+
+* Set Chessboard
+  DO 8 TIMES.
+    IF sy-index &lt;= 3.  &quot; Black
+      color = zcl_excel_style_color=&gt;c_black.
+    ELSE.
+      color = zcl_excel_style_color=&gt;c_white.
+    ENDIF.
+    row_board = sy-index.
+    row = current_row + sy-index.
+    DO 8 TIMES.
+      col = sy-index + 1.
+      col_alpha = zcl_excel_common=&gt;convert_column2alpha( col ).
+      TRY.
+* Borders around outer limits
+          IF row_board = 1.
+            lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                              ip_row                  = row
+                                              ip_borders_top_style    = zcl_excel_style_border=&gt;c_border_thick
+                                              ip_borders_top_color_rgb =  zcl_excel_style_color=&gt;c_black ).
+          ENDIF.
+          IF row_board = 8.
+            lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                              ip_row                  = row
+                                              ip_borders_down_style    = zcl_excel_style_border=&gt;c_border_thick
+                                              ip_borders_down_color_rgb =  zcl_excel_style_color=&gt;c_black ).
+          ENDIF.
+          IF col = 2.
+            lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                              ip_row                  = row
+                                              ip_borders_left_style    = zcl_excel_style_border=&gt;c_border_thick
+                                              ip_borders_left_color_rgb =  zcl_excel_style_color=&gt;c_black ).
+          ENDIF.
+          IF col = 9.
+            lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                              ip_row                  = row
+                                              ip_borders_right_style    = zcl_excel_style_border=&gt;c_border_thick
+                                              ip_borders_right_color_rgb =  zcl_excel_style_color=&gt;c_black ).
+          ENDIF.
+* Style for writing
+          lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                            ip_row                  = row
+                                            ip_font_color_rgb       = color
+                                            ip_font_bold            = &apos;X&apos;
+                                            ip_font_size            = 16
+                                            ip_alignment_horizontal = zcl_excel_style_alignment=&gt;c_horizontal_center
+                                            ip_alignment_vertical   = zcl_excel_style_alignment=&gt;c_vertical_center
+                                            ip_fill_filltype        = zcl_excel_style_fill=&gt;c_fill_solid ).
+* Color of field
+          colorflag = ( row + col ) MOD 2.
+          IF colorflag = 0.
+            lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                              ip_row                  = row
+                                              ip_fill_fgcolor_rgb     = &apos;FFB5866A&apos; ).
+          ELSE.
+            lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
+                                              ip_row                  = row
+                                              ip_fill_fgcolor_rgb     = &apos;FFF5DEBF&apos; ).
+          ENDIF.
 
 
-  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  lv_file = lo_excel_writer-&gt;write_file( lo_excel ).
 
-  &quot; Convert to binary
-  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
-    EXPORTING
-      buffer        = lv_file
-    IMPORTING
-      output_length = lv_bytecount
-    TABLES
-      binary_tab    = lt_file_tab.
-*  &quot; This method is only available on AS ABAP &gt; 6.40
-*  lt_file_tab = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
+        CATCH zcx_excel .
+      ENDTRY.
 
-  &quot; Save the file
-  cl_gui_frontend_services=&gt;gui_download( EXPORTING bin_filesize = lv_bytecount
-                                                    filename     = lv_full_path
-                                                    filetype     = &apos;BIN&apos;
-                                           CHANGING data_tab     = lt_file_tab ).</source>
+    ENDDO.
+  ENDDO.
+
+
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
 </PROG>
