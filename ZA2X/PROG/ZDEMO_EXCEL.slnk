@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20120331" VERN="000062" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120331" STIME="091923" IDATE="20120331" ITIME="091923" UCCHECK="X">
+<PROG NAME="ZDEMO_EXCEL" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100817" UNAM="FEMIA" UDAT="20120409" VERN="000063" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120409" STIME="144829" IDATE="20120409" ITIME="144829" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Run all ABAP2XLSX Demo Programs" LENGTH="31 "/>
@@ -71,6 +71,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel33 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Table autofilter
   SUBMIT zdemo_excel34 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Static Styles Chess
   SUBMIT zdemo_excel35 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Static Styles
+  SUBMIT zdemo_excel36 WITH p_path = p_path AND RETURN. &quot; abap2xlsx Demo: Style applied to sheet, column and single cell
   &quot;
   &quot; Reader/Writer Demo must always run at the end
   &quot; to make sure all documents where created

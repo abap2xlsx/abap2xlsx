@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL36" VARCL="X" SUBC="1" CNAM="K2_SCHMOECK" CDAT="20120404" UNAM="K2_SCHMOECK" UDAT="20120404" VERN="000026" RSTAT="T" RMAND="007" RLOAD="E" FIXPT="X" SDATE="20120404" STIME="233231" IDATE="20120404" ITIME="233231" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL36" VARCL="X" SUBC="1" CNAM="K2_SCHMOECK" CDAT="20120404" UNAM="FEMIA" UDAT="20120409" VERN="000028" RSTAT="T" RMAND="007" RLOAD="E" FIXPT="X" SDATE="20120409" STIME="144721" IDATE="20120409" ITIME="144332" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo:  Default Styles" LENGTH="31 "/>
@@ -12,11 +12,15 @@ REPORT  zdemo_excel36.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       column_dimension        TYPE REF TO zcl_excel_worksheet_columndime,
-      col                     type i.
+      col                     TYPE i.
 
-DATA: guid_arial20            TYPE zexcel_cell_style,
-      gui_times11             TYPE zexcel_cell_style,
-      gui_cambria8red         TYPE zexcel_cell_style.
+DATA: lo_style_arial20      TYPE REF TO zcl_excel_style,
+      lo_style_times11      TYPE REF TO zcl_excel_style,
+      lo_style_cambria8red  TYPE REF TO zcl_excel_style.
+
+DATA: lv_style_arial20_guid     TYPE zexcel_cell_style,
+      lv_style_times11_guid     TYPE zexcel_cell_style,
+      lv_style_cambria8red_guid TYPE zexcel_cell_style.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE &apos;36_DefaultStyles.xlsx&apos;.
@@ -27,18 +31,27 @@ START-OF-SELECTION.
   &quot; Creates active sheet
   CREATE OBJECT lo_excel.
 
-  guid_arial20 = lo_excel-&gt;build_style( ip_font_name      = zcl_excel_style_font=&gt;c_name_arial
-                                        ip_font_scheme    = zcl_excel_style_font=&gt;c_scheme_none
-                                        ip_font_size      = 20 ).
-  gui_times11 = lo_excel-&gt;build_style( ip_font_name      = zcl_excel_style_font=&gt;c_name_roman
-                                        ip_font_scheme    = zcl_excel_style_font=&gt;c_scheme_none
-                                        ip_font_size      = 11 ).
-  gui_cambria8red = lo_excel-&gt;build_style(  ip_font_name      = zcl_excel_style_font=&gt;C_NAME_CAMBRIA
-                                            ip_font_scheme    = zcl_excel_style_font=&gt;c_scheme_none
-                                            ip_font_size      = 8
-                                            ip_font_color_rgb = zcl_excel_style_color=&gt;c_red ).
+  &quot; Create a bold / italic style
+  lo_style_arial20                  = lo_excel-&gt;add_new_style( ).
+  lo_style_arial20-&gt;font-&gt;name      = zcl_excel_style_font=&gt;c_name_arial.
+  lo_style_arial20-&gt;font-&gt;scheme    = zcl_excel_style_font=&gt;c_scheme_none.
+  lo_style_arial20-&gt;font-&gt;size      = 20.
+  lv_style_arial20_guid             = lo_style_arial20-&gt;get_guid( ).
 
-  lo_excel-&gt;set_default_style( guid_arial20 ).  &quot; Default for all new worksheets
+  lo_style_times11                  = lo_excel-&gt;add_new_style( ).
+  lo_style_times11-&gt;font-&gt;name      = zcl_excel_style_font=&gt;c_name_roman.
+  lo_style_times11-&gt;font-&gt;scheme    = zcl_excel_style_font=&gt;c_scheme_none.
+  lo_style_times11-&gt;font-&gt;size      = 11.
+  lv_style_times11_guid             = lo_style_times11-&gt;get_guid( ).
+
+  lo_style_cambria8red                  = lo_excel-&gt;add_new_style( ).
+  lo_style_cambria8red-&gt;font-&gt;name      = zcl_excel_style_font=&gt;c_name_cambria.
+  lo_style_cambria8red-&gt;font-&gt;scheme    = zcl_excel_style_font=&gt;c_scheme_none.
+  lo_style_cambria8red-&gt;font-&gt;size      = 8.
+  lo_style_cambria8red-&gt;font-&gt;color-rgb = zcl_excel_style_color=&gt;c_red.
+  lv_style_cambria8red_guid             = lo_style_cambria8red-&gt;get_guid( ).
+
+  lo_excel-&gt;set_default_style( lv_style_arial20_guid ).  &quot; Default for all new worksheets
 
 * 1st sheet - do not change anything --&gt; defaultstyle from lo_excel should apply
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
@@ -52,7 +65,7 @@ START-OF-SELECTION.
 * 2nd sheet - defaultstyle for this sheet set explicitly ( set to Times New Roman 11 )
   lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
   lo_worksheet-&gt;set_title( &apos;Style for this sheet&apos; ).
-  lo_worksheet-&gt;zif_excel_sheet_properties~set_style( gui_times11 ).
+  lo_worksheet-&gt;zif_excel_sheet_properties~set_style( lv_style_times11_guid ).
 
   lo_worksheet-&gt;set_cell( ip_column = 2 ip_row = 4 ip_value = &apos;All  cells in this sheet are set to font Times New Roman, fontsize 11&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = 2 ip_row = 5 ip_value = &apos;because this style was passed for this sheet&apos; ).
@@ -64,21 +77,21 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
   lo_worksheet-&gt;set_title( &apos;Style for 3 columns&apos; ).
   column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
-  column_dimension-&gt;set_column_style_by_guid( ip_style_guid = gui_times11 ).
+  column_dimension-&gt;set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
   column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
-  column_dimension-&gt;set_column_style_by_guid( ip_style_guid = gui_times11 ).
+  column_dimension-&gt;set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
   column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;F&apos; ).
-  column_dimension-&gt;set_column_style_by_guid( ip_style_guid = gui_times11 ).
+  column_dimension-&gt;set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
 
   lo_worksheet-&gt;set_cell( ip_column = 2 ip_row = 4  ip_value = &apos;The columns B,C and F are set to Times New Roman&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = 2 ip_row = 10 ip_value = &apos;All other cells in this sheet are set to font Arial, fontsize 20&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = 2 ip_row = 11 ip_value = &apos;because no separate style was passed for this sheet&apos; ).
   lo_worksheet-&gt;set_cell( ip_column = 2 ip_row = 12 ip_value = &apos;but a default style was set for the complete instance of zcl_excel&apos; ).
 
-  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 1 ip_value = &apos;Of course&apos; ip_style = gui_cambria8red ).
-  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 2 ip_value = &apos;setting a specific style to a cell&apos; ip_style = gui_cambria8red ).
-  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 3 ip_value = &apos;takes precedence over all defaults&apos; ip_style = gui_cambria8red ).
-  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 4 ip_value = &apos;Here:  Cambria 8 in red&apos; ip_style = gui_cambria8red ).
+  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 1 ip_value = &apos;Of course&apos; ip_style = lv_style_cambria8red_guid ).
+  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 2 ip_value = &apos;setting a specific style to a cell&apos; ip_style = lv_style_cambria8red_guid ).
+  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 3 ip_value = &apos;takes precedence over all defaults&apos; ip_style = lv_style_cambria8red_guid ).
+  lo_worksheet-&gt;set_cell( ip_column = 8 ip_row = 4 ip_value = &apos;Here:  Cambria 8 in red&apos; ip_style = lv_style_cambria8red_guid ).
 
 
 * Set entry into each of the first 10 columns
