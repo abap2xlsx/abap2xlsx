@@ -4707,11 +4707,13 @@ endmethod.</source>
     lv_value = lo_range-&gt;name.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_name
                                       value = lv_value ).
-    lv_value = lo_range-&gt;sheetid.                                       &quot; Issue #163
-    SHIFT lv_value RIGHT DELETING TRAILING space.                       &quot; Issue #163
-    SHIFT lv_value LEFT DELETING LEADING space.                         &quot; Issue #163
-    lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_localsheetid  &quot; Issue #163
-                                      value = lv_syindex ).             &quot; Issue #163
+    lv_value = lo_range-&gt;sheetid.                                         &quot; Issue #163
+    IF lv_value GT 0.                                                     &quot; Issue #163
+      SHIFT lv_value RIGHT DELETING TRAILING space.                       &quot; Issue #163
+      SHIFT lv_value LEFT DELETING LEADING space.                         &quot; Issue #163
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_localsheetid  &quot; Issue #163
+                                        value = lv_value ).               &quot; Issue #163
+    ENDIF.
     lv_value = lo_range-&gt;get_value( ).
     lo_sub_element-&gt;set_value( value = lv_value ).
     lo_element-&gt;append_child( new_child = lo_sub_element ). &quot; range node

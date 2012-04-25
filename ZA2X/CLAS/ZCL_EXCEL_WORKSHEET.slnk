@@ -3751,7 +3751,8 @@ endmethod.</source>
   me-&gt;update_dimension_range( ).
   IF upper_cell EQ lower_cell. &quot;only one cell
     &quot; Worksheet not filled
-    IF upper_cell-cell_coords = &apos;0&apos;.
+*    IF upper_cell-cell_coords = &apos;0&apos;.
+    IF upper_cell-cell_coords IS INITIAL.
       ep_dimension_range = &apos;A1&apos;.
     ELSE.
       ep_dimension_range = upper_cell-cell_coords.
@@ -4497,6 +4498,8 @@ endmethod.</source>
         lt_sheet_content TYPE zexcel_t_cell_data_unsorted,
         lv_row_alpha     TYPE string,
         lv_column_alpha  TYPE zexcel_cell_column_alpha.
+
+  CHECK lt_sheet_content IS NOT INITIAL.
 
 * update dimension range
   lt_sheet_content = sheet_content.
