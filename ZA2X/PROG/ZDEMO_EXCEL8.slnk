@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL8" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000038" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111822" IDATE="20120324" ITIME="111822" UCCHECK="X">
+<?xml version="1.0" encoding="utf-16"?>
+<PROG NAME="ZDEMO_EXCEL8" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100713" UNAM="DEVELOPER" UDAT="20120317" VERN="000042" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120317" STIME="090232" IDATE="20120317" ITIME="090232" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Define a range" LENGTH="31 "/>
@@ -48,6 +48,19 @@ START-OF-SELECTION.
   lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = &apos;Blueberry&apos; ).
   lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;C&apos; ip_value = &apos;Ananas&apos; ).
   lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;C&apos; ip_value = &apos;Grapes&apos; ).
+
+  &quot; Define another Range with a name longer than 40 characters that
+  &quot; tests the fix of issue #151 Ranges can be only up to 40 chars
+
+  lo_range = lo_excel-&gt;add_new_range( ).
+  lo_range-&gt;name = &apos;A_range_with_a_name_that_is_longer_than_40_characters&apos;.
+  lo_range-&gt;set_value( ip_sheet_name    = lv_title
+                       ip_start_column  = &apos;D&apos;
+                       ip_start_row     = 4
+                       ip_stop_column   = &apos;D&apos;
+                       ip_stop_row      = 5 ).
+  lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;D&apos; ip_value = &apos;Range Value 1&apos; ).
+  lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;D&apos; ip_value = &apos;Range Value 2&apos; ).
 
 
 *** Create output
