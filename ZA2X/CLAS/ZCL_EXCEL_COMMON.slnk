@@ -456,7 +456,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
         cl_abap_unit_assert=&gt;assert_equals(
           act   = ep_value
-          exp   = &apos;0&apos;
+          exp   = &apos;-693596&apos;
           msg   = &apos;Wrong date conversion&apos;
           level = if_aunit_constants=&gt;critical
         ).
@@ -469,11 +469,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 2. Basic conversion
     TRY.
+        DATA exp_value TYPE zexcel_cell_value VALUE 0.
         ep_value = zcl_excel_common=&gt;date_to_excel_string( &apos;18991231&apos; ).
 
         cl_abap_unit_assert=&gt;assert_differs(
               act   = ep_value
-              exp   = &apos;0&apos;
+              exp   = exp_value
               msg   = &apos;Wrong date conversion&apos;
               level = if_aunit_constants=&gt;critical
             ).
@@ -1017,7 +1018,7 @@ endmethod.</source>
   <source>METHOD date_to_excel_string.
   DATA: lv_date_diff         TYPE i.
 
-  CHECK ip_value IS NOT INITIAL.
+  &quot;CHECK ip_value IS NOT INITIAL.
   &quot; Needed hack caused by the problem that:
   &quot; Excel 2000 incorrectly assumes that the year 1900 is a leap year
   &quot; http://support.microsoft.com/kb/214326/en-us
