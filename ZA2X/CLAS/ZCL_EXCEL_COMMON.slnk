@@ -727,10 +727,10 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 * Test 1. Basic conversion
     TRY.
         ep_value = zcl_excel_common=&gt;time_to_excel_string( &apos;000001&apos; ).
-
+        &quot; A test directly in Excel returns the value 0.0000115740740740741000
         cl_abap_unit_assert=&gt;assert_equals(
               act   = ep_value
-              exp   = &apos;0.00001&apos;
+              exp   = &apos;0.0000115740740741&apos;
               msg   = &apos;Wrong date conversion&apos;
               level = if_aunit_constants=&gt;critical
             ).
@@ -744,10 +744,10 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 * Test 2. Basic conversion
     TRY.
         ep_value = zcl_excel_common=&gt;time_to_excel_string( &apos;235959&apos; ).
-
+        &quot; A test directly in Excel returns the value 0.9999884259259260000000
         cl_abap_unit_assert=&gt;assert_equals(
               act   = ep_value
-              exp   = &apos;0.99999&apos;
+              exp   = &apos;0.9999884259259260&apos;
               msg   = &apos;Wrong date conversion&apos;
               level = if_aunit_constants=&gt;critical
             ).
@@ -781,7 +781,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
         cl_abap_unit_assert=&gt;assert_equals(
               act   = ep_value
-              exp   = &apos;0.1&apos;
+              exp   = &apos;0.1000000000000000&apos;
               msg   = &apos;Wrong date conversion&apos;
               level = if_aunit_constants=&gt;critical
         ).
