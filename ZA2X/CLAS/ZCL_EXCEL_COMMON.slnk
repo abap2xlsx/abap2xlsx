@@ -532,6 +532,37 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=&gt;critical    &quot; Error Severity
         ).
     ENDTRY.
+* Check around the &quot;Excel Leap Year&quot; 1900
+    TRY.
+        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;59&apos; ).
+
+        cl_abap_unit_assert=&gt;assert_equals(
+              act   = ep_value
+              exp   = &apos;19000228&apos;
+              msg   = &apos;Wrong date conversion&apos;
+              level = if_aunit_constants=&gt;critical
+            ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=&gt;fail(
+            msg    = &apos;unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
+        ).
+    ENDTRY.
+    TRY.
+        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;61&apos; ).
+
+        cl_abap_unit_assert=&gt;assert_equals(
+              act   = ep_value
+              exp   = &apos;19000301&apos;
+              msg   = &apos;Wrong date conversion&apos;
+              level = if_aunit_constants=&gt;critical
+            ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=&gt;fail(
+            msg    = &apos;unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
+        ).
+    ENDTRY.
 
 * Test 2. Simple test
     TRY.
@@ -1062,18 +1093,24 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="DEVELOPER" CREATEDON="20111008" CHANGEDBY="DEVELOPER" CHANGEDON="20120317" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Date" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="DEVELOPER" CREATEDON="20111008" CHANGEDBY="DEVELOPER" CHANGEDON="20120317" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="D"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="DEVELOPER" CREATEDON="20120317" CHANGEDBY="DEVELOPER" CHANGEDON="20120317"/>
-  <source>method EXCEL_STRING_TO_DATE.
+  <source>METHOD excel_string_to_date.
   DATA: lv_date_int TYPE i.
 
-  TRY .
+  TRY.
       lv_date_int = ip_value.
       ep_value = lv_date_int + c_excel_baseline_date - 2.
+      &quot; Needed hack caused by the problem that:
+      &quot; Excel 2000 incorrectly assumes that the year 1900 is a leap year
+      &quot; http://support.microsoft.com/kb/214326/en-us
+      IF ep_value &lt; c_excel_1900_leap_year.
+        ep_value = ep_value + 1.
+      ENDIF.
     CATCH cx_sy_conversion_error.
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = &apos;Index out of bounds&apos;.
   ENDTRY.
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" VERSION="1" LANGU="E" DESCRIPT="Convert time from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " AUTHOR="DEVELOPER" CREATEDON="20111008" CHANGEDBY="DEVELOPER" CHANGEDON="20120317" MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="DEVELOPER" CREATEDON="20111008" CHANGEDBY="DEVELOPER" CHANGEDON="20120317" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
