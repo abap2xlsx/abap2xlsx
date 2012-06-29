@@ -4540,7 +4540,7 @@ endmethod.</source>
         lv_row_alpha     TYPE string,
         lv_column_alpha  TYPE zexcel_cell_column_alpha.
 
-  CHECK lt_sheet_content IS NOT INITIAL.
+  CHECK sheet_content IS NOT INITIAL.
 
 * update dimension range
   lt_sheet_content = sheet_content.
