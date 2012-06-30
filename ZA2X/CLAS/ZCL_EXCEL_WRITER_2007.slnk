@@ -3283,7 +3283,7 @@ endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120409" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120409" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_STYLES.
+  <source>METHOD create_xl_styles.
 
 
 ** Constant node name
@@ -3481,6 +3481,8 @@ endmethod.</source>
     ls_protection = lo_style-&gt;protection-&gt;get_structure( ).
     ls_numfmt     = lo_style-&gt;number_format-&gt;get_structure( ).
 
+
+
     CLEAR ls_cellxfs.
 
 
@@ -3540,19 +3542,34 @@ endmethod.</source>
     SUBTRACT 1 FROM ls_cellxfs-protectionid.
 
 * Compress number formats
-    IF ls_numfmt IS NOT INITIAL.
-      READ TABLE lt_numfmts FROM ls_numfmt TRANSPORTING NO FIELDS.
-      IF sy-subrc EQ 0.
-        ls_cellxfs-numfmtid = sy-tabix.
+
+    &quot;-----------
+    IF ls_numfmt-numfmt NE zcl_excel_style_number_format=&gt;c_format_date_std.&quot; and ls_numfmt-NUMFMT ne &apos;STD_NDEC&apos;. &quot; ALE Changes on going
+      &quot;---
+      IF ls_numfmt IS NOT INITIAL.
+
+        READ TABLE lt_numfmts FROM ls_numfmt TRANSPORTING NO FIELDS.
+        IF sy-subrc EQ 0.
+          ls_cellxfs-numfmtid = sy-tabix.
+        ELSE.
+          APPEND ls_numfmt TO lt_numfmts.
+          DESCRIBE TABLE lt_numfmts LINES ls_cellxfs-numfmtid.
+        ENDIF.
+        ADD zcl_excel_common=&gt;c_excel_numfmt_offset TO ls_cellxfs-numfmtid. &quot; Add OXML offset for custom styles
+        ls_cellxfs-applynumberformat    = 1.
       ELSE.
-        APPEND ls_numfmt TO lt_numfmts.
-        DESCRIBE TABLE lt_numfmts LINES ls_cellxfs-numfmtid.
+        ls_cellxfs-applynumberformat    = 0.
       ENDIF.
-      ADD zcl_excel_common=&gt;c_excel_numfmt_offset TO ls_cellxfs-numfmtid. &quot; Add OXML offset for custom styles
-      ls_cellxfs-applynumberformat    = 1.
+      &quot;----------- &quot; ALE changes on going
     ELSE.
-      ls_cellxfs-applynumberformat    = 0.
+      ls_cellxfs-applynumberformat    = 1.
+      IF ls_numfmt-numfmt EQ zcl_excel_style_number_format=&gt;c_format_date_std.
+        ls_cellxfs-numfmtid = 14.
+*      elseif ls_numfmt-NUMFMT eq &apos;STD_NDEC&apos;.
+*        ls_cellxfs-numfmtid = 2.
+      ENDIF.
     ENDIF.
+    &quot;---
 
     IF ls_cellxfs-fontid NE 0.
       ls_cellxfs-applyfont    = 1.
@@ -3574,6 +3591,8 @@ endmethod.</source>
     ELSE.
       ls_cellxfs-applyborder    = 0.
     ENDIF.
+
+
 
 * Remap styles
     READ TABLE lt_cellxfs FROM ls_cellxfs TRANSPORTING NO FIELDS.
@@ -4184,7 +4203,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos; color node" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120409" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="702" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="FEMIA" CREATEDON="20110528" CHANGEDBY="FEMIA" CHANGEDON="20120409" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
