@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_CALENDAR" VARCL="X" SUBC="1" CNAM="DEVELOPER" CDAT="20111229" UNAM="DEVELOPER" UDAT="20111230" VERN="000116" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20111230" STIME="102417" IDATE="20111230" ITIME="102249" UCCHECK="X">
+<PROG NAME="ZDEMO_CALENDAR" VARCL="X" SUBC="1" CNAM="DEVELOPER" CDAT="20111229" UNAM="DEVELOPER" UDAT="20120619" VERN="000127" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120619" STIME="063434" IDATE="20120619" ITIME="063434" UCCHECK="X">
  <textPool>
   <language SPRAS="D">
    <textElement ID="I" KEY="001" ENTRY="KW" LENGTH="4 "/>
@@ -44,8 +44,8 @@ INCLUDE zdemo_calendar_classes.
 DATA: lv_workdir        TYPE string.
 
 PARAMETERS: p_path    TYPE zexcel_export_dir.
-PARAMETERS: p_from    TYPE demo_cr_date_from DEFAULT &apos;20120101&apos;,
-            p_to      TYPE demo_cr_date_to   DEFAULT &apos;20121231&apos;.
+PARAMETERS: p_from    TYPE dfrom DEFAULT &apos;20120101&apos;,
+            p_to      TYPE dto   DEFAULT &apos;20121231&apos;.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
   lv_workdir = p_path.
@@ -63,6 +63,8 @@ START-OF-SELECTION.
   DATA: lo_excel                TYPE REF TO zcl_excel,
         lo_excel_writer         TYPE REF TO zif_excel_writer,
         lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+        lo_col_dim              TYPE REF TO zcl_excel_worksheet_columndime,
+        lo_row_dim              TYPE REF TO ZCL_EXCEL_WORKSHEET_ROWDIMENSI,
         lo_drawing              TYPE REF TO zcl_excel_drawing.
 
   DATA: lo_style_month          TYPE REF TO zcl_excel_style,
@@ -223,9 +225,12 @@ START-OF-SELECTION.
     lo_worksheet-&gt;sheet_setup-&gt;margin_left   = &apos;0.55&apos;.
     lo_worksheet-&gt;sheet_setup-&gt;margin_right  = &apos;0.05&apos;.
     lo_worksheet-&gt;sheet_setup-&gt;margin_bottom = &apos;0.30&apos;.
-    lo_worksheet-&gt;get_column_dimension( &apos;A&apos; )-&gt;set_width( &apos;1.0&apos; ).
-    lo_worksheet-&gt;get_column_dimension( &apos;B&apos; )-&gt;set_width( &apos;2.0&apos; ).
-    lo_worksheet-&gt;get_column_dimension( &apos;K&apos; )-&gt;set_width( &apos;3.0&apos; ).
+    lo_col_dim = lo_worksheet-&gt;get_column_dimension( &apos;A&apos; ).
+    lo_col_dim-&gt;set_width( &apos;1.0&apos; ).
+    lo_col_dim = lo_worksheet-&gt;get_column_dimension( &apos;B&apos; ).
+    lo_col_dim-&gt;set_width( &apos;2.0&apos; ).
+    lo_col_dim = lo_worksheet-&gt;get_column_dimension( &apos;K&apos; ).
+    lo_col_dim-&gt;set_width( &apos;3.0&apos; ).
     lo_worksheet-&gt;sheet_setup-&gt;horizontal_centered = abap_true.
 
     &quot; Add Month Name
@@ -241,8 +246,8 @@ START-OF-SELECTION.
         ip_style     = lv_style_month_guid
     ).
 
-    to_col_int = zcl_excel_common=&gt;convert_column2int( from_col ).
-    to_col = zcl_excel_common=&gt;convert_column2alpha( to_col_int + 7 ).
+    to_col_int = zcl_excel_common=&gt;convert_column2int( from_col ) + 7.
+    to_col = zcl_excel_common=&gt;convert_column2alpha( to_col_int ).
 
     lo_worksheet-&gt;set_merge(
       EXPORTING
@@ -257,14 +262,15 @@ START-OF-SELECTION.
     READ TABLE image_descriptions WITH KEY month_nr = month_nr ASSIGNING &lt;img_descr&gt;.
     IF &lt;img_descr&gt; IS ASSIGNED.
       value = &lt;img_descr&gt;-descr.
-      row = from_row - 4.
+      row = from_row - 3.
       lo_worksheet-&gt;set_cell(
         EXPORTING
           ip_column    = from_col &quot; Cell Column
           ip_row       = row      &quot; Cell Row
           ip_value     = value    &quot; Cell Value
       ).
-      lo_worksheet-&gt;get_row_dimension( row )-&gt;set_row_height( &apos;18.0&apos; ).
+      lo_row_dim = lo_worksheet-&gt;get_row_dimension( row ).
+      lo_row_dim-&gt;set_row_height( &apos;22.0&apos; ).
 
       CONCATENATE p_path lv_file_separator &lt;img_descr&gt;-filename INTO image_path.
       lo_drawing = lo_excel-&gt;add_new_drawing( ).
