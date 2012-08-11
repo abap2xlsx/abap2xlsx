@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" VERSION="1" LANGU="E" DESCRIPT="SALV converter for web dynpro" UUID="4F6071D6C832018FE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDBY="RTURNHEIM" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT">
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" VERSION="1" LANGU="E" DESCRIPT="SALV converter for web dynpro" UUID="0202322174CD1EE19DA6A46937591510" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT">
  <publicSection>class ZCL_EXCEL_CONVERTER_RESULT_WD definition
   public
   inheriting from ZCL_EXCEL_CONVERTER_RESULT
@@ -17,9 +17,25 @@ public section.
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_RESULT_WD
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_EX_RESULT
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_RESULT_WD
 *&quot;* do not include other source files here!!!
-private section.</privateSection>
+private section.
+
+  data WO_CONFIG type ref to CL_SALV_WD_CONFIG_TABLE .
+  data WT_FIELDS type SALV_WD_T_FIELD_REF .
+  data WT_COLUMNS type SALV_WD_T_COLUMN_REF .
+
+  methods GET_COLUMNS_INFO
+    changing
+      !XS_FCAT type LVC_S_FCAT .
+  methods GET_FIELDS_INFO
+    changing
+      !XS_FCAT type LVC_S_FCAT .
+  methods CREATE_WT_SORT .
+  methods CREATE_WT_FILT .
+  methods CREATE_WT_FCAT
+    importing
+      !IO_TABLE type ref to DATA .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -28,7 +44,10 @@ private section.</privateSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120319" CHANGEDON="00000000">
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="WO_CONFIG" VERSION="1" LANGU="1" DESCRIPT="Configuration of the ALV Output" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_SALV_WD_CONFIG_TABLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="WT_COLUMNS" VERSION="1" LANGU="E" DESCRIPT="SALV_WD_T_COLUMN_REF" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="SALV_WD_T_COLUMN_REF" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="WT_FIELDS" VERSION="1" LANGU="1" DESCRIPT="SALV_WD_T_FIELD_REF" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="SALV_WD_T_FIELD_REF" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" STATE="1">
   <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT"/>
   <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG"/>
  </inheritance>
@@ -48,7 +67,6 @@ ENDMETHOD.</source>
  <interfaceMethod CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CPDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG">
   <source>METHOD zif_excel_converter~create_fieldcatalog.
   DATA: lo_result  TYPE REF TO cl_salv_wd_result_data_table,
-        lo_ex_cm   TYPE REF TO cl_salv_ex_cm,
         lo_data    TYPE REF TO data.
 
   FIELD-SYMBOLS: &lt;fs_table&gt; TYPE STANDARD TABLE.
@@ -62,27 +80,29 @@ ENDMETHOD.</source>
   CLEAR: es_layout,
          et_fieldcatalog.
 
+  break rturnheim.
+
   IF lo_result IS BOUND.
     lo_data = get_table( io_object = lo_result-&gt;r_model-&gt;r_data ).
     IF lo_data IS BOUND.
       ASSIGN lo_data-&gt;* TO &lt;fs_table&gt; .
-* CL_SALV_WD_C_TABLE_V_TABLE  &quot; If we want to do it we need this
-*      if_salv_wd_comp_table_events~on_export_excel( ).
-*    lo_ex_cm ?= lo_result-&gt;r_model-&gt;r_model.
-*    ws_layo = lo_ex_cm-&gt;s_layo.
-* T_DRDN  Instance Attribute  Public  Type  LVC_T_DROP
-*    wt_fcat = lo_ex_cm-&gt;t_fcat.
-*    wt_filt = lo_ex_cm-&gt;t_filt.
-* T_HYPE  Instance Attribute  Public  Type  LVC_T_HYPE
-* T_SELECTED_CELLS  Instance Attribute  Public  Type  LVC_T_CELL
-* T_SELECTED_COLUMNS  Instance Attribute  Public  Type  LVC_T_COL
-*    wt_sort = lo_ex_cm-&gt;t_sort.
+
+      wo_config ?= lo_result-&gt;r_model-&gt;r_model.
+
+      IF wo_config IS BOUND.
+        wt_fields  = wo_config-&gt;if_salv_wd_field_settings~get_fields( ) .
+        wt_columns = wo_config-&gt;if_salv_wd_column_settings~get_columns( ) .
+      ENDIF.
+
+      create_wt_fcat( io_table = lo_data ).
+      create_wt_sort( ).
+      create_wt_filt( ).
 
       apply_sort( EXPORTING it_table = &lt;fs_table&gt;
                   IMPORTING eo_table = eo_table ) .
 
-      get_color( EXPORTING io_table    = eo_table
-                 IMPORTING et_colors   = et_colors ) .
+*      get_color( EXPORTING io_table    = eo_table
+*                 IMPORTING et_colors   = et_colors ) .
 
       get_filter( EXPORTING io_table   = eo_table
                   IMPORTING et_filter  = et_filter ) .
@@ -95,4 +115,195 @@ ENDMETHOD.</source>
   ENDIF.
 ENDMETHOD.</source>
  </interfaceMethod>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="CREATE_WT_FCAT" VERSION="1" LANGU="1" DESCRIPT="Create wt_fcat for WD interface" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="CREATE_WT_FCAT" SCONAME="IO_TABLE" VERSION="1" LANGU="1" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
+  <source>METHOD create_wt_fcat.
+  DATA: lr_data             TYPE REF TO data,
+      lo_structdescr      TYPE REF TO cl_abap_structdescr,
+      lo_elemdescr        TYPE REF TO cl_abap_elemdescr,
+      lt_dfies            TYPE ddfields,
+      ls_dfies            TYPE dfies,
+      lv_sytabix          TYPE sytabix,
+      lt_components       TYPE abap_component_tab,
+      ls_component        LIKE LINE OF lt_components.
+
+  DATA: ls_fcat         TYPE lvc_s_fcat.
+  DATA: lt_filters      TYPE salv_wd_t_filter_rule_ref,
+        ls_filt         TYPE lvc_s_filt.
+
+  FIELD-SYMBOLS: &lt;fs_filter&gt;  TYPE salv_wd_s_filter_rule_ref.
+
+  FIELD-SYMBOLS: &lt;fs_tab&gt;         TYPE ANY TABLE.
+
+  ASSIGN io_table-&gt;* TO &lt;fs_tab&gt; .
+
+  CREATE DATA lr_data LIKE LINE OF &lt;fs_tab&gt;.
+
+  lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data_ref( lr_data ).
+
+  &quot;for DDIC structure get the info directly
+  IF lo_structdescr-&gt;is_ddic_type( ) = abap_true.
+    lt_dfies = lo_structdescr-&gt;get_ddic_field_list( ).
+
+    LOOP AT lt_dfies INTO ls_dfies.
+      MOVE-CORRESPONDING ls_dfies TO ls_fcat.
+*      ls_fcat-columnname = ls_dfies-fieldname.
+      ls_fcat-col_pos = ls_dfies-position.
+      ls_fcat-key     = ls_dfies-keyflag.
+      get_fields_info( CHANGING xs_fcat = ls_fcat ) .
+
+      ls_fcat-col_opt = abap_true.
+
+      get_columns_info( CHANGING xs_fcat = ls_fcat ) .
+
+      INSERT ls_fcat INTO TABLE wt_fcat.
+    ENDLOOP.
+  ELSE.
+    &quot;if structure is not DDIC check components
+    lt_components = lo_structdescr-&gt;get_components( ).
+    LOOP AT lt_components INTO ls_component.
+      lv_sytabix = sy-tabix.
+      CLEAR ls_fcat.
+      lo_elemdescr ?= ls_component-type.
+      &quot;component is DDIC
+      IF lo_elemdescr-&gt;is_ddic_type( ) = abap_true.
+        ls_dfies = lo_elemdescr-&gt;get_ddic_field( ).
+        MOVE-CORRESPONDING ls_dfies TO ls_fcat.
+*        ls_fcat-columnname = ls_component-name.
+      ELSE.
+        &quot;component is not DDIC -&gt; return minimum information required
+        ls_fcat-fieldname  = ls_component-name.
+*        ls_fcat-columnname = ls_component-name.
+        ls_fcat-scrtext_m  = ls_component-name.
+      ENDIF.
+      ls_fcat-col_opt = abap_true.
+      ls_fcat-col_pos = lv_sytabix.
+      get_fields_info( CHANGING xs_fcat = ls_fcat ) .
+
+      INSERT ls_fcat INTO TABLE wt_fcat.
+    ENDLOOP.
+  ENDIF.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="CREATE_WT_FILT" VERSION="1" LANGU="1" DESCRIPT="Create wt_filt for WD interface" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>METHOD create_wt_filt.
+* No neeed for superclass.
+* Only for WD
+  DATA: lt_otab  TYPE abap_sortorder_tab,
+        ls_otab  TYPE abap_sortorder.
+  DATA: lt_filters      TYPE salv_wd_t_filter_rule_ref,
+        ls_filt         TYPE lvc_s_filt.
+
+  FIELD-SYMBOLS: &lt;fs_fields&gt;  TYPE salv_wd_s_field_ref,
+                 &lt;fs_filter&gt;  TYPE salv_wd_s_filter_rule_ref.
+
+  LOOP AT  wt_fields ASSIGNING &lt;fs_fields&gt;.
+    REFRESH lt_filters.
+    lt_filters    = &lt;fs_fields&gt;-r_field-&gt;if_salv_wd_filter~get_filter_rules( ) .
+    LOOP AT lt_filters ASSIGNING &lt;fs_filter&gt;.
+      ls_filt-fieldname = &lt;fs_fields&gt;-fieldname.
+      IF &lt;fs_filter&gt;-r_filter_rule-&gt;get_included( ) = abap_true.
+        ls_filt-sign      = &apos;I&apos;.
+      ELSE.
+        ls_filt-sign      = &apos;E&apos;.
+      ENDIF.
+      ls_filt-option    = &lt;fs_filter&gt;-r_filter_rule-&gt;get_operator( ).
+      ls_filt-high      = &lt;fs_filter&gt;-r_filter_rule-&gt;get_high_value( ) .
+      ls_filt-low       = &lt;fs_filter&gt;-r_filter_rule-&gt;get_low_value( ) .
+      INSERT ls_filt INTO TABLE wt_filt.
+    ENDLOOP.
+  ENDLOOP.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="CREATE_WT_SORT" VERSION="1" LANGU="1" DESCRIPT="Create wt_sort for WD interface" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>METHOD create_wt_sort.
+  DATA: lo_sort         TYPE REF TO cl_salv_wd_sort_rule,
+        l_sort_order    TYPE salv_wd_constant,
+        ls_sort         TYPE lvc_s_sort.
+
+  FIELD-SYMBOLS: &lt;fs_fields&gt;  TYPE salv_wd_s_field_ref.
+
+  LOOP AT  wt_fields ASSIGNING &lt;fs_fields&gt;.
+    lo_sort      = &lt;fs_fields&gt;-r_field-&gt;if_salv_wd_sort~get_sort_rule( ) .
+    IF lo_sort IS BOUND.
+      l_sort_order = lo_sort-&gt;get_sort_order( ).
+      IF l_sort_order &lt;&gt; if_salv_wd_c_sort=&gt;sort_order.
+        CLEAR ls_sort.
+        ls_sort-spos      = lo_sort-&gt;get_sort_position( ).
+        ls_sort-fieldname = &lt;fs_fields&gt;-fieldname.
+*      ls_sort-GROUP
+        ls_sort-subtot    = lo_sort-&gt;get_group_aggregation( ).
+*      ls_sort-COMP
+*      ls_sort-EXPA
+*      ls_sort-SELTEXT
+*      ls_sort-OBLIGATORY
+*      ls_sort-LEVEL
+*      ls_sort-NO_OUT
+        IF l_sort_order = if_salv_wd_c_sort=&gt;sort_order_ascending.
+          ls_sort-up = abap_true.
+        ELSE.
+          ls_sort-down = abap_true.
+        ENDIF.
+        INSERT ls_sort INTO TABLE wt_sort.
+      ENDIF.
+    ENDIF.
+  ENDLOOP.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="GET_COLUMNS_INFO" VERSION="1" LANGU="E" DESCRIPT="Read data from WD columns object" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="GET_COLUMNS_INFO" SCONAME="XS_FCAT" VERSION="1" LANGU="E" DESCRIPT="ALV control: Field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="LVC_S_FCAT"/>
+  <source>METHOD get_columns_info.
+  DATA:  l_numc2             TYPE salv_wd_constant.
+
+
+  FIELD-SYMBOLS: &lt;fs_column&gt;  TYPE salv_wd_s_column_ref.
+
+  READ TABLE wt_columns ASSIGNING &lt;fs_column&gt; WITH KEY id = xs_fcat-fieldname .
+  IF sy-subrc = 0.
+    xs_fcat-col_pos    = &lt;fs_column&gt;-r_column-&gt;get_position( ) .
+    l_numc2 = &lt;fs_column&gt;-r_column-&gt;get_fixed_position( ).
+    IF l_numc2 = &apos;02&apos;.
+      xs_fcat-fix_column = abap_true .
+    ENDIF.
+    l_numc2 = &lt;fs_column&gt;-r_column-&gt;get_visible( ).
+    IF l_numc2 = &apos;01&apos;.
+      xs_fcat-no_out = abap_true .
+    ENDIF.
+  ENDIF.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="GET_FIELDS_INFO" VERSION="1" LANGU="E" DESCRIPT="Get aggregation from field table" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="GET_FIELDS_INFO" SCONAME="XS_FCAT" VERSION="1" LANGU="E" DESCRIPT="ALV control: Field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="LVC_S_FCAT"/>
+  <source>METHOD get_fields_info.
+  DATA:   lo_aggr         TYPE REF TO cl_salv_wd_aggr_rule,
+          l_aggrtype      TYPE salv_wd_constant.
+
+  FIELD-SYMBOLS: &lt;fs_fields&gt;  TYPE salv_wd_s_field_ref.
+
+  READ TABLE wt_fields ASSIGNING &lt;fs_fields&gt; WITH KEY fieldname = xs_fcat-fieldname.
+  IF sy-subrc = 0.
+    lo_aggr = &lt;fs_fields&gt;-r_field-&gt;if_salv_wd_aggr~get_aggr_rule( ) .
+    IF lo_aggr IS BOUND.
+      l_aggrtype = lo_aggr-&gt;get_aggregation_type( ) .
+      CASE l_aggrtype.
+        WHEN if_salv_wd_c_aggregation=&gt;aggrtype_total.
+          xs_fcat-do_sum = abap_true.
+        WHEN if_salv_wd_c_aggregation=&gt;aggrtype_minimum.
+          xs_fcat-do_sum =  &apos;A&apos;.
+        WHEN if_salv_wd_c_aggregation=&gt;aggrtype_maximum .
+          xs_fcat-do_sum =  &apos;B&apos;.
+        WHEN if_salv_wd_c_aggregation=&gt;aggrtype_average .
+          xs_fcat-do_sum =  &apos;C&apos;.
+        WHEN OTHERS.
+          CLEAR xs_fcat-do_sum .
+      ENDCASE.
+    ENDIF.
+  ENDIF.
+
+ENDMETHOD.</source>
+ </method>
 </CLAS>

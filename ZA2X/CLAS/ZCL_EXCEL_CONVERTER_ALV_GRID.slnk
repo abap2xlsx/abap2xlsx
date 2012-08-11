@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F037FA9DF490087E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RTURNHEIM" CREATEDON="20120131" CHANGEDON="20120131" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="700" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" CHANGEDBY="RTURNHEIM">
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F037FA9DF490087E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
  <publicSection>class ZCL_EXCEL_CONVERTER_ALV_GRID definition
   public
   inheriting from ZCL_EXCEL_CONVERTER_ALV
   final
   create public .
 
+public section.
 *&quot;* public components of class ZCL_EXCEL_CONVERTER_ALV_GRID
 *&quot;* do not include other source files here!!!
-public section.
 
-  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
-    redefinition .
   methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
+    redefinition .
+  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
     redefinition .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_ALV_GRID
-*&quot;* do not include other source files here!!!
-protected section.</protectedSection>
+ <protectedSection>protected section.
+*&quot;* protected components of class ZCL_EXCEL_CONVERTER_ALV_GRID
+*&quot;* do not include other source files here!!!</protectedSection>
  <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_ALV_GRID
 *&quot;* do not include other source files here!!!
 private section.</privateSection>
@@ -28,7 +28,7 @@ private section.</privateSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1" AUTHOR="RTURNHEIM" CREATEDON="20120131" CHANGEDBY="RTURNHEIM" CHANGEDON="20120131">
+ <inheritance CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" STATE="1">
   <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT"/>
   <redefinition CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" MTDNAME="ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG"/>
  </inheritance>
