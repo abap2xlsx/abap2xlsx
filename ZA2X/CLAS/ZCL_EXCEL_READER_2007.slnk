@@ -1,60 +1,68 @@
 <?xml version="1.0" encoding="utf-16"?>
 <CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" UUID="DFAC2E4C81CE84F1B39B000C29B7D360" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="10 " SRCCOLUMN2="29 " TYPESRC_LENG="154 " TYPESRC="BEGIN OF t_relationship,
-           id     TYPE string,
-           type   TYPE string,
-           target TYPE string,
-         END OF t_relationship
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="10 " SRCCOLUMN2="29 " TYPESRC_LENG="154 " TYPESRC="BEGIN OF t_relationship,
+           id     TYPE string,
+           type   TYPE string,
+           target TYPE string,
+         END OF t_relationship
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="18 " SRCCOLUMN2="26 " TYPESRC_LENG="254 " TYPESRC="BEGIN OF t_fileversion,
-            appname       TYPE string,
-            lastedited    TYPE string,
-            lowestedited  TYPE string,
-            rupbuild      TYPE string,
-            codename      TYPE string,
-       END OF t_fileversion
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="18 " SRCCOLUMN2="26 " TYPESRC_LENG="254 " TYPESRC="BEGIN OF t_fileversion,
+            appname       TYPE string,
+            lastedited    TYPE string,
+            lowestedited  TYPE string,
+            rupbuild      TYPE string,
+            codename      TYPE string,
+       END OF t_fileversion
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="20 " SRCCOLUMN1="4 " SRCROW2="24 " SRCCOLUMN2="22 " TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
-              name    TYPE string,
-              sheetid TYPE string,
-              id      TYPE string,
-         END OF t_sheet
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="20 " SRCCOLUMN1="4 " SRCROW2="24 " SRCCOLUMN2="22 " TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
+              name    TYPE string,
+              sheetid TYPE string,
+              id      TYPE string,
+         END OF t_sheet
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
-              codename            TYPE string,
-              defaultthemeversion TYPE string,
-         END OF t_workbookpr
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
+              codename            TYPE string,
+              defaultthemeversion TYPE string,
+         END OF t_workbookpr
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="31 " SRCCOLUMN1="4 " SRCROW2="33 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
-              codename            TYPE string,
-         END OF t_sheetpr
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="31 " SRCCOLUMN1="4 " SRCROW2="33 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
+              codename            TYPE string,
+         END OF t_sheetpr
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="35 " SRCCOLUMN1="4 " SRCROW2="38 " SRCCOLUMN2="22 " TYPESRC_LENG="143 " TYPESRC='BEGIN OF t_range,
-              name    TYPE string,
-              localsheetid    TYPE string,       &quot; issue #163
-         END OF t_range
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="35 " SRCCOLUMN1="4 " SRCROW2="38 " SRCCOLUMN2="22 " TYPESRC_LENG="143 " TYPESRC='BEGIN OF t_range,
+              name    TYPE string,
+              localsheetid    TYPE string,       &quot; issue #163
+         END OF t_range
 '/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILLS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="7 " TYPTYPE="4" SRCROW1="40 " SRCCOLUMN1="8 " SRCROW2="40 " SRCCOLUMN2="82 " TYPESRC_LENG="77 " TYPESRC="t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILLS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="7 " TYPTYPE="4" SRCROW1="40 " SRCCOLUMN1="4 " SRCROW2="40 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_BORDERS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="8 " TYPTYPE="4" SRCROW1="41 " SRCCOLUMN1="8 " SRCROW2="41 " SRCCOLUMN2="87 " TYPESRC_LENG="82 " TYPESRC="t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_BORDERS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="8 " TYPTYPE="4" SRCROW1="42 " SRCCOLUMN1="4 " SRCROW2="42 " SRCCOLUMN2="83 " TYPESRC_LENG="82 " TYPESRC="t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FONTS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="9 " TYPTYPE="4" SRCROW1="42 " SRCCOLUMN1="8 " SRCROW2="42 " SRCCOLUMN2="82 " TYPESRC_LENG="77 " TYPESRC="t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FONTS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="9 " TYPTYPE="4" SRCROW1="44 " SRCCOLUMN1="4 " SRCROW2="44 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="44 " SRCCOLUMN1="8 " SRCROW2="44 " SRCCOLUMN2="56 " TYPESRC_LENG="51 " TYPESRC="t_style_refs TYPE TABLE OF REF TO zcl_excel_style
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="46 " SRCCOLUMN1="4 " SRCROW2="46 " SRCCOLUMN2="52 " TYPESRC_LENG="51 " TYPESRC="t_style_refs TYPE TABLE OF REF TO zcl_excel_style
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="46 " SRCCOLUMN1="9 " SRCROW2="49 " SRCCOLUMN2="20 " TYPESRC_LENG="123 " TYPESRC="BEGIN OF t_num_format,
-    id TYPE string,
-    format TYPE REF TO zcl_excel_style_number_format,
-  END OF t_num_format
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="48 " SRCCOLUMN1="4 " SRCROW2="51 " SRCCOLUMN2="20 " TYPESRC_LENG="123 " TYPESRC="BEGIN OF t_num_format,
+    id TYPE string,
+    format TYPE REF TO zcl_excel_style_number_format,
+  END OF t_num_format
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="50 " SRCCOLUMN1="8 " SRCROW2="50 " SRCCOLUMN2="73 " TYPESRC_LENG="68 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="53 " SRCCOLUMN1="4 " SRCROW2="53 " SRCCOLUMN2="69 " TYPESRC_LENG="68 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="52 " SRCCOLUMN1="9 " SRCROW2="57 " SRCCOLUMN2="15 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF t_color,
-    indexed TYPE string,
-    rgb TYPE string,
-    theme TYPE string,
-    tint TYPE string,
-  END OF t_color
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="55 " SRCCOLUMN1="4 " SRCROW2="60 " SRCCOLUMN2="15 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF t_color,
+    indexed TYPE string,
+    rgb TYPE string,
+    theme TYPE string,
+    tint TYPE string,
+  END OF t_color
+"/>
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="62 " SRCCOLUMN1="4 " SRCROW2="66 " SRCCOLUMN2="23 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF T_REL_DRAWING,
+      id type string,
+      content type xstring,
+      file_ext type string,
+    end of t_rel_drawing
+"/>
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="68 " SRCCOLUMN1="4 " SRCROW2="68 " SRCCOLUMN2="45 " TYPESRC_LENG="44 " TYPESRC="t_rel_drawings type TABLE OF t_rel_drawing
 "/>
  <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <publicSection>class ZCL_EXCEL_READER_2007 definition
@@ -67,17 +75,17 @@ public section.
   type-pools IXML .
 
   interfaces ZIF_EXCEL_READER .</publicSection>
- <protectedSection>PROTECTED SECTION.
+ <protectedSection>protected section.
 *&quot;* protected components of class ZCL_EXCEL_READER_2007
 *&quot;* do not include other source files here!!!
 
-  TYPES:
+  types:
     BEGIN OF t_relationship,
            id     TYPE string,
            type   TYPE string,
            target TYPE string,
          END OF t_relationship .
-  TYPES:
+  types:
     BEGIN OF t_fileversion,
             appname       TYPE string,
             lastedited    TYPE string,
@@ -85,100 +93,125 @@ public section.
             rupbuild      TYPE string,
             codename      TYPE string,
        END OF t_fileversion .
-  TYPES:
+  types:
     BEGIN OF t_sheet,
               name    TYPE string,
               sheetid TYPE string,
               id      TYPE string,
          END OF t_sheet .
-  TYPES:
+  types:
     BEGIN OF t_workbookpr,
               codename            TYPE string,
               defaultthemeversion TYPE string,
          END OF t_workbookpr .
-  TYPES:
+  types:
     BEGIN OF t_sheetpr,
               codename            TYPE string,
          END OF t_sheetpr .
-  TYPES:
+  types:
     BEGIN OF t_range,
               name    TYPE string,
               localsheetid    TYPE string,       &quot; issue #163
          END OF t_range .
-
-  TYPES t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY.
-  TYPES t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY.
-  TYPES t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY.
-
-  TYPES t_style_refs TYPE TABLE OF REF TO zcl_excel_style.
-
-  TYPES: BEGIN OF t_num_format,
+  types:
+    t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY .
+  types:
+    t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY .
+  types:
+    t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY .
+  types:
+    t_style_refs TYPE TABLE OF REF TO zcl_excel_style .
+  types:
+    BEGIN OF t_num_format,
     id TYPE string,
     format TYPE REF TO zcl_excel_style_number_format,
-  END OF t_num_format.
-  TYPES t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id.
-
-  TYPES: BEGIN OF t_color,
+  END OF t_num_format .
+  types:
+    t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id .
+  types:
+    BEGIN OF t_color,
     indexed TYPE string,
     rgb TYPE string,
     theme TYPE string,
     tint TYPE string,
-  END OF t_color.
+  END OF t_color .
+  types:
+    BEGIN OF T_REL_DRAWING,
+      id type string,
+      content type xstring,
+      file_ext type string,
+    end of t_rel_drawing .
+  types:
+    t_rel_drawings type TABLE OF t_rel_drawing .
 
-  METHODS fill_struct_from_attributes
-    IMPORTING
-      !ip_element TYPE REF TO if_ixml_element
-    CHANGING
-      !cp_structure TYPE any .
-  METHODS get_from_zip_archive
-    IMPORTING
-      !i_filename TYPE string
-    RETURNING
-      value(r_content) TYPE xstring
-    RAISING
-      zcx_excel .
-  METHODS get_ixml_from_zip_archive
-    IMPORTING
-      !i_filename TYPE string
-    RETURNING
-      value(r_ixml) TYPE REF TO if_ixml_document
-    RAISING
-      zcx_excel .
-  METHODS load_workbook
-    IMPORTING
-      !ip_path TYPE string
-      !ip_excel TYPE REF TO zcl_excel .
-  METHODS load_worksheet
-    IMPORTING
-      !ip_path TYPE string
-      !io_worksheet TYPE REF TO zcl_excel_worksheet .
-  METHODS load_shared_strings
-    IMPORTING
-      !ip_path TYPE string .
-  METHODS load_styles
-    IMPORTING
-      !ip_path TYPE string
-      !ip_excel TYPE REF TO zcl_excel .
-  METHODS load_style_borders
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_borders) TYPE t_borders .
-  METHODS load_style_fills
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_fills) TYPE t_fills .
-  METHODS load_style_fonts
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_fonts) TYPE t_fonts .
-  METHODS load_style_num_formats
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_num_formats) TYPE t_num_formats .</protectedSection>
+  class-methods RESOLVE_PATH
+    importing
+      !IP_PATH type STRING
+    returning
+      value(RP_RESULT) type STRING .
+  methods FILL_STRUCT_FROM_ATTRIBUTES
+    importing
+      !IP_ELEMENT type ref to IF_IXML_ELEMENT
+    changing
+      !CP_STRUCTURE type ANY .
+  methods GET_FROM_ZIP_ARCHIVE
+    importing
+      !I_FILENAME type STRING
+    returning
+      value(R_CONTENT) type XSTRING
+    raising
+      ZCX_EXCEL .
+  methods GET_IXML_FROM_ZIP_ARCHIVE
+    importing
+      !I_FILENAME type STRING
+    returning
+      value(R_IXML) type ref to IF_IXML_DOCUMENT
+    raising
+      ZCX_EXCEL .
+  methods LOAD_WORKBOOK
+    importing
+      !IP_PATH type STRING
+      !IP_EXCEL type ref to ZCL_EXCEL .
+  methods LOAD_DRAWING_ANCHOR
+    importing
+      !IO_ANCHOR_ELEMENT type ref to IF_IXML_ELEMENT
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+      !IT_RELATED_DRAWINGS type T_REL_DRAWINGS .
+  methods LOAD_WORKSHEET
+    importing
+      !IP_PATH type STRING
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
+  methods LOAD_WORKSHEET_DRAWING
+    importing
+      !IP_PATH type STRING
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
+  methods LOAD_SHARED_STRINGS
+    importing
+      !IP_PATH type STRING .
+  methods LOAD_STYLES
+    importing
+      !IP_PATH type STRING
+      !IP_EXCEL type ref to ZCL_EXCEL .
+  methods LOAD_STYLE_BORDERS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_BORDERS) type T_BORDERS .
+  methods LOAD_STYLE_FILLS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_FILLS) type T_FILLS .
+  methods LOAD_STYLE_FONTS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_FONTS) type T_FONTS .
+  methods LOAD_STYLE_NUM_FORMATS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_NUM_FORMATS) type T_NUM_FORMATS .</protectedSection>
  <privateSection>private section.
 *&quot;* private components of class ZCL_EXCEL_READER_2007
 *&quot;* do not include other source files here!!!
@@ -308,7 +341,7 @@ endmethod.</source>
   r_excel = me-&gt;zif_excel_reader~load( excel_data ).
 endmethod.</source>
  </interfaceMethod>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="IP_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="CP_STRUCTURE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
   <source>method FILL_STRUCT_FROM_ATTRIBUTES.
@@ -335,7 +368,7 @@ endmethod.</source>
   ENDWHILE.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="R_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -375,7 +408,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="R_IXML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -403,7 +436,154 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Loads shared strings table" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IT_RELATED_DRAWINGS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_REL_DRAWINGS"/>
+  <source>method LOAD_DRAWING_ANCHOR.
+
+  TYPES: BEGIN OF t_c_nv_pr,
+    name TYPE string,
+    id TYPE string,
+    END OF t_c_nv_pr.
+
+  TYPES: BEGIN OF t_blip,
+    cstate TYPE string,
+    embed TYPE string,
+    END OF t_blip.
+
+  TYPES: BEGIN OF t_chart,
+    id TYPE string,
+    END OF t_chart.
+
+  TYPES: BEGIN OF t_ext,
+    cx TYPE string,
+    cy TYPE string,
+    END OF t_ext.
+
+  CONSTANTS: lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
+             lc_xml_attr_true_int            TYPE string VALUE &apos;1&apos;.
+  CONSTANTS: lc_rel_chart       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart&apos;,
+             lc_rel_image       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/image&apos;.
+
+  DATA: lo_drawing          TYPE REF TO zcl_excel_drawing,
+        node                TYPE REF TO if_ixml_element,
+        node2               TYPE REF TO if_ixml_element,
+        node3               TYPE REF TO if_ixml_element,
+        node4               TYPE REF TO if_ixml_element,
+
+        ls_upper            TYPE zexcel_drawing_location,
+        ls_lower            TYPE zexcel_drawing_location,
+        ls_size             TYPE zexcel_drawing_size,
+        ext                 TYPE t_ext,
+        lv_content          TYPE xstring,
+        lv_relation_id      TYPE string,
+        lv_title            TYPE zexcel_sheet_title,
+
+        cnvpr               TYPE t_c_nv_pr,
+        blip                TYPE t_blip,
+        chart               TYPE t_chart,
+        drawing_type        TYPE zexcel_drawing_type,
+
+        rel_drawing         TYPE t_rel_drawing.
+
+  node ?= io_anchor_element-&gt;find_from_name( name = &apos;from&apos; namespace = &apos;xdr&apos; ).
+  CHECK node IS NOT INITIAL.
+  node2 ?= node-&gt;find_from_name( name = &apos;col&apos; namespace = &apos;xdr&apos; ).
+  ls_upper-col = node2-&gt;get_value( ).
+  node2 ?= node-&gt;find_from_name( name = &apos;row&apos; namespace = &apos;xdr&apos; ).
+  ls_upper-row = node2-&gt;get_value( ).
+  node2 ?= node-&gt;find_from_name( name = &apos;colOff&apos; namespace = &apos;xdr&apos; ).
+  ls_upper-col_offset = node2-&gt;get_value( ).
+  node2 ?= node-&gt;find_from_name( name = &apos;rowOff&apos; namespace = &apos;xdr&apos; ).
+  ls_upper-row_offset = node2-&gt;get_value( ).
+
+  node ?= io_anchor_element-&gt;find_from_name( name = &apos;ext&apos; namespace = &apos;xdr&apos; ).
+  IF node IS INITIAL.
+    CLEAR ls_size.
+  ELSE.
+    me-&gt;fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = ext ).
+    ls_size-width = ext-cx.
+    ls_size-height = ext-cy.
+  ENDIF.
+
+  node ?= io_anchor_element-&gt;find_from_name( name = &apos;to&apos; namespace = &apos;xdr&apos; ).
+  IF node IS INITIAL.
+    CLEAR ls_lower.
+  ELSE.
+    node2 ?= node-&gt;find_from_name( name = &apos;col&apos; namespace = &apos;xdr&apos; ).
+    ls_lower-col = node2-&gt;get_value( ).
+    node2 ?= node-&gt;find_from_name( name = &apos;row&apos; namespace = &apos;xdr&apos; ).
+    ls_lower-row = node2-&gt;get_value( ).
+    node2 ?= node-&gt;find_from_name( name = &apos;colOff&apos; namespace = &apos;xdr&apos; ).
+    ls_lower-col_offset = node2-&gt;get_value( ).
+    node2 ?= node-&gt;find_from_name( name = &apos;rowOff&apos; namespace = &apos;xdr&apos; ).
+    ls_lower-row_offset = node2-&gt;get_value( ).
+  ENDIF.
+
+  node ?= io_anchor_element-&gt;find_from_name( name = &apos;pic&apos; namespace = &apos;xdr&apos; ).
+  IF node IS NOT INITIAL.
+    node2 ?= node-&gt;find_from_name( name = &apos;nvPicPr&apos; namespace = &apos;xdr&apos; ).
+    CHECK node2 IS NOT INITIAL.
+    node3 ?= node2-&gt;find_from_name( name = &apos;cNvPr&apos; namespace = &apos;xdr&apos; ).
+    CHECK node3 IS NOT INITIAL.
+    me-&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = cnvpr ).
+    lv_title = cnvpr-name.
+
+    node2 ?= node-&gt;find_from_name( name = &apos;blipFill&apos; namespace = &apos;xdr&apos; ).
+    CHECK node2 IS NOT INITIAL.
+    node3 ?= node2-&gt;find_from_name( name = &apos;blip&apos; namespace = &apos;a&apos; ).
+    CHECK node3 IS NOT INITIAL.
+    me-&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = blip ).
+    lv_relation_id = blip-embed.
+
+    drawing_type = zcl_excel_drawing=&gt;type_image.
+  ENDIF.
+
+  node ?= io_anchor_element-&gt;find_from_name( name = &apos;graphicFrame&apos; namespace = &apos;xdr&apos; ).
+  IF node IS NOT INITIAL.
+    node2 ?= node-&gt;find_from_name( name = &apos;nvGraphicFramePr&apos; namespace = &apos;xdr&apos; ).
+    CHECK node2 IS NOT INITIAL.
+    node3 ?= node2-&gt;find_from_name( name = &apos;cNvPr&apos; namespace = &apos;xdr&apos; ).
+    CHECK node3 IS NOT INITIAL.
+    me-&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = cnvpr ).
+    lv_title = cnvpr-name.
+
+    node2 ?= node-&gt;find_from_name( name = &apos;graphic&apos; namespace = &apos;a&apos; ).
+    CHECK node2 IS NOT INITIAL.
+    node3 ?= node2-&gt;find_from_name( name = &apos;graphicData&apos; namespace = &apos;a&apos; ).
+    CHECK node3 IS NOT INITIAL.
+    node4 ?= node2-&gt;find_from_name( name = &apos;chart&apos; namespace = &apos;c&apos; ).
+    CHECK node4 IS NOT INITIAL.
+    me-&gt;fill_struct_from_attributes( EXPORTING ip_element = node4 CHANGING cp_structure = chart ).
+    lv_relation_id = chart-id.
+
+    drawing_type = zcl_excel_drawing=&gt;type_chart.
+  ENDIF.
+
+  lo_drawing = io_worksheet-&gt;excel-&gt;add_new_drawing(
+                    ip_type  = drawing_type
+                    ip_title = lv_title ).
+  io_worksheet-&gt;add_drawing( lo_drawing ).
+
+  lo_drawing-&gt;set_position2(
+    EXPORTING
+      ip_from   = ls_upper
+      ip_to     = ls_lower ).
+
+  READ TABLE it_related_drawings INTO rel_drawing
+        WITH KEY id = lv_relation_id.
+
+  lo_drawing-&gt;set_media(
+    EXPORTING
+      ip_media = rel_drawing-content
+      ip_media_type = rel_drawing-file_ext
+      ip_width = ls_size-width
+      ip_height = ls_size-height ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Loads shared strings table" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <source>method LOAD_SHARED_STRINGS.
   DATA: value TYPE string,
@@ -429,7 +609,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads styles" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads styles" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <source>method LOAD_STYLES.
@@ -600,7 +780,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="EP_BORDERS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_BORDERS"/>
   <source>method LOAD_STYLE_BORDERS.
@@ -672,7 +852,7 @@ endmethod.</source>
   ENDWHILE.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="EP_FILLS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FILLS"/>
   <source>method LOAD_STYLE_FILLS.
@@ -741,7 +921,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fonts&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fonts&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="EP_FONTS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FONTS"/>
   <source>method LOAD_STYLE_FONTS.
@@ -819,7 +999,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="EP_NUM_FORMATS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_NUM_FORMATS"/>
   <source>method LOAD_STYLE_NUM_FORMATS.
@@ -837,13 +1017,51 @@ endmethod.</source>
     node ?= node-&gt;get_next( ).
   ENDWHILE.
 
+  DEFINE predefined_format.
+    num_format-id = &amp;1.
+    create object num_format-format.
+    num_format-format-&gt;format_code = &amp;2.
+    insert num_format into table ep_num_formats.
+  END-OF-DEFINITION.
+
+  predefined_format &apos;1&apos; &apos;0&apos;.
+  predefined_format &apos;2&apos; &apos;0.00&apos;.
+  predefined_format &apos;3&apos; &apos;#,##0&apos;.
+  predefined_format &apos;4&apos; &apos;#,##0.00&apos;.
+  predefined_format &apos;5&apos; &apos;$#,##0_);($#,##0)&apos;.
+  predefined_format &apos;6&apos; &apos;$#,##0_);[Red]($#,##0)&apos;.
+  predefined_format &apos;7&apos; &apos;$#,##0.00_);($#,##0.00)&apos;.
+  predefined_format &apos;8&apos; &apos;$#,##0.00_);[Red]($#,##0.00)&apos;.
+  predefined_format &apos;9&apos; &apos;0%&apos;.
+  predefined_format &apos;10&apos; &apos;0.00%&apos;.
+  predefined_format &apos;11&apos; &apos;0.00E+00&apos;.
+  predefined_format &apos;12&apos; &apos;# ?/?&apos;.
+  predefined_format &apos;13&apos; &apos;# ??/??&apos;.
+  predefined_format &apos;14&apos; &apos;m/d/yyyy&apos;.
+  predefined_format &apos;15&apos; &apos;d-mmm-yy&apos;.
+  predefined_format &apos;16&apos; &apos;d-mmm&apos;.
+  predefined_format &apos;17&apos; &apos;mmm-yy&apos;.
+  predefined_format &apos;18&apos; &apos;h:mm AM/PM&apos;.
+  predefined_format &apos;19&apos; &apos;h:mm:ss AM/PM&apos;.
+  predefined_format &apos;20&apos; &apos;h:mm&apos;.
+  predefined_format &apos;21&apos; &apos;h:mm:ss&apos;.
+  predefined_format &apos;22&apos; &apos;m/d/yyyy h:mm&apos;.
+  predefined_format &apos;37&apos; &apos;#,##0_);(#,##0)&apos;.
+  predefined_format &apos;38&apos; &apos;#,##0_);[Red](#,##0)&apos;.
+  predefined_format &apos;39&apos; &apos;#,##0.00_);(#,##0.00)&apos;.
+  predefined_format &apos;40&apos; &apos;#,##0.00_);[Red](#,##0.00)&apos;.
+  predefined_format &apos;45&apos; &apos;mm:ss&apos;.
+  predefined_format &apos;46&apos; &apos;[h]:mm:ss&apos;.
+  predefined_format &apos;47&apos; &apos;mm:ss.0&apos;.
+  predefined_format &apos;48&apos; &apos;##0.0E+0&apos;.
+  predefined_format &apos;49&apos; &apos;@&apos;.
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
-  <source>METHOD load_workbook.
+  <source>method LOAD_WORKBOOK.
 
   CONSTANTS: lc_shared_strings  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
              lc_worksheet       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
@@ -964,12 +1182,12 @@ endmethod.</source>
     node ?= node-&gt;get_next( ).
   ENDWHILE.
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
-  <source>METHOD load_worksheet.
+  <source>method LOAD_WORKSHEET.
   TYPES: BEGIN OF t_cell,
     r TYPE string,
     t TYPE string,
@@ -982,17 +1200,8 @@ ENDMETHOD.</source>
     width TYPE float,
     customwidth TYPE string,
     style TYPE string,
+    hidden TYPE string,
     END OF t_column.
-
-  TYPES: BEGIN OF t_row,
-    r TYPE string,
-    customheight TYPE string,
-    ht TYPE float,
-    spans TYPE string,
-    thickbot TYPE string,
-    customformat TYPE string,
-    thicktop TYPE string,
-    END OF t_row.
 
   TYPES: BEGIN OF t_sheetview,
     showgridlines TYPE zexcel_show_gridlines,
@@ -1006,18 +1215,56 @@ ENDMETHOD.</source>
     ref TYPE string,
     END OF t_mergecell.
 
+  TYPES: BEGIN OF t_row,
+    r TYPE string,
+    customheight TYPE string,
+    ht TYPE float,
+    spans TYPE string,
+    thickbot TYPE string,
+    customformat TYPE string,
+    thicktop TYPE string,
+    END OF t_row.
+
+  TYPES: BEGIN OF t_page_setup,
+    id TYPE string,
+    orientation TYPE string,
+    scale TYPE string,
+    END OF t_page_setup.
+
+  TYPES: BEGIN OF t_page_margins,
+    footer TYPE string,
+    header TYPE string,
+    bottom TYPE string,
+    top    TYPE string,
+    right  TYPE string,
+    left   TYPE string,
+    END OF t_page_margins.
+
+  TYPES: BEGIN OF t_sheetformatpr,
+    customheight TYPE string,
+    defaultrowheight TYPE string,
+    customwidth TYPE string,
+    defaultcolwidth TYPE string,
+    END OF t_sheetformatpr.
+
+  TYPES: BEGIN OF t_headerfooter,
+    alignwithmargins TYPE string,
+    differentoddeven TYPE string,
+    END OF t_headerfooter.
+
+
   CONSTANTS: lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
              lc_xml_attr_true_int            TYPE string VALUE &apos;1&apos;.
+  CONSTANTS: lc_rel_drawing     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
+             lc_rel_printer     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;.
 
   DATA: worksheet           TYPE REF TO if_ixml_document,
-        rows                TYPE REF TO if_ixml_node_collection,
         cells               TYPE REF TO if_ixml_node_collection,
         iterator            TYPE REF TO if_ixml_node_iterator,
         iterator2           TYPE REF TO if_ixml_node_iterator,
+        row_elem                 TYPE REF TO  if_ixml_element,
         cell_elem           TYPE REF TO  if_ixml_element,
         cell                TYPE t_cell,
-        row_elem            TYPE REF TO  if_ixml_element,
-        row                 TYPE t_row,
         index               TYPE i,
         value_elem          TYPE REF TO if_ixml_element,
         formula_elem        TYPE REF TO if_ixml_element,
@@ -1038,13 +1285,76 @@ ENDMETHOD.</source>
         merge_column_end    TYPE zexcel_cell_column_alpha,
         merge_row_start     TYPE zexcel_cell_row,
         merge_row_end       TYPE zexcel_cell_row,
-        row_dimension       TYPE REF TO ZCL_EXCEL_WORKSHEET_ROWDIMENSI,
+
+        sheetformatpr_elem  TYPE REF TO if_ixml_element,
+        sheetformatpr       TYPE t_sheetformatpr,
+        height              TYPE float,
+        width               TYPE float,
+
+        headerfooter_elem   TYPE REF TO if_ixml_element,
+        headerfooter        TYPE t_headerfooter,
+        odd_header          TYPE zexcel_s_worksheet_head_foot,
+        odd_footer          TYPE zexcel_s_worksheet_head_foot,
+        even_header         TYPE zexcel_s_worksheet_head_foot,
+        even_footer         TYPE zexcel_s_worksheet_head_foot,
+        hf_value_elem       TYPE REF TO if_ixml_element,
+
+        pagemargins_elem    TYPE REF TO if_ixml_element,
+        pagemargins         TYPE t_page_margins,
+        pagesetup_elem      TYPE REF TO if_ixml_element,
+        pagesetup           TYPE t_page_setup,
 
         columns             TYPE REF TO if_ixml_node_collection,
         column_elem         TYPE REF TO if_ixml_element,
         column              TYPE t_column,
         column_alpha        TYPE zexcel_cell_column_alpha,
-        column_dimension    TYPE REF TO zcl_excel_worksheet_columndime.
+        column_dimension    TYPE REF TO zcl_excel_worksheet_columndime,
+
+        rows                TYPE REF TO if_ixml_node_collection,
+        row                 TYPE t_row,
+        row_dimension       TYPE REF TO zcl_excel_worksheet_rowdimensi,
+
+        path                TYPE string,
+        node                TYPE REF TO if_ixml_element,
+        relationship        TYPE t_relationship,
+        rels_worksheet      TYPE REF TO if_ixml_document,
+        rels_worksheet_path TYPE string,
+        stripped_name       TYPE chkfile,
+        dirname             TYPE string.
+
+  &quot; Read Workbook Relationships
+  CALL FUNCTION &apos;TRINT_SPLIT_FILE_AND_PATH&apos;
+    EXPORTING
+      full_name     = ip_path
+    IMPORTING
+      stripped_name = stripped_name
+      file_path     = dirname.
+  CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos;
+    INTO rels_worksheet_path.
+  rels_worksheet = me-&gt;get_ixml_from_zip_archive( rels_worksheet_path ).
+  node ?= rels_worksheet-&gt;find_from_name( &apos;Relationship&apos; ).
+  WHILE node IS BOUND.
+    fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
+    CONCATENATE dirname relationship-target INTO path.
+    path = resolve_path( path ).
+
+    CASE relationship-type.
+      WHEN lc_rel_drawing.
+        &quot; Read Drawings
+        CALL METHOD me-&gt;load_worksheet_drawing
+          EXPORTING
+            ip_path      = path
+            io_worksheet = io_worksheet.
+
+      WHEN lc_rel_printer.
+        &quot; Read Printer settings
+
+      WHEN OTHERS.
+    ENDCASE.
+
+    node ?= node-&gt;get_next( ).
+  ENDWHILE.
+
 
   worksheet = me-&gt;get_ixml_from_zip_archive( ip_path ).
   rows = worksheet-&gt;get_elements_by_tag_name( name = &apos;row&apos; ).
@@ -1109,7 +1419,7 @@ ENDMETHOD.</source>
         ).
         io_worksheet-&gt;set_cell(
             ip_column  = cell_column  &quot; cell_elem Column
-            ip_row     = cell_row     &quot; cell_elem Row
+            ip_row     = cell_row     &quot; cell_elem row_elem
             ip_value   = cell_value   &quot; cell_elem Value
             ip_formula = cell_formula
             ip_data_type = cell-t
@@ -1137,7 +1447,17 @@ ENDMETHOD.</source>
         column_dimension-&gt;set_width( column-width ).
         ADD 1 TO index.
       ENDWHILE.
+    ENDIF.
 
+    IF column-hidden = lc_xml_attr_true OR
+       column-hidden = lc_xml_attr_true_int.
+      index = column-min.
+      WHILE index &lt;= column-max.
+        column_alpha = zcl_excel_common=&gt;convert_column2alpha( index ).
+        column_dimension =  io_worksheet-&gt;get_column_dimension( column_alpha ).
+        column_dimension-&gt;set_visible( abap_false ).
+        ADD 1 TO index.
+      ENDWHILE.
     ENDIF.
   ENDWHILE.
 
@@ -1180,7 +1500,198 @@ ENDMETHOD.</source>
     ).
   ENDWHILE.
 
+  &quot; read sheet format properties
+  sheetformatpr_elem = worksheet-&gt;find_from_name( &apos;sheetFormatPr&apos; ).
+  IF sheetformatpr_elem IS NOT INITIAL.
+    fill_struct_from_attributes( EXPORTING ip_element = sheetformatpr_elem CHANGING cp_structure = sheetformatpr ).
+    IF sheetformatpr-customheight = &apos;1&apos;.
+      height = sheetformatpr-defaultrowheight.
+      io_worksheet-&gt;get_default_row_dimension( )-&gt;set_row_height( height ).
+    ENDIF.
 
-ENDMETHOD.</source>
+    &quot; TODO...  column
+  ENDIF.
+
+  &quot; Read in page margins
+  pagemargins_elem = worksheet-&gt;find_from_name( &apos;pageMargins&apos; ).
+  IF pagemargins_elem IS NOT INITIAL.
+    fill_struct_from_attributes( EXPORTING ip_element = pagemargins_elem CHANGING cp_structure = pagemargins ).
+    io_worksheet-&gt;sheet_setup-&gt;margin_bottom = pagemargins-bottom.
+    io_worksheet-&gt;sheet_setup-&gt;margin_footer = pagemargins-footer.
+    io_worksheet-&gt;sheet_setup-&gt;margin_header = pagemargins-header.
+    io_worksheet-&gt;sheet_setup-&gt;margin_left = pagemargins-left.
+    io_worksheet-&gt;sheet_setup-&gt;margin_right = pagemargins-right.
+    io_worksheet-&gt;sheet_setup-&gt;margin_top = pagemargins-top.
+  ENDIF.
+
+  &quot; Read in page setup
+  pagesetup_elem = worksheet-&gt;find_from_name( &apos;pageSetup&apos; ).
+  IF pagesetup_elem IS NOT INITIAL.
+    fill_struct_from_attributes( EXPORTING ip_element = pagesetup_elem CHANGING cp_structure = pagesetup ).
+    io_worksheet-&gt;sheet_setup-&gt;orientation = pagesetup-orientation.
+    io_worksheet-&gt;sheet_setup-&gt;scale = pagesetup-scale.
+  ENDIF.
+
+  &quot; Read header footer
+  headerfooter_elem = worksheet-&gt;find_from_name( &apos;headerFooter&apos; ).
+  IF headerfooter_elem IS NOT INITIAL.
+    fill_struct_from_attributes( EXPORTING ip_element = headerfooter_elem CHANGING cp_structure = headerfooter ).
+    io_worksheet-&gt;sheet_setup-&gt;diff_oddeven_headerfooter = headerfooter-differentoddeven.
+
+    hf_value_elem = headerfooter_elem-&gt;find_from_name( &apos;oddFooter&apos; ).
+    IF hf_value_elem IS NOT INITIAL.
+      odd_footer-left_value = hf_value_elem-&gt;get_value( ).
+    ENDIF.
+
+    &quot; TODO.. get the rest.
+
+    io_worksheet-&gt;sheet_setup-&gt;set_header_footer(
+                  ip_odd_header   = odd_header
+                  ip_odd_footer   = odd_footer
+                  ip_even_header  = even_header
+                  ip_even_footer  = even_footer ).
+
+  ENDIF.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <source>method LOAD_WORKSHEET_DRAWING.
+
+  TYPES: BEGIN OF t_c_nv_pr,
+    name TYPE string,
+    id TYPE string,
+    END OF t_c_nv_pr.
+
+  TYPES: BEGIN OF t_blip,
+    cstate TYPE string,
+    embed TYPE string,
+    END OF t_blip.
+
+  TYPES: BEGIN OF t_chart,
+    id TYPE string,
+    END OF t_chart.
+
+  CONSTANTS: lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
+             lc_xml_attr_true_int            TYPE string VALUE &apos;1&apos;.
+  CONSTANTS: lc_rel_chart       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart&apos;,
+             lc_rel_image       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/image&apos;.
+
+  DATA: drawing             TYPE REF TO if_ixml_document,
+        anchors             TYPE REF TO if_ixml_node_collection,
+        node                type ref to if_ixml_element,
+        coll_length         TYPE i,
+        iterator            TYPE REF TO if_ixml_node_iterator,
+        anchor_elem         TYPE REF TO if_ixml_element,
+
+        relationship        TYPE t_relationship,
+        rel_drawings        TYPE t_rel_drawings,
+        rel_drawing         type t_rel_drawing,
+        rels_drawing        TYPE REF TO if_ixml_document,
+        rels_drawing_path   TYPE string,
+        stripped_name       TYPE chkfile,
+        dirname             TYPE string,
+
+        path                type string,
+        path2               TYPE draw-filep,
+        file_ext2           TYPE char32.
+
+  &quot; Read Workbook Relationships
+  CALL FUNCTION &apos;TRINT_SPLIT_FILE_AND_PATH&apos;
+    EXPORTING
+      full_name     = ip_path
+    IMPORTING
+      stripped_name = stripped_name
+      file_path     = dirname.
+  CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos;
+    INTO rels_drawing_path.
+  rels_drawing_path = resolve_path( rels_drawing_path ).
+  rels_drawing = me-&gt;get_ixml_from_zip_archive( rels_drawing_path ).
+  node ?= rels_drawing-&gt;find_from_name( &apos;Relationship&apos; ).
+  WHILE node IS BOUND.
+    fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
+    rel_drawing-id = relationship-id.
+
+    CONCATENATE dirname relationship-target INTO path.
+    path = resolve_path( path ).
+    rel_drawing-content = me-&gt;get_from_zip_archive( path ).
+
+    path2 = path.
+    CALL FUNCTION &apos;CV120_SPLIT_FILE&apos;
+      EXPORTING
+        pf_file       = path2
+      IMPORTING
+        pfx_extension = file_ext2.
+    rel_drawing-file_ext = file_ext2.
+
+    APPEND rel_drawing TO rel_drawings.
+
+    node ?= node-&gt;get_next( ).
+  ENDWHILE.
+
+  drawing = me-&gt;get_ixml_from_zip_archive( ip_path ).
+
+* one-cell anchor **************
+  anchors = drawing-&gt;get_elements_by_tag_name( name = &apos;oneCellAnchor&apos; namespace = &apos;xdr&apos; ).
+  coll_length = anchors-&gt;get_length( ).
+  iterator = anchors-&gt;create_iterator( ).
+  DO coll_length TIMES.
+    anchor_elem ?= iterator-&gt;get_next( ).
+
+    CALL METHOD me-&gt;load_drawing_anchor
+      EXPORTING
+        io_anchor_element   = anchor_elem
+        io_worksheet        = io_worksheet
+        it_related_drawings = rel_drawings.
+
+  ENDDO.
+
+* two-cell anchor ******************
+  anchors = drawing-&gt;get_elements_by_tag_name( name = &apos;twoCellAnchor&apos; namespace = &apos;xdr&apos; ).
+  coll_length = anchors-&gt;get_length( ).
+  iterator = anchors-&gt;create_iterator( ).
+  DO coll_length TIMES.
+    anchor_elem ?= iterator-&gt;get_next( ).
+
+    CALL METHOD me-&gt;load_drawing_anchor
+      EXPORTING
+        io_anchor_element   = anchor_elem
+        io_worksheet        = io_worksheet
+        it_related_drawings = rel_drawings.
+
+  ENDDO.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="RP_RESULT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <source>method RESOLVE_PATH.
+
+  DATA: lt_segments                   TYPE TABLE OF string,
+        lv_segment                    TYPE string,
+        lv_count                      TYPE i.
+
+  SPLIT ip_path AT &apos;/&apos; INTO TABLE lt_segments.
+  lv_count = lines( lt_segments ).
+
+  WHILE lv_count &gt; 0.
+    READ TABLE lt_segments INTO lv_segment INDEX lv_count.
+
+    IF lv_segment = &apos;..&apos;.
+      SUBTRACT 1 FROM lv_count.
+    ELSE.
+      IF strlen( rp_result ) &gt; 0.
+        CONCATENATE &apos;/&apos; rp_result INTO rp_result.
+      ENDIF.
+      CONCATENATE lv_segment rp_result INTO rp_result.
+    ENDIF.
+
+    SUBTRACT 1 FROM lv_count.
+  ENDWHILE.
+
+endmethod.</source>
  </method>
 </CLAS>
