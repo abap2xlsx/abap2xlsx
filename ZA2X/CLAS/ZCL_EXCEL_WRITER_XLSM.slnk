@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" UUID="0202322174CD1EE0A391D25CAFCCC6E6" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20120319" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_WRITER_2007">
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" UUID="0202322174CD1EE0A391D25CAFCCC6E6" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_WRITER_2007">
  <publicSection>class ZCL_EXCEL_WRITER_XLSM definition
   public
   inheriting from ZCL_EXCEL_WRITER_2007
@@ -36,15 +36,15 @@ public section.
 *&quot;* components in the private section</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_XLSM" CMPNAME="C_XL_VBAPROJECT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20120319" ATTDECLTYP="2" ATTVALUE="&apos;xl/vbaProject.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="702" TYPESRC_LENG="0 "/>
- <inheritance CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" STATE="1" AUTHOR="FEMIA" CREATEDON="20110601" CHANGEDBY="FEMIA" CHANGEDON="20120319">
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_XLSM" CMPNAME="C_XL_VBAPROJECT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;xl/vbaProject.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <inheritance CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" STATE="1">
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_CONTENT_TYPES" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_RELATIONSHIPS" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_SHEET" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_WORKBOOK" EXPOSURE="1"/>
  </inheritance>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE.
 
 
@@ -200,14 +200,26 @@ public section.
 
 **********************************************************************
 * STEP 11: Add media
-  lo_iterator = me-&gt;excel-&gt;get_drawings_iterator( ).
-
+  lo_iterator = me-&gt;excel-&gt;get_drawings_iterator( zcl_excel_drawing=&gt;type_image ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
     lo_drawing ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
 
     lv_content = lo_drawing-&gt;get_media( ).
     lv_value = lo_drawing-&gt;get_media_name( ).
     CONCATENATE &apos;xl/media/&apos; lv_value INTO lv_value.
+    lo_zip-&gt;add( name    = lv_value
+                 content = lv_content ).
+  ENDWHILE.
+
+**********************************************************************
+* STEP 12: Add charts
+  lo_iterator = me-&gt;excel-&gt;get_drawings_iterator( zcl_excel_drawing=&gt;type_chart ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+
+    lv_content = lo_drawing-&gt;get_media( ).
+    lv_value = lo_drawing-&gt;get_media_name( ).
+    CONCATENATE &apos;xl/charts/&apos; lv_value INTO lv_value.
     lo_zip-&gt;add( name    = lv_value
                  content = lv_content ).
   ENDWHILE.
@@ -223,7 +235,7 @@ public section.
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_CONTENT_TYPES.
 ** Constant node name
   DATA: lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.ms-excel.sheet.macroEnabled.main+xml&apos;,
@@ -305,7 +317,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_XL_RELATIONSHIPS.
 
 ** Constant node name
@@ -383,7 +395,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_XL_SHEET.
 
 ** Constant node name
@@ -447,7 +459,7 @@ endmethod.</source>
   lo_renderer-&gt;render( ).
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_XL_WORKBOOK.
 
 ** Constant node name
