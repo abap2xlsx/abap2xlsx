@@ -1242,7 +1242,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_WORKSHEET.
+  <source>METHOD load_worksheet.
   TYPES: BEGIN OF t_cell,
     r TYPE string,
     t TYPE string,
@@ -1255,7 +1255,10 @@ endmethod.</source>
     width TYPE float,
     customwidth TYPE string,
     style TYPE string,
+    bestfit TYPE string,
+    collapsed TYPE string,
     hidden TYPE string,
+    outlinelevel TYPE string,
     END OF t_column.
 
   TYPES: BEGIN OF t_sheetview,
@@ -1278,6 +1281,9 @@ endmethod.</source>
     thickbot TYPE string,
     customformat TYPE string,
     thicktop TYPE string,
+    collapsed TYPE string,
+    hidden TYPE string,
+    outlinelevel TYPE string,
     END OF t_row.
 
   TYPES: BEGIN OF t_page_setup,
@@ -1332,6 +1338,12 @@ endmethod.</source>
 
         sheetview_elem      TYPE REF TO if_ixml_element,
         sheetview           TYPE t_sheetview,
+        pane_elem           TYPE REF TO if_ixml_element,
+        pane                TYPE zexcel_pane,
+        pane_cell_row_a     TYPE string,
+        pane_cell_row       TYPE zexcel_cell_row,
+        pane_cell_col_a     TYPE zexcel_cell_column_alpha,
+        pane_cell_col       TYPE zexcel_cell_column,
 
         mergecells          TYPE REF TO if_ixml_node_collection,
         mergecell_elem      TYPE REF TO if_ixml_element,
@@ -1364,9 +1376,14 @@ endmethod.</source>
         column              TYPE t_column,
         column_alpha        TYPE zexcel_cell_column_alpha,
         column_dimension    TYPE REF TO zcl_excel_worksheet_columndime,
+        outline_level       TYPE int4,
 
         rows                TYPE REF TO if_ixml_node_collection,
         row                 TYPE t_row,
+        max_col             TYPE i,     &quot;for use with SPANS element
+        min_col             TYPE i,     &quot;for use with SPANS element
+        max_col_s           TYPE char10,     &quot;for use with SPANS element
+        min_col_s           TYPE char10,     &quot;for use with SPANS element
         row_dimension       TYPE REF TO zcl_excel_worksheet_rowdimensi,
 
         path                TYPE string,
@@ -1418,10 +1435,35 @@ endmethod.</source>
   WHILE row_elem IS BOUND.
 
     fill_struct_from_attributes( EXPORTING ip_element = row_elem CHANGING cp_structure = row ).
+    SPLIT row-spans AT &apos;:&apos; INTO min_col_s max_col_s.
+    index = max_col_s.
+    IF index &gt; max_col.
+      max_col = index.
+    ENDIF.
     cell_row = row-r.
-    IF row-customheight = &apos;1&apos;.
+    IF row-customheight = &apos;1&apos; OR row-collapsed = lc_xml_attr_true OR row-collapsed = lc_xml_attr_true_int OR
+       row-hidden = lc_xml_attr_true OR row-hidden = lc_xml_attr_true_int OR row-outlineLevel &gt; &apos;0&apos;.
       row_dimension = io_worksheet-&gt;get_row_dimension( cell_row ).
-      row_dimension-&gt;set_row_height( row-ht ).
+      IF row-customheight = &apos;1&apos;.
+        row_dimension-&gt;set_row_height( row-ht ).
+      ENDIF.
+
+      IF row-collapsed = lc_xml_attr_true OR row-collapsed = lc_xml_attr_true_int.
+        row_dimension-&gt;set_collapsed( abap_true ).
+      ENDIF.
+
+      IF row-hidden = lc_xml_attr_true OR row-hidden = lc_xml_attr_true_int.
+        row_dimension-&gt;set_visible( abap_false ).
+      ENDIF.
+
+      IF row-outlineLevel &gt; &apos;&apos;.
+*        outline_level = condense( row-outlineLevel ).  &quot;For basis 7.02 and higher
+        CONDENSE  row-outlineLevel.
+        outline_level = row-outlineLevel.
+        IF outline_level &gt; 0.
+          row_dimension-&gt;set_outline_level( outline_level ).
+        ENDIF.
+      ENDIF.
     ENDIF.
 
     cells = row_elem-&gt;get_elements_by_tag_name( name = &apos;c&apos; ).
@@ -1493,27 +1535,64 @@ endmethod.</source>
     fill_struct_from_attributes( EXPORTING ip_element = column_elem CHANGING cp_structure = column ).
     column_elem ?= iterator-&gt;get_next( ).
     IF column-customwidth = lc_xml_attr_true OR
-       column-customwidth = lc_xml_attr_true_int.
+       column-customwidth = lc_xml_attr_true_int OR
+       column-bestfit = lc_xml_attr_true OR
+       column-bestfit = lc_xml_attr_true_int OR
+       column-collapsed = lc_xml_attr_true OR
+       column-collapsed = lc_xml_attr_true_int OR
+       column-hidden = lc_xml_attr_true OR
+       column-hidden = lc_xml_attr_true_int OR
+       column-outlineLevel &gt; &apos;&apos; OR
+       column-style &gt; &apos;&apos;.
       index = column-min.
-      WHILE index &lt;= column-max.
+WHILE index &lt;= column-max AND index &lt;= max_col.
 
         column_alpha = zcl_excel_common=&gt;convert_column2alpha( index ).
         column_dimension =  io_worksheet-&gt;get_column_dimension( column_alpha ).
-        column_dimension-&gt;set_width( column-width ).
-        ADD 1 TO index.
-      ENDWHILE.
-    ENDIF.
 
-    IF column-hidden = lc_xml_attr_true OR
-       column-hidden = lc_xml_attr_true_int.
-      index = column-min.
-      WHILE index &lt;= column-max.
-        column_alpha = zcl_excel_common=&gt;convert_column2alpha( index ).
-        column_dimension =  io_worksheet-&gt;get_column_dimension( column_alpha ).
-        column_dimension-&gt;set_visible( abap_false ).
+        IF column-customwidth = lc_xml_attr_true OR column-customwidth = lc_xml_attr_true_int.
+          column_dimension-&gt;set_width( column-width ).
+        ENDIF.
+
+        IF column-bestfit = lc_xml_attr_true OR column-bestfit = lc_xml_attr_true_int.
+          column_dimension-&gt;set_auto_size( abap_true ).
+        ENDIF.
+
+        IF column-collapsed = lc_xml_attr_true OR column-collapsed = lc_xml_attr_true_int.
+          column_dimension-&gt;set_collapsed( abap_true ).
+        ENDIF.
+
+        IF column-hidden = lc_xml_attr_true OR column-hidden = lc_xml_attr_true_int.
+          column_dimension-&gt;set_visible( abap_false ).
+        ENDIF.
+
+        IF column-outlineLevel &gt; &apos;&apos;.
+          outline_level = condense( column-outlineLevel ).
+          IF outline_level &gt; 0.
+            column_dimension-&gt;set_outline_level( outline_level ).
+          ENDIF.
+        ENDIF.
+
+        IF column-style &gt; &apos;&apos;.
+          sy-index = column-style + 1.
+          READ TABLE styles INTO style INDEX sy-index.
+          column_dimension-&gt;set_column_style_by_guid( style-&gt;get_guid( ) ).
+        ENDIF.
+
         ADD 1 TO index.
       ENDWHILE.
     ENDIF.
+* Fix 207 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
+*    IF column-hidden = lc_xml_attr_true OR
+*       column-hidden = lc_xml_attr_true_int.
+*      index = column-min.
+*      WHILE index &lt;= column-max.
+*        column_alpha = zcl_excel_common=&gt;convert_column2alpha( index ).
+*        column_dimension =  io_worksheet-&gt;get_column_dimension( column_alpha ).
+*        column_dimension-&gt;set_visible( abap_false ).
+*        ADD 1 TO index.
+*      ENDWHILE.
+*    ENDIF.
   ENDWHILE.
 
   &quot;Now we need to get information from the sheetView node
@@ -1609,7 +1688,28 @@ endmethod.</source>
 
   ENDIF.
 
-endmethod.</source>
+  &quot; Start fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
+  &quot; Read pane
+  pane_elem = sheetview_elem-&gt;find_from_name( name = &apos;pane&apos; ).
+  IF pane_elem IS BOUND.
+    fill_struct_from_attributes( EXPORTING ip_element = pane_elem CHANGING cp_structure = pane ).
+    FIND REGEX &apos;^(\w+)(\d+)$&apos; IN pane-topleftcell SUBMATCHES pane_cell_col_a
+                                                             pane_cell_row_a.
+    pane_cell_row = pane_cell_row_a.
+    pane_cell_col = zcl_excel_common=&gt;convert_column2int( pane_cell_col_a ).
+    SUBTRACT 1 FROM: pane_cell_col, pane_cell_row.
+    IF pane_cell_col &gt; 0 AND pane_cell_row &gt; 0.
+      io_worksheet-&gt;freeze_panes( ip_num_rows    = pane_cell_row
+                                  ip_num_columns = pane_cell_col ).
+    ELSEIF pane_cell_row &gt; 0.
+      io_worksheet-&gt;freeze_panes( ip_num_rows    = pane_cell_row ).
+    ELSE.
+      io_worksheet-&gt;freeze_panes( ip_num_columns = pane_cell_col ).
+    ENDIF.
+  ENDIF.
+  &quot; End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
