@@ -64,7 +64,7 @@
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="68 " SRCCOLUMN1="4 " SRCROW2="68 " SRCCOLUMN2="45 " TYPESRC_LENG="43 " TYPESRC="t_rel_drawings type TABLE OF t_rel_drawing
 "/>
- <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_READER_2007 definition
   public
   create public .
@@ -1242,7 +1242,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD load_worksheet.
+  <source>method LOAD_WORKSHEET.
   TYPES: BEGIN OF t_cell,
     r TYPE string,
     t TYPE string,
@@ -1567,7 +1567,8 @@ WHILE index &lt;= column-max AND index &lt;= max_col.
         ENDIF.
 
         IF column-outlineLevel &gt; &apos;&apos;.
-          outline_level = condense( column-outlineLevel ).
+*          outline_level = condense( column-outlineLevel ).
+          condense column-outlinelevel.
           IF outline_level &gt; 0.
             column_dimension-&gt;set_outline_level( outline_level ).
           ENDIF.
@@ -1576,7 +1577,9 @@ WHILE index &lt;= column-max AND index &lt;= max_col.
         IF column-style &gt; &apos;&apos;.
           sy-index = column-style + 1.
           READ TABLE styles INTO style INDEX sy-index.
-          column_dimension-&gt;set_column_style_by_guid( style-&gt;get_guid( ) ).
+          data: dummy_guid TYPE ZEXCEL_CELL_STYLE.
+          dummy_guid = style-&gt;get_guid( ).
+          column_dimension-&gt;set_column_style_by_guid( dummy_guid ).
         ENDIF.
 
         ADD 1 TO index.
@@ -1709,13 +1712,13 @@ WHILE index &lt;= column-max AND index &lt;= max_col.
   ENDIF.
   &quot; End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD load_worksheet_drawing.
+  <source>method LOAD_WORKSHEET_DRAWING.
 
   TYPES: BEGIN OF t_c_nv_pr,
     name TYPE string,
@@ -1822,7 +1825,7 @@ ENDMETHOD.</source>
 
   ENDDO.
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
