@@ -195,7 +195,7 @@ CLASS zcl_excel_common DEFINITION LOCAL FRIENDS lcl_excel_common_test.
 *----------------------------------------------------------------------*
 CLASS lcl_excel_common_test DEFINITION FOR TESTING  &quot;#AU Risk_Level Harmless
                                  .                  &quot;#AU Duration Short
-*?﻿&lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;
+*?ï»¿&lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;
 *?&lt;asx:values&gt;
 *?&lt;TESTCLASS_OPTIONS&gt;
 *?&lt;TEST_CLASS&gt;lcl_Excel_Common_Test
@@ -1096,7 +1096,7 @@ endmethod.</source>
         ep_column = lv_column_c.                            &quot; Fix #164
         EXIT.
       ENDIF.
-    CATCH cx_sy_conversion_no_number.
+    CATCH cx_sy_conversion_no_number.&quot;#EC NO_HANDLER
       &quot; Too bad - try the character-approach
   ENDTRY.
 
@@ -1443,27 +1443,63 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Creates field catalog for BIND_TABLE based on internal table" EXPOSURE="2" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="EP_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG"/>
-  <source>method GET_FIELDCATALOG.
+  <source>METHOD get_fieldcatalog.
+  DATA: lr_dref_tab             TYPE REF TO  data,
+        lo_salv_table           TYPE REF TO  cl_salv_table,
+        lo_salv_columns_table   TYPE REF TO  cl_salv_columns_table,
+        lt_salv_t_column_ref    TYPE         salv_t_column_ref,
+        ls_salv_t_column_ref    LIKE LINE OF lt_salv_t_column_ref,
+        lo_salv_column_table    TYPE REF TO  cl_salv_column_table.
 
-  data: lr_data             type ref to data,
-        lo_structdescr      type ref to cl_abap_structdescr,
-        lt_dfies            type ddfields,
-        ls_dfies            type dfies,
-        ls_fieldcatalog     type zexcel_s_fieldcatalog.
+  FIELD-SYMBOLS: &lt;tab&gt;          TYPE STANDARD TABLE.
+  FIELD-SYMBOLS: &lt;fcat&gt;         LIKE LINE OF ep_fieldcatalog.
 
-  create data lr_data like line of ip_table.
+* Get copy of IP_TABLE-structure &lt;-- must be changeable to create salv
+  CREATE DATA lr_dref_tab LIKE ip_table.
+  ASSIGN lr_dref_tab-&gt;* TO &lt;tab&gt;.
+* Create salv --&gt; implicitly create fieldcat
+  TRY.
+      cl_salv_table=&gt;factory( IMPORTING
+                                r_salv_table   = lo_salv_table
+                              CHANGING
+                                t_table        = &lt;tab&gt;  ).
+      lo_salv_columns_table = lo_salv_table-&gt;get_columns( ).
+      lt_salv_t_column_ref  = lo_salv_columns_table-&gt;get( ).
+    CATCH cx_root.
+* maybe some errorhandling here - just haven&apos;t made up my mind yet
+  ENDTRY.
 
-  lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data_ref( lr_data ).
+* Loop through columns and set relevant fields ( fieldname, texts )
+  LOOP AT lt_salv_t_column_ref INTO ls_salv_t_column_ref.
 
-  lt_dfies = describe_structure( io_struct = lo_structdescr ).
+    lo_salv_column_table ?= ls_salv_t_column_ref-r_column.
+    APPEND INITIAL LINE TO ep_fieldcatalog ASSIGNING &lt;fcat&gt;.
+    &lt;fcat&gt;-position  = sy-tabix.
+    &lt;fcat&gt;-fieldname = ls_salv_t_column_ref-columnname.
+    &lt;fcat&gt;-scrtext_s = ls_salv_t_column_ref-r_column-&gt;get_short_text( ).
+    &lt;fcat&gt;-scrtext_m = ls_salv_t_column_ref-r_column-&gt;get_medium_text( ).
+    &lt;fcat&gt;-scrtext_l = ls_salv_t_column_ref-r_column-&gt;get_long_text( ).
 
-  loop at lt_dfies into ls_dfies.
-    clear ls_fieldcatalog.
-    move-corresponding ls_dfies to ls_fieldcatalog.
-    append ls_fieldcatalog to ep_fieldcatalog.
-  endloop.
+    &lt;fcat&gt;-dynpfld   = &apos;X&apos;.  &quot; What in the world would we exclude here?
+    IF &lt;fcat&gt;-position = 1.  &quot; except for the MANDT-field of most tables ( 1st column that is )
+      IF lo_salv_column_table-&gt;get_ddic_datatype( ) = &apos;CLNT&apos;.
+        CLEAR &lt;fcat&gt;-dynpfld.
+      ENDIF.
+    ENDIF.
 
-endmethod.</source>
+* For fields that don&apos;t a description (  i.e. defined by  &quot;field type i,&quot; )
+* just use the fieldname as description - that is better than nothing
+    IF    &lt;fcat&gt;-scrtext_s IS INITIAL
+      AND &lt;fcat&gt;-scrtext_m IS INITIAL
+      AND &lt;fcat&gt;-scrtext_l IS INITIAL.
+      CONCATENATE &apos;Col:&apos; &lt;fcat&gt;-fieldname INTO &lt;fcat&gt;-scrtext_l  SEPARATED BY space.
+      &lt;fcat&gt;-scrtext_m = &lt;fcat&gt;-scrtext_l.
+      &lt;fcat&gt;-scrtext_s = &lt;fcat&gt;-scrtext_l.
+    ENDIF.
+
+  ENDLOOP.
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Converts number to string representation in Excel format" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="NUMERIC"/>
@@ -1655,7 +1691,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" SCONAME="EP_FILE" VERSION="1" LANGU="E" DESCRIPT="Dateiname ohne Extension" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="TEXT255"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" SCONAME="EP_EXTENSION" VERSION="1" LANGU="E" DESCRIPT="Dateiextension (ohne .)" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR10"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" SCONAME="EP_DOTEXTENSION" VERSION="1" LANGU="E" DESCRIPT="Dateiextension (mit .)" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR10"/>
-  <source>METHOD split_file.
+  <source>method SPLIT_FILE.
 
   DATA: lt_hlp TYPE TABLE OF text255,
         ls_hlp TYPE text255.
@@ -1696,7 +1732,7 @@ endmethod.</source>
     ep_file = ip_file(lf_len).
   ENDIF.
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="STRUCTURE_CASE" VERSION="1" LANGU="E" DESCRIPT="Case stement for recursive" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="STRUCTURE_CASE" SCONAME="IS_COMPONENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_COMPONENTDESCR"/>
