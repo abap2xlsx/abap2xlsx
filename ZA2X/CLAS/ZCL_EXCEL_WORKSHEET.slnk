@@ -4637,10 +4637,15 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" VERSION="1" LANGU="E" DESCRIPT="Set WorkSheet Title" EXPOSURE="2" STATE="1" EDITORDER="50 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method SET_TITLE.
+  <source>METHOD set_title.
   DATA: lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator,
         lo_worksheet           TYPE REF TO zcl_excel_worksheet,
-        errormessage           TYPE string.
+        errormessage           TYPE string,
+        lv_rangesheetname_old  TYPE string,
+        lv_rangesheetname_new  TYPE string,
+        lo_ranges_iterator     TYPE REF TO cl_object_collection_iterator,
+        lo_range               TYPE REF TO zcl_excel_range,
+        lv_range_value         TYPE zexcel_range_value.
 
 
 * Check whether title consists only of allowed characters
@@ -4666,9 +4671,25 @@ endmethod.</source>
     ENDIF.
   ENDWHILE.
 
+  CONCATENATE me-&gt;title &apos;!&apos; INTO lv_rangesheetname_old.
 
   me-&gt;title = ip_title.
-endmethod.</source>
+* After changing this worksheets title we have to adjust
+* all ranges that are referring to this worksheet.
+
+  CONCATENATE me-&gt;title &apos;!&apos; INTO lv_rangesheetname_new.
+
+  lo_ranges_iterator = me-&gt;excel-&gt;get_ranges_iterator( ).
+  WHILE lo_ranges_iterator-&gt;has_next( ) = &apos;X&apos;.
+    lo_range ?= lo_ranges_iterator-&gt;get_next( ).
+    lv_range_value = lo_range-&gt;get_value( ).
+    REPLACE ALL OCCURRENCES OF lv_rangesheetname_old IN lv_range_value WITH lv_rangesheetname_new.
+    IF sy-subrc = 0.
+      lo_range-&gt;set_range_value( lv_range_value ).
+    ENDIF.
+
+  ENDWHILE.
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update dimension range" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
