@@ -1313,7 +1313,7 @@ endmethod.</source>
     differentoddeven TYPE string,
     END OF t_headerfooter.
 
-  types: BEGIN OF lty_tabcolor,
+  TYPES: BEGIN OF lty_tabcolor,
            rgb   TYPE string,
            theme TYPE string,
          END OF lty_tabcolor.
@@ -1384,8 +1384,8 @@ endmethod.</source>
         outline_level       TYPE int4,
 
         lr_tabcolor         TYPE REF TO if_ixml_element,
-        ls_tabcolor         type lty_tabcolor,
-        ls_excel_s_tabcolor type zexcel_s_tabcolor,
+        ls_tabcolor         TYPE lty_tabcolor,
+        ls_excel_s_tabcolor TYPE zexcel_s_tabcolor,
 
         rows                TYPE REF TO if_ixml_node_collection,
         row                 TYPE t_row,
@@ -1412,8 +1412,12 @@ endmethod.</source>
       file_path     = dirname.
   CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos;
     INTO rels_worksheet_path.
-  rels_worksheet = me-&gt;get_ixml_from_zip_archive( rels_worksheet_path ).
-  node ?= rels_worksheet-&gt;find_from_name( &apos;Relationship&apos; ).
+  TRY.                                                                          &quot; +#222  _rels/xxx.rels might not be present.  If not found there can be no drawings --&gt; just ignore this section
+      rels_worksheet = me-&gt;get_ixml_from_zip_archive( rels_worksheet_path ).
+      node ?= rels_worksheet-&gt;find_from_name( &apos;Relationship&apos; ).
+    CATCH zcx_excel.                                                            &quot; +#222
+                                                                                &quot; +#222   No errorhandling necessary - node will be unbound if error occurs
+  ENDTRY.                                                                       &quot; +#222
   WHILE node IS BOUND.
     fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
     CONCATENATE dirname relationship-target INTO path.
@@ -1444,10 +1448,10 @@ endmethod.</source>
   IF lr_tabcolor IS BOUND.
     fill_struct_from_attributes( EXPORTING ip_element = lr_tabcolor CHANGING cp_structure = ls_tabcolor ).
 * Theme not supported yet
-    if ls_tabcolor-rgb is not INITIAL.
+    IF ls_tabcolor-rgb IS NOT INITIAL.
       ls_excel_s_tabcolor-rgb = ls_tabcolor-rgb.
       io_worksheet-&gt;set_tabcolor( ls_excel_s_tabcolor ).
-    endif.
+    ENDIF.
   ENDIF.
 
   rows = worksheet-&gt;get_elements_by_tag_name( name = &apos;row&apos; ).
