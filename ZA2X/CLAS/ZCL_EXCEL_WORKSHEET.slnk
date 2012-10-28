@@ -1570,7 +1570,7 @@ endmethod.</source>
           wa_sema-col_typ = &apos;DAT&apos;.
           wa_sema-col_ops = &apos;NOP&apos;.
 
-        when &apos;CHAR&apos;.
+        when &apos;CHAR&apos; OR &apos;UNIT&apos; OR &apos;CUKY&apos;. &quot; Added fieldformats UNIT and CUKY - dd. 26-10-2012 Wouter Heuvelmans
           wa_sema-col_typ = &apos;STR&apos;.
           wa_sema-col_ops = &apos;DFT&apos;.   &quot; dependent field
 
