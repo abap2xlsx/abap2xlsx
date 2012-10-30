@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL37" VARCL="X" SUBC="1" RSTAT="T" RMAND="100" RLOAD="E" FIXPT="X" UCCHECK="X">
+ <textPool>
+  <language SPRAS="D">
+   <textElement ID="R" ENTRY="Xlsx-Datei lesen und dann wieder ausgeben" LENGTH="70 "/>
+  </language>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="Read xlsx-file and output" LENGTH="25 "/>
+  </language>
+ </textPool>
+ <source>REPORT ZDEMO_EXCEL37.
+
+DATA: excel           TYPE REF TO zcl_excel,
+      reader          TYPE REF TO zif_excel_reader.
+
+
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;37-passthrough.xlsx&apos;.
+
+SELECTION-SCREEN BEGIN OF BLOCK blx WITH FRAME.
+PARAMETERS: p_upfile TYPE string OBLIGATORY DEFAULT &apos;c:\temp\Noprinterassigned.xlsx&apos; LOWER CASE.
+SELECTION-SCREEN END OF BLOCK blx.
+
+INCLUDE zdemo_excel_outputopt_incl.
+
+
+START-OF-SELECTION.
+
+  TRY.
+      CREATE OBJECT reader TYPE zcl_excel_reader_2007.
+*      CREATE OBJECT reader TYPE zcl_excel_reader_xlsm.
+      excel = reader-&gt;load_file( p_upfile ).
+*** Create output
+      lcl_output=&gt;output( excel ).
+    CATCH cx_root.
+      message &apos;Error reading excelfile&apos; type &apos;I&apos;.
+  ENDTRY.</source>
+</PROG>
