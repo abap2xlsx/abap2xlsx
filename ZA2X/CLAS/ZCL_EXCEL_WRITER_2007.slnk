@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="9551494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <publicSection>class ZCL_EXCEL_WRITER_2007 definition
   public
   create public .
@@ -1830,7 +1830,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD create_xl_sheet.
+  <source>method CREATE_XL_SHEET.
 
   TYPES: BEGIN OF cfvo,
           value TYPE zexcel_conditional_value,
@@ -3429,7 +3429,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
@@ -4834,7 +4834,7 @@ endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_WORKBOOK.
+  <source>METHOD create_xl_workbook.
 
 ** Constant node name
   DATA: lc_xml_node_workbook            TYPE string VALUE &apos;workbook&apos;,
@@ -4882,12 +4882,14 @@ endmethod.</source>
         lo_document       TYPE REF TO if_ixml_document,
         lo_element_root   TYPE REF TO if_ixml_element,
         lo_element        TYPE REF TO if_ixml_element,
+        lo_element_range  TYPE REF TO if_ixml_element,
         lo_sub_element    TYPE REF TO if_ixml_element,
         lo_encoding       TYPE REF TO if_ixml_encoding,
         lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
         lo_ostream        TYPE REF TO if_ixml_ostream,
         lo_renderer       TYPE REF TO if_ixml_renderer,
         lo_iterator       TYPE REF TO cl_object_collection_iterator,
+        lo_iterator_range TYPE REF TO cl_object_collection_iterator,
         lo_worksheet      TYPE REF TO zcl_excel_worksheet,
         lo_range          TYPE REF TO zcl_excel_range,
         lo_autofilters    TYPE REF TO zcl_excel_autofilters,
@@ -5002,6 +5004,10 @@ endmethod.</source>
                                                    parent = lo_document ).
   lo_iterator = excel-&gt;get_worksheets_iterator( ).
 
+  &quot; ranges node
+  lo_element_range = lo_document-&gt;create_simple_element( name   = lc_xml_node_definednames &quot; issue 163 +
+                                                         parent = lo_document ).           &quot; issue 163 +
+
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
     &quot; sheet node
     lo_sub_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_sheet
@@ -5025,13 +5031,35 @@ endmethod.</source>
                                       prefix  = lc_r_ns
                                       value   = lv_xml_node_ridx_id ).
     lo_element-&gt;append_child( new_child = lo_sub_element ). &quot; sheet node
+
+    &quot; issue 163 &gt;&gt;&gt;
+    lo_iterator_range = lo_worksheet-&gt;get_ranges_iterator( ).
+
+    WHILE lo_iterator_range-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+      &quot; range node
+      lo_sub_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_definedname
+                                                              parent = lo_document ).
+      lo_range ?= lo_iterator_range-&gt;if_object_collection_iterator~get_next( ).
+      lv_value = lo_range-&gt;name.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_name
+                                        value = lv_value ).
+
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_localsheetid
+                                        value = lv_xml_node_ridx_id ).
+
+      lv_value = lo_range-&gt;get_value( ).
+      lo_sub_element-&gt;set_value( value = lv_value ).
+      lo_element_range-&gt;append_child( new_child = lo_sub_element ). &quot; range node
+    ENDWHILE.
+    &quot; issue 163 &lt;&lt;&lt;
+
   ENDWHILE.
   lo_element_root-&gt;append_child( new_child = lo_element ).&quot; sheets node
 
 
-  &quot; ranges node
-  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_definednames
-                                                   parent = lo_document ).
+*  &quot; ranges node
+*  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_definednames &quot; issue 163 -
+*                                                   parent = lo_document ).           &quot; issue 163 -
   lo_iterator = excel-&gt;get_ranges_iterator( ).
 
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
@@ -5042,16 +5070,9 @@ endmethod.</source>
     lv_value = lo_range-&gt;name.
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_name
                                       value = lv_value ).
-    lv_value = lo_range-&gt;sheetid.                                         &quot; Issue #163
-    IF lv_value GT 0.                                                     &quot; Issue #163
-      SHIFT lv_value RIGHT DELETING TRAILING space.                       &quot; Issue #163
-      SHIFT lv_value LEFT DELETING LEADING space.                         &quot; Issue #163
-      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_localsheetid  &quot; Issue #163
-                                        value = lv_value ).               &quot; Issue #163
-    ENDIF.
     lv_value = lo_range-&gt;get_value( ).
     lo_sub_element-&gt;set_value( value = lv_value ).
-    lo_element-&gt;append_child( new_child = lo_sub_element ). &quot; range node
+    lo_element_range-&gt;append_child( new_child = lo_sub_element ). &quot; range node
   ENDWHILE.
   lo_autofilters = excel-&gt;get_autofilters_reference( ).
   IF lo_autofilters-&gt;is_empty( ) = abap_false.
@@ -5076,11 +5097,11 @@ endmethod.</source>
                                           value = lv_value ).
         lv_value = lo_autofilter-&gt;get_filter_reference( ).
         lo_sub_element-&gt;set_value( value = lv_value ).
-        lo_element-&gt;append_child( new_child = lo_sub_element ). &quot; range node
+        lo_element_range-&gt;append_child( new_child = lo_sub_element ). &quot; range node
       ENDIF.
     ENDWHILE.
   ENDIF.
-  lo_element_root-&gt;append_child( new_child = lo_element ).&quot; ranges node
+  lo_element_root-&gt;append_child( new_child = lo_element_range ).&quot; ranges node
 
   &quot; calcPr node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_calcpr
@@ -5096,7 +5117,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
