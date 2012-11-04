@@ -15,8 +15,9 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_drawing              TYPE REF TO zcl_excel_drawing.
 
 TYPES: BEGIN OF gty_icon,
-         name      TYPE icon_name,
-         objid     TYPE wwwdata-objid,
+*         name      TYPE icon_name, &quot;Fix #228
+         name      TYPE iconname,   &quot;Fix #228
+         objid     TYPE w3objid,
        END OF gty_icon,
        gtyt_icon TYPE STANDARD TABLE OF gty_icon WITH NON-UNIQUE DEFAULT KEY.
 
