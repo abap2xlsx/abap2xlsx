@@ -5,9 +5,9 @@
   final
   create public .
 
-public section.
 *&quot;* public components of class ZCL_EXCEL_COMMON
 *&quot;* do not include other source files here!!!
+public section.
 
   constants C_EXCEL_BASELINE_DATE type D value &apos;19000101&apos;. &quot;#EC NOTEXT
   class-data C_EXCEL_NUMFMT_OFFSET type INT1 value 164. &quot;#EC NOTEXT .
@@ -16,6 +16,7 @@ public section.
   class-data C_SPRAS_EN type SPRAS value &apos;E&apos;. &quot;#EC NOTEXT .
   class-data O_CONV type ref to CL_ABAP_CONV_OUT_CE .
   constants C_EXCEL_1900_LEAP_YEAR type D value &apos;19000228&apos;. &quot;#EC NOTEXT
+  constants C_XLSX_FILE_FILTER type STRING value &apos;Excel Workbook (*.xlsx)|*.xlsx|&apos;. &quot;#EC NOTEXT
 
   class-methods DESCRIBE_STRUCTURE
     importing
@@ -146,9 +147,9 @@ public section.
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_COMMON
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_COMMON
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_COMMON
 *&quot;* do not include other source files here!!!
+private section.
 
   class-data C_EXCEL_COL_MODULE type INT2 value 64. &quot;#EC NOTEXT .
 
@@ -913,6 +914,7 @@ ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_EXCEL_SHEET_MAX_COL" VERSION="1" LANGU="E" DESCRIPT="2 byte integer (signed)" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="2" ATTVALUE="16384" ATTEXPVIRT="0" TYPTYPE="1" TYPE="INT4" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_EXCEL_SHEET_MIN_COL" VERSION="1" LANGU="E" DESCRIPT="2 byte integer (signed)" EXPOSURE="2" STATE="1" EDITORDER="5 " ATTDECLTYP="2" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="INT4" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_SPRAS_EN" VERSION="1" LANGU="E" DESCRIPT="Language Key" EXPOSURE="2" STATE="1" EDITORDER="6 " ATTDECLTYP="1" ATTVALUE="&apos;E&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="SPRAS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_XLSX_FILE_FILTER" VERSION="1" LANGU="E" DESCRIPT="File filter" EXPOSURE="2" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;Excel Workbook (*.xlsx)|*.xlsx|&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="O_CONV" VERSION="1" LANGU="E" DESCRIPT="Code Page and Endian Conversion (System Format -&gt; External)" EXPOSURE="2" STATE="1" EDITORDER="7 " ATTDECLTYP="1" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_ABAP_CONV_OUT_CE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_DIFFERS" VERSION="1" LANGU="E" DESCRIPT="Ensure Difference Between 2 (Elementary) data Objects" EXPOSURE="2" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_DIFFERS" SCONAME="EXP" VERSION="1" LANGU="E" DESCRIPT="Compare Object with Unexpected Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
