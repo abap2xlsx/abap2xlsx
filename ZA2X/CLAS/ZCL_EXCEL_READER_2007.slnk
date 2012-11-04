@@ -1115,7 +1115,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_WORKBOOK.
+  <source>METHOD load_workbook.
 
   CONSTANTS: lc_shared_strings  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
              lc_worksheet       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
@@ -1141,6 +1141,15 @@ endmethod.</source>
 
         range               TYPE t_range,
         range_value         TYPE zexcel_range_value.
+
+*--------------------------------------------------------------------*
+* #229: Set active worksheet - begin data declarations
+*--------------------------------------------------------------------*
+  DATA: lv_active_sheet_string     TYPE string,
+        lv_zexcel_active_worksheet TYPE zexcel_active_worksheet.
+*--------------------------------------------------------------------*
+* #229: Set active worksheet - end data declarations
+*--------------------------------------------------------------------*
 
 
   FIELD-SYMBOLS: &lt;worksheet&gt; TYPE t_relationship.
@@ -1216,6 +1225,7 @@ endmethod.</source>
     ADD 1 TO workbook_index.
   ENDWHILE.
 
+
   &quot;Can I reuse the workbook variable?
   &quot;workbook = me-&gt;get_ixml_from_zip_archive( ip_path ).
   node ?=  workbook-&gt;find_from_name( &apos;definedName&apos; ).
@@ -1236,7 +1246,24 @@ endmethod.</source>
     node ?= node-&gt;get_next( ).
   ENDWHILE.
 
-endmethod.</source>
+*--------------------------------------------------------------------*
+* #229: Set active worksheet - begin coding
+*--------------------------------------------------------------------*
+  lv_zexcel_active_worksheet = 1.                                 &quot; First sheet = active sheet if nothing else specified.
+  node ?=  workbook-&gt;find_from_name( &apos;workbookView&apos; ).
+  IF node IS BOUND.
+    lv_active_sheet_string = node-&gt;get_attribute( &apos;activeTab&apos; ).
+    TRY.
+        lv_zexcel_active_worksheet = lv_active_sheet_string + 1.  &quot; EXCEL numbers the sheets from 0 onwards --&gt; index into worksheettable needs to be one more
+      CATCH cx_sy_conversion_error.
+    ENDTRY.
+  ENDIF.
+  ip_excel-&gt;set_active_sheet_index( lv_zexcel_active_worksheet ).
+*--------------------------------------------------------------------*
+* #229: Set active worksheet - end coding
+*--------------------------------------------------------------------*
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
