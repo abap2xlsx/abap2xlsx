@@ -1830,12 +1830,26 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method CREATE_XL_SHEET.
+  <source>METHOD create_xl_sheet.
 
   TYPES: BEGIN OF cfvo,
           value TYPE zexcel_conditional_value,
           type  TYPE zexcel_conditional_type,
          END OF cfvo.
+
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Declarations 1 - start
+*--------------------------------------------------------------------*
+  TYPES: BEGIN OF lty_table_area,
+           left     TYPE i,
+           right    TYPE i,
+           top      TYPE i,
+           bottom   TYPE i,
+         END OF lty_table_area.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Declarations 1 - end
+*--------------------------------------------------------------------*
+
 
 ** Constant node name
   DATA: lc_xml_node_worksheet           TYPE string VALUE &apos;worksheet&apos;,
@@ -2047,6 +2061,17 @@ endmethod.</source>
                  &lt;column_dimension&gt; TYPE zexcel_s_worksheet_columndime,
                  &lt;row_dimension&gt;    TYPE zexcel_s_worksheet_rowdimensio.
 
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Declarations 2 - start
+*--------------------------------------------------------------------*
+  DATA: lt_table_areas TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
+        ls_table_area  LIKE LINE OF lt_table_areas.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Declarations 2 - end
+*--------------------------------------------------------------------*
+
+
+
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
   lo_ixml = cl_ixml=&gt;create( ).
@@ -2081,14 +2106,14 @@ endmethod.</source>
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_sheetpr
                                                    parent = lo_document ).
   &quot; TODO tabColor
-  if io_worksheet-&gt;tabcolor is not INITIAL.
+  IF io_worksheet-&gt;tabcolor IS NOT INITIAL.
     lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_tabcolor
                                                        parent = lo_element ).
 * Theme not supported yet - start with RGB
     lv_value = io_worksheet-&gt;tabcolor-rgb.
     lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_tabcolor_rgb
                                     value = lv_value ).
-  endif.
+  ENDIF.
 
   &quot; outlinePr
   lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_outlinepr
@@ -2475,6 +2500,23 @@ endmethod.</source>
     ls_area             = lo_autofilter-&gt;get_filter_area( ) .
     l_autofilter_hidden = abap_true. &quot; First defautl is not showing
   ENDIF.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - start
+*--------------------------------------------------------------------*
+* Build table to hold all table-areas attached to this sheet
+  lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+    ls_table_area-left   = zcl_excel_common=&gt;convert_column2int( lo_table-&gt;settings-top_left_column ).
+    ls_table_area-right  = lo_table-&gt;get_right_column_integer( ).
+    ls_table_area-top    = lo_table-&gt;settings-top_left_row.
+    ls_table_area-bottom = lo_table-&gt;get_bottom_row_integer( ).
+    INSERT ls_table_area INTO TABLE lt_table_areas.
+  ENDWHILE.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - end
+*--------------------------------------------------------------------*
+
   LOOP AT io_worksheet-&gt;sheet_content ASSIGNING &lt;ls_sheet_content&gt;.
     READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
     IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
@@ -2560,16 +2602,39 @@ endmethod.</source>
     IF &lt;ls_sheet_content&gt;-cell_style IS NOT INITIAL.
       lv_style_guid = &lt;ls_sheet_content&gt;-cell_style.
     ELSE.
-      lv_column_p = zcl_excel_common=&gt;convert_column2alpha( &lt;ls_sheet_content&gt;-cell_column ).
-      READ TABLE column_dimensions with key column = lv_column_p ASSIGNING &lt;column_dimension&gt;.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - start
+*--------------------------------------------------------------------*
+* Check if cell in any of the table areas
+      LOOP AT lt_table_areas TRANSPORTING NO FIELDS WHERE top    &lt;= &lt;ls_sheet_content&gt;-cell_row
+                                                      AND bottom &gt;= &lt;ls_sheet_content&gt;-cell_row
+                                                      AND left   &lt;= &lt;ls_sheet_content&gt;-cell_column
+                                                      AND right  &gt;= &lt;ls_sheet_content&gt;-cell_column.
+        EXIT.
+      ENDLOOP.
       IF sy-subrc = 0.
-        lv_style_guid = &lt;column_dimension&gt;-column_dimension-&gt;get_column_style_guid( ).
-        IF lv_style_guid IS INITIAL.
+        CLEAR lv_style_guid.     &quot; No style --&gt; EXCEL will use built-in-styles as declared in the tables-section
+      ELSE.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - end
+*--------------------------------------------------------------------*
+        lv_column_p = zcl_excel_common=&gt;convert_column2alpha( &lt;ls_sheet_content&gt;-cell_column ).
+        READ TABLE column_dimensions WITH KEY column = lv_column_p ASSIGNING &lt;column_dimension&gt;.
+        IF sy-subrc = 0.
+          lv_style_guid = &lt;column_dimension&gt;-column_dimension-&gt;get_column_style_guid( ).
+          IF lv_style_guid IS INITIAL.
+            lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
+          ENDIF.
+        ELSE.
           lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
         ENDIF.
-      ELSE.
-        lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - start
+*--------------------------------------------------------------------*
       ENDIF.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - end
+*--------------------------------------------------------------------*
     ENDIF.
 *    IF &lt;ls_sheet_content&gt;-cell_style IS NOT INITIAL.
 *      READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = &lt;ls_sheet_content&gt;-cell_style.
@@ -3364,7 +3429,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
