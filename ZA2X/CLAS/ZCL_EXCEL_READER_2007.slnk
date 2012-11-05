@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" UUID="DFAC2E4C81CE84F1B39B000C29B7D360" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="11 " SRCCOLUMN2="29 " TYPESRC_LENG="222 " TYPESRC="BEGIN OF t_relationship,
-           id         TYPE string,
-           type       TYPE string,
-           target     TYPE string,
-           worksheet  TYPE REF TO zcl_excel_worksheet,
-         END OF t_relationship
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="11 " SRCCOLUMN2="29 " TYPESRC_LENG="222 " TYPESRC="BEGIN OF t_relationship,
+           id         TYPE string,
+           type       TYPE string,
+           target     TYPE string,
+           worksheet  TYPE REF TO zcl_excel_worksheet,
+         END OF t_relationship
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="13 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="26 " TYPESRC_LENG="254 " TYPESRC="BEGIN OF t_fileversion,
-            appname       TYPE string,
-            lastedited    TYPE string,
-            lowestedited  TYPE string,
-            rupbuild      TYPE string,
-            codename      TYPE string,
-       END OF t_fileversion
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="13 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="26 " TYPESRC_LENG="254 " TYPESRC="BEGIN OF t_fileversion,
+            appname       TYPE string,
+            lastedited    TYPE string,
+            lowestedited  TYPE string,
+            rupbuild      TYPE string,
+            codename      TYPE string,
+       END OF t_fileversion
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="25 " SRCCOLUMN2="22 " TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
-              name    TYPE string,
-              sheetid TYPE string,
-              id      TYPE string,
-         END OF t_sheet
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="25 " SRCCOLUMN2="22 " TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
+              name    TYPE string,
+              sheetid TYPE string,
+              id      TYPE string,
+         END OF t_sheet
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="27 " SRCCOLUMN1="4 " SRCROW2="30 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
-              codename            TYPE string,
-              defaultthemeversion TYPE string,
-         END OF t_workbookpr
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="27 " SRCCOLUMN1="4 " SRCROW2="30 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
+              codename            TYPE string,
+              defaultthemeversion TYPE string,
+         END OF t_workbookpr
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="32 " SRCCOLUMN1="4 " SRCROW2="34 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
-              codename            TYPE string,
-         END OF t_sheetpr
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="32 " SRCCOLUMN1="4 " SRCROW2="34 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
+              codename            TYPE string,
+         END OF t_sheetpr
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="36 " SRCCOLUMN1="4 " SRCROW2="39 " SRCCOLUMN2="22 " TYPESRC_LENG="143 " TYPESRC='BEGIN OF t_range,
-              name    TYPE string,
-              localsheetid    TYPE string,       &quot; issue #163
-         END OF t_range
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="36 " SRCCOLUMN1="4 " SRCROW2="39 " SRCCOLUMN2="22 " TYPESRC_LENG="143 " TYPESRC='BEGIN OF t_range,
+              name    TYPE string,
+              localsheetid    TYPE string,       &quot; issue #163
+         END OF t_range
 '/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILLS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="7 " TYPTYPE="4" SRCROW1="41 " SRCCOLUMN1="4 " SRCROW2="41 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILLS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="7 " TYPTYPE="4" SRCROW1="41 " SRCCOLUMN1="4 " SRCROW2="41 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_BORDERS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="8 " TYPTYPE="4" SRCROW1="43 " SRCCOLUMN1="4 " SRCROW2="43 " SRCCOLUMN2="83 " TYPESRC_LENG="82 " TYPESRC="t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_BORDERS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="8 " TYPTYPE="4" SRCROW1="43 " SRCCOLUMN1="4 " SRCROW2="43 " SRCCOLUMN2="83 " TYPESRC_LENG="82 " TYPESRC="t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FONTS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="9 " TYPTYPE="4" SRCROW1="45 " SRCCOLUMN1="4 " SRCROW2="45 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FONTS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="9 " TYPTYPE="4" SRCROW1="45 " SRCCOLUMN1="4 " SRCROW2="45 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="47 " SRCCOLUMN1="4 " SRCROW2="47 " SRCCOLUMN2="52 " TYPESRC_LENG="51 " TYPESRC="t_style_refs TYPE TABLE OF REF TO zcl_excel_style
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="47 " SRCCOLUMN1="4 " SRCROW2="47 " SRCCOLUMN2="52 " TYPESRC_LENG="51 " TYPESRC="t_style_refs TYPE TABLE OF REF TO zcl_excel_style
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="49 " SRCCOLUMN1="4 " SRCROW2="52 " SRCCOLUMN2="20 " TYPESRC_LENG="123 " TYPESRC="BEGIN OF t_num_format,
-    id TYPE string,
-    format TYPE REF TO zcl_excel_style_number_format,
-  END OF t_num_format
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="49 " SRCCOLUMN1="4 " SRCROW2="52 " SRCCOLUMN2="20 " TYPESRC_LENG="123 " TYPESRC="BEGIN OF t_num_format,
+    id TYPE string,
+    format TYPE REF TO zcl_excel_style_number_format,
+  END OF t_num_format
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="54 " SRCCOLUMN1="4 " SRCROW2="54 " SRCCOLUMN2="69 " TYPESRC_LENG="68 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="54 " SRCCOLUMN1="4 " SRCROW2="54 " SRCCOLUMN2="69 " TYPESRC_LENG="68 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="56 " SRCCOLUMN1="4 " SRCROW2="61 " SRCCOLUMN2="15 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF t_color,
-    indexed TYPE string,
-    rgb TYPE string,
-    theme TYPE string,
-    tint TYPE string,
-  END OF t_color
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="56 " SRCCOLUMN1="4 " SRCROW2="61 " SRCCOLUMN2="15 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF t_color,
+    indexed TYPE string,
+    rgb TYPE string,
+    theme TYPE string,
+    tint TYPE string,
+  END OF t_color
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="63 " SRCCOLUMN1="4 " SRCROW2="67 " SRCCOLUMN2="23 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF T_REL_DRAWING,
-      id type string,
-      content type xstring,
-      file_ext type string,
-    end of t_rel_drawing
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="63 " SRCCOLUMN1="4 " SRCROW2="67 " SRCCOLUMN2="23 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF T_REL_DRAWING,
+      id type string,
+      content type xstring,
+      file_ext type string,
+    end of t_rel_drawing
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="69 " SRCCOLUMN1="4 " SRCROW2="69 " SRCCOLUMN2="45 " TYPESRC_LENG="44 " TYPESRC="t_rel_drawings type TABLE OF t_rel_drawing
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="69 " SRCCOLUMN1="4 " SRCROW2="69 " SRCCOLUMN2="45 " TYPESRC_LENG="44 " TYPESRC="t_rel_drawings type TABLE OF t_rel_drawing
 "/>
- <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_READER_2007 definition
   public
   create public .
@@ -246,6 +246,11 @@ protected section.
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="I" KEY="001" ENTRY="A problem occured when reading the file" LENGTH="60 "/>
+  </language>
+ </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_READER_2007" TYPEGROUP="IXML" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
  <forwardDeclaration>IXML</forwardDeclaration>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="EXCEL2007" VERSION="1" LANGU="E" DESCRIPT="Excel 2007 data" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -297,67 +302,139 @@ endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD_FILE">
   <source>method ZIF_EXCEL_READER~LOAD_FILE.
-  DATA: excel_data TYPE xstring.
-  DATA filelength TYPE i.
-  DATA bin_tab TYPE TABLE OF x255.
-  &quot; Background processing
-  DATA bin_data LIKE LINE OF bin_tab.
-  DATA len TYPE i.
-  DATA alen TYPE i.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   decision whether to load from frontend or backend
+*                current behavior ( autodecide ) should be default
+*                add optional parameter to allow user to choose
+*                to load from backend even when online
+*        2do§2   loosen typing of i_filename to CLIKE
+*--------------------------------------------------------------------*
 
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,                          2012-11-05
+*              - ...
+* changes: renaming variables to naming conventions
+*          renaming variables to indicate what they are used for
+*          adding comments to explain what we are trying to achieve
+*          message made to support multilinguality
+*          aligning code
+*          commenting on problems/future enhancements/todos we already know of or should decide upon
+*          adding issue # that has initiated the change - date provided to allow cleaning of code after a certain period
+*          explicit declaration of type of table instead of implicit declaration
+*          added errorhandling for open dataset
+*--------------------------------------------------------------------*
+
+  CONSTANTS: lcv_load_from_frontend         TYPE char1 VALUE &apos;F&apos;,
+             lcv_load_from_backend          TYPE char1 VALUE &apos;B&apos;.
+
+  DATA:      lv_load_from_source            TYPE char1,
+
+             lv_filelength                  TYPE i,
+             lt_binary_data                 TYPE STANDARD TABLE OF x255 WITH NON-UNIQUE DEFAULT KEY,
+             ls_binary_data                 LIKE LINE OF lt_binary_data,
+*   Background processing
+             lv_max_length_line             TYPE i,
+             lv_actual_length_line          TYPE i,
+
+             lv_errormessage                TYPE string,                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
+             lv_excel_data                  TYPE xstring.                         &quot; Binary content of .xlsx file
+
+
+*--------------------------------------------------------------------*
+* ToDos: 2do§1 Decision whether to load from frontend or backend
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* Autodecide on frontend or backend reading
+* Background-processing --&gt; backend  reading
+* Online-processing     --&gt; frontend reading
+*--------------------------------------------------------------------*
   IF sy-batch = abap_true.
-    DESCRIBE FIELD bin_data LENGTH len IN BYTE MODE.
-    OPEN DATASET i_filename FOR INPUT IN BINARY MODE.
-    WHILE sy-subrc = 0.
-      READ DATASET i_filename INTO bin_data MAXIMUM LENGTH len ACTUAL LENGTH alen.
-      APPEND bin_data TO bin_tab.
-      filelength = filelength + alen.
-    ENDWHILE.
-    CLOSE DATASET i_filename.
+    lv_load_from_source = lcv_load_from_backend.
   ELSE.
-    cl_gui_frontend_services=&gt;gui_upload(
-      EXPORTING
-        filename                = i_filename    &quot; Name of file
-        filetype                = &apos;BIN&apos;    &quot; File Type (ASCII, Binary)
-      IMPORTING
-        filelength              = filelength
-      CHANGING
-        data_tab                = bin_tab
-      EXCEPTIONS
-        file_open_error         = 1
-        file_read_error         = 2
-        no_batch                = 3
-        gui_refuse_filetransfer = 4
-        invalid_type            = 5
-        no_authority            = 6
-        unknown_error           = 7
-        bad_data_format         = 8
-        header_not_allowed      = 9
-        separator_not_allowed   = 10
-        header_too_long         = 11
-        unknown_dp_error        = 12
-        access_denied           = 13
-        dp_out_of_memory        = 14
-        disk_full               = 15
-        dp_timeout              = 16
-        not_supported_by_gui    = 17
-        error_no_gui            = 18
-        OTHERS                  = 19
-    ).
-    IF sy-subrc &lt;&gt; 0.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error    = &apos;A problem occured when reading the file&apos;.
-    ENDIF.
+    lv_load_from_source = lcv_load_from_frontend.
   ENDIF.
+
+  CASE lv_load_from_source.
+
+*--------------------------------------------------------------------*
+* Read from backend
+*--------------------------------------------------------------------*
+    WHEN lcv_load_from_backend.
+      DESCRIBE FIELD ls_binary_data LENGTH lv_max_length_line IN BYTE MODE.
+      OPEN DATASET i_filename FOR INPUT IN BINARY MODE.
+      IF sy-subrc &lt;&gt; 0.
+        lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error    = lv_errormessage.
+      ENDIF.
+      WHILE sy-subrc = 0.
+
+        READ DATASET i_filename INTO ls_binary_data MAXIMUM LENGTH lv_max_length_line ACTUAL LENGTH lv_actual_length_line.
+        APPEND ls_binary_data TO lt_binary_data.
+        lv_filelength = lv_filelength + lv_actual_length_line.
+
+      ENDWHILE.
+      CLOSE DATASET i_filename.
+
+*--------------------------------------------------------------------*
+* Read from frontend
+*--------------------------------------------------------------------*
+    WHEN lcv_load_from_frontend.
+      cl_gui_frontend_services=&gt;gui_upload( EXPORTING
+                                              filename                = i_filename
+                                              filetype                = &apos;BIN&apos;         &quot; We are basically working with zipped directories --&gt; force binary read
+                                            IMPORTING
+                                              filelength              = lv_filelength
+                                            CHANGING
+                                              data_tab                = lt_binary_data
+                                            EXCEPTIONS
+                                              file_open_error         = 1
+                                              file_read_error         = 2
+                                              no_batch                = 3
+                                              gui_refuse_filetransfer = 4
+                                              invalid_type            = 5
+                                              no_authority            = 6
+                                              unknown_error           = 7
+                                              bad_data_format         = 8
+                                              header_not_allowed      = 9
+                                              separator_not_allowed   = 10
+                                              header_too_long         = 11
+                                              unknown_dp_error        = 12
+                                              access_denied           = 13
+                                              dp_out_of_memory        = 14
+                                              disk_full               = 15
+                                              dp_timeout              = 16
+                                              not_supported_by_gui    = 17
+                                              error_no_gui            = 18
+                                              OTHERS                  = 19 ).
+      IF sy-subrc &lt;&gt; 0.
+        lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error    = lv_errormessage.
+      ENDIF.
+
+  ENDCASE.
+
+
+*--------------------------------------------------------------------*
+* Binary data needs to be provided as XSTRING for further processing
+*--------------------------------------------------------------------*
   CALL FUNCTION &apos;SCMS_BINARY_TO_XSTRING&apos;
     EXPORTING
-      input_length = filelength
+      input_length = lv_filelength
     IMPORTING
-      buffer       = excel_data
+      buffer       = lv_excel_data
     TABLES
-      binary_tab   = bin_tab.
-  r_excel = me-&gt;zif_excel_reader~load( excel_data ).
+      binary_tab   = lt_binary_data.
+
+  r_excel = me-&gt;zif_excel_reader~load( lv_excel_data ).
+
+
 endmethod.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
@@ -1117,7 +1194,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD load_workbook.
+  <source>method LOAD_WORKBOOK.
 
   CONSTANTS: lc_shared_strings  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
              lc_worksheet       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
@@ -1273,7 +1350,7 @@ endmethod.</source>
 * #229: Set active worksheet - end coding
 *--------------------------------------------------------------------*
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
