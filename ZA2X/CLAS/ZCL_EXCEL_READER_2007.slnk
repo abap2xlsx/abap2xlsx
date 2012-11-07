@@ -249,6 +249,8 @@ protected section.
  <textPool>
   <language SPRAS="E">
    <textElement ID="I" KEY="001" ENTRY="A problem occured when reading the file" LENGTH="60 "/>
+   <textElement ID="I" KEY="002" ENTRY="ZIP parse error" LENGTH="60 "/>
+   <textElement ID="I" KEY="003" ENTRY="File not found in zip-archive" LENGTH="60 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_READER_2007" TYPEGROUP="IXML" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
@@ -258,50 +260,113 @@ protected section.
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_ABAP_ZIP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~CAN_READ_FILE">
-  <source>method ZIF_EXCEL_READER~CAN_READ_FILE.
+  <source>METHOD zif_excel_reader~can_read_file.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,                          2012-11-07
+* changes: nothind done in code
+*          but started discussion about killing this method
+*--------------------------------------------------------------------*
 * For now always Unknown
   r_readable = abap_undefined.
-endmethod.</source>
+ENDMETHOD.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD">
-  <source>method ZIF_EXCEL_READER~LOAD.
+  <source>METHOD zif_excel_reader~load.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Map Document Properties to ZCL_EXCEL
+*--------------------------------------------------------------------*
 
-  CONSTANTS:
-    lc_core_properties TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&apos;,
-    lc_office_document TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&apos;,
-    lc_relationships   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,                          2012-11-07
+*              - ...
+* changes: renaming variables to naming conventions
+*          removing unused variables
+*          aligning code
+*          adding comments to explain what we are trying to achieve
+*          commenting on problems/future enhancements/todos we already know of or should decide upon
+*          adding me-&gt; where possible
+*--------------------------------------------------------------------*
 
-  DATA: rels                TYPE REF TO if_ixml_document,
-        node                TYPE REF TO if_ixml_element,
-        relationship        TYPE t_relationship.
+  CONSTANTS:  lcv_core_properties             TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&apos;,
+              lcv_office_document             TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&apos;.
 
-  me-&gt;excel2007 = i_excel2007.
-  rels = me-&gt;get_ixml_from_zip_archive( &apos;_rels/.rels&apos; ).
+  DATA:       lo_rels                         TYPE REF TO if_ixml_document,
+              lo_node                         TYPE REF TO if_ixml_element,
+              ls_relationship                 TYPE t_relationship.
 
+
+*--------------------------------------------------------------------*
+* $1  Create EXCEL-Object we want to return to caller
+
+* §2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
+*     us where in this folder structure the data for the workbook
+*     is located in the xlsx zip-archive
+*
+*     The xlsx Zip-archive has generally the following folder structure:
+*       &lt;root&gt; |
+*              |--&gt;  _rels
+*              |--&gt;  doc_Props
+*              |--&gt;  xl |
+*                       |--&gt;  _rels
+*                       |--&gt;  theme
+*                       |--&gt;  worksheets
+
+* §3  Extracting from this the path&amp;file where the workbook is located
+*     Following is an example how this file could be set up
+*        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;true&quot;?&gt;
+*      - &lt;Relationships xmlns=&quot;http://schemas.openxmlformats.org/package/2006/relationships&quot;&gt;
+*           &lt;Relationship Target=&quot;docProps/app.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties&quot; Id=&quot;rId3&quot;/&gt;
+*           &lt;Relationship Target=&quot;docProps/core.xml&quot; Type=&quot;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&quot; Id=&quot;rId2&quot;/&gt;
+*           &lt;Relationship Target=&quot;xl/workbook.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&quot; Id=&quot;rId1&quot;/&gt;
+*        &lt;/Relationships&gt;
+*--------------------------------------------------------------------*
+
+
+*--------------------------------------------------------------------*
+* $1  Create EXCEL-Object we want to return to caller
+*--------------------------------------------------------------------*
   CREATE OBJECT r_excel.
 
-  node ?= rels-&gt;find_from_name( &apos;Relationship&apos; ).
-  WHILE node IS BOUND.
-    fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
+*--------------------------------------------------------------------*
+* $2  Get file in folderstructure
+*--------------------------------------------------------------------*
+  me-&gt;excel2007 = i_excel2007.
+  lo_rels = me-&gt;get_ixml_from_zip_archive( &apos;_rels/.rels&apos; ).
 
-    CASE relationship-type.
-      WHEN lc_core_properties.
-        &quot; TODO Map Document Properties to ZCL_EXCEL
-      WHEN lc_office_document.
-        load_workbook(
-            ip_path  =  relationship-target
-            ip_excel =  r_excel ).
+*--------------------------------------------------------------------*
+* $3  Cycle through the Relationship Tags and use the ones we need
+*--------------------------------------------------------------------*
+  lo_node ?= lo_rels-&gt;find_from_name( &apos;Relationship&apos; ).
+  WHILE lo_node IS BOUND.
+
+    me-&gt;fill_struct_from_attributes( EXPORTING
+                                       ip_element   = lo_node
+                                     CHANGING
+                                       cp_structure = ls_relationship ).
+    CASE ls_relationship-type.
+
+      WHEN lcv_core_properties.
+        &quot; 2do§1   Map Document Properties to ZCL_EXCEL
+
+      WHEN lcv_office_document.
+        me-&gt;load_workbook( ip_path  = ls_relationship-target
+                           ip_excel = r_excel ).
 
       WHEN OTHERS.
-    ENDCASE.
 
-    node ?= node-&gt;get_next( ).
+    ENDCASE.
+    lo_node ?= lo_node-&gt;get_next( ).
+
   ENDWHILE.
 
-endmethod.</source>
+
+ENDMETHOD.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD_FILE">
-  <source>method ZIF_EXCEL_READER~LOAD_FILE.
+  <source>METHOD zif_excel_reader~load_file.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   decision whether to load from frontend or backend
@@ -326,20 +391,20 @@ endmethod.</source>
 *          added errorhandling for open dataset
 *--------------------------------------------------------------------*
 
-  CONSTANTS: lcv_load_from_frontend         TYPE char1 VALUE &apos;F&apos;,
-             lcv_load_from_backend          TYPE char1 VALUE &apos;B&apos;.
+  CONSTANTS:  lcv_load_from_frontend          TYPE char1 VALUE &apos;F&apos;,
+              lcv_load_from_backend           TYPE char1 VALUE &apos;B&apos;.
 
-  DATA:      lv_load_from_source            TYPE char1,
+  DATA:       lv_load_from_source             TYPE char1,
 
-             lv_filelength                  TYPE i,
-             lt_binary_data                 TYPE STANDARD TABLE OF x255 WITH NON-UNIQUE DEFAULT KEY,
-             ls_binary_data                 LIKE LINE OF lt_binary_data,
+              lv_filelength                   TYPE i,
+              lt_binary_data                  TYPE STANDARD TABLE OF x255 WITH NON-UNIQUE DEFAULT KEY,
+              ls_binary_data                  LIKE LINE OF lt_binary_data,
 *   Background processing
-             lv_max_length_line             TYPE i,
-             lv_actual_length_line          TYPE i,
+              lv_max_length_line              TYPE i,
+              lv_actual_length_line           TYPE i,
 
-             lv_errormessage                TYPE string,                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
-             lv_excel_data                  TYPE xstring.                         &quot; Binary content of .xlsx file
+              lv_errormessage                 TYPE string,                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
+              lv_excel_data                   TYPE xstring.                         &quot; Binary content of .xlsx file
 
 
 *--------------------------------------------------------------------*
@@ -435,104 +500,165 @@ endmethod.</source>
   r_excel = me-&gt;zif_excel_reader~load( lv_excel_data ).
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="IP_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="CP_STRUCTURE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
-  <source>method FILL_STRUCT_FROM_ATTRIBUTES.
-  DATA: name TYPE string,
-        attributes TYPE REF TO if_ixml_named_node_map,
-        attribute TYPE REF TO if_ixml_attribute,
-        iterator TYPE REF TO if_ixml_node_iterator.
+  <source>METHOD fill_struct_from_attributes.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,                          2012-11-07
+*              - ...
+* changes: renaming variables to naming conventions
+*          aligning code
+*          adding comments to explain what we are trying to achieve
+*--------------------------------------------------------------------*
 
-  FIELD-SYMBOLS: &lt;component&gt; TYPE any.
+  DATA:       lv_name                         TYPE string,
+              lo_attributes                   TYPE REF TO if_ixml_named_node_map,
+              lo_attribute                    TYPE REF TO if_ixml_attribute,
+              lo_iterator                     TYPE REF TO if_ixml_node_iterator.
 
+  FIELD-SYMBOLS: &lt;component&gt;                  TYPE ANY.
+
+*--------------------------------------------------------------------*
+* The values of named attributes of a tag are being read and moved into corresponding
+* fields of given structure
+* Behaves like move-corresonding tag to structure
+
+* Example:
+*     &lt;Relationship Target=&quot;docProps/app.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties&quot; Id=&quot;rId3&quot;/&gt;
+*   Here the attributes are Target, Type and Id.  Thus if the passed
+*   structure has fieldnames Id and Target these would be filled with
+*   &quot;rId3&quot; and &quot;docProps/app.xml&quot; respectively
+*--------------------------------------------------------------------*
   CLEAR cp_structure.
 
-  attributes = ip_element-&gt;get_attributes( ).
-  iterator = attributes-&gt;create_iterator( ).
-  attribute ?= iterator-&gt;get_next( ).
-  WHILE attribute IS BOUND.
-    name = attribute-&gt;get_name( ).
-    TRANSLATE name TO UPPER CASE.
-    ASSIGN COMPONENT name OF STRUCTURE cp_structure TO &lt;component&gt;.
+  lo_attributes  = ip_element-&gt;get_attributes( ).
+  lo_iterator    = lo_attributes-&gt;create_iterator( ).
+  lo_attribute  ?= lo_iterator-&gt;get_next( ).
+  WHILE lo_attribute IS BOUND.
+
+    lv_name = lo_attribute-&gt;get_name( ).
+    TRANSLATE lv_name TO UPPER CASE.
+    ASSIGN COMPONENT lv_name OF STRUCTURE cp_structure TO &lt;component&gt;.
     IF sy-subrc = 0.
-      &lt;component&gt; = attribute-&gt;get_value( ).
+      &lt;component&gt; = lo_attribute-&gt;get_value( ).
     ENDIF.
-    attribute ?= iterator-&gt;get_next( ).
+    lo_attribute ?= lo_iterator-&gt;get_next( ).
+
   ENDWHILE.
-endmethod.</source>
+
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="R_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method GET_FROM_ZIP_ARCHIVE.
+  <source>METHOD get_from_zip_archive.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,                          2012-11-07
+*              - ...
+* changes: aligning code
+*          adding comments to explain what we are trying to achieve
+*          changed message passed with exception
+*          message made to support multilinguality
+*--------------------------------------------------------------------*
 
+  DATA:         lv_errormessage                 TYPE string.                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
+
+
+*--------------------------------------------------------------------*
+* An xlsx-file is basically a zip-archive
+* From this zip-archive we need to extract one file in binary form
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* Setup ABAP zip-class with binary exceldata if not done already
+*--------------------------------------------------------------------*
   IF me-&gt;zip IS NOT BOUND.
     CREATE OBJECT me-&gt;zip.
-    zip-&gt;load(
-      EXPORTING
-        zip             = me-&gt;excel2007
-      EXCEPTIONS
-        zip_parse_error = 1
-        OTHERS          = 2
-    ).
+    zip-&gt;load( EXPORTING
+                 zip             = me-&gt;excel2007
+               EXCEPTIONS
+                 zip_parse_error = 1
+                 OTHERS          = 2 ).
     IF sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;ZIP parse error&apos;(002).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
-          error = &apos;ZIP parse error&apos;.
+          error = lv_errormessage.
     ENDIF.
   ENDIF.
 
-  zip-&gt;get(
-    EXPORTING
-      name                    = i_filename
-    IMPORTING
-      content                 = r_content    &quot; Contents
-    EXCEPTIONS
-      zip_index_error         = 1
-      zip_decompression_error = 2
-      OTHERS                  = 3
-  ).
+*--------------------------------------------------------------------*
+* Extract requested filename from archive if possible
+*--------------------------------------------------------------------*
+  zip-&gt;get( EXPORTING
+              name                    = i_filename
+            IMPORTING
+              content                 = r_content    &quot; Contents
+            EXCEPTIONS
+              zip_index_error         = 1
+              zip_decompression_error = 2
+              OTHERS                  = 3 ).
   IF sy-subrc &lt;&gt; 0.
+    lv_errormessage = &apos;File not found in zip-archive&apos;(003).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;ZIP index or decompression error&apos;.
+        error = lv_errormessage.
   ENDIF.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="IS_NORMALIZING" VERSION="1" LANGU="E" DESCRIPT="Boolean Variable (X=True, -=False, Space=Unknown)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="BOOLEAN" PARVALUE="&apos;X&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="R_IXML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method GET_IXML_FROM_ZIP_ARCHIVE.
-  TYPE-POOLS: ixml.
+  <source>METHOD get_ixml_from_zip_archive.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Add comment what is being achieved here
+*--------------------------------------------------------------------*
 
-  DATA: content TYPE xstring.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,                          2012-11-07
+*              - ...
+* changes: renaming variables to naming conventions
+*          removing unnecessary type-pool
+*          aligning code
+*--------------------------------------------------------------------*
 
-  DATA: ixml          TYPE REF TO if_ixml,
-        streamfactory TYPE REF TO if_ixml_stream_factory,
-        istream       TYPE REF TO if_ixml_istream,
-        parser        TYPE REF TO if_ixml_parser.
+  DATA:       lv_content                     TYPE xstring,
 
-  content = me-&gt;get_from_zip_archive( i_filename ).
-  ixml     = cl_ixml=&gt;create( ).
-  streamfactory = ixml-&gt;create_stream_factory( ).
-  istream  = streamfactory-&gt;create_istream_xstring( content ).
-  r_ixml   = ixml-&gt;create_document( ).
-  parser   = ixml-&gt;create_parser( stream_factory = streamfactory
-                                 istream         = istream
-                                 document        = r_ixml ).
-*  parser-&gt;set_normalizing( ).
-  parser-&gt;set_normalizing( is_normalizing ).
-  parser-&gt;set_validating( mode = if_ixml_parser=&gt;co_no_validation ).
-  parser-&gt;parse( ).
+              lo_ixml                        TYPE REF TO if_ixml,
+              lo_streamfactory               TYPE REF TO if_ixml_stream_factory,
+              lo_istream                     TYPE REF TO if_ixml_istream,
+              lo_parser                      TYPE REF TO if_ixml_parser.
 
-endmethod.</source>
+
+*--------------------------------------------------------------------*
+*  2do§1  ????  Something happens here   ???
+*--------------------------------------------------------------------*
+  lv_content        = me-&gt;get_from_zip_archive( i_filename ).
+  lo_ixml           = cl_ixml=&gt;create( ).
+  lo_streamfactory  = lo_ixml-&gt;create_stream_factory( ).
+  lo_istream        = lo_streamfactory-&gt;create_istream_xstring( lv_content ).
+  r_ixml            = lo_ixml-&gt;create_document( ).
+  lo_parser         = lo_ixml-&gt;create_parser( stream_factory = lo_streamfactory
+                                              istream        = lo_istream
+                                              document       = r_ixml ).
+
+  lo_parser-&gt;set_normalizing( is_normalizing ).
+  lo_parser-&gt;set_validating( mode = if_ixml_parser=&gt;co_no_validation ).
+  lo_parser-&gt;parse( ).
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
