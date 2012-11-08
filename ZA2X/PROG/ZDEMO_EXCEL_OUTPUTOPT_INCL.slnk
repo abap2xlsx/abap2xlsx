@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL_OUTPUTOPT_INCL" VARCL="X" SUBC="I" CNAM="K2_SCHMOECK" CDAT="20120318" UNAM="K2_SCHMOECK" UDAT="20120323" VERN="000080" RMAND="007" RLOAD="E" SDATE="20120323" STIME="211219" IDATE="20120323" ITIME="211219" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL_OUTPUTOPT_INCL" VARCL="X" SUBC="I" RMAND="007" RLOAD="E" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="Include ZDEMO_EXCEL_OUTPUTOPT_INCL" LENGTH="34 "/>
@@ -59,8 +59,10 @@ AT SELECTION-SCREEN OUTPUT.
   ENDLOOP.
 
 INITIALIZATION.
-  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = p_path ).
-  cl_gui_cfw=&gt;flush( ).
+  IF sy-batch IS INITIAL.
+    cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = p_path ).
+    cl_gui_cfw=&gt;flush( ).
+  ENDIF.
   lcl_output=&gt;parametertexts( ).  &quot; If started in language w/o textelements translated set defaults
   sy-title = gc_save_file_name.
   txt_bl1 = &apos;Output options&apos;(bl1).
@@ -98,13 +100,21 @@ CLASS lcl_output IMPLEMENTATION.
 
     CASE &apos;X&apos;.
       WHEN rb_down.
-        cl_output-&gt;download_frontend( ).
+        IF sy-batch IS INITIAL.
+          cl_output-&gt;download_frontend( ).
+        ELSE.
+          MESSAGE e001(00) WITH &apos;Frontenddownload impossible in background processing&apos;.
+        ENDIF.
 
       WHEN rb_back.
         cl_output-&gt;download_backend( ).
 
       WHEN rb_show.
-        cl_output-&gt;display_online( ).
+        IF sy-batch IS INITIAL.
+          cl_output-&gt;display_online( ).
+        ELSE.
+          MESSAGE e001(00) WITH &apos;Online display absurd in background processing&apos;.
+        ENDIF.
 
       WHEN rb_send.
         cl_output-&gt;send_email( ).
@@ -216,7 +226,7 @@ CLASS lcl_output IMPLEMENTATION.
 
     IF sy-calld = &apos;X&apos;.  &quot; no need to display anything if download was selected and report was called for demo purposes
       LEAVE PROGRAM.
-    else.
+    ELSE.
       MESSAGE &apos;Data transferred to default backend directory&apos; TYPE &apos;I&apos;.
     ENDIF.
   ENDMETHOD.                    &quot;download_backend
