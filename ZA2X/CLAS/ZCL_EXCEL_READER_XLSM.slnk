@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-16"?>
+<?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_READER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro reader" UUID="0202322174CD1EE0A390E386CB9ED10B" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_READER_2007">
  <publicSection>class ZCL_EXCEL_READER_XLSM definition
   public
@@ -34,8 +34,8 @@ public section.
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <inheritance CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" STATE="1">
-  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKBOOK" EXPOSURE="1"/>
-  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKSHEET" EXPOSURE="1"/>
+  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKBOOK"/>
+  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKSHEET"/>
  </inheritance>
  <method CLSNAME="ZCL_EXCEL_READER_XLSM" CMPNAME="LOAD_VBAPROJECT" VERSION="1" LANGU="E" DESCRIPT="Load VBA binary" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_XLSM" CMPNAME="LOAD_VBAPROJECT" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -52,8 +52,8 @@ ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>METHOD load_workbook.
-  super-&gt;load_workbook( EXPORTING ip_path  = ip_path
-                                  ip_excel = ip_excel ).
+  super-&gt;load_workbook( EXPORTING iv_workbook_full_filename = iv_workbook_full_filename
+                                  io_excel                  = io_excel ).
 
   CONSTANTS: lc_vba_project  TYPE string VALUE &apos;http://schemas.microsoft.com/office/2006/relationships/vbaProject&apos;.
 
@@ -66,13 +66,13 @@ ENDMETHOD.</source>
         dirname             TYPE string,
         relationship        TYPE t_relationship,
         fileversion         TYPE t_fileversion,
-        workbookPr          TYPE t_workbookPr.
+        workbookpr          TYPE t_workbookpr.
 
   FIELD-SYMBOLS: &lt;worksheet&gt; TYPE t_relationship.
 
   CALL FUNCTION &apos;TRINT_SPLIT_FILE_AND_PATH&apos;
     EXPORTING
-      full_name     = ip_path
+      full_name     = iv_workbook_full_filename
     IMPORTING
       stripped_name = stripped_name
       file_path     = dirname.
@@ -92,7 +92,7 @@ ENDMETHOD.</source>
         &quot; Read VBA  binary
         CONCATENATE dirname relationship-target INTO path.
         me-&gt;load_vbaproject( ip_path  = path
-                             ip_excel = ip_excel ).
+                             ip_excel = io_excel ).
       WHEN OTHERS.
     ENDCASE.
 
@@ -100,25 +100,25 @@ ENDMETHOD.</source>
   ENDWHILE.
 
   &quot; Read Workbook codeName
-  workbook = me-&gt;get_ixml_from_zip_archive( ip_path ).
+  workbook = me-&gt;get_ixml_from_zip_archive( iv_workbook_full_filename ).
   node ?=  workbook-&gt;find_from_name( &apos;fileVersion&apos; ).
   IF node IS BOUND.
 
     fill_struct_from_attributes( EXPORTING ip_element   = node
                                  CHANGING  cp_structure = fileversion  ).
 
-    ip_excel-&gt;zif_excel_book_vba_project~set_codename( fileversion-codename ).
+    io_excel-&gt;zif_excel_book_vba_project~set_codename( fileversion-codename ).
   ENDIF.
 
   &quot; Read Workbook codeName
-  workbook = me-&gt;get_ixml_from_zip_archive( ip_path ).
+  workbook = me-&gt;get_ixml_from_zip_archive( iv_workbook_full_filename ).
   node ?=  workbook-&gt;find_from_name( &apos;workbookPr&apos; ).
   IF node IS BOUND.
 
     fill_struct_from_attributes( EXPORTING ip_element   = node
-                                 CHANGING  cp_structure = workbookPr  ).
+                                 CHANGING  cp_structure = workbookpr  ).
 
-    ip_excel-&gt;zif_excel_book_vba_project~set_codename_pr( workbookPr-codename ).
+    io_excel-&gt;zif_excel_book_vba_project~set_codename_pr( workbookpr-codename ).
   ENDIF.
 
 ENDMETHOD.</source>
@@ -132,7 +132,7 @@ ENDMETHOD.</source>
   DATA: path                TYPE string,
         node                TYPE REF TO if_ixml_element,
         worksheet           TYPE REF TO if_ixml_document,
-        sheetPr             TYPE t_sheetPr.
+        sheetpr             TYPE t_sheetpr.
 
 
 *    &quot; Read Workbook codeName

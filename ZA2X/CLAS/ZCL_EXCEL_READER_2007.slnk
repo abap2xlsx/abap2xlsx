@@ -15,55 +15,56 @@
             codename      TYPE string,
        END OF t_fileversion
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="25 " SRCCOLUMN2="22 " TYPESRC_LENG="152 " TYPESRC="BEGIN OF t_sheet,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="26 " SRCCOLUMN2="22 " TYPESRC_LENG="188 " TYPESRC="BEGIN OF t_sheet,
               name    TYPE string,
               sheetid TYPE string,
               id      TYPE string,
+              state   TYPE string,
          END OF t_sheet
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="27 " SRCCOLUMN1="4 " SRCROW2="30 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="28 " SRCCOLUMN1="4 " SRCROW2="31 " SRCCOLUMN2="27 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF t_workbookpr,
               codename            TYPE string,
               defaultthemeversion TYPE string,
          END OF t_workbookpr
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="32 " SRCCOLUMN1="4 " SRCROW2="34 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="33 " SRCCOLUMN1="4 " SRCROW2="35 " SRCCOLUMN2="24 " TYPESRC_LENG="96 " TYPESRC="BEGIN OF t_sheetpr,
               codename            TYPE string,
          END OF t_sheetpr
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="36 " SRCCOLUMN1="4 " SRCROW2="39 " SRCCOLUMN2="22 " TYPESRC_LENG="143 " TYPESRC='BEGIN OF t_range,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="37 " SRCCOLUMN1="4 " SRCROW2="40 " SRCCOLUMN2="22 " TYPESRC_LENG="143 " TYPESRC='BEGIN OF t_range,
               name    TYPE string,
               localsheetid    TYPE string,       &quot; issue #163
          END OF t_range
 '/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILLS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="7 " TYPTYPE="4" SRCROW1="41 " SRCCOLUMN1="4 " SRCROW2="41 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FILLS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="7 " TYPTYPE="4" SRCROW1="42 " SRCCOLUMN1="4 " SRCROW2="42 " SRCCOLUMN2="91 " TYPESRC_LENG="90 " TYPESRC="t_fills   TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_BORDERS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="8 " TYPTYPE="4" SRCROW1="43 " SRCCOLUMN1="4 " SRCROW2="43 " SRCCOLUMN2="83 " TYPESRC_LENG="82 " TYPESRC="t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_BORDERS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="8 " TYPTYPE="4" SRCROW1="44 " SRCCOLUMN1="4 " SRCROW2="44 " SRCCOLUMN2="94 " TYPESRC_LENG="93 " TYPESRC="t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FONTS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="9 " TYPTYPE="4" SRCROW1="45 " SRCCOLUMN1="4 " SRCROW2="45 " SRCCOLUMN2="78 " TYPESRC_LENG="77 " TYPESRC="t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_FONTS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="9 " TYPTYPE="4" SRCROW1="46 " SRCCOLUMN1="4 " SRCROW2="46 " SRCCOLUMN2="91 " TYPESRC_LENG="90 " TYPESRC="t_fonts   TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="47 " SRCCOLUMN1="4 " SRCROW2="47 " SRCCOLUMN2="52 " TYPESRC_LENG="51 " TYPESRC="t_style_refs TYPE TABLE OF REF TO zcl_excel_style
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="48 " SRCCOLUMN1="4 " SRCROW2="48 " SRCCOLUMN2="89 " TYPESRC_LENG="88 " TYPESRC="t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="49 " SRCCOLUMN1="4 " SRCROW2="52 " SRCCOLUMN2="20 " TYPESRC_LENG="123 " TYPESRC="BEGIN OF t_num_format,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="50 " SRCCOLUMN1="4 " SRCROW2="53 " SRCCOLUMN2="20 " TYPESRC_LENG="123 " TYPESRC="BEGIN OF t_num_format,
     id TYPE string,
     format TYPE REF TO zcl_excel_style_number_format,
   END OF t_num_format
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="54 " SRCCOLUMN1="4 " SRCROW2="54 " SRCCOLUMN2="69 " TYPESRC_LENG="68 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="55 " SRCCOLUMN1="4 " SRCROW2="55 " SRCCOLUMN2="69 " TYPESRC_LENG="68 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="56 " SRCCOLUMN1="4 " SRCROW2="61 " SRCCOLUMN2="15 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF t_color,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="57 " SRCCOLUMN1="4 " SRCROW2="62 " SRCCOLUMN2="15 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF t_color,
     indexed TYPE string,
     rgb TYPE string,
     theme TYPE string,
     tint TYPE string,
   END OF t_color
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="63 " SRCCOLUMN1="4 " SRCROW2="67 " SRCCOLUMN2="23 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF T_REL_DRAWING,
-      id type string,
-      content type xstring,
-      file_ext type string,
-    end of t_rel_drawing
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="64 " SRCCOLUMN1="4 " SRCROW2="68 " SRCCOLUMN2="23 " TYPESRC_LENG="132 " TYPESRC="BEGIN OF t_rel_drawing,
+      id TYPE string,
+      content TYPE xstring,
+      file_ext TYPE string,
+    END OF t_rel_drawing
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="69 " SRCCOLUMN1="4 " SRCROW2="69 " SRCCOLUMN2="45 " TYPESRC_LENG="44 " TYPESRC="t_rel_drawings type TABLE OF t_rel_drawing
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="70 " SRCCOLUMN1="4 " SRCROW2="70 " SRCCOLUMN2="82 " TYPESRC_LENG="81 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
 "/>
  <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_READER_2007 definition
@@ -78,16 +79,16 @@ public section.
   interfaces ZIF_EXCEL_READER .</publicSection>
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_READER_2007
 *&quot;* do not include other source files here!!!
-protected section.
+PROTECTED SECTION.
 
-  types:
+  TYPES:
     BEGIN OF t_relationship,
            id         TYPE string,
            type       TYPE string,
            target     TYPE string,
            worksheet  TYPE REF TO zcl_excel_worksheet,
          END OF t_relationship .
-  types:
+  TYPES:
     BEGIN OF t_fileversion,
             appname       TYPE string,
             lastedited    TYPE string,
@@ -95,136 +96,137 @@ protected section.
             rupbuild      TYPE string,
             codename      TYPE string,
        END OF t_fileversion .
-  types:
+  TYPES:
     BEGIN OF t_sheet,
               name    TYPE string,
               sheetid TYPE string,
               id      TYPE string,
+              state   TYPE string,
          END OF t_sheet .
-  types:
+  TYPES:
     BEGIN OF t_workbookpr,
               codename            TYPE string,
               defaultthemeversion TYPE string,
          END OF t_workbookpr .
-  types:
+  TYPES:
     BEGIN OF t_sheetpr,
               codename            TYPE string,
          END OF t_sheetpr .
-  types:
+  TYPES:
     BEGIN OF t_range,
               name    TYPE string,
               localsheetid    TYPE string,       &quot; issue #163
          END OF t_range .
-  types:
-    t_fills TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH DEFAULT KEY .
-  types:
-    t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH DEFAULT KEY .
-  types:
-    t_fonts TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH DEFAULT KEY .
-  types:
-    t_style_refs TYPE TABLE OF REF TO zcl_excel_style .
-  types:
+  TYPES:
+    t_fills   TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH NON-UNIQUE DEFAULT KEY .
+  TYPES:
+    t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH NON-UNIQUE DEFAULT KEY .
+  TYPES:
+    t_fonts   TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH NON-UNIQUE DEFAULT KEY .
+  TYPES:
+    t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY .
+  TYPES:
     BEGIN OF t_num_format,
     id TYPE string,
     format TYPE REF TO zcl_excel_style_number_format,
   END OF t_num_format .
-  types:
+  TYPES:
     t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id .
-  types:
+  TYPES:
     BEGIN OF t_color,
     indexed TYPE string,
     rgb TYPE string,
     theme TYPE string,
     tint TYPE string,
   END OF t_color .
-  types:
-    BEGIN OF T_REL_DRAWING,
-      id type string,
-      content type xstring,
-      file_ext type string,
-    end of t_rel_drawing .
-  types:
-    t_rel_drawings type TABLE OF t_rel_drawing .
+  TYPES:
+    BEGIN OF t_rel_drawing,
+      id TYPE string,
+      content TYPE xstring,
+      file_ext TYPE string,
+    END OF t_rel_drawing .
+  TYPES:
+    t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY.
 
-  class-methods RESOLVE_PATH
-    importing
-      !IP_PATH type STRING
-    returning
-      value(RP_RESULT) type STRING .
-  methods FILL_STRUCT_FROM_ATTRIBUTES
-    importing
-      !IP_ELEMENT type ref to IF_IXML_ELEMENT
-    changing
-      !CP_STRUCTURE type ANY .
-  methods GET_FROM_ZIP_ARCHIVE
-    importing
-      !I_FILENAME type STRING
-    returning
-      value(R_CONTENT) type XSTRING
-    raising
-      ZCX_EXCEL .
-  methods GET_IXML_FROM_ZIP_ARCHIVE
-    importing
-      !I_FILENAME type STRING
-      !IS_NORMALIZING type BOOLEAN default &apos;X&apos;
-    returning
-      value(R_IXML) type ref to IF_IXML_DOCUMENT
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKBOOK
-    importing
-      !IP_PATH type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD_DRAWING_ANCHOR
-    importing
-      !IO_ANCHOR_ELEMENT type ref to IF_IXML_ELEMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IT_RELATED_DRAWINGS type T_REL_DRAWINGS .
-  methods LOAD_WORKSHEET
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_DRAWING
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_SHARED_STRINGS
-    importing
-      !IP_PATH type STRING
-    raising
-      ZCX_EXCEL .
-  methods LOAD_STYLES
-    importing
-      !IP_PATH type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD_STYLE_BORDERS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_BORDERS) type T_BORDERS .
-  methods LOAD_STYLE_FILLS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_FILLS) type T_FILLS .
-  methods LOAD_STYLE_FONTS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_FONTS) type T_FONTS .
-  methods LOAD_STYLE_NUM_FORMATS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_NUM_FORMATS) type T_NUM_FORMATS .</protectedSection>
+  CLASS-METHODS resolve_path
+    IMPORTING
+      !ip_path TYPE string
+    RETURNING
+      value(rp_result) TYPE string .
+  METHODS fill_struct_from_attributes
+    IMPORTING
+      !ip_element TYPE REF TO if_ixml_element
+    CHANGING
+      !cp_structure TYPE any .
+  METHODS get_from_zip_archive
+    IMPORTING
+      !i_filename TYPE string
+    RETURNING
+      value(r_content) TYPE xstring
+    RAISING
+      zcx_excel .
+  METHODS get_ixml_from_zip_archive
+    IMPORTING
+      !i_filename TYPE string
+      !is_normalizing TYPE boolean DEFAULT &apos;X&apos;
+    RETURNING
+      value(r_ixml) TYPE REF TO if_ixml_document
+    RAISING
+      zcx_excel .
+  METHODS load_workbook
+    IMPORTING
+      !iv_workbook_full_filename TYPE string
+      !io_excel TYPE REF TO zcl_excel
+    RAISING
+      zcx_excel .
+  METHODS load_drawing_anchor
+    IMPORTING
+      !io_anchor_element TYPE REF TO if_ixml_element
+      !io_worksheet TYPE REF TO zcl_excel_worksheet
+      !it_related_drawings TYPE t_rel_drawings .
+  METHODS load_worksheet
+    IMPORTING
+      !ip_path TYPE string
+      !io_worksheet TYPE REF TO zcl_excel_worksheet
+    RAISING
+      zcx_excel .
+  METHODS load_worksheet_drawing
+    IMPORTING
+      !ip_path TYPE string
+      !io_worksheet TYPE REF TO zcl_excel_worksheet
+    RAISING
+      zcx_excel .
+  METHODS load_shared_strings
+    IMPORTING
+      !ip_path TYPE string
+    RAISING
+      zcx_excel .
+  METHODS load_styles
+    IMPORTING
+      !ip_path TYPE string
+      !ip_excel TYPE REF TO zcl_excel
+    RAISING
+      zcx_excel .
+  METHODS load_style_borders
+    IMPORTING
+      !ip_xml TYPE REF TO if_ixml_document
+    RETURNING
+      value(ep_borders) TYPE t_borders .
+  METHODS load_style_fills
+    IMPORTING
+      !ip_xml TYPE REF TO if_ixml_document
+    RETURNING
+      value(ep_fills) TYPE t_fills .
+  METHODS load_style_fonts
+    IMPORTING
+      !ip_xml TYPE REF TO if_ixml_document
+    RETURNING
+      value(ep_fonts) TYPE t_fonts .
+  METHODS load_style_num_formats
+    IMPORTING
+      !ip_xml TYPE REF TO if_ixml_document
+    RETURNING
+      value(ep_num_formats) TYPE t_num_formats .</protectedSection>
  <privateSection>private section.
 *&quot;* private components of class ZCL_EXCEL_READER_2007
 *&quot;* do not include other source files here!!!
@@ -299,7 +301,7 @@ ENDMETHOD.</source>
 
 
 *--------------------------------------------------------------------*
-* $1  Create EXCEL-Object we want to return to caller
+* §1  Create EXCEL-Object we want to return to caller
 
 * §2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
 *     us where in this folder structure the data for the workbook
@@ -317,29 +319,29 @@ ENDMETHOD.</source>
 * §3  Extracting from this the path&amp;file where the workbook is located
 *     Following is an example how this file could be set up
 *        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;true&quot;?&gt;
-*      - &lt;Relationships xmlns=&quot;http://schemas.openxmlformats.org/package/2006/relationships&quot;&gt;
-*           &lt;Relationship Target=&quot;docProps/app.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties&quot; Id=&quot;rId3&quot;/&gt;
-*           &lt;Relationship Target=&quot;docProps/core.xml&quot; Type=&quot;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&quot; Id=&quot;rId2&quot;/&gt;
-*           &lt;Relationship Target=&quot;xl/workbook.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&quot; Id=&quot;rId1&quot;/&gt;
+*        &lt;Relationships xmlns=&quot;http://schemas.openxmlformats.org/package/2006/relationships&quot;&gt;
+*            &lt;Relationship Target=&quot;docProps/app.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties&quot; Id=&quot;rId3&quot;/&gt;
+*            &lt;Relationship Target=&quot;docProps/core.xml&quot; Type=&quot;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&quot; Id=&quot;rId2&quot;/&gt;
+*            &lt;Relationship Target=&quot;xl/workbook.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&quot; Id=&quot;rId1&quot;/&gt;
 *        &lt;/Relationships&gt;
 *--------------------------------------------------------------------*
 
 
 *--------------------------------------------------------------------*
-* $1  Create EXCEL-Object we want to return to caller
+* §1  Create EXCEL-Object we want to return to caller
 *--------------------------------------------------------------------*
   CREATE OBJECT r_excel.
 
 *--------------------------------------------------------------------*
-* $2  Get file in folderstructure
+* §2  Get file in folderstructure
 *--------------------------------------------------------------------*
   me-&gt;excel2007 = i_excel2007.
   lo_rels = me-&gt;get_ixml_from_zip_archive( &apos;_rels/.rels&apos; ).
 
 *--------------------------------------------------------------------*
-* $3  Cycle through the Relationship Tags and use the ones we need
+* §3  Cycle through the Relationship Tags and use the ones we need
 *--------------------------------------------------------------------*
-  lo_node ?= lo_rels-&gt;find_from_name( &apos;Relationship&apos; ).
+  lo_node ?= lo_rels-&gt;find_from_name( &apos;Relationship&apos; ).               &quot;#EC NOTEXT
   WHILE lo_node IS BOUND.
 
     me-&gt;fill_struct_from_attributes( EXPORTING
@@ -352,8 +354,8 @@ ENDMETHOD.</source>
         &quot; 2do§1   Map Document Properties to ZCL_EXCEL
 
       WHEN lcv_office_document.
-        me-&gt;load_workbook( ip_path  = ls_relationship-target
-                           ip_excel = r_excel ).
+        me-&gt;load_workbook( iv_workbook_full_filename  = ls_relationship-target
+                           io_excel                   = r_excel ).
 
       WHEN OTHERS.
 
@@ -616,7 +618,7 @@ ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="IS_NORMALIZING" VERSION="1" LANGU="E" DESCRIPT="Boolean Variable (X=True, -=False, Space=Unknown)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="BOOLEAN" PARVALUE="&apos;X&apos;"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="IS_NORMALIZING" VERSION="1" LANGU="E" DESCRIPT="Boolean Variable (X=True, -=False, Space=Unknown)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="BOOLEAN" PARVALUE="&apos;X&apos;" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="R_IXML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD get_ixml_from_zip_archive.
@@ -1317,166 +1319,296 @@ endmethod.</source>
 endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IV_WORKBOOK_FULL_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_WORKBOOK.
+  <source>METHOD load_workbook.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Move macro-reading from zcl_excel_reader_xlsm to this class
+*                autodetect existance of macro/vba content
+*                Allow inputparameter to explicitly tell reader to ignore vba-content
+*--------------------------------------------------------------------*
 
-  CONSTANTS: lc_shared_strings  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
-             lc_worksheet       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
-             lc_styles          TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles&apos;.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,                          2012-11-10
+*              - ...
+* changes: renaming variables to naming conventions
+*          aligning code
+*          removing unused variables
+*          adding me-&gt; where possible
+*          renaming variables to indicate what they are used for
+*          adding comments to explain what we are trying to achieve
+*          renaming i/o parameters:  previous input-parameter ip_path  holds a (full) filename and not a path   --&gt; rename to iv_workbook_full_filename
+*                                                             ip_excel renamed while being at it                --&gt; rename to io_excel
+*--------------------------------------------------------------------*
+* issue #232   - Read worksheetstate hidden/veryHidden
+*              - Stefan Schmöcker,                          2012-11-11
+*--------------------------------------------------------------------*
 
-  DATA: rels                TYPE REF TO if_ixml_document,
-        rels_workbook_path  TYPE string,
-        rels_workbook       TYPE REF TO if_ixml_document,
-        path                TYPE string,
-        worksheets          TYPE TABLE OF t_relationship,
-        workbook            TYPE REF TO if_ixml_document,
-        workbook_index      TYPE i,
-        worksheet_path      TYPE string,
-        sheet               TYPE t_sheet,
+  CONSTANTS:  lcv_shared_strings              TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
+              lcv_worksheet                   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
+              lcv_styles                      TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles&apos;,
+              lcv_vba_project                 TYPE string VALUE &apos;http://schemas.microsoft.com/office/2006/relationships/vbaProject&apos;,                  &quot;#EC NEEDED     for future incorporation of XLSM-reader
+*--------------------------------------------------------------------*
+* #232: Read worksheetstate hidden/veryHidden - begin data declarations
+*--------------------------------------------------------------------*
+              lcv_worksheet_state_hidden      TYPE string VALUE &apos;hidden&apos;,
+              lcv_worksheet_state_veryhidden  TYPE string VALUE &apos;veryHidden&apos;.
+*--------------------------------------------------------------------*
+* #232: Read worksheetstate hidden/veryHidden - end data declarations
+*--------------------------------------------------------------------*
 
-        node                TYPE REF TO if_ixml_element,
-        stripped_name       TYPE chkfile,
-        dirname             TYPE string,
-        relationship        TYPE t_relationship,
-        lo_worksheet        TYPE REF TO zcl_excel_worksheet,
-        lo_range            TYPE REF TO zcl_excel_range,
-        worksheet_title     TYPE zexcel_sheet_title,
+  DATA:
+              lv_path                         TYPE string,
+              lv_filename                     TYPE chkfile,
+              lv_full_filename                TYPE string,
 
-        range               TYPE t_range,
-        range_value         TYPE zexcel_range_value.
+              lo_rels_workbook                TYPE REF TO if_ixml_document,
+              lt_worksheets                   TYPE STANDARD TABLE OF t_relationship WITH NON-UNIQUE DEFAULT KEY,
+              lo_workbook                     TYPE REF TO if_ixml_document,
+              lv_workbook_index               TYPE i,
+              lv_worksheet_path               TYPE string,
+              ls_sheet                        TYPE t_sheet,
 
+              lo_node                         TYPE REF TO if_ixml_element,
+              ls_relationship                 TYPE t_relationship,
+              lo_worksheet                    TYPE REF TO zcl_excel_worksheet,
+              lo_range                        TYPE REF TO zcl_excel_range,
+              lv_worksheet_title              TYPE zexcel_sheet_title,
+
+              ls_range                        TYPE t_range,
+              lv_range_value                  TYPE zexcel_range_value,
 *--------------------------------------------------------------------*
 * #229: Set active worksheet - begin data declarations
 *--------------------------------------------------------------------*
-  DATA: lv_active_sheet_string     TYPE string,
-        lv_zexcel_active_worksheet TYPE zexcel_active_worksheet.
+              lv_active_sheet_string          TYPE string,
+              lv_zexcel_active_worksheet      TYPE zexcel_active_worksheet.
 *--------------------------------------------------------------------*
 * #229: Set active worksheet - end data declarations
 *--------------------------------------------------------------------*
-
-
   FIELD-SYMBOLS: &lt;worksheet&gt; TYPE t_relationship.
 
+
+*--------------------------------------------------------------------*
+
+* §1  Get the position of files related to this workbook
+*         Usually this will be &lt;root&gt;/xl/workbook.xml
+*         Thus the workbookroot will be &lt;root&gt;/xl/
+*         The position of all related files will be given in file
+*         &lt;workbookroot&gt;/_rels/&lt;workbookfilename&gt;.rels and their positions
+*         be be given relative to the workbookroot
+
+*     Following is an example how this file could be set up
+
+*        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;true&quot;?&gt;
+*        &lt;Relationships xmlns=&quot;http://schemas.openxmlformats.org/package/2006/relationships&quot;&gt;
+*            &lt;Relationship Target=&quot;styles.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles&quot; Id=&quot;rId6&quot;/&gt;
+*            &lt;Relationship Target=&quot;theme/theme1.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme&quot; Id=&quot;rId5&quot;/&gt;
+*            &lt;Relationship Target=&quot;worksheets/sheet1.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&quot; Id=&quot;rId1&quot;/&gt;
+*            &lt;Relationship Target=&quot;worksheets/sheet2.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&quot; Id=&quot;rId2&quot;/&gt;
+*            &lt;Relationship Target=&quot;worksheets/sheet3.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&quot; Id=&quot;rId3&quot;/&gt;
+*            &lt;Relationship Target=&quot;worksheets/sheet4.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&quot; Id=&quot;rId4&quot;/&gt;
+*            &lt;Relationship Target=&quot;sharedStrings.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&quot; Id=&quot;rId7&quot;/&gt;
+*        &lt;/Relationships&gt;
+*
+* §2  Load data that is relevant to the complete workbook
+*     Currently supported is:
+*   §2.1    Shared strings  - This holds all strings that are used in all worksheets
+*   §2.2    Styles          - This holds all styles that are used in all worksheets
+*   §2.3    Worksheets      - For each worksheet in the workbook one entry appears here to point to the file that holds the content of this worksheet
+*   §2.4    [Themes]                - not supported
+*   §2.5    [VBA (Macro)]           - supported in class zcl_excel_reader_xlsm but should be moved here and autodetect
+*   ...
+*
+* §3  Some information is held in the workbookfile as well
+*   §3.1    Names and order of of worksheets
+*   §3.2    Active worksheet
+*   §3.3    Defined names
+*   ...
+*     Following is an example how this file could be set up
+
+*        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;true&quot;?&gt;
+*        &lt;workbook xmlns:r=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships&quot; xmlns=&quot;http://schemas.openxmlformats.org/spreadsheetml/2006/main&quot;&gt;
+*            &lt;fileVersion rupBuild=&quot;4506&quot; lowestEdited=&quot;4&quot; lastEdited=&quot;4&quot; appName=&quot;xl&quot;/&gt;
+*            &lt;workbookPr defaultThemeVersion=&quot;124226&quot;/&gt;
+*            &lt;bookViews&gt;
+*                &lt;workbookView activeTab=&quot;1&quot; windowHeight=&quot;8445&quot; windowWidth=&quot;19035&quot; yWindow=&quot;120&quot; xWindow=&quot;120&quot;/&gt;
+*            &lt;/bookViews&gt;
+*            &lt;sheets&gt;
+*                &lt;sheet r:id=&quot;rId1&quot; sheetId=&quot;1&quot; name=&quot;Sheet1&quot;/&gt;
+*                &lt;sheet r:id=&quot;rId2&quot; sheetId=&quot;2&quot; name=&quot;Sheet2&quot;/&gt;
+*                &lt;sheet r:id=&quot;rId3&quot; sheetId=&quot;3&quot; name=&quot;Sheet3&quot; state=&quot;hidden&quot;/&gt;
+*                &lt;sheet r:id=&quot;rId4&quot; sheetId=&quot;4&quot; name=&quot;Sheet4&quot;/&gt;
+*            &lt;/sheets&gt;
+*            &lt;definedNames/&gt;
+*            &lt;calcPr calcId=&quot;125725&quot;/&gt;
+*        &lt;/workbook&gt;
+*--------------------------------------------------------------------*
+
+
+*--------------------------------------------------------------------*
+* §1  Get the position of files related to this workbook
+*     Entry into this method is with the filename of the workbook
+*--------------------------------------------------------------------*
   CALL FUNCTION &apos;TRINT_SPLIT_FILE_AND_PATH&apos;
     EXPORTING
-      full_name     = ip_path
+      full_name     = iv_workbook_full_filename
     IMPORTING
-      stripped_name = stripped_name
-      file_path     = dirname.
+      stripped_name = lv_filename
+      file_path     = lv_path.
 
-  &quot; Read Workbook Relationships
-  CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos;
-    INTO rels_workbook_path.
+  CONCATENATE lv_path &apos;_rels/&apos; lv_filename &apos;.rels&apos;
+      INTO lv_full_filename.
+  lo_rels_workbook = me-&gt;get_ixml_from_zip_archive( lv_full_filename ).
 
-  rels_workbook = me-&gt;get_ixml_from_zip_archive( rels_workbook_path ).
+  lo_node ?= lo_rels_workbook-&gt;find_from_name( &apos;Relationship&apos; ).              &quot;#EC NOTEXT
+  WHILE lo_node IS BOUND.
 
-  node ?= rels_workbook-&gt;find_from_name( &apos;Relationship&apos; ).
-  WHILE node IS BOUND.
-    fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
+    me-&gt;fill_struct_from_attributes( EXPORTING ip_element = lo_node CHANGING cp_structure = ls_relationship ).
 
-    CASE relationship-type.
-      WHEN lc_shared_strings.
-        &quot; Read Shared Strings
-        CONCATENATE dirname relationship-target INTO path.
-        load_shared_strings( path ).
+    CASE ls_relationship-type.
 
-      WHEN lc_worksheet.
-        &quot; Read worksheets
-        APPEND relationship TO worksheets.
+*--------------------------------------------------------------------*
+*   §2.1    Shared strings  - This holds all strings that are used in all worksheets
+*--------------------------------------------------------------------*
+      WHEN lcv_shared_strings.
+        CONCATENATE lv_path ls_relationship-target
+            INTO lv_full_filename.
+        me-&gt;load_shared_strings( lv_full_filename ).
 
-      WHEN lc_styles.
-        CONCATENATE dirname relationship-target INTO path.
-        load_styles(
-            ip_path  = path
-            ip_excel = ip_excel ).
+*--------------------------------------------------------------------*
+*   §2.3    Worksheets
+*           For each worksheet in the workbook one entry appears here to point to the file that holds the content of this worksheet
+*           Shared strings and styles have to be present before we can start with creating the worksheets
+*           thus we only store this information for use when parsing the workbookfile for sheetinformations
+*--------------------------------------------------------------------*
+      WHEN lcv_worksheet.
+        APPEND ls_relationship TO lt_worksheets.
+
+*--------------------------------------------------------------------*
+*   §2.2    Styles           - This holds the styles that are used in all worksheets
+*--------------------------------------------------------------------*
+      WHEN lcv_styles.
+        CONCATENATE lv_path ls_relationship-target
+            INTO lv_full_filename.
+        me-&gt;load_styles( ip_path  = lv_full_filename
+                         ip_excel = io_excel ).
 
       WHEN OTHERS.
+
     ENDCASE.
 
-    node ?= node-&gt;get_next( ).
+    lo_node ?= lo_node-&gt;get_next( ).
+
   ENDWHILE.
 
-  &quot; Read Workbook
-  workbook = me-&gt;get_ixml_from_zip_archive( ip_path ).
-  node ?=  workbook-&gt;find_from_name( &apos;sheet&apos; ).
-  workbook_index = 1.
-  WHILE node IS BOUND.
+*--------------------------------------------------------------------*
+* §3  Some information held in the workbookfile
+*--------------------------------------------------------------------*
+  lo_workbook = me-&gt;get_ixml_from_zip_archive( iv_workbook_full_filename ).
 
-    fill_struct_from_attributes(
-      EXPORTING
-        ip_element   =  node
-      CHANGING
-        cp_structure = sheet  ).
+*--------------------------------------------------------------------*
+*   §3.1    Names and order of of worksheets
+*--------------------------------------------------------------------*
+  lo_node           ?= lo_workbook-&gt;find_from_name( &apos;sheet&apos; ).
+  lv_workbook_index  = 1.
+  WHILE lo_node IS BOUND.
 
-    worksheet_title = sheet-name.
-    IF workbook_index &gt; 1.
-      lo_worksheet = ip_excel-&gt;add_new_worksheet( worksheet_title ).
+    me-&gt;fill_struct_from_attributes( EXPORTING
+                                       ip_element   = lo_node
+                                     CHANGING
+                                       cp_structure = ls_sheet ).
+*--------------------------------------------------------------------*
+*       Create new worksheet in workbook with correct name
+*--------------------------------------------------------------------*
+    lv_worksheet_title = ls_sheet-name.
+    IF lv_workbook_index = 1.                                               &quot; First sheet has been added automatically by creating io_excel
+      lo_worksheet = io_excel-&gt;get_active_worksheet( ).
+      lo_worksheet-&gt;set_title( lv_worksheet_title ).
     ELSE.
-      lo_worksheet = ip_excel-&gt;get_active_worksheet( ).
-      lo_worksheet-&gt;set_title( worksheet_title ).
+      lo_worksheet = io_excel-&gt;add_new_worksheet( lv_worksheet_title ).
+    ENDIF.
+*--------------------------------------------------------------------*
+* #232   - Read worksheetstate hidden/veryHidden - begin of coding
+*       Set status hidden if necessary
+*--------------------------------------------------------------------*
+    CASE ls_sheet-state.
+
+      WHEN lcv_worksheet_state_hidden.
+        lo_worksheet-&gt;zif_excel_sheet_properties~hidden = zif_excel_sheet_properties=&gt;c_hidden.
+
+      WHEN lcv_worksheet_state_veryhidden.
+        lo_worksheet-&gt;zif_excel_sheet_properties~hidden = zif_excel_sheet_properties=&gt;c_veryhidden.
+
+    ENDCASE.
+*--------------------------------------------------------------------*
+* #232   - Read worksheetstate hidden/veryHidden - end of coding
+*--------------------------------------------------------------------*
+*--------------------------------------------------------------------*
+*       Load worksheetdata
+*--------------------------------------------------------------------*
+    READ TABLE lt_worksheets ASSIGNING &lt;worksheet&gt; WITH KEY id = ls_sheet-id.
+    IF sy-subrc = 0.
+      CONCATENATE lv_path &lt;worksheet&gt;-target
+          INTO lv_worksheet_path.
+      me-&gt;load_worksheet( ip_path      = lv_worksheet_path
+                          io_worksheet = lo_worksheet ).
+      &lt;worksheet&gt;-worksheet = lo_worksheet.
     ENDIF.
 
-    READ TABLE worksheets ASSIGNING &lt;worksheet&gt;
-      WITH KEY id = sheet-id.
-    &quot; WRITE: / worksheet_id, worksheet_title, &lt;worksheet&gt;-target.
-    CONCATENATE dirname &lt;worksheet&gt;-target INTO worksheet_path.
-    load_worksheet(
-        ip_path      = worksheet_path
-        io_worksheet = lo_worksheet ).
+    lo_node ?= lo_node-&gt;get_next( ).
+    ADD 1 TO lv_workbook_index.
 
-    &lt;worksheet&gt;-worksheet = lo_worksheet.
-
-    node ?= node-&gt;get_next( ).
-    ADD 1 TO workbook_index.
   ENDWHILE.
-
-
-  &quot;Can I reuse the workbook variable?
-  &quot;workbook = me-&gt;get_ixml_from_zip_archive( ip_path ).
-  node ?=  workbook-&gt;find_from_name( &apos;definedName&apos; ).
-  WHILE node IS BOUND.
-
-    fill_struct_from_attributes(
-      EXPORTING
-        ip_element   =  node
-      CHANGING
-        cp_structure = range
-    ).
-    range_value = node-&gt;get_value( ).
-
-    IF range-localsheetid IS NOT INITIAL.                 &quot; issue #163+
-      READ TABLE worksheets ASSIGNING &lt;worksheet&gt;         &quot; issue #163+
-        WITH KEY id = range-localsheetid.                 &quot; issue #163+
-      lo_range = &lt;worksheet&gt;-worksheet-&gt;add_new_range( ). &quot; issue #163+
-    ELSE.                                                 &quot; issue #163+
-      lo_range = ip_excel-&gt;add_new_range( ).              &quot; issue #163+
-    ENDIF.                                                &quot; issue #163+
-*    lo_range = ip_excel-&gt;add_new_range( ).               &quot; issue #163-
-    lo_range-&gt;name = range-name.
-    lo_range-&gt;set_range_value( range_value ).
-    node ?= node-&gt;get_next( ).
-  ENDWHILE.
-
 *--------------------------------------------------------------------*
-* #229: Set active worksheet - begin coding
+*   #229: Set active worksheet - begin coding
+*   §3.2    Active worksheet
 *--------------------------------------------------------------------*
   lv_zexcel_active_worksheet = 1.                                 &quot; First sheet = active sheet if nothing else specified.
-  node ?=  workbook-&gt;find_from_name( &apos;workbookView&apos; ).
-  IF node IS BOUND.
-    lv_active_sheet_string = node-&gt;get_attribute( &apos;activeTab&apos; ).
+  lo_node ?=  lo_workbook-&gt;find_from_name( &apos;workbookView&apos; ).
+  IF lo_node IS BOUND.
+    lv_active_sheet_string = lo_node-&gt;get_attribute( &apos;activeTab&apos; ).
     TRY.
-        lv_zexcel_active_worksheet = lv_active_sheet_string + 1.  &quot; EXCEL numbers the sheets from 0 onwards --&gt; index into worksheettable needs to be one more
-      CATCH cx_sy_conversion_error.
+        lv_zexcel_active_worksheet = lv_active_sheet_string + 1.  &quot; EXCEL numbers the sheets from 0 onwards --&gt; index into worksheettable is increased by one
+      CATCH cx_sy_conversion_error.                               &quot;#EC NO_HANDLER    - error here --&gt; just use the default 1st sheet
     ENDTRY.
   ENDIF.
-  ip_excel-&gt;set_active_sheet_index( lv_zexcel_active_worksheet ).
+  io_excel-&gt;set_active_sheet_index( lv_zexcel_active_worksheet ).
 *--------------------------------------------------------------------*
 * #229: Set active worksheet - end coding
 *--------------------------------------------------------------------*
 
-endmethod.</source>
+
+*--------------------------------------------------------------------*
+*   §3.3    Defined names
+*           Unfortunately I don&apos;t know what this is used for at the moment
+*           So if anyone who does reads this comment please explain and commit to working directory
+*--------------------------------------------------------------------*
+  lo_node ?=  lo_workbook-&gt;find_from_name( &apos;definedName&apos; ).
+  WHILE lo_node IS BOUND.
+
+    me-&gt;fill_struct_from_attributes(  EXPORTING
+                                      ip_element   =  lo_node
+                                     CHANGING
+                                       cp_structure = ls_range ).
+    lv_range_value = lo_node-&gt;get_value( ).
+
+    IF ls_range-localsheetid IS NOT INITIAL.                                                              &quot; issue #163+
+      READ TABLE lt_worksheets ASSIGNING &lt;worksheet&gt; WITH KEY id = ls_range-localsheetid.                 &quot; issue #163+
+      lo_range = &lt;worksheet&gt;-worksheet-&gt;add_new_range( ).                                                 &quot; issue #163+
+    ELSE.                                                                                                 &quot; issue #163+
+      lo_range = io_excel-&gt;add_new_range( ).                                                              &quot; issue #163+
+    ENDIF.                                                                                                &quot; issue #163+
+*    lo_range = ip_excel-&gt;add_new_range( ).                                                               &quot; issue #163-
+    lo_range-&gt;name = ls_range-name.
+    lo_range-&gt;set_range_value( lv_range_value ).
+    lo_node ?= lo_node-&gt;get_next( ).
+
+  ENDWHILE.
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -1655,7 +1787,7 @@ endmethod.</source>
   TRY.                                                                          &quot; +#222  _rels/xxx.rels might not be present.  If not found there can be no drawings --&gt; just ignore this section
       rels_worksheet = me-&gt;get_ixml_from_zip_archive( rels_worksheet_path ).
       node ?= rels_worksheet-&gt;find_from_name( &apos;Relationship&apos; ).
-    CATCH zcx_excel.                                                            &quot; +#222
+    CATCH zcx_excel.                                              &quot;#EC NO_HANDLER +#222
                                                                                 &quot; +#222   No errorhandling necessary - node will be unbound if error occurs
   ENDTRY.                                                                       &quot; +#222
   WHILE node IS BOUND.
