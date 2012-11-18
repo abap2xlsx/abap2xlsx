@@ -79,16 +79,16 @@ public section.
   interfaces ZIF_EXCEL_READER .</publicSection>
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_READER_2007
 *&quot;* do not include other source files here!!!
-PROTECTED SECTION.
+protected section.
 
-  TYPES:
+  types:
     BEGIN OF t_relationship,
            id         TYPE string,
            type       TYPE string,
            target     TYPE string,
            worksheet  TYPE REF TO zcl_excel_worksheet,
          END OF t_relationship .
-  TYPES:
+  types:
     BEGIN OF t_fileversion,
             appname       TYPE string,
             lastedited    TYPE string,
@@ -96,143 +96,144 @@ PROTECTED SECTION.
             rupbuild      TYPE string,
             codename      TYPE string,
        END OF t_fileversion .
-  TYPES:
+  types:
     BEGIN OF t_sheet,
               name    TYPE string,
               sheetid TYPE string,
               id      TYPE string,
               state   TYPE string,
          END OF t_sheet .
-  TYPES:
+  types:
     BEGIN OF t_workbookpr,
               codename            TYPE string,
               defaultthemeversion TYPE string,
          END OF t_workbookpr .
-  TYPES:
+  types:
     BEGIN OF t_sheetpr,
               codename            TYPE string,
          END OF t_sheetpr .
-  TYPES:
+  types:
     BEGIN OF t_range,
               name    TYPE string,
               localsheetid    TYPE string,       &quot; issue #163
          END OF t_range .
-  TYPES:
+  types:
     t_fills   TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH NON-UNIQUE DEFAULT KEY .
-  TYPES:
+  types:
     t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH NON-UNIQUE DEFAULT KEY .
-  TYPES:
+  types:
     t_fonts   TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH NON-UNIQUE DEFAULT KEY .
-  TYPES:
+  types:
     t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY .
-  TYPES:
+  types:
     BEGIN OF t_num_format,
     id TYPE string,
     format TYPE REF TO zcl_excel_style_number_format,
   END OF t_num_format .
-  TYPES:
+  types:
     t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id .
-  TYPES:
+  types:
     BEGIN OF t_color,
     indexed TYPE string,
     rgb TYPE string,
     theme TYPE string,
     tint TYPE string,
   END OF t_color .
-  TYPES:
+  types:
     BEGIN OF t_rel_drawing,
       id TYPE string,
       content TYPE xstring,
       file_ext TYPE string,
     END OF t_rel_drawing .
-  TYPES:
-    t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY.
+  types:
+    t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY .
 
-  CLASS-METHODS resolve_path
-    IMPORTING
-      !ip_path TYPE string
-    RETURNING
-      value(rp_result) TYPE string .
-  METHODS fill_struct_from_attributes
-    IMPORTING
-      !ip_element TYPE REF TO if_ixml_element
-    CHANGING
-      !cp_structure TYPE any .
-  METHODS get_from_zip_archive
-    IMPORTING
-      !i_filename TYPE string
-    RETURNING
-      value(r_content) TYPE xstring
-    RAISING
-      zcx_excel .
-  METHODS get_ixml_from_zip_archive
-    IMPORTING
-      !i_filename TYPE string
-      !is_normalizing TYPE boolean DEFAULT &apos;X&apos;
-    RETURNING
-      value(r_ixml) TYPE REF TO if_ixml_document
-    RAISING
-      zcx_excel .
-  METHODS load_workbook
-    IMPORTING
-      !iv_workbook_full_filename TYPE string
-      !io_excel TYPE REF TO zcl_excel
-    RAISING
-      zcx_excel .
-  METHODS load_drawing_anchor
-    IMPORTING
-      !io_anchor_element TYPE REF TO if_ixml_element
-      !io_worksheet TYPE REF TO zcl_excel_worksheet
-      !it_related_drawings TYPE t_rel_drawings .
-  METHODS load_worksheet
-    IMPORTING
-      !ip_path TYPE string
-      !io_worksheet TYPE REF TO zcl_excel_worksheet
-    RAISING
-      zcx_excel .
-  METHODS load_worksheet_drawing
-    IMPORTING
-      !ip_path TYPE string
-      !io_worksheet TYPE REF TO zcl_excel_worksheet
-    RAISING
-      zcx_excel .
-  METHODS load_shared_strings
-    IMPORTING
-      !ip_path TYPE string
-    RAISING
-      zcx_excel .
-  METHODS load_styles
-    IMPORTING
-      !ip_path TYPE string
-      !ip_excel TYPE REF TO zcl_excel
-    RAISING
-      zcx_excel .
-  METHODS load_style_borders
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_borders) TYPE t_borders .
-  METHODS load_style_fills
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_fills) TYPE t_fills .
-  METHODS load_style_fonts
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_fonts) TYPE t_fonts .
-  METHODS load_style_num_formats
-    IMPORTING
-      !ip_xml TYPE REF TO if_ixml_document
-    RETURNING
-      value(ep_num_formats) TYPE t_num_formats .</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_READER_2007
+  class-methods RESOLVE_PATH
+    importing
+      !IP_PATH type STRING
+    returning
+      value(RP_RESULT) type STRING .
+  methods FILL_STRUCT_FROM_ATTRIBUTES
+    importing
+      !IP_ELEMENT type ref to IF_IXML_ELEMENT
+    changing
+      !CP_STRUCTURE type ANY .
+  methods GET_FROM_ZIP_ARCHIVE
+    importing
+      !I_FILENAME type STRING
+    returning
+      value(R_CONTENT) type XSTRING
+    raising
+      ZCX_EXCEL .
+  methods GET_IXML_FROM_ZIP_ARCHIVE
+    importing
+      !I_FILENAME type STRING
+      !IS_NORMALIZING type BOOLEAN default &apos;X&apos;
+    returning
+      value(R_IXML) type ref to IF_IXML_DOCUMENT
+    raising
+      ZCX_EXCEL .
+  methods LOAD_WORKBOOK
+    importing
+      !IV_WORKBOOK_FULL_FILENAME type STRING
+      !IO_EXCEL type ref to ZCL_EXCEL
+    raising
+      ZCX_EXCEL .
+  methods LOAD_DRAWING_ANCHOR
+    importing
+      !IO_ANCHOR_ELEMENT type ref to IF_IXML_ELEMENT
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+      !IT_RELATED_DRAWINGS type T_REL_DRAWINGS .
+  methods LOAD_WORKSHEET
+    importing
+      !IP_PATH type STRING
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+    raising
+      ZCX_EXCEL .
+  methods LOAD_WORKSHEET_DRAWING
+    importing
+      !IP_PATH type STRING
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+    raising
+      ZCX_EXCEL .
+  methods LOAD_SHARED_STRINGS
+    importing
+      !IP_PATH type STRING
+    raising
+      ZCX_EXCEL .
+  methods LOAD_STYLES
+    importing
+      !IP_PATH type STRING
+      !IP_EXCEL type ref to ZCL_EXCEL
+    raising
+      ZCX_EXCEL .
+  methods LOAD_STYLE_BORDERS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_BORDERS) type T_BORDERS .
+  methods LOAD_STYLE_FILLS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_FILLS) type T_FILLS .
+  methods LOAD_STYLE_FONTS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_FONTS) type T_FONTS .
+  methods LOAD_STYLE_NUM_FORMATS
+    importing
+      !IP_XML type ref to IF_IXML_DOCUMENT
+    returning
+      value(EP_NUM_FORMATS) type T_NUM_FORMATS .</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_READER_2007
 *&quot;* do not include other source files here!!!
+private section.
 
   data EXCEL2007 type XSTRING .
   data ZIP type ref to CL_ABAP_ZIP .
+  data ALTERNATE_ZIP type ref to ZCL_EXCEL_ABAP_ZIP .
   data SHARED_STRINGS type STRINGTAB .
   data STYLES type T_STYLE_REFS .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
@@ -257,16 +258,18 @@ PROTECTED SECTION.
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_READER_2007" TYPEGROUP="IXML" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
  <forwardDeclaration>IXML</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ALTERNATE_ZIP" VERSION="1" LANGU="E" DESCRIPT="Alternate Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_ABAP_ZIP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="EXCEL2007" VERSION="1" LANGU="E" DESCRIPT="Excel 2007 data" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRINGTAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRINGTAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_ABAP_ZIP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~CAN_READ_FILE">
   <source>METHOD zif_excel_reader~can_read_file.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,                          2012-11-07
-* changes: nothind done in code
+*              - Stefan Schmöcker,      (done)              2012-11-07
+*              - ...
+* changes: nothing done in code
 *          but started discussion about killing this method
 *--------------------------------------------------------------------*
 * For now always Unknown
@@ -282,7 +285,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,                          2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          removing unused variables
@@ -291,6 +294,10 @@ ENDMETHOD.</source>
 *          commenting on problems/future enhancements/todos we already know of or should decide upon
 *          adding me-&gt; where possible
 *--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+*              - Stefan Schmöcker,                          2012-11-07
+* changes: passing new optional input parameter to private attribute
+*--------------------------------------------------------------------*
 
   CONSTANTS:  lcv_core_properties             TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&apos;,
               lcv_office_document             TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&apos;.
@@ -298,7 +305,6 @@ ENDMETHOD.</source>
   DATA:       lo_rels                         TYPE REF TO if_ixml_document,
               lo_node                         TYPE REF TO if_ixml_element,
               ls_relationship                 TYPE t_relationship.
-
 
 *--------------------------------------------------------------------*
 * §1  Create EXCEL-Object we want to return to caller
@@ -331,6 +337,12 @@ ENDMETHOD.</source>
 * §1  Create EXCEL-Object we want to return to caller
 *--------------------------------------------------------------------*
   CREATE OBJECT r_excel.
+
+*--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+  me-&gt;zif_excel_reader~gv_use_alternate_zip = iv_use_alternate_zip.
+*--------------------------------------------------------------------*
+
 
 *--------------------------------------------------------------------*
 * §2  Get file in folderstructure
@@ -380,7 +392,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,                          2012-11-05
+*              - Stefan Schmöcker,      (done)              2012-11-05
 *              - ...
 * changes: renaming variables to naming conventions
 *          renaming variables to indicate what they are used for
@@ -392,6 +404,10 @@ ENDMETHOD.</source>
 *          explicit declaration of type of table instead of implicit declaration
 *          added errorhandling for open dataset
 *--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+*              - Stefan Schmöcker,                          2012-11-07
+* changes: passing new optional input parameter to private attribute
+*--------------------------------------------------------------------**--------------------------------------------------------------------*
 
   CONSTANTS:  lcv_load_from_frontend          TYPE char1 VALUE &apos;F&apos;,
               lcv_load_from_backend           TYPE char1 VALUE &apos;B&apos;.
@@ -412,6 +428,12 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
 * ToDos: 2do§1 Decision whether to load from frontend or backend
 *--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+  me-&gt;zif_excel_reader~gv_use_alternate_zip = iv_use_alternate_zip.
+*--------------------------------------------------------------------*
+
 
 *--------------------------------------------------------------------*
 * Autodecide on frontend or backend reading
@@ -499,7 +521,11 @@ ENDMETHOD.</source>
     TABLES
       binary_tab   = lt_binary_data.
 
-  r_excel = me-&gt;zif_excel_reader~load( lv_excel_data ).
+*--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+  r_excel = me-&gt;zif_excel_reader~load( i_excel2007          = lv_excel_data
+                                       iv_use_alternate_zip = iv_use_alternate_zip ).
+*--------------------------------------------------------------------*
 
 
 ENDMETHOD.</source>
@@ -510,7 +536,7 @@ ENDMETHOD.</source>
   <source>METHOD fill_struct_from_attributes.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,                          2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -562,12 +588,16 @@ ENDMETHOD.</source>
   <source>METHOD get_from_zip_archive.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,                          2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
 *          changed message passed with exception
 *          message made to support multilinguality
+*--------------------------------------------------------------------**--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+*              - Stefan Schmöcker,                          2012-11-07
+* changes: copying coding and using ALTERNATE_ZIP in ELSE-Branch
 *--------------------------------------------------------------------*
 
   DATA:         lv_errormessage                 TYPE string.                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
@@ -577,42 +607,86 @@ ENDMETHOD.</source>
 * An xlsx-file is basically a zip-archive
 * From this zip-archive we need to extract one file in binary form
 *--------------------------------------------------------------------*
-
+  IF me-&gt;zif_excel_reader~gv_use_alternate_zip IS INITIAL.                            &quot;+#234
 *--------------------------------------------------------------------*
 * Setup ABAP zip-class with binary exceldata if not done already
 *--------------------------------------------------------------------*
-  IF me-&gt;zip IS NOT BOUND.
-    CREATE OBJECT me-&gt;zip.
-    zip-&gt;load( EXPORTING
-                 zip             = me-&gt;excel2007
-               EXCEPTIONS
-                 zip_parse_error = 1
-                 OTHERS          = 2 ).
+    IF me-&gt;zip IS NOT BOUND.
+      CREATE OBJECT me-&gt;zip.
+      zip-&gt;load( EXPORTING
+                   zip             = me-&gt;excel2007
+                 EXCEPTIONS
+                   zip_parse_error = 1
+                   OTHERS          = 2 ).
+      IF sy-subrc &lt;&gt; 0.
+        lv_errormessage = &apos;ZIP parse error&apos;(002).
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+      ENDIF.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Extract requested filename from archive if possible
+*--------------------------------------------------------------------*
+    zip-&gt;get( EXPORTING
+                name                    = i_filename
+              IMPORTING
+                content                 = r_content    &quot; Contents
+              EXCEPTIONS
+                zip_index_error         = 1
+                zip_decompression_error = 2
+                OTHERS                  = 3 ).
     IF sy-subrc &lt;&gt; 0.
-      lv_errormessage = &apos;ZIP parse error&apos;(002).
+      lv_errormessage = &apos;File not found in zip-archive&apos;(003).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = lv_errormessage.
+    ENDIF.
+*--------------------------------------------------------------------*
+* issue#234 - begin of insertion
+*--------------------------------------------------------------------*
+  ELSE.
+*--------------------------------------------------------------------*
+* Setup alternate ABAP zip-class with binary exceldata if not done already
+* May become obsolete if SAP fixes  standard CL_ABAP_ZIP
+*--------------------------------------------------------------------*
+    IF me-&gt;alternate_zip IS NOT BOUND.
+      CREATE OBJECT me-&gt;alternate_zip.
+      alternate_zip-&gt;load( EXPORTING
+                             zip             = me-&gt;excel2007
+                           EXCEPTIONS
+                             zip_parse_error = 1
+                             OTHERS          = 2 ).
+      IF sy-subrc &lt;&gt; 0.
+        lv_errormessage = &apos;ZIP parse error&apos;(002).
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+      ENDIF.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Extract requested filename from archive if possible
+*--------------------------------------------------------------------*
+    alternate_zip-&gt;get( EXPORTING
+                          name                    = i_filename
+                        IMPORTING
+                          content                 = r_content    &quot; Contents
+                        EXCEPTIONS
+                          zip_index_error         = 1
+                          zip_decompression_error = 2
+                          OTHERS                  = 3 ).
+    IF sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;File not found in zip-archive&apos;(003).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = lv_errormessage.
     ENDIF.
   ENDIF.
-
 *--------------------------------------------------------------------*
-* Extract requested filename from archive if possible
+* issue#234 - end of insertion
 *--------------------------------------------------------------------*
-  zip-&gt;get( EXPORTING
-              name                    = i_filename
-            IMPORTING
-              content                 = r_content    &quot; Contents
-            EXCEPTIONS
-              zip_index_error         = 1
-              zip_decompression_error = 2
-              OTHERS                  = 3 ).
-  IF sy-subrc &lt;&gt; 0.
-    lv_errormessage = &apos;File not found in zip-archive&apos;(003).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = lv_errormessage.
-  ENDIF.
 
 ENDMETHOD.</source>
  </method>
@@ -629,7 +703,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,                          2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          removing unnecessary type-pool
@@ -666,7 +740,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IT_RELATED_DRAWINGS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_REL_DRAWINGS"/>
-  <source>method LOAD_DRAWING_ANCHOR.
+  <source>METHOD load_drawing_anchor.
 
   TYPES: BEGIN OF t_c_nv_pr,
     name TYPE string,
@@ -807,516 +881,667 @@ ENDMETHOD.</source>
       ip_width = ls_size-width
       ip_height = ls_size-height ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Loads shared strings table" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_SHARED_STRINGS.
-  DATA: value               TYPE string,
-        value2              TYPE string,
-        shared_strings_xml  TYPE REF TO if_ixml_document,
-        tag_name            TYPE string,
-        node                TYPE REF TO if_ixml_element,
-        node2               TYPE REF TO if_ixml_element,
-        node3               TYPE REF TO if_ixml_element.
+  <source>METHOD load_shared_strings.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Support partial formatting of strings in cells
+*--------------------------------------------------------------------*
 
-***  Basic structure of Shared strings
-***  Some lines insignificant for us to read
-***  &lt;si&gt;(Stringinfo)&lt;/si&gt;
-***  So far I have seen 2 versions how (Stringinfo) can be displayed
-***    a)  &quot;simple&quot; strings:   &lt;t&gt;string&lt;/t&gt;
-***    b)  rich text string:   (&lt;r&gt;richtextstring&lt;/r&gt;)+     &quot; String split up into parts that are of equal formatting
-***          richtextstring: can be
-***          b1) &lt;t xml:space=&quot;preserve&quot;&gt;string&lt;/t&gt;
-***       or b2) &lt;rPr&gt;someformattinginfo&lt;/rPr&gt;&lt;t xml:space=&quot;preserve&quot;&gt;string&lt;/t&gt;
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-11
+*              - ...
+* changes: renaming variables to naming conventions
+*          renaming variables to indicate what they are used for
+*          aligning code
+*          adding comments to explain what we are trying to achieve
+*          rewriting code for better readibility
+*--------------------------------------------------------------------*
 
 
 
-  shared_strings_xml = me-&gt;get_ixml_from_zip_archive( i_filename     = ip_path
-                                                      is_normalizing = space ).  &quot; NO!!! normalizing - otherwise leading blanks will be omitted and that is not really desired for the stringtable
-  node ?= shared_strings_xml-&gt;find_from_name( &apos;si&apos; ).
-  WHILE node IS BOUND.
-    node2 ?= node-&gt;get_first_child( ).
-    tag_name = node2-&gt;get_name( ).
-    IF tag_name = &apos;t&apos;.      &quot; a - &quot;simple&quot; string
-      value = node2-&gt;get_value( ).
-      APPEND value TO shared_strings.
-    ELSEIF tag_name = &apos;r&apos;.  &quot; b - rich text string
-      &quot; TODO parse rich text
-* Still no support for rich text strings - but at least we should try to extract the stringinfo from this passage
-* and !!! APPEND it to shared strings - otherwise the stringtable might get jumbled
-      CLEAR value.
-      WHILE node2 IS BOUND.  &quot; Walk through b)
-        node3 ?= node2-&gt;get_first_child( ).
-        WHILE node3 IS BOUND.
-          tag_name = node3-&gt;get_name( ).
-          IF tag_name = &apos;t&apos;.  &quot; this is sufficient to get hold of b1 and b2
-            value2 = node3-&gt;get_value( ).
-            CONCATENATE value value2 INTO value RESPECTING BLANKS.   &quot; Build resulting string from all partial (formatted) strings
+  DATA:
+              lo_shared_strings_xml           TYPE REF TO if_ixml_document,
+              lo_node_si                      TYPE REF TO if_ixml_element,
+              lo_node_si_child                TYPE REF TO if_ixml_element,
+              lo_node_r_child_t               TYPE REF TO if_ixml_element,
+              lv_tag_name                     TYPE string,
+              lv_node_value                   TYPE string.
+
+  FIELD-SYMBOLS: &lt;lv_shared_string&gt;           LIKE LINE OF me-&gt;shared_strings.
+
+*--------------------------------------------------------------------*
+
+* §1  Parse shared strings file and get into internal table
+*   So far I have encountered 2 ways how a string can be represented in the shared strings file
+*   §1.1 - &quot;simple&quot; strings
+*   §1.2 - rich text formatted strings
+
+*     Following is an example how this file could be set up; 2 strings in simple formatting, 3rd string rich textformatted
+
+
+*        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;true&quot;?&gt;
+*        &lt;sst uniqueCount=&quot;6&quot; count=&quot;6&quot; xmlns=&quot;http://schemas.openxmlformats.org/spreadsheetml/2006/main&quot;&gt;
+*            &lt;si&gt;
+*                &lt;t&gt;This is a teststring 1&lt;/t&gt;
+*            &lt;/si&gt;
+*            &lt;si&gt;
+*                &lt;t&gt;This is a teststring 2&lt;/t&gt;
+*            &lt;/si&gt;
+*            &lt;si&gt;
+*                &lt;r&gt;
+*                  &lt;t&gt;T&lt;/t&gt;
+*                &lt;/r&gt;
+*                &lt;r&gt;
+*                    &lt;rPr&gt;
+*                        &lt;sz val=&quot;11&quot;/&gt;
+*                        &lt;color rgb=&quot;FFFF0000&quot;/&gt;
+*                        &lt;rFont val=&quot;Calibri&quot;/&gt;
+*                        &lt;family val=&quot;2&quot;/&gt;
+*                        &lt;scheme val=&quot;minor&quot;/&gt;
+*                    &lt;/rPr&gt;
+*                    &lt;t xml:space=&quot;preserve&quot;&gt;his is a &lt;/t&gt;
+*                &lt;/r&gt;
+*                &lt;r&gt;
+*                    &lt;rPr&gt;
+*                        &lt;sz val=&quot;11&quot;/&gt;
+*                        &lt;color theme=&quot;1&quot;/&gt;
+*                        &lt;rFont val=&quot;Calibri&quot;/&gt;
+*                        &lt;family val=&quot;2&quot;/&gt;
+*                        &lt;scheme val=&quot;minor&quot;/&gt;
+*                    &lt;/rPr&gt;
+*                    &lt;t&gt;teststring 3&lt;/t&gt;
+*                &lt;/r&gt;
+*            &lt;/si&gt;
+*        &lt;/sst&gt;
+*--------------------------------------------------------------------*
+
+  lo_shared_strings_xml = me-&gt;get_ixml_from_zip_archive( i_filename     = ip_path
+                                                         is_normalizing = space ).  &quot; NO!!! normalizing - otherwise leading blanks will be omitted and that is not really desired for the stringtable
+  lo_node_si ?= lo_shared_strings_xml-&gt;find_from_name( &apos;si&apos; ).
+  WHILE lo_node_si IS BOUND.
+
+    APPEND INITIAL LINE TO me-&gt;shared_strings ASSIGNING &lt;lv_shared_string&gt;.            &quot; Each &lt;si&gt;-entry in the xml-file must lead to an entry in our stringtable
+    lo_node_si_child ?= lo_node_si-&gt;get_first_child( ).
+    IF lo_node_si_child IS BOUND.
+      lv_tag_name = lo_node_si_child-&gt;get_name( ).
+      IF lv_tag_name = &apos;t&apos;.
+*--------------------------------------------------------------------*
+*   §1.1 - &quot;simple&quot; strings
+*                Example:  see above
+*--------------------------------------------------------------------*
+        &lt;lv_shared_string&gt; = lo_node_si_child-&gt;get_value( ).
+      ELSE.
+*--------------------------------------------------------------------*
+*   §1.2 - rich text formatted strings
+*       it is sufficient to strip the &lt;t&gt;...&lt;/t&gt; tag from each &lt;r&gt;-tag and concatenate these
+*       as long as rich text formatting is not supported (2do§1) ignore all info about formatting
+*                Example:  see above
+*--------------------------------------------------------------------*
+        WHILE lo_node_si_child IS BOUND.                                             &quot; actually these children of &lt;si&gt; are &lt;r&gt;-tags
+
+          lo_node_r_child_t ?= lo_node_si_child-&gt;find_from_name( &apos;t&apos; ).              &quot; extract the &lt;t&gt;...&lt;/t&gt; part of each &lt;r&gt;-tag
+          IF lo_node_r_child_t IS BOUND.
+            lv_node_value = lo_node_r_child_t-&gt;get_value( ).
+            CONCATENATE &lt;lv_shared_string&gt; lv_node_value INTO &lt;lv_shared_string&gt; RESPECTING BLANKS.
           ENDIF.
-          node3 ?= node3-&gt;get_next( ).
-        ENDWHILE.
-        node2 ?= node2-&gt;get_next( ).
-      ENDWHILE.
-      APPEND value TO shared_strings.
 
+          lo_node_si_child ?= lo_node_si_child-&gt;get_next( ).
+
+        ENDWHILE.
+      ENDIF.
     ENDIF.
 
-    node ?= node-&gt;get_next( ).
+    lo_node_si ?= lo_node_si-&gt;get_next( ).
   ENDWHILE.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads styles" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_STYLES.
-  TYPES: BEGIN OF t_xf,
-    applyalignment TYPE string,
-    applyborder TYPE string,
-    applyfill TYPE string,
-    applyfont TYPE string,
-    applynumberformat TYPE string,
-    applyprotection TYPE string,
-    borderid TYPE string,
-    fillid TYPE string,
-    fontid TYPE string,
-    numfmtid TYPE string,
-    pivotbutton TYPE string,
-    quoteprefix TYPE string,
-    xfid TYPE string,
-    END OF t_xf.
+  <source>METHOD load_styles.
 
-  TYPES: BEGIN OF t_alignment,
-    horizontal  TYPE string,
-    indent TYPE string,
-    justifylastline TYPE string,
-    readingorder TYPE string,
-    relativeindent TYPE string,
-    shrinktofit TYPE string,
-    textrotation TYPE string,
-    vertical TYPE string,
-    wraptext TYPE string,
-    END OF t_alignment.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (wip )              2012-11-11
+*              - ...
+* changes: renaming variables and types to naming conventions
+*          aligning code
+*--------------------------------------------------------------------*
+  TYPES:  BEGIN OF lty_xf,
+            applyalignment      TYPE string,
+            applyborder         TYPE string,
+            applyfill           TYPE string,
+            applyfont           TYPE string,
+            applynumberformat   TYPE string,
+            applyprotection     TYPE string,
+            borderid            TYPE string,
+            fillid              TYPE string,
+            fontid              TYPE string,
+            numfmtid            TYPE string,
+            pivotbutton         TYPE string,
+            quoteprefix         TYPE string,
+            xfid                TYPE string,
+          END OF lty_xf.
 
-  TYPES: BEGIN OF t_protection,
-   hidden  TYPE string,
-   locked TYPE string,
- END OF t_protection.
+  TYPES:  BEGIN OF lty_alignment,
+            horizontal          TYPE string,
+            indent              TYPE string,
+            justifylastline     TYPE string,
+            readingorder        TYPE string,
+            relativeindent      TYPE string,
+            shrinktofit         TYPE string,
+            textrotation        TYPE string,
+            vertical            TYPE string,
+            wraptext            TYPE string,
+          END OF lty_alignment.
 
+  TYPES:  BEGIN OF lty_protection,
+            hidden              TYPE string,
+            locked              TYPE string,
+          END OF lty_protection.
 
-  DATA: styles_xml      TYPE REF TO if_ixml_document,
-        iterator        TYPE REF TO if_ixml_node_iterator,
-        nodes           TYPE REF TO if_ixml_node_collection,
-        node            TYPE REF TO if_ixml_element,
-        node2           TYPE REF TO if_ixml_element,
-        fills           TYPE t_fills,
-        fill            TYPE REF TO zcl_excel_style_fill,
-        num_formats     TYPE t_num_formats,
-        num_format      TYPE t_num_format,
-        cell_border     TYPE REF TO zcl_excel_style_borders,
-        borders         TYPE t_borders,
-        fonts           TYPE t_fonts,
-        font            TYPE REF TO zcl_excel_style_font,
-        style           TYPE REF TO zcl_excel_style,
-        xf              TYPE t_xf,
-        alignment       TYPE t_alignment,
-        protection      TYPE t_protection,
-        index           TYPE i.
+  DATA:
+              lo_styles_xml                   TYPE REF TO if_ixml_document,
+              lo_style                        TYPE REF TO zcl_excel_style,
 
-  styles_xml = me-&gt;get_ixml_from_zip_archive( ip_path ).
+              lt_num_formats                  TYPE t_num_formats,
+              lt_fills                        TYPE t_fills,
+              lt_borders                      TYPE t_borders,
+              lt_fonts                        TYPE t_fonts,
 
-  num_formats = load_style_num_formats( styles_xml ).
-  fills = load_style_fills( styles_xml ).
-  borders = load_style_borders( styles_xml ).
-  fonts = load_style_fonts( styles_xml ).
+              ls_num_format                   TYPE t_num_format,
+              ls_fill                         TYPE REF TO zcl_excel_style_fill,
+              ls_cell_border                  TYPE REF TO zcl_excel_style_borders,
+              ls_font                         TYPE REF TO zcl_excel_style_font,
+
+              lo_node_cellxfs                 TYPE REF TO if_ixml_element,
+              lo_node_cellxfs_xf              TYPE REF TO if_ixml_element,
+              lo_node_cellxfs_xf_alignment    TYPE REF TO if_ixml_element,
+              lo_node_cellxfs_xf_protection   TYPE REF TO if_ixml_element,
+
+              lo_nodes_xf                     TYPE REF TO if_ixml_node_collection,
+              lo_iterator_cellxfs             TYPE REF TO if_ixml_node_iterator,
+
+              ls_xf                           TYPE lty_xf,
+              ls_alignment                    TYPE lty_alignment,
+              ls_protection                   TYPE lty_protection,
+              lv_index                        TYPE i.
+
+  lo_styles_xml = me-&gt;get_ixml_from_zip_archive( ip_path ).
+
+  lt_num_formats   = load_style_num_formats( lo_styles_xml ).
+  lt_fills         = load_style_fills( lo_styles_xml ).
+  lt_borders       = load_style_borders( lo_styles_xml ).
+  lt_fonts         = load_style_fonts( lo_styles_xml ).
 
   &quot;we have all the components of style, now build the style objects
-  node = styles_xml-&gt;find_from_name( name = &apos;cellXfs&apos; ).
-  IF node IS BOUND.
-    nodes = node-&gt;get_elements_by_tag_name( name = &apos;xf&apos; ).
-    iterator = nodes-&gt;create_iterator( ).
-    node ?= iterator-&gt;get_next( ).
-    WHILE node IS BOUND.
-      style = ip_excel-&gt;add_new_style( ).
-      fill_struct_from_attributes(
-        EXPORTING
-          ip_element   =  node
-        CHANGING
-          cp_structure = xf ).
+  lo_node_cellxfs  = lo_styles_xml-&gt;find_from_name( name = &apos;cellXfs&apos; ).
+  IF lo_node_cellxfs IS BOUND.
+    lo_nodes_xf         = lo_node_cellxfs-&gt;get_elements_by_tag_name( name = &apos;xf&apos; ).
+    lo_iterator_cellxfs = lo_nodes_xf-&gt;create_iterator( ).
+    lo_node_cellxfs_xf ?= lo_iterator_cellxfs-&gt;get_next( ).
+    WHILE lo_node_cellxfs_xf IS BOUND.
 
-      IF xf-applyfill = &apos;1&apos; AND xf-fillid IS NOT INITIAL.
-        index = xf-fillid + 1.
-        READ TABLE fills INTO fill INDEX index.
+      lo_style = ip_excel-&gt;add_new_style( ).
+      fill_struct_from_attributes( EXPORTING
+                                     ip_element   =  lo_node_cellxfs_xf
+                                   CHANGING
+                                     cp_structure = ls_xf ).
+      IF ls_xf-applyfill = &apos;1&apos; AND ls_xf-fillid IS NOT INITIAL.
+        lv_index = ls_xf-fillid + 1.
+        READ TABLE lt_fills INTO ls_fill INDEX lv_index.
         IF sy-subrc = 0.
-          style-&gt;fill = fill.
+          lo_style-&gt;fill = ls_fill.
         ENDIF.
       ENDIF.
 
-      IF xf-numfmtid IS NOT INITIAL.
-        READ TABLE num_formats INTO num_format WITH TABLE KEY id = xf-numfmtid.
+      IF ls_xf-numfmtid IS NOT INITIAL.
+        READ TABLE lt_num_formats INTO ls_num_format WITH TABLE KEY id = ls_xf-numfmtid.
         IF sy-subrc = 0.
-          style-&gt;number_format = num_format-format.
+          lo_style-&gt;number_format = ls_num_format-format.
         ENDIF.
       ENDIF.
 
-      IF xf-applyborder = &apos;1&apos; AND xf-borderid IS NOT INITIAL.
-        index = xf-borderid + 1.
-        READ TABLE borders INTO cell_border INDEX index.
+      IF ls_xf-applyborder = &apos;1&apos; AND ls_xf-borderid IS NOT INITIAL.
+        lv_index = ls_xf-borderid + 1.
+        READ TABLE lt_borders INTO ls_cell_border INDEX lv_index.
         IF sy-subrc = 0.
-          style-&gt;borders = cell_border.
+          lo_style-&gt;borders = ls_cell_border.
         ENDIF.
       ENDIF.
 
-      IF xf-applyfont = &apos;1&apos; AND xf-fontid IS NOT INITIAL.
-        index = xf-fontid + 1.
-        READ TABLE fonts INTO font INDEX index.
+      IF ls_xf-applyfont = &apos;1&apos; AND ls_xf-fontid IS NOT INITIAL.
+        lv_index = ls_xf-fontid + 1.
+        READ TABLE lt_fonts INTO ls_font INDEX lv_index.
         IF sy-subrc = 0.
-          style-&gt;font = font.
+          lo_style-&gt;font = ls_font.
         ENDIF.
       ENDIF.
 
-      node2 ?= node-&gt;find_from_name( &apos;alignment&apos; ).
-      IF node2 IS BOUND.
-        fill_struct_from_attributes(
-                EXPORTING
-                  ip_element   =  node2
-                CHANGING
-                  cp_structure = alignment ).
-
-        IF alignment-horizontal IS NOT INITIAL.
-          style-&gt;alignment-&gt;horizontal = alignment-horizontal.
+      lo_node_cellxfs_xf_alignment ?= lo_node_cellxfs_xf-&gt;find_from_name( &apos;alignment&apos; ).
+      IF lo_node_cellxfs_xf_alignment IS BOUND.
+        fill_struct_from_attributes( EXPORTING
+                                       ip_element   =  lo_node_cellxfs_xf_alignment
+                                     CHANGING
+                                       cp_structure = ls_alignment ).
+        IF ls_alignment-horizontal IS NOT INITIAL.
+          lo_style-&gt;alignment-&gt;horizontal = ls_alignment-horizontal.
         ENDIF.
 
-        IF alignment-vertical IS NOT INITIAL.
-          style-&gt;alignment-&gt;vertical = alignment-vertical.
+        IF ls_alignment-vertical IS NOT INITIAL.
+          lo_style-&gt;alignment-&gt;vertical = ls_alignment-vertical.
         ENDIF.
 
-        IF alignment-textrotation IS NOT INITIAL.
-          style-&gt;alignment-&gt;textrotation = alignment-textrotation.
+        IF ls_alignment-textrotation IS NOT INITIAL.
+          lo_style-&gt;alignment-&gt;textrotation = ls_alignment-textrotation.
         ENDIF.
 
-        IF alignment-wraptext = &apos;1&apos; OR alignment-wraptext = &apos;true&apos;.
-          style-&gt;alignment-&gt;wraptext = abap_true.
+        IF ls_alignment-wraptext = &apos;1&apos; OR ls_alignment-wraptext = &apos;true&apos;.
+          lo_style-&gt;alignment-&gt;wraptext = abap_true.
         ENDIF.
 
-        IF alignment-shrinktofit = &apos;1&apos; OR alignment-shrinktofit = &apos;true&apos;.
-          style-&gt;alignment-&gt;shrinktofit = abap_true.
+        IF ls_alignment-shrinktofit = &apos;1&apos; OR ls_alignment-shrinktofit = &apos;true&apos;.
+          lo_style-&gt;alignment-&gt;shrinktofit = abap_true.
         ENDIF.
 
-        IF alignment-indent IS NOT INITIAL.
-          style-&gt;alignment-&gt;indent = alignment-indent.
+        IF ls_alignment-indent IS NOT INITIAL.
+          lo_style-&gt;alignment-&gt;indent = ls_alignment-indent.
         ENDIF.
       ENDIF.
 
-      node2 ?= node-&gt;find_from_name( &apos;protection&apos; ).
-      IF node2 IS BOUND.
-        fill_struct_from_attributes(
-        EXPORTING
-          ip_element   =  node2
-        CHANGING
-          cp_structure = protection ).
-
-        IF protection-locked = &apos;1&apos; OR protection-locked = &apos;true&apos;.
-          style-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_locked.
+      lo_node_cellxfs_xf_protection ?= lo_node_cellxfs_xf-&gt;find_from_name( &apos;protection&apos; ).
+      IF lo_node_cellxfs_xf_protection IS BOUND.
+        fill_struct_from_attributes( EXPORTING
+                                       ip_element   = lo_node_cellxfs_xf_protection
+                                     CHANGING
+                                       cp_structure = ls_protection ).
+        IF ls_protection-locked = &apos;1&apos; OR ls_protection-locked = &apos;true&apos;.
+          lo_style-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_locked.
         ELSE.
-          style-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_unlocked.
+          lo_style-&gt;protection-&gt;locked = zcl_excel_style_protection=&gt;c_protection_unlocked.
         ENDIF.
 
-        IF protection-hidden = &apos;1&apos; OR protection-hidden = &apos;true&apos;.
-          style-&gt;protection-&gt;hidden = zcl_excel_style_protection=&gt;c_protection_hidden.
+        IF ls_protection-hidden = &apos;1&apos; OR ls_protection-hidden = &apos;true&apos;.
+          lo_style-&gt;protection-&gt;hidden = zcl_excel_style_protection=&gt;c_protection_hidden.
         ELSE.
-          style-&gt;protection-&gt;hidden = zcl_excel_style_protection=&gt;c_protection_unhidden.
+          lo_style-&gt;protection-&gt;hidden = zcl_excel_style_protection=&gt;c_protection_unhidden.
         ENDIF.
 
       ENDIF.
 
-      INSERT style INTO TABLE styles.
-      node ?= iterator-&gt;get_next( ).
+      INSERT lo_style INTO TABLE me-&gt;styles.
+
+      lo_node_cellxfs_xf ?= lo_iterator_cellxfs-&gt;get_next( ).
+
     ENDWHILE.
   ENDIF.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="EP_BORDERS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_BORDERS"/>
-  <source>method LOAD_STYLE_BORDERS.
-  DATA:   node            TYPE REF TO if_ixml_element,
-          node2           TYPE REF TO if_ixml_element,
-          node3           TYPE REF TO if_ixml_element,
-          cell_border     TYPE REF TO zcl_excel_style_borders,
-          border          TYPE REF TO zcl_excel_style_border,
-          color           TYPE t_color.
+  <source>METHOD load_style_borders.
 
-  node ?= ip_xml-&gt;find_from_name( &apos;border&apos; ).
-  WHILE node IS BOUND.
-    CREATE OBJECT cell_border.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (wip )              2012-11-18
+*              - ...
+* changes: renaming variables and types to naming conventions
+*          aligning code
+*--------------------------------------------------------------------*
+  DATA:       lo_node                         TYPE REF TO if_ixml_element,
+              lo_node2                        TYPE REF TO if_ixml_element,
+              lo_node3                        TYPE REF TO if_ixml_element,
+              lo_cell_border                  TYPE REF TO zcl_excel_style_borders,
+              lo_border                       TYPE REF TO zcl_excel_style_border,
+              ls_color                        TYPE t_color.
 
-    IF node-&gt;get_attribute( &apos;diagonalDown&apos; ) IS NOT INITIAL.
-      cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
+  lo_node ?= ip_xml-&gt;find_from_name( &apos;border&apos; ).
+  WHILE lo_node IS BOUND.
+
+    CREATE OBJECT lo_cell_border.
+
+    IF lo_node-&gt;get_attribute( &apos;diagonalDown&apos; ) IS NOT INITIAL.
+      lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
     ENDIF.
 
-    IF node-&gt;get_attribute( &apos;diagonalUp&apos; ) IS NOT INITIAL.
-      IF cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
-        cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_both.
+    IF lo_node-&gt;get_attribute( &apos;diagonalUp&apos; ) IS NOT INITIAL.
+      IF lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
+        lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_both.
       ELSE.
-        cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_up.
+        lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_up.
       ENDIF.
     ENDIF.
 
-    node2 ?= node-&gt;get_first_child( ).
-    WHILE node2 IS BOUND.
-      CREATE OBJECT border.
+    lo_node2 ?= lo_node-&gt;get_first_child( ).
+    WHILE lo_node2 IS BOUND.
+      CREATE OBJECT lo_border.
 
-      CASE node2-&gt;get_name( ).
+      CASE lo_node2-&gt;get_name( ).
+
         WHEN &apos;left&apos;.
-          cell_border-&gt;left = border.
+          lo_cell_border-&gt;left = lo_border.
+
         WHEN &apos;right&apos;.
-          cell_border-&gt;right = border.
+          lo_cell_border-&gt;right = lo_border.
+
         WHEN &apos;top&apos;.
-          cell_border-&gt;top = border.
+          lo_cell_border-&gt;top = lo_border.
+
         WHEN &apos;bottom&apos;.
-          cell_border-&gt;down = border.
+          lo_cell_border-&gt;down = lo_border.
+
         WHEN &apos;diagonal&apos;.
-          cell_border-&gt;diagonal = border.
+          lo_cell_border-&gt;diagonal = lo_border.
+
       ENDCASE.
 
-      border-&gt;border_style = node2-&gt;get_attribute( &apos;style&apos; ).
-      node3 ?= node2-&gt;find_from_name( &apos;color&apos; ).
-      IF node3 IS BOUND.
-        fill_struct_from_attributes(
-                    EXPORTING
-                      ip_element   =  node3
-                    CHANGING
-                      cp_structure = color ).
+      lo_border-&gt;border_style = lo_node2-&gt;get_attribute( &apos;style&apos; ).
+      lo_node3 ?= lo_node2-&gt;find_from_name( &apos;color&apos; ).
+      IF lo_node3 IS BOUND.
+        fill_struct_from_attributes( EXPORTING
+                                       ip_element   =  lo_node3
+                                     CHANGING
+                                       cp_structure = ls_color ).
 
-        border-&gt;border_color-rgb = color-rgb.
-        IF color-indexed IS NOT INITIAL.
-          border-&gt;border_color-indexed = color-indexed.
+        lo_border-&gt;border_color-rgb = ls_color-rgb.
+        IF ls_color-indexed IS NOT INITIAL.
+          lo_border-&gt;border_color-indexed = ls_color-indexed.
         ENDIF.
 
-        IF color-theme IS NOT INITIAL.
-          border-&gt;border_color-theme = color-theme.
+        IF ls_color-theme IS NOT INITIAL.
+          lo_border-&gt;border_color-theme = ls_color-theme.
         ENDIF.
-        border-&gt;border_color-tint = color-tint.
+        lo_border-&gt;border_color-tint = ls_color-tint.
       ENDIF.
 
-      node2 ?= node2-&gt;get_next( ).
+      lo_node2 ?= lo_node2-&gt;get_next( ).
+
     ENDWHILE.
 
-    INSERT cell_border INTO TABLE ep_borders.
-    node ?= node-&gt;get_next( ).
+    INSERT lo_cell_border INTO TABLE ep_borders.
+
+    lo_node ?= lo_node-&gt;get_next( ).
+
   ENDWHILE.
-endmethod.</source>
+
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="EP_FILLS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FILLS"/>
-  <source>method LOAD_STYLE_FILLS.
-  DATA:  value TYPE string,
-         node            TYPE REF TO if_ixml_element,
-         node2           TYPE REF TO if_ixml_element,
-         node3           TYPE REF TO if_ixml_element,
-         fill            TYPE REF TO zcl_excel_style_fill,
-         color           TYPE t_color.
+  <source>METHOD load_style_fills.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Support gradientFill
+*--------------------------------------------------------------------*
 
-  node ?= ip_xml-&gt;find_from_name( &apos;fill&apos; ).
-  WHILE node IS BOUND.
-    CREATE OBJECT fill.
-    node2 ?= node-&gt;get_first_child( ).
-    value = node2-&gt;get_name( ).
-    CASE value.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (wip )              2012-11-18
+*              - ...
+* changes: renaming variables and types to naming conventions
+*          aligning code
+*          commenting on problems/future enhancements/todos we already know of or should decide upon
+*--------------------------------------------------------------------*
+  DATA:    lv_value                           TYPE string,
+           lo_node                            TYPE REF TO if_ixml_element,
+           lo_node2                           TYPE REF TO if_ixml_element,
+           lo_node3                           TYPE REF TO if_ixml_element,
+           lo_fill                            TYPE REF TO zcl_excel_style_fill,
+           ls_color                           TYPE t_color.
+
+  lo_node ?= ip_xml-&gt;find_from_name( &apos;fill&apos; ).
+  WHILE lo_node IS BOUND.
+
+    CREATE OBJECT lo_fill.
+    lo_node2 ?= lo_node-&gt;get_first_child( ).
+    lv_value = lo_node2-&gt;get_name( ).
+    CASE lv_value.
+
       WHEN &apos;patternFill&apos;.
-        fill-&gt;filltype = node2-&gt;get_attribute( &apos;patternType&apos; ).
+        lo_fill-&gt;filltype = lo_node2-&gt;get_attribute( &apos;patternType&apos; ).
+        lo_node3 = lo_node2-&gt;find_from_name( &apos;bgColor&apos; ).
+        IF lo_node3 IS BOUND.
+          fill_struct_from_attributes( EXPORTING
+                                         ip_element   =  lo_node3
+                                       CHANGING
+                                         cp_structure = ls_color ).
 
-        node3 = node2-&gt;find_from_name( &apos;bgColor&apos; ).
-        IF node3 IS BOUND.
-          fill_struct_from_attributes(
-            EXPORTING
-              ip_element   =  node3
-            CHANGING
-              cp_structure = color ).
-
-          fill-&gt;bgcolor-rgb = color-rgb.
-          IF color-indexed IS NOT INITIAL.
-            fill-&gt;bgcolor-indexed = color-indexed.
+          lo_fill-&gt;bgcolor-rgb = ls_color-rgb.
+          IF ls_color-indexed IS NOT INITIAL.
+            lo_fill-&gt;bgcolor-indexed = ls_color-indexed.
           ENDIF.
 
-          IF color-theme IS NOT INITIAL.
-            fill-&gt;bgcolor-theme = color-theme.
+          IF ls_color-theme IS NOT INITIAL.
+            lo_fill-&gt;bgcolor-theme = ls_color-theme.
           ENDIF.
-          fill-&gt;bgcolor-tint = color-tint.
+          lo_fill-&gt;bgcolor-tint = ls_color-tint.
         ENDIF.
 
-        node3 = node-&gt;find_from_name( &apos;fgColor&apos; ).
-        IF node3 IS BOUND.
-          fill_struct_from_attributes(
-            EXPORTING
-              ip_element   =  node3
-            CHANGING
-              cp_structure = color ).
+        lo_node3 = lo_node-&gt;find_from_name( &apos;fgColor&apos; ).
+        IF lo_node3 IS BOUND.
+          fill_struct_from_attributes( EXPORTING
+                                         ip_element   =  lo_node3
+                                       CHANGING
+                                         cp_structure = ls_color ).
 
-          fill-&gt;fgcolor-rgb = color-rgb.
-          IF color-indexed IS NOT INITIAL.
-            fill-&gt;fgcolor-indexed = color-indexed.
+          lo_fill-&gt;fgcolor-rgb = ls_color-rgb.
+          IF ls_color-indexed IS NOT INITIAL.
+            lo_fill-&gt;fgcolor-indexed = ls_color-indexed.
           ENDIF.
 
-          IF color-theme IS NOT INITIAL.
-            fill-&gt;fgcolor-theme = color-theme.
+          IF ls_color-theme IS NOT INITIAL.
+            lo_fill-&gt;fgcolor-theme = ls_color-theme.
           ENDIF.
-          fill-&gt;fgcolor-tint = color-tint.
+          lo_fill-&gt;fgcolor-tint = ls_color-tint.
         ENDIF.
+
       WHEN &apos;gradientFill&apos;.
-        &quot;TODO
+        &quot; 2do§1   Support gradientFill
+
       WHEN OTHERS.
+
     ENDCASE.
 
-    INSERT fill INTO TABLE ep_fills.
-    node ?= node-&gt;get_next( ).
+    INSERT lo_fill INTO TABLE ep_fills.
+    lo_node ?= lo_node-&gt;get_next( ).
+
   ENDWHILE.
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fonts&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="EP_FONTS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FONTS"/>
-  <source>method LOAD_STYLE_FONTS.
-  DATA:  value TYPE string,
-         node            TYPE REF TO if_ixml_element,
-         node2           TYPE REF TO if_ixml_element,
-         node3           TYPE REF TO if_ixml_element,
-         font            TYPE REF TO zcl_excel_style_font,
-         color           TYPE t_color.
+  <source>METHOD load_style_fonts.
 
-  node ?= ip_xml-&gt;find_from_name( &apos;font&apos; ).
-  WHILE node IS BOUND.
-    CREATE OBJECT font.
-    IF node-&gt;find_from_name( &apos;b&apos; ) IS BOUND.
-      font-&gt;bold = abap_true.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (wip )              2012-11-18
+*              - ...
+* changes: renaming variables and types to naming conventions
+*          aligning code
+*          removing unused variables
+*--------------------------------------------------------------------*
+  DATA:       lo_node                         TYPE REF TO if_ixml_element,
+              lo_node2                        TYPE REF TO if_ixml_element,
+              lo_font                         TYPE REF TO zcl_excel_style_font,
+              ls_color                        TYPE t_color.
+
+  lo_node ?= ip_xml-&gt;find_from_name( &apos;font&apos; ).
+  WHILE lo_node IS BOUND.
+
+    CREATE OBJECT lo_font.
+
+    IF lo_node-&gt;find_from_name( &apos;b&apos; ) IS BOUND.
+      lo_font-&gt;bold = abap_true.
     ENDIF.
 
-    IF node-&gt;find_from_name( &apos;i&apos; ) IS BOUND.
-      font-&gt;italic = abap_true.
+    IF lo_node-&gt;find_from_name( &apos;i&apos; ) IS BOUND.
+      lo_font-&gt;italic = abap_true.
     ENDIF.
 
-    node2 = node-&gt;find_from_name( &apos;u&apos; ).
-    IF node2 IS BOUND.
-      font-&gt;underline = abap_true.
-      font-&gt;underline_mode = node2-&gt;get_attribute( &apos;val&apos; ).
+    lo_node2 = lo_node-&gt;find_from_name( &apos;u&apos; ).
+    IF lo_node2 IS BOUND.
+      lo_font-&gt;underline      = abap_true.
+      lo_font-&gt;underline_mode = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    IF node-&gt;find_from_name( &apos;strike&apos; ) IS BOUND.
-      font-&gt;strikethrough = abap_true.
+    IF lo_node-&gt;find_from_name( &apos;strike&apos; ) IS BOUND.
+      lo_font-&gt;strikethrough = abap_true.
     ENDIF.
 
-    node2 = node-&gt;find_from_name( &apos;sz&apos; ).
-    IF node2 IS BOUND.
-      font-&gt;size = node2-&gt;get_attribute( &apos;val&apos; ).
+    lo_node2 = lo_node-&gt;find_from_name( &apos;sz&apos; ).
+    IF lo_node2 IS BOUND.
+      lo_font-&gt;size = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    node2 = node-&gt;find_from_name( &apos;name&apos; ).
-    IF node2 IS BOUND.
-      font-&gt;name = node2-&gt;get_attribute( &apos;val&apos; ).
+    lo_node2 = lo_node-&gt;find_from_name( &apos;name&apos; ).
+    IF lo_node2 IS BOUND.
+      lo_font-&gt;name = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    node2 = node-&gt;find_from_name( &apos;family&apos; ).
-    IF node2 IS BOUND.
-      font-&gt;family = node2-&gt;get_attribute( &apos;val&apos; ).
+    lo_node2 = lo_node-&gt;find_from_name( &apos;family&apos; ).
+    IF lo_node2 IS BOUND.
+      lo_font-&gt;family = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    node2 = node-&gt;find_from_name( &apos;scheme&apos; ).
-    IF node2 IS BOUND.
-      font-&gt;scheme = node2-&gt;get_attribute( &apos;val&apos; ).
+    lo_node2 = lo_node-&gt;find_from_name( &apos;scheme&apos; ).
+    IF lo_node2 IS BOUND.
+      lo_font-&gt;scheme = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    node2 = node-&gt;find_from_name( &apos;color&apos; ).
-    IF node2 IS BOUND.
-      fill_struct_from_attributes(
-                  EXPORTING
-                    ip_element   =  node2
-                  CHANGING
-                    cp_structure = color ).
-
-      font-&gt;color-rgb = color-rgb.
-      IF color-indexed IS NOT INITIAL.
-        font-&gt;color-indexed = color-indexed.
+    lo_node2 = lo_node-&gt;find_from_name( &apos;color&apos; ).
+    IF lo_node2 IS BOUND.
+      fill_struct_from_attributes( EXPORTING
+                                     ip_element   =  lo_node2
+                                   CHANGING
+                                     cp_structure = ls_color ).
+      lo_font-&gt;color-rgb = ls_color-rgb.
+      IF ls_color-indexed IS NOT INITIAL.
+        lo_font-&gt;color-indexed = ls_color-indexed.
       ENDIF.
 
-      IF color-theme IS NOT INITIAL.
-        font-&gt;color-theme = color-theme.
+      IF ls_color-theme IS NOT INITIAL.
+        lo_font-&gt;color-theme = ls_color-theme.
       ENDIF.
-      font-&gt;color-tint = color-tint.
+      lo_font-&gt;color-tint = ls_color-tint.
     ENDIF.
 
-    INSERT font INTO TABLE ep_fonts.
-    node ?= node-&gt;get_next( ).
+    INSERT lo_font INTO TABLE ep_fonts.
+
+    lo_node ?= lo_node-&gt;get_next( ).
+
   ENDWHILE.
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="EP_NUM_FORMATS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_NUM_FORMATS"/>
-  <source>method LOAD_STYLE_NUM_FORMATS.
-  DATA: node            TYPE REF TO if_ixml_element,
-        num_format      TYPE t_num_format.
+  <source>METHOD load_style_num_formats.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Explain gaps in predefined formats
+*--------------------------------------------------------------------*
 
-  node ?= ip_xml-&gt;find_from_name( &apos;numFmt&apos; ).
-  WHILE node IS BOUND.
-    CLEAR num_format.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-11
+*              - ...
+* changes: renaming variables and types to naming conventions
+*          aligning code
+*--------------------------------------------------------------------*
+  DATA:       lo_node_numfmt                  TYPE REF TO if_ixml_element,
+              ls_num_format                   TYPE t_num_format.
 
-    CREATE OBJECT num_format-format.
-    num_format-format-&gt;format_code = node-&gt;get_attribute( &apos;formatCode&apos; ).
-    num_format-id = node-&gt;get_attribute( &apos;numFmtId&apos; ).
-    INSERT num_format INTO TABLE ep_num_formats.
-    node ?= node-&gt;get_next( ).
+  lo_node_numfmt ?= ip_xml-&gt;find_from_name( &apos;numFmt&apos; ).
+  WHILE lo_node_numfmt IS BOUND.
+
+    CLEAR ls_num_format.
+
+    CREATE OBJECT ls_num_format-format.
+    ls_num_format-format-&gt;format_code = lo_node_numfmt-&gt;get_attribute( &apos;formatCode&apos; ).
+    ls_num_format-id                  = lo_node_numfmt-&gt;get_attribute( &apos;numFmtId&apos; ).
+    INSERT ls_num_format INTO TABLE ep_num_formats.
+
+    lo_node_numfmt                          ?= lo_node_numfmt-&gt;get_next( ).
+
   ENDWHILE.
 
   DEFINE predefined_format.
-    num_format-id = &amp;1.
-    create object num_format-format.
-    num_format-format-&gt;format_code = &amp;2.
-    insert num_format into table ep_num_formats.
+    ls_num_format-id                  = &amp;1.
+    create object ls_num_format-format.
+    ls_num_format-format-&gt;format_code = &amp;2.
+    insert ls_num_format into table ep_num_formats.
   END-OF-DEFINITION.
 
-  predefined_format &apos;1&apos; &apos;0&apos;.
-  predefined_format &apos;2&apos; &apos;0.00&apos;.
-  predefined_format &apos;3&apos; &apos;#,##0&apos;.
-  predefined_format &apos;4&apos; &apos;#,##0.00&apos;.
-  predefined_format &apos;5&apos; &apos;$#,##0_);($#,##0)&apos;.
-  predefined_format &apos;6&apos; &apos;$#,##0_);[Red]($#,##0)&apos;.
-  predefined_format &apos;7&apos; &apos;$#,##0.00_);($#,##0.00)&apos;.
-  predefined_format &apos;8&apos; &apos;$#,##0.00_);[Red]($#,##0.00)&apos;.
-  predefined_format &apos;9&apos; &apos;0%&apos;.
-  predefined_format &apos;10&apos; &apos;0.00%&apos;.
-  predefined_format &apos;11&apos; &apos;0.00E+00&apos;.
-  predefined_format &apos;12&apos; &apos;# ?/?&apos;.
-  predefined_format &apos;13&apos; &apos;# ??/??&apos;.
-  predefined_format &apos;14&apos; &apos;m/d/yyyy&apos;.
-  predefined_format &apos;15&apos; &apos;d-mmm-yy&apos;.
-  predefined_format &apos;16&apos; &apos;d-mmm&apos;.
-  predefined_format &apos;17&apos; &apos;mmm-yy&apos;.
-  predefined_format &apos;18&apos; &apos;h:mm AM/PM&apos;.
-  predefined_format &apos;19&apos; &apos;h:mm:ss AM/PM&apos;.
-  predefined_format &apos;20&apos; &apos;h:mm&apos;.
-  predefined_format &apos;21&apos; &apos;h:mm:ss&apos;.
-  predefined_format &apos;22&apos; &apos;m/d/yyyy h:mm&apos;.
-  predefined_format &apos;37&apos; &apos;#,##0_);(#,##0)&apos;.
-  predefined_format &apos;38&apos; &apos;#,##0_);[Red](#,##0)&apos;.
-  predefined_format &apos;39&apos; &apos;#,##0.00_);(#,##0.00)&apos;.
-  predefined_format &apos;40&apos; &apos;#,##0.00_);[Red](#,##0.00)&apos;.
-  predefined_format &apos;45&apos; &apos;mm:ss&apos;.
-  predefined_format &apos;46&apos; &apos;[h]:mm:ss&apos;.
-  predefined_format &apos;47&apos; &apos;mm:ss.0&apos;.
-  predefined_format &apos;48&apos; &apos;##0.0E+0&apos;.
-  predefined_format &apos;49&apos; &apos;@&apos;.
+  predefined_format    &apos;1&apos;        &apos;0&apos;.
+  predefined_format    &apos;2&apos;        &apos;0.00&apos;.
+  predefined_format    &apos;3&apos;        &apos;#,##0&apos;.
+  predefined_format    &apos;4&apos;        &apos;#,##0.00&apos;.
+  predefined_format    &apos;5&apos;        &apos;$#,##0_);($#,##0)&apos;.
+  predefined_format    &apos;6&apos;        &apos;$#,##0_);[Red]($#,##0)&apos;.
+  predefined_format    &apos;7&apos;        &apos;$#,##0.00_);($#,##0.00)&apos;.
+  predefined_format    &apos;8&apos;        &apos;$#,##0.00_);[Red]($#,##0.00)&apos;.
+  predefined_format    &apos;9&apos;        &apos;0%&apos;.
+  predefined_format   &apos;10&apos;        &apos;0.00%&apos;.
+  predefined_format   &apos;11&apos;        &apos;0.00E+00&apos;.
+  predefined_format   &apos;12&apos;        &apos;# ?/?&apos;.
+  predefined_format   &apos;13&apos;        &apos;# ??/??&apos;.
+  predefined_format   &apos;14&apos;        &apos;m/d/yyyy&apos;.
+  predefined_format   &apos;15&apos;        &apos;d-mmm-yy&apos;.
+  predefined_format   &apos;16&apos;        &apos;d-mmm&apos;.
+  predefined_format   &apos;17&apos;        &apos;mmm-yy&apos;.
+  predefined_format   &apos;18&apos;        &apos;h:mm AM/PM&apos;.
+  predefined_format   &apos;19&apos;        &apos;h:mm:ss AM/PM&apos;.
+  predefined_format   &apos;20&apos;        &apos;h:mm&apos;.
+  predefined_format   &apos;21&apos;        &apos;h:mm:ss&apos;.
+  predefined_format   &apos;22&apos;        &apos;m/d/yyyy h:mm&apos;.
+* 2do§1     Why is there a gap in here?
 
-endmethod.</source>
+
+
+
+
+
+
+
+
+
+
+
+
+  predefined_format   &apos;37&apos;        &apos;#,##0_);(#,##0)&apos;.
+  predefined_format   &apos;38&apos;        &apos;#,##0_);[Red](#,##0)&apos;.
+  predefined_format   &apos;39&apos;        &apos;#,##0.00_);(#,##0.00)&apos;.
+  predefined_format   &apos;40&apos;        &apos;#,##0.00_);[Red](#,##0.00)&apos;.
+* 2do§1     Why is there a gap in here?
+
+
+
+  predefined_format   &apos;45&apos;        &apos;mm:ss&apos;.
+  predefined_format   &apos;46&apos;        &apos;[h]:mm:ss&apos;.
+  predefined_format   &apos;47&apos;        &apos;mm:ss.0&apos;.
+  predefined_format   &apos;48&apos;        &apos;##0.0E+0&apos;.
+  predefined_format   &apos;49&apos;        &apos;@&apos;.
+* 2do§1     Is 49 really the last redefined format?
+
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IV_WORKBOOK_FULL_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -1332,7 +1557,7 @@ endmethod.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,                          2012-11-10
+*              - Stefan Schmöcker,      (done)              2012-11-10
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -1614,87 +1839,87 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_WORKSHEET.
-  TYPES: BEGIN OF t_cell,
-    r TYPE string,
-    t TYPE string,
-    s TYPE string,
-    END OF t_cell.
+  <source>METHOD load_worksheet.
+  TYPES:  BEGIN OF t_cell,
+            r TYPE string,
+            t TYPE string,
+            s TYPE string,
+          END OF t_cell.
 
-  TYPES: BEGIN OF t_column,
-    min TYPE string,
-    max TYPE string,
-    width TYPE float,
-    customwidth TYPE string,
-    style TYPE string,
-    bestfit TYPE string,
-    collapsed TYPE string,
-    hidden TYPE string,
-    outlinelevel TYPE string,
-    END OF t_column.
+  TYPES:  BEGIN OF t_column,
+            min TYPE string,
+            max TYPE string,
+            width TYPE float,
+            customwidth TYPE string,
+            style TYPE string,
+            bestfit TYPE string,
+            collapsed TYPE string,
+            hidden TYPE string,
+            outlinelevel TYPE string,
+          END OF t_column.
 
-  TYPES: BEGIN OF t_sheetview,
-    showgridlines TYPE zexcel_show_gridlines,
-    tabselected TYPE string,
-    zoomscalenormal TYPE string,
-    workbookviewid TYPE string,
-    showrowcolheaders TYPE string,
-    END OF t_sheetview.
+  TYPES:  BEGIN OF t_sheetview,
+            showgridlines TYPE zexcel_show_gridlines,
+            tabselected TYPE string,
+            zoomscalenormal TYPE string,
+            workbookviewid TYPE string,
+            showrowcolheaders TYPE string,
+          END OF t_sheetview.
 
-  TYPES: BEGIN OF t_mergecell,
-    ref TYPE string,
-    END OF t_mergecell.
+  TYPES:  BEGIN OF t_mergecell,
+            ref TYPE string,
+          END OF t_mergecell.
 
-  TYPES: BEGIN OF t_row,
-    r TYPE string,
-    customheight TYPE string,
-    ht TYPE float,
-    spans TYPE string,
-    thickbot TYPE string,
-    customformat TYPE string,
-    thicktop TYPE string,
-    collapsed TYPE string,
-    hidden TYPE string,
-    outlinelevel TYPE string,
-    END OF t_row.
+  TYPES:  BEGIN OF t_row,
+            r TYPE string,
+            customheight TYPE string,
+            ht TYPE float,
+            spans TYPE string,
+            thickbot TYPE string,
+            customformat TYPE string,
+            thicktop TYPE string,
+            collapsed TYPE string,
+            hidden TYPE string,
+            outlinelevel TYPE string,
+          END OF t_row.
 
-  TYPES: BEGIN OF t_page_setup,
-    id TYPE string,
-    orientation TYPE string,
-    scale TYPE string,
-    END OF t_page_setup.
+  TYPES:  BEGIN OF t_page_setup,
+            id TYPE string,
+            orientation TYPE string,
+            scale TYPE string,
+          END OF t_page_setup.
 
-  TYPES: BEGIN OF t_page_margins,
-    footer TYPE string,
-    header TYPE string,
-    bottom TYPE string,
-    top    TYPE string,
-    right  TYPE string,
-    left   TYPE string,
-    END OF t_page_margins.
+  TYPES:  BEGIN OF t_page_margins,
+            footer TYPE string,
+            header TYPE string,
+            bottom TYPE string,
+            top    TYPE string,
+            right  TYPE string,
+            left   TYPE string,
+          END OF t_page_margins.
 
-  TYPES: BEGIN OF t_sheetformatpr,
-    customheight TYPE string,
-    defaultrowheight TYPE string,
-    customwidth TYPE string,
-    defaultcolwidth TYPE string,
-    END OF t_sheetformatpr.
+  TYPES:  BEGIN OF t_sheetformatpr,
+            customheight TYPE string,
+            defaultrowheight TYPE string,
+            customwidth TYPE string,
+            defaultcolwidth TYPE string,
+          END OF t_sheetformatpr.
 
-  TYPES: BEGIN OF t_headerfooter,
-    alignwithmargins TYPE string,
-    differentoddeven TYPE string,
-    END OF t_headerfooter.
+  TYPES:  BEGIN OF t_headerfooter,
+            alignwithmargins TYPE string,
+            differentoddeven TYPE string,
+          END OF t_headerfooter.
 
-  TYPES: BEGIN OF lty_tabcolor,
-           rgb   TYPE string,
-           theme TYPE string,
-         END OF lty_tabcolor.
+  TYPES:  BEGIN OF lty_tabcolor,
+            rgb   TYPE string,
+            theme TYPE string,
+          END OF lty_tabcolor.
 
 
-  CONSTANTS: lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
-             lc_xml_attr_true_int            TYPE string VALUE &apos;1&apos;.
-  CONSTANTS: lc_rel_drawing     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
-             lc_rel_printer     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;.
+  CONSTANTS: lc_xml_attr_true                 TYPE string VALUE &apos;true&apos;,
+             lc_xml_attr_true_int             TYPE string VALUE &apos;1&apos;.
+  CONSTANTS: lc_rel_drawing                   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
+             lc_rel_printer                   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;.
 
   DATA: worksheet           TYPE REF TO if_ixml_document,
         cells               TYPE REF TO if_ixml_node_collection,
@@ -1712,6 +1937,9 @@ ENDMETHOD.</source>
         cell_row            TYPE zexcel_cell_row,
         style               TYPE REF TO zcl_excel_style,
         style_guid          TYPE zexcel_cell_style,
+
+        lo_dimension_elem         TYPE REF TO if_ixml_element, &quot;#+234
+        lv_dimension_range        TYPE string,              &quot;#+234
 
         sheetview_elem      TYPE REF TO if_ixml_element,
         sheetview           TYPE t_sheetview,
@@ -1787,9 +2015,9 @@ ENDMETHOD.</source>
   TRY.                                                                          &quot; +#222  _rels/xxx.rels might not be present.  If not found there can be no drawings --&gt; just ignore this section
       rels_worksheet = me-&gt;get_ixml_from_zip_archive( rels_worksheet_path ).
       node ?= rels_worksheet-&gt;find_from_name( &apos;Relationship&apos; ).
-    CATCH zcx_excel.                                              &quot;#EC NO_HANDLER +#222
-                                                                                &quot; +#222   No errorhandling necessary - node will be unbound if error occurs
-  ENDTRY.                                                                       &quot; +#222
+    CATCH zcx_excel.                              &quot;#EC NO_HANDLER +#222
+      &quot; +#222   No errorhandling necessary - node will be unbound if error occurs
+  ENDTRY.                                                   &quot; +#222
   WHILE node IS BOUND.
     fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
     CONCATENATE dirname relationship-target INTO path.
@@ -1924,6 +2152,26 @@ ENDMETHOD.</source>
     row_elem ?= iterator-&gt;get_next( ).
   ENDWHILE.
 
+*--------------------------------------------------------------------*
+*#234 - column width not read correctly - begin of coding
+*       reason - libre office doesn&apos;t use SPAN in row - definitions
+*--------------------------------------------------------------------*
+  IF max_col = 0.
+    lo_dimension_elem = worksheet-&gt;find_from_name( name = &apos;dimension&apos; ).
+    IF lo_dimension_elem IS BOUND.
+      lv_dimension_range = lo_dimension_elem-&gt;get_attribute( &apos;ref&apos; ).
+      IF lv_dimension_range CS &apos;:&apos;.
+        REPLACE REGEX &apos;\D+\d+:(\D+)\d+&apos; IN lv_dimension_range WITH &apos;$1&apos;.  &quot; Get max column
+      ELSE.
+        REPLACE REGEX &apos;(\D+)\d+&apos; IN lv_dimension_range WITH &apos;$1&apos;.  &quot; Get max column
+      ENDIF.
+      max_col = zcl_excel_common=&gt;convert_column2int( lv_dimension_range ).
+    ENDIF.
+  ENDIF.
+*--------------------------------------------------------------------*
+*#234 - column width not read correctly - end of coding
+*--------------------------------------------------------------------*
+
   &quot;Get the customized column width
   columns = worksheet-&gt;get_elements_by_tag_name( name = &apos;col&apos; ).
   iterator = columns-&gt;create_iterator( ).
@@ -1947,7 +2195,8 @@ ENDMETHOD.</source>
         column_alpha = zcl_excel_common=&gt;convert_column2alpha( index ).
         column_dimension =  io_worksheet-&gt;get_column_dimension( column_alpha ).
 
-        IF column-customwidth = lc_xml_attr_true OR column-customwidth = lc_xml_attr_true_int.
+        IF column-customwidth = lc_xml_attr_true OR column-customwidth = lc_xml_attr_true_int
+                                                 OR column-width IS NOT INITIAL. &quot;+#234
           column_dimension-&gt;set_width( column-width ).
         ENDIF.
 
@@ -1966,7 +2215,7 @@ ENDMETHOD.</source>
         IF column-outlinelevel &gt; &apos;&apos;.
 *          outline_level = condense( column-outlineLevel ).
           CONDENSE column-outlinelevel.
-          outline_level = outline_level.
+          outline_level = column-outlinelevel.
           IF outline_level &gt; 0.
             column_dimension-&gt;set_outline_level( outline_level ).
           ENDIF.
@@ -2110,13 +2359,13 @@ ENDMETHOD.</source>
   ENDIF.
   &quot; End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_WORKSHEET_DRAWING.
+  <source>METHOD load_worksheet_drawing.
 
   TYPES: BEGIN OF t_c_nv_pr,
     name TYPE string,
@@ -2223,35 +2472,49 @@ endmethod.</source>
 
   ENDDO.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="RP_RESULT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
-  <source>method RESOLVE_PATH.
+  <source>METHOD resolve_path.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Determine whether the replacement should be done
+*                iterative to allow /../../..   or something alike
+*        2do§2   Determine whether /./ has to be supported as well
+*
+*                Please don&apos;t just delete these ToDos if they are not
+*                needed but leave a comment that states this
+*--------------------------------------------------------------------*
 
-  DATA: lt_segments                   TYPE TABLE OF string,
-        lv_segment                    TYPE string,
-        lv_count                      TYPE i.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-11
+*              - ...
+* changes: replaced previous coding by regular expression
+*          adding comments to explain what we are trying to achieve
+*--------------------------------------------------------------------*
 
-  SPLIT ip_path AT &apos;/&apos; INTO TABLE lt_segments.
-  lv_count = lines( lt_segments ).
+*--------------------------------------------------------------------*
+* §1  This routine will receive a path, that may have a relative pathname (/../) included somewhere
+*     The output should be a resolved path without relative references
+*     Example:  Input     xl/worksheets/../drawings/drawing1.xml
+*               Output    xl/drawings/drawing1.xml
+*--------------------------------------------------------------------*
 
-  WHILE lv_count &gt; 0.
-    READ TABLE lt_segments INTO lv_segment INDEX lv_count.
+  rp_result = ip_path.
+*--------------------------------------------------------------------*
+* §1  Remove relative pathnames
+*--------------------------------------------------------------------*
+*  Regular expression   [^/]*/\.\./
+*                       [^/]*            --&gt; any number of characters other than /
+*   followed by              /\.\./      --&gt; the sequence /../
+*   ==&gt; worksheets/../ will be found in the example
+*--------------------------------------------------------------------*
+  REPLACE REGEX &apos;[^/]*/\.\./&apos; IN rp_result WITH ``.
 
-    IF lv_segment = &apos;..&apos;.
-      SUBTRACT 1 FROM lv_count.
-    ELSE.
-      IF strlen( rp_result ) &gt; 0.
-        CONCATENATE &apos;/&apos; rp_result INTO rp_result.
-      ENDIF.
-      CONCATENATE lv_segment rp_result INTO rp_result.
-    ENDIF.
 
-    SUBTRACT 1 FROM lv_count.
-  ENDWHILE.
-
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
 </CLAS>

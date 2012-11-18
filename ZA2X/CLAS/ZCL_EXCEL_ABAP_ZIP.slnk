@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_ABAP_ZIP" VERSION="1" LANGU="E" DESCRIPT="Alternate Zip Utility" UUID="E22EF0F7F3E02BF1B7380050568C0F65" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <types CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="T_EXT" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="17 " SRCCOLUMN2="20 " TYPESRC_LENG="458 " TYPESRC="BEGIN OF T_EXT,
+           min_extract_version TYPE i,
+           gen_flags           TYPE i,
+           compressed          TYPE i,
+           compsize            TYPE i,
+           crc32(4)            TYPE x,
+           filename_len        TYPE i,
+           filename            TYPE xstring,
+           extra_len           TYPE i,
+           extra               TYPE xstring,
+           content             TYPE xstring,
+         END OF T_EXT
+"/>
+ <types CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="T_EXTS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="19 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="29 " TYPESRC_LENG="28 " TYPESRC="T_EXTS TYPE TABLE OF T_EXT
+"/>
+ <types CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="T_FILE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="17 " SRCCOLUMN2="21 " TYPESRC_LENG="147 " TYPESRC="BEGIN OF T_FILE,
+           name TYPE string,
+           date TYPE d,
+           time TYPE t,
+           size TYPE i,
+         END OF T_FILE
+"/>
+ <types CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="T_FILES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="19 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="31 " TYPESRC_LENG="30 " TYPESRC="T_FILES TYPE TABLE OF T_FILE
+"/>
+ <types CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="T_SPLICE_ENTRY" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="26 " SRCCOLUMN2="29 " TYPESRC_LENG="187 " TYPESRC="BEGIN OF T_SPLICE_ENTRY,
+           name       TYPE string,
+           offset     TYPE i,
+           length     TYPE i,
+           compressed TYPE i,
+         END OF T_SPLICE_ENTRY
+"/>
+ <types CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="T_SPLICE_ENTRIES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="28 " SRCCOLUMN1="4 " SRCROW2="28 " SRCCOLUMN2="74 " TYPESRC_LENG="73 " TYPESRC="T_SPLICE_ENTRIES TYPE STANDARD TABLE OF T_SPLICE_ENTRY WITH DEFAULT KEY
+"/>
+ <publicSection>class ZCL_EXCEL_ABAP_ZIP definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZCL_EXCEL_ABAP_ZIP
+*&quot;* do not include other source files here!!!
+public section.
+  type-pools IHTTP .
+
+  types:
+    BEGIN OF T_FILE,
+           name TYPE string,
+           date TYPE d,
+           time TYPE t,
+           size TYPE i,
+         END OF T_FILE .
+  types:
+    T_FILES TYPE TABLE OF T_FILE .
+  types:
+    BEGIN OF T_SPLICE_ENTRY,
+           name       TYPE string,
+           offset     TYPE i,
+           length     TYPE i,
+           compressed TYPE i,
+         END OF T_SPLICE_ENTRY .
+  types:
+    T_SPLICE_ENTRIES TYPE STANDARD TABLE OF T_SPLICE_ENTRY WITH DEFAULT KEY .
+
+  data FILES type T_FILES read-only .
+  type-pools ABAP .
+  data SUPPORT_UNICODE_NAMES type ABAP_BOOL value ABAP_FALSE. &quot;#EC NOTEXT .
+
+  methods LOAD
+    importing
+      !ZIP type XSTRING
+    exceptions
+      ZIP_PARSE_ERROR .
+  methods SAVE
+    returning
+      value(ZIP) type XSTRING .
+  methods GET
+    importing
+      !NAME type STRING optional
+      value(INDEX) type I default 0
+    exporting
+      !CONTENT type XSTRING
+    exceptions
+      ZIP_INDEX_ERROR
+      ZIP_DECOMPRESSION_ERROR .
+  methods ADD
+    importing
+      !NAME type STRING
+      !CONTENT type XSEQUENCE .
+  methods DELETE
+    importing
+      !NAME type STRING optional
+      value(INDEX) type I default 0
+    exceptions
+      ZIP_INDEX_ERROR .
+  class-methods CRC32
+    importing
+      !CONTENT type XSTRING
+    returning
+      value(CRC32) type I .
+  class-methods SPLICE
+    importing
+      !ZIP type XSTRING
+    returning
+      value(ENTRIES) type T_SPLICE_ENTRIES .</publicSection>
+ <protectedSection>*&quot;* protected components of class CL_ABAP_ZIP
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class CL_ABAP_ZIP
+*&quot;* do not include other source files here!!!
+private section.
+
+  types:
+    BEGIN OF T_EXT,
+           min_extract_version TYPE i,
+           gen_flags           TYPE i,
+           compressed          TYPE i,
+           compsize            TYPE i,
+           crc32(4)            TYPE x,
+           filename_len        TYPE i,
+           filename            TYPE xstring,
+           extra_len           TYPE i,
+           extra               TYPE xstring,
+           content             TYPE xstring,
+         END OF T_EXT .
+  types:
+    T_EXTS TYPE TABLE OF T_EXT .
+
+  data EXTS type T_EXTS .
+  class-data CRC32_MAP type XSTRING .</privateSection>
+ <localImplementation>CLASS msdos IMPLEMENTATION.
+
+
+  METHOD from_date. &quot; IMPORTING msdos_date TYPE i RETURNING value(date) TYPE d
+
+*   MS-DOS format for date:
+*     Bits 15:9 = year - 1980
+*     Bits 8:5 = month of year
+*     Bits 4:0 = day of month
+
+    CONSTANTS: mFE00(2) TYPE x VALUE &apos;FE00&apos;,
+               m01E0(2) TYPE x VALUE &apos;01E0&apos;,
+               m001F(2) TYPE x VALUE &apos;001F&apos;.
+
+    DATA: x(2)  TYPE x,
+          year  TYPE i,
+          month TYPE i,
+          day   TYPE i,
+          c4(4) TYPE c,
+          str   TYPE string.
+
+*   Bits 15:9 = year - 1980
+    x     = msdos_date.
+    x     = x BIT-AND mFE00.
+    x     = x DIV 512. &quot; &gt;&gt; 9
+    x     = x BIT-AND m001F.
+    year  = x.
+    year  = year + 1980.
+    WRITE year TO c4 USING EDIT MASK &apos;RR____&apos;.
+    CONCATENATE str c4 INTO str.
+
+*     Bits 8:5 = month of year
+    x     = msdos_date.
+    x     = x BIT-AND m01E0.
+    x     = x DIV 32. &quot; &gt;&gt; 5
+    x     = x BIT-AND m001F.
+    month = x.
+    WRITE month TO c4 USING EDIT MASK &apos;RR__&apos;.
+    CONCATENATE str c4 INTO str.
+
+*     Bits 4:0 = day of month
+    x     = msdos_date.
+    x     = x BIT-AND m001F.
+    day   = x.
+    WRITE day TO c4 USING EDIT MASK &apos;RR__&apos;.
+    CONCATENATE str c4 INTO str.
+
+*   Build date
+    TRANSLATE str USING &apos; 0&apos;.
+    date = str.
+
+  ENDMETHOD.
+
+
+  METHOD from_time. &quot; IMPORTING msdos_time TYPE i RETURNING value(time) TYPE t.
+
+*   MS-DOS format for time:
+*     Bits 15:11 = hour   (24-hour clock)
+*     Bits 10:5 = minute
+*     Bits 4:0 = second/2
+
+    CONSTANTS: mF100(2) TYPE x VALUE &apos;F100&apos;,
+               m07E0(2) TYPE x VALUE &apos;07E0&apos;,
+               m003F(2) TYPE x VALUE &apos;003F&apos;,
+               m001F(2) TYPE x VALUE &apos;001F&apos;.
+
+    DATA: x(2)  TYPE x,
+          hour  TYPE i,
+          min   TYPE i,
+          c4(4) TYPE c,
+          str   TYPE string.
+
+*   Bits 15:11 = hour (24-hour clock)
+    x     = msdos_time.
+    x     = x BIT-AND mF100.
+    x     = x DIV 2048. &quot; &gt;&gt; 11
+    x     = x BIT-AND m001F.
+    hour  = x.
+    WRITE hour TO c4 USING EDIT MASK &apos;RR__&apos;.
+    CONCATENATE str c4 INTO str.
+
+*   Bits 10:5 = minute
+    x     = msdos_time.
+    x     = x BIT-AND m07E0.
+    x     = x DIV 32. &quot; &gt;&gt; 5
+    x     = x BIT-AND m003F.
+    min   = x.
+    WRITE min TO c4 USING EDIT MASK &apos;RR__&apos;.
+    CONCATENATE str c4 INTO str.
+
+*   Bits 4:0 = second/2
+    CONCATENATE str &apos;00&apos; INTO str.
+
+*   Build time
+    TRANSLATE str USING &apos; 0&apos;.
+    time = str.
+
+  ENDMETHOD.
+
+
+  METHOD to_date. &quot; IMPORTING date TYPE d RETURNING value(msdos_date) TYPE i.
+
+*   MS-DOS format for date:
+*     Bits 15:9 = year - 1980
+*     Bits 8:5 = month of year
+*     Bits 4:0 = day of month
+
+    DATA: xdate(2) TYPE x,
+          x(2)     TYPE x,
+          year     TYPE i,
+          month    TYPE i,
+          day      TYPE i.
+
+*   Bits 15:9 = year - 1980
+    year  = date+0(4).
+    x     = year - 1980.
+    x     = x * 512. &quot; &lt;&lt; 9
+    xdate = xdate BIT-OR x.
+
+*   Bits 8:5 = month of year
+    month = date+4(2).
+    x     = month.
+    x     = x * 32. &quot; &lt;&lt; 5
+    xdate = xdate BIT-OR x.
+
+*   Bits 4:0 = day of month
+    day   = date+6(2).
+    x     = day.
+    xdate = xdate BIT-OR x.
+
+    msdos_date = xdate.
+
+  ENDMETHOD.
+
+
+  METHOD to_time. &quot; IMPORTING time TYPE t RETURNING value(msdos_time) TYPE i.
+
+*   MS-DOS format for time:
+*     Bits 15:11 = hour   (24-hour clock)
+*     Bits 10:5 = minute
+*     Bits 4:0 = second/2
+
+    DATA: xtime(2) TYPE x,
+          x(2)     TYPE x,
+          hour     TYPE i,
+          min      TYPE i,
+          sec      TYPE i.
+
+*   Bits 15:11 = hour (24-hour clock)
+    hour  = time+0(2).
+    x     = hour.
+    x     = x * 2048. &quot; &lt;&lt; 11
+    xtime = xtime BIT-OR x.
+
+*   Bits 10:5 = minute
+    min   = time+2(2).
+    x     = min.
+    x     = x * 32. &quot; &lt;&lt; 5
+    xtime = xtime BIT-OR x.
+
+*   Bits 4:0 = seconds
+    sec   = time+4(2).
+    x     = sec / 2.
+    xtime = xtime BIT-OR x.
+
+    msdos_time = xtime.
+
+  ENDMETHOD.
+
+
+ENDCLASS.</localImplementation>
+ <localTypes>CLASS msdos DEFINITION FINAL.
+  PUBLIC SECTION.
+    CLASS-METHODS:   to_date IMPORTING       date TYPE d RETURNING value(msdos_date) TYPE i.
+    CLASS-METHODS:   to_time IMPORTING       time TYPE t RETURNING value(msdos_time) TYPE i.
+    CLASS-METHODS: from_date IMPORTING msdos_date TYPE i RETURNING value(date)       TYPE d.
+    CLASS-METHODS: from_time IMPORTING msdos_time TYPE i RETURNING value(time)       TYPE t.
+ENDCLASS.</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <typeUsage CLSNAME="ZCL_EXCEL_ABAP_ZIP" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
+ <typeUsage CLSNAME="ZCL_EXCEL_ABAP_ZIP" TYPEGROUP="IHTTP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <forwardDeclaration>IHTTP</forwardDeclaration>
+ <attribute CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="CRC32_MAP" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="EXTS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_EXTS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="FILES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_FILES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="SUPPORT_UNICODE_NAMES" VERSION="1" LANGU="E" DESCRIPT="Feature initially disabled because of compatibility" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTVALUE="ABAP_FALSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ABAP_BOOL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="ADD" VERSION="1" LANGU="E" DESCRIPT="Adds a File to a Zip Folder" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="ADD" SCONAME="NAME" VERSION="1" LANGU="E" DESCRIPT="Name (Case-Sensitive)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="ADD" SCONAME="CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSEQUENCE"/>
+  <source>METHOD ADD.
+
+  FIELD-SYMBOLS: &lt;file&gt; TYPE t_file,
+                 &lt;ext&gt;  TYPE t_ext.
+
+  APPEND INITIAL LINE TO files ASSIGNING &lt;file&gt;.
+  APPEND INITIAL LINE TO exts  ASSIGNING &lt;ext&gt;.
+
+  &lt;file&gt;-name = name.
+  &lt;file&gt;-date = sy-datum.
+  &lt;file&gt;-time = sy-uzeit.
+  &lt;file&gt;-size = XSTRLEN( content ).
+
+* general purpose flag bit 11 (Language encoding flag (EFS)
+  CONSTANTS: gen_flags_unicode(2) TYPE x VALUE &apos;0800&apos;.
+* see: http://www.pkware.com/documents/casestudies/APPNOTE.TXT, APPENDIX D
+* zip normaly used IBM Code Page 437 mapped to SAP Printer EPESCP IBM 437
+
+  DATA: conv       TYPE REF TO cl_abap_conv_out_ce,
+        conv_cp437 TYPE REF TO cl_abap_conv_out_ce,
+        conv_utf8  TYPE REF TO cl_abap_conv_out_ce,
+        cp437      TYPE abap_encoding value &apos;1142&apos;, &quot; IBM 437
+        utf8       TYPE abap_encoding value &apos;4110&apos;. &quot; UTF-8
+  if support_unicode_names = abap_true.
+     conv = cl_abap_conv_out_ce=&gt;create( encoding = utf8
+                                      ignore_cerr = abap_true
+                                      replacement = &apos;#&apos; ).
+  else.
+     conv = cl_abap_conv_out_ce=&gt;create( encoding = cp437
+                                      ignore_cerr = abap_true
+                                      replacement = &apos;#&apos; ).
+  endif.
+  conv-&gt;convert( EXPORTING data = &lt;file&gt;-name IMPORTING buffer = &lt;ext&gt;-filename ).
+  &lt;ext&gt;-filename_len        = XSTRLEN( &lt;ext&gt;-filename ).
+  &lt;ext&gt;-extra_len           = 0.
+  &lt;ext&gt;-extra               = &apos;&apos;.
+  &lt;ext&gt;-min_extract_version = 20.
+  if support_unicode_names  = abap_true.
+     &lt;ext&gt;-gen_flags        = gen_flags_unicode.
+  else.
+     &lt;ext&gt;-gen_flags        = 0.
+  endif.
+
+  IF &lt;file&gt;-size &gt; 0.
+    &lt;ext&gt;-compressed        = 8. &quot; gzip Deflate
+    &lt;ext&gt;-crc32             = crc32( content ).
+    cl_abap_gzip=&gt;compress_binary(
+      EXPORTING raw_in       = content
+                raw_in_len   = &lt;file&gt;-size
+      IMPORTING gzip_out     = &lt;ext&gt;-content
+                gzip_out_len = &lt;ext&gt;-compsize ).
+  ELSE. &quot; folder
+    &lt;ext&gt;-compressed        = 0. &quot; gzip Stored
+    &lt;ext&gt;-crc32             = 0.
+    &lt;ext&gt;-compsize          = 0.
+  ENDIF.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="CRC32" VERSION="1" LANGU="E" DESCRIPT="Calculate a CRC32 Value" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="CRC32" SCONAME="CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="CRC32" SCONAME="CRC32" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <source>METHOD CRC32.
+
+* Let us ask our friendly neighbour whether there is a CRC32 in the kernel (thanks guys!)
+  IF cl_http_utility=&gt;is_ict_system_call_implemented( ihttp_scid_crc32_checksum ) IS INITIAL.
+    SYSTEM-CALL ict                        &quot;#EC CI_SYSTEMCALL
+      DID
+        ihttp_scid_crc32_checksum
+      PARAMETERS
+        content                            &quot; &gt; xstr
+        crc32.                             &quot; &lt; unsigned int
+    RETURN.
+  ENDIF.
+
+* Do the calculations by hand. This is going to be slow. This is going to be a pain.
+* What is a man to do?
+
+  CONSTANTS: magic_nr(4)  TYPE x VALUE &apos;EDB88320&apos;,
+             mFFFFFFFF(4) TYPE x VALUE &apos;FFFFFFFF&apos;,
+             m7FFFFFFF(4) TYPE x VALUE &apos;7FFFFFFF&apos;,
+             m00FFFFFF(4) TYPE x VALUE &apos;00FFFFFF&apos;,
+             m000000FF(4) TYPE x VALUE &apos;000000FF&apos;,
+             m000000(3)   TYPE x VALUE &apos;000000&apos;.
+
+  IF XSTRLEN( crc32_map ) = 0.
+    DO 256 TIMES.
+      DATA: c(4) TYPE x, low_bit(4) TYPE x.
+      c = sy-index - 1.
+      DO 8 TIMES.
+        low_bit = &apos;00000001&apos;. low_bit = c BIT-AND low_bit.   &quot; c  &amp; 1
+        c = c DIV 2. c = c BIT-AND m7FFFFFFF. &quot; c &gt;&gt; 1 (top is zero, but in ABAP signed!)
+        IF low_bit IS NOT INITIAL.
+          c = c BIT-XOR magic_nr.
+        ENDIF.
+      ENDDO.
+      CONCATENATE crc32_map c INTO crc32_map IN BYTE MODE.
+    ENDDO.
+  ENDIF.
+
+  DATA: len TYPE i, n TYPE i. &quot;#EC *
+  DATA: crc(4) TYPE x VALUE mFFFFFFFF, x4(4) TYPE x, idx(4) TYPE x.
+
+  len = XSTRLEN( content ).
+  DO len TIMES.
+    n = sy-index - 1.
+    CONCATENATE m000000 content+n(1) INTO idx IN BYTE MODE.
+    idx = ( crc BIT-XOR idx ) BIT-AND m000000FF.
+    idx = idx * 4.
+    x4  = crc32_map+idx(4).
+    crc = crc DIV 256. crc = crc BIT-AND m00FFFFFF. &quot; c &gt;&gt; 8
+    crc = x4 BIT-XOR crc.
+  ENDDO.
+  crc = crc BIT-XOR mFFFFFFFF.
+
+  crc32 = crc.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="DELETE" VERSION="1" LANGU="E" DESCRIPT="Deletes a File in the Zip Folder" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="DELETE" SCONAME="NAME" VERSION="1" LANGU="E" DESCRIPT="Name (Case-Sensitive)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="DELETE" SCONAME="INDEX" VERSION="1" LANGU="E" DESCRIPT="Either Name or Index" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="I" PARVALUE="0" PAROPTIONL="X"/>
+  <exception CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="DELETE" SCONAME="ZIP_INDEX_ERROR" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD DELETE.
+
+  IF index = 0.
+    READ TABLE files TRANSPORTING NO FIELDS WITH KEY name = name.
+    IF sy-subrc IS NOT INITIAL.
+      RAISE zip_index_error.  &quot;#EC RAISE_OK
+    ENDIF.
+    index = sy-tabix.
+  ENDIF.
+
+  IF index &lt; 1 OR index &gt; LINES( files ).
+    RAISE zip_index_error.  &quot;#EC RAISE_OK
+  ENDIF.
+
+  DELETE files INDEX index.
+  DELETE exts  INDEX index.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="GET" VERSION="1" LANGU="E" DESCRIPT="Reads a File from the Zip Folder" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="GET" SCONAME="NAME" VERSION="1" LANGU="E" DESCRIPT="Name (Case-Sensitive)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="GET" SCONAME="INDEX" VERSION="1" LANGU="E" DESCRIPT="Either Name or Index" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="I" PARVALUE="0" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="GET" SCONAME="CONTENT" VERSION="1" LANGU="E" DESCRIPT="Contents" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="GET" SCONAME="ZIP_INDEX_ERROR" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <exception CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="GET" SCONAME="ZIP_DECOMPRESSION_ERROR" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="2 "/>
+  <source>METHOD GET.
+
+  FIELD-SYMBOLS: &lt;ext&gt; TYPE t_ext.
+
+  IF index IS INITIAL.
+    READ TABLE files TRANSPORTING NO FIELDS WITH KEY name = name.
+    IF sy-subrc IS NOT INITIAL.
+      RAISE zip_index_error.  &quot;#EC RAISE_OK
+    ENDIF.
+    index = sy-tabix.
+  ENDIF.
+
+  IF index &lt; 1 OR index &gt; LINES( files ).
+    RAISE zip_index_error.  &quot;#EC RAISE_OK
+  ENDIF.
+
+  READ TABLE exts INDEX index ASSIGNING &lt;ext&gt;.
+
+  IF &lt;ext&gt;-compressed IS INITIAL.
+    content = &lt;ext&gt;-content.
+  ELSE.
+    cl_abap_gzip=&gt;decompress_binary(
+      EXPORTING gzip_in     = &lt;ext&gt;-content
+                gzip_in_len = &lt;ext&gt;-compsize
+      IMPORTING raw_out     = content ).
+  ENDIF.
+
+  IF crc32( content ) &lt;&gt; &lt;ext&gt;-crc32.
+    RAISE zip_decompression_error.  &quot;#EC RAISE_OK
+  ENDIF.
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="LOAD" VERSION="1" LANGU="E" DESCRIPT="Loads a Zip File" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="LOAD" SCONAME="ZIP" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="LOAD" SCONAME="ZIP_PARSE_ERROR" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD load.
+
+* Documentation from: http://www.pkware.com/company/standards/appnote/appnote.txt
+
+* Start to decode new ZIP file
+  CLEAR:   files, exts.
+  REFRESH: files, exts.
+
+* Global offset for moving through file
+  DATA: offset  TYPE i.
+
+  DEFINE next.   &quot; move offset
+    offset = offset + &amp;1.
+  END-OF-DEFINITION.
+
+* DATA: l1(1) TYPE x, h1(1) TYPE x, l2(1) TYPE x, h2(1) TYPE x, xstr TYPE xstring.
+  DATA: w2(2) TYPE x, w4(4) TYPE x, xstr TYPE xstring.
+  DEFINE read2.  &quot; read two bytes as integer and move offset
+*    l1 = zip+offset(1). offset = offset + 1.
+*    h1 = zip+offset(1). offset = offset + 1.
+*    CONCATENATE h1 l1 INTO xstr IN BYTE MODE.
+    w2     = zip+offset(2).
+    offset = offset + 2.
+    concatenate w2+1(1) w2+0(1) into xstr in byte mode.
+    &amp;1     = xstr.
+  END-OF-DEFINITION.
+
+  DEFINE read4.  &quot; read four bytes as integer and move offset
+*    l1 = zip+offset(1). offset = offset + 1.
+*    h1 = zip+offset(1). offset = offset + 1.
+*    l2 = zip+offset(1). offset = offset + 1.
+*    h2 = zip+offset(1). offset = offset + 1.
+*    CONCATENATE h2 l2 h1 l1 INTO xstr IN BYTE MODE.
+    w4     = zip+offset(4).
+    offset = offset + 4.
+    concatenate w4+3(1) w4+2(1) w4+1(1) w4+0(1) into xstr in byte mode.
+    &amp;1     = xstr.
+  END-OF-DEFINITION.
+
+  CONSTANTS: gen_flags_encrypted(2) TYPE x VALUE &apos;0001&apos;,
+             gen_flags_unicode(2)   TYPE x VALUE &apos;0800&apos;. &quot; general purpose flag bit 11
+  DATA:      gen_flags(2) TYPE x.
+
+* We convert all names from xstring into string
+* see: http://www.pkware.com/documents/casestudies/APPNOTE.TXT, APPENDIX D
+* zip normaly used IBM Code Page 437 mapped to SAP Printer EPESCP IBM 437
+  DATA: conv       TYPE REF TO cl_abap_conv_in_ce,
+        conv_cp437 TYPE REF TO cl_abap_conv_in_ce,
+        conv_utf8  TYPE REF TO cl_abap_conv_in_ce,
+        cp437      TYPE abap_encoding VALUE &apos;1142&apos;,         &quot; IBM 437
+        utf8       TYPE abap_encoding VALUE &apos;4110&apos;.         &quot; UTF-8
+
+  conv_cp437 = cl_abap_conv_in_ce=&gt;create( encoding = cp437
+                                        ignore_cerr = abap_true
+                                        replacement = &apos;#&apos; ).
+  conv_utf8  = cl_abap_conv_in_ce=&gt;create( encoding = utf8
+                                        ignore_cerr = abap_true
+                                        replacement = &apos;#&apos; ).
+
+* The maximum length of the ZIP file for scanning.
+  DATA: max_length TYPE i.
+  max_length = XSTRLEN( zip ) - 4.
+
+* Extract information about all files.
+  DATA: msdos_date TYPE i, msdos_time TYPE i, file_no TYPE i VALUE 0.
+  FIELD-SYMBOLS:  &lt;file&gt; TYPE t_file,
+                  &lt;ext&gt;  TYPE t_ext.
+*--------------------------------------------------------------------*
+* Insert Begin - Get local file headers by  central directory record
+* Documentation: http://en.wikipedia.org/wiki/Zip_(file_format)
+*--------------------------------------------------------------------*
+* ###     End of central directory record
+* 0       4   End of central directory signature = 0x06054b50
+* 4       2   Number of this disk
+* 6       2   Disk where central directory starts
+* 8       2   Number of central directory records on this disk
+*10     -&gt;2   Total number of central directory records
+*12       4   Size of central directory (bytes)
+*16     -&gt;4   Offset of start of central directory,relative to start of archive
+*20       2   Comment length (n)
+*22       n   Comment
+*--------------------------------------------------------------------*
+* ###     Central directory file header
+* 0       4   Central directory file header signature = 0x02014b50
+* 4       2   Version made by
+* 6       2   Version needed to extract (minimum)
+* 8       2   General purpose bit flag
+*10       2   Compression method
+*12       2   File last modification time
+*14       2   File last modification date
+*16       4   CRC-32
+*20       4   Compressed size
+*24       4   Uncompressed size
+*28       2   File name length (n)
+*30       2   Extra field length (m)
+*32       2   File comment length (k)
+*34       2   Disk number where file starts
+*36       2   Internal file attributes
+*38       4   External file attributes
+*42       4   Relative offset of local file header.
+*46       n   File name
+*46+n     m   Extra field
+*46+n+m   k   File comment
+*--------------------------------------------------------------------*
+  CONSTANTS: cv_end_central_directory(4) TYPE x VALUE &apos;504B0506&apos;.
+  DATA: lt_match_results           TYPE match_result_tab,
+        lv_match_count             TYPE i,
+        ls_match_result            LIKE LINE OF lt_match_results,
+
+        lv_entries_in_central_dir  TYPE i,
+        lv_offset_central_dir      TYPE i,
+        lv_offset_local_fileheader TYPE i,
+        lv_file_name_length        TYPE i,
+        lv_extra_field_length      TYPE i,
+        lv_file_comment_length     TYPE i,
+
+        lv_file_length             TYPE i.
+
+* Read &quot;end of central directory record&quot; to find &quot;central directory record&quot;
+  FIND cv_end_central_directory IN zip IN BYTE MODE
+          RESULTS lt_match_results MATCH COUNT lv_match_count .
+  IF lv_match_count IS INITIAL.
+    RAISE zip_parse_error.                                &quot;#EC RAISE_OK
+  ENDIF.
+  READ TABLE lt_match_results INTO ls_match_result INDEX lv_match_count.
+
+  offset = ls_match_result-offset + 10.
+  read2 lv_entries_in_central_dir.
+
+  offset = ls_match_result-offset + 16.
+  read4 lv_offset_central_dir.
+
+  offset = lv_offset_central_dir.
+
+  DO lv_entries_in_central_dir TIMES.
+
+    offset = lv_offset_central_dir + 24.
+    read4 lv_file_length.                                      &quot; uncompressed size
+
+    IF lv_file_length &gt; 0.  &quot; Directoryentries in central file header have no local file header
+*--------------------------------------------------------------------*
+* Insert End - Get local file headers by  central directory record
+*--------------------------------------------------------------------*
+
+*  WHILE offset &lt; max_length AND zip+offset(4) = &apos;504B0304&apos;.                              &quot;-cdr
+
+
+      file_no = file_no + 1.
+      APPEND INITIAL LINE TO files ASSIGNING &lt;file&gt;.
+      APPEND INITIAL LINE TO exts  ASSIGNING &lt;ext&gt;.
+*--------------------------------------------------------------------*
+* Insert Begin - Get local file headers by  central directory record
+*--------------------------------------------------------------------*
+* Get position of local file header
+* CRC32, filesize, compressed size are set in central directory header
+* but not necessarily in local file header --&gt; use this here
+      offset = lv_offset_central_dir + 16.
+      read4 &lt;ext&gt;-crc32.                                    &quot; crc-32
+      read4 &lt;ext&gt;-compsize.                                   &quot; compressed size
+      read4 &lt;file&gt;-size.                                      &quot; uncompressed size
+    ENDIF.
+
+* Get offset of local file header to continue old coding
+    offset = lv_offset_central_dir + 42.
+    read4 lv_offset_local_fileheader.
+
+* and prepare next central directory entry
+    offset =   lv_offset_central_dir + 28.
+    read2 lv_file_name_length   .
+    read2 lv_extra_field_length .
+    read2 lv_file_comment_length.
+
+    ADD 46                     TO lv_offset_central_dir.
+    ADD lv_file_name_length    TO lv_offset_central_dir.
+    ADD lv_extra_field_length  TO lv_offset_central_dir.
+    ADD lv_file_comment_length TO lv_offset_central_dir.
+    CHECK lv_file_length &gt; 0.  &quot; Directoryentries in central file header have no local file header
+
+    offset = lv_offset_local_fileheader.
+*--------------------------------------------------------------------*
+* Insert End - Get local file headers by  central directory record
+*--------------------------------------------------------------------*
+    next  4.                          &quot; local file header signature
+    read2 &lt;ext&gt;-min_extract_version.  &quot; version needed to extract = 2.0 - File is compressed using Deflate
+    read2 &lt;ext&gt;-gen_flags.            &quot; general purpose bit flag
+    read2 &lt;ext&gt;-compressed.           &quot; compression method: deflated
+    read2 msdos_time.                 &quot; last mod file time
+    read2 msdos_date.                 &quot; last mod file date
+*    read4 &lt;ext&gt;-crc32.                                      &quot; crc-32                     &quot;-cdr
+*    read4 &lt;ext&gt;-compsize.             &quot; compressed size                                  &quot;-cdr
+*    read4 &lt;file&gt;-size.                &quot; uncompressed size                                &quot;-cdr
+    next 12.                                                                              &quot;+cdr
+    read2 &lt;ext&gt;-filename_len.         &quot; file name length
+    read2 &lt;ext&gt;-extra_len.            &quot; extra field length
+
+    gen_flags = &lt;ext&gt;-gen_flags.
+    gen_flags = gen_flags BIT-AND gen_flags_unicode. &quot; bit 11: Language encoding flag
+    IF gen_flags &lt;&gt; 0 AND support_unicode_names = abap_true.
+      conv = conv_utf8.  &quot; utf-8 filename extension
+    ELSE.
+      conv = conv_cp437.                                    &quot; IBM CP437
+    ENDIF.
+
+    &lt;ext&gt;-filename = zip+offset(&lt;ext&gt;-filename_len).
+    conv-&gt;convert( EXPORTING input = &lt;ext&gt;-filename IMPORTING data = &lt;file&gt;-name ).
+    next &lt;ext&gt;-filename_len.
+
+    &lt;ext&gt;-extra = zip+offset(&lt;ext&gt;-extra_len).
+    next &lt;ext&gt;-extra_len.
+
+    IF &lt;ext&gt;-gen_flags &lt;&gt; 8.
+
+      &lt;ext&gt;-content = zip+offset(&lt;ext&gt;-compsize).
+      next &lt;ext&gt;-compsize.
+
+    ELSE.
+
+*     Sometimes sequence in file and directory do not match.
+*     READ TABLE markers INTO marker WITH KEY no = file_no.
+*     DATA: cached_offset TYPE i. cached_offset = offset. offset = marker-offset + 16.
+      DATA   result_tab TYPE match_result_tab.
+      FIELD-SYMBOLS &lt;match&gt; LIKE LINE OF result_tab.
+      FIND ALL OCCURRENCES OF &lt;ext&gt;-filename IN zip RESULTS result_tab IN BYTE MODE.
+* --- start of modification:
+* The following modification was necessary to handle zip-archives containing files
+* where the name of one file is a sub-string of the name of another file
+
+* --- deleted code:
+*     Loop till the end of the result_tab to get the entry from the Central Directory
+*      LOOP at result_tab ASSIGNING &lt;match&gt;.
+*      ENDLOOP .
+*      DATA: cached_offset TYPE i. cached_offset = offset. offset = &lt;match&gt;-offset - 30.
+
+      DATA: cached_offset TYPE i. cached_offset = offset.
+      DATA: l_filename_length TYPE i.
+      SORT result_tab BY offset DESCENDING.
+      LOOP AT result_tab ASSIGNING &lt;match&gt;.
+        offset = &lt;match&gt;-offset - 18.
+        read2 l_filename_length.
+        IF l_filename_length = XSTRLEN( &lt;ext&gt;-filename ).
+          EXIT.
+        ENDIF.
+      ENDLOOP .
+
+      offset = &lt;match&gt;-offset - 30.
+* --- end of modification
+
+      read4 &lt;ext&gt;-crc32.
+      read4 &lt;ext&gt;-compsize.
+      read4 &lt;file&gt;-size.
+      next 18.
+      offset = cached_offset.
+      &lt;ext&gt;-content = zip+offset(&lt;ext&gt;-compsize).
+      next &lt;ext&gt;-compsize.
+      next 16.                                              &quot; I032850
+
+    ENDIF.
+
+    &lt;file&gt;-time = msdos=&gt;from_time( msdos_time ).
+    &lt;file&gt;-date = msdos=&gt;from_date( msdos_date ).
+
+    gen_flags = &lt;ext&gt;-gen_flags.
+    gen_flags = gen_flags BIT-AND gen_flags_encrypted.
+
+    IF NOT ( &lt;ext&gt;-min_extract_version &lt;= 20 )
+*   OR NOT ( &lt;ext&gt;-gen_flags = 0  OR &lt;ext&gt;-gen_flags = 2 OR &lt;ext&gt;-gen_flags = 8 )
+    OR     ( gen_flags = gen_flags_encrypted )
+    OR NOT ( &lt;ext&gt;-compressed = 0 OR &lt;ext&gt;-compressed = 8 ).
+      RAISE zip_parse_error.                              &quot;#EC RAISE_OK
+    ENDIF.
+
+*  ENDWHILE.                                                                              &quot;-cdr
+  ENDDO.                                                                                  &quot;+cdr
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="SAVE" VERSION="1" LANGU="E" DESCRIPT="Creates a Zip File" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="SAVE" SCONAME="ZIP" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>METHOD SAVE.
+
+* Documentation from: http://www.pkware.com/company/standards/appnote/appnote.txt
+
+  DATA: x2(2) TYPE x, x4(4) TYPE x.
+
+  DEFINE writeX4.    &quot; write xstring
+    x4 = &amp;2.
+    CONCATENATE &amp;1 x4 INTO &amp;1 IN BYTE MODE.
+  END-OF-DEFINITION.
+
+  DEFINE write2.  &quot; write two bytes from integer
+    x2 = &amp;2.
+    CONCATENATE &amp;1 x2+1(1) x2+0(1) INTO &amp;1 IN BYTE MODE.
+  END-OF-DEFINITION.
+
+  DEFINE write4.  &quot; write four bytes from integer
+    x4 = &amp;2.
+    CONCATENATE &amp;1 x4+3(1) x4+2(1) x4+1(1) x4+0(1) INTO &amp;1 IN BYTE MODE.
+  END-OF-DEFINITION.
+
+* Process all files. We write in parallel the zip and the central directory to use later
+  DATA: msdos_date TYPE i, msdos_time TYPE i.
+  FIELD-SYMBOLS:  &lt;file&gt;  TYPE t_file,
+                  &lt;ext&gt;   TYPE t_ext.
+  DATA: dir TYPE xstring, start_offset(4) TYPE x.
+
+  LOOP AT files ASSIGNING &lt;file&gt;.
+    READ TABLE exts INDEX sy-tabix ASSIGNING &lt;ext&gt;.
+    start_offset = XSTRLEN( zip ).
+
+    msdos_time = msdos=&gt;to_time( &lt;file&gt;-time ).
+    msdos_date = msdos=&gt;to_date( &lt;file&gt;-date ).
+
+*   zip data stream
+    writeX4  zip &apos;504B0304&apos;.                  &quot; local file header signature
+    write2   zip &lt;ext&gt;-min_extract_version.   &quot; version needed to extract = 2.0 - File is compressed using Deflate
+    write2   zip &lt;ext&gt;-gen_flags.             &quot; general purpose bit flag
+    write2   zip &lt;ext&gt;-compressed.            &quot; compression method: deflated
+    write2   zip msdos_time.                  &quot; last mod file time
+    write2   zip msdos_date.                  &quot; last mod file date
+    write4   zip &lt;ext&gt;-crc32.                 &quot; crc-32
+    write4   zip &lt;ext&gt;-compsize.              &quot; compressed size
+    write4   zip &lt;file&gt;-size.                 &quot; uncompressed size
+    write2   zip &lt;ext&gt;-filename_len.          &quot; file name length
+    write2   zip &lt;ext&gt;-extra_len.             &quot; extra field length
+
+    CONCATENATE zip &lt;ext&gt;-filename &lt;ext&gt;-extra &lt;ext&gt;-content INTO zip IN BYTE MODE.
+
+*   central directory stream (which has a lare duplicate sequence of zip header)
+    DATA: dup_offset TYPE i. dup_offset = start_offset + 4.
+    writeX4  dir &apos;504B0102&apos;.                  &quot; central file header signature
+    write2   dir 19.                          &quot; version made by (== pkzip 2.04g)
+    CONCATENATE dir zip+dup_offset(26) INTO dir IN BYTE MODE.  &quot; part which matches exactly zip header
+    write2   dir  0.                          &quot; file comment length
+    write2   dir  0.                          &quot; disk number start
+    write2   dir  0.                          &quot; internal file attributes
+    write4   dir  0.                          &quot; external file attributes
+    write4   dir  start_offset.               &quot; relative offset of local header
+    CONCATENATE dir &lt;ext&gt;-filename  &lt;ext&gt;-extra INTO dir IN BYTE MODE.  &quot; file name + extra info
+
+  ENDLOOP.
+
+* Write Central Directory
+  DATA: lines_files TYPE i.    lines_files = LINES( files ).
+  DATA: xstrlen_dir TYPE i.    xstrlen_dir = XSTRLEN( dir ).
+  DATA: offset_dir  TYPE i.    offset_dir  = XSTRLEN( zip ).
+
+  CONCATENATE zip dir INTO zip IN BYTE MODE.
+  writeX4  zip &apos;504B0506&apos;.                    &quot; End of central directory
+  write2   zip  0.                            &quot; number of this disk
+  write2   zip  0.                            &quot; number of the disk with the start of the central directory
+  write2   zip  lines_files.                  &quot; total number of entries in the central directory on this disk
+  write2   zip  lines_files.                  &quot; total number of entries in the central directory
+  write4   zip  xstrlen_dir.                  &quot; size of the central directory
+  write4   zip  offset_dir.                   &quot; offset of start of central directory
+  write2   zip  0.                            &quot; ZIP file comment length
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="SPLICE" VERSION="1" LANGU="E" DESCRIPT="Loads and Splits a Zip File" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="SPLICE" SCONAME="ZIP" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_ABAP_ZIP" CMPNAME="SPLICE" SCONAME="ENTRIES" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_SPLICE_ENTRIES"/>
+  <source>METHOD SPLICE.
+
+* Documentation from: http://www.pkware.com/company/standards/appnote/appnote.txt
+
+* Local variables.
+  FIELD-SYMBOLS:
+        &lt;entry&gt;      LIKE LINE OF entries.
+  DATA: filename_len TYPE i,
+        extra_len    TYPE i,
+        filename     TYPE xstring.
+
+* Start to decode new ZIP file
+  CLEAR:   entries.
+  REFRESH: entries.
+
+* Global offset for moving through file
+  DATA: offset  TYPE i.
+
+  DATA: w2(2) TYPE x, w4(4) TYPE x, xstr TYPE xstring.
+  DEFINE read2.  &quot;#EC NEEDED read two bytes as integer and move offset
+    w2     = zip+offset(2).
+    offset = offset + 2.
+    CONCATENATE w2+1(1) w2+0(1) INTO xstr IN BYTE MODE.
+    &amp;1     = xstr.
+  END-OF-DEFINITION.
+
+  DEFINE read4.  &quot;#EC NEEDED read four bytes as integer and move offset
+    w4     = zip+offset(4).
+    offset = offset + 4.
+    CONCATENATE w4+3(1) w4+2(1) w4+1(1) w4+0(1) INTO xstr IN BYTE MODE.
+    &amp;1     = xstr.
+  END-OF-DEFINITION.
+
+* We convert all names from xstring into string
+  DATA: conv TYPE REF TO cl_abap_conv_in_ce.
+  conv = cl_abap_conv_in_ce=&gt;create( ).
+
+* Extract information about all files.
+  WHILE zip+offset(4) = &apos;504B0304&apos;.  &quot; local file header signature
+
+    APPEND INITIAL LINE TO entries ASSIGNING &lt;entry&gt;.
+
+    offset = offset + 8.       &quot; next 4=(header). read2 &lt;ext&gt;-min_extract_version. read2 &lt;ext&gt;-gen_flags.
+    read2 &lt;entry&gt;-compressed.  &quot; compression method: deflated
+    offset = offset + 8.       &quot; read2 msdos_time. read2 msdos_date. read4 &lt;ext&gt;-crc32.
+    read4 &lt;entry&gt;-length.      &quot; compressed size
+    offset = offset + 4.       &quot; uncompressed size
+    read2 filename_len.        &quot; file name length
+    read2 extra_len.           &quot; extra field length
+
+    filename = zip+offset(filename_len).
+    conv-&gt;convert( EXPORTING input = filename IMPORTING data = &lt;entry&gt;-name ).
+
+    &lt;entry&gt;-offset = offset + filename_len + extra_len.
+    offset         = &lt;entry&gt;-offset + &lt;entry&gt;-length.
+
+  ENDWHILE.
+
+  DELETE entries WHERE length = 0.
+
+ENDMETHOD.</source>
+ </method>
+</CLAS>
