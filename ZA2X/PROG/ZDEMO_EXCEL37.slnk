@@ -13,7 +13,9 @@
  <source>REPORT zdemo_excel37.
 
 DATA: excel           TYPE REF TO zcl_excel,
-      reader          TYPE REF TO zif_excel_reader.
+      reader          TYPE REF TO zif_excel_reader,
+      go_error        TYPE REF TO cx_root,
+      gv_message      type string.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE &apos;37-passthrough.xlsx&apos;.
@@ -33,11 +35,22 @@ START-OF-SELECTION.
   TRY.
       CREATE OBJECT reader TYPE zcl_excel_reader_2007.
 *      CREATE OBJECT reader TYPE zcl_excel_reader_xlsm.
-      excel = reader-&gt;load_file( p_upfile ).
+      excel = reader-&gt;load_file(  p_upfile ).
+*--------------------------------------------------------------------*
+* CL_ABAP_ZIP may have problems reading LibreOffice generated files
+* You may have to use alternate ZIP-Class - see comments in issue #234 in abap2xlsx at developers network
+*      excel = reader-&gt;load_file( i_filename           = p_upfile
+*                                 iv_use_alternate_zip = &apos;ZCL_EXCEL_ABAP_ZIP&apos;      ).
+*--------------------------------------------------------------------*
+
 *** Create output
       lcl_output=&gt;output( excel ).
-    CATCH cx_root.
+    CATCH cx_root INTO go_error.
       MESSAGE &apos;Error reading excelfile&apos; TYPE &apos;I&apos;.
+      gv_message = go_error-&gt;get_text( ).
+      IF gv_message IS NOT INITIAL.
+        MESSAGE gv_message TYPE &apos;I&apos;.
+      ENDIF.
   ENDTRY.
 
 
