@@ -1023,50 +1023,50 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_STYLES.
+  <source>METHOD load_styles.
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wip )              2012-11-11
+*              - Stefan Schmöcker,      (wip )              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
+*          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
   TYPES:  BEGIN OF lty_xf,
-            applyalignment      TYPE string,
-            applyborder         TYPE string,
-            applyfill           TYPE string,
-            applyfont           TYPE string,
-            applynumberformat   TYPE string,
-            applyprotection     TYPE string,
-            borderid            TYPE string,
-            fillid              TYPE string,
-            fontid              TYPE string,
-            numfmtid            TYPE string,
-            pivotbutton         TYPE string,
-            quoteprefix         TYPE string,
-            xfid                TYPE string,
+              applyalignment                  TYPE string,
+              applyborder                     TYPE string,
+              applyfill                       TYPE string,
+              applyfont                       TYPE string,
+              applynumberformat               TYPE string,
+              applyprotection                 TYPE string,
+              borderid                        TYPE string,
+              fillid                          TYPE string,
+              fontid                          TYPE string,
+              numfmtid                        TYPE string,
+              pivotbutton                     TYPE string,
+              quoteprefix                     TYPE string,
+              xfid                            TYPE string,
           END OF lty_xf.
 
   TYPES:  BEGIN OF lty_alignment,
-            horizontal          TYPE string,
-            indent              TYPE string,
-            justifylastline     TYPE string,
-            readingorder        TYPE string,
-            relativeindent      TYPE string,
-            shrinktofit         TYPE string,
-            textrotation        TYPE string,
-            vertical            TYPE string,
-            wraptext            TYPE string,
+              horizontal                      TYPE string,
+              indent                          TYPE string,
+              justifylastline                 TYPE string,
+              readingorder                    TYPE string,
+              relativeindent                  TYPE string,
+              shrinktofit                     TYPE string,
+              textrotation                    TYPE string,
+              vertical                        TYPE string,
+              wraptext                        TYPE string,
           END OF lty_alignment.
 
   TYPES:  BEGIN OF lty_protection,
-            hidden              TYPE string,
-            locked              TYPE string,
+              hidden                          TYPE string,
+              locked                          TYPE string,
           END OF lty_protection.
 
-  DATA:
-              lo_styles_xml                   TYPE REF TO if_ixml_document,
+  DATA:       lo_styles_xml                   TYPE REF TO if_ixml_document,
               lo_style                        TYPE REF TO zcl_excel_style,
 
               lt_num_formats                  TYPE t_num_formats,
@@ -1092,14 +1092,51 @@ endmethod.</source>
               ls_protection                   TYPE lty_protection,
               lv_index                        TYPE i.
 
+*--------------------------------------------------------------------*
+* To build a complete style that fully describes how a cell looks like
+* we need the various parts
+* §1 - Numberformat
+* §2 - Fillstyle
+* §3 - Borders
+* §4 - Font
+* §5 - Alignment
+* §6 - Protection
+
+*          Following is an example how this part of a file could be set up
+*              ...
+*              parts with various formatinformation - see §1,§2,§3,§4
+*              ...
+*          &lt;cellXfs count=&quot;26&quot;&gt;
+*              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;0&quot; fillId=&quot;0&quot; fontId=&quot;0&quot; xfId=&quot;0&quot;/&gt;
+*              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;0&quot; fillId=&quot;2&quot; fontId=&quot;0&quot; xfId=&quot;0&quot; applyFill=&quot;1&quot;/&gt;
+*              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;1&quot; fillId=&quot;3&quot; fontId=&quot;0&quot; xfId=&quot;0&quot; applyFill=&quot;1&quot; applyBorder=&quot;1&quot;/&gt;
+*              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;2&quot; fillId=&quot;3&quot; fontId=&quot;0&quot; xfId=&quot;0&quot; applyFill=&quot;1&quot; applyBorder=&quot;1&quot;/&gt;
+*              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;3&quot; fillId=&quot;3&quot; fontId=&quot;0&quot; xfId=&quot;0&quot; applyFill=&quot;1&quot; applyBorder=&quot;1&quot;/&gt;
+*              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;4&quot; fillId=&quot;3&quot; fontId=&quot;0&quot; xfId=&quot;0&quot; applyFill=&quot;1&quot; applyBorder=&quot;1&quot;/&gt;
+*              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;0&quot; fillId=&quot;3&quot; fontId=&quot;0&quot; xfId=&quot;0&quot; applyFill=&quot;1&quot; applyBorder=&quot;1&quot;/&gt;
+*              ...
+*          &lt;/cellXfs&gt;
+*--------------------------------------------------------------------*
+
   lo_styles_xml = me-&gt;get_ixml_from_zip_archive( ip_path ).
 
-  lt_num_formats   = load_style_num_formats( lo_styles_xml ).
-  lt_fills         = load_style_fills( lo_styles_xml ).
-  lt_borders       = load_style_borders( lo_styles_xml ).
-  lt_fonts         = load_style_fonts( lo_styles_xml ).
+*--------------------------------------------------------------------*
+* The styles are build up from
+* §1 number formats
+* §2 fill styles
+* §3 border styles
+* §4 fonts
+* These need to be read before we can try to build up a complete
+* style that describes the look of a cell
+*--------------------------------------------------------------------*
+  lt_num_formats   = load_style_num_formats( lo_styles_xml ).   &quot; §1
+  lt_fills         = load_style_fills( lo_styles_xml ).         &quot; §2
+  lt_borders       = load_style_borders( lo_styles_xml ).       &quot; §3
+  lt_fonts         = load_style_fonts( lo_styles_xml ).         &quot; §4
 
-  &quot;we have all the components of style, now build the style objects
+*--------------------------------------------------------------------*
+* Now everything is prepared to build a &quot;full&quot; style
+*--------------------------------------------------------------------*
   lo_node_cellxfs  = lo_styles_xml-&gt;find_from_name( name = &apos;cellXfs&apos; ).
   IF lo_node_cellxfs IS BOUND.
     lo_nodes_xf         = lo_node_cellxfs-&gt;get_elements_by_tag_name( name = &apos;xf&apos; ).
@@ -1112,6 +1149,9 @@ endmethod.</source>
                                      ip_element   =  lo_node_cellxfs_xf
                                    CHANGING
                                      cp_structure = ls_xf ).
+*--------------------------------------------------------------------*
+* §2 fill style
+*--------------------------------------------------------------------*
       IF ls_xf-applyfill = &apos;1&apos; AND ls_xf-fillid IS NOT INITIAL.
         lv_index = ls_xf-fillid + 1.
         READ TABLE lt_fills INTO ls_fill INDEX lv_index.
@@ -1120,6 +1160,9 @@ endmethod.</source>
         ENDIF.
       ENDIF.
 
+*--------------------------------------------------------------------*
+* §1 number format
+*--------------------------------------------------------------------*
       IF ls_xf-numfmtid IS NOT INITIAL.
         READ TABLE lt_num_formats INTO ls_num_format WITH TABLE KEY id = ls_xf-numfmtid.
         IF sy-subrc = 0.
@@ -1127,6 +1170,9 @@ endmethod.</source>
         ENDIF.
       ENDIF.
 
+*--------------------------------------------------------------------*
+* §3 border style
+*--------------------------------------------------------------------*
       IF ls_xf-applyborder = &apos;1&apos; AND ls_xf-borderid IS NOT INITIAL.
         lv_index = ls_xf-borderid + 1.
         READ TABLE lt_borders INTO ls_cell_border INDEX lv_index.
@@ -1135,6 +1181,9 @@ endmethod.</source>
         ENDIF.
       ENDIF.
 
+*--------------------------------------------------------------------*
+* §4 font
+*--------------------------------------------------------------------*
       IF ls_xf-applyfont = &apos;1&apos; AND ls_xf-fontid IS NOT INITIAL.
         lv_index = ls_xf-fontid + 1.
         READ TABLE lt_fonts INTO ls_font INDEX lv_index.
@@ -1143,6 +1192,9 @@ endmethod.</source>
         ENDIF.
       ENDIF.
 
+*--------------------------------------------------------------------*
+* §5 - Alignment
+*--------------------------------------------------------------------*
       lo_node_cellxfs_xf_alignment ?= lo_node_cellxfs_xf-&gt;find_from_name( &apos;alignment&apos; ).
       IF lo_node_cellxfs_xf_alignment IS BOUND.
         fill_struct_from_attributes( EXPORTING
@@ -1174,6 +1226,9 @@ endmethod.</source>
         ENDIF.
       ENDIF.
 
+*--------------------------------------------------------------------*
+* §6 - Protection
+*--------------------------------------------------------------------*
       lo_node_cellxfs_xf_protection ?= lo_node_cellxfs_xf-&gt;find_from_name( &apos;protection&apos; ).
       IF lo_node_cellxfs_xf_protection IS BOUND.
         fill_struct_from_attributes( EXPORTING
@@ -1201,49 +1256,85 @@ endmethod.</source>
     ENDWHILE.
   ENDIF.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="EP_BORDERS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_BORDERS"/>
-  <source>method LOAD_STYLE_BORDERS.
+  <source>METHOD load_style_borders.
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wip )              2012-11-18
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
+*          renaming variables to indicate what they are used for
+*          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
-  DATA:       lo_node                         TYPE REF TO if_ixml_element,
-              lo_node2                        TYPE REF TO if_ixml_element,
-              lo_node3                        TYPE REF TO if_ixml_element,
+  DATA:       lo_node_border                  TYPE REF TO if_ixml_element,
+              lo_node_bordertype              TYPE REF TO if_ixml_element,
+              lo_node_bordercolor             TYPE REF TO if_ixml_element,
               lo_cell_border                  TYPE REF TO zcl_excel_style_borders,
               lo_border                       TYPE REF TO zcl_excel_style_border,
               ls_color                        TYPE t_color.
 
-  lo_node ?= ip_xml-&gt;find_from_name( &apos;border&apos; ).
-  WHILE lo_node IS BOUND.
+*--------------------------------------------------------------------*
+* We need a table of used borderformats to build up our styles
+* §1    A cell has 4 outer borders and 2 diagonal &quot;borders&quot;
+*       These borders can be formatted separately but the diagonal borders
+*       are always being formatted the same
+*       We&apos;ll parse through the &lt;border&gt;-tag for each of the bordertypes
+* §2    and read the corresponding formatting information
+
+*          Following is an example how this part of a file could be set up
+*          &lt;border diagonalDown=&quot;1&quot;&gt;
+*              &lt;left style=&quot;mediumDashDotDot&quot;&gt;
+*                  &lt;color rgb=&quot;FFFF0000&quot;/&gt;
+*              &lt;/left&gt;
+*              &lt;right/&gt;
+*              &lt;top style=&quot;thick&quot;&gt;
+*                  &lt;color rgb=&quot;FFFF0000&quot;/&gt;
+*              &lt;/top&gt;
+*              &lt;bottom style=&quot;thick&quot;&gt;
+*                  &lt;color rgb=&quot;FFFF0000&quot;/&gt;
+*              &lt;/bottom&gt;
+*              &lt;diagonal style=&quot;thick&quot;&gt;
+*                  &lt;color rgb=&quot;FFFF0000&quot;/&gt;
+*              &lt;/diagonal&gt;
+*          &lt;/border&gt;
+*--------------------------------------------------------------------*
+  lo_node_border ?= ip_xml-&gt;find_from_name( &apos;border&apos; ).
+  WHILE lo_node_border IS BOUND.
 
     CREATE OBJECT lo_cell_border.
 
-    IF lo_node-&gt;get_attribute( &apos;diagonalDown&apos; ) IS NOT INITIAL.
-      lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
+*--------------------------------------------------------------------*
+* Diagonal borderlines are formatted the equally.  Determine what kind of diagonal borders are present if any
+*--------------------------------------------------------------------*
+* DiagonalNone = 0
+* DiagonalUp   = 1
+* DiagonalDown = 2
+* DiagonalBoth = 3
+*--------------------------------------------------------------------*
+    IF lo_node_border-&gt;get_attribute( &apos;diagonalDown&apos; ) IS NOT INITIAL.
+      add zcl_excel_style_borders=&gt;c_diagonal_down to lo_cell_border-&gt;diagonal_mode.
     ENDIF.
 
-    IF lo_node-&gt;get_attribute( &apos;diagonalUp&apos; ) IS NOT INITIAL.
-      IF lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_down.
-        lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_both.
-      ELSE.
-        lo_cell_border-&gt;diagonal_mode = zcl_excel_style_borders=&gt;c_diagonal_up.
-      ENDIF.
+    IF lo_node_border-&gt;get_attribute( &apos;diagonalUp&apos; ) IS NOT INITIAL.
+      add zcl_excel_style_borders=&gt;c_diagonal_up to lo_cell_border-&gt;diagonal_mode.
     ENDIF.
 
-    lo_node2 ?= lo_node-&gt;get_first_child( ).
-    WHILE lo_node2 IS BOUND.
+    lo_node_bordertype ?= lo_node_border-&gt;get_first_child( ).
+    WHILE lo_node_bordertype IS BOUND.
+*--------------------------------------------------------------------*
+* §1 Determine what kind of border we are talking about
+*--------------------------------------------------------------------*
+* Up, down, left, right, diagonal
+*--------------------------------------------------------------------*
       CREATE OBJECT lo_border.
 
-      CASE lo_node2-&gt;get_name( ).
+      CASE lo_node_bordertype-&gt;get_name( ).
 
         WHEN &apos;left&apos;.
           lo_cell_border-&gt;left = lo_border.
@@ -1262,11 +1353,14 @@ endmethod.</source>
 
       ENDCASE.
 
-      lo_border-&gt;border_style = lo_node2-&gt;get_attribute( &apos;style&apos; ).
-      lo_node3 ?= lo_node2-&gt;find_from_name( &apos;color&apos; ).
-      IF lo_node3 IS BOUND.
+*--------------------------------------------------------------------*
+* §2 Read the border-formatting
+*--------------------------------------------------------------------*
+      lo_border-&gt;border_style = lo_node_bordertype-&gt;get_attribute( &apos;style&apos; ).
+      lo_node_bordercolor ?= lo_node_bordertype-&gt;find_from_name( &apos;color&apos; ).
+      IF lo_node_bordercolor IS BOUND.
         fill_struct_from_attributes( EXPORTING
-                                       ip_element   =  lo_node3
+                                       ip_element   =  lo_node_bordercolor
                                      CHANGING
                                        cp_structure = ls_color ).
 
@@ -1281,23 +1375,23 @@ endmethod.</source>
         lo_border-&gt;border_color-tint = ls_color-tint.
       ENDIF.
 
-      lo_node2 ?= lo_node2-&gt;get_next( ).
+      lo_node_bordertype ?= lo_node_bordertype-&gt;get_next( ).
 
     ENDWHILE.
 
     INSERT lo_cell_border INTO TABLE ep_borders.
 
-    lo_node ?= lo_node-&gt;get_next( ).
+    lo_node_border ?= lo_node_border-&gt;get_next( ).
 
   ENDWHILE.
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="EP_FILLS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FILLS"/>
-  <source>method LOAD_STYLE_FILLS.
+  <source>METHOD load_style_fills.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Support gradientFill
@@ -1305,33 +1399,57 @@ endmethod.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wip )              2012-11-18
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
 *          commenting on problems/future enhancements/todos we already know of or should decide upon
+*          adding comments to explain what we are trying to achieve
+*          renaming variables to indicate what they are used for
 *--------------------------------------------------------------------*
   DATA:    lv_value                           TYPE string,
-           lo_node                            TYPE REF TO if_ixml_element,
-           lo_node2                           TYPE REF TO if_ixml_element,
-           lo_node3                           TYPE REF TO if_ixml_element,
+           lo_node_fill                       TYPE REF TO if_ixml_element,
+           lo_node_fill_child                 TYPE REF TO if_ixml_element,
+           lo_node_bgcolor                    TYPE REF TO if_ixml_element,
+           lo_node_fgcolor                    TYPE REF TO if_ixml_element,
            lo_fill                            TYPE REF TO zcl_excel_style_fill,
            ls_color                           TYPE t_color.
 
-  lo_node ?= ip_xml-&gt;find_from_name( &apos;fill&apos; ).
-  WHILE lo_node IS BOUND.
+*--------------------------------------------------------------------*
+* We need a table of used fillformats to build up our styles
+
+*          Following is an example how this part of a file could be set up
+*          &lt;fill&gt;
+*              &lt;patternFill patternType=&quot;gray125&quot;/&gt;
+*          &lt;/fill&gt;
+*          &lt;fill&gt;
+*              &lt;patternFill patternType=&quot;solid&quot;&gt;
+*                  &lt;fgColor rgb=&quot;FFFFFF00&quot;/&gt;
+*                  &lt;bgColor indexed=&quot;64&quot;/&gt;
+*              &lt;/patternFill&gt;
+*          &lt;/fill&gt;
+*--------------------------------------------------------------------*
+
+  lo_node_fill ?= ip_xml-&gt;find_from_name( &apos;fill&apos; ).
+  WHILE lo_node_fill IS BOUND.
 
     CREATE OBJECT lo_fill.
-    lo_node2 ?= lo_node-&gt;get_first_child( ).
-    lv_value = lo_node2-&gt;get_name( ).
+    lo_node_fill_child ?= lo_node_fill-&gt;get_first_child( ).
+    lv_value            = lo_node_fill_child-&gt;get_name( ).
     CASE lv_value.
 
+*--------------------------------------------------------------------*
+* Patternfill
+*--------------------------------------------------------------------*
       WHEN &apos;patternFill&apos;.
-        lo_fill-&gt;filltype = lo_node2-&gt;get_attribute( &apos;patternType&apos; ).
-        lo_node3 = lo_node2-&gt;find_from_name( &apos;bgColor&apos; ).
-        IF lo_node3 IS BOUND.
+        lo_fill-&gt;filltype = lo_node_fill_child-&gt;get_attribute( &apos;patternType&apos; ).
+*--------------------------------------------------------------------*
+* Patternfill - background color
+*--------------------------------------------------------------------*
+        lo_node_bgcolor = lo_node_fill_child-&gt;find_from_name( &apos;bgColor&apos; ).
+        IF lo_node_bgcolor IS BOUND.
           fill_struct_from_attributes( EXPORTING
-                                         ip_element   =  lo_node3
+                                         ip_element   = lo_node_bgcolor
                                        CHANGING
                                          cp_structure = ls_color ).
 
@@ -1346,10 +1464,13 @@ endmethod.</source>
           lo_fill-&gt;bgcolor-tint = ls_color-tint.
         ENDIF.
 
-        lo_node3 = lo_node-&gt;find_from_name( &apos;fgColor&apos; ).
-        IF lo_node3 IS BOUND.
+*--------------------------------------------------------------------*
+* Patternfill - foreground color
+*--------------------------------------------------------------------*
+        lo_node_fgcolor = lo_node_fill-&gt;find_from_name( &apos;fgColor&apos; ).
+        IF lo_node_fgcolor IS BOUND.
           fill_struct_from_attributes( EXPORTING
-                                         ip_element   =  lo_node3
+                                         ip_element   = lo_node_fgcolor
                                        CHANGING
                                          cp_structure = ls_color ).
 
@@ -1364,6 +1485,10 @@ endmethod.</source>
           lo_fill-&gt;fgcolor-tint = ls_color-tint.
         ENDIF.
 
+
+*--------------------------------------------------------------------*
+* gradientFill
+*--------------------------------------------------------------------*
       WHEN &apos;gradientFill&apos;.
         &quot; 2do§1   Support gradientFill
 
@@ -1371,76 +1496,117 @@ endmethod.</source>
 
     ENDCASE.
 
+
     INSERT lo_fill INTO TABLE ep_fills.
-    lo_node ?= lo_node-&gt;get_next( ).
+
+    lo_node_fill ?= lo_node_fill-&gt;get_next( ).
 
   ENDWHILE.
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fonts&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="EP_FONTS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FONTS"/>
-  <source>method LOAD_STYLE_FONTS.
+  <source>METHOD load_style_fonts.
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wip )              2012-11-18
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
 *          removing unused variables
+*          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
-  DATA:       lo_node                         TYPE REF TO if_ixml_element,
+  DATA:       lo_node_font                    TYPE REF TO if_ixml_element,
               lo_node2                        TYPE REF TO if_ixml_element,
               lo_font                         TYPE REF TO zcl_excel_style_font,
               ls_color                        TYPE t_color.
 
-  lo_node ?= ip_xml-&gt;find_from_name( &apos;font&apos; ).
-  WHILE lo_node IS BOUND.
+*--------------------------------------------------------------------*
+* We need a table of used fonts to build up our styles
+
+*          Following is an example how this part of a file could be set up
+*          &lt;font&gt;
+*              &lt;sz val=&quot;11&quot;/&gt;
+*              &lt;color theme=&quot;1&quot;/&gt;
+*              &lt;name val=&quot;Calibri&quot;/&gt;
+*              &lt;family val=&quot;2&quot;/&gt;
+*              &lt;scheme val=&quot;minor&quot;/&gt;
+*          &lt;/font&gt;
+*--------------------------------------------------------------------*
+  lo_node_font ?= ip_xml-&gt;find_from_name( &apos;font&apos; ).
+  WHILE lo_node_font IS BOUND.
 
     CREATE OBJECT lo_font.
-
-    IF lo_node-&gt;find_from_name( &apos;b&apos; ) IS BOUND.
+*--------------------------------------------------------------------*
+*   Bold
+*--------------------------------------------------------------------*
+    IF lo_node_font-&gt;find_from_name( &apos;b&apos; ) IS BOUND.
       lo_font-&gt;bold = abap_true.
     ENDIF.
 
-    IF lo_node-&gt;find_from_name( &apos;i&apos; ) IS BOUND.
+*--------------------------------------------------------------------*
+*   Italic
+*--------------------------------------------------------------------*
+    IF lo_node_font-&gt;find_from_name( &apos;i&apos; ) IS BOUND.
       lo_font-&gt;italic = abap_true.
     ENDIF.
 
-    lo_node2 = lo_node-&gt;find_from_name( &apos;u&apos; ).
+*--------------------------------------------------------------------*
+*   Underline
+*--------------------------------------------------------------------*
+    lo_node2 = lo_node_font-&gt;find_from_name( &apos;u&apos; ).
     IF lo_node2 IS BOUND.
       lo_font-&gt;underline      = abap_true.
       lo_font-&gt;underline_mode = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    IF lo_node-&gt;find_from_name( &apos;strike&apos; ) IS BOUND.
+*--------------------------------------------------------------------*
+*   StrikeThrough
+*--------------------------------------------------------------------*
+    IF lo_node_font-&gt;find_from_name( &apos;strike&apos; ) IS BOUND.
       lo_font-&gt;strikethrough = abap_true.
     ENDIF.
 
-    lo_node2 = lo_node-&gt;find_from_name( &apos;sz&apos; ).
+*--------------------------------------------------------------------*
+*   Fontsize
+*--------------------------------------------------------------------*
+    lo_node2 = lo_node_font-&gt;find_from_name( &apos;sz&apos; ).
     IF lo_node2 IS BOUND.
       lo_font-&gt;size = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    lo_node2 = lo_node-&gt;find_from_name( &apos;name&apos; ).
+*--------------------------------------------------------------------*
+*   Fontname
+*--------------------------------------------------------------------*
+    lo_node2 = lo_node_font-&gt;find_from_name( &apos;name&apos; ).
     IF lo_node2 IS BOUND.
       lo_font-&gt;name = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    lo_node2 = lo_node-&gt;find_from_name( &apos;family&apos; ).
+*--------------------------------------------------------------------*
+*   Fontfamily
+*--------------------------------------------------------------------*
+    lo_node2 = lo_node_font-&gt;find_from_name( &apos;family&apos; ).
     IF lo_node2 IS BOUND.
       lo_font-&gt;family = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    lo_node2 = lo_node-&gt;find_from_name( &apos;scheme&apos; ).
+*--------------------------------------------------------------------*
+*   Fontscheme
+*--------------------------------------------------------------------*
+    lo_node2 = lo_node_font-&gt;find_from_name( &apos;scheme&apos; ).
     IF lo_node2 IS BOUND.
       lo_font-&gt;scheme = lo_node2-&gt;get_attribute( &apos;val&apos; ).
     ENDIF.
 
-    lo_node2 = lo_node-&gt;find_from_name( &apos;color&apos; ).
+*--------------------------------------------------------------------*
+*   Fontcolor
+*--------------------------------------------------------------------*
+    lo_node2 = lo_node_font-&gt;find_from_name( &apos;color&apos; ).
     IF lo_node2 IS BOUND.
       fill_struct_from_attributes( EXPORTING
                                      ip_element   =  lo_node2
@@ -1459,12 +1625,12 @@ endmethod.</source>
 
     INSERT lo_font INTO TABLE ep_fonts.
 
-    lo_node ?= lo_node-&gt;get_next( ).
+    lo_node_font ?= lo_node_font-&gt;get_next( ).
 
   ENDWHILE.
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -1477,14 +1643,30 @@ endmethod.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-11
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
+*          adding comments to explain what we are trying to achieve
 *          aligning code
 *--------------------------------------------------------------------*
   DATA:       lo_node_numfmt                  TYPE REF TO if_ixml_element,
               ls_num_format                   TYPE t_num_format.
 
+*--------------------------------------------------------------------*
+* We need a table of used numberformats to build up our styles
+* there are two kinds of numberformats
+* §1 those that have been explicitly added by the createor of the excel-file
+* §2 and built-in numberformats
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* §1   Get non-internal numberformats that are found in the file explicitly
+
+*         Following is an example how this part of a file could be set up
+*         &lt;numFmts count=&quot;1&quot;&gt;
+*             &lt;numFmt formatCode=&quot;#,###,###,###,##0.00&quot; numFmtId=&quot;164&quot;/&gt;
+*         &lt;/numFmts&gt;
+*--------------------------------------------------------------------*
   lo_node_numfmt ?= ip_xml-&gt;find_from_name( &apos;numFmt&apos; ).
   WHILE lo_node_numfmt IS BOUND.
 
@@ -1506,6 +1688,9 @@ endmethod.</source>
     insert ls_num_format into table ep_num_formats.
   END-OF-DEFINITION.
 
+*--------------------------------------------------------------------*
+* §1 Get internal predefined numberformats
+*--------------------------------------------------------------------*
   predefined_format    &apos;1&apos;        &apos;0&apos;.
   predefined_format    &apos;2&apos;        &apos;0.00&apos;.
   predefined_format    &apos;3&apos;        &apos;#,##0&apos;.
@@ -1555,7 +1740,7 @@ endmethod.</source>
   predefined_format   &apos;47&apos;        &apos;mm:ss.0&apos;.
   predefined_format   &apos;48&apos;        &apos;##0.0E+0&apos;.
   predefined_format   &apos;49&apos;        &apos;@&apos;.
-* 2do§1     Is 49 really the last redefined format?
+* 2do§1     Is 49 really the last predefined format?
 
 
 endmethod.</source>
@@ -2500,6 +2685,7 @@ endmethod.</source>
 *        2do§1   Determine whether the replacement should be done
 *                iterative to allow /../../..   or something alike
 *        2do§2   Determine whether /./ has to be supported as well
+*        2do§3   Create unit-test for this method
 *
 *                Please don&apos;t just delete these ToDos if they are not
 *                needed but leave a comment that states this
