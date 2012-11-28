@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="9551494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_WRITER_2007 definition
   public
   create public .
@@ -5023,9 +5023,12 @@ endmethod.</source>
                                       value = lv_value ).
     lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_sheetid
                                       value = lv_syindex ).
-    IF lo_worksheet-&gt;zif_excel_sheet_properties~hidden EQ abap_true.
+    IF lo_worksheet-&gt;zif_excel_sheet_properties~hidden EQ zif_excel_sheet_properties=&gt;c_hidden.
       lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_state
                                         value = &apos;hidden&apos; ).
+    ELSEIF lo_worksheet-&gt;zif_excel_sheet_properties~hidden EQ zif_excel_sheet_properties=&gt;c_veryhidden.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_state
+                                        value = &apos;veryHidden&apos; ).
     ENDIF.
     lo_sub_element-&gt;set_attribute_ns( name    = lc_xml_attr_id
                                       prefix  = lc_r_ns
