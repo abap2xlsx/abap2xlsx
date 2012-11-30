@@ -36,6 +36,9 @@ START-OF-SELECTION.
       CREATE OBJECT reader TYPE zcl_excel_reader_2007.
 *      CREATE OBJECT reader TYPE zcl_excel_reader_xlsm.
       excel = reader-&gt;load_file(  p_upfile ).
+
+      &quot;Use template for charts
+      excel-&gt;use_template = abap_true.
 *--------------------------------------------------------------------*
 * CL_ABAP_ZIP may have problems reading LibreOffice generated files
 * You may have to use alternate ZIP-Class - see comments in issue #234 in abap2xlsx at developers network

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" UUID="02023211AE4F1EE28EDF2A8F8A97065E" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZCL_EXCEL_GRAPH definition
+  public
+  create public .
+
+public section.
+*&quot;* public components of class ZCL_EXCEL_GRAPH
+*&quot;* do not include other source files here!!!
+
+  data REF type STRING .
+  data NS_1904VAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_LANGVAL type STRING value &apos;it-IT&apos;. &quot;#EC NOTEXT .
+  data NS_ROUNDEDCORNERSVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .</publicSection>
+ <protectedSection>protected section.
+*&quot;* protected components of class ZCL_EXCEL_GRAPH
+*&quot;* do not include other source files here!!!</protectedSection>
+ <privateSection>private section.
+*&quot;* private components of class ZCL_EXCEL_GRAPH
+*&quot;* do not include other source files here!!!</privateSection>
+ <localImplementation>*&quot;* use this source file for the definition and implementation of
+*&quot;* local helper classes, interface definitions and type
+*&quot;* declarations</localImplementation>
+ <localTypes>*&quot;* use this source file for any type of declarations (class
+*&quot;* definitions, interfaces or type declarations) you need for
+*&quot;* components in the private section</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_1904VAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_LANGVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTVALUE="&apos;it-IT&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_ROUNDEDCORNERSVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="REF" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+</CLAS>

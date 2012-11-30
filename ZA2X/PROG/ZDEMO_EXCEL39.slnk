@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL39" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Drawings" LENGTH="25 "/>
+   <textElement ID="S" KEY="POBJTYPE" ENTRY="D       ." LENGTH="9 "/>
+   <textElement ID="S" KEY="P_CLASS" ENTRY="D       ." LENGTH="9 "/>
+   <textElement ID="S" KEY="P_OBJID" ENTRY="D       ." LENGTH="9 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="9 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL16
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  zdemo_excel39.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_drawing              TYPE REF TO zcl_excel_drawing.
+
+
+DATA: ls_io TYPE skwf_io.
+
+DATA: ls_upper  TYPE ZEXCEL_DRAWING_LOCATION,
+      ls_lower  TYPE ZEXCEL_DRAWING_LOCATION.
+
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;39_Charts.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
+
+START-OF-SELECTION.
+
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
+
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;set_title( &apos;Sheet1&apos; ).
+
+  &quot; create global drawing, set position and media from web repository
+  lo_drawing = lo_worksheet-&gt;excel-&gt;add_new_drawing(
+                    ip_type  = zcl_excel_drawing=&gt;type_chart
+                    ip_title = &apos;titolografico&apos; ).
+
+  data lo_bar type ref to ZCL_EXCEL_GRAPH_BARS.
+
+  create object lo_bar.
+
+  lo_bar-&gt;REF = &apos;&apos;. &quot;VALUE RANGE FOR CHART
+
+  lo_drawing-&gt;graph = lo_bar.
+
+  ls_lower-row = 10.
+  ls_lower-col = 10.
+
+  lo_drawing-&gt;set_position2(
+    EXPORTING
+      ip_from   = ls_upper
+      ip_to     = ls_lower ).
+
+  lo_drawing-&gt;set_media(
+    EXPORTING
+      ip_media = &apos;0&apos; &quot;usato per il template
+      ip_media_type = &apos;xml&apos;
+      ip_width = 0 &quot;usati solo per le immagini
+      ip_height = 0 ). &quot;usati solo per le immagini
+
+
+  lo_worksheet-&gt;add_drawing( lo_drawing ).
+
+
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
+</PROG>

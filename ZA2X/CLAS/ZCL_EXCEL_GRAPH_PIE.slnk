@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_GRAPH_PIE" VERSION="1" LANGU="E" DESCRIPT="Pie Graphic" UUID="02023211AE4F1EE28EDF2CCF6EE54660" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_GRAPH">
+ <publicSection>class ZCL_EXCEL_GRAPH_PIE definition
+  public
+  inheriting from ZCL_EXCEL_GRAPH
+  final
+  create public .
+
+public section.
+*&quot;* public components of class ZCL_EXCEL_GRAPH_PIE
+*&quot;* do not include other source files here!!!</publicSection>
+ <protectedSection>protected section.
+*&quot;* protected components of class ZCL_EXCEL_GRAPH_PIE
+*&quot;* do not include other source files here!!!</protectedSection>
+ <privateSection>private section.
+*&quot;* private components of class ZCL_EXCEL_GRAPH_PIE
+*&quot;* do not include other source files here!!!</privateSection>
+ <localImplementation>*&quot;* use this source file for the definition and implementation of
+*&quot;* local helper classes, interface definitions and type
+*&quot;* declarations</localImplementation>
+ <localTypes>*&quot;* use this source file for any type of declarations (class
+*&quot;* definitions, interfaces or type declarations) you need for
+*&quot;* components in the private section</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <inheritance CLSNAME="ZCL_EXCEL_GRAPH_PIE" REFCLSNAME="ZCL_EXCEL_GRAPH" VERSION="1" STATE="1"/>
+</CLAS>
