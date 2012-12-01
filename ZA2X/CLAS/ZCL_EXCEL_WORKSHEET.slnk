@@ -2935,14 +2935,16 @@ endmethod.</source>
   ls_settings-bottom_right_column = zcl_excel_common=&gt;convert_column2alpha( lv_maxcol ).
   ls_settings-bottom_right_row    = lv_maxrow.
 
+  lv_column_int = zcl_excel_common=&gt;convert_column2int( ls_settings-top_left_column ).
+
   &quot;Check if overlapping areas exist
   lo_iterator = me-&gt;tables-&gt;if_object_collection~get_iterator( ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
     lo_curtable ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-    IF ls_settings-top_left_row GE lo_curtable-&gt;settings-top_left_row AND ls_settings-top_left_row LE lo_curtable-&gt;settings-bottom_right_row
-      OR ls_settings-bottom_right_row GE lo_curtable-&gt;settings-top_left_row AND ls_settings-bottom_right_row LE lo_curtable-&gt;settings-bottom_right_row.
-    ELSEIF lv_column_int GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_column_int LE lo_curtable-&gt;settings-bottom_right_column
-      OR lv_maxcol GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_maxcol LE lo_curtable-&gt;settings-bottom_right_column.
+    IF ( ls_settings-top_left_row GE lo_curtable-&gt;settings-top_left_row AND ls_settings-top_left_row LE lo_curtable-&gt;settings-bottom_right_row
+      OR ls_settings-bottom_right_row GE lo_curtable-&gt;settings-top_left_row AND ls_settings-bottom_right_row LE lo_curtable-&gt;settings-bottom_right_row )
+      and ( lv_column_int GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_column_int LE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-bottom_right_column )
+      OR lv_maxcol GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_maxcol LE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-bottom_right_column ) ).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = &apos;It is not possible to bind two tables to an excelsheet with overlapping areas.&apos;.

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZERROR_A2X_BIND_TABLE_OVERLAP" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="38 "/>
+   <textElement ID="S" KEY="P_EMPTY" ENTRY="        Leave Table Empty" LENGTH="25 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="24 "/>
+  </language>
+ </textPool>
+ <source>REPORT  zerror_a2x_bind_table_overlap.
+
+TYPE-POOLS: abap.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+
+DATA: ls_table_settings       TYPE zexcel_s_table_settings.
+
+
+DATA: lv_title TYPE zexcel_sheet_title,
+      lt_carr  TYPE TABLE OF scarr,
+      row TYPE zexcel_cell_row VALUE 2,
+      lo_range TYPE REF TO zcl_excel_range.
+DATA: lo_data_validation  TYPE REF TO zcl_excel_data_validation.
+FIELD-SYMBOLS: &lt;carr&gt; LIKE LINE OF lt_carr.
+
+CONSTANTS: c_airlines TYPE string VALUE &apos;Airlines&apos;.
+
+
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;03_iTab.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
+
+START-OF-SELECTION.
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
+
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Internal table&apos;).
+
+  DATA lt_test TYPE TABLE OF sflight.
+
+  SELECT * FROM sflight INTO TABLE lt_test.             &quot;#EC CI_NOWHERE
+
+* First table - A:M
+
+  ls_table_settings-table_style  = zcl_excel_table=&gt;builtinstyle_medium2.
+  ls_table_settings-show_row_stripes = abap_true.
+  ls_table_settings-top_left_column  = &apos;A&apos;.
+
+  lo_worksheet-&gt;bind_table( ip_table          = lt_test
+                            is_table_settings = ls_table_settings ).
+
+* Second (overlapping) table:  K:T
+
+  ls_table_settings-top_left_column  = &apos;K&apos;.
+
+  lo_worksheet-&gt;bind_table( ip_table          = lt_test
+                            is_table_settings = ls_table_settings ).
+
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
+</PROG>
