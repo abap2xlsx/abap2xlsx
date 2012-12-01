@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" UUID="C1BF274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_WORKSHEET definition
   public
   final
@@ -596,8 +596,13 @@ endclass.</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
+  <language SPRAS="D">
+   <textElement ID="I" KEY="001" ENTRY="Tabelle" LENGTH="132 "/>
+   <textElement ID="I" KEY="400" ENTRY="Tabelle überschneidet sich mit schon eingebundener Tabelle und wird diesem Tabellenblatt nicht hinzugefügt." LENGTH="132 "/>
+  </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
+   <textElement ID="I" KEY="400" ENTRY="Table overlaps with previously bound table and will not be added to worksheet." LENGTH="132 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_WORKSHEET" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
@@ -2862,38 +2867,51 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ES_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD bind_table.
-
-  DATA:
-        lv_row_int            TYPE zexcel_cell_row,
-        lv_first_row          TYPE zexcel_cell_row,
-        lv_last_row           TYPE zexcel_cell_row,
-        lv_column_int         TYPE zexcel_cell_column,
-        lv_column_alpha       TYPE zexcel_cell_column_alpha,
-        lt_field_catalog      TYPE zexcel_t_fieldcatalog,
-        lv_id                 TYPE i,
-        lv_rows               TYPE i,
-        lv_formula            TYPE string,
-        ls_settings           TYPE zexcel_s_table_settings,
-        lo_table              TYPE REF TO zcl_excel_table,
-        lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
-        lv_value              TYPE string,
-        lv_syindex            TYPE char3.
-
-  DATA lv_columns TYPE i.
-  DATA lt_columns      TYPE zexcel_t_fieldcatalog.
-  DATA lv_maxcol TYPE i.
-  DATA lv_maxrow TYPE i.
-  DATA lo_iterator TYPE REF TO cl_object_collection_iterator.
-  DATA lo_curtable TYPE REF TO zcl_excel_table.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (wi p)              2012-12-01
+*              - ...
+*          aligning code
+*          message made to support multilinguality
+*--------------------------------------------------------------------*
+* issue #237   - Check if overlapping areas exist
+*              - Alessandro Iannacci                        2012-12-01
+* changes:     - Added raise if overlaps are detected
+*--------------------------------------------------------------------*
 
   CONSTANTS:
-        lc_top_left_column  TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
-        lc_top_left_row     TYPE zexcel_cell_row VALUE &apos;3&apos;.
+              lc_top_left_column              TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
+              lc_top_left_row                 TYPE zexcel_cell_row VALUE &apos;3&apos;.
 
-  FIELD-SYMBOLS: &lt;ls_field_catalog&gt;         TYPE zexcel_s_fieldcatalog,
-                 &lt;ls_field_catalog_custom&gt;  TYPE zexcel_s_fieldcatalog,
-                 &lt;fs_table_line&gt;            TYPE any,
-                 &lt;fs_fldval&gt;                TYPE any.
+  DATA:
+              lv_row_int                      TYPE zexcel_cell_row,
+              lv_first_row                    TYPE zexcel_cell_row,
+              lv_last_row                     TYPE zexcel_cell_row,
+              lv_column_int                   TYPE zexcel_cell_column,
+              lv_column_alpha                 TYPE zexcel_cell_column_alpha,
+              lt_field_catalog                TYPE zexcel_t_fieldcatalog,
+              lv_id                           TYPE i,
+              lv_rows                         TYPE i,
+              lv_formula                      TYPE string,
+              ls_settings                     TYPE zexcel_s_table_settings,
+              lo_table                        TYPE REF TO zcl_excel_table,
+              lt_column_name_buffer           TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
+              lv_value                        TYPE string,
+              lv_syindex                      TYPE char3,
+              lv_errormessage                 TYPE string,                                            &quot;ins issue #237
+
+              lv_columns                      TYPE i,
+              lt_columns                      TYPE zexcel_t_fieldcatalog,
+              lv_maxcol                       TYPE i,
+              lv_maxrow                       TYPE i,
+              lo_iterator                     TYPE REF TO cl_object_collection_iterator,
+              lo_curtable                     TYPE REF TO zcl_excel_table.
+
+  FIELD-SYMBOLS:
+              &lt;ls_field_catalog&gt;              TYPE zexcel_s_fieldcatalog,
+              &lt;ls_field_catalog_custom&gt;       TYPE zexcel_s_fieldcatalog,
+              &lt;fs_table_line&gt;                 TYPE ANY,
+              &lt;fs_fldval&gt;                     TYPE ANY.
 
   ls_settings = is_table_settings.
 
@@ -2917,6 +2935,9 @@ endmethod.</source>
 
   SORT lt_field_catalog BY position.
 
+*--------------------------------------------------------------------*
+*  issue #237   Check if overlapping areas exist  Start
+*--------------------------------------------------------------------*
   &quot;Get the number of columns for the current table
   lt_columns = lt_field_catalog.
   DELETE lt_columns WHERE dynpfld NE abap_true.
@@ -2930,26 +2951,36 @@ endmethod.</source>
   DESCRIBE TABLE ip_table LINES lv_rows.
 
   &quot;Calculate the bottom right row for the current table
-  lv_maxcol = lv_column_int + lv_columns - 1.
-  lv_maxrow = lv_row_int + lv_rows - 1.
+  lv_maxcol                       = lv_column_int + lv_columns - 1.
+  lv_maxrow                       = lv_row_int    + lv_rows - 1.
   ls_settings-bottom_right_column = zcl_excel_common=&gt;convert_column2alpha( lv_maxcol ).
   ls_settings-bottom_right_row    = lv_maxrow.
 
-  lv_column_int = zcl_excel_common=&gt;convert_column2int( ls_settings-top_left_column ).
+  lv_column_int                   = zcl_excel_common=&gt;convert_column2int( ls_settings-top_left_column ).
 
-  &quot;Check if overlapping areas exist
   lo_iterator = me-&gt;tables-&gt;if_object_collection~get_iterator( ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+
     lo_curtable ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-    IF ( ls_settings-top_left_row GE lo_curtable-&gt;settings-top_left_row AND ls_settings-top_left_row LE lo_curtable-&gt;settings-bottom_right_row
-      OR ls_settings-bottom_right_row GE lo_curtable-&gt;settings-top_left_row AND ls_settings-bottom_right_row LE lo_curtable-&gt;settings-bottom_right_row )
-      and ( lv_column_int GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_column_int LE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-bottom_right_column )
-      OR lv_maxcol GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_maxcol LE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-bottom_right_column ) ).
+    IF  (    (  ls_settings-top_left_row     GE lo_curtable-&gt;settings-top_left_row                             AND ls_settings-top_left_row     LE lo_curtable-&gt;settings-bottom_right_row )
+          OR
+             (  ls_settings-bottom_right_row GE lo_curtable-&gt;settings-top_left_row                             AND ls_settings-bottom_right_row LE lo_curtable-&gt;settings-bottom_right_row )
+        )
+      AND
+        (    (  lv_column_int GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_column_int LE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-bottom_right_column ) )
+          OR
+             (  lv_maxcol     GE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-top_left_column ) AND lv_maxcol     LE zcl_excel_common=&gt;convert_column2int( lo_curtable-&gt;settings-bottom_right_column ) )
+        ).
+      lv_errormessage = &apos;Table overlaps with previously bound table and will not be added to worksheet.&apos;(400).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
-          error = &apos;It is not possible to bind two tables to an excelsheet with overlapping areas.&apos;.
+          error = lv_errormessage.
     ENDIF.
+
   ENDWHILE.
+*--------------------------------------------------------------------*
+*  issue #237   Check if overlapping areas exist  End
+*--------------------------------------------------------------------*
 
   CREATE OBJECT lo_table.
   lo_table-&gt;settings = ls_settings.
@@ -2982,6 +3013,7 @@ endmethod.</source>
       &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
     ENDIF.
     WHILE 1 = 1.
+
       READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value BINARY SEARCH.
       IF sy-subrc &lt;&gt; 0.
         &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
@@ -2991,6 +3023,7 @@ endmethod.</source>
         lv_syindex = sy-index.
         CONCATENATE &lt;ls_field_catalog&gt;-scrtext_l lv_syindex INTO lv_value.
       ENDIF.
+
     ENDWHILE.
     &quot; First of all write column header
     IF &lt;ls_field_catalog&gt;-style_header IS NOT INITIAL.
@@ -3006,6 +3039,7 @@ endmethod.</source>
 
     ADD 1 TO lv_row_int.
     LOOP AT ip_table ASSIGNING &lt;fs_table_line&gt;.
+
       ASSIGN COMPONENT &lt;ls_field_catalog&gt;-fieldname OF STRUCTURE &lt;fs_table_line&gt; TO &lt;fs_fldval&gt;.
       IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
         me-&gt;set_cell( ip_column = lv_column_alpha
@@ -3018,6 +3052,7 @@ endmethod.</source>
                       ip_value  = &lt;fs_fldval&gt; ).
       ENDIF.
       ADD 1 TO lv_row_int.
+
     ENDLOOP.
     IF sy-subrc &lt;&gt; 0. &quot;create empty row if table has no data
       me-&gt;set_cell( ip_column = lv_column_alpha
@@ -3026,7 +3061,9 @@ endmethod.</source>
       ADD 1 TO lv_row_int.
     ENDIF.
 
+*--------------------------------------------------------------------*
     &quot; totals
+*--------------------------------------------------------------------*
     IF &lt;ls_field_catalog&gt;-totals_function IS NOT INITIAL.
       lv_formula = lo_table-&gt;get_totals_formula( ip_column = &lt;ls_field_catalog&gt;-scrtext_l ip_function = &lt;ls_field_catalog&gt;-totals_function ).
       IF &lt;ls_field_catalog&gt;-style_total IS NOT INITIAL.
@@ -3044,7 +3081,9 @@ endmethod.</source>
     lv_row_int = ls_settings-top_left_row.
     ADD 1 TO lv_column_int.
 
+*--------------------------------------------------------------------*
     &quot; conditional formatting
+*--------------------------------------------------------------------*
     IF &lt;ls_field_catalog&gt;-cond_style IS NOT INITIAL.
       lv_first_row    = ls_settings-top_left_row + 1. &quot; +1 to exclude header
       lv_last_row     = ls_settings-top_left_row + lv_rows.
@@ -3053,9 +3092,12 @@ endmethod.</source>
                                                 ip_stop_column   = lv_column_alpha
                                                 ip_stop_row      = lv_last_row ).
     ENDIF.
+
   ENDLOOP.
 
+*--------------------------------------------------------------------*
   &quot; Set field catalog
+*--------------------------------------------------------------------*
   lo_table-&gt;fieldcat = lt_field_catalog[].
 
   es_table_settings = ls_settings.
