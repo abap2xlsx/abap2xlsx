@@ -5,10 +5,11 @@
   final
   create public .
 
-public section.
 *&quot;* public components of class ZCL_EXCEL_RANGE
 *&quot;* do not include other source files here!!!
+public section.
 
+  constants GCV_PRINT_TITLE_NAME type STRING value &apos;_xlnm.Print_Titles&apos;. &quot;#EC NOTEXT
   data NAME type ZEXCEL_RANGE_NAME .
   data GUID type ZEXCEL_RANGE_GUID .
 
@@ -32,9 +33,9 @@ public section.
  <protectedSection>*&quot;* protected components of class ZABAP_EXCEL_WORKSHEET
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_RANGE
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_RANGE
 *&quot;* do not include other source files here!!!
+private section.
 
   data VALUE type ZEXCEL_RANGE_VALUE .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
@@ -45,9 +46,10 @@ protected section.</protectedSection>
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <attribute CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID for the OLTP System (RAW16)" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_RANGE_GUID" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="NAME" VERSION="1" LANGU="E" DESCRIPT="Range Name" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_RANGE_NAME" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_RANGE_VALUE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="GCV_PRINT_TITLE_NAME" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;_xlnm.Print_Titles&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID for the OLTP System (RAW16)" EXPOSURE="2" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_RANGE_GUID" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="NAME" VERSION="1" LANGU="E" DESCRIPT="Range Name" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_RANGE_NAME" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_RANGE_VALUE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <method CLSNAME="ZCL_EXCEL_RANGE" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CONSTRUCTOR.
 endmethod.</source>
