@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" UUID="02023211AE4F1EE28EDF2A8F8A97065E" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="T_PAGEMARGINS" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="17 " SRCCOLUMN2="23 " TYPESRC_LENG="229 " TYPESRC="BEGIN OF t_pagemargins,
+            b TYPE string,
+            l TYPE string,
+            r TYPE string,
+            t TYPE string,
+            header TYPE string,
+            footer TYPE string,
+    END OF t_pagemargins
+"/>
  <publicSection>class ZCL_EXCEL_GRAPH definition
   public
   create public .
@@ -8,10 +17,27 @@ public section.
 *&quot;* public components of class ZCL_EXCEL_GRAPH
 *&quot;* do not include other source files here!!!
 
+  types:
+    BEGIN OF t_pagemargins,
+            b TYPE string,
+            l TYPE string,
+            r TYPE string,
+            t TYPE string,
+            header TYPE string,
+            footer TYPE string,
+    END OF t_pagemargins .
+
   data REF type STRING .
   data NS_1904VAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
   data NS_LANGVAL type STRING value &apos;it-IT&apos;. &quot;#EC NOTEXT .
-  data NS_ROUNDEDCORNERSVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .</publicSection>
+  data NS_ROUNDEDCORNERSVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data PAGEMARGINS type T_PAGEMARGINS .
+  data NS_AUTOTITLEDELETEDVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_PLOTVISONLYVAL type STRING value &apos;1&apos;. &quot;#EC NOTEXT .
+  data NS_DISPBLANKSASVAL type STRING value &apos;gap&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWDLBLSOVERMAXVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+
+  methods CONSTRUCTOR .</publicSection>
  <protectedSection>protected section.
 *&quot;* protected components of class ZCL_EXCEL_GRAPH
 *&quot;* do not include other source files here!!!</protectedSection>
@@ -27,7 +53,23 @@ public section.
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_1904VAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_AUTOTITLEDELETEDVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="6 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_DISPBLANKSASVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="8 " ATTDECLTYP="0" ATTVALUE="&apos;gap&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_LANGVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTVALUE="&apos;it-IT&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_PLOTVISONLYVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="7 " ATTDECLTYP="0" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_ROUNDEDCORNERSVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_SHOWDLBLSOVERMAXVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="9 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="PAGEMARGINS" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_PAGEMARGINS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="REF" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CONSTRUCTOR.
+  &quot;Load default values
+  me-&gt;pagemargins-b = &apos;0.75&apos;.
+  me-&gt;pagemargins-l = &apos;0.7&apos;.
+  me-&gt;pagemargins-r = &apos;0.7&apos;.
+  me-&gt;pagemargins-t = &apos;0.75&apos;.
+  me-&gt;pagemargins-header = &apos;0.3&apos;.
+  me-&gt;pagemargins-footer = &apos;0.3&apos;.
+endmethod.</source>
+ </method>
 </CLAS>

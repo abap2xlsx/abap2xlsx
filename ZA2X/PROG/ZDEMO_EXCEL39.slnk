@@ -23,11 +23,16 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_drawing              TYPE REF TO zcl_excel_drawing.
 
+DATA lv_value TYPE i.
 
 DATA: ls_io TYPE skwf_io.
 
-DATA: ls_upper  TYPE ZEXCEL_DRAWING_LOCATION,
-      ls_lower  TYPE ZEXCEL_DRAWING_LOCATION.
+DATA: ls_upper  TYPE zexcel_drawing_location,
+      ls_lower  TYPE zexcel_drawing_location.
+
+DATA lo_bar TYPE REF TO zcl_excel_graph_bars.
+DATA lo_pie TYPE REF TO zcl_excel_graph_pie.
+DATA lv_media TYPE xstring.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE &apos;39_Charts.xlsx&apos;.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -41,22 +46,28 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;set_title( &apos;Sheet1&apos; ).
 
-  &quot; create global drawing, set position and media from web repository
+  &quot; Set values for chart
+  lv_value = 1.
+  lo_worksheet-&gt;set_cell( ip_column = &apos;J&apos; ip_row = 1 ip_value = lv_value ).
+  lv_value = 2.
+  lo_worksheet-&gt;set_cell( ip_column = &apos;J&apos; ip_row = 2 ip_value = lv_value ).
+  lv_value = 3.
+  lo_worksheet-&gt;set_cell( ip_column = &apos;J&apos; ip_row = 3 ip_value = lv_value ).
+
+  &quot; Create a pie chart and assign value range
+  CREATE OBJECT lo_pie.
+  lo_pie-&gt;ref = &apos;Sheet1!$J$1:$J$3&apos;. &quot;VALUE RANGE FOR CHART
+
+  &quot; Create global drawing, set type as pie chart, assign chart, set position and media type
   lo_drawing = lo_worksheet-&gt;excel-&gt;add_new_drawing(
                     ip_type  = zcl_excel_drawing=&gt;type_chart
-                    ip_title = &apos;titolografico&apos; ).
+                    ip_title = &apos;CHART TITLE&apos; ).
+  lo_drawing-&gt;graph = lo_pie.
+  lo_drawing-&gt;graph_type = zcl_excel_drawing=&gt;c_graph_pie.
 
-  data lo_bar type ref to ZCL_EXCEL_GRAPH_BARS.
-
-  create object lo_bar.
-
-  lo_bar-&gt;REF = &apos;&apos;. &quot;VALUE RANGE FOR CHART
-
-  lo_drawing-&gt;graph = lo_bar.
-
+  &quot;Set chart position (anchor 2 cells)
   ls_lower-row = 10.
   ls_lower-col = 10.
-
   lo_drawing-&gt;set_position2(
     EXPORTING
       ip_from   = ls_upper
@@ -64,10 +75,10 @@ START-OF-SELECTION.
 
   lo_drawing-&gt;set_media(
     EXPORTING
-      ip_media = &apos;0&apos; &quot;usato per il template
+      ip_media = lv_media &quot;used for template (binary content)
       ip_media_type = &apos;xml&apos;
-      ip_width = 0 &quot;usati solo per le immagini
-      ip_height = 0 ). &quot;usati solo per le immagini
+      ip_width = 0 &quot;used only for image types, not for charts
+      ip_height = 0 ). &quot;used only for image types, not for charts
 
 
   lo_worksheet-&gt;add_drawing( lo_drawing ).

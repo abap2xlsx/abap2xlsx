@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="9551494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <publicSection>class ZCL_EXCEL_WRITER_2007 definition
   public
   create public .
@@ -166,7 +166,7 @@ endmethod.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD create.
+  <source>method CREATE.
 
 * Office 2007 file format is a cab of several xml files with extension .xlsx
 
@@ -359,7 +359,7 @@ endmethod.</source>
 * STEP 12: Create the final zip
   ep_excel = lo_zip-&gt;save( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;[Content_Types].xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -1090,38 +1090,95 @@ endmethod.</source>
 
 
 ** Constant node name
-  CONSTANTS:  lc_xml_node_chartspace    TYPE string VALUE &apos;c:chartSpace&apos;,
-              lc_xml_node_ns_c    TYPE string VALUE &apos;http://schemas.openxmlformats.org/drawingml/2006/chart&apos;,
-              lc_xml_node_ns_a    TYPE string VALUE &apos;http://schemas.openxmlformats.org/drawingml/2006/main&apos;,
-              lc_xml_node_ns_r    TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;,
-              lc_xml_node_date1904    TYPE string VALUE &apos;c:date1904&apos;,
-              lc_xml_node_lang       TYPE string VALUE &apos;c:lang&apos;,
-              lc_xml_node_roundedcorners       TYPE string VALUE &apos;c:roundedCorners&apos;,
-              lc_xml_node_altcont       TYPE string VALUE &apos;mc:AlternateContent&apos;,
-              lc_xml_node_altcont_ns_mc       TYPE string VALUE &apos;http://schemas.openxmlformats.org/markup-compatibility/2006&apos;,
-              lc_xml_node_choice       TYPE string VALUE &apos;mc:Choice&apos;,
-              lc_xml_node_choice_ns_requires       TYPE string VALUE &apos;c14&apos;,
-              lc_xml_node_choice_ns_c14       TYPE string VALUE &apos;http://schemas.microsoft.com/office/drawing/2007/8/2/chart&apos;,
-              lc_xml_node_style       TYPE string VALUE &apos;c14:style&apos;,
-              lc_xml_node_style_ns_val       TYPE string VALUE &apos;102&apos;,
-              lc_xml_node_fallback       TYPE string VALUE &apos;mc:Fallback&apos;,
-              lc_xml_node_style2       TYPE string VALUE &apos;c:style&apos;,
-              lc_xml_node_style2_ns_val       TYPE string VALUE &apos;2&apos;.
+  CONSTANTS:  lc_xml_node_chartspace            TYPE string VALUE &apos;c:chartSpace&apos;,
+              lc_xml_node_ns_c                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/drawingml/2006/chart&apos;,
+              lc_xml_node_ns_a                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/drawingml/2006/main&apos;,
+              lc_xml_node_ns_r                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;,
+              lc_xml_node_date1904              TYPE string VALUE &apos;c:date1904&apos;,
+              lc_xml_node_lang                  TYPE string VALUE &apos;c:lang&apos;,
+              lc_xml_node_roundedcorners        TYPE string VALUE &apos;c:roundedCorners&apos;,
+              lc_xml_node_altcont               TYPE string VALUE &apos;mc:AlternateContent&apos;,
+              lc_xml_node_altcont_ns_mc         TYPE string VALUE &apos;http://schemas.openxmlformats.org/markup-compatibility/2006&apos;,
+              lc_xml_node_choice                TYPE string VALUE &apos;mc:Choice&apos;,
+              lc_xml_node_choice_ns_requires    TYPE string VALUE &apos;c14&apos;,
+              lc_xml_node_choice_ns_c14         TYPE string VALUE &apos;http://schemas.microsoft.com/office/drawing/2007/8/2/chart&apos;,
+              lc_xml_node_style                 TYPE string VALUE &apos;c14:style&apos;,
+              lc_xml_node_style_ns_val          TYPE string VALUE &apos;102&apos;,
+              lc_xml_node_fallback              TYPE string VALUE &apos;mc:Fallback&apos;,
+              lc_xml_node_style2                TYPE string VALUE &apos;c:style&apos;,
+              lc_xml_node_style2_ns_val         TYPE string VALUE &apos;2&apos;,
+
+              &quot;---------------------------CHART
+              lc_xml_node_chart                 TYPE string VALUE &apos;c:chart&apos;,
+              lc_xml_node_autoTitleDeleted      TYPE string VALUE &apos;c:autoTitleDeleted&apos;,
+                &quot;plotArea
+                lc_xml_node_plotArea            TYPE string VALUE &apos;c:plotArea&apos;,
+                lc_xml_node_layout              TYPE string VALUE &apos;c:layout&apos;,
+                  &quot;plotArea-&gt;pie
+                  lc_xml_node_pieChart          TYPE string VALUE &apos;c:pieChart&apos;,
+                  lc_xml_node_varyColors        TYPE string VALUE &apos;c:varyColors&apos;,
+                  lc_xml_node_ser               TYPE string VALUE &apos;c:ser&apos;,
+                  lc_xml_node_idx               TYPE string VALUE &apos;c:idx&apos;,
+                  lc_xml_node_order             TYPE string VALUE &apos;c:order&apos;,
+                  lc_xml_node_val               TYPE string VALUE &apos;c:val&apos;,
+                  lc_xml_node_numRef            TYPE string VALUE &apos;c:numRef&apos;,
+                  lc_xml_node_f                 TYPE string VALUE &apos;c:f&apos;, &quot;this is the range
+                  &quot;note: numcache avoided
+                  lc_xml_node_dLbls             TYPE string VALUE &apos;c:dLbls&apos;,
+                  lc_xml_node_showLegendKey     TYPE string VALUE &apos;c:showLegendKey&apos;,
+                  lc_xml_node_showVal           TYPE string VALUE &apos;c:showVal&apos;,
+                  lc_xml_node_showCatName       TYPE string VALUE &apos;c:showCatName&apos;,
+                  lc_xml_node_showSerName       TYPE string VALUE &apos;c:showSerName&apos;,
+                  lc_xml_node_showPercent       TYPE string VALUE &apos;c:showPercent&apos;,
+                  lc_xml_node_showBubbleSize    TYPE string VALUE &apos;c:showBubbleSize&apos;,
+                  lc_xml_node_showLeaderLines   TYPE string VALUE &apos;c:showLeaderLines&apos;,
+                  lc_xml_node_firstSliceAng     TYPE string VALUE &apos;c:firstSliceAng&apos;,
+                  &quot;plotArea-&gt;bar
+                  lc_xml_node_barChart          TYPE string VALUE &apos;c:barChart&apos;,
+                  lc_xml_node_catAx             TYPE string VALUE &apos;c:catAx&apos;,
+                  lc_xml_node_valAx             TYPE string VALUE &apos;c:valAx&apos;,
+                &quot;legend
+                lc_xml_node_legend              TYPE string VALUE &apos;c:legend&apos;,
+                  &quot;legend-&gt;pie
+                  lc_xml_node_legendPos         TYPE string VALUE &apos;c:legendPos&apos;,
+*                  lc_xml_node_layout            TYPE string VALUE &apos;c:layout&apos;, &quot;already exist
+                  lc_xml_node_overlay           TYPE string VALUE &apos;c:overlay&apos;,
+                  lc_xml_node_txPr              TYPE string VALUE &apos;c:txPr&apos;,
+                  lc_xml_node_bodyPr            TYPE string VALUE &apos;a:bodyPr&apos;,
+                  lc_xml_node_lstStyle          TYPE string VALUE &apos;a:lstStyle&apos;,
+                  lc_xml_node_p                 TYPE string VALUE &apos;a:p&apos;,
+                  lc_xml_node_pPr               TYPE string VALUE &apos;a:pPr&apos;,
+                  lc_xml_node_defRPr            TYPE string VALUE &apos;a:defRPr&apos;,
+                  lc_xml_node_endParaRPr        TYPE string VALUE &apos;a:endParaRPr&apos;,
+                  &quot;legend-&gt;bar
+              lc_xml_node_plotVisOnly           TYPE string VALUE &apos;c:plotVisOnly&apos;,
+              lc_xml_node_dispBlanksAs          TYPE string VALUE &apos;c:dispBlanksAs&apos;,
+              lc_xml_node_showDLblsOverMax      TYPE string VALUE &apos;c:showDLblsOverMax&apos;,
+              &quot;---------------------------END OF CHART
+
+              lc_xml_node_printsettings         TYPE string VALUE &apos;c:printSettings&apos;,
+              lc_xml_node_headerfooter          TYPE string VALUE &apos;c:headerFooter&apos;,
+              lc_xml_node_pagemargins           TYPE string VALUE &apos;c:pageMargins&apos;,
+              lc_xml_node_pagesetup             TYPE string VALUE &apos;c:pageSetup&apos;.
 
 
-  DATA: lo_ixml             TYPE REF TO if_ixml,
-        lo_document         TYPE REF TO if_ixml_document,
-        lo_element_root     TYPE REF TO if_ixml_element,
-        lo_element_cellanchor TYPE REF TO if_ixml_element,
-        lo_encoding         TYPE REF TO if_ixml_encoding,
-        lo_streamfactory    TYPE REF TO if_ixml_stream_factory,
-        lo_ostream          TYPE REF TO if_ixml_ostream,
-        lo_renderer         TYPE REF TO if_ixml_renderer.
-  DATA: lv_rel_id            TYPE i.
+  DATA: lo_ixml                                 TYPE REF TO if_ixml,
+        lo_document                             TYPE REF TO if_ixml_document,
+        lo_element_root                         TYPE REF TO if_ixml_element,
+        lo_element_cellanchor                   TYPE REF TO if_ixml_element,
+        lo_encoding                             TYPE REF TO if_ixml_encoding,
+        lo_streamfactory                        TYPE REF TO if_ixml_stream_factory,
+        lo_ostream                              TYPE REF TO if_ixml_ostream,
+        lo_renderer                             TYPE REF TO if_ixml_renderer.
+  DATA: lv_rel_id                               TYPE i.
 
-  DATA lo_element           TYPE REF TO if_ixml_element.
-  DATA lo_element2          TYPE REF TO if_ixml_element.
-  DATA lo_element3          TYPE REF TO if_ixml_element.
+  DATA lo_element                               TYPE REF TO if_ixml_element.
+  DATA lo_element2                              TYPE REF TO if_ixml_element.
+  DATA lo_element3                              TYPE REF TO if_ixml_element.
+  DATA lo_element4                              TYPE REF TO if_ixml_element.
+  DATA lo_element5                              TYPE REF TO if_ixml_element.
+  DATA lo_element6                              TYPE REF TO if_ixml_element.
+  DATA lo_element7                              TYPE REF TO if_ixml_element.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -1148,6 +1205,21 @@ endmethod.</source>
 
 **********************************************************************
 * STEP 4: Create chart
+
+  DATA lo_chartb TYPE REF TO zcl_excel_graph_bars.
+  DATA lo_chartp TYPE REF TO zcl_excel_graph_pie.
+
+  &quot;Identify chart type
+  CASE io_drawing-&gt;graph_type.
+    WHEN zcl_excel_drawing=&gt;c_graph_bars.
+      lo_chartb ?= io_drawing-&gt;graph.
+    WHEN zcl_excel_drawing=&gt;c_graph_pie.
+      lo_chartp ?= io_drawing-&gt;graph.
+
+
+
+    WHEN OTHERS.
+  ENDCASE.
 
   DATA lo_chart TYPE REF TO zcl_excel_graph.
   lo_chart = io_drawing-&gt;graph.
@@ -1180,7 +1252,7 @@ endmethod.</source>
   lo_element2-&gt;set_attribute_ns( name  = &apos;xmlns:c14&apos;
                                     value = lc_xml_node_choice_ns_c14 ).
 
-                                                            &quot;C14:style
+  &quot;C14:style
   lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_style
                                                        parent = lo_element2 ).
   lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
@@ -1196,23 +1268,169 @@ endmethod.</source>
   lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
                                     value = lc_xml_node_style2_ns_val ).
 
-  DATA lo_chartb TYPE REF TO zcl_excel_graph_bars.
-  DATA lo_chartp TYPE REF TO zcl_excel_graph_pie.
+  &quot;---------------------------CHART
+  lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_chart
+                                                       parent = lo_element_root ).
+  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_autoTitleDeleted
+                                                       parent = lo_element ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chart-&gt;ns_autoTitleDeletedval ).
 
+    &quot;plotArea
+    lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_plotArea
+                                                       parent = lo_element ).
+    lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
+                                                       parent = lo_element2 ).
+      CASE io_drawing-&gt;graph_type.
+        WHEN zcl_excel_drawing=&gt;c_graph_bars.
+          &quot;----bar
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_barChart
+                                                       parent = lo_element2 ).
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_catAx
+                                                       parent = lo_element2 ).
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_valAx
+                                                       parent = lo_element2 ).
+          &quot;TODO
+        WHEN zcl_excel_drawing=&gt;c_graph_pie.
+          &quot;----pie
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_pieChart
+                                                       parent = lo_element2 ).
+          lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_varyColors
+                                                       parent = lo_element3 ).
+          lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_varyColorsval ).
+          lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ser
+                                                       parent = lo_element3 ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_idxval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_orderval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_val
+                                                       parent = lo_element4 ).
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_numRef
+                                                       parent = lo_element5 ).
+          lo_element7 = lo_document-&gt;create_simple_element( name = lc_xml_node_f
+                                                       parent = lo_element6 ).
+          lo_element7-&gt;set_value( value = lo_chartp-&gt;REF ).
+          lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_dLbls
+                                                       parent = lo_element3 ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showLegendKey
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_showLegendKeyval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showVal
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_showValval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showCatName
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_showCatNameval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showSerName
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_showSerNameval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showPercent
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_showPercentval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showBubbleSize
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_showBubbleSizeval ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showLeaderLines
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_showLeaderLinesval ).
+          lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_firstSliceAng
+                                                       parent = lo_element3 ).
+          lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_firstSliceAngval ).
+        WHEN OTHERS.
+      ENDCASE.
 
-  CASE io_drawing-&gt;graph_type.
-    WHEN zcl_excel_drawing=&gt;c_graph_bars.
-      lo_chartb ?= io_drawing-&gt;graph.
-    WHEN zcl_excel_drawing=&gt;c_graph_pie.
-      lo_chartp ?= io_drawing-&gt;graph.
+    &quot;legend
+    lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_legend
+                                                       parent = lo_element ).
+      CASE io_drawing-&gt;graph_type.
+        WHEN zcl_excel_drawing=&gt;c_graph_bars.
+          &quot;----bar
+          &quot;TODO
+        WHEN zcl_excel_drawing=&gt;c_graph_pie.
+          &quot;----pie
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendPos
+                                                       parent = lo_element2 ).
+          lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_legendPosval ).
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
+                                                       parent = lo_element2 ).
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
+                                                       parent = lo_element2 ).
+          lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chartp-&gt;ns_overlayval ).
+          lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_txPr
+                                                       parent = lo_element2 ).
+          lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_bodyPr
+                                                       parent = lo_element3 ).
+          lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lstStyle
+                                                       parent = lo_element3 ).
+          lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_p
+                                                       parent = lo_element3 ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_pPr
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;rtl&apos;
+                                    value = lo_chartp-&gt;ns_pPrrtl ).
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_defRPr
+                                                       parent = lo_element5 ).
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_endParaRPr
+                                                       parent = lo_element4 ).
+          lo_element5-&gt;set_attribute_ns( name  = &apos;lang&apos;
+                                    value = lo_chartp-&gt;ns_endParaRPrlang ).
+        WHEN OTHERS.
+      ENDCASE.
 
+  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_plotVisOnly
+                                                       parent = lo_element ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chart-&gt;ns_plotVisOnlyval ).
+  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_dispBlanksAs
+                                                       parent = lo_element ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chart-&gt;ns_dispBlanksAsval ).
+  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_showDLblsOverMax
+                                                       parent = lo_element ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                    value = lo_chart-&gt;ns_showDLblsOverMaxval ).
+  &quot;---------------------------END OF CHART
 
-
-    WHEN OTHERS.
-  ENDCASE.
-
-
-
+  &quot;printSettings
+  lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_printsettings
+                                                       parent = lo_element_root ).
+  &quot;headerFooter
+  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_headerfooter
+                                                       parent = lo_element ).
+  &quot;pageMargins
+  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_pagemargins
+                                                       parent = lo_element ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;b&apos;
+                                    value = lo_chart-&gt;pagemargins-b ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;l&apos;
+                                    value = lo_chart-&gt;pagemargins-l ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;r&apos;
+                                    value = lo_chart-&gt;pagemargins-r ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;t&apos;
+                                    value = lo_chart-&gt;pagemargins-t ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;header&apos;
+                                    value = lo_chart-&gt;pagemargins-header ).
+  lo_element2-&gt;set_attribute_ns( name  = &apos;footer&apos;
+                                    value = lo_chart-&gt;pagemargins-footer ).
+  &quot;pageSetup
+  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_pageSetup
+                                                       parent = lo_element ).
 
 **********************************************************************
 * STEP 5: Create xstring stream
@@ -1986,7 +2204,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD create_xl_sheet.
+  <source>method CREATE_XL_SHEET.
 *--------------------------------------------------------------------*
 * issue #237   - Error writing column-style
 *              - Stefan Schmöcker,                          2012-11-01
@@ -3594,7 +3812,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
@@ -4999,7 +5217,7 @@ endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD create_xl_workbook.
+  <source>method CREATE_XL_WORKBOOK.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan Schmöcker,      (done)              2012-11-07
@@ -5316,7 +5534,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>

@@ -354,10 +354,6 @@ endmethod.</source>
   DATA: node                TYPE REF TO if_ixml_element.
   DATA: node2               TYPE REF TO if_ixml_element.
   DATA: node3               TYPE REF TO if_ixml_element.
-  DATA: node4               TYPE REF TO if_ixml_element.
-  DATA: node5               TYPE REF TO if_ixml_element.
-  DATA: node6               TYPE REF TO if_ixml_element.
-  DATA: node7               TYPE REF TO if_ixml_element.
   DATA: iterator            TYPE REF TO if_ixml_node_iterator.
 
   DATA: chartspace          TYPE REF TO if_ixml_node_collection.
@@ -367,44 +363,26 @@ endmethod.</source>
   DATA lo_barchart TYPE REF TO zcl_excel_graph_bars.
   DATA lo_piechart TYPE REF TO zcl_excel_graph_pie.
 
-*  chartspace = ip_chart-&gt;get_elements_by_tag_name( name = &apos;chartSpace&apos; namespace = &apos;c&apos; ).
-*  coll_length = chartspace-&gt;get_length( ).
-*  iterator = chartspace-&gt;create_iterator( ).
-*
-*  DO coll_length TIMES. &quot;always 1
-*    chartelem ?= iterator-&gt;get_next( ).
-*
-*    node ?= chartelem-&gt;find_from_name( name = &apos;chart&apos; namespace = &apos;c&apos; ).
-
   TYPES: BEGIN OF t_prop,
- val TYPE string,
- END OF t_prop.
+        val   TYPE string,
+        rtl   TYPE string,
+        lang  TYPE string,
+  END OF t_prop.
+
+  TYPES: BEGIN OF t_pagemargins,
+        b TYPE string,
+        l TYPE string,
+        r TYPE string,
+        t TYPE string,
+        header TYPE string,
+        footer TYPE string,
+  END OF t_pagemargins.
 
   DATA ls_prop TYPE t_prop.
+  DATA ls_pagemargins TYPE t_pagemargins.
 
   node ?= ip_chart-&gt;if_ixml_node~get_first_child( ).
   CHECK node IS NOT INITIAL.
-  node2 ?= node-&gt;find_from_name( name = &apos;plotArea&apos; namespace = &apos;c&apos; ).
-  CHECK node2 IS NOT INITIAL.
-  node3 ?= node2-&gt;find_from_name( name = &apos;pieChart&apos; namespace = &apos;c&apos; ).
-  IF node3 IS INITIAL.
-    node3 ?= node2-&gt;find_from_name( name = &apos;barChart&apos; namespace = &apos;c&apos; ).
-    IF node3 IS NOT INITIAL.
-      me-&gt;graph_type = c_graph_bars.
-    ENDIF.
-  ELSE.
-    me-&gt;graph_type = c_graph_pie.
-  ENDIF.
-  CHECK node3 IS NOT INITIAL.
-  node4 ?= node3-&gt;find_from_name( name = &apos;ser&apos; namespace = &apos;c&apos; ).
-  CHECK node4 IS NOT INITIAL.
-  node5 ?= node4-&gt;find_from_name( name = &apos;val&apos; namespace = &apos;c&apos; ).
-  CHECK node5 IS NOT INITIAL.
-  node6 ?= node5-&gt;find_from_name( name = &apos;numRef&apos; namespace = &apos;c&apos; ).
-  CHECK node6 IS NOT INITIAL.
-  node7 ?= node6-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
-  CHECK node7 IS NOT INITIAL.
-
 
   CASE me-&gt;graph_type.
     WHEN c_graph_bars.
@@ -416,30 +394,100 @@ endmethod.</source>
     WHEN OTHERS.
   ENDCASE.
 
-  me-&gt;graph-&gt;ref = node7-&gt;get_value( ).
-
   &quot;Fill properties
   node2 ?= node-&gt;find_from_name( name = &apos;date1904&apos; namespace = &apos;c&apos; ).
-  ZCL_EXCEL_READER_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
   me-&gt;graph-&gt;ns_1904val = ls_prop-val.
   node2 ?= node-&gt;find_from_name( name = &apos;lang&apos; namespace = &apos;c&apos; ).
-  ZCL_EXCEL_READER_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
   me-&gt;graph-&gt;ns_langval = ls_prop-val.
   node2 ?= node-&gt;find_from_name( name = &apos;roundedCorners&apos; namespace = &apos;c&apos; ).
-  ZCL_EXCEL_READER_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
   me-&gt;graph-&gt;ns_roundedcornersval = ls_prop-val.
 
-*    node ?= chartElem-&gt;find_from_name( name = &apos;graphicFrame&apos; namespace = &apos;xdr&apos; ).
-*    IF node IS NOT INITIAL.
-*     node2 ?= node-&gt;find_from_name( name = &apos;nvGraphicFramePr&apos; namespace = &apos;xdr&apos; ).
-*     CHECK node2 IS NOT INITIAL.
-*     node3 ?= node2-&gt;find_from_name( name = &apos;cNvPr&apos; namespace = &apos;xdr&apos; ).
-*     CHECK node3 IS NOT INITIAL.
-*     me-&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = cnvpr ).
-*     lv_title = cnvpr-name.
-*    ENDIF.
+  &quot;---------------------------Read graph properties
+  node2 ?= node-&gt;find_from_name( name = &apos;autoTitleDeleted&apos; namespace = &apos;c&apos; ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  me-&gt;graph-&gt;ns_autoTitleDeletedval = ls_prop-val.
 
-*  ENDDO.
+    &quot;plotArea
+    CASE me-&gt;graph_type.
+    WHEN c_graph_bars.
+      &quot;TODO
+    WHEN c_graph_pie.
+      node2 ?= node-&gt;find_from_name( name = &apos;varyColors&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_varyColorsval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;idx&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_idxval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;order&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_orderval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
+      lo_piechart-&gt;REF = node3-&gt;get_value( ).
+      &quot;note: numCache avoided
+      node2 ?= node-&gt;find_from_name( name = &apos;showLegendKey&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_showLegendKeyval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showVal&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_showValval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showCatName&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_showCatNameval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showSerName&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_showSerNameval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showPercent&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_showPercentval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showBubbleSize&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_showBubbleSizeval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showLeaderLines&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_showLeaderLinesval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;firstSliceAng&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_firstSliceAngval = ls_prop-val.
+    WHEN OTHERS.
+    ENDCASE.
+    &quot;legend
+    CASE me-&gt;graph_type.
+    WHEN c_graph_bars.
+      &quot;TODO
+    WHEN c_graph_pie.
+      node2 ?= node-&gt;find_from_name( name = &apos;legendPos&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_legendPosval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;overlay&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_overlayval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;pPr&apos; namespace = &apos;a&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_pPrrtl = ls_prop-rtl.
+      node2 ?= node-&gt;find_from_name( name = &apos;endParaRPr&apos; namespace = &apos;a&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_piechart-&gt;ns_endParaRPrlang = ls_prop-lang.
+    WHEN OTHERS.
+    ENDCASE.
+
+  node2 ?= node-&gt;find_from_name( name = &apos;plotVisOnly&apos; namespace = &apos;c&apos; ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  me-&gt;graph-&gt;ns_plotVisOnlyval = ls_prop-val.
+  node2 ?= node-&gt;find_from_name( name = &apos;dispBlanksAs&apos; namespace = &apos;c&apos; ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  me-&gt;graph-&gt;ns_dispBlanksAsval = ls_prop-val.
+  node2 ?= node-&gt;find_from_name( name = &apos;showDLblsOverMax&apos; namespace = &apos;c&apos; ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  me-&gt;graph-&gt;ns_showDLblsOverMaxval = ls_prop-val.
+  &quot;---------------------
+
+  node2 ?= node-&gt;find_from_name( name = &apos;pageMargins&apos; namespace = &apos;c&apos; ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_pagemargins ).
+  me-&gt;graph-&gt;pagemargins = ls_pagemargins.
+
 
 ENDMETHOD.</source>
  </method>
