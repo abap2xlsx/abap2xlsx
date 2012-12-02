@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" UUID="C1BF274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
@@ -8,14 +9,28 @@
   final
   create public .
 
-public section.
 *&quot;* public components of class ZCL_EXCEL_WORKSHEET
 *&quot;* do not include other source files here!!!
+public section.
   type-pools ABAP .
 
+  interfaces ZIF_EXCEL_SHEET_PRINTSETTINGS .
   interfaces ZIF_EXCEL_SHEET_PROPERTIES .
   interfaces ZIF_EXCEL_SHEET_PROTECTION .
   interfaces ZIF_EXCEL_SHEET_VBA_PROJECT .
+
+  aliases CLEAR_PRINT_REPEAT_COLUMNS
+    for ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS .
+  aliases CLEAR_PRINT_REPEAT_ROWS
+    for ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS .
+  aliases GET_PRINT_REPEAT_COLUMNS
+    for ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS .
+  aliases GET_PRINT_REPEAT_ROWS
+    for ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS .
+  aliases SET_PRINT_REPEAT_COLUMNS
+    for ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS .
+  aliases SET_PRINT_REPEAT_ROWS
+    for ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS .
 
   constants C_BREAK_COLUMN type ZEXCEL_BREAK value 2. &quot;#EC NOTEXT
   constants C_BREAK_NONE type ZEXCEL_BREAK value 0. &quot;#EC NOTEXT
@@ -396,9 +411,9 @@ public section.
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_WORKSHEET
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_WORKSHEET
+ <privateSection>*&quot;* private components of class ZCL_EXCEL_WORKSHEET
 *&quot;* do not include other source files here!!!
+private section.
 
   data ACTIVE_CELL type ZEXCEL_S_CELL_DATA .
   data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
@@ -420,6 +435,10 @@ protected section.</protectedSection>
   data TABLES type ref to CL_OBJECT_COLLECTION .
   data TITLE type ZEXCEL_SHEET_TITLE value &apos;Worksheet&apos;. &quot;#EC NOTEXT .
   data UPPER_CELL type ZEXCEL_S_CELL_DATA .
+  data PRINT_TITLE_COL_FROM type ZEXCEL_CELL_COLUMN_ALPHA .
+  data PRINT_TITLE_COL_TO type ZEXCEL_CELL_COLUMN_ALPHA .
+  data PRINT_TITLE_ROW_FROM type ZEXCEL_CELL_ROW .
+  data PRINT_TITLE_ROW_TO type ZEXCEL_CELL_ROW .
 
   methods CALCULATE_CELL_WIDTH
     importing
@@ -440,7 +459,8 @@ protected section.</protectedSection>
       !EP_VALUE_TYPE type ABAP_TYPEKIND .
   methods UPDATE_DIMENSION_RANGE
     raising
-      ZCX_EXCEL .</privateSection>
+      ZCX_EXCEL .
+  methods PRINT_TITLE_SET_RANGE .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes
@@ -599,10 +619,12 @@ endclass.</localTypes>
   <language SPRAS="D">
    <textElement ID="I" KEY="001" ENTRY="Tabelle" LENGTH="132 "/>
    <textElement ID="I" KEY="400" ENTRY="Tabelle überschneidet sich mit schon eingebundener Tabelle und wird diesem Tabellenblatt nicht hinzugefügt." LENGTH="132 "/>
+   <textElement ID="I" KEY="401" ENTRY="Für Druckbereich Wiederholungsspalten wurde ein ungültiger Bereich übergeben" LENGTH="132 "/>
   </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
    <textElement ID="I" KEY="400" ENTRY="Table overlaps with previously bound table and will not be added to worksheet." LENGTH="132 "/>
+   <textElement ID="I" KEY="401" ENTRY="Invalid range supplied for print-title repeatable columns" LENGTH="132 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_WORKSHEET" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
@@ -631,6 +653,10 @@ endclass.</localTypes>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Colletion of hyperlinks" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="LOWER_CELL" VERSION="1" LANGU="E" DESCRIPT="Bottom right range cell" EXPOSURE="0" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Print Gridlines" EXPOSURE="2" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTRDONLY="X" ATTVALUE="ABAP_FALSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PRINT_GRIDLINES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_COL_FROM" VERSION="1" LANGU="E" DESCRIPT="Cell Column" EXPOSURE="0" STATE="1" EDITORDER="33 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_COL_TO" VERSION="1" LANGU="E" DESCRIPT="Cell Column" EXPOSURE="0" STATE="1" EDITORDER="34 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_ROW_FROM" VERSION="1" LANGU="E" DESCRIPT="Cell Row" EXPOSURE="0" STATE="1" EDITORDER="35 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_ROW_TO" VERSION="1" LANGU="E" DESCRIPT="Cell Row" EXPOSURE="0" STATE="1" EDITORDER="36 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="RANGES" VERSION="1" LANGU="E" DESCRIPT="Ranges collection" EXPOSURE="0" STATE="1" EDITORDER="21 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_RANGES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ROW_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Collection of row dimensions" EXPOSURE="0" STATE="1" EDITORDER="22 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_ROWDIMENSIO" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SHEET_CONTENT" VERSION="1" LANGU="E" DESCRIPT="Excel worksheet content" EXPOSURE="2" STATE="1" EDITORDER="23 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -643,6 +669,145 @@ endclass.</localTypes>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TABLES" VERSION="1" LANGU="E" DESCRIPT="Colletion of tables" EXPOSURE="0" STATE="1" EDITORDER="30 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="0" STATE="1" EDITORDER="31 " ATTDECLTYP="0" ATTVALUE="&apos;Worksheet&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPPER_CELL" VERSION="1" LANGU="E" DESCRIPT="Top left range cell" EXPOSURE="0" STATE="1" EDITORDER="32 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS">
+  <source>METHOD zif_excel_sheet_printsettings~clear_print_repeat_columns.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  clear:  me-&gt;print_title_col_from,
+          me-&gt;print_title_col_to  .
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS">
+  <source>METHOD zif_excel_sheet_printsettings~clear_print_repeat_rows.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  clear:  me-&gt;print_title_row_from,
+          me-&gt;print_title_row_to  .
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS">
+  <source>METHOD zif_excel_sheet_printsettings~get_print_repeat_columns.
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS">
+  <source>METHOD zif_excel_sheet_printsettings~get_print_repeat_rows.
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS">
+  <source>METHOD zif_excel_sheet_printsettings~set_print_repeat_columns.
+*--------------------------------------------------------------------*
+* issue#235 - repeat rows/columns
+*           - Stefan Schmöcker,                             2012-12-02
+*--------------------------------------------------------------------*
+
+  DATA:     lv_col_from_int                 TYPE i,
+            lv_col_to_int                   TYPE i,
+            lv_errormessage                 TYPE string.
+
+  DATA:     lo_range_iterator               TYPE REF TO cl_object_collection_iterator,
+            lo_range                        TYPE REF TO zcl_excel_range.
+
+
+  lv_col_from_int = zcl_excel_common=&gt;convert_column2int( iv_columns_from ).
+  lv_col_to_int   = zcl_excel_common=&gt;convert_column2int( iv_columns_to ).
+
+*--------------------------------------------------------------------*
+* Check if valid range is supplied
+*--------------------------------------------------------------------*
+  IF lv_col_from_int &lt; 1.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable columns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+  IF  lv_col_from_int &gt; lv_col_to_int.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable columns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  me-&gt;print_title_col_from = iv_columns_from.
+  me-&gt;print_title_col_to   = iv_columns_to.
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS">
+  <source>METHOD zif_excel_sheet_printsettings~set_print_repeat_rows.
+*--------------------------------------------------------------------*
+* issue#235 - repeat rows/columns
+*           - Stefan Schmöcker,                             2012-12-02
+*--------------------------------------------------------------------*
+
+  DATA:     lv_errormessage                 TYPE string.
+
+  DATA:     lo_range_iterator               TYPE REF TO cl_object_collection_iterator,
+            lo_range                        TYPE REF TO zcl_excel_range.
+
+
+
+*--------------------------------------------------------------------*
+* Check if valid range is supplied
+*--------------------------------------------------------------------*
+  IF iv_rows_from &lt; 1.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rowumns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+  IF  iv_rows_from &gt; iv_rows_to.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rowumns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  me-&gt;print_title_row_from = iv_rows_from.
+  me-&gt;print_title_row_to   = iv_rows_to.
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+
+ENDMETHOD.</source>
+ </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE">
   <source>method ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE.
   IF zif_excel_sheet_properties~style IS NOT INITIAL.
@@ -3614,6 +3779,8 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CLEAR_PRINT_REPEAT_COLUMNS" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" REFCMPNAME="CLEAR_PRINT_REPEAT_COLUMNS" BCMTDCAT="00" BCMTDSYN="0"/>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CLEAR_PRINT_REPEAT_ROWS" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" REFCMPNAME="CLEAR_PRINT_REPEAT_ROWS" BCMTDCAT="00" BCMTDSYN="0"/>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Ref to parent document" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="2" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" PAROPTIONL="X"/>
@@ -4114,6 +4281,14 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_PRINT_REPEAT_COLUMNS" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" REFCMPNAME="GET_PRINT_REPEAT_COLUMNS" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_PRINT_REPEAT_ROWS" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" REFCMPNAME="GET_PRINT_REPEAT_ROWS" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+ </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_RANGES_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get ranges iterator" EXPOSURE="2" STATE="1" EDITORDER="36 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_RANGES_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
   <source>method GET_RANGES_ITERATOR.
@@ -4237,6 +4412,105 @@ endmethod.</source>
   ENDIF.
 
 endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_SET_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update range for print title" EXPOSURE="0" STATE="1" EDITORDER="57 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>METHOD print_title_set_range.
+*--------------------------------------------------------------------*
+* issue#235 - repeat rows/columns
+*           - Stefan Schmöcker,                             2012-12-02
+*--------------------------------------------------------------------*
+
+
+  DATA:     lo_range_iterator               TYPE REF TO cl_object_collection_iterator,
+            lo_range                        TYPE REF TO zcl_excel_range,
+            lv_repeat_range_sheetname       TYPE string,
+            lv_repeat_range_col             TYPE string,
+            lv_row_char_from                TYPE char10,
+            lv_row_char_to                  TYPE char10,
+            lv_repeat_range_row             TYPE string,
+            lv_repeat_range                 TYPE string.
+
+
+*--------------------------------------------------------------------*
+* Get range that represents printarea
+* if non-existant, create it
+*--------------------------------------------------------------------*
+  lo_range_iterator = me-&gt;get_ranges_iterator( ).
+  WHILE lo_range_iterator-&gt;has_next( ) = abap_true.
+
+    lo_range ?= lo_range_iterator-&gt;get_next( ).
+    IF lo_range-&gt;name = zif_excel_sheet_printsettings=&gt;gcv_print_title_name.
+      EXIT.  &quot; Found it
+    ENDIF.
+    CLEAR lo_range.
+
+  ENDWHILE.
+
+
+  IF me-&gt;print_title_col_from IS INITIAL AND
+     me-&gt;print_title_row_from IS INITIAL.
+*--------------------------------------------------------------------*
+* No print titles are present,
+*--------------------------------------------------------------------*
+    IF lo_range IS BOUND.
+      me-&gt;ranges-&gt;remove( lo_range ).
+    ENDIF.
+  ELSE.
+*--------------------------------------------------------------------*
+* Print titles are present,
+*--------------------------------------------------------------------*
+    IF lo_range IS NOT BOUND.
+      lo_range =  me-&gt;add_new_range( ).
+      lo_range-&gt;name = zif_excel_sheet_printsettings=&gt;gcv_print_title_name.
+    ENDIF.
+
+    lv_repeat_range_sheetname = me-&gt;get_title( ).
+    lv_repeat_range_sheetname = zcl_excel_common=&gt;escape_string( lv_repeat_range_sheetname ).
+
+*--------------------------------------------------------------------*
+* Repeat-columns
+*--------------------------------------------------------------------*
+    IF me-&gt;print_title_col_from IS NOT INITIAL.
+      CONCATENATE lv_repeat_range_sheetname
+                  &apos;!$&apos; me-&gt;print_title_col_from
+                  &apos;:$&apos; me-&gt;print_title_col_to
+          INTO lv_repeat_range_col.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Repeat-rows
+*--------------------------------------------------------------------*
+    IF me-&gt;print_title_row_from IS NOT INITIAL.
+      lv_row_char_from = me-&gt;print_title_row_from.
+      lv_row_char_to   = me-&gt;print_title_row_to.
+      CONCATENATE &apos;!$&apos; lv_row_char_from
+                  &apos;:$&apos; lv_row_char_to
+          INTO lv_repeat_range_row.
+      CONDENSE lv_repeat_range_row NO-GAPS.
+      CONCATENATE lv_repeat_range_sheetname
+                  lv_repeat_range_row
+          INTO lv_repeat_range_row.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Concatenate repeat-rows and columns
+*--------------------------------------------------------------------*
+    IF lv_repeat_range_col IS INITIAL.
+      lv_repeat_range = lv_repeat_range_row.
+    ELSEIF lv_repeat_range_row IS INITIAL.
+      lv_repeat_range = lv_repeat_range_col.
+    ELSE.
+      CONCATENATE lv_repeat_range_col lv_repeat_range_row
+          INTO lv_repeat_range SEPARATED BY &apos;,&apos;.
+    ENDIF.
+
+
+    lo_range-&gt;set_range_value( lv_repeat_range ).
+  ENDIF.
+
+
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" VERSION="1" LANGU="E" DESCRIPT="Set cell value" EXPOSURE="2" STATE="1" EDITORDER="44 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -4592,6 +4866,14 @@ endmethod.</source>
   <source>method SET_PRINT_GRIDLINES.
   me-&gt;print_gridlines = i_print_gridlines.
 endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_PRINT_REPEAT_COLUMNS" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" REFCMPNAME="SET_PRINT_REPEAT_COLUMNS" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_PRINT_REPEAT_ROWS" VERSION="1" LANGU="E" ALIAS="X" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" REFCMPNAME="SET_PRINT_REPEAT_ROWS" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
+  <parameter VERSION="0" CMPTYPE="0" MTDTYPE="0" EDITORDER="0 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="0"/>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" VERSION="1" LANGU="E" DESCRIPT="Set row height" EXPOSURE="2" STATE="1" EDITORDER="50 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
