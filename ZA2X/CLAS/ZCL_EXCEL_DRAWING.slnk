@@ -426,8 +426,20 @@ endmethod.</source>
       node2 ?= node-&gt;find_from_name( name = &apos;order&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
       lo_piechart-&gt;ns_orderval = ls_prop-val.
-      node2 ?= node-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
-      lo_piechart-&gt;REF = node3-&gt;get_value( ).
+      node2 ?= node-&gt;find_from_name( name = &apos;v&apos; namespace = &apos;c&apos; ).
+      if node2 is bound.
+        lo_piechart-&gt;sername = node2-&gt;get_value( ).
+      endif.
+      node2 ?= node-&gt;find_from_name( name = &apos;strRef&apos; namespace = &apos;c&apos; ).
+      if node2 is bound.
+        node3 ?= node2-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
+        lo_piechart-&gt;LBL = node3-&gt;get_value( ).
+      endif.
+      node2 ?= node-&gt;find_from_name( name = &apos;numRef&apos; namespace = &apos;c&apos; ).
+      if node2 is bound.
+        node3 ?= node2-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
+        lo_piechart-&gt;REF = node3-&gt;get_value( ).
+      endif.
       &quot;note: numCache avoided
       node2 ?= node-&gt;find_from_name( name = &apos;showLegendKey&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).

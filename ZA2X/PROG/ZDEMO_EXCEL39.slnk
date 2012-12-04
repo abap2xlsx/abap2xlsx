@@ -46,6 +46,14 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
   lo_worksheet-&gt;set_title( &apos;Sheet1&apos; ).
 
+  &quot; Set labels for chart
+  lv_value = 1.
+  lo_worksheet-&gt;set_cell( ip_column = &apos;K&apos; ip_row = 1 ip_value = &apos;One&apos; ).
+  lv_value = 2.
+  lo_worksheet-&gt;set_cell( ip_column = &apos;K&apos; ip_row = 2 ip_value = &apos;Two&apos; ).
+  lv_value = 3.
+  lo_worksheet-&gt;set_cell( ip_column = &apos;K&apos; ip_row = 3 ip_value = &apos;Three&apos; ).
+
   &quot; Set values for chart
   lv_value = 1.
   lo_worksheet-&gt;set_cell( ip_column = &apos;J&apos; ip_row = 1 ip_value = lv_value ).
@@ -57,6 +65,8 @@ START-OF-SELECTION.
   &quot; Create a pie chart and assign value range
   CREATE OBJECT lo_pie.
   lo_pie-&gt;ref = &apos;Sheet1!$J$1:$J$3&apos;. &quot;VALUE RANGE FOR CHART
+  lo_pie-&gt;lbl = &apos;Sheet1!$K$1:$K$3&apos;. &quot;VALUE RANGE FOR CHART
+  lo_pie-&gt;sername = &apos;My serie&apos;. &quot;Serie name
 
   &quot; Create global drawing, set type as pie chart, assign chart, set position and media type
   lo_drawing = lo_worksheet-&gt;excel-&gt;add_new_drawing(
@@ -66,8 +76,8 @@ START-OF-SELECTION.
   lo_drawing-&gt;graph_type = zcl_excel_drawing=&gt;c_graph_pie.
 
   &quot;Set chart position (anchor 2 cells)
-  ls_lower-row = 10.
-  ls_lower-col = 10.
+  ls_lower-row = 22.
+  ls_lower-col = 11.
   lo_drawing-&gt;set_position2(
     EXPORTING
       ip_from   = ls_upper
