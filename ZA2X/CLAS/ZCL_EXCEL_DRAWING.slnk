@@ -105,7 +105,7 @@ public section.
       value(RP_INDEX) type STRING .
   methods LOAD_CHART_ATTRIBUTES
     importing
-      value(IP_CHART) type ref to IF_IXML_DOCUMENT .</publicSection>
+      value(IP_CHART) type ref to IF_IXML_DOCUMENT .
   methods SET_OFFSET
     importing
       !IP_ROWOFF type INT4
