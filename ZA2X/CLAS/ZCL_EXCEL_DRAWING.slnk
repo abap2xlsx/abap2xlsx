@@ -106,6 +106,10 @@ public section.
   methods LOAD_CHART_ATTRIBUTES
     importing
       value(IP_CHART) type ref to IF_IXML_DOCUMENT .</publicSection>
+  methods SET_OFFSET
+    importing
+      !IP_ROWOFF type INT4
+      !IP_COLOFF type INT4 .</publicSection>
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_DRAWING
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
@@ -566,6 +570,14 @@ endmethod.</source>
   size-width  = ip_width.
   size-height = ip_height.
 endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_OFFSET" VERSION="1" LANGU="E" DESCRIPT="Set offset of drawing from tol-left corner" EXPOSURE="2" STATE="1" EDITORDER="23 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20121204" CHANGEDBY="VONDRUSKA" CHANGEDON="20121204" MTDTYPE="0" MTDDECLTYP="0" R3RELEASE="731" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_OFFSET" SCONAME="IP_ROWOFF" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20121204" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_OFFSET" SCONAME="IP_COLOFF" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="VONDRUSKA" CREATEDON="20121204" CHANGEDON="00000000" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
+  <source>METHOD set_offset.
+  from_loc-col_offset = ip_coloff.
+  from_loc-row_offset = ip_rowoff.
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION" VERSION="1" LANGU="E" DESCRIPT="Set position of drawing" EXPOSURE="2" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION" SCONAME="IP_FROM_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
