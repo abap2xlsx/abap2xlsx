@@ -420,26 +420,68 @@ endmethod.</source>
       node2 ?= node-&gt;find_from_name( name = &apos;varyColors&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
       lo_piechart-&gt;ns_varyColorsval = ls_prop-val.
-      node2 ?= node-&gt;find_from_name( name = &apos;idx&apos; namespace = &apos;c&apos; ).
-      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-      lo_piechart-&gt;ns_idxval = ls_prop-val.
-      node2 ?= node-&gt;find_from_name( name = &apos;order&apos; namespace = &apos;c&apos; ).
-      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-      lo_piechart-&gt;ns_orderval = ls_prop-val.
-      node2 ?= node-&gt;find_from_name( name = &apos;v&apos; namespace = &apos;c&apos; ).
-      if node2 is bound.
-        lo_piechart-&gt;sername = node2-&gt;get_value( ).
+
+      &quot;Load series
+      DATA lo_collection type ref to IF_IXML_NODE_COLLECTION.
+      DATA lo_node       type ref to IF_IXML_NODE.
+      DATA lo_iterator   type ref to IF_IXML_NODE_ITERATOR.
+      DATA lv_idx        type i.
+      DATA lv_order      type i.
+      DATA lv_sername    type string.
+      DATA lv_label      type string.
+      DATA lv_value      type string.
+
+      CALL METHOD node-&gt;get_elements_by_tag_name
+        EXPORTING
+*          depth     = 0
+          name      = &apos;ser&apos;
+*          namespace = &apos;&apos;
+        receiving
+          rval      = lo_collection
+          .
+      CALL METHOD lo_collection-&gt;create_iterator
+        RECEIVING
+          rval   = lo_iterator
+          .
+      lo_node = lo_iterator-&gt;GET_NEXT( ).
+      if lo_node is bound.
+        node2 ?= lo_node-&gt;query_interface( ixml_iid_element ).
       endif.
-      node2 ?= node-&gt;find_from_name( name = &apos;strRef&apos; namespace = &apos;c&apos; ).
-      if node2 is bound.
-        node3 ?= node2-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
-        lo_piechart-&gt;LBL = node3-&gt;get_value( ).
-      endif.
-      node2 ?= node-&gt;find_from_name( name = &apos;numRef&apos; namespace = &apos;c&apos; ).
-      if node2 is bound.
-        node3 ?= node2-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
-        lo_piechart-&gt;REF = node3-&gt;get_value( ).
-      endif.
+      WHILE lo_node is bound.
+        node2 ?= node-&gt;find_from_name( name = &apos;idx&apos; namespace = &apos;c&apos; ).
+        zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+        lv_idx = ls_prop-val.
+        node2 ?= node-&gt;find_from_name( name = &apos;order&apos; namespace = &apos;c&apos; ).
+        zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+        lv_order = ls_prop-val.
+        node2 ?= node-&gt;find_from_name( name = &apos;v&apos; namespace = &apos;c&apos; ).
+        if node2 is bound.
+           lv_sername = node2-&gt;get_value( ).
+        endif.
+        node2 ?= node-&gt;find_from_name( name = &apos;strRef&apos; namespace = &apos;c&apos; ).
+        if node2 is bound.
+            node3 ?= node2-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
+            lv_label = node3-&gt;get_value( ).
+        endif.
+        node2 ?= node-&gt;find_from_name( name = &apos;numRef&apos; namespace = &apos;c&apos; ).
+        if node2 is bound.
+           node3 ?= node2-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
+           lv_value = node3-&gt;get_value( ).
+        endif.
+        CALL METHOD lo_piechart-&gt;create_serie
+          EXPORTING
+            idx     = lv_idx
+            order   = lv_order
+            lbl     = lv_label
+            REF     = lv_value
+            sername = lv_sername
+            .
+        lo_node = lo_iterator-&gt;GET_NEXT( ).
+        if lo_node is bound.
+          node2 ?= lo_node-&gt;query_interface( ixml_iid_element ).
+        endif.
+     ENDWHILE.
+
       &quot;note: numCache avoided
       node2 ?= node-&gt;find_from_name( name = &apos;showLegendKey&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).

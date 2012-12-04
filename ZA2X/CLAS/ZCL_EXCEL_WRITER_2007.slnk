@@ -1303,41 +1303,53 @@ endmethod.</source>
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lo_chartp-&gt;ns_varycolorsval ).
-      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ser
+
+      &quot;series
+      data ls_serie type zcl_excel_graph=&gt;s_series.
+      data lv_str type string.
+      loop at lo_chartp-&gt;SERIES into ls_serie.
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ser
                                                    parent = lo_element3 ).
-      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
                                                    parent = lo_element4 ).
-      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_idxval ).
-      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
+        lv_str = ls_serie-idx.
+        condense lv_str.
+        lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lv_str ).
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
                                                    parent = lo_element4 ).
-      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_orderval ).
-      if lo_chartp-&gt;sername is not initial.
-        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
+        lv_str = ls_serie-order.
+        condense lv_str.
+        lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lv_str ).
+        if ls_serie-sername is not initial.
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
                                                     parent = lo_element4 ).
-        lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_v
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_v
                                                     parent = lo_element5 ).
-         lo_element6-&gt;set_value( value = lo_chartp-&gt;sername ).
-      endif.
-      IF lo_chartp-&gt;lbl IS NOT INITIAL.
-        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_cat
+          lo_element6-&gt;set_value( value = ls_serie-sername ).
+        endif.
+        IF ls_serie-lbl IS NOT INITIAL.
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_cat
                                                      parent = lo_element4 ).
-        lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_strref
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_strref
                                                      parent = lo_element5 ).
-        lo_element7 = lo_document-&gt;create_simple_element( name = lc_xml_node_f
+          lo_element7 = lo_document-&gt;create_simple_element( name = lc_xml_node_f
                                                      parent = lo_element6 ).
-        lo_element7-&gt;set_value( value = lo_chartp-&gt;lbl ).
-      ENDIF.
-      IF lo_chartp-&gt;ref IS NOT INITIAL.
-        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_val
+          lo_element7-&gt;set_value( value = ls_serie-lbl ).
+        ENDIF.
+        IF ls_serie-ref IS NOT INITIAL.
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_val
                                                      parent = lo_element4 ).
-        lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_numref
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_numref
                                                      parent = lo_element5 ).
-        lo_element7 = lo_document-&gt;create_simple_element( name = lc_xml_node_f
+          lo_element7 = lo_document-&gt;create_simple_element( name = lc_xml_node_f
                                                      parent = lo_element6 ).
-        lo_element7-&gt;set_value( value = lo_chartp-&gt;ref ).
-      ENDIF.
+          lo_element7-&gt;set_value( value = ls_serie-ref ).
+        ENDIF.
+      endloop.
+      &quot;endseries
+
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_dlbls
                                                    parent = lo_element3 ).
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showlegendkey
