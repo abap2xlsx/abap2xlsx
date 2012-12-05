@@ -33,7 +33,6 @@ DATA: ls_upper  TYPE zexcel_drawing_location,
 DATA lo_bar  TYPE REF TO zcl_excel_graph_bars.
 DATA lo_bar2 TYPE REF TO zcl_excel_graph_bars.
 DATA lo_pie  TYPE REF TO zcl_excel_graph_pie.
-DATA lv_media TYPE xstring.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE &apos;39_Charts.xlsx&apos;.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -81,142 +80,138 @@ START-OF-SELECTION.
   CREATE OBJECT lo_pie.
 
   CALL METHOD lo_pie-&gt;create_serie
-      EXPORTING
-       ip_idx     = 0
-       ip_order   = 0
-       ip_lbl     = &apos;Sheet1!$B$1:$B$3&apos;
-       ip_REF     = &apos;Sheet1!$A$1:$A$3&apos;
-       ip_sername = &apos;My serie 1&apos;
-       .
+    EXPORTING
+      ip_order   = 0
+      ip_sheet = &apos;Sheet1&apos;
+      ip_lbl_from_col = &apos;B&apos;
+      ip_lbl_from_row = &apos;1&apos;
+      ip_lbl_to_col = &apos;B&apos;
+      ip_lbl_to_row = &apos;3&apos;
+      ip_ref_from_col = &apos;A&apos;
+      ip_ref_from_row = &apos;1&apos;
+      ip_ref_to_col = &apos;A&apos;
+      ip_ref_to_row = &apos;3&apos;
+      ip_sername = &apos;My serie 1&apos;.
 
-  CALL METHOD lo_pie-&gt;create_serie
-      EXPORTING
-       ip_idx     = 1
-       ip_order   = 1
-       ip_lbl     = &apos;Sheet1!$D$1:$D$3&apos;
-       ip_REF     = &apos;Sheet1!$C$1:$C$3&apos;
-       ip_sername = &apos;My serie 2&apos;
-       .
+  &quot; Set style
+  lo_pie-&gt;set_style( zcl_excel_graph=&gt;c_style_15 ).
 
   &quot; Create a bar chart, series and axes
   CREATE OBJECT lo_bar.
 
   CALL METHOD lo_bar-&gt;create_serie
-      EXPORTING
-       ip_idx     = 0
-       ip_order   = 0
-       ip_invertIfNegative     = &apos;0&apos;
-       ip_lbl     = &apos;Sheet1!$D$1:$D$3&apos;
-       ip_REF     = &apos;Sheet1!$C$1:$C$3&apos;
-       ip_sername = &apos;My serie 1&apos;
-       .
+    EXPORTING
+      ip_order            = 0
+      ip_invertifnegative = zcl_excel_graph_bars=&gt;c_invertifnegative_no
+      ip_lbl              = &apos;Sheet1!$D$1:$D$3&apos;
+      ip_ref              = &apos;Sheet1!$C$1:$C$3&apos;
+      ip_sername          = &apos;My serie 1&apos;.
 
   CALL METHOD lo_bar-&gt;create_serie
-      EXPORTING
-       ip_idx     = 1
-       ip_order   = 1
-       ip_invertIfNegative     = &apos;0&apos;
-       ip_lbl     = &apos;Sheet1!$B$1:$B$3&apos;
-       ip_REF     = &apos;Sheet1!$A$1:$A$3&apos;
-       ip_sername = &apos;My serie 2&apos;
-       .
+    EXPORTING
+      ip_order            = 1
+      ip_invertifnegative = zcl_excel_graph_bars=&gt;c_invertifnegative_no
+      ip_lbl              = &apos;Sheet1!$B$1:$B$3&apos;
+      ip_ref              = &apos;Sheet1!$A$1:$A$3&apos;
+      ip_sername          = &apos;My serie 2&apos;.
 
   CALL METHOD lo_bar-&gt;create_ax
     EXPORTING
-*      ip_axid          =
+*     ip_axid          =
       ip_type          = zcl_excel_graph_bars=&gt;c_catax
-*      ip_orientation   =
-*      ip_delete        =
-*      ip_axpos         =
-*      ip_formatcode    =
-*      ip_sourcelinked  =
-*      ip_majortickmark =
-*      ip_minortickmark =
-*      ip_ticklblpos    =
-*      ip_crossax       =
-*      ip_crosses       =
-*      ip_auto          =
-*      ip_lblalgn       =
-*      ip_lbloffset     =
-*      ip_nomultilvllbl =
-*      ip_crossbetween  =
-      .
+*     ip_orientation   =
+*     ip_delete        =
+*     ip_axpos         =
+*     ip_formatcode    =
+*     ip_sourcelinked  =
+*     ip_majortickmark =
+*     ip_minortickmark =
+*     ip_ticklblpos    =
+*     ip_crossax       =
+*     ip_crosses       =
+*     ip_auto          =
+*     ip_lblalgn       =
+*     ip_lbloffset     =
+*     ip_nomultilvllbl =
+*     ip_crossbetween  =
+    .
 
   CALL METHOD lo_bar-&gt;create_ax
     EXPORTING
-*      ip_axid          =
+*     ip_axid          =
       ip_type          = zcl_excel_graph_bars=&gt;c_valax
-*      ip_orientation   =
-*      ip_delete        =
-*      ip_axpos         =
-*      ip_formatcode    =
-*      ip_sourcelinked  =
-*      ip_majortickmark =
-*      ip_minortickmark =
-*      ip_ticklblpos    =
-*      ip_crossax       =
-*      ip_crosses       =
-*      ip_auto          =
-*      ip_lblalgn       =
-*      ip_lbloffset     =
-*      ip_nomultilvllbl =
-*      ip_crossbetween  =
-      .
+*     ip_orientation   =
+*     ip_delete        =
+*     ip_axpos         =
+*     ip_formatcode    =
+*     ip_sourcelinked  =
+*     ip_majortickmark =
+*     ip_minortickmark =
+*     ip_ticklblpos    =
+*     ip_crossax       =
+*     ip_crosses       =
+*     ip_auto          =
+*     ip_lblalgn       =
+*     ip_lbloffset     =
+*     ip_nomultilvllbl =
+*     ip_crossbetween  =
+    .
+
+  &quot; Set style
+  lo_bar-&gt;set_style( zcl_excel_graph=&gt;c_style_16 ).
 
   &quot; Create a bar chart, series and axes
   CREATE OBJECT lo_bar2.
 
   CALL METHOD lo_bar2-&gt;create_serie
-      EXPORTING
-       ip_idx     = 0
-       ip_order   = 0
-       ip_invertIfNegative     = &apos;0&apos;
-       ip_lbl     = &apos;Sheet1!$D$1:$D$3&apos;
-       ip_REF     = &apos;Sheet1!$C$1:$C$3&apos;
-       ip_sername = &apos;My serie 1&apos;
-       .
+    EXPORTING
+      ip_order            = 0
+      ip_invertifnegative = zcl_excel_graph_bars=&gt;c_invertifnegative_no
+      ip_lbl              = &apos;Sheet1!$D$1:$D$3&apos;
+      ip_ref              = &apos;Sheet1!$C$1:$C$3&apos;
+      ip_sername          = &apos;My serie 1&apos;.
 
   CALL METHOD lo_bar2-&gt;create_ax
     EXPORTING
-*      ip_axid          =
+*     ip_axid          =
       ip_type          = zcl_excel_graph_bars=&gt;c_catax
-*      ip_orientation   =
-*      ip_delete        =
-*      ip_axpos         =
-*      ip_formatcode    =
-*      ip_sourcelinked  =
-*      ip_majortickmark =
-*      ip_minortickmark =
-*      ip_ticklblpos    =
-*      ip_crossax       =
-*      ip_crosses       =
-*      ip_auto          =
-*      ip_lblalgn       =
-*      ip_lbloffset     =
-*      ip_nomultilvllbl =
-*      ip_crossbetween  =
-      .
+*     ip_orientation   =
+*     ip_delete        =
+*     ip_axpos         =
+*     ip_formatcode    =
+*     ip_sourcelinked  =
+*     ip_majortickmark =
+*     ip_minortickmark =
+*     ip_ticklblpos    =
+*     ip_crossax       =
+*     ip_crosses       =
+*     ip_auto          =
+*     ip_lblalgn       =
+*     ip_lbloffset     =
+*     ip_nomultilvllbl =
+*     ip_crossbetween  =
+    .
 
   CALL METHOD lo_bar2-&gt;create_ax
     EXPORTING
-*      ip_axid          =
+*     ip_axid          =
       ip_type          = zcl_excel_graph_bars=&gt;c_valax
-*      ip_orientation   =
-*      ip_delete        =
-*      ip_axpos         =
-*      ip_formatcode    =
-*      ip_sourcelinked  =
-*      ip_majortickmark =
-*      ip_minortickmark =
-*      ip_ticklblpos    =
-*      ip_crossax       =
-*      ip_crosses       =
-*      ip_auto          =
-*      ip_lblalgn       =
-*      ip_lbloffset     =
-*      ip_nomultilvllbl =
-*      ip_crossbetween  =
-      .
+*     ip_orientation   =
+*     ip_delete        =
+*     ip_axpos         =
+*     ip_formatcode    =
+*     ip_sourcelinked  =
+*     ip_majortickmark =
+*     ip_minortickmark =
+*     ip_ticklblpos    =
+*     ip_crossax       =
+*     ip_crosses       =
+*     ip_auto          =
+*     ip_lblalgn       =
+*     ip_lbloffset     =
+*     ip_nomultilvllbl =
+*     ip_crossbetween  =
+    .
 
 
   &quot; Create global drawing, set type as pie chart, assign chart, set position and media type
@@ -236,10 +231,7 @@ START-OF-SELECTION.
 
   lo_drawing-&gt;set_media(
     EXPORTING
-      ip_media = lv_media &quot;used for template (binary content)
-      ip_media_type = &apos;xml&apos;
-      ip_width = 0 &quot;used only for image types, not for charts
-      ip_height = 0 ). &quot;used only for image types, not for charts
+      ip_media_type = zcl_excel_drawing=&gt;c_media_type_xml ).
 
 
   lo_worksheet-&gt;add_drawing( lo_drawing ).
@@ -263,11 +255,7 @@ START-OF-SELECTION.
 
   lo_drawing-&gt;set_media(
     EXPORTING
-      ip_media = lv_media &quot;used for template (binary content)
-      ip_media_type = &apos;xml&apos;
-      ip_width = 0 &quot;used only for image types, not for charts
-      ip_height = 0 ). &quot;used only for image types, not for charts
-
+      ip_media_type = zcl_excel_drawing=&gt;c_media_type_xml ).
 
   lo_worksheet-&gt;add_drawing( lo_drawing ).
 
@@ -290,11 +278,7 @@ START-OF-SELECTION.
 
   lo_drawing-&gt;set_media(
     EXPORTING
-      ip_media = lv_media &quot;used for template (binary content)
-      ip_media_type = &apos;xml&apos;
-      ip_width = 0 &quot;used only for image types, not for charts
-      ip_height = 0 ). &quot;used only for image types, not for charts
-
+      ip_media_type = zcl_excel_drawing=&gt;c_media_type_xml ).
 
   lo_worksheet-&gt;add_drawing( lo_drawing ).
 
