@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" UUID="02023211AE4F1EE28EDF2A8F8A97065E" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="S_SERIES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="16 " SRCCOLUMN2="22 " TYPESRC_LENG="217 " TYPESRC="BEGIN OF s_series,
-                idx   TYPE i,
-                order TYPE i,
-                lbl   TYPE string,
-                ref   TYPE string,
-                sername TYPE string,
+ <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="S_SERIES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="17 " SRCCOLUMN2="22 " TYPESRC_LENG="323 " TYPESRC="BEGIN OF s_series,
+                idx               TYPE i,
+                order             TYPE i,
+                invertIfNegative  TYPE string,
+                lbl               TYPE string,
+                ref               TYPE string,
+                sername           TYPE string,
         END OF s_series
 "/>
- <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="T_SERIES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="18 " SRCCOLUMN1="4 " SRCROW2="18 " SRCCOLUMN2="43 " TYPESRC_LENG="42 " TYPESRC="t_series TYPE STANDARD TABLE OF s_series
+ <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="T_SERIES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="19 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="43 " TYPESRC_LENG="42 " TYPESRC="t_series TYPE STANDARD TABLE OF s_series
 "/>
- <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="S_PAGEMARGINS" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="20 " SRCCOLUMN1="4 " SRCROW2="27 " SRCCOLUMN2="27 " TYPESRC_LENG="257 " TYPESRC="BEGIN OF s_pagemargins,
+ <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="S_PAGEMARGINS" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="28 " SRCCOLUMN2="27 " TYPESRC_LENG="257 " TYPESRC="BEGIN OF s_pagemargins,
                 b TYPE string,
                 l TYPE string,
                 r TYPE string,
@@ -29,11 +30,12 @@ public section.
 
   types:
     BEGIN OF s_series,
-                idx   TYPE i,
-                order TYPE i,
-                lbl   TYPE string,
-                ref   TYPE string,
-                sername TYPE string,
+                idx               TYPE i,
+                order             TYPE i,
+                invertIfNegative  TYPE string,
+                lbl               TYPE string,
+                ref               TYPE string,
+                sername           TYPE string,
         END OF s_series .
   types:
     t_series TYPE STANDARD TABLE OF s_series .
@@ -60,11 +62,12 @@ public section.
   methods CONSTRUCTOR .
   methods CREATE_SERIE
     importing
-      !IDX type I
-      !ORDER type I
-      !LBL type STRING
-      !REF type STRING
-      !SERNAME type STRING .</publicSection>
+      !IP_IDX type I
+      !IP_ORDER type I
+      !IP_INVERTIFNEGATIVE type STRING optional
+      !IP_LBL type STRING
+      !IP_REF type STRING
+      !IP_SERNAME type STRING .</publicSection>
  <protectedSection>protected section.
 *&quot;* protected components of class ZCL_EXCEL_GRAPH
 *&quot;* do not include other source files here!!!</protectedSection>
@@ -100,18 +103,20 @@ public section.
 endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IDX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="ORDER" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="LBL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="REF" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="SERNAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_IDX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_ORDER" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_INVERTIFNEGATIVE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_LBL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_REF" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_SERNAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <source>METHOD create_serie.
   DATA ls_serie TYPE s_series.
-  ls_serie-idx = idx.
-  ls_serie-order = order.
-  ls_serie-lbl = lbl.
-  ls_serie-ref = ref.
-  ls_serie-sername = sername.
+  ls_serie-idx = ip_idx.
+  ls_serie-order = ip_order.
+  ls_serie-invertIfNegative = ip_invertIfNegative.
+  ls_serie-lbl = ip_lbl.
+  ls_serie-ref = ip_ref.
+  ls_serie-sername = ip_sername.
   APPEND ls_serie TO me-&gt;series.
   SORT me-&gt;series BY order ASCENDING.
 ENDMETHOD.</source>
