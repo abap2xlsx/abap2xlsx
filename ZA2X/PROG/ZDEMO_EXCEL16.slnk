@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL16" VARCL="X" SUBC="1" CNAM="VONDRUSKA" CDAT="20100914" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000080" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111821" IDATE="20120324" ITIME="111821" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL16" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Drawings" LENGTH="25 "/>
@@ -118,7 +118,7 @@ START-OF-SELECTION.
   lo_drawing-&gt;set_position( ip_from_row = 9
                             ip_from_col = &apos;B&apos; ).
   lo_drawing-&gt;set_media( ip_media       = lv_content
-                         ip_media_type = &apos;bmp&apos;
+                         ip_media_type = zcl_excel_drawing=&gt;c_media_type_bmp
                          ip_width = 83
                          ip_height = 160 ).
 

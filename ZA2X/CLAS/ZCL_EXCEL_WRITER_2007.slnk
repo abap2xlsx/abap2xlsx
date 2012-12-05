@@ -1103,10 +1103,8 @@ endmethod.</source>
               lc_xml_node_choice_ns_requires    TYPE string VALUE &apos;c14&apos;,
               lc_xml_node_choice_ns_c14         TYPE string VALUE &apos;http://schemas.microsoft.com/office/drawing/2007/8/2/chart&apos;,
               lc_xml_node_style                 TYPE string VALUE &apos;c14:style&apos;,
-              lc_xml_node_style_ns_val          TYPE string VALUE &apos;102&apos;,
               lc_xml_node_fallback              TYPE string VALUE &apos;mc:Fallback&apos;,
               lc_xml_node_style2                TYPE string VALUE &apos;c:style&apos;,
-              lc_xml_node_style2_ns_val         TYPE string VALUE &apos;2&apos;,
 
               &quot;---------------------------CHART
               lc_xml_node_chart                 TYPE string VALUE &apos;c:chart&apos;,
@@ -1287,7 +1285,7 @@ endmethod.</source>
   lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_style
                                                        parent = lo_element2 ).
   lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lc_xml_node_style_ns_val ).
+                                    value = lo_chart-&gt;ns_c14styleval ).
 
   &quot;Fallback
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_fallback
@@ -1297,7 +1295,7 @@ endmethod.</source>
   lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_style2
                                                        parent = lo_element2 ).
   lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lc_xml_node_style2_ns_val ).
+                                    value = lo_chart-&gt;ns_styleval ).
 
   &quot;---------------------------CHART
   lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_chart
@@ -1336,7 +1334,11 @@ endmethod.</source>
                                                    parent = lo_element3 ).
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
                                                    parent = lo_element4 ).
-        lv_str = ls_serie-idx.
+        if ls_serie-idx is not initial.
+          lv_str = ls_serie-idx.
+        else.
+          lv_str = sy-index.
+        endif.
         condense lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lv_str ).
@@ -1554,7 +1556,11 @@ endmethod.</source>
                                                    parent = lo_element3 ).
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
                                                    parent = lo_element4 ).
-        lv_str = ls_serie-idx.
+        if ls_serie-idx is not initial.
+          lv_str = ls_serie-idx.
+        else.
+          lv_str = sy-index.
+        endif.
         condense lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lv_str ).

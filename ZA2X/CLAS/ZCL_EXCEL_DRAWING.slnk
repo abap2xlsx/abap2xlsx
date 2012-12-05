@@ -22,6 +22,9 @@ public section.
   constants ANCHOR_ONE_CELL type ZEXCEL_DRAWING_ANCHOR value &apos;ONE&apos;. &quot;#EC NOTEXT
   constants ANCHOR_TWO_CELL type ZEXCEL_DRAWING_ANCHOR value &apos;TWO&apos;. &quot;#EC NOTEXT
   data GRAPH type ref to ZCL_EXCEL_GRAPH .
+  constants C_MEDIA_TYPE_BMP type STRING value &apos;bmp&apos;. &quot;#EC NOTEXT
+  constants C_MEDIA_TYPE_XML type STRING value &apos;xml&apos;. &quot;#EC NOTEXT
+  constants C_MEDIA_TYPE_JPG type STRING value &apos;jpg&apos;. &quot;#EC NOTEXT
 
   methods CONSTRUCTOR
     importing
@@ -71,10 +74,10 @@ public section.
       value(R_EMU) type INT4 .
   methods SET_MEDIA
     importing
-      !IP_MEDIA type XSTRING
+      !IP_MEDIA type XSTRING optional
       !IP_MEDIA_TYPE type STRING
-      !IP_WIDTH type INT4
-      !IP_HEIGHT type INT4 .
+      !IP_WIDTH type INT4 default 0
+      !IP_HEIGHT type INT4 default 0 .
   methods SET_MEDIA_MIME
     importing
       !IP_IO type SKWF_IO
@@ -150,6 +153,9 @@ protected section.</protectedSection>
  <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_MIME" VERSION="1" LANGU="E" DESCRIPT="miem repository" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="2" ATTVALUE="2" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_WWW" VERSION="1" LANGU="E" DESCRIPT="www repository SMW0" EXPOSURE="0" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_XSTRING" VERSION="1" LANGU="E" DESCRIPT="Binary data as XSTRING" EXPOSURE="0" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTVALUE="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_BMP" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="29 " ATTDECLTYP="2" ATTVALUE="&apos;bmp&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_JPG" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="31 " ATTDECLTYP="2" ATTVALUE="&apos;jpg&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_XML" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="30 " ATTDECLTYP="2" ATTVALUE="&apos;xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="FROM_LOC" VERSION="1" LANGU="E" DESCRIPT="Drawing location for Excel" EXPOSURE="0" STATE="1" EDITORDER="26 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_LOCATION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" EXPOSURE="2" STATE="1" EDITORDER="12 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_GRAPH" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GRAPH_TYPE" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -436,6 +442,13 @@ endmethod.</source>
   zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
   me-&gt;graph-&gt;ns_roundedcornersval = ls_prop-val.
 
+  &quot;style
+  node2 ?= node-&gt;find_from_name( name = &apos;style&apos; namespace = &apos;c14&apos; ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  me-&gt;graph-&gt;ns_c14styleval = ls_prop-val.
+  node2 ?= node-&gt;find_from_name( name = &apos;style&apos; namespace = &apos;c&apos; ).
+  zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+  me-&gt;graph-&gt;ns_styleval = ls_prop-val.
   &quot;---------------------------Read graph properties
   node2 ?= node-&gt;find_from_name( name = &apos;autoTitleDeleted&apos; namespace = &apos;c&apos; ).
   zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
@@ -803,17 +816,23 @@ ENDMETHOD.</source>
 endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" VERSION="1" LANGU="E" DESCRIPT="Add media to drawing as XSTRING" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_MEDIA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_MEDIA" VERSION="1" LANGU="E" DESCRIPT="used only for template of charts" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_MEDIA_TYPE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_WIDTH" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
-  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_HEIGHT" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
-  <source>method SET_MEDIA.
-  media = ip_media.
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_WIDTH" VERSION="1" LANGU="E" DESCRIPT="used only for image types, not for charts" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4" PARVALUE="0"/>
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_HEIGHT" VERSION="1" LANGU="E" DESCRIPT="used only for image types, not for charts" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4" PARVALUE="0"/>
+  <source>METHOD set_media.
+  IF ip_media IS SUPPLIED.
+    media = ip_media.
+  ENDIF.
   media_type = ip_media_type.
   media_source = c_media_source_xstring.
-  size-width  = ip_width.
-  size-height = ip_height.
-endmethod.</source>
+  IF ip_width IS SUPPLIED.
+    size-width  = ip_width.
+  ENDIF.
+  IF ip_height IS SUPPLIED.
+    size-height = ip_height.
+  ENDIF.
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA_MIME" VERSION="1" LANGU="E" DESCRIPT="Add media from mime repository" EXPOSURE="2" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA_MIME" SCONAME="IP_IO" VERSION="1" LANGU="E" DESCRIPT="KW Framework: Object Key" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SKWF_IO"/>

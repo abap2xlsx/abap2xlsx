@@ -103,7 +103,7 @@ START-OF-SELECTION.
     ENDLOOP.
 
     lo_drawing-&gt;set_media( ip_media      = lv_xstring
-                           ip_media_type = &apos;jpg&apos;
+                           ip_media_type = zcl_excel_drawing=&gt;c_media_type_jpg
                            ip_width      = 16
                            ip_height     = 14  ).
     lo_worksheet-&gt;add_drawing( lo_drawing ).

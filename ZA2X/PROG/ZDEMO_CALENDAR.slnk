@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_CALENDAR" VARCL="X" SUBC="1" CNAM="DEVELOPER" CDAT="20111229" UNAM="DEVELOPER" UDAT="20120619" VERN="000127" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120619" STIME="063434" IDATE="20120619" ITIME="063434" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_CALENDAR" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="D">
    <textElement ID="I" KEY="001" ENTRY="KW" LENGTH="4 "/>
@@ -280,7 +280,7 @@ START-OF-SELECTION.
       lv_content = zcl_helper=&gt;load_image( image_path ).
       width = c_height * c_factor.
       lo_drawing-&gt;set_media( ip_media      = lv_content
-                             ip_media_type = &apos;jpg&apos;
+                             ip_media_type = zcl_excel_drawing=&gt;c_media_type_jpg
                              ip_width      = width
                              ip_height     = c_height  ).
       lo_worksheet-&gt;add_drawing( lo_drawing ).
