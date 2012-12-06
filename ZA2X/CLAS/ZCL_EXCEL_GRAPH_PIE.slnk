@@ -1,54 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_GRAPH_PIE" VERSION="1" LANGU="E" DESCRIPT="Pie Graphic" UUID="02023211AE4F1EE28EDF2CCF6EE54660" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_GRAPH">
- <publicSection>*----------------------------------------------------------------------*
-*       CLASS ZCL_EXCEL_GRAPH_PIE DEFINITION
-*----------------------------------------------------------------------*
-*
-*----------------------------------------------------------------------*
-CLASS zcl_excel_graph_pie DEFINITION
-  PUBLIC
-  INHERITING FROM zcl_excel_graph
-  FINAL
-  CREATE PUBLIC .
+ <publicSection>class ZCL_EXCEL_GRAPH_PIE definition
+  public
+  inheriting from ZCL_EXCEL_GRAPH
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 *&quot;* public components of class ZCL_EXCEL_GRAPH_PIE
 *&quot;* do not include other source files here!!!
 
-    DATA ns_legendposval TYPE string VALUE &apos;r&apos;.           &quot;#EC NOTEXT .
-    DATA ns_overlayval TYPE string VALUE &apos;0&apos;.             &quot;#EC NOTEXT .
-    DATA ns_pprrtl TYPE string VALUE &apos;0&apos;.                 &quot;#EC NOTEXT .
-    DATA ns_endpararprlang TYPE string VALUE &apos;it-IT&apos;.     &quot;#EC NOTEXT .
-    DATA ns_varycolorsval TYPE string VALUE &apos;1&apos;.          &quot;#EC NOTEXT .
-    DATA ns_firstsliceangval TYPE string VALUE &apos;0&apos;.       &quot;#EC NOTEXT .
-    DATA ns_showlegendkeyval TYPE string VALUE &apos;0&apos;.       &quot;#EC NOTEXT .
-    DATA ns_showvalval TYPE string VALUE &apos;0&apos;.             &quot;#EC NOTEXT .
-    DATA ns_showcatnameval TYPE string VALUE &apos;0&apos;.         &quot;#EC NOTEXT .
-    DATA ns_showsernameval TYPE string VALUE &apos;0&apos;.         &quot;#EC NOTEXT .
-    DATA ns_showpercentval TYPE string VALUE &apos;0&apos;.         &quot;#EC NOTEXT .
-    DATA ns_showbubblesizeval TYPE string VALUE &apos;0&apos;.      &quot;#EC NOTEXT .
-    DATA ns_showleaderlinesval TYPE string VALUE &apos;1&apos;.     &quot;#EC NOTEXT .
-    CONSTANTS c_show_true TYPE char1 VALUE &apos;1&apos;.             &quot;#EC NOTEXT
-    CONSTANTS c_show_false TYPE char1 VALUE &apos;0&apos;.            &quot;#EC NOTEXT
+  data NS_LEGENDPOSVAL type STRING value &apos;r&apos;. &quot;#EC NOTEXT .
+  data NS_OVERLAYVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_PPRRTL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_ENDPARARPRLANG type STRING value &apos;it-IT&apos;. &quot;#EC NOTEXT .
+  data NS_VARYCOLORSVAL type STRING value &apos;1&apos;. &quot;#EC NOTEXT .
+  data NS_FIRSTSLICEANGVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWLEGENDKEYVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWVALVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWCATNAMEVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWSERNAMEVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWPERCENTVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWBUBBLESIZEVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
+  data NS_SHOWLEADERLINESVAL type STRING value &apos;1&apos;. &quot;#EC NOTEXT .
 
-    METHODS set_show_legend_key
-      IMPORTING
-        !ip_value TYPE char1 .
-    METHODS set_show_values
-      IMPORTING
-        !ip_value TYPE char1 .
-    METHODS set_show_cat_name
-      IMPORTING
-        !ip_value TYPE char1 .
-    METHODS set_show_ser_name
-      IMPORTING
-        !ip_value TYPE char1 .
-    METHODS set_show_percent
-      IMPORTING
-        !ip_value TYPE char1 .
-    METHODS set_show_leader_lines
-      IMPORTING
-        !ip_value TYPE char1 .</publicSection>
+  methods SET_SHOW_LEGEND_KEY
+    importing
+      !IP_VALUE type C .
+  methods SET_SHOW_VALUES
+    importing
+      !IP_VALUE type C .
+  methods SET_SHOW_CAT_NAME
+    importing
+      !IP_VALUE type C .
+  methods SET_SHOW_SER_NAME
+    importing
+      !IP_VALUE type C .
+  methods SET_SHOW_PERCENT
+    importing
+      !IP_VALUE type C .
+  methods SET_SHOW_LEADER_LINES
+    importing
+      !IP_VALUE type C .
+  methods SET_VARYCOLOR
+    importing
+      !IP_VALUE type C .</publicSection>
  <protectedSection>protected section.
 *&quot;* protected components of class ZCL_EXCEL_GRAPH_PIE
 *&quot;* do not include other source files here!!!</protectedSection>
@@ -63,8 +59,6 @@ CLASS zcl_excel_graph_pie DEFINITION
 *&quot;* components in the private section</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="C_SHOW_FALSE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" EXPOSURE="2" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="C_SHOW_TRUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" EXPOSURE="2" STATE="1" EDITORDER="14 " ATTDECLTYP="2" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="NS_ENDPARARPRLANG" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTVALUE="&apos;it-IT&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="NS_FIRSTSLICEANGVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="6 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="NS_LEGENDPOSVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTVALUE="&apos;r&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -80,39 +74,45 @@ CLASS zcl_excel_graph_pie DEFINITION
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="NS_VARYCOLORSVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <inheritance CLSNAME="ZCL_EXCEL_GRAPH_PIE" REFCLSNAME="ZCL_EXCEL_GRAPH" VERSION="1" STATE="1"/>
  <method CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_CAT_NAME" VERSION="1" LANGU="E" DESCRIPT="Show the category name on the pie chart" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_CAT_NAME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_CAT_NAME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
   <source>METHOD set_show_cat_name.
   ns_showcatnameval = ip_value.
 ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_LEADER_LINES" VERSION="1" LANGU="E" DESCRIPT="Show leader lines on the pie chart" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_LEADER_LINES" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_LEADER_LINES" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
   <source>METHOD set_show_leader_lines.
   ns_showleaderlinesval = ip_value.
 ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_LEGEND_KEY" VERSION="1" LANGU="E" DESCRIPT="Show the legend key on the pie chart" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_LEGEND_KEY" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_LEGEND_KEY" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
   <source>METHOD set_show_legend_key.
   ns_showlegendkeyval = ip_value.
 ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_PERCENT" VERSION="1" LANGU="E" DESCRIPT="Values as percent" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_PERCENT" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_PERCENT" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
   <source>METHOD set_show_percent.
   ns_showpercentval = ip_value.
 ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_SER_NAME" VERSION="1" LANGU="E" DESCRIPT="Show the serie name on the pie chart" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_SER_NAME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_SER_NAME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
   <source>METHOD set_show_ser_name.
   ns_showsernameval = ip_value.
 ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_VALUES" VERSION="1" LANGU="E" DESCRIPT="Show values on the pie chart" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_VALUES" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_SHOW_VALUES" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
   <source>METHOD set_show_values.
   ns_showvalval = ip_value.
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_VARYCOLOR" VERSION="1" LANGU="E" DESCRIPT="Show vary colors" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_GRAPH_PIE" CMPNAME="SET_VARYCOLOR" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
+  <source>METHOD set_varycolor.
+  ns_varycolorsval = ip_value.
 ENDMETHOD.</source>
  </method>
 </CLAS>

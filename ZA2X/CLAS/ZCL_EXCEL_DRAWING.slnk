@@ -11,6 +11,7 @@ public section.
   type-pools ABAP .
 
   constants C_GRAPH_PIE type ZEXCEL_GRAPH_TYPE value &apos;1&apos;. &quot;#EC NOTEXT
+  constants C_GRAPH_LINE type ZEXCEL_GRAPH_TYPE value &apos;2&apos;. &quot;#EC NOTEXT
   constants C_GRAPH_BARS type ZEXCEL_GRAPH_TYPE value &apos;0&apos;. &quot;#EC NOTEXT
   data GRAPH_TYPE type ZEXCEL_GRAPH_TYPE .
   data TITLE type STRING value &apos;image1.jpg&apos;. &quot;#EC NOTEXT .
@@ -144,37 +145,38 @@ protected section.</protectedSection>
 *&quot;* in the implementation part of the class</localMacros>
  <typeUsage CLSNAME="ZCL_EXCEL_DRAWING" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
  <forwardDeclaration>ABAP</forwardDeclaration>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="0" STATE="1" EDITORDER="15 " ATTDECLTYP="0" ATTVALUE="ANCHOR_ONE_CELL" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR_ABSOLUTE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="2" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;ABS&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR_ONE_CELL" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="2" STATE="1" EDITORDER="10 " ATTDECLTYP="2" ATTVALUE="&apos;ONE&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR_TWO_CELL" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="2" STATE="1" EDITORDER="11 " ATTDECLTYP="2" ATTVALUE="&apos;TWO&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_GRAPH_BARS" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="2" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="0" STATE="1" EDITORDER="16 " ATTDECLTYP="0" ATTVALUE="ANCHOR_ONE_CELL" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR_ABSOLUTE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="2" STATE="1" EDITORDER="10 " ATTDECLTYP="2" ATTVALUE="&apos;ABS&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR_ONE_CELL" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="2" STATE="1" EDITORDER="11 " ATTDECLTYP="2" ATTVALUE="&apos;ONE&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="ANCHOR_TWO_CELL" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing anchor" EXPOSURE="2" STATE="1" EDITORDER="12 " ATTDECLTYP="2" ATTVALUE="&apos;TWO&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_ANCHOR" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_GRAPH_BARS" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="3 " ATTDECLTYP="2" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_GRAPH_LINE" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="2" ATTVALUE="&apos;2&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_GRAPH_PIE" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_MIME" VERSION="1" LANGU="E" DESCRIPT="miem repository" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="2" ATTVALUE="2" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_WWW" VERSION="1" LANGU="E" DESCRIPT="www repository SMW0" EXPOSURE="0" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_XSTRING" VERSION="1" LANGU="E" DESCRIPT="Binary data as XSTRING" EXPOSURE="0" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTVALUE="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_BMP" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="29 " ATTDECLTYP="2" ATTVALUE="&apos;bmp&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_JPG" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="31 " ATTDECLTYP="2" ATTVALUE="&apos;jpg&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_XML" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="30 " ATTDECLTYP="2" ATTVALUE="&apos;xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="FROM_LOC" VERSION="1" LANGU="E" DESCRIPT="Drawing location for Excel" EXPOSURE="0" STATE="1" EDITORDER="26 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_LOCATION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" EXPOSURE="2" STATE="1" EDITORDER="12 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_GRAPH" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GRAPH_TYPE" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" EXPOSURE="0" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="GUID_16" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="INDEX" VERSION="1" LANGU="E" DESCRIPT="Index in collection" EXPOSURE="0" STATE="1" EDITORDER="14 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="IO" VERSION="1" LANGU="E" DESCRIPT="KW Framework: Object Key" EXPOSURE="0" STATE="1" EDITORDER="25 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="SKWF_IO" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_KEY_WWW" VERSION="1" LANGU="E" DESCRIPT="Contents of table WWWDATA" EXPOSURE="0" STATE="1" EDITORDER="21 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="WWWDATATAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_NAME" VERSION="1" LANGU="E" DESCRIPT="Generated file name" EXPOSURE="0" STATE="1" EDITORDER="22 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_SOURCE" VERSION="1" LANGU="E" DESCRIPT="0=XSTRING, 1=WWW" EXPOSURE="0" STATE="1" EDITORDER="23 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_TYPE" VERSION="1" LANGU="E" DESCRIPT="Type of media, file extension" EXPOSURE="0" STATE="1" EDITORDER="24 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SIZE" VERSION="1" LANGU="E" DESCRIPT="Drawing size for Excel" EXPOSURE="0" STATE="1" EDITORDER="28 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_SIZE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTVALUE="&apos;image1.jpg&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TO_LOC" VERSION="1" LANGU="E" DESCRIPT="Drawing location for Excel" EXPOSURE="0" STATE="1" EDITORDER="27 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_LOCATION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TYPE" VERSION="1" LANGU="E" DESCRIPT="Drawing type: image|chart" EXPOSURE="0" STATE="1" EDITORDER="13 " ATTDECLTYP="0" ATTVALUE="TYPE_IMAGE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TYPE_CHART" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" EXPOSURE="2" STATE="1" EDITORDER="8 " ATTDECLTYP="2" ATTVALUE="&apos;chart&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TYPE_IMAGE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" EXPOSURE="2" STATE="1" EDITORDER="7 " ATTDECLTYP="2" ATTVALUE="&apos;image&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="X_REFERENCES" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" EXPOSURE="2" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="Y_REFERENCES" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" EXPOSURE="2" STATE="1" EDITORDER="6 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_MIME" VERSION="1" LANGU="E" DESCRIPT="miem repository" EXPOSURE="0" STATE="1" EDITORDER="19 " ATTDECLTYP="2" ATTVALUE="2" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_WWW" VERSION="1" LANGU="E" DESCRIPT="www repository SMW0" EXPOSURE="0" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_SOURCE_XSTRING" VERSION="1" LANGU="E" DESCRIPT="Binary data as XSTRING" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="2" ATTVALUE="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_BMP" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="30 " ATTDECLTYP="2" ATTVALUE="&apos;bmp&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_JPG" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="32 " ATTDECLTYP="2" ATTVALUE="&apos;jpg&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="C_MEDIA_TYPE_XML" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="31 " ATTDECLTYP="2" ATTVALUE="&apos;xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="FROM_LOC" VERSION="1" LANGU="E" DESCRIPT="Drawing location for Excel" EXPOSURE="0" STATE="1" EDITORDER="27 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_LOCATION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" EXPOSURE="2" STATE="1" EDITORDER="13 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_GRAPH" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GRAPH_TYPE" VERSION="1" LANGU="E" DESCRIPT="Graph type" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_GRAPH_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" EXPOSURE="0" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="GUID_16" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="INDEX" VERSION="1" LANGU="E" DESCRIPT="Index in collection" EXPOSURE="0" STATE="1" EDITORDER="15 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="IO" VERSION="1" LANGU="E" DESCRIPT="KW Framework: Object Key" EXPOSURE="0" STATE="1" EDITORDER="26 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="SKWF_IO" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="21 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_KEY_WWW" VERSION="1" LANGU="E" DESCRIPT="Contents of table WWWDATA" EXPOSURE="0" STATE="1" EDITORDER="22 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="WWWDATATAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_NAME" VERSION="1" LANGU="E" DESCRIPT="Generated file name" EXPOSURE="0" STATE="1" EDITORDER="23 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_SOURCE" VERSION="1" LANGU="E" DESCRIPT="0=XSTRING, 1=WWW" EXPOSURE="0" STATE="1" EDITORDER="24 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="MEDIA_TYPE" VERSION="1" LANGU="E" DESCRIPT="Type of media, file extension" EXPOSURE="0" STATE="1" EDITORDER="25 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SIZE" VERSION="1" LANGU="E" DESCRIPT="Drawing size for Excel" EXPOSURE="0" STATE="1" EDITORDER="29 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_SIZE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="2" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTVALUE="&apos;image1.jpg&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TO_LOC" VERSION="1" LANGU="E" DESCRIPT="Drawing location for Excel" EXPOSURE="0" STATE="1" EDITORDER="28 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_LOCATION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TYPE" VERSION="1" LANGU="E" DESCRIPT="Drawing type: image|chart" EXPOSURE="0" STATE="1" EDITORDER="14 " ATTDECLTYP="0" ATTVALUE="TYPE_IMAGE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TYPE_CHART" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" EXPOSURE="2" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;chart&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="TYPE_IMAGE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" EXPOSURE="2" STATE="1" EDITORDER="8 " ATTDECLTYP="2" ATTVALUE="&apos;image&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="X_REFERENCES" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" EXPOSURE="2" STATE="1" EDITORDER="6 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="Y_REFERENCES" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" EXPOSURE="2" STATE="1" EDITORDER="7 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONSTRUCTOR" SCONAME="IP_TYPE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" PARVALUE="ZCL_EXCEL_DRAWING=&gt;TYPE_IMAGE"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CONSTRUCTOR" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="2" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" PAROPTIONL="X"/>
@@ -371,6 +373,7 @@ endmethod.</source>
 
   DATA lo_barchart TYPE REF TO zcl_excel_graph_bars.
   DATA lo_piechart TYPE REF TO zcl_excel_graph_pie.
+  DATA lo_linechart TYPE REF TO zcl_excel_graph_line.
 
   TYPES: BEGIN OF t_prop,
         val           TYPE string,
@@ -398,6 +401,8 @@ endmethod.</source>
   DATA lv_idx        TYPE i.
   DATA lv_order      TYPE i.
   DATA lv_invertifnegative      TYPE string.
+  DATA lv_symbol      TYPE string.
+  DATA lv_smooth      TYPE c.
   DATA lv_sername    TYPE string.
   DATA lv_label      TYPE string.
   DATA lv_value      TYPE string.
@@ -428,6 +433,9 @@ endmethod.</source>
     WHEN c_graph_pie.
       CREATE OBJECT lo_piechart.
       me-&gt;graph = lo_piechart.
+    WHEN c_graph_line.
+      CREATE OBJECT lo_linechart.
+      me-&gt;graph = lo_linechart.
     WHEN OTHERS.
   ENDCASE.
 
@@ -755,6 +763,233 @@ endmethod.</source>
       node2 ?= node-&gt;find_from_name( name = &apos;firstSliceAng&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
       lo_piechart-&gt;ns_firstsliceangval = ls_prop-val.
+    WHEN c_graph_line.
+      node2 ?= node-&gt;find_from_name( name = &apos;grouping&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_groupingval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;varyColors&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_varycolorsval = ls_prop-val.
+
+      &quot;Load series
+      CALL METHOD node-&gt;get_elements_by_tag_name
+        EXPORTING
+*         depth     = 0
+          name      = &apos;ser&apos;
+*         namespace = &apos;&apos;
+        RECEIVING
+          rval      = lo_collection.
+      CALL METHOD lo_collection-&gt;create_iterator
+        RECEIVING
+          rval = lo_iterator.
+      lo_node = lo_iterator-&gt;get_next( ).
+      IF lo_node IS BOUND.
+        node2 ?= lo_node-&gt;query_interface( ixml_iid_element ).
+      ENDIF.
+      WHILE lo_node IS BOUND.
+        node3 ?= node2-&gt;find_from_name( name = &apos;idx&apos; namespace = &apos;c&apos; ).
+        zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+        lv_idx = ls_prop-val.
+        node3 ?= node2-&gt;find_from_name( name = &apos;order&apos; namespace = &apos;c&apos; ).
+        zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+        lv_order = ls_prop-val.
+        node3 ?= node2-&gt;find_from_name( name = &apos;symbol&apos; namespace = &apos;c&apos; ).
+        zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+        lv_symbol = ls_prop-val.
+        node3 ?= node2-&gt;find_from_name( name = &apos;smooth&apos; namespace = &apos;c&apos; ).
+        zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+        lv_smooth = ls_prop-val.
+        node3 ?= node2-&gt;find_from_name( name = &apos;v&apos; namespace = &apos;c&apos; ).
+        IF node3 IS BOUND.
+          lv_sername = node3-&gt;get_value( ).
+        ENDIF.
+        node3 ?= node2-&gt;find_from_name( name = &apos;strRef&apos; namespace = &apos;c&apos; ).
+        IF node3 IS BOUND.
+          node4 ?= node3-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
+          lv_label = node4-&gt;get_value( ).
+        ENDIF.
+        node3 ?= node2-&gt;find_from_name( name = &apos;numRef&apos; namespace = &apos;c&apos; ).
+        IF node3 IS BOUND.
+          node4 ?= node3-&gt;find_from_name( name = &apos;f&apos; namespace = &apos;c&apos; ).
+          lv_value = node4-&gt;get_value( ).
+        ENDIF.
+        CALL METHOD lo_linechart-&gt;create_serie
+          EXPORTING
+            ip_idx              = lv_idx
+            ip_order            = lv_order
+            ip_symbol           = lv_symbol
+            ip_smooth           = lv_smooth
+            ip_lbl              = lv_label
+            ip_ref              = lv_value
+            ip_sername          = lv_sername.
+        lo_node = lo_iterator-&gt;get_next( ).
+        IF lo_node IS BOUND.
+          node2 ?= lo_node-&gt;query_interface( ixml_iid_element ).
+        ENDIF.
+      ENDWHILE.
+      &quot;note: numCache avoided
+      node2 ?= node-&gt;find_from_name( name = &apos;showLegendKey&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_showlegendkeyval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showVal&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_showvalval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showCatName&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_showcatnameval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showSerName&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_showsernameval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showPercent&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_showpercentval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;showBubbleSize&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_showbubblesizeval = ls_prop-val.
+
+      node ?= node-&gt;find_from_name( name = &apos;lineChart&apos; namespace = &apos;c&apos; ).
+      node2 ?= node-&gt;find_from_name( name = &apos;marker&apos; namespace = &apos;c&apos; DEPTH = &apos;1&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;NS_MARKERVAL = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;smooth&apos; namespace = &apos;c&apos; DEPTH = &apos;1&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;NS_SMOOTHVAL = ls_prop-val.
+      node ?= ip_chart-&gt;if_ixml_node~get_first_child( ).
+      CHECK node IS NOT INITIAL.
+
+      &quot;Load axes
+      node2 ?= node-&gt;find_from_name( name = &apos;lineChart&apos; namespace = &apos;c&apos; ).
+      CALL METHOD node2-&gt;get_elements_by_tag_name
+        EXPORTING
+*         depth     = 0
+          name      = &apos;axId&apos;
+*         namespace = &apos;&apos;
+        RECEIVING
+          rval      = lo_collection.
+      CALL METHOD lo_collection-&gt;create_iterator
+        RECEIVING
+          rval = lo_iterator.
+      lo_node = lo_iterator-&gt;get_next( ).
+      IF lo_node IS BOUND.
+        node2 ?= lo_node-&gt;query_interface( ixml_iid_element ).
+      ENDIF.
+      WHILE lo_node IS BOUND.
+        zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+        lv_axid = ls_prop-val.
+        IF sy-index EQ 1. &quot;catAx
+          node2 ?= node-&gt;find_from_name( name = &apos;catAx&apos; namespace = &apos;c&apos; ).
+          node3 ?= node2-&gt;find_from_name( name = &apos;orientation&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_orientation = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;delete&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_delete = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;axPos&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_axpos = ls_prop-val.
+*          node3 ?= node2-&gt;find_from_name( name = &apos;numFmt&apos; namespace = &apos;c&apos; ).
+*          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+*          lv_formatcode = ls_prop-formatcode.
+*          lv_sourcelinked = ls_prop-sourcelinked.
+          node3 ?= node2-&gt;find_from_name( name = &apos;majorTickMark&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_majortickmark = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;majorTickMark&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_minortickmark = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;tickLblPos&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_ticklblpos = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;crossAx&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_crossax = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;crosses&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_crosses = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;auto&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_auto = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;lblAlgn&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_lblalgn = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;lblOffset&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_lbloffset = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;noMultiLvlLbl&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_nomultilvllbl = ls_prop-val.
+          CALL METHOD lo_linechart-&gt;create_ax
+            EXPORTING
+              ip_axid          = lv_axid
+              ip_type          = zcl_excel_graph_line=&gt;c_catax
+              ip_orientation   = lv_orientation
+              ip_delete        = lv_delete
+              ip_axpos         = lv_axpos
+              ip_formatcode    = lv_formatcode
+              ip_sourcelinked  = lv_sourcelinked
+              ip_majortickmark = lv_majortickmark
+              ip_minortickmark = lv_minortickmark
+              ip_ticklblpos    = lv_ticklblpos
+              ip_crossax       = lv_crossax
+              ip_crosses       = lv_crosses
+              ip_auto          = lv_auto
+              ip_lblalgn       = lv_lblalgn
+              ip_lbloffset     = lv_lbloffset
+              ip_nomultilvllbl = lv_nomultilvllbl.
+        ELSEIF sy-index EQ 2. &quot;valAx
+          node2 ?= node-&gt;find_from_name( name = &apos;valAx&apos; namespace = &apos;c&apos; ).
+          node3 ?= node2-&gt;find_from_name( name = &apos;orientation&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_orientation = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;delete&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_delete = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;axPos&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_axpos = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;numFmt&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_formatcode = ls_prop-formatcode.
+          lv_sourcelinked = ls_prop-sourcelinked.
+          node3 ?= node2-&gt;find_from_name( name = &apos;majorTickMark&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_majortickmark = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;majorTickMark&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_minortickmark = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;tickLblPos&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_ticklblpos = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;crossAx&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_crossax = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;crosses&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_crosses = ls_prop-val.
+          node3 ?= node2-&gt;find_from_name( name = &apos;crossBetween&apos; namespace = &apos;c&apos; ).
+          zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
+          lv_crossbetween = ls_prop-val.
+          CALL METHOD lo_linechart-&gt;create_ax
+            EXPORTING
+              ip_axid          = lv_axid
+              ip_type          = zcl_excel_graph_line=&gt;c_valax
+              ip_orientation   = lv_orientation
+              ip_delete        = lv_delete
+              ip_axpos         = lv_axpos
+              ip_formatcode    = lv_formatcode
+              ip_sourcelinked  = lv_sourcelinked
+              ip_majortickmark = lv_majortickmark
+              ip_minortickmark = lv_minortickmark
+              ip_ticklblpos    = lv_ticklblpos
+              ip_crossax       = lv_crossax
+              ip_crosses       = lv_crosses
+              ip_crossbetween  = lv_crossbetween.
+        ENDIF.
+        lo_node = lo_iterator-&gt;get_next( ).
+        IF lo_node IS BOUND.
+          node2 ?= lo_node-&gt;query_interface( ixml_iid_element ).
+        ENDIF.
+      ENDWHILE.
     WHEN OTHERS.
   ENDCASE.
 
@@ -763,10 +998,17 @@ endmethod.</source>
     WHEN c_graph_bars.
       node2 ?= node-&gt;find_from_name( name = &apos;legendPos&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-      lo_piechart-&gt;ns_legendposval = ls_prop-val.
+      lo_barchart-&gt;ns_legendposval = ls_prop-val.
       node2 ?= node-&gt;find_from_name( name = &apos;overlay&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-      lo_piechart-&gt;ns_overlayval = ls_prop-val.
+      lo_barchart-&gt;ns_overlayval = ls_prop-val.
+    WHEN c_graph_line.
+      node2 ?= node-&gt;find_from_name( name = &apos;legendPos&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_legendposval = ls_prop-val.
+      node2 ?= node-&gt;find_from_name( name = &apos;overlay&apos; namespace = &apos;c&apos; ).
+      zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+      lo_linechart-&gt;ns_overlayval = ls_prop-val.
     WHEN c_graph_pie.
       node2 ?= node-&gt;find_from_name( name = &apos;legendPos&apos; namespace = &apos;c&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
@@ -780,6 +1022,7 @@ endmethod.</source>
       node2 ?= node-&gt;find_from_name( name = &apos;endParaRPr&apos; namespace = &apos;a&apos; ).
       zcl_excel_reader_2007=&gt;fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
       lo_piechart-&gt;ns_endpararprlang = ls_prop-lang.
+
     WHEN OTHERS.
   ENDCASE.
 

@@ -1135,31 +1135,37 @@ endmethod.</source>
                   lc_xml_node_piechart          TYPE string VALUE &apos;c:pieChart&apos;,
                   lc_xml_node_showleaderlines   TYPE string VALUE &apos;c:showLeaderLines&apos;,
                   lc_xml_node_firstsliceang     TYPE string VALUE &apos;c:firstSliceAng&apos;,
+                  &quot;plotArea-&gt;line
+                  lc_xml_node_linechart          TYPE string VALUE &apos;c:lineChart&apos;,
+                  lc_xml_node_symbol            TYPE string VALUE &apos;c:symbol&apos;,
+                  lc_xml_node_marker            TYPE string VALUE &apos;c:marker&apos;,
+                  lc_xml_node_smooth            TYPE string VALUE &apos;c:smooth&apos;,
                   &quot;plotArea-&gt;bar
-                  lc_xml_node_invertIfNegative  TYPE string VALUE &apos;c:invertIfNegative&apos;,
+                  lc_xml_node_invertifnegative  TYPE string VALUE &apos;c:invertIfNegative&apos;,
                   lc_xml_node_barchart          TYPE string VALUE &apos;c:barChart&apos;,
                   lc_xml_node_bardir            TYPE string VALUE &apos;c:barDir&apos;,
-                  lc_xml_node_grouping          TYPE string VALUE &apos;c:grouping&apos;,
                   lc_xml_node_gapwidth          TYPE string VALUE &apos;c:gapwidth&apos;,
-                  lc_xml_node_axId              TYPE string VALUE &apos;c:axId&apos;,
+                  &quot;plotArea-&gt;line + plotArea-&gt;bar
+                  lc_xml_node_grouping          TYPE string VALUE &apos;c:grouping&apos;,
+                  lc_xml_node_axid              TYPE string VALUE &apos;c:axId&apos;,
                   lc_xml_node_catax             TYPE string VALUE &apos;c:catAx&apos;,
                   lc_xml_node_valax             TYPE string VALUE &apos;c:valAx&apos;,
                   lc_xml_node_scaling           TYPE string VALUE &apos;c:scaling&apos;,
                   lc_xml_node_orientation       TYPE string VALUE &apos;c:orientation&apos;,
                   lc_xml_node_delete            TYPE string VALUE &apos;c:delete&apos;,
-                  lc_xml_node_axPos             TYPE string VALUE &apos;c:axPos&apos;,
-                  lc_xml_node_numFmt            TYPE string VALUE &apos;c:numFmt&apos;,
-                  lc_xml_node_majorGridlines    TYPE string VALUE &apos;c:majorGridlines&apos;,
-                  lc_xml_node_majorTickMark     TYPE string VALUE &apos;c:majorTickMark&apos;,
-                  lc_xml_node_minorTickMark     TYPE string VALUE &apos;c:minorTickMark&apos;,
-                  lc_xml_node_tickLblPos        TYPE string VALUE &apos;c:tickLblPos&apos;,
-                  lc_xml_node_crossAx           TYPE string VALUE &apos;c:crossAx&apos;,
+                  lc_xml_node_axpos             TYPE string VALUE &apos;c:axPos&apos;,
+                  lc_xml_node_numfmt            TYPE string VALUE &apos;c:numFmt&apos;,
+                  lc_xml_node_majorgridlines    TYPE string VALUE &apos;c:majorGridlines&apos;,
+                  lc_xml_node_majortickmark     TYPE string VALUE &apos;c:majorTickMark&apos;,
+                  lc_xml_node_minortickmark     TYPE string VALUE &apos;c:minorTickMark&apos;,
+                  lc_xml_node_ticklblpos        TYPE string VALUE &apos;c:tickLblPos&apos;,
+                  lc_xml_node_crossax           TYPE string VALUE &apos;c:crossAx&apos;,
                   lc_xml_node_crosses           TYPE string VALUE &apos;c:crosses&apos;,
                   lc_xml_node_auto              TYPE string VALUE &apos;c:auto&apos;,
-                  lc_xml_node_lblAlgn           TYPE string VALUE &apos;c:lblAlgn&apos;,
-                  lc_xml_node_lblOffset         TYPE string VALUE &apos;c:lblOffset&apos;,
-                  lc_xml_node_noMultiLvlLbl     TYPE string VALUE &apos;c:noMultiLvlLbl&apos;,
-                  lc_xml_node_crossBetween      TYPE string VALUE &apos;c:crossBetween&apos;,
+                  lc_xml_node_lblalgn           TYPE string VALUE &apos;c:lblAlgn&apos;,
+                  lc_xml_node_lbloffset         TYPE string VALUE &apos;c:lblOffset&apos;,
+                  lc_xml_node_nomultilvllbl     TYPE string VALUE &apos;c:noMultiLvlLbl&apos;,
+                  lc_xml_node_crossbetween      TYPE string VALUE &apos;c:crossBetween&apos;,
                 &quot;legend
                 lc_xml_node_legend              TYPE string VALUE &apos;c:legend&apos;,
                   &quot;legend-&gt;pie
@@ -1173,10 +1179,10 @@ endmethod.</source>
                   lc_xml_node_ppr               TYPE string VALUE &apos;a:pPr&apos;,
                   lc_xml_node_defrpr            TYPE string VALUE &apos;a:defRPr&apos;,
                   lc_xml_node_endpararpr        TYPE string VALUE &apos;a:endParaRPr&apos;,
-                  &quot;legend-&gt;bar
-              lc_xml_node_plotvisonly           TYPE string VALUE &apos;c:plotVisOnly&apos;,
-              lc_xml_node_dispblanksas          TYPE string VALUE &apos;c:dispBlanksAs&apos;,
-              lc_xml_node_showdlblsovermax      TYPE string VALUE &apos;c:showDLblsOverMax&apos;,
+                  &quot;legend-&gt;bar + legend-&gt;line
+                  lc_xml_node_plotvisonly           TYPE string VALUE &apos;c:plotVisOnly&apos;,
+                  lc_xml_node_dispblanksas          TYPE string VALUE &apos;c:dispBlanksAs&apos;,
+                  lc_xml_node_showdlblsovermax      TYPE string VALUE &apos;c:showDLblsOverMax&apos;,
               &quot;---------------------------END OF CHART
 
               lc_xml_node_printsettings         TYPE string VALUE &apos;c:printSettings&apos;,
@@ -1198,7 +1204,7 @@ endmethod.</source>
   DATA lo_element                               TYPE REF TO if_ixml_element.
   DATA lo_element2                              TYPE REF TO if_ixml_element.
   DATA lo_element3                              TYPE REF TO if_ixml_element.
-  DATA lo_el_barchart                           TYPE REF TO if_ixml_element.
+  DATA lo_el_rootchart                           TYPE REF TO if_ixml_element.
   DATA lo_element4                              TYPE REF TO if_ixml_element.
   DATA lo_element5                              TYPE REF TO if_ixml_element.
   DATA lo_element6                              TYPE REF TO if_ixml_element.
@@ -1232,11 +1238,12 @@ endmethod.</source>
 
   DATA lo_chartb TYPE REF TO zcl_excel_graph_bars.
   DATA lo_chartp TYPE REF TO zcl_excel_graph_pie.
+  DATA lo_chartl TYPE REF TO zcl_excel_graph_line.
   DATA lo_chart TYPE REF TO zcl_excel_graph.
 
-  data ls_serie type zcl_excel_graph=&gt;s_series.
-  data ls_ax type zcl_excel_graph_bars=&gt;s_ax.
-  data lv_str type string.
+  DATA ls_serie TYPE zcl_excel_graph=&gt;s_series.
+  DATA ls_ax TYPE zcl_excel_graph_bars=&gt;s_ax.
+  DATA lv_str TYPE string.
 
   &quot;Identify chart type
   CASE io_drawing-&gt;graph_type.
@@ -1244,9 +1251,8 @@ endmethod.</source>
       lo_chartb ?= io_drawing-&gt;graph.
     WHEN zcl_excel_drawing=&gt;c_graph_pie.
       lo_chartp ?= io_drawing-&gt;graph.
-
-
-
+    WHEN zcl_excel_drawing=&gt;c_graph_line.
+      lo_chartl ?= io_drawing-&gt;graph.
     WHEN OTHERS.
   ENDCASE.
 
@@ -1329,36 +1335,36 @@ endmethod.</source>
                                 value = lo_chartb-&gt;ns_varycolorsval ).
 
       &quot;series
-      loop at lo_chartb-&gt;SERIES into ls_serie.
+      LOOP AT lo_chartb-&gt;series INTO ls_serie.
         lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ser
                                                    parent = lo_element3 ).
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
                                                    parent = lo_element4 ).
-        if ls_serie-idx is not initial.
+        IF ls_serie-idx IS NOT INITIAL.
           lv_str = ls_serie-idx.
-        else.
-          lv_str = sy-index.
-        endif.
-        condense lv_str.
+        ELSE.
+          lv_str = sy-tabix - 1.
+        ENDIF.
+        CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lv_str ).
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
                                                    parent = lo_element4 ).
         lv_str = ls_serie-order.
-        condense lv_str.
+        CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lv_str ).
-        if ls_serie-sername is not initial.
+        IF ls_serie-sername IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
                                                     parent = lo_element4 ).
           lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_v
                                                     parent = lo_element5 ).
           lo_element6-&gt;set_value( value = ls_serie-sername ).
-        endif.
-        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_invertIfNegative
+        ENDIF.
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_invertifnegative
                                                    parent = lo_element4 ).
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = ls_serie-invertIfNegative ).
+                                value = ls_serie-invertifnegative ).
         IF ls_serie-lbl IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_cat
                                                      parent = lo_element4 ).
@@ -1377,7 +1383,7 @@ endmethod.</source>
                                                      parent = lo_element6 ).
           lo_element7-&gt;set_value( value = ls_serie-ref ).
         ENDIF.
-      endloop.
+      ENDLOOP.
       &quot;endseries
 
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_dlbls
@@ -1407,23 +1413,23 @@ endmethod.</source>
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lo_chartb-&gt;ns_showbubblesizeval ).
 
-      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_gapWidth
+      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_gapwidth
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lo_chartb-&gt;ns_gapwidthval ).
 
       &quot;axes
-      lo_el_barchart = lo_element3.
-      loop at lo_chartb-&gt;axes into ls_ax.
-        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axId
-                                                   parent = lo_el_barchart ).
+      lo_el_rootchart = lo_element3.
+      LOOP AT lo_chartb-&gt;axes INTO ls_ax.
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
+                                                   parent = lo_el_rootchart ).
         lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = ls_ax-axid ).
         CASE ls_ax-type.
-          WHEN zcl_excel_graph_bars=&gt;C_CATAX.
+          WHEN zcl_excel_graph_bars=&gt;c_catax.
             lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_catax
                                                    parent = lo_element2 ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axId
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                            value = ls_ax-axid ).
@@ -1437,32 +1443,32 @@ endmethod.</source>
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                            value = ls_ax-delete ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axPos
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axPos ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numFmt
+                                           value = ls_ax-axpos ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
-                                           value = ls_ax-formatCode ).
+                                           value = ls_ax-formatcode ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
-                                           value = ls_ax-sourceLinked ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majorTickMark
+                                           value = ls_ax-sourcelinked ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-majorTickMark ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minorTickMark
+                                           value = ls_ax-majortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-minorTickMark ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_tickLblPos
+                                           value = ls_ax-minortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-tickLblPos ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossAx
+                                           value = ls_ax-ticklblpos ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossAx ).
+                                           value = ls_ax-crossax ).
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
@@ -1471,22 +1477,22 @@ endmethod.</source>
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                            value = ls_ax-auto ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lblAlgn
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lblalgn
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-lblAlgn ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lblOffset
+                                           value = ls_ax-lblalgn ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lbloffset
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-lblOffset ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_noMultiLvlLbl
+                                           value = ls_ax-lbloffset ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_nomultilvllbl
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-noMultiLvlLbl ).
-          WHEN zcl_excel_graph_bars=&gt;C_VALAX.
+                                           value = ls_ax-nomultilvllbl ).
+          WHEN zcl_excel_graph_bars=&gt;c_valax.
             lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_valax
                                                    parent = lo_element2 ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axId
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                            value = ls_ax-axid ).
@@ -1500,34 +1506,34 @@ endmethod.</source>
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                            value = ls_ax-delete ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axPos
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axPos ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majorGridlines
+                                           value = ls_ax-axpos ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majorgridlines
                                                    parent = lo_element3 ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numFmt
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
-                                           value = ls_ax-formatCode ).
+                                           value = ls_ax-formatcode ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
-                                           value = ls_ax-sourceLinked ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majorTickMark
+                                           value = ls_ax-sourcelinked ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-majorTickMark ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minorTickMark
+                                           value = ls_ax-majortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-minorTickMark ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_tickLblPos
+                                           value = ls_ax-minortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-tickLblPos ).
-            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossAx
+                                           value = ls_ax-ticklblpos ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossAx ).
+                                           value = ls_ax-crossax ).
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
@@ -1538,7 +1544,7 @@ endmethod.</source>
                                            value = ls_ax-crossbetween ).
           WHEN OTHERS.
         ENDCASE.
-      endloop.
+      ENDLOOP.
       &quot;endaxes
 
     WHEN zcl_excel_drawing=&gt;c_graph_pie.
@@ -1551,32 +1557,32 @@ endmethod.</source>
                                 value = lo_chartp-&gt;ns_varycolorsval ).
 
       &quot;series
-      loop at lo_chartp-&gt;SERIES into ls_serie.
+      LOOP AT lo_chartp-&gt;series INTO ls_serie.
         lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ser
                                                    parent = lo_element3 ).
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
                                                    parent = lo_element4 ).
-        if ls_serie-idx is not initial.
+        IF ls_serie-idx IS NOT INITIAL.
           lv_str = ls_serie-idx.
-        else.
-          lv_str = sy-index.
-        endif.
-        condense lv_str.
+        ELSE.
+          lv_str = sy-tabix - 1.
+        ENDIF.
+        CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lv_str ).
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
                                                    parent = lo_element4 ).
         lv_str = ls_serie-order.
-        condense lv_str.
+        CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lv_str ).
-        if ls_serie-sername is not initial.
+        IF ls_serie-sername IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
                                                     parent = lo_element4 ).
           lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_v
                                                     parent = lo_element5 ).
           lo_element6-&gt;set_value( value = ls_serie-sername ).
-        endif.
+        ENDIF.
         IF ls_serie-lbl IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_cat
                                                      parent = lo_element4 ).
@@ -1595,7 +1601,7 @@ endmethod.</source>
                                                      parent = lo_element6 ).
           lo_element7-&gt;set_value( value = ls_serie-ref ).
         ENDIF.
-      endloop.
+      ENDLOOP.
       &quot;endseries
 
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_dlbls
@@ -1632,57 +1638,307 @@ endmethod.</source>
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
                                 value = lo_chartp-&gt;ns_firstsliceangval ).
+    WHEN zcl_excel_drawing=&gt;c_graph_line.
+      &quot;----line
+      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_linechart
+                                                   parent = lo_element2 ).
+      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_grouping
+                                                   parent = lo_element3 ).
+      lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_groupingval ).
+      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_varycolors
+                                                   parent = lo_element3 ).
+      lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_varycolorsval ).
+
+      &quot;series
+      LOOP AT lo_chartl-&gt;series INTO ls_serie.
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ser
+                                                   parent = lo_element3 ).
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_idx
+                                                   parent = lo_element4 ).
+        IF ls_serie-idx IS NOT INITIAL.
+          lv_str = ls_serie-idx.
+        ELSE.
+          lv_str = sy-tabix - 1.
+        ENDIF.
+        CONDENSE lv_str.
+        lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lv_str ).
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
+                                                   parent = lo_element4 ).
+        lv_str = ls_serie-order.
+        CONDENSE lv_str.
+        lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lv_str ).
+        IF ls_serie-sername IS NOT INITIAL.
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
+                                                    parent = lo_element4 ).
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_v
+                                                    parent = lo_element5 ).
+          lo_element6-&gt;set_value( value = ls_serie-sername ).
+        ENDIF.
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_marker
+                                                   parent = lo_element4 ).
+        lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_symbol
+                                                   parent = lo_element5 ).
+        lo_element6-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = ls_serie-symbol ).
+        IF ls_serie-lbl IS NOT INITIAL.
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_cat
+                                                     parent = lo_element4 ).
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_strref
+                                                     parent = lo_element5 ).
+          lo_element7 = lo_document-&gt;create_simple_element( name = lc_xml_node_f
+                                                     parent = lo_element6 ).
+          lo_element7-&gt;set_value( value = ls_serie-lbl ).
+        ENDIF.
+        IF ls_serie-ref IS NOT INITIAL.
+          lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_val
+                                                     parent = lo_element4 ).
+          lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_numref
+                                                     parent = lo_element5 ).
+          lo_element7 = lo_document-&gt;create_simple_element( name = lc_xml_node_f
+                                                     parent = lo_element6 ).
+          lo_element7-&gt;set_value( value = ls_serie-ref ).
+        ENDIF.
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_smooth
+                                                     parent = lo_element4 ).
+        lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = ls_serie-smooth ).
+      ENDLOOP.
+      &quot;endseries
+
+      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_dlbls
+                                                   parent = lo_element3 ).
+      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showlegendkey
+                                                   parent = lo_element4 ).
+      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_showlegendkeyval ).
+      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showval
+                                                   parent = lo_element4 ).
+      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_showvalval ).
+      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showcatname
+                                                   parent = lo_element4 ).
+      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_showcatnameval ).
+      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showsername
+                                                   parent = lo_element4 ).
+      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_showsernameval ).
+      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showpercent
+                                                   parent = lo_element4 ).
+      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_showpercentval ).
+      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showbubblesize
+                                                   parent = lo_element4 ).
+      lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;ns_showbubblesizeval ).
+
+      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_marker
+                                                   parent = lo_element3 ).
+      lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;NS_MARKERVAL ).
+      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_smooth
+                                                   parent = lo_element3 ).
+      lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = lo_chartl-&gt;NS_SMOOTHVAL ).
+
+      &quot;axes
+      lo_el_rootchart = lo_element3.
+      LOOP AT lo_chartl-&gt;axes INTO ls_ax.
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
+                                                   parent = lo_el_rootchart ).
+        lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                value = ls_ax-axid ).
+        CASE ls_ax-type.
+          WHEN zcl_excel_graph_line=&gt;c_catax.
+            lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_catax
+                                                   parent = lo_element2 ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-axid ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_scaling
+                                                   parent = lo_element3 ).
+            lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_orientation
+                                                   parent = lo_element4 ).
+            lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-orientation ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_delete
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-delete ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-axpos ).
+*            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
+*                                                   parent = lo_element3 ).
+*            lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
+*                                           value = ls_ax-formatcode ).
+*            lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
+*                                           value = ls_ax-sourcelinked ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-majortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-minortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-ticklblpos ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-crossax ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-crosses ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_auto
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-auto ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lblalgn
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-lblalgn ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lbloffset
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-lbloffset ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_nomultilvllbl
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-nomultilvllbl ).
+          WHEN zcl_excel_graph_line=&gt;c_valax.
+            lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_valax
+                                                   parent = lo_element2 ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-axid ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_scaling
+                                                   parent = lo_element3 ).
+            lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_orientation
+                                                   parent = lo_element4 ).
+            lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-orientation ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_delete
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-delete ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-axpos ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majorgridlines
+                                                   parent = lo_element3 ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
+                                           value = ls_ax-formatcode ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
+                                           value = ls_ax-sourcelinked ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-majortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-minortickmark ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-ticklblpos ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-crossax ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-crosses ).
+            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossbetween
+                                                   parent = lo_element3 ).
+            lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                           value = ls_ax-crossbetween ).
+          WHEN OTHERS.
+        ENDCASE.
+      ENDLOOP.
+      &quot;endaxes
+
     WHEN OTHERS.
   ENDCASE.
 
   &quot;legend
-  lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_legend
-                                                     parent = lo_element ).
-  CASE io_drawing-&gt;graph_type.
-    WHEN zcl_excel_drawing=&gt;c_graph_bars.
-      &quot;----bar
-      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
-                                                   parent = lo_element2 ).
-      lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_legendposval ).
-      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
-                                                   parent = lo_element2 ).
-      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
-                                                   parent = lo_element2 ).
-      lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_overlayval ).
-    WHEN zcl_excel_drawing=&gt;c_graph_pie.
-      &quot;----pie
-      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
-                                                   parent = lo_element2 ).
-      lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_legendposval ).
-      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
-                                                   parent = lo_element2 ).
-      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
-                                                   parent = lo_element2 ).
-      lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_overlayval ).
-      lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_txpr
-                                                   parent = lo_element2 ).
-      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_bodypr
-                                                   parent = lo_element3 ).
-      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lststyle
-                                                   parent = lo_element3 ).
-      lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_p
-                                                   parent = lo_element3 ).
-      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_ppr
-                                                   parent = lo_element4 ).
-      lo_element5-&gt;set_attribute_ns( name  = &apos;rtl&apos;
-                                value = lo_chartp-&gt;ns_pprrtl ).
-      lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_defrpr
-                                                   parent = lo_element5 ).
-      lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_endpararpr
-                                                   parent = lo_element4 ).
-      lo_element5-&gt;set_attribute_ns( name  = &apos;lang&apos;
-                                value = lo_chartp-&gt;ns_endpararprlang ).
-    WHEN OTHERS.
-  ENDCASE.
+  IF lo_chart-&gt;print_label EQ abap_true.
+    lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_legend
+                                                       parent = lo_element ).
+    CASE io_drawing-&gt;graph_type.
+      WHEN zcl_excel_drawing=&gt;c_graph_bars.
+        &quot;----bar
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
+                                                     parent = lo_element2 ).
+        lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                  value = lo_chartb-&gt;ns_legendposval ).
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
+                                                     parent = lo_element2 ).
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
+                                                     parent = lo_element2 ).
+        lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                  value = lo_chartb-&gt;ns_overlayval ).
+      WHEN zcl_excel_drawing=&gt;c_graph_line.
+        &quot;----line
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
+                                                     parent = lo_element2 ).
+        lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                  value = lo_chartl-&gt;ns_legendposval ).
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
+                                                     parent = lo_element2 ).
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
+                                                     parent = lo_element2 ).
+        lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                  value = lo_chartl-&gt;ns_overlayval ).
+      WHEN zcl_excel_drawing=&gt;c_graph_pie.
+        &quot;----pie
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
+                                                     parent = lo_element2 ).
+        lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                  value = lo_chartp-&gt;ns_legendposval ).
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
+                                                     parent = lo_element2 ).
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
+                                                     parent = lo_element2 ).
+        lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                  value = lo_chartp-&gt;ns_overlayval ).
+        lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_txpr
+                                                     parent = lo_element2 ).
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_bodypr
+                                                     parent = lo_element3 ).
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lststyle
+                                                     parent = lo_element3 ).
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_p
+                                                     parent = lo_element3 ).
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_ppr
+                                                     parent = lo_element4 ).
+        lo_element5-&gt;set_attribute_ns( name  = &apos;rtl&apos;
+                                  value = lo_chartp-&gt;ns_pprrtl ).
+        lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_defrpr
+                                                     parent = lo_element5 ).
+        lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_endpararpr
+                                                     parent = lo_element4 ).
+        lo_element5-&gt;set_attribute_ns( name  = &apos;lang&apos;
+                                  value = lo_chartp-&gt;ns_endpararprlang ).
+      WHEN OTHERS.
+    ENDCASE.
+  ENDIF.
 
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_plotvisonly
                                                        parent = lo_element ).
