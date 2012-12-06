@@ -398,9 +398,9 @@ public section.
  <protectedSection>*&quot;* protected components of class ZCL_EXCEL_WORKSHEET
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_WORKSHEET
+ <privateSection>private section.
+*&quot;* private components of class ZCL_EXCEL_WORKSHEET
 *&quot;* do not include other source files here!!!
-private section.
 
   data ACTIVE_CELL type ZEXCEL_S_CELL_DATA .
   data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
