@@ -46,13 +46,15 @@ public section.
       !E_ROW type ZEXCEL_CELL_ROW .
   class-methods CONVERT_RANGE2COLUMN_A_ROW
     importing
-      !I_RANGE type STRING
+      !I_RANGE type CLIKE
     exporting
       !E_COLUMN_START type ZEXCEL_CELL_COLUMN_ALPHA
       !E_COLUMN_END type ZEXCEL_CELL_COLUMN_ALPHA
       !E_ROW_START type ZEXCEL_CELL_ROW
       !E_ROW_END type ZEXCEL_CELL_ROW
-      !E_SHEET type ZEXCEL_SHEET_TITLE .
+      !E_SHEET type CLIKE
+    raising
+      ZCX_EXCEL .
   class-methods DATE_TO_EXCEL_STRING
     importing
       !IP_VALUE type D
@@ -65,9 +67,16 @@ public section.
       value(R_ENCRYPTED_PWD) type ZEXCEL_AES_PASSWORD .
   class-methods ESCAPE_STRING
     importing
-      !IP_VALUE type STRING
+      !IP_VALUE type CLIKE
     returning
       value(EP_ESCAPED_VALUE) type STRING .
+  class-methods UNESCAPE_STRING
+    importing
+      !IV_ESCAPED type CLIKE
+    returning
+      value(EV_UNESCAPED_STRING) type STRING
+    raising
+      ZCX_EXCEL .
   class-methods EXCEL_STRING_TO_DATE
     importing
       !IP_VALUE type ZEXCEL_CELL_VALUE
@@ -905,6 +914,16 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.                    &quot;split_file
 
 ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
+ <textPool>
+  <language SPRAS="D">
+   <textElement ID="I" KEY="001" ENTRY="Unerlaubter Bereich" LENGTH="60 "/>
+   <textElement ID="I" KEY="002" ENTRY="Eingabe nicht korrekt ?escaped? - &amp;  Wie zum Geier heißt das" LENGTH="60 "/>
+  </language>
+  <language SPRAS="E">
+   <textElement ID="I" KEY="001" ENTRY="Invalid range" LENGTH="60 "/>
+   <textElement ID="I" KEY="002" ENTRY="Input not properly escaped - &amp;" LENGTH="60 "/>
+  </language>
+ </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_COMMON" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
  <forwardDeclaration>ABAP</forwardDeclaration>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_EXCEL_1900_LEAP_YEAR" VERSION="1" LANGU="E" DESCRIPT="Excel baseline date" EXPOSURE="2" STATE="1" EDITORDER="8 " ATTDECLTYP="2" ATTVALUE="&apos;19000228&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="D" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -916,7 +935,7 @@ ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_SPRAS_EN" VERSION="1" LANGU="E" DESCRIPT="Language Key" EXPOSURE="2" STATE="1" EDITORDER="6 " ATTDECLTYP="1" ATTVALUE="&apos;E&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="SPRAS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="C_XLSX_FILE_FILTER" VERSION="1" LANGU="E" DESCRIPT="File filter" EXPOSURE="2" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;Excel Workbook (*.xlsx)|*.xlsx|&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="O_CONV" VERSION="1" LANGU="E" DESCRIPT="Code Page and Endian Conversion (System Format -&gt; External)" EXPOSURE="2" STATE="1" EDITORDER="7 " ATTDECLTYP="1" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_ABAP_CONV_OUT_CE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_DIFFERS" VERSION="1" LANGU="E" DESCRIPT="Ensure Difference Between 2 (Elementary) data Objects" EXPOSURE="2" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_DIFFERS" VERSION="1" LANGU="E" DESCRIPT="Ensure Difference Between 2 (Elementary) data Objects" EXPOSURE="2" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_DIFFERS" SCONAME="EXP" VERSION="1" LANGU="E" DESCRIPT="Compare Object with Unexpected Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_DIFFERS" SCONAME="ACT" VERSION="1" LANGU="E" DESCRIPT="Data Object with Current Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_DIFFERS" SCONAME="MSG" VERSION="1" LANGU="E" DESCRIPT="Message in Case of Error" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE" PAROPTIONL="X"/>
@@ -966,7 +985,7 @@ ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
   ENDIF.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" VERSION="1" LANGU="E" DESCRIPT="Ensure Equality of Two Data Objects" EXPOSURE="2" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" VERSION="1" LANGU="E" DESCRIPT="Ensure Equality of Two Data Objects" EXPOSURE="2" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="EXP" VERSION="1" LANGU="E" DESCRIPT="Data Object with Expected Type" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="ACT" VERSION="1" LANGU="E" DESCRIPT="Data Object with Current Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="MSG" VERSION="1" LANGU="E" DESCRIPT="Message in Case of Error" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE" PAROPTIONL="X"/>
@@ -1179,50 +1198,91 @@ endmethod.</source>
   e_row = row_str.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Converts Sheet1!AB34:CD56 to Sheet1, AB, 34, CD, 56" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="I_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Converts Sheet1!AB34:CD56 to Sheet1, AB, 34, CD, 56" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="I_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_COLUMN_START" VERSION="1" LANGU="E" DESCRIPT="Cell Column Start" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_COLUMN_END" VERSION="1" LANGU="E" DESCRIPT="Cell Column End" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_ROW_START" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_ROW_END" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
-  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_SHEET" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE"/>
-  <source>method CONVERT_RANGE2COLUMN_A_ROW.
-  DATA:
-    sheet           TYPE string,
-    range           TYPE string,
-    columnrow_start TYPE string,
-    columnrow_end   TYPE string.
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_SHEET" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD convert_range2column_a_row.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-12-07
+*              - ...
+* changes: renaming variables to naming conventions
+*          aligning code
+*          added exceptionclass
+*          added errorhandling for invalid range
+*          adding comments to explain what we are trying to achieve
+*--------------------------------------------------------------------*
+* issue#241 - error when sheetname contains &quot;!&quot;
+*           - sheetname should be returned unescaped
+*              - Stefan Schmöcker,                          2012-12-07
+* changes: changed coding to support sheetnames with &quot;!&quot;
+*          unescaping sheetname
+*--------------------------------------------------------------------*
+* issue#155 - lessening restrictions of input parameters
+*              - Stefan Schmöcker,                          2012-12-07
+* changes: i_range changed to clike
+*          e_sheet changed to clike
+*--------------------------------------------------------------------*
 
-  IF i_range IS INITIAL
-    OR NOT i_range CS &apos;:&apos;.
-    RETURN.
+  DATA:       lv_sheet                        TYPE string,
+              lv_range                        TYPE string,
+              lv_columnrow_start              TYPE string,
+              lv_columnrow_end                TYPE string,
+              lv_errormessage                 TYPE string.                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
+
+
+*--------------------------------------------------------------------*
+* Split input range into sheetname and Area
+* 4 cases - a) input empty --&gt; nothing to do
+*         - b) sheetname existing - starts with &apos;            example &apos;Sheet 1&apos;!$B$6:$D$13
+*         - c) sheetname existing - does not start with &apos;    example Sheet1!$B$6:$D$13
+*         - d) no sheetname - just area                      example $B$6:$D$13
+*--------------------------------------------------------------------*
+  IF i_range IS INITIAL.                                &quot; a) input empty --&gt; nothing to do
+    EXIT.
+
+  ELSEIF i_range(1) = `&apos;`.                              &quot; b) sheetname existing - starts with &apos;
+    FIND REGEX &apos;\![^\!]*$&apos; IN i_range MATCH OFFSET sy-fdpos.  &quot; Find last !
+    IF sy-subrc = 0.
+      lv_sheet = i_range(sy-fdpos).
+      ADD 1 TO sy-fdpos.
+      lv_range = i_range.
+      SHIFT lv_range LEFT BY sy-fdpos PLACES.
+    ELSE.
+      lv_errormessage = &apos;Invalid range&apos;(001).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error    = lv_errormessage.
+    ENDIF.
+
+  ELSEIF i_range CS &apos;!&apos;.                                &quot; c) sheetname existing - does not start with &apos;
+    SPLIT i_range AT &apos;!&apos; INTO lv_sheet lv_range.
+
+  ELSE.                                                 &quot; d) no sheetname - just area
+    lv_range = i_range.
   ENDIF.
 
-  IF i_range CS &apos;!&apos;.
-    SPLIT i_range AT &apos;!&apos; INTO sheet range.
-    e_sheet = sheet.
-  ELSE.
-    range = i_range.
-  ENDIF.
+  REPLACE ALL OCCURRENCES OF &apos;$&apos; IN lv_range WITH &apos;&apos;.
+  SPLIT lv_range AT &apos;:&apos; INTO lv_columnrow_start lv_columnrow_end.
 
-  REPLACE ALL OCCURRENCES OF &apos;$&apos; IN range WITH &apos;&apos;.
-  SPLIT range AT &apos;:&apos; INTO columnrow_start columnrow_end.
+  convert_columnrow2column_a_row( EXPORTING
+                                    i_columnrow = lv_columnrow_start
+                                  IMPORTING
+                                    e_column    = e_column_start
+                                    e_row       = e_row_start ).
+  convert_columnrow2column_a_row( EXPORTING
+                                    i_columnrow = lv_columnrow_end
+                                  IMPORTING
+                                    e_column    = e_column_end
+                                    e_row       = e_row_end ).
 
-  convert_columnrow2column_a_row(
-    EXPORTING
-      i_columnrow = columnrow_start
-    IMPORTING
-      e_column    = e_column_start
-      e_row       = e_row_start
-  ).
-  convert_columnrow2column_a_row(
-    EXPORTING
-      i_columnrow = columnrow_end
-    IMPORTING
-      e_column    = e_column_end
-      e_row       = e_row_end
-  ).
-endmethod.</source>
+  e_sheet = unescape_string( lv_sheet ).                  &quot; Return in unescaped form
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert date from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="D"/>
@@ -1339,24 +1399,57 @@ endmethod.</source>
 endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" VERSION="1" LANGU="E" DESCRIPT="Escape a string" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" SCONAME="EP_ESCAPED_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
-  <source>method ESCAPE_STRING.
-  DATA lv_value TYPE string.
+  <source>METHOD escape_string.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-12-08
+*              - ...
+* changes: aligning code
+*          adding comments to explain what we are trying to achieve
+*--------------------------------------------------------------------*
+* issue#242 - Support escaping for white-spaces
+*           - Escaping also necessary when &apos; encountered in input
+*              - Stefan Schmöcker,                          2012-12-08
+* changes: switched check if escaping is necessary to regular expression
+*          and moved the &quot;REPLACE&quot;
+*--------------------------------------------------------------------*
+* issue#155 - lessening restrictions of input parameters
+*              - Stefan Schmöcker,                          2012-12-08
+* changes: ip_value changed to clike
+*--------------------------------------------------------------------*
+  DATA:       lv_value                        TYPE string.
 
+*--------------------------------------------------------------------*
+* There exist various situations when a space will be used to separate
+* different parts of a string. When we have a string consisting spaces
+* that will cause errors unless we &quot;escape&quot; the string by putting &apos; at
+* the beginning and at the end of the string.
+*--------------------------------------------------------------------*
+
+
+*--------------------------------------------------------------------*
+* When allowing clike-input parameters we might encounter trailing
+* &quot;real&quot; blanks .  These are automatically eliminated when moving
+* the input parameter to a string.
+* Now any remaining spaces ( white-spaces or normal spaces ) should
+* trigger the escaping as well as any &apos;
+*--------------------------------------------------------------------*
   lv_value = ip_value.
 
-  REPLACE ALL OCCURRENCES OF `&apos;` IN lv_value WITH `&apos;&apos;`.
 
-  IF lv_value CP &apos;* *&apos;.
+  FIND REGEX `\s|&apos;` IN lv_value.  &quot; \s finds regular and white spaces
+  IF sy-subrc = 0.
+    REPLACE ALL OCCURRENCES OF `&apos;` IN lv_value WITH `&apos;&apos;`.
     CONCATENATE `&apos;` lv_value `&apos;` INTO lv_value .
   ENDIF.
 
   ep_escaped_value = lv_value.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" VERSION="1" LANGU="E" DESCRIPT="Convert date from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" VERSION="1" LANGU="E" DESCRIPT="Convert date from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Date" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="D"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -1379,7 +1472,7 @@ endmethod.</source>
   ENDTRY.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" VERSION="1" LANGU="E" DESCRIPT="Convert time from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" VERSION="1" LANGU="E" DESCRIPT="Convert time from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Time" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -1402,7 +1495,7 @@ endmethod.</source>
   ENDTRY.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="FAIL" VERSION="1" LANGU="E" DESCRIPT="Report Unconditional Error" EXPOSURE="2" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="FAIL" VERSION="1" LANGU="E" DESCRIPT="Report Unconditional Error" EXPOSURE="2" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="FAIL" SCONAME="MSG" VERSION="1" LANGU="E" DESCRIPT="Error Message" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="FAIL" SCONAME="LEVEL" VERSION="1" LANGU="E" DESCRIPT="Error Severity" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="AUNIT_LEVEL" PARVALUE="IF_AUNIT_CONSTANTS=&gt;CRITICAL"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="FAIL" SCONAME="QUIT" VERSION="1" LANGU="E" DESCRIPT="Flow Control in Case of Error" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="AUNIT_FLOWCTRL" PARVALUE="IF_AUNIT_CONSTANTS=&gt;METHOD"/>
@@ -1442,7 +1535,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Creates field catalog for BIND_TABLE based on internal table" EXPOSURE="2" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Creates field catalog for BIND_TABLE based on internal table" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="EP_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG"/>
   <source>METHOD get_fieldcatalog.
@@ -1503,7 +1596,7 @@ endmethod.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Converts number to string representation in Excel format" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Converts number to string representation in Excel format" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="NUMERIC"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <source>method NUMBER_TO_EXCEL_STRING.
@@ -1522,7 +1615,7 @@ ENDMETHOD.</source>
   ENDIF.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" VERSION="1" LANGU="E" DESCRIPT="Move class to structure" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" VERSION="1" LANGU="E" DESCRIPT="Move class to structure" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" SCONAME="E_TARGET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" SCONAME="E_TARGETX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
@@ -1581,7 +1674,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" VERSION="1" LANGU="E" DESCRIPT="Move structure to class" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" VERSION="1" LANGU="E" DESCRIPT="Move structure to class" EXPOSURE="2" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="E_TARGET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
@@ -1688,7 +1781,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" VERSION="1" LANGU="E" DESCRIPT="File &amp; Extension disconnect (clone of FM CV120_SPLIT_FILE)" EXPOSURE="2" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" VERSION="1" LANGU="E" DESCRIPT="File &amp; Extension disconnect (clone of FM CV120_SPLIT_FILE)" EXPOSURE="2" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" SCONAME="IP_FILE" VERSION="1" LANGU="E" DESCRIPT="Original of document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="TEXT255"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" SCONAME="EP_FILE" VERSION="1" LANGU="E" DESCRIPT="Dateiname ohne Extension" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="TEXT255"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" SCONAME="EP_EXTENSION" VERSION="1" LANGU="E" DESCRIPT="Dateiextension (ohne .)" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR10"/>
@@ -1775,7 +1868,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert time from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert time from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" SCONAME="EP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <source>method TIME_TO_EXCEL_STRING.
@@ -1788,5 +1881,65 @@ endmethod.</source>
   lv_day_fraction = lv_seconds_in_day / lc_seconds_in_day.
   ep_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = lv_day_fraction ).
 endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" VERSION="1" LANGU="E" DESCRIPT="Unescape" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" SCONAME="IV_ESCAPED" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" SCONAME="EV_UNESCAPED_STRING" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD unescape_string.
+
+  CONSTANTS   lcv_regex                       TYPE string VALUE `^&apos;[^&apos;]`    &amp; `|` &amp;  &quot; Beginning single &apos; OR
+                                                                `[^&apos;]&apos;$`    &amp; `|` &amp;  &quot; Trailing single &apos;  OR
+                                                                `[^&apos;]&apos;[^&apos;]`.         &quot; Single &apos; somewhere in between
+
+
+  DATA:       lv_errormessage                 TYPE string.                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
+
+*--------------------------------------------------------------------*
+* This method is used to extract the &quot;real&quot; string from an escaped string.
+* An escaped string can be identified by a beginning &apos; which must be
+* accompanied by a trailing &apos;
+* All &apos;&apos; in between beginning and trailing &apos; are treated as single &apos;
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* When allowing clike-input parameters we might encounter trailing
+* &quot;real&quot; blanks .  These are automatically eliminated when moving
+* the input parameter to a string.
+*--------------------------------------------------------------------*
+  ev_unescaped_string = iv_escaped.           &quot; Pass through if not escaped
+
+  CHECK ev_unescaped_string IS NOT INITIAL.   &quot; Nothing to do if empty
+  CHECK ev_unescaped_string(1) = `&apos;`.         &quot; Nothing to do if not escaped
+
+*--------------------------------------------------------------------*
+* Remove leading and trailing &apos;
+*--------------------------------------------------------------------*
+  REPLACE REGEX `^&apos;(.*)&apos;$` IN ev_unescaped_string WITH &apos;$1&apos;.
+  IF sy-subrc &lt;&gt; 0.
+    lv_errormessage = &apos;Input not properly escaped - &amp;&apos;(002).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error    = lv_errormessage.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* Any remaining single &apos; should not be here
+*--------------------------------------------------------------------*
+  FIND REGEX lcv_regex IN ev_unescaped_string.
+  IF sy-subrc = 0.
+    lv_errormessage = &apos;Input not properly escaped - &amp;&apos;(002).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error    = lv_errormessage.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* Replace &apos;&apos; with &apos;
+*--------------------------------------------------------------------*
+  REPLACE ALL OCCURRENCES OF `&apos;&apos;` IN ev_unescaped_string WITH `&apos;`.
+
+
+ENDMETHOD.</source>
  </method>
 </CLAS>
