@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" UUID="C1BF274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="4 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="1 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="2 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="3 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <publicSection>class ZCL_EXCEL_WORKSHEET definition
   public
   final
@@ -607,11 +607,15 @@ endclass.</localTypes>
    <textElement ID="I" KEY="001" ENTRY="Tabelle" LENGTH="132 "/>
    <textElement ID="I" KEY="400" ENTRY="Tabelle überschneidet sich mit schon eingebundener Tabelle und wird diesem Tabellenblatt nicht hinzugefügt." LENGTH="132 "/>
    <textElement ID="I" KEY="401" ENTRY="Für Druckbereich Wiederholungsspalten wurde ein ungültiger Bereich übergeben" LENGTH="132 "/>
+   <textElement ID="I" KEY="402" ENTRY="Nicht erlaubtes Zeichen in Titel des Arbeitblatts.  Liste der verbotenen Zeichen: /\[]*?:" LENGTH="132 "/>
+   <textElement ID="I" KEY="403" ENTRY="Blattname darf nicht mit &amp; beginnen." LENGTH="132 "/>
   </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
    <textElement ID="I" KEY="400" ENTRY="Table overlaps with previously bound table and will not be added to worksheet." LENGTH="132 "/>
    <textElement ID="I" KEY="401" ENTRY="Invalid range supplied for print-title repeatable columns" LENGTH="132 "/>
+   <textElement ID="I" KEY="402" ENTRY="Found illegal character in sheetname. List of forbidden characters: /\[]*?:" LENGTH="132 "/>
+   <textElement ID="I" KEY="403" ENTRY="Sheetname may not start with &amp;" LENGTH="132 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_WORKSHEET" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
@@ -719,6 +723,149 @@ endmethod.</source>
   <source>method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR.
   me-&gt;zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
 endmethod.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS">
+  <source>METHOD zif_excel_sheet_printsettings~clear_print_repeat_columns.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  clear:  me-&gt;print_title_col_from,
+          me-&gt;print_title_col_to  .
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS">
+  <source>METHOD zif_excel_sheet_printsettings~clear_print_repeat_rows.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  clear:  me-&gt;print_title_row_from,
+          me-&gt;print_title_row_to  .
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS">
+  <source>METHOD zif_excel_sheet_printsettings~get_print_repeat_columns.
+  ev_columns_from = me-&gt;print_title_col_from.
+  ev_columns_to   = me-&gt;print_title_col_to.
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS">
+  <source>METHOD zif_excel_sheet_printsettings~get_print_repeat_rows.
+  ev_rows_from = me-&gt;print_title_row_from.
+  ev_rows_to   = me-&gt;print_title_row_to.
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS">
+  <source>METHOD zif_excel_sheet_printsettings~set_print_repeat_columns.
+*--------------------------------------------------------------------*
+* issue#235 - repeat rows/columns
+*           - Stefan Schmöcker,                             2012-12-02
+*--------------------------------------------------------------------*
+
+  DATA:     lv_col_from_int                 TYPE i,
+            lv_col_to_int                   TYPE i,
+            lv_errormessage                 TYPE string.
+
+  DATA:     lo_range_iterator               TYPE REF TO cl_object_collection_iterator,
+            lo_range                        TYPE REF TO zcl_excel_range.
+
+
+  lv_col_from_int = zcl_excel_common=&gt;convert_column2int( iv_columns_from ).
+  lv_col_to_int   = zcl_excel_common=&gt;convert_column2int( iv_columns_to ).
+
+*--------------------------------------------------------------------*
+* Check if valid range is supplied
+*--------------------------------------------------------------------*
+  IF lv_col_from_int &lt; 1.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable columns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+  IF  lv_col_from_int &gt; lv_col_to_int.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable columns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  me-&gt;print_title_col_from = iv_columns_from.
+  me-&gt;print_title_col_to   = iv_columns_to.
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS">
+  <source>METHOD zif_excel_sheet_printsettings~set_print_repeat_rows.
+*--------------------------------------------------------------------*
+* issue#235 - repeat rows/columns
+*           - Stefan Schmöcker,                             2012-12-02
+*--------------------------------------------------------------------*
+
+  DATA:     lv_errormessage                 TYPE string.
+
+  DATA:     lo_range_iterator               TYPE REF TO cl_object_collection_iterator,
+            lo_range                        TYPE REF TO zcl_excel_range.
+
+
+
+*--------------------------------------------------------------------*
+* Check if valid range is supplied
+*--------------------------------------------------------------------*
+  IF iv_rows_from &lt; 1.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rowumns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+  IF  iv_rows_from &gt; iv_rows_to.
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rowumns&apos;(401).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* adjust internal representation
+*--------------------------------------------------------------------*
+  me-&gt;print_title_row_from = iv_rows_from.
+  me-&gt;print_title_row_to   = iv_rows_to.
+
+
+*--------------------------------------------------------------------*
+* adjust corresponding range
+*--------------------------------------------------------------------*
+  me-&gt;print_title_set_range( ).
+
+
+ENDMETHOD.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Add drawing to the sheet" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_DRAWING" SCONAME="IP_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
@@ -4841,29 +4988,63 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" VERSION="1" LANGU="E" DESCRIPT="Set WorkSheet Title" EXPOSURE="2" STATE="1" EDITORDER="55 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method SET_TITLE.
-  DATA: lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator,
-        lo_worksheet           TYPE REF TO zcl_excel_worksheet,
-        errormessage           TYPE string,
-        lv_rangesheetname_old  TYPE string,
-        lv_rangesheetname_new  TYPE string,
-        lo_ranges_iterator     TYPE REF TO cl_object_collection_iterator,
-        lo_range               TYPE REF TO zcl_excel_range,
-        lv_range_value         TYPE zexcel_range_value.
+  <source>METHOD set_title.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   The current coding for replacing a named ranges name
+*                after renaming a sheet should be checked if it is
+*                really working if sheetname should be escaped
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (wip )              2012-12-08
+*              - ...
+* changes: aligning code
+*          message made to support multilinguality
+*--------------------------------------------------------------------*
+* issue#243 - &apos; is not allowed as first character in sheet title
+*              - Stefan Schmöcker,                          2012-12-02
+* changes: added additional check for &apos; as first character
+*--------------------------------------------------------------------*
+  DATA:       lo_worksheets_iterator          TYPE REF TO cl_object_collection_iterator,
+              lo_worksheet                    TYPE REF TO zcl_excel_worksheet,
+              errormessage                    TYPE string,
+              lv_rangesheetname_old           TYPE string,
+              lv_rangesheetname_new           TYPE string,
+              lo_ranges_iterator              TYPE REF TO cl_object_collection_iterator,
+              lo_range                        TYPE REF TO zcl_excel_range,
+              lv_range_value                  TYPE zexcel_range_value,
+              lv_errormessage                 TYPE string.                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
 
 
+*--------------------------------------------------------------------*
 * Check whether title consists only of allowed characters
 * Illegal characters are: /	\	[	]	*	?	:  --&gt; http://msdn.microsoft.com/en-us/library/ff837411.aspx
+* Illegal characters not in documentation:   &apos; as first character
+*--------------------------------------------------------------------*
   IF ip_title CA &apos;/\[]*?:&apos;.
+    lv_errormessage = &apos;Found illegal character in sheetname. List of forbidden characters: /\[]*?:&apos;(402).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Found illegal character in sheetname. List of forbidden characters: /\[]*?: &apos;.
+        error = lv_errormessage.
+  ENDIF.
+
+  IF ip_title IS NOT INITIAL AND ip_title(1) = `&apos;`.
+    lv_errormessage = &apos;Sheetname may not start with &amp;&apos;(403).   &quot; &amp; used instead of &apos; to allow fallbacklanguage
+    REPLACE &apos;&amp;&apos; IN lv_errormessage WITH `&apos;`.
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
   ENDIF.
 
 
-* Check whether title is unique in worksheet
+*--------------------------------------------------------------------*
+* Check whether title is unique in workbook
+*--------------------------------------------------------------------*
   lo_worksheets_iterator = me-&gt;excel-&gt;get_worksheets_iterator( ).
   WHILE lo_worksheets_iterator-&gt;has_next( ) = &apos;X&apos;.
+
     lo_worksheet ?= lo_worksheets_iterator-&gt;get_next( ).
     CHECK me-&gt;guid &lt;&gt; lo_worksheet-&gt;get_guid( ).  &quot; Don&apos;t check against itself
     IF ip_title = lo_worksheet-&gt;get_title( ).  &quot; Not unique --&gt; raise exception
@@ -4873,18 +5054,28 @@ endmethod.</source>
         EXPORTING
           error = errormessage.
     ENDIF.
+
   ENDWHILE.
 
+*--------------------------------------------------------------------*
+* Remember old sheetname and rename sheet to desired name
+*--------------------------------------------------------------------*
   CONCATENATE me-&gt;title &apos;!&apos; INTO lv_rangesheetname_old.
-
   me-&gt;title = ip_title.
-* After changing this worksheets title we have to adjust
-* all ranges that are referring to this worksheet.
 
+*--------------------------------------------------------------------*
+* After changing this worksheet&apos;s title we have to adjust
+* all ranges that are referring to this worksheet.
+*--------------------------------------------------------------------*
+* 2do§1  -  Check if the following quickfix is solid
+*           I fear it isn&apos;t - but this implementation is better then
+*           nothing at all since it handles a supposed majority of cases
+*--------------------------------------------------------------------*
   CONCATENATE me-&gt;title &apos;!&apos; INTO lv_rangesheetname_new.
 
   lo_ranges_iterator = me-&gt;excel-&gt;get_ranges_iterator( ).
   WHILE lo_ranges_iterator-&gt;has_next( ) = &apos;X&apos;.
+
     lo_range ?= lo_ranges_iterator-&gt;get_next( ).
     lv_range_value = lo_range-&gt;get_value( ).
     REPLACE ALL OCCURRENCES OF lv_rangesheetname_old IN lv_range_value WITH lv_rangesheetname_new.
@@ -4893,7 +5084,9 @@ endmethod.</source>
     ENDIF.
 
   ENDWHILE.
-endmethod.</source>
+
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update dimension range" EXPOSURE="0" STATE="1" EDITORDER="56 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
