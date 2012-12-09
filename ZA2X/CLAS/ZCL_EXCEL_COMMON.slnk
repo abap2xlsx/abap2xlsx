@@ -1243,6 +1243,13 @@ endmethod.</source>
 *         - c) sheetname existing - does not start with &apos;    example Sheet1!$B$6:$D$13
 *         - d) no sheetname - just area                      example $B$6:$D$13
 *--------------------------------------------------------------------*
+* Initialize output parameters
+  CLEAR: e_column_start,
+         e_column_end,
+         e_row_start,
+         e_row_end,
+         e_sheet.
+
   IF i_range IS INITIAL.                                &quot; a) input empty --&gt; nothing to do
     EXIT.
 
