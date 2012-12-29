@@ -918,10 +918,14 @@ ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
   <language SPRAS="D">
    <textElement ID="I" KEY="001" ENTRY="Unerlaubter Bereich" LENGTH="60 "/>
    <textElement ID="I" KEY="002" ENTRY="Eingabe nicht korrekt ?escaped? - &amp;  Wie zum Geier heißt das" LENGTH="60 "/>
+   <textElement ID="I" KEY="003" ENTRY="Eingabe konnte nicht als Spaltenname interpretiert werden" LENGTH="60 "/>
+   <textElement ID="I" KEY="004" ENTRY="Index nicht im erlaubten Bereich" LENGTH="60 "/>
   </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="001" ENTRY="Invalid range" LENGTH="60 "/>
    <textElement ID="I" KEY="002" ENTRY="Input not properly escaped - &amp;" LENGTH="60 "/>
+   <textElement ID="I" KEY="003" ENTRY="Unable to interpret input as column" LENGTH="60 "/>
+   <textElement ID="I" KEY="004" ENTRY="Index out of bounds" LENGTH="60 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_COMMON" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
@@ -1089,92 +1093,140 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="EP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method CONVERT_COLUMN2INT.
+  <source>METHOD convert_column2int.
 
-  DATA: lv_uccpi     TYPE i,
-        lv_factor    TYPE i,
-        lv_offset    TYPE i,
-        lv_char      TYPE c,
-        lv_column    TYPE zexcel_cell_column_alpha,
-        lv_column_c  TYPE char10,
-        mod          TYPE i.
-* If a number gets passed, just convert it to an integer,
-* Otherwise try to interpret it as if ZEXCEL_CELL_COLUMN_ALPHA was passed
-* if both fails raise exception
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-12-29
+*              - ...
+* changes: renaming variables to naming conventions
+*          removing unused variables
+*          removing commented out code that is inactive for more then half a year
+*          message made to support multilinguality
+*          adding comments to explain what we are trying to achieve
+*--------------------------------------------------------------------*
+* issue#246 - error converting lower case column names
+*              - Stefan Schmöcker,                          2012-12-29
+* changes: translating the correct variable to upper dase
+*          adding missing exception if input is a number
+*          that is out of bounds
+*          adding missing exception if input contains
+*          illegal characters like german umlauts
+*--------------------------------------------------------------------*
 
+  DATA:       lv_column                       TYPE zexcel_cell_column_alpha,
+              lv_column_c                     TYPE char10,
+              lv_column_s                     TYPE string,
+              lv_errormessage                 TYPE string,                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
+              lv_modulo                       TYPE i.
+
+*--------------------------------------------------------------------*
+* This module tries to identify which column a user wants to access
+* Numbers as input are just passed back, anything else will be converted
+* using EXCEL nomenclatura A = 1, AA = 27, ..., XFD = 16384
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* Normalize input ( upper case , no gaps )
+*--------------------------------------------------------------------*
   lv_column_c = ip_column.
-  TRANSLATE lv_column TO UPPER CASE.
+*  TRANSLATE lv_column TO UPPER CASE.                       &quot; Fix #246
+  TRANSLATE lv_column_c TO UPPER CASE.                      &quot; Fix #246
   CONDENSE lv_column_c NO-GAPS.
   IF lv_column_c EQ &apos;&apos;.
+    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Unable to interpret column&apos;.
+        error = lv_errormessage.
   ENDIF.
 
-* First try - convert to number
+*--------------------------------------------------------------------*
+* If a number gets passed, just convert it to an integer and return
+* the converted value
+*--------------------------------------------------------------------*
   TRY.
       IF lv_column_c CO &apos;1234567890 &apos;.                      &quot; Fix #164
         ep_column = lv_column_c.                            &quot; Fix #164
+*--------------------------------------------------------------------*
+* Maximum column for EXCEL:  XFD = 16384    &quot; if anyone has a reference for this information - please add here instead of this comment
+*--------------------------------------------------------------------*
+        IF ep_column &gt; 16384 OR ep_column &lt; 1.
+          lv_errormessage = &apos;Index out of bounds&apos;(004).
+          RAISE EXCEPTION TYPE zcx_excel
+            EXPORTING
+              error = lv_errormessage.
+        ENDIF.
         EXIT.
       ENDIF.
-    CATCH cx_sy_conversion_no_number.&quot;#EC NO_HANDLER
-      &quot; Too bad - try the character-approach
+    CATCH cx_sy_conversion_no_number.                   &quot;#EC NO_HANDLER
+      &quot; Try the character-approach if approach via number has failed
   ENDTRY.
 
-* Upper case
-  lv_column = lv_column_c.
+*--------------------------------------------------------------------*
+* Raise error if unexpected characters turns up
+*--------------------------------------------------------------------*
+  lv_column_s = lv_column_c.
+  IF lv_column_s CN sy-abcde.
+    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = lv_errormessage.
+  ENDIF.
 
-** Get string lenght and align to right
-*  lv_offset = 3 - STRLEN( lv_column ).
-*
-*  SHIFT lv_column RIGHT BY lv_offset PLACES.
-*
-** Calculate column position
-*  DO 3 TIMES.
-*    lv_offset = sy-index - 1.
-*    lv_char = lv_column+lv_offset(1).
-*    if lv_char IS INITIAL.
-*      CONTINUE.
-*    ENDIF.
-*    lv_uccpi   = cl_abap_conv_out_ce=&gt;uccpi( lv_char ).
-*    lv_factor  = 26 ** ( 3 - sy-index ).
-*    ep_column  = ep_column + ( lv_uccpi MOD zcl_excel_common=&gt;c_excel_col_module ) * lv_factor.
-*  ENDDO.
-
+*--------------------------------------------------------------------*
+* Interpret input as number to base 26 with A=1, ... Z=26
 * Raise error if unexpected character turns up
-  mod = cl_abap_conv_out_ce=&gt;uccpi( lv_column+0(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
-  IF mod &lt; 1 OR mod &gt; 26.
+*--------------------------------------------------------------------*
+* 1st character
+*--------------------------------------------------------------------*
+  lv_column = lv_column_c.
+  lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+0(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
+  IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
+    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Unable to interpret column&apos;.
+        error = lv_errormessage.
   ENDIF.
-  ep_column = mod.
+  ep_column = lv_modulo.                    &quot; Leftmost digit
 
-  CHECK lv_column+1(1) IS NOT INITIAL.  &quot; No need to continue if string ended
-  mod = cl_abap_conv_out_ce=&gt;uccpi( lv_column+1(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
-  IF mod &lt; 1 OR mod &gt; 26.
+*--------------------------------------------------------------------*
+* 2nd character if present
+*--------------------------------------------------------------------*
+  CHECK lv_column+1(1) IS NOT INITIAL.      &quot; No need to continue if string ended
+  lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+1(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
+  IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
+    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Unable to interpret column&apos;.
+        error = lv_errormessage.
   ENDIF.
-  ep_column = 26 * ep_column + mod.
+  ep_column = 26 * ep_column + lv_modulo.   &quot; if second digit is present first digit is for 26^1
 
-  CHECK lv_column+2(1) IS NOT INITIAL.  &quot; No need to continue if string ended
-  mod = cl_abap_conv_out_ce=&gt;uccpi( lv_column+2(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
-  IF mod &lt; 1 OR mod &gt; 26.
+*--------------------------------------------------------------------*
+* 3rd character if present
+*--------------------------------------------------------------------*
+  CHECK lv_column+2(1) IS NOT INITIAL.      &quot; No need to continue if string ended
+  lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+2(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
+  IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
+    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Unable to interpret column&apos;.
+        error = lv_errormessage.
   ENDIF.
-  ep_column = 26 * ep_column + mod.
+  ep_column = 26 * ep_column + lv_modulo.   &quot; if third digit is present first digit is for 26^2 and second digit for 26^1
 
-  IF ep_column GT 16384 OR ep_column LT 1.
+*--------------------------------------------------------------------*
+* Maximum column for EXCEL:  XFD = 16384    &quot; if anyone has a reference for this information - please add here instead of this comment
+*--------------------------------------------------------------------*
+  IF ep_column &gt; 16384 OR ep_column &lt; 1.
+    lv_errormessage = &apos;Index out of bounds&apos;(004).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Index out of bounds&apos;.
+        error = lv_errormessage.
   ENDIF.
 
-endmethod.</source>
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Convert ColumnRow i.e. AB34 to AB and 34" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="I_COLUMNROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
