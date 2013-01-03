@@ -2,9 +2,15 @@
 <PROG NAME="ZDEMO_CALENDAR" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="D">
+   <textElement ID="I" KEY="000" ENTRY="Ausrichtung" LENGTH="11 "/>
    <textElement ID="I" KEY="001" ENTRY="KW" LENGTH="4 "/>
    <textElement ID="I" KEY="002" ENTRY="Erzeugt mit abap2xlsx. Weitere Informationen unter http://abap2xlsx.org." LENGTH="100 "/>
    <textElement ID="R" ENTRY="abap2xlsx Demo: Erzeugen eines Kalenders mit Bildern" LENGTH="70 "/>
+   <textElement ID="S" KEY="P_LANDS" ENTRY="        Querformat" LENGTH="18 "/>
+   <textElement ID="S" KEY="P_PORTR" ENTRY="        Hochformat" LENGTH="18 "/>
+   <textElement ID="S" KEY="P_FROM" ENTRY="D       ." LENGTH="17 "/>
+   <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="24 "/>
+   <textElement ID="S" KEY="P_TO" ENTRY="D       ." LENGTH="15 "/>
   </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="000" ENTRY="Orientation" LENGTH="11 "/>
