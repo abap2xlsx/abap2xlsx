@@ -129,7 +129,8 @@ endmethod.</source>
   FIELD-SYMBOLS: &lt;fs_table&gt; TYPE STANDARD TABLE.
 
   IF settings-bottom_right_row IS NOT INITIAL.
-    ev_row =  zcl_excel_common=&gt;convert_column2int( settings-bottom_right_row ).
+*    ev_row =  zcl_excel_common=&gt;convert_column2int( settings-bottom_right_row ). &quot; del issue #246
+    ev_row =  settings-bottom_right_row .                                         &quot; ins issue #246
     EXIT.
   ENDIF.
 
