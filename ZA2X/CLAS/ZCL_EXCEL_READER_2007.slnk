@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" UUID="DFAC2E4C81CE84F1B39B000C29B7D360" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="12 " SRCCOLUMN2="29 " TYPESRC_LENG="319 " TYPESRC='BEGIN OF t_relationship,
            id         TYPE string,
            type       TYPE string,
@@ -69,180 +69,7 @@
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="73 " SRCCOLUMN1="4 " SRCROW2="73 " SRCCOLUMN2="82 " TYPESRC_LENG="80 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
 "/>
- <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <publicSection>class ZCL_EXCEL_READER_2007 definition
-  public
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_READER_2007
-*&quot;* do not include other source files here!!!
-  type-pools IXML .
-
-  interfaces ZIF_EXCEL_READER .
-
-  class-methods FILL_STRUCT_FROM_ATTRIBUTES
-    importing
-      !IP_ELEMENT type ref to IF_IXML_ELEMENT
-    changing
-      !CP_STRUCTURE type ANY .</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_READER_2007
-*&quot;* do not include other source files here!!!
-
-  types:
-    BEGIN OF t_relationship,
-           id         TYPE string,
-           type       TYPE string,
-           target     TYPE string,
-           worksheet  TYPE REF TO zcl_excel_worksheet,
-           sheetid    type string,     &quot;ins #235 - repeat rows/cols - needed to identify correct sheet
-         END OF t_relationship .
-  types:
-    BEGIN OF t_fileversion,
-            appname       TYPE string,
-            lastedited    TYPE string,
-            lowestedited  TYPE string,
-            rupbuild      TYPE string,
-            codename      TYPE string,
-       END OF t_fileversion .
-  types:
-    BEGIN OF t_sheet,
-              name    TYPE string,
-              sheetid TYPE string,
-              id      TYPE string,
-              state   TYPE string,
-         END OF t_sheet .
-  types:
-    BEGIN OF t_workbookpr,
-              codename            TYPE string,
-              defaultthemeversion TYPE string,
-         END OF t_workbookpr .
-  types:
-    BEGIN OF t_sheetpr,
-              codename            TYPE string,
-         END OF t_sheetpr .
-  types:
-    BEGIN OF t_range,
-              name            TYPE string,
-              hidden          type string,       &quot;inserted with issue #235 because Autofilters didn&apos;t passthrough
-              localsheetid    TYPE string,       &quot; issue #163
-         END OF t_range .
-  types:
-    t_fills   TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    t_fonts   TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    BEGIN OF t_num_format,
-    id TYPE string,
-    format TYPE REF TO zcl_excel_style_number_format,
-  END OF t_num_format .
-  types:
-    t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id .
-  types:
-    BEGIN OF t_color,
-    indexed TYPE string,
-    rgb TYPE string,
-    theme TYPE string,
-    tint TYPE string,
-  END OF t_color .
-  types:
-    BEGIN OF t_rel_drawing,
-      id TYPE string,
-      content TYPE xstring,
-      file_ext TYPE string,
-      content_xml TYPE REF TO IF_IXML_DOCUMENT,
-    END OF t_rel_drawing .
-  types:
-    t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY .
-
-  class-methods RESOLVE_PATH
-    importing
-      !IP_PATH type STRING
-    returning
-      value(RP_RESULT) type STRING .
-  methods GET_FROM_ZIP_ARCHIVE
-    importing
-      !I_FILENAME type STRING
-    returning
-      value(R_CONTENT) type XSTRING
-    raising
-      ZCX_EXCEL .
-  methods GET_IXML_FROM_ZIP_ARCHIVE
-    importing
-      !I_FILENAME type STRING
-      !IS_NORMALIZING type BOOLEAN default &apos;X&apos;
-    returning
-      value(R_IXML) type ref to IF_IXML_DOCUMENT
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKBOOK
-    importing
-      !IV_WORKBOOK_FULL_FILENAME type STRING
-      !IO_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD_DRAWING_ANCHOR
-    importing
-      !IO_ANCHOR_ELEMENT type ref to IF_IXML_ELEMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IT_RELATED_DRAWINGS type T_REL_DRAWINGS .
-  methods LOAD_WORKSHEET
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_DRAWING
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_SHARED_STRINGS
-    importing
-      !IP_PATH type STRING
-    raising
-      ZCX_EXCEL .
-  methods LOAD_STYLES
-    importing
-      !IP_PATH type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD_STYLE_BORDERS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_BORDERS) type T_BORDERS .
-  methods LOAD_STYLE_FILLS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_FILLS) type T_FILLS .
-  methods LOAD_STYLE_FONTS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_FONTS) type T_FONTS .
-  methods LOAD_STYLE_NUM_FORMATS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_NUM_FORMATS) type T_NUM_FORMATS .</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_READER_2007
-*&quot;* do not include other source files here!!!
-private section.
-
-  data EXCEL2007 type XSTRING .
-  data ZIP type ref to CL_ABAP_ZIP .
-  data ALTERNATE_ZIP type ref to OBJECT .
-  data SHARED_STRINGS type STRINGTAB .
-  data STYLES type T_STYLE_REFS .</privateSection>
+ <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes
@@ -2273,7 +2100,6 @@ ENDMETHOD.</source>
         sheetview           TYPE t_sheetview,
         pane_elem           TYPE REF TO if_ixml_element,
         pane                TYPE zexcel_pane,
-        pane_cell_row_a     TYPE string,
         pane_cell_row       TYPE zexcel_cell_row,
         pane_cell_col_a     TYPE zexcel_cell_column_alpha,
         pane_cell_col       TYPE zexcel_cell_column,
@@ -2671,9 +2497,15 @@ ENDMETHOD.</source>
   pane_elem = sheetview_elem-&gt;find_from_name( name = &apos;pane&apos; ).
   IF pane_elem IS BOUND.
     fill_struct_from_attributes( EXPORTING ip_element = pane_elem CHANGING cp_structure = pane ).
-    FIND REGEX &apos;^(\w+)(\d+)$&apos; IN pane-topleftcell SUBMATCHES pane_cell_col_a
-                                                             pane_cell_row_a.
-    pane_cell_row = pane_cell_row_a.
+    &quot; Issue #194
+    &quot; Replace REGEX with method from the common class
+    zcl_excel_common=&gt;convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow = pane-topleftcell
+      IMPORTING
+        e_column    = pane_cell_col_a    &quot; Cell Column
+        e_row       = pane_cell_row    &quot; Natural number
+    ).
     pane_cell_col = zcl_excel_common=&gt;convert_column2int( pane_cell_col_a ).
     SUBTRACT 1 FROM: pane_cell_col, pane_cell_row.
     IF pane_cell_col &gt; 0 AND pane_cell_row &gt; 0.
