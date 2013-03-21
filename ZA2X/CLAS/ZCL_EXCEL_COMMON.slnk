@@ -1,192 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_COMMON" VERSION="1" LANGU="E" DESCRIPT="Static common methods" UUID="E750494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" WITH_UNIT_TESTS="X" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <publicSection>class ZCL_EXCEL_COMMON definition
-  public
-  final
-  create public .
-
-*&quot;* public components of class ZCL_EXCEL_COMMON
-*&quot;* do not include other source files here!!!
-public section.
-
-  constants C_EXCEL_BASELINE_DATE type D value &apos;19000101&apos;. &quot;#EC NOTEXT
-  class-data C_EXCEL_NUMFMT_OFFSET type INT1 value 164. &quot;#EC NOTEXT .
-  constants C_EXCEL_SHEET_MAX_COL type INT4 value 16384. &quot;#EC NOTEXT
-  constants C_EXCEL_SHEET_MIN_COL type INT4 value 1. &quot;#EC NOTEXT
-  class-data C_SPRAS_EN type SPRAS value &apos;E&apos;. &quot;#EC NOTEXT .
-  class-data O_CONV type ref to CL_ABAP_CONV_OUT_CE .
-  constants C_EXCEL_1900_LEAP_YEAR type D value &apos;19000228&apos;. &quot;#EC NOTEXT
-  constants C_XLSX_FILE_FILTER type STRING value &apos;Excel Workbook (*.xlsx)|*.xlsx|&apos;. &quot;#EC NOTEXT
-
-  class-methods DESCRIBE_STRUCTURE
-    importing
-      !IO_STRUCT type ref to CL_ABAP_STRUCTDESCR
-    returning
-      value(RT_DFIES) type DDFIELDS .
-  class-methods DESCRIBE_TABLE .
-  class-methods CONVERT_COLUMN2ALPHA
-    importing
-      !IP_COLUMN type SIMPLE
-    returning
-      value(EP_COLUMN) type ZEXCEL_CELL_COLUMN_ALPHA
-    raising
-      ZCX_EXCEL .
-  class-methods CONVERT_COLUMN2INT
-    importing
-      !IP_COLUMN type SIMPLE
-    returning
-      value(EP_COLUMN) type ZEXCEL_CELL_COLUMN
-    raising
-      ZCX_EXCEL .
-  class-methods CONVERT_COLUMNROW2COLUMN_A_ROW
-    importing
-      !I_COLUMNROW type STRING
-    exporting
-      !E_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
-      !E_ROW type ZEXCEL_CELL_ROW .
-  class-methods CONVERT_RANGE2COLUMN_A_ROW
-    importing
-      !I_RANGE type CLIKE
-    exporting
-      !E_COLUMN_START type ZEXCEL_CELL_COLUMN_ALPHA
-      !E_COLUMN_END type ZEXCEL_CELL_COLUMN_ALPHA
-      !E_ROW_START type ZEXCEL_CELL_ROW
-      !E_ROW_END type ZEXCEL_CELL_ROW
-      !E_SHEET type CLIKE
-    raising
-      ZCX_EXCEL .
-  class-methods DATE_TO_EXCEL_STRING
-    importing
-      !IP_VALUE type D
-    returning
-      value(EP_VALUE) type ZEXCEL_CELL_VALUE .
-  class-methods ENCRYPT_PASSWORD
-    importing
-      !I_PWD type ZEXCEL_AES_PASSWORD
-    returning
-      value(R_ENCRYPTED_PWD) type ZEXCEL_AES_PASSWORD .
-  class-methods ESCAPE_STRING
-    importing
-      !IP_VALUE type CLIKE
-    returning
-      value(EP_ESCAPED_VALUE) type STRING .
-  class-methods UNESCAPE_STRING
-    importing
-      !IV_ESCAPED type CLIKE
-    returning
-      value(EV_UNESCAPED_STRING) type STRING
-    raising
-      ZCX_EXCEL .
-  class-methods EXCEL_STRING_TO_DATE
-    importing
-      !IP_VALUE type ZEXCEL_CELL_VALUE
-    returning
-      value(EP_VALUE) type D
-    raising
-      ZCX_EXCEL .
-  class-methods EXCEL_STRING_TO_TIME
-    importing
-      !IP_VALUE type ZEXCEL_CELL_VALUE
-    returning
-      value(EP_VALUE) type T
-    raising
-      ZCX_EXCEL .
-  class-methods GET_FIELDCATALOG
-    importing
-      !IP_TABLE type STANDARD TABLE
-    returning
-      value(EP_FIELDCATALOG) type ZEXCEL_T_FIELDCATALOG .
-  class-methods NUMBER_TO_EXCEL_STRING
-    importing
-      value(IP_VALUE) type NUMERIC
-    returning
-      value(EP_VALUE) type ZEXCEL_CELL_VALUE .
-  class-methods RECURSIVE_CLASS_TO_STRUCT
-    importing
-      !I_SOURCE type ANY
-    changing
-      !E_TARGET type DATA
-      !E_TARGETX type DATA .
-  class-methods RECURSIVE_STRUCT_TO_CLASS
-    importing
-      !I_SOURCE type DATA
-      !I_SOURCEX type DATA
-    changing
-      !E_TARGET type ANY .
-  class-methods TIME_TO_EXCEL_STRING
-    importing
-      !IP_VALUE type T
-    returning
-      value(EP_VALUE) type ZEXCEL_CELL_VALUE .
-  type-pools ABAP .
-  class-methods ASSERT_EQUALS
-    importing
-      !EXP type ANY
-      !ACT type ANY
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=&gt;CRITICAL
-      !TOL type F optional
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=&gt;METHOD
-      !IGNORE_HASH_SEQUENCE type ABAP_BOOL default ABAP_FALSE
-    returning
-      value(ASSERTION_FAILED) type ABAP_BOOL .
-  class-methods FAIL
-    importing
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=&gt;CRITICAL
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=&gt;METHOD
-      !DETAIL type CSEQUENCE optional .
-  class-methods ASSERT_DIFFERS
-    importing
-      !EXP type SIMPLE
-      !ACT type SIMPLE
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=&gt;CRITICAL
-      !TOL type F optional
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=&gt;METHOD
-    returning
-      value(ASSERTION_FAILED) type ABAP_BOOL .
-  class-methods SPLIT_FILE
-    importing
-      !IP_FILE type TEXT255
-    exporting
-      !EP_FILE type TEXT255
-      !EP_EXTENSION type CHAR10
-      !EP_DOTEXTENSION type CHAR10 .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_COMMON
-*&quot;* do not include other source files here!!!
-protected section.</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_COMMON
-*&quot;* do not include other source files here!!!
-private section.
-
-  class-data C_EXCEL_COL_MODULE type INT2 value 64. &quot;#EC NOTEXT .
-
-  class-methods STRUCTURE_CASE
-    importing
-      !IS_COMPONENT type ABAP_COMPONENTDESCR
-    changing
-      !XT_COMPONENTS type ABAP_COMPONENT_TAB .
-  class-methods STRUCTURE_RECURSIVE
-    importing
-      !IS_COMPONENT type ABAP_COMPONENTDESCR
-    returning
-      value(RT_COMPONENTS) type ABAP_COMPONENT_TAB .
-  class-methods CHAR2HEX
-    importing
-      !I_CHAR type CHAR1
-    returning
-      value(R_HEX) type ZEXCEL_PWD_HASH .
-  class-methods SHL01
-    importing
-      !I_PWD_HASH type ZEXCEL_PWD_HASH
-    returning
-      value(R_PWD_HASH) type ZEXCEL_PWD_HASH .
-  class-methods SHR14
-    importing
-      !I_PWD_HASH type ZEXCEL_PWD_HASH
-    returning
-      value(R_PWD_HASH) type ZEXCEL_PWD_HASH .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -1232,23 +1045,16 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="I_COLUMNROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="E_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="E_ROW" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
-  <source>method CONVERT_COLUMNROW2COLUMN_A_ROW.
-  DATA: width TYPE i,
-        col_width TYPE i,
-        row_str   TYPE string,
-        col_str   TYPE string.
-  width = strlen( i_columnrow ).
-  col_width = width.
-  col_str = i_columnrow.
-  WHILE col_str CA &apos;0123456789&apos;.
-    col_width = col_width - 1.
-    col_str = i_columnrow(col_width).
-  ENDWHILE.
-  e_column = col_str.
-  width = width - col_width.
-  row_str = i_columnrow+col_width(width).
-  e_row = row_str.
-endmethod.</source>
+  <source>METHOD convert_columnrow2column_a_row.
+  &quot;issue #256 - replacing char processing with regex
+
+  DATA: pane_cell_row_a     TYPE string.
+
+  FIND REGEX &apos;^(\D+)(\d+)$&apos; IN i_columnrow SUBMATCHES e_column
+                                                      pane_cell_row_a.
+  e_row = pane_cell_row_a.
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Converts Sheet1!AB34:CD56 to Sheet1, AB, 34, CD, 56" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="I_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
