@@ -87,7 +87,7 @@ CLASS lcl_output IMPLEMENTATION.
 
 * After 6.40 via cl_bcs_convert
     cl_output-&gt;t_rawdata = cl_bcs_convert=&gt;xstring_to_solix( iv_xstring  = cl_output-&gt;xdata ).
-    cl_output-&gt;bytecount = XSTRLEN( cl_output-&gt;xdata ).
+    cl_output-&gt;bytecount = xstrlen( cl_output-&gt;xdata ).
 
 * before 6.40
 *  CALL FUNCTION &apos;SCMS_XSTRING_TO_BINARY&apos;
@@ -125,19 +125,43 @@ CLASS lcl_output IMPLEMENTATION.
   METHOD f4_path.
     DATA: new_path TYPE string,
           repid    TYPE syrepid,
-          dynnr    TYPE sydynnr.
+          dynnr    TYPE sydynnr,
+          lt_dynpfields TYPE TABLE OF dynpread,
+          ls_dynpfields LIKE LINE OF lt_dynpfields.
 
 * Get current value
     dynnr = sy-dynnr.
     repid = sy-repid.
-    CALL FUNCTION &apos;GET_DYNP_VALUE&apos;
-      EXPORTING
-        i_field = &apos;P_PATH&apos;
-        i_repid = repid
-        i_dynnr = dynnr
-      CHANGING
-        o_value = new_path.
+    ls_dynpfields-fieldname = &apos;P_PATH&apos;.
+    APPEND ls_dynpfields TO lt_dynpfields.
 
+    CALL FUNCTION &apos;DYNP_VALUES_READ&apos;
+      EXPORTING
+        dyname               = repid
+        dynumb               = dynnr
+      TABLES
+        dynpfields           = lt_dynpfields
+      EXCEPTIONS
+        invalid_abapworkarea = 1
+        invalid_dynprofield  = 2
+        invalid_dynproname   = 3
+        invalid_dynpronummer = 4
+        invalid_request      = 5
+        no_fielddescription  = 6
+        invalid_parameter    = 7
+        undefind_error       = 8
+        double_conversion    = 9
+        stepl_not_found      = 10
+        OTHERS               = 11.
+    IF sy-subrc &lt;&gt; 0.
+      MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+              WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+      EXIT.
+    ENDIF.
+
+    READ TABLE lt_dynpfields INTO ls_dynpfields INDEX 1.
+
+    new_path = ls_dynpfields-fieldvalue.
     selected_folder = new_path.
 
     cl_gui_frontend_services=&gt;directory_browse(
