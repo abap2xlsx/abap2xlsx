@@ -1,133 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="9551494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <publicSection>class ZCL_EXCEL_WRITER_2007 definition
-  public
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_WRITER_2007
-*&quot;* do not include other source files here!!!
-
-  interfaces ZIF_EXCEL_WRITER .</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_WRITER_2007
-*&quot;* do not include other source files here!!!
-
-  constants C_CONTENT_TYPES type STRING value &apos;[Content_Types].xml&apos;. &quot;#EC NOTEXT
-  constants C_DOCPROPS_APP type STRING value &apos;docProps/app.xml&apos;. &quot;#EC NOTEXT
-  constants C_DOCPROPS_CORE type STRING value &apos;docProps/core.xml&apos;. &quot;#EC NOTEXT
-  constants C_RELATIONSHIPS type STRING value &apos;_rels/.rels&apos;. &quot;#EC NOTEXT
-  constants C_XL_DRAWINGS type STRING value &apos;xl/drawings/drawing#.xml&apos;. &quot;#EC NOTEXT
-  constants C_XL_DRAWINGS_RELS type STRING value &apos;xl/drawings/_rels/drawing#.xml.rels&apos;. &quot;#EC NOTEXT
-  constants C_XL_RELATIONSHIPS type STRING value &apos;xl/_rels/workbook.xml.rels&apos;. &quot;#EC NOTEXT
-  constants C_XL_SHAREDSTRINGS type STRING value &apos;xl/sharedStrings.xml&apos;. &quot;#EC NOTEXT
-  constants C_XL_CALCCHAIN type STRING value &apos;xl/calcChain.xml&apos;. &quot;#EC NOTEXT
-  constants C_XL_SHEET type STRING value &apos;xl/worksheets/sheet#.xml&apos;. &quot;#EC NOTEXT
-  constants C_XL_SHEET_RELS type STRING value &apos;xl/worksheets/_rels/sheet#.xml.rels&apos;. &quot;#EC NOTEXT
-  constants C_XL_STYLES type STRING value &apos;xl/styles.xml&apos;. &quot;#EC NOTEXT
-  constants C_XL_THEME type STRING value &apos;xl/theme/theme1.xml&apos;. &quot;#EC NOTEXT
-  constants C_XL_WORKBOOK type STRING value &apos;xl/workbook.xml&apos;. &quot;#EC NOTEXT
-  data EXCEL type ref to ZCL_EXCEL .
-  constants C_XL_PRINTERSETTINGS type STRING value &apos;xl/printerSettings/printerSettings#.bin&apos;. &quot;#EC NOTEXT
-
-  methods CREATE
-    returning
-      value(EP_EXCEL) type XSTRING .
-  methods CREATE_CONTENT_TYPES
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_DOCPROPS_APP
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_DOCPROPS_CORE
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_RELATIONSHIPS
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_CHARTS
-    importing
-      !IO_DRAWING type ref to ZCL_EXCEL_DRAWING
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_DRAWINGS
-    importing
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_DRAWING_ANCHOR
-    importing
-      !IO_DRAWING type ref to ZCL_EXCEL_DRAWING
-      !IO_DOCUMENT type ref to IF_IXML_DOCUMENT
-      !IP_INDEX type I
-    returning
-      value(EP_ANCHOR) type ref to IF_IXML_ELEMENT .
-  methods CREATE_XL_DRAWINGS_RELS
-    importing
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_RELATIONSHIPS
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_SHAREDSTRINGS
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_SHEET
-    importing
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IV_ACTIVE type FLAG default &apos;&apos;
-    returning
-      value(EP_CONTENT) type XSTRING
-    raising
-      ZCX_EXCEL .
-  methods CREATE_XL_SHEET_RELS
-    importing
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IV_DRAWING_INDEX type I
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_STYLES
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_STYLES_COLOR_NODE
-    importing
-      !IO_DOCUMENT type ref to IF_IXML_DOCUMENT
-      !IO_PARENT type ref to IF_IXML_ELEMENT
-      !IV_COLOR_ELEM_NAME type STRING default &apos;color&apos;
-      !IS_COLOR type ZEXCEL_S_STYLE_COLOR .
-  methods CREATE_XL_TABLE
-    importing
-      !IO_TABLE type ref to ZCL_EXCEL_TABLE
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_THEME
-    returning
-      value(EP_CONTENT) type XSTRING .
-  methods CREATE_XL_WORKBOOK
-    returning
-      value(EP_CONTENT) type XSTRING .</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_WRITER_2007
-*&quot;* do not include other source files here!!!
-
-  constants C_OFF type STRING value &apos;0&apos;. &quot;#EC NOTEXT
-  constants C_ON type STRING value &apos;1&apos;. &quot;#EC NOTEXT
-  data SHARED_STRINGS type ZEXCEL_T_SHARED_STRING .
-  data STYLES_COND_MAPPING type ZEXCEL_T_STYLES_COND_MAPPING .
-  data STYLES_MAPPING type ZEXCEL_T_STYLES_MAPPING .
-
-  methods FLAG2BOOL
-    importing
-      !IP_FLAG type FLAG
-    returning
-      value(EP_BOOLEAN) type CHAR5 .
-  methods GET_SHARED_STRING_INDEX
-    importing
-      !IP_CELL_VALUE type ZEXCEL_CELL_VALUE
-    returning
-      value(EP_INDEX) type INT4 .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -2973,7 +2846,7 @@ endmethod.</source>
         write_current_row           TYPE boolean,
         lt_values                   TYPE zexcel_t_autofilter_values,
         ls_values                   TYPE zexcel_s_autofilter_values,
-        lv_guid                     TYPE oltpguid16,
+        lv_guid                     TYPE uuid,
         lo_autofilters              TYPE REF TO zcl_excel_autofilters,
         lo_autofilter               TYPE REF TO zcl_excel_autofilter,
         l_autofilter_hidden         TYPE flag,
@@ -5839,7 +5712,7 @@ endmethod.</source>
   DATA:       lv_xml_node_ridx_id             TYPE string,
               lv_value                        TYPE string,
               lv_syindex                      TYPE string,
-              l_guid                          TYPE oltpguid16,
+              l_guid                          TYPE uuid,
               lv_active_sheet                 TYPE zexcel_active_worksheet.
 
 **********************************************************************

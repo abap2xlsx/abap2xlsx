@@ -1,453 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" UUID="C1BF274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <publicSection>class ZCL_EXCEL_WORKSHEET definition
-  public
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_WORKSHEET
-*&quot;* do not include other source files here!!!
-  type-pools ABAP .
-
-  interfaces ZIF_EXCEL_SHEET_PROPERTIES .
-  interfaces ZIF_EXCEL_SHEET_PROTECTION .
-  interfaces ZIF_EXCEL_SHEET_VBA_PROJECT .
-  interfaces ZIF_EXCEL_SHEET_PRINTSETTINGS .
-
-  constants C_BREAK_COLUMN type ZEXCEL_BREAK value 2. &quot;#EC NOTEXT
-  constants C_BREAK_NONE type ZEXCEL_BREAK value 0. &quot;#EC NOTEXT
-  constants C_BREAK_ROW type ZEXCEL_BREAK value 1. &quot;#EC NOTEXT
-  data EXCEL type ref to ZCL_EXCEL read-only .
-  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. &quot;#EC NOTEXT .
-  data SHEET_CONTENT type ZEXCEL_T_CELL_DATA .
-  data SHEET_CONTENT_MERGE type ZEXCEL_T_CELL_DATA_UNSORTED .
-  data SHEET_SETUP type ref to ZCL_EXCEL_SHEET_SETUP .
-  data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. &quot;#EC NOTEXT .
-  data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. &quot;#EC NOTEXT .
-  data STYLES type ZEXCEL_T_SHEET_STYLE .
-  data TABCOLOR type ZEXCEL_S_TABCOLOR read-only .
-
-  methods ADD_DRAWING
-    importing
-      !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
-  methods ADD_NEW_CONDITIONAL_STYLE
-    returning
-      value(EO_CONDITIONAL_STYLE) type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
-  methods ADD_NEW_DATA_VALIDATION
-    returning
-      value(EO_DATA_VALIDATION) type ref to ZCL_EXCEL_DATA_VALIDATION .
-  methods ADD_NEW_RANGE
-    returning
-      value(EO_RANGE) type ref to ZCL_EXCEL_RANGE .
-  methods BIND_ALV
-    importing
-      !IO_ALV type ref to OBJECT
-      !IT_TABLE type STANDARD TABLE
-      !I_TOP type I default 1
-      !I_LEFT type I default 1
-      !TABLE_STYLE type ZEXCEL_TABLE_STYLE optional
-    raising
-      ZCX_EXCEL .
-  type-pools SLIS .
-  type-pools SOI .
-  methods BIND_ALV_OLE2
-    importing
-      !I_DOCUMENT_URL type CHAR255 default SPACE
-      !I_XLS type C default SPACE
-      !I_SAVE_PATH type STRING
-      !IO_ALV type ref to CL_GUI_ALV_GRID
-      !IT_LISTHEADER type SLIS_T_LISTHEADER optional
-      !I_TOP type I default 1
-      !I_LEFT type I default 1
-      !I_COLUMNS_HEADER type C default &apos;X&apos;
-      !I_COLUMNS_AUTOFIT type C default &apos;X&apos;
-      !I_FORMAT_COL_HEADER type SOI_FORMAT_ITEM optional
-      !I_FORMAT_SUBTOTAL type SOI_FORMAT_ITEM optional
-      !I_FORMAT_TOTAL type SOI_FORMAT_ITEM optional
-    exceptions
-      MISS_GUIDE
-      EX_TRANSFER_KKBLO_ERROR
-      FATAL_ERROR
-      INV_DATA_RANGE
-      DIM_MISMATCH_VKEY
-      DIM_MISMATCH_SEMA
-      ERROR_IN_SEMA .
-  methods BIND_TABLE
-    importing
-      !IP_TABLE type STANDARD TABLE
-      !IT_FIELD_CATALOG type ZEXCEL_T_FIELDCATALOG optional
-      !IS_TABLE_SETTINGS type ZEXCEL_S_TABLE_SETTINGS optional
-    exporting
-      !ES_TABLE_SETTINGS type ZEXCEL_S_TABLE_SETTINGS
-    raising
-      ZCX_EXCEL .
-  methods CALCULATE_COLUMN_WIDTHS
-    raising
-      ZCX_EXCEL .
-  methods CHANGE_CELL_STYLE
-    importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
-      !IP_COMPLETE type ZEXCEL_S_CSTYLE_COMPLETE optional
-      !IP_XCOMPLETE type ZEXCEL_S_CSTYLEX_COMPLETE optional
-      !IP_FONT type ZEXCEL_S_CSTYLE_FONT optional
-      !IP_XFONT type ZEXCEL_S_CSTYLEX_FONT optional
-      !IP_FILL type ZEXCEL_S_CSTYLE_FILL optional
-      !IP_XFILL type ZEXCEL_S_CSTYLEX_FILL optional
-      !IP_BORDERS type ZEXCEL_S_CSTYLE_BORDERS optional
-      !IP_XBORDERS type ZEXCEL_S_CSTYLEX_BORDERS optional
-      !IP_ALIGNMENT type ZEXCEL_S_CSTYLE_ALIGNMENT optional
-      !IP_XALIGNMENT type ZEXCEL_S_CSTYLEX_ALIGNMENT optional
-      !IP_NUMBER_FORMAT_FORMAT_CODE type ZEXCEL_NUMBER_FORMAT optional
-      !IP_PROTECTION type ZEXCEL_S_CSTYLE_PROTECTION optional
-      !IP_XPROTECTION type ZEXCEL_S_CSTYLEX_PROTECTION optional
-      !IP_FONT_BOLD type FLAG optional
-      !IP_FONT_COLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_FONT_COLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_FONT_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_FONT_COLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_FONT_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_FONT_FAMILY type ZEXCEL_STYLE_FONT_FAMILY optional
-      !IP_FONT_ITALIC type FLAG optional
-      !IP_FONT_NAME type ZEXCEL_STYLE_FONT_NAME optional
-      !IP_FONT_SCHEME type ZEXCEL_STYLE_FONT_SCHEME optional
-      !IP_FONT_SIZE type ZEXCEL_STYLE_FONT_SIZE optional
-      !IP_FONT_STRIKETHROUGH type FLAG optional
-      !IP_FONT_UNDERLINE type FLAG optional
-      !IP_FONT_UNDERLINE_MODE type ZEXCEL_STYLE_FONT_UNDERLINE optional
-      !IP_FILL_FILLTYPE type ZEXCEL_FILL_TYPE optional
-      !IP_FILL_ROTATION type ZEXCEL_ROTATION optional
-      !IP_FILL_FGCOLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_FILL_FGCOLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_FILL_FGCOLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_FILL_FGCOLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_FILL_FGCOLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_FILL_BGCOLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_FILL_BGCOLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_FILL_BGCOLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_FILL_BGCOLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_FILL_BGCOLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_BORDERS_ALLBORDERS type ZEXCEL_S_CSTYLE_BORDER optional
-      !IP_XBORDERS_ALLBORDERS type ZEXCEL_S_CSTYLEX_BORDER optional
-      !IP_BORDERS_DIAGONAL type ZEXCEL_S_CSTYLE_BORDER optional
-      !IP_XBORDERS_DIAGONAL type ZEXCEL_S_CSTYLEX_BORDER optional
-      !IP_BORDERS_DIAGONAL_MODE type ZEXCEL_DIAGONAL optional
-      !IP_BORDERS_DOWN type ZEXCEL_S_CSTYLE_BORDER optional
-      !IP_XBORDERS_DOWN type ZEXCEL_S_CSTYLEX_BORDER optional
-      !IP_BORDERS_LEFT type ZEXCEL_S_CSTYLE_BORDER optional
-      !IP_XBORDERS_LEFT type ZEXCEL_S_CSTYLEX_BORDER optional
-      !IP_BORDERS_RIGHT type ZEXCEL_S_CSTYLE_BORDER optional
-      !IP_XBORDERS_RIGHT type ZEXCEL_S_CSTYLEX_BORDER optional
-      !IP_BORDERS_TOP type ZEXCEL_S_CSTYLE_BORDER optional
-      !IP_XBORDERS_TOP type ZEXCEL_S_CSTYLEX_BORDER optional
-      !IP_ALIGNMENT_HORIZONTAL type ZEXCEL_ALIGNMENT optional
-      !IP_ALIGNMENT_VERTICAL type ZEXCEL_ALIGNMENT optional
-      !IP_ALIGNMENT_TEXTROTATION type ZEXCEL_TEXT_ROTATION optional
-      !IP_ALIGNMENT_WRAPTEXT type FLAG optional
-      !IP_ALIGNMENT_SHRINKTOFIT type FLAG optional
-      !IP_ALIGNMENT_INDENT type ZEXCEL_INDENT optional
-      !IP_PROTECTION_HIDDEN type ZEXCEL_CELL_PROTECTION optional
-      !IP_PROTECTION_LOCKED type ZEXCEL_CELL_PROTECTION optional
-      !IP_BORDERS_ALLBORDERS_STYLE type ZEXCEL_BORDER optional
-      !IP_BORDERS_ALLBORDERS_COLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_BORDERS_ALLBO_COLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_BORDERS_ALLBO_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_BORDERS_ALLBO_COLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_BORDERS_ALLBO_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_BORDERS_DIAGONAL_STYLE type ZEXCEL_BORDER optional
-      !IP_BORDERS_DIAGONAL_COLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_BORDERS_DIAGONAL_COLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_BORDERS_DIAGONAL_COLOR_INDE type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_BORDERS_DIAGONAL_COLOR_THEM type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_BORDERS_DIAGONAL_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_BORDERS_DOWN_STYLE type ZEXCEL_BORDER optional
-      !IP_BORDERS_DOWN_COLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_BORDERS_DOWN_COLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_BORDERS_DOWN_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_BORDERS_DOWN_COLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_BORDERS_DOWN_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_BORDERS_LEFT_STYLE type ZEXCEL_BORDER optional
-      !IP_BORDERS_LEFT_COLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_BORDERS_LEFT_COLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_BORDERS_LEFT_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_BORDERS_LEFT_COLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_BORDERS_LEFT_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_BORDERS_RIGHT_STYLE type ZEXCEL_BORDER optional
-      !IP_BORDERS_RIGHT_COLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_BORDERS_RIGHT_COLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_BORDERS_RIGHT_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_BORDERS_RIGHT_COLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_BORDERS_RIGHT_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-      !IP_BORDERS_TOP_STYLE type ZEXCEL_BORDER optional
-      !IP_BORDERS_TOP_COLOR type ZEXCEL_S_STYLE_COLOR optional
-      !IP_BORDERS_TOP_COLOR_RGB type ZEXCEL_STYLE_COLOR_ARGB optional
-      !IP_BORDERS_TOP_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-      !IP_BORDERS_TOP_COLOR_THEME type ZEXCEL_STYLE_COLOR_THEME optional
-      !IP_BORDERS_TOP_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-    returning
-      value(EP_GUID) type ZEXCEL_CELL_STYLE
-    raising
-      ZCX_EXCEL .
-  methods CONSTRUCTOR
-    importing
-      !IP_EXCEL type ref to ZCL_EXCEL
-      !IP_TITLE type ZEXCEL_SHEET_TITLE optional
-    raising
-      ZCX_EXCEL .
-  methods DELETE_MERGE .
-  methods FREEZE_PANES
-    importing
-      !IP_NUM_COLUMNS type I optional
-      !IP_NUM_ROWS type I optional
-    raising
-      ZCX_EXCEL .
-  methods GET_ACTIVE_CELL
-    returning
-      value(EP_ACTIVE_CELL) type STRING
-    raising
-      ZCX_EXCEL .
-  methods GET_CELL
-    importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
-    exporting
-      !EP_VALUE type ZEXCEL_CELL_VALUE
-      !EP_RC type SYSUBRC
-      !EP_STYLE type ref to ZCL_EXCEL_STYLE
-      !EP_GUID type ZEXCEL_CELL_STYLE
-    raising
-      ZCX_EXCEL .
-  methods GET_COLUMN_DIMENSION
-    importing
-      !IP_COLUMN type SIMPLE
-    returning
-      value(R_COLUMN_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME
-    raising
-      ZCX_EXCEL .
-  methods GET_COLUMN_DIMENSIONS
-    returning
-      value(R_COLUMN_DIMENSION) type ZEXCEL_T_WORKSHEET_COLUMNDIME .
-  methods GET_COND_STYLES_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_DATA_VALIDATIONS_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_DATA_VALIDATIONS_SIZE
-    returning
-      value(EP_SIZE) type I .
-  methods GET_DEFAULT_COLUMN_DIMENSION
-    returning
-      value(R_COLUMN_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
-  methods GET_DEFAULT_EXCEL_DATE_FORMAT
-    returning
-      value(EP_DEFAULT_EXCEL_DATE_FORMAT) type ZEXCEL_NUMBER_FORMAT .
-  methods GET_DEFAULT_EXCEL_TIME_FORMAT
-    returning
-      value(EP_DEFAULT_EXCEL_TIME_FORMAT) type ZEXCEL_NUMBER_FORMAT .
-  methods GET_DEFAULT_ROW_DIMENSION
-    returning
-      value(R_ROW_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
-  methods GET_DIMENSION_RANGE
-    returning
-      value(EP_DIMENSION_RANGE) type STRING
-    raising
-      ZCX_EXCEL .
-  methods GET_DRAWINGS
-    importing
-      !IP_TYPE type ZEXCEL_DRAWING_TYPE optional
-    returning
-      value(R_DRAWINGS) type ref to ZCL_EXCEL_DRAWINGS .
-  methods GET_DRAWINGS_ITERATOR
-    importing
-      !IP_TYPE type ZEXCEL_DRAWING_TYPE
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_FREEZE_CELL
-    exporting
-      !EP_ROW type ZEXCEL_CELL_ROW
-      !EP_COLUMN type ZEXCEL_CELL_COLUMN .
-  methods GET_GUID
-    returning
-      value(EP_GUID) type OLTPGUID16 .
-  methods GET_HIGHEST_COLUMN
-    returning
-      value(R_HIGHEST_COLUMN) type ZEXCEL_CELL_COLUMN
-    raising
-      ZCX_EXCEL .
-  methods GET_HIGHEST_ROW
-    returning
-      value(R_HIGHEST_ROW) type INT4
-    raising
-      ZCX_EXCEL .
-  methods GET_HYPERLINKS_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_HYPERLINKS_SIZE
-    returning
-      value(EP_SIZE) type I .
-  methods GET_MERGE
-    returning
-      value(MERGE_RANGE) type STRING_TABLE
-    raising
-      ZCX_EXCEL .
-  methods GET_RANGES_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_ROW_DIMENSION
-    importing
-      !IP_ROW type INT4
-    returning
-      value(R_ROW_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
-  methods GET_ROW_DIMENSIONS
-    returning
-      value(R_ROW_DIMENSION) type ZEXCEL_T_WORKSHEET_ROWDIMENSIO .
-  methods GET_TABCOLOR
-    returning
-      value(EV_TABCOLOR) type ZEXCEL_S_TABCOLOR .
-  methods GET_TABLES_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_TABLES_SIZE
-    returning
-      value(EP_SIZE) type I .
-  methods GET_TITLE
-    importing
-      !IP_ESCAPED type FLAG default &apos;&apos;
-    returning
-      value(EP_TITLE) type ZEXCEL_SHEET_TITLE .
-  methods SET_CELL
-    importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
-      !IP_VALUE type SIMPLE optional
-      !IP_FORMULA type ZEXCEL_CELL_FORMULA optional
-      !IP_STYLE type ZEXCEL_CELL_STYLE optional
-      !IP_HYPERLINK type ref to ZCL_EXCEL_HYPERLINK optional
-      !IP_DATA_TYPE type ZEXCEL_CELL_DATA_TYPE optional
-      !IP_ABAP_TYPE type ABAP_TYPEKIND optional
-    raising
-      ZCX_EXCEL .
-  methods SET_CELL_STYLE
-    importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
-      !IP_STYLE type ZEXCEL_CELL_STYLE
-    raising
-      ZCX_EXCEL .
-  methods SET_COLUMN_WIDTH
-    importing
-      !IP_COLUMN type SIMPLE
-      !IP_WIDTH_FIX type SIMPLE default 0
-      !IP_WIDTH_AUTOSIZE type FLAG default &apos;X&apos;
-    raising
-      ZCX_EXCEL .
-  methods SET_DEFAULT_EXCEL_DATE_FORMAT
-    importing
-      !IP_DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT
-    raising
-      ZCX_EXCEL .
-  methods SET_MERGE
-    importing
-      !IP_COLUMN_START type ZEXCEL_CELL_COLUMN_ALPHA optional
-      !IP_COLUMN_END type ZEXCEL_CELL_COLUMN_ALPHA optional
-      !IP_ROW type ZEXCEL_CELL_ROW optional
-      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
-    raising
-      ZCX_EXCEL .
-  methods SET_PRINT_GRIDLINES
-    importing
-      !I_PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES .
-  methods SET_ROW_HEIGHT
-    importing
-      !IP_ROW type SIMPLE
-      !IP_HEIGHT_FIX type SIMPLE
-    raising
-      ZCX_EXCEL .
-  methods SET_SHOW_GRIDLINES
-    importing
-      !I_SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES .
-  methods SET_SHOW_ROWCOLHEADERS
-    importing
-      !I_SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_ROWCOLHEADER .
-  methods SET_TABCOLOR
-    importing
-      !IV_TABCOLOR type ZEXCEL_S_TABCOLOR .
-  methods SET_TABLE
-    importing
-      !IP_TABLE type STANDARD TABLE
-      !IP_HDR_STYLE type ZEXCEL_CELL_STYLE optional
-      !IP_BODY_STYLE type ZEXCEL_CELL_STYLE optional
-      !IP_TABLE_TITLE type STRING
-      !IP_TOP_LEFT_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA default &apos;B&apos;
-      !IP_TOP_LEFT_ROW type ZEXCEL_CELL_ROW default 3
-      !IP_TRANSPOSE type XFELD optional
-      !IP_NO_HEADER type XFELD optional
-    raising
-      ZCX_EXCEL .
-  methods SET_TITLE
-    importing
-      !IP_TITLE type ZEXCEL_SHEET_TITLE
-    raising
-      ZCX_EXCEL .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_WORKSHEET
-*&quot;* do not include other source files here!!!
-protected section.</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_WORKSHEET
-*&quot;* do not include other source files here!!!
-
-  data ACTIVE_CELL type ZEXCEL_S_CELL_DATA .
-  data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
-  data COLUMN_DIMENSIONS type ZEXCEL_T_WORKSHEET_COLUMNDIME .
-  data CONDITIONAL_STYLES type ref to ZCL_EXCEL_STYLES_CONDITIONAL .
-  data DATA_VALIDATIONS type ref to ZCL_EXCEL_DATA_VALIDATIONS .
-  data DEFAULT_COLUMN_DIMENSION type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
-  data DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT .
-  data DEFAULT_EXCEL_TIME_FORMAT type ZEXCEL_NUMBER_FORMAT .
-  data DEFAULT_ROW_DIMENSION type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
-  data DRAWINGS type ref to ZCL_EXCEL_DRAWINGS .
-  data FREEZE_PANE_CELL_COLUMN type ZEXCEL_CELL_COLUMN .
-  data FREEZE_PANE_CELL_ROW type ZEXCEL_CELL_ROW .
-  data GUID type OLTPGUID16 .
-  data HYPERLINKS type ref to CL_OBJECT_COLLECTION .
-  data LOWER_CELL type ZEXCEL_S_CELL_DATA .
-  data RANGES type ref to ZCL_EXCEL_RANGES .
-  data ROW_DIMENSIONS type ZEXCEL_T_WORKSHEET_ROWDIMENSIO .
-  data TABLES type ref to CL_OBJECT_COLLECTION .
-  data TITLE type ZEXCEL_SHEET_TITLE value &apos;Worksheet&apos;. &quot;#EC NOTEXT .
-  data UPPER_CELL type ZEXCEL_S_CELL_DATA .
-  data PRINT_TITLE_COL_FROM type ZEXCEL_CELL_COLUMN_ALPHA .
-  data PRINT_TITLE_COL_TO type ZEXCEL_CELL_COLUMN_ALPHA .
-  data PRINT_TITLE_ROW_FROM type ZEXCEL_CELL_ROW .
-  data PRINT_TITLE_ROW_TO type ZEXCEL_CELL_ROW .
-
-  methods CALCULATE_CELL_WIDTH
-    importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
-    returning
-      value(EP_WIDTH) type I
-    raising
-      ZCX_EXCEL .
-  methods GENERATE_TITLE
-    returning
-      value(EP_TITLE) type ZEXCEL_SHEET_TITLE .
-  methods GET_VALUE_TYPE
-    importing
-      !IP_VALUE type SIMPLE
-    exporting
-      !EP_VALUE type SIMPLE
-      !EP_VALUE_TYPE type ABAP_TYPEKIND .
-  methods UPDATE_DIMENSION_RANGE
-    raising
-      ZCX_EXCEL .
-  methods PRINT_TITLE_SET_RANGE .</privateSection>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes
@@ -640,7 +196,7 @@ endclass.</localTypes>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="EXCEL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="14 " ATTDECLTYP="0" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="FREEZE_PANE_CELL_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" EXPOSURE="0" STATE="1" EDITORDER="15 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="FREEZE_PANE_CELL_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" EXPOSURE="0" STATE="1" EDITORDER="16 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" EXPOSURE="0" STATE="1" EDITORDER="17 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="OLTPGUID16" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" EXPOSURE="0" STATE="1" EDITORDER="17 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="UUID" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Colletion of hyperlinks" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="LOWER_CELL" VERSION="1" LANGU="E" DESCRIPT="Bottom right range cell" EXPOSURE="0" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Print Gridlines" EXPOSURE="2" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTRDONLY="X" ATTVALUE="ABAP_FALSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PRINT_GRIDLINES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -660,70 +216,6 @@ endclass.</localTypes>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TABLES" VERSION="1" LANGU="E" DESCRIPT="Colletion of tables" EXPOSURE="0" STATE="1" EDITORDER="30 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="0" STATE="1" EDITORDER="31 " ATTDECLTYP="0" ATTVALUE="&apos;Worksheet&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPPER_CELL" VERSION="1" LANGU="E" DESCRIPT="Top left range cell" EXPOSURE="0" STATE="1" EDITORDER="32 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE">
-  <source>method ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE.
-  IF zif_excel_sheet_properties~style IS NOT INITIAL.
-    ep_style = zif_excel_sheet_properties~style.
-  ELSE.
-    ep_style = me-&gt;excel-&gt;get_default_style( ).
-  ENDIF.
-endmethod.</source>
- </interfaceMethod>
- <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE">
-  <source>method ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE.
-
-  zif_excel_sheet_properties~show_zeros   = zif_excel_sheet_properties=&gt;c_showzero.
-  zif_excel_sheet_properties~summarybelow = zif_excel_sheet_properties=&gt;c_below_on.
-  zif_excel_sheet_properties~summaryright = zif_excel_sheet_properties=&gt;c_right_on.
-
-* inizialize zoomscale values
-  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale = 100.
-  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_normal = 100.
-  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_pagelayoutview = 100 .
-  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_sheetlayoutview = 100 .
-endmethod.</source>
- </interfaceMethod>
- <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE">
-  <source>method ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE.
-  zif_excel_sheet_properties~style = ip_style.
-endmethod.</source>
- </interfaceMethod>
- <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE">
-  <source>method ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE.
-
-  me-&gt;zif_excel_sheet_protection~protected = zif_excel_sheet_protection=&gt;c_unprotected.
-  CLEAR me-&gt;zif_excel_sheet_protection~password.
-  me-&gt;zif_excel_sheet_protection~auto_filter            = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~delete_columns         = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~delete_rows            = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~format_cells           = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~format_columns         = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~format_rows            = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~insert_columns         = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~insert_hyperlinks      = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~insert_rows            = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~objects                = zif_excel_sheet_protection=&gt;c_noactive.
-*  me-&gt;zif_excel_sheet_protection~password               = zif_excel_sheet_protection=&gt;c_noactive. &quot;issue #68
-  me-&gt;zif_excel_sheet_protection~pivot_tables           = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~protected              = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~scenarios              = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~select_locked_cells    = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~select_unlocked_cells  = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~sheet                  = zif_excel_sheet_protection=&gt;c_noactive.
-  me-&gt;zif_excel_sheet_protection~sort                   = zif_excel_sheet_protection=&gt;c_noactive.
-
-endmethod.</source>
- </interfaceMethod>
- <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME">
-  <source>method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME.
-  me-&gt;zif_excel_sheet_vba_project~codename = ip_codename.
-endmethod.</source>
- </interfaceMethod>
- <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR">
-  <source>method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR.
-  me-&gt;zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
-endmethod.</source>
- </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS">
   <source>METHOD zif_excel_sheet_printsettings~clear_print_repeat_columns.
 
@@ -866,6 +358,70 @@ ENDMETHOD.</source>
 
 
 ENDMETHOD.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE">
+  <source>method ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE.
+  IF zif_excel_sheet_properties~style IS NOT INITIAL.
+    ep_style = zif_excel_sheet_properties~style.
+  ELSE.
+    ep_style = me-&gt;excel-&gt;get_default_style( ).
+  ENDIF.
+endmethod.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE">
+  <source>method ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE.
+
+  zif_excel_sheet_properties~show_zeros   = zif_excel_sheet_properties=&gt;c_showzero.
+  zif_excel_sheet_properties~summarybelow = zif_excel_sheet_properties=&gt;c_below_on.
+  zif_excel_sheet_properties~summaryright = zif_excel_sheet_properties=&gt;c_right_on.
+
+* inizialize zoomscale values
+  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale = 100.
+  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_normal = 100.
+  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_pagelayoutview = 100 .
+  ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_sheetlayoutview = 100 .
+endmethod.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE">
+  <source>method ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE.
+  zif_excel_sheet_properties~style = ip_style.
+endmethod.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE">
+  <source>method ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE.
+
+  me-&gt;zif_excel_sheet_protection~protected = zif_excel_sheet_protection=&gt;c_unprotected.
+  CLEAR me-&gt;zif_excel_sheet_protection~password.
+  me-&gt;zif_excel_sheet_protection~auto_filter            = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~delete_columns         = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~delete_rows            = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~format_cells           = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~format_columns         = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~format_rows            = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~insert_columns         = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~insert_hyperlinks      = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~insert_rows            = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~objects                = zif_excel_sheet_protection=&gt;c_noactive.
+*  me-&gt;zif_excel_sheet_protection~password               = zif_excel_sheet_protection=&gt;c_noactive. &quot;issue #68
+  me-&gt;zif_excel_sheet_protection~pivot_tables           = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~protected              = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~scenarios              = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~select_locked_cells    = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~select_unlocked_cells  = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~sheet                  = zif_excel_sheet_protection=&gt;c_noactive.
+  me-&gt;zif_excel_sheet_protection~sort                   = zif_excel_sheet_protection=&gt;c_noactive.
+
+endmethod.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME">
+  <source>method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME.
+  me-&gt;zif_excel_sheet_vba_project~codename = ip_codename.
+endmethod.</source>
+ </interfaceMethod>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR">
+  <source>method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR.
+  me-&gt;zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
+endmethod.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Add drawing to the sheet" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_DRAWING" SCONAME="IP_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
@@ -3476,7 +3032,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="IP_BORDERS_TOP_COLOR_TINT" VERSION="1" LANGU="E" DESCRIPT="Tint" CMPTYPE="1" MTDTYPE="0" EDITORDER="98 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_STYLE_COLOR_TINT" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="99 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method CHANGE_CELL_STYLE.
+  <source>METHOD change_cell_style.
   &quot; issue # 139
   DATA: stylemapping    TYPE zexcel_s_stylemapping,
 
@@ -3484,7 +3040,7 @@ endmethod.</source>
         complete_stylex TYPE zexcel_s_cstylex_complete,
 
         borderx         TYPE zexcel_s_cstylex_border,
-        l_guid          type OLTPGUID16.   &quot;issue # 177
+        l_guid          TYPE zexcel_cell_style.   &quot;issue # 177
 
 * We have a lot of parameters.  Use some macros to make the coding more structured
 
@@ -3772,7 +3328,7 @@ endmethod.</source>
                       ip_row    = ip_row
                       ip_style  = ep_guid ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Ref to parent document" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
@@ -4163,7 +3719,7 @@ endmethod.</source>
 endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_GUID" VERSION="1" LANGU="E" DESCRIPT="Get sheet guid" EXPOSURE="2" STATE="1" EDITORDER="30 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_GUID" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="OLTPGUID16"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_GUID" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="UUID"/>
   <source>method GET_GUID.
 
   ep_guid = me-&gt;guid.
