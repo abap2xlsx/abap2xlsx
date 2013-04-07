@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" UUID="C1BF274C8A345F2DE1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
@@ -4063,12 +4063,12 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_DATA_TYPE" VERSION="1" LANGU="E" DESCRIPT="Cell data type" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_DATA_TYPE" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_ABAP_TYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type" CMPTYPE="1" MTDTYPE="0" EDITORDER="8 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_TYPEKIND" PAROPTIONL="X"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method SET_CELL.
+  <source>METHOD set_cell.
 
   DATA: lv_column                 TYPE zexcel_cell_column,
         ls_sheet_content          TYPE zexcel_s_cell_data,
         lv_row_alpha              TYPE string,
-        lv_col_alpha              TYPE ZEXCEL_CELL_COLUMN_ALPHA,
+        lv_col_alpha              TYPE zexcel_cell_column_alpha,
         lv_value                  TYPE zexcel_cell_value,
         lv_data_type              TYPE zexcel_cell_data_type,
         lv_value_type             TYPE abap_typekind,
@@ -4150,7 +4150,7 @@ endmethod.</source>
             lv_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = &lt;fs_numeric&gt; ).
           ENDIF.
 
-        WHEN cl_abap_typedescr=&gt;typekind_char OR cl_abap_typedescr=&gt;typekind_string OR cl_abap_typedescr=&gt;typekind_num or
+        WHEN cl_abap_typedescr=&gt;typekind_char OR cl_abap_typedescr=&gt;typekind_string OR cl_abap_typedescr=&gt;typekind_num OR
              cl_abap_typedescr=&gt;typekind_hex.
           lv_value = &lt;fs_value&gt;.
           lv_data_type = &apos;s&apos;.
@@ -4229,7 +4229,7 @@ endmethod.</source>
 *    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.&quot;del #152 - replaced with condense - should be faster
 *    SHIFT lv_row_alpha LEFT DELETING LEADING space.  &quot;del #152 - replaced with condense - should be faster
     CONDENSE lv_row_alpha NO-GAPS.                    &quot;ins #152 - replaced 2 shifts      - should be faster
-    lv_col_alpha = zcl_excel_common=&gt;CONVERT_COLUMN2ALPHA( ip_column ).       &quot; issue #155 - less restrictive typing for ip_column
+    lv_col_alpha = zcl_excel_common=&gt;convert_column2alpha( ip_column ).       &quot; issue #155 - less restrictive typing for ip_column
     CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  &quot; issue #155 - less restrictive typing for ip_column
     INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt;. &quot;ins #152 - Now &lt;fs_sheet_content&gt; always holds the data
 *    APPEND ls_sheet_content TO sheet_content.
@@ -4278,7 +4278,15 @@ endmethod.</source>
   ENDCASE.
 * End of change issue #152 - don&apos;t touch exisiting style if only value is passed
 
-endmethod.</source>
+* Fix issue #162
+  IF ip_value CS cl_abap_char_utilities=&gt;cr_lf.
+    me-&gt;change_cell_style( ip_column               = ip_column
+                           ip_row                  = ip_row
+                           ip_alignment_wraptext   = abap_true ).
+  ENDIF.
+* End of Fix issue #162
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Set cell style" EXPOSURE="2" STATE="1" EDITORDER="45 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>

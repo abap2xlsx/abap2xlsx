@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL14" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100817" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000058" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111821" IDATE="20120324" ITIME="111821" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL14" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Alignment" LENGTH="26 "/>
@@ -27,6 +27,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_style_top            TYPE REF TO zcl_excel_style,
       lo_style_justify        TYPE REF TO zcl_excel_style,
       lo_style_mixed          TYPE REF TO zcl_excel_style,
+      lo_style_mixed_wrap     TYPE REF TO zcl_excel_style,
       lo_style_rotated        TYPE REF TO zcl_excel_style,
       lo_style_shrink         TYPE REF TO zcl_excel_style,
       lo_style_indent         TYPE REF TO zcl_excel_style,
@@ -39,6 +40,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lv_style_top_guid       TYPE zexcel_cell_style,
       lv_style_justify_guid   TYPE zexcel_cell_style,
       lv_style_mixed_guid     TYPE zexcel_cell_style,
+      lv_style_mixed_wrap_guid TYPE zexcel_cell_style,
       lv_style_rotated_guid   TYPE zexcel_cell_style,
       lv_style_shrink_guid    TYPE zexcel_cell_style,
       lv_style_indent_guid    TYPE zexcel_cell_style.
@@ -101,17 +103,23 @@ START-OF-SELECTION.
   lv_style_indent_guid = lo_style_indent-&gt;get_guid( ).
 
   &quot;Middle / Centered / Wrap
+  lo_style_mixed_wrap = lo_excel-&gt;add_new_style( ).
+  lo_style_mixed_wrap-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
+  lo_style_mixed_wrap-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
+  lo_style_mixed_wrap-&gt;alignment-&gt;wraptext     = abap_true.
+  lv_style_mixed_wrap_guid = lo_style_mixed_wrap-&gt;get_guid( ).
+
+  &quot;Middle / Centered / Wrap
   lo_style_mixed = lo_excel-&gt;add_new_style( ).
   lo_style_mixed-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
   lo_style_mixed-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
-  lo_style_mixed-&gt;alignment-&gt;wraptext     = abap_true.
   lv_style_mixed_guid = lo_style_mixed-&gt;get_guid( ).
 
   &quot;Center
   lo_style_rotated = lo_excel-&gt;add_new_style( ).
   lo_style_rotated-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
   lo_style_rotated-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
-  lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75° == 90° + 75°
+  lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75Â° == 90Â° + 75Â°
   lv_style_rotated_guid = lo_style_rotated-&gt;get_guid( ).
 
 
@@ -141,14 +149,20 @@ START-OF-SELECTION.
   &quot; Wrapped
   lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;B&apos;
                           ip_value = &apos;This is a wrapped text centered in the middle&apos;
-                          ip_style = lv_style_mixed_guid ).
+                          ip_style = lv_style_mixed_wrap_guid ).
 
   &quot; Rotated
   lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;D&apos;
-                          ip_value = &apos;This is a centered text rotated by -75°&apos;
+                          ip_value = &apos;This is a centered text rotated by -75Â°&apos;
                           ip_style = lv_style_rotated_guid ).
 
-
+  &quot; forced line break
+  DATA: lv_value TYPE string.
+  CONCATENATE &apos;This is a wrapped text centered in the middle&apos; cl_abap_char_utilities=&gt;cr_lf
+    &apos;and a manuall line break.&apos; INTO lv_value.
+  lo_worksheet-&gt;set_cell( ip_row = 11 ip_column = &apos;B&apos;
+                          ip_value = lv_value
+                          ip_style = lv_style_mixed_guid ).
 
 *** Create output
   lcl_output=&gt;output( lo_excel ).</source>
