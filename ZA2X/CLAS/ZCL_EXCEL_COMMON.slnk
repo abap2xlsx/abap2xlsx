@@ -1523,7 +1523,7 @@ endmethod.</source>
     ENDIF.
 
     CASE wa_component-type_kind.
-      WHEN cl_abap_structdescr=&gt;typekind_struct1.  &quot; Structure --&gt; use recursio
+      WHEN cl_abap_structdescr=&gt;typekind_struct1 OR cl_abap_structdescr=&gt;typekind_struct2.  &quot; Structure --&gt; use recursio
 *        IF flag_class = abap_true.
 ** Only borders will be passed as unbound references.  But since we want to set a value we have to create an instance
 *        ENDIF.
@@ -1543,7 +1543,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="E_TARGET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
-  <source>method RECURSIVE_STRUCT_TO_CLASS.
+  <source>METHOD recursive_struct_to_class.
   &quot; # issue 139
 * is working for me - but after looking through this coding I guess
 * I&apos;ll rewrite this to a version w/o recursion
@@ -1554,10 +1554,11 @@ endmethod.</source>
         flag_class      TYPE flag,
         o_border        TYPE REF TO zcl_excel_style_border.
 
-  FIELD-SYMBOLS: &lt;field&gt;      TYPE any,
-                 &lt;fieldx&gt;     TYPE any,
-                 &lt;class&gt;      TYPE REF TO object,
-                 &lt;attribute&gt;  TYPE any.
+  FIELD-SYMBOLS: &lt;field&gt;        TYPE any,
+                 &lt;fieldx&gt;       TYPE any,
+                 &lt;class&gt;        TYPE REF TO object,
+                 &lt;attribute&gt;    TYPE any,
+                 &lt;attribute_s&gt;  TYPE ANY TABLE.
 
 
   descr ?= cl_abap_structdescr=&gt;describe_by_data( i_source ).
@@ -1581,7 +1582,7 @@ endmethod.</source>
     ENDIF.
 
     CASE wa_component-type_kind.
-      WHEN cl_abap_structdescr=&gt;typekind_struct1.  &quot; Structure --&gt; use recursion
+      WHEN cl_abap_structdescr=&gt;typekind_struct1 OR cl_abap_structdescr=&gt;typekind_struct2.  &quot; Structure --&gt; use recursion
         IF flag_class = abap_true AND &lt;attribute&gt; IS INITIAL.
 * Only borders will be passed as unbound references.  But since we want to set a value we have to create an instance
           CREATE OBJECT o_border.
@@ -1590,6 +1591,9 @@ endmethod.</source>
         zcl_excel_common=&gt;recursive_struct_to_class( EXPORTING i_source  = &lt;field&gt;
                                                                i_sourcex = &lt;fieldx&gt;
                                                      CHANGING  e_target  = &lt;attribute&gt; ).
+*      WHEN cl_abap_structdescr=&gt;typekind_struct2.  &quot; String
+*        CHECK &lt;fieldx&gt; = abap_true.  &quot; Marked for change
+*        &lt;attribute_s&gt; = &lt;field&gt;.
       WHEN OTHERS.
         CHECK &lt;fieldx&gt; = abap_true.  &quot; Marked for change
         &lt;attribute&gt; = &lt;field&gt;.
@@ -1597,7 +1601,7 @@ endmethod.</source>
     ENDCASE.
   ENDLOOP.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" SCONAME="I_PWD_HASH" VERSION="1" LANGU="E" DESCRIPT="Password hash" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_PWD_HASH"/>
