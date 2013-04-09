@@ -4279,7 +4279,8 @@ endmethod.</source>
 * End of change issue #152 - don&apos;t touch exisiting style if only value is passed
 
 * Fix issue #162
-  IF ip_value CS cl_abap_char_utilities=&gt;cr_lf.
+  lv_value = ip_value.
+  IF lv_value CS cl_abap_char_utilities=&gt;cr_lf.
     me-&gt;change_cell_style( ip_column               = ip_column
                            ip_row                  = ip_row
                            ip_alignment_wraptext   = abap_true ).
