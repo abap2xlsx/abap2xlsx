@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_COMMON" VERSION="1" LANGU="E" DESCRIPT="Static common methods" UUID="E750494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" WITH_UNIT_TESTS="X" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_COMMON" VERSION="1" LANGU="E" DESCRIPT="Static common methods" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" WITH_UNIT_TESTS="X" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -225,7 +225,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       CATCH zcx_excel INTO lx_excel.
         zcl_excel_common=&gt;assert_equals(
           act   = lx_excel-&gt;error
-          exp   = &apos;Unable to interpret column&apos;
+          exp   = &apos;Unable to interpret input as column&apos;
           msg   = &apos;Colum name should be a valid string&apos;
           level = if_aunit_constants=&gt;fatal
         ).
