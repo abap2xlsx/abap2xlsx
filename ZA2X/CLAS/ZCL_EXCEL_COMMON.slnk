@@ -59,6 +59,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING  &quot;#AU Risk_Level Harmles
 *    METHODS: number_to_excel_string FOR TESTING.
     METHODS: time_to_excel_string FOR TESTING.
     METHODS: split_file FOR TESTING.
+    METHODS: convert_range2column_a_row FOR TESTING.
 ENDCLASS.       &quot;lcl_Excel_Common_Test
 
 
@@ -724,7 +725,168 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           msg   = &apos;Split extension failed&apos;
           level = if_aunit_constants=&gt;critical ).
 
-  ENDMETHOD.                    &quot;split_file
+  ENDMETHOD.  &quot;split_file
+
+  METHOD convert_range2column_a_row.
+    DATA: lv_range        TYPE string.
+    DATA: lv_column_start TYPE zexcel_cell_column_alpha,
+          lv_column_end   TYPE zexcel_cell_column_alpha,
+          lv_row_start    TYPE zexcel_cell_row,
+          lv_row_end      TYPE zexcel_cell_row,
+          lv_sheet        TYPE string.
+
+* a) input empty --&gt; nothing to do
+    zcl_excel_common=&gt;convert_range2column_a_row(
+      EXPORTING
+        i_range        = lv_range
+      IMPORTING
+        e_column_start = lv_column_start    &quot; Cell Column Start
+        e_column_end   = lv_column_end    &quot; Cell Column End
+        e_row_start    = lv_row_start    &quot; Cell Row
+        e_row_end      = lv_row_end    &quot; Cell Row
+        e_sheet        = lv_sheet    &quot; Title
+    ).
+
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_start
+          exp   = &apos;&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_end
+          exp   = &apos;&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_start
+          exp   = &apos;&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_end
+          exp   = &apos;&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_sheet
+          exp   = &apos;&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+* b) sheetname existing - starts with &apos;            example &apos;Sheet 1&apos;!$B$6:$D$13
+    lv_range = `&apos;Sheet 1&apos;!$B$6:$D$13`.
+    zcl_excel_common=&gt;convert_range2column_a_row(
+      EXPORTING
+        i_range        = lv_range
+      IMPORTING
+        e_column_start = lv_column_start    &quot; Cell Column Start
+        e_column_end   = lv_column_end    &quot; Cell Column End
+        e_row_start    = lv_row_start    &quot; Cell Row
+        e_row_end      = lv_row_end    &quot; Cell Row
+        e_sheet        = lv_sheet    &quot; Title
+    ).
+
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_start
+          exp   = &apos;B&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_end
+          exp   = &apos;D&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_start
+          exp   = &apos;6&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_end
+          exp   = &apos;13&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_sheet
+          exp   = &apos;Sheet 1&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+* c) sheetname existing - does not start with &apos;    example Sheet1!$B$6:$D$13
+    lv_range = `Sheet1!B6:$D$13`.
+    zcl_excel_common=&gt;convert_range2column_a_row(
+      EXPORTING
+        i_range        = lv_range
+      IMPORTING
+        e_column_start = lv_column_start    &quot; Cell Column Start
+        e_column_end   = lv_column_end    &quot; Cell Column End
+        e_row_start    = lv_row_start    &quot; Cell Row
+        e_row_end      = lv_row_end    &quot; Cell Row
+        e_sheet        = lv_sheet    &quot; Title
+    ).
+
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_start
+          exp   = &apos;B&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_end
+          exp   = &apos;D&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_start
+          exp   = &apos;6&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_end
+          exp   = &apos;13&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_sheet
+          exp   = &apos;Sheet1&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+* d) no sheetname - just area                      example $B$6:$D$13
+    lv_range = `$B$6:D13`.
+    zcl_excel_common=&gt;convert_range2column_a_row(
+      EXPORTING
+        i_range        = lv_range
+      IMPORTING
+        e_column_start = lv_column_start    &quot; Cell Column Start
+        e_column_end   = lv_column_end    &quot; Cell Column End
+        e_row_start    = lv_row_start    &quot; Cell Row
+        e_row_end      = lv_row_end    &quot; Cell Row
+        e_sheet        = lv_sheet    &quot; Title
+    ).
+
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_start
+          exp   = &apos;B&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_column_end
+          exp   = &apos;D&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_start
+          exp   = &apos;6&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_row_end
+          exp   = &apos;13&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+    zcl_excel_common=&gt;assert_equals(
+          act   = lv_sheet
+          exp   = &apos;&apos;
+          msg   = &apos;Conversion of range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+  ENDMETHOD.
 
 ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
  <textPool>
