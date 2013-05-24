@@ -60,6 +60,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING  &quot;#AU Risk_Level Harmles
     METHODS: time_to_excel_string FOR TESTING.
     METHODS: split_file FOR TESTING.
     METHODS: convert_range2column_a_row FOR TESTING.
+    METHODS: describe_structure FOR TESTING.
 ENDCLASS.       &quot;lcl_Excel_Common_Test
 
 
@@ -888,6 +889,43 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=&gt;critical ).
   ENDMETHOD.
 
+
+  METHOD describe_structure.
+    DATA: ls_test TYPE scarr.
+    DATA: lo_structdescr TYPE REF TO cl_abap_structdescr.
+    DATA: lt_structure TYPE ddfields.
+    FIELD-SYMBOLS: &lt;line&gt; LIKE LINE OF lt_structure.
+
+    &quot; Test with DDIC Type
+    lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data( p_data = ls_test ).
+    lt_structure = zcl_excel_common=&gt;describe_structure( io_struct = lo_structdescr ).
+    READ TABLE lt_structure ASSIGNING &lt;line&gt; INDEX 1.
+    zcl_excel_common=&gt;assert_equals(
+          act   = &lt;line&gt;-fieldname
+          exp   = &apos;MANDT&apos;
+          msg   = &apos;Describe structure failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+
+    &quot; Test with local defined structure having DDIC and non DDIC elements
+    TYPES:
+      BEGIN OF t_test,
+        carrid   TYPE s_carr_id,
+        carrname TYPE s_carrname,
+        carrdesc TYPE string,
+      END OF t_test.
+    DATA: ls_ttest type t_test.
+
+    lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data( p_data = ls_ttest ).
+    lt_structure = zcl_excel_common=&gt;describe_structure( io_struct = lo_structdescr ).
+    READ TABLE lt_structure ASSIGNING &lt;line&gt; INDEX 1.
+    zcl_excel_common=&gt;assert_equals(
+          act   = &lt;line&gt;-fieldname
+          exp   = &apos;CARRID&apos;
+          msg   = &apos;Describe structure failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+
+  ENDMETHOD.
+
 ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
  <textPool>
   <language SPRAS="D">
@@ -1357,8 +1395,9 @@ endmethod.</source>
         ADD 1 TO l_position.
         lo_elemdescr ?= ls_component-type.
         IF lo_elemdescr-&gt;is_ddic_type( ) = abap_true.
-          ls_dfies          = lo_elemdescr-&gt;get_ddic_field( ).
-          ls_dfies-position = l_position.
+          ls_dfies           = lo_elemdescr-&gt;get_ddic_field( ).
+          ls_dfies-fieldname = ls_component-name.
+          ls_dfies-position  = l_position.
         ELSE.
           ls_dfies-fieldname = ls_component-name.
           ls_dfies-position  = l_position.
