@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" UUID="9551494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
@@ -1017,7 +1017,7 @@ endmethod.</source>
                   lc_xml_node_invertifnegative  TYPE string VALUE &apos;c:invertIfNegative&apos;,
                   lc_xml_node_barchart          TYPE string VALUE &apos;c:barChart&apos;,
                   lc_xml_node_bardir            TYPE string VALUE &apos;c:barDir&apos;,
-                  lc_xml_node_gapwidth          TYPE string VALUE &apos;c:gapwidth&apos;,
+                  lc_xml_node_gapwidth          TYPE string VALUE &apos;c:gapWidth&apos;,
                   &quot;plotArea-&gt;line + plotArea-&gt;bar
                   lc_xml_node_grouping          TYPE string VALUE &apos;c:grouping&apos;,
                   lc_xml_node_axid              TYPE string VALUE &apos;c:axId&apos;,
