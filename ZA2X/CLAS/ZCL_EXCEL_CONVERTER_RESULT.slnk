@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_CONVERTER_RESULT" VERSION="1" LANGU="E" DESCRIPT="Result object for table reference" UUID="0202322174CD1ED19DA6A65D857CDDA2" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSABSTRCT="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
- <publicSection>class ZCL_EXCEL_CONVERTER_RESULT definition
-  public
-  inheriting from ZCL_EXCEL_CONVERTER_ALV
-  abstract
-  create public .
-
-*&quot;* public components of class ZCL_EXCEL_CONVERTER_RESULT
-*&quot;* do not include other source files here!!!
-public section.</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_RESULT
-*&quot;* do not include other source files here!!!
-protected section.
-
-  methods GET_TABLE
-    importing
-      !IO_OBJECT type ref to OBJECT
-    returning
-      value(RO_DATA) type ref to DATA .</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_RESULT
-*&quot;* do not include other source files here!!!
-private section.</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>

@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV_GRID" VERSION="1" LANGU="E" DESCRIPT="SALV converter" UUID="4F037FA9DF490087E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_ALV">
- <publicSection>class ZCL_EXCEL_CONVERTER_ALV_GRID definition
-  public
-  inheriting from ZCL_EXCEL_CONVERTER_ALV
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_CONVERTER_ALV_GRID
-*&quot;* do not include other source files here!!!
-
-  methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
-    redefinition .
-  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
-    redefinition .</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_CONVERTER_ALV_GRID
-*&quot;* do not include other source files here!!!</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_ALV_GRID
-*&quot;* do not include other source files here!!!
-private section.</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -52,6 +32,8 @@ endmethod.</source>
     zif_excel_converter~can_convert_object( io_object = io_object ).
   ENDTRY.
 
+  ws_option = is_option.
+
   lo_alv ?= io_object.
 
   CLEAR: es_layout,
@@ -69,8 +51,8 @@ endmethod.</source>
     get_color( EXPORTING io_table    = eo_table
                IMPORTING et_colors   = et_colors ) .
 
-    get_filter( EXPORTING io_table   = eo_table
-                IMPORTING et_filter  = et_filter ) .
+    get_filter( IMPORTING et_filter  = et_filter
+                CHANGING  xo_table   = eo_table  ) .
 
     update_catalog( CHANGING  cs_layout       = es_layout
                               ct_fieldcatalog = et_fieldcatalog ).

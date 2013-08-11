@@ -1,54 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" LANGU="E" DESCRIPT="ALV grid interface implementation" UUID="4F25C0C5503300EAE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSABSTRCT="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <implementing CLSNAME="ZCL_EXCEL_CONVERTER_ALV" REFCLSNAME="ZIF_EXCEL_CONVERTER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" IMPABSTRCT="X"/>
- <publicSection>class ZCL_EXCEL_CONVERTER_ALV definition
-  public
-  abstract
-  create public .
-
-*&quot;* public components of class ZCL_EXCEL_CONVERTER_ALV
-*&quot;* do not include other source files here!!!
-public section.
-  type-pools ABAP .
-  type-pools KKBLO .
-
-  interfaces ZIF_EXCEL_CONVERTER
-      all methods abstract .
-
-  class-methods CLASS_CONSTRUCTOR .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_ALV
-*&quot;* do not include other source files here!!!
-protected section.
-
-  data WT_SORT type LVC_T_SORT .
-  data WT_FILT type LVC_T_FILT .
-  data WT_FCAT type LVC_T_FCAT .
-  data WS_LAYO type LVC_S_LAYO .
-
-  methods UPDATE_CATALOG
-    changing
-      !CS_LAYOUT type ZEXCEL_S_CONVERTER_LAYO
-      !CT_FIELDCATALOG type ZEXCEL_T_CONVERTER_FCAT .
-  methods APPLY_SORT
-    importing
-      !IT_TABLE type STANDARD TABLE
-    exporting
-      !EO_TABLE type ref to DATA .
-  methods GET_COLOR
-    importing
-      !IO_TABLE type ref to DATA
-    exporting
-      !ET_COLORS type ZEXCEL_T_CONVERTER_COL .
-  methods GET_FILTER
-    importing
-      !IO_TABLE type ref to DATA
-    exporting
-      !ET_FILTER type ZEXCEL_T_CONVERTER_FIL .</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_ALV
-*&quot;* do not include other source files here!!!
-private section.
-
-  class-data WT_COLORS type TT_COL_CONVERTER .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -70,15 +22,16 @@ TYPES: BEGIN OF ts_col_converter,
  <typeUsage CLSNAME="ZCL_EXCEL_CONVERTER_ALV" TYPEGROUP="KKBLO" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
  <forwardDeclaration>ABAP</forwardDeclaration>
  <forwardDeclaration>KKBLO</forwardDeclaration>
- <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WS_LAYO" VERSION="1" LANGU="1" DESCRIPT="ALV control: Layout structure" EXPOSURE="1" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_S_LAYO" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_COLORS" VERSION="1" LANGU="1" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TT_COL_CONVERTER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_FCAT" VERSION="1" LANGU="1" DESCRIPT="Field Catalog for List Viewer Control" EXPOSURE="1" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_T_FCAT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_FILT" VERSION="1" LANGU="1" DESCRIPT="ALV control: Table of filter conditions" EXPOSURE="1" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_T_FILT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_SORT" VERSION="1" LANGU="1" DESCRIPT="ALV Control: Table of Sort Criteria" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_T_SORT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" VERSION="1" LANGU="1" DESCRIPT="Apply sort criteria to data table" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" SCONAME="IT_TABLE" VERSION="1" LANGU="1" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" SCONAME="EO_TABLE" VERSION="1" LANGU="1" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
-  <source>method APPLY_SORT.
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WS_LAYO" VERSION="1" LANGU="E" DESCRIPT="ALV control: Layout structure" EXPOSURE="1" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_S_LAYO" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WS_OPTION" VERSION="1" LANGU="E" DESCRIPT="Converter options for grid configuration" EXPOSURE="1" STATE="1" EDITORDER="6 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_OPTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_COLORS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TT_COL_CONVERTER" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_FCAT" VERSION="1" LANGU="E" DESCRIPT="Field Catalog for List Viewer Control" EXPOSURE="1" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_T_FCAT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_FILT" VERSION="1" LANGU="E" DESCRIPT="ALV control: Table of filter conditions" EXPOSURE="1" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_T_FILT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="WT_SORT" VERSION="1" LANGU="E" DESCRIPT="ALV Control: Table of Sort Criteria" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="LVC_T_SORT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" VERSION="1" LANGU="E" DESCRIPT="Apply sort criteria to data table" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" SCONAME="IT_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" SCONAME="EO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
+  <source>METHOD apply_sort.
   DATA: lt_otab  TYPE abap_sortorder_tab,
         ls_otab  TYPE abap_sortorder.
 
@@ -90,7 +43,7 @@ TYPES: BEGIN OF ts_col_converter,
 
   &lt;fs_table&gt; = it_table.
 
-  sort wt_sort by spos.
+  SORT wt_sort BY spos.
   LOOP AT wt_sort ASSIGNING &lt;fs_sort&gt;.
     IF &lt;fs_sort&gt;-up = abap_true.
       ls_otab-name = &lt;fs_sort&gt;-fieldname.
@@ -108,9 +61,10 @@ TYPES: BEGIN OF ts_col_converter,
   IF lt_otab IS NOT INITIAL.
     SORT &lt;fs_table&gt; BY (lt_otab).
   ENDIF.
-endmethod.</source>
+
+ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="CLASS_CONSTRUCTOR" VERSION="1" LANGU="1" DESCRIPT="CLASS_CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="CLASS_CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CLASS_CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CLASS_CONSTRUCTOR.
 * let&apos;s fill the color conversion routines.
   DATA: ls_color TYPE ts_col_converter.
@@ -319,9 +273,9 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" VERSION="1" LANGU="1" DESCRIPT="Create color table for formating" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" SCONAME="IO_TABLE" VERSION="1" LANGU="1" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" SCONAME="ET_COLORS" VERSION="1" LANGU="1" DESCRIPT="Table type for color information of cells for converter" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_COL"/>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" VERSION="1" LANGU="E" DESCRIPT="Create color table for formating" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" SCONAME="ET_COLORS" VERSION="1" LANGU="E" DESCRIPT="Table type for color information of cells for converter" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_COL"/>
   <source>METHOD get_color.
   DATA: ls_con_col TYPE zexcel_s_converter_col,
         ls_color   TYPE ts_col_converter,
@@ -388,9 +342,9 @@ endmethod.</source>
   ENDIF.
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" VERSION="1" LANGU="1" DESCRIPT="Create filter values" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" SCONAME="IO_TABLE" VERSION="1" LANGU="1" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" SCONAME="ET_FILTER" VERSION="1" LANGU="1" DESCRIPT="Table type for filter information of cells for converter" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_FIL"/>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" VERSION="1" LANGU="E" DESCRIPT="Create filter values" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" SCONAME="ET_FILTER" VERSION="1" LANGU="E" DESCRIPT="Table type for filter information of cells for converter" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_FIL"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" SCONAME="XO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
   <source>METHOD get_filter.
   DATA: ls_filt   TYPE lvc_s_filt,
         l_line    TYPE i,
@@ -400,17 +354,27 @@ ENDMETHOD.</source>
         ls_components           TYPE abap_componentdescr,
         lo_table                TYPE REF TO cl_abap_tabledescr,
         lo_struc                TYPE REF TO cl_abap_structdescr,
-        lo_tdata                TYPE REF TO data,
-        lo_sdata                TYPE REF TO data.
+        lo_trange               TYPE REF TO data,
+        lo_srange               TYPE REF TO data,
+        lo_ltabdata             TYPE REF TO data.
 
-  FIELD-SYMBOLS: &lt;fs_tab&gt; TYPE STANDARD TABLE,
+  FIELD-SYMBOLS: &lt;fs_tab&gt;  TYPE STANDARD TABLE,
+                 &lt;fs_ltab&gt; TYPE STANDARD TABLE,
                  &lt;fs_stab&gt; TYPE ANY,
                  &lt;fs&gt;      TYPE ANY,
                  &lt;fs1&gt;     TYPE ANY,
                  &lt;fs_srange&gt; TYPE ANY,
                  &lt;fs_trange&gt; TYPE STANDARD TABLE.
 
-  ASSIGN io_table-&gt;* TO &lt;fs_tab&gt;.
+  IF ws_option-filter = abap_false.
+    REFRESH et_filter.
+    RETURN.
+  ENDIF.
+
+  ASSIGN xo_table-&gt;* TO &lt;fs_tab&gt;.
+
+  CREATE DATA lo_ltabdata LIKE &lt;fs_tab&gt;.
+  ASSIGN lo_ltabdata-&gt;* TO &lt;fs_ltab&gt;.
 
   LOOP AT wt_filt INTO ls_filt.
     LOOP AT &lt;fs_tab&gt; ASSIGNING &lt;fs_stab&gt;.
@@ -444,11 +408,11 @@ ENDMETHOD.</source>
           ENDTRY.
           lo_table = cl_abap_tabledescr=&gt;create( lo_struc ).
 
-          CREATE DATA lo_tdata   TYPE HANDLE lo_table.
-          CREATE DATA lo_sdata   TYPE HANDLE lo_struc.
+          CREATE DATA lo_trange  TYPE HANDLE lo_table.
+          CREATE DATA lo_srange  TYPE HANDLE lo_struc.
 
-          ASSIGN lo_tdata-&gt;* TO &lt;fs_trange&gt;.
-          ASSIGN lo_sdata-&gt;* TO &lt;fs_srange&gt;.
+          ASSIGN lo_trange-&gt;* TO &lt;fs_trange&gt;.
+          ASSIGN lo_srange-&gt;* TO &lt;fs_srange&gt;.
         ENDIF.
         REFRESH &lt;fs_trange&gt;.
         ASSIGN COMPONENT &apos;SIGN&apos;   OF STRUCTURE  &lt;fs_srange&gt; TO &lt;fs1&gt;.
@@ -461,19 +425,27 @@ ENDMETHOD.</source>
         &lt;fs1&gt; = ls_filt-high.
         INSERT &lt;fs_srange&gt; INTO TABLE &lt;fs_trange&gt;.
         IF &lt;fs&gt; IN &lt;fs_trange&gt;.
-          ls_filter-rownumber   = l_line.
-          ls_filter-columnname  = ls_filt-fieldname.
-          INSERT ls_filter INTO TABLE et_filter.
+          IF ws_option-filter = abap_true.
+            ls_filter-rownumber   = l_line.
+            ls_filter-columnname  = ls_filt-fieldname.
+            INSERT ls_filter INTO TABLE et_filter.
+          ELSE.
+            INSERT &lt;fs_stab&gt; INTO TABLE &lt;fs_ltab&gt;.
+          ENDIF.
         ENDIF.
       ENDIF.
     ENDLOOP.
+    IF ws_option-filter = abap_undefined.
+      &lt;fs_tab&gt; = &lt;fs_ltab&gt;.
+      REFRESH &lt;fs_ltab&gt;.
+    ENDIF.
   ENDLOOP.
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" VERSION="1" LANGU="1" DESCRIPT="Create fieldcatalog and layout" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" SCONAME="CS_LAYOUT" VERSION="1" LANGU="1" DESCRIPT="Converter settings for table" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_LAYO"/>
-  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" SCONAME="CT_FIELDCATALOG" VERSION="1" LANGU="1" DESCRIPT="Conter table for tabel fields" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_FCAT"/>
+ <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" VERSION="1" LANGU="E" DESCRIPT="Create fieldcatalog and layout" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" SCONAME="CS_LAYOUT" VERSION="1" LANGU="E" DESCRIPT="Converter settings for table" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_LAYO"/>
+  <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" SCONAME="CT_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Conter table for tabel fields" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_FCAT"/>
   <source>METHOD update_catalog.
   DATA: ls_fieldcatalog   TYPE zexcel_s_converter_fcat,
         ls_ref            TYPE salv_s_ddic_reference,
@@ -494,7 +466,17 @@ ENDMETHOD.</source>
   LOOP AT wt_fcat INTO ls_fcat.
     CLEAR: ls_fieldcatalog,
            l_decimals.
-    IF ls_fcat-tech = abap_false AND ls_fcat-no_out IS INITIAL.
+    CASE ws_option-hidenc.
+      WHEN abap_false.     &quot; We make hiden columns visible
+        CLEAR ls_fcat-no_out.
+      WHEN abap_true.
+* We convert column and hide it.
+      WHEN abap_undefined. &quot;We don&apos;t convert hiden columns
+        IF ls_fcat-no_out = abap_true.
+          ls_fcat-tech = abap_true.
+        ENDIF.
+    ENDCASE.
+    IF ls_fcat-tech = abap_false.
       ls_fieldcatalog-tabname         = ls_fcat-tabname.
       ls_fieldcatalog-fieldname       = ls_fcat-fieldname .
       ls_fieldcatalog-columnname      = ls_fcat-fieldname .
@@ -511,6 +493,14 @@ ENDMETHOD.</source>
       ELSE.
         ls_fieldcatalog-decimals = ls_fcat-decimals .
       ENDIF.
+      CASE ws_option-subtot.
+        WHEN abap_false.     &quot; We ignore subtotals
+          CLEAR ls_fcat-do_sum.
+        WHEN abap_true.      &quot; We convert subtotals and detail
+
+        WHEN abap_undefined. &quot; We should only take subtotals and displayed detail
+* for now abap_true
+      ENDCASE.
       CASE ls_fcat-do_sum.
         WHEN abap_true.
           ls_fieldcatalog-totals_function =  zcl_excel_table=&gt;totals_function_sum.
@@ -548,7 +538,7 @@ ENDMETHOD.</source>
       ENDCASE.
 * Check for subtotals.
       READ TABLE wt_sort INTO ls_sort WITH KEY fieldname = ls_fcat-fieldname.
-      IF sy-subrc = 0.
+      IF sy-subrc = 0 AND  ws_option-subtot &lt;&gt; abap_false.
         ls_fieldcatalog-sort_level      = 0 .
 *        IF  ls_fieldcatalog-totals_function IS INITIAL.  &quot; Not clear why not
 *          CLEAR ls_fieldcatalog-is_subtotalled.

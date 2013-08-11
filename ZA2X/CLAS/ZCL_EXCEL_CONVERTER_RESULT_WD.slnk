@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" VERSION="1" LANGU="E" DESCRIPT="SALV converter for web dynpro" UUID="0202322174CD1EE19DA6A46937591510" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_CONVERTER_RESULT">
- <publicSection>class ZCL_EXCEL_CONVERTER_RESULT_WD definition
-  public
-  inheriting from ZCL_EXCEL_CONVERTER_RESULT
-  final
-  create public .
-
-*&quot;* public components of class ZCL_EXCEL_CONVERTER_RESULT_WD
-*&quot;* do not include other source files here!!!
-public section.
-
-  methods ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT
-    redefinition .
-  methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
-    redefinition .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_CONVERTER_RESULT_WD
-*&quot;* do not include other source files here!!!
-protected section.</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_CONVERTER_RESULT_WD
-*&quot;* do not include other source files here!!!
-private section.
-
-  data WO_CONFIG type ref to CL_SALV_WD_CONFIG_TABLE .
-  data WT_FIELDS type SALV_WD_T_FIELD_REF .
-  data WT_COLUMNS type SALV_WD_T_COLUMN_REF .
-
-  methods GET_COLUMNS_INFO
-    changing
-      !XS_FCAT type LVC_S_FCAT .
-  methods GET_FIELDS_INFO
-    changing
-      !XS_FCAT type LVC_S_FCAT .
-  methods CREATE_WT_SORT .
-  methods CREATE_WT_FILT .
-  methods CREATE_WT_FCAT
-    importing
-      !IO_TABLE type ref to DATA .</privateSection>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -75,6 +39,8 @@ ENDMETHOD.</source>
     zif_excel_converter~can_convert_object( io_object = io_object ).
   ENDTRY.
 
+  ws_option = is_option.
+
   lo_result ?= io_object.
 
   CLEAR: es_layout,
@@ -104,8 +70,8 @@ ENDMETHOD.</source>
 *      get_color( EXPORTING io_table    = eo_table
 *                 IMPORTING et_colors   = et_colors ) .
 
-      get_filter( EXPORTING io_table   = eo_table
-                  IMPORTING et_filter  = et_filter ) .
+      get_filter( IMPORTING et_filter  = et_filter
+                  CHANGING  xo_table   = eo_table ) .
 
       update_catalog( CHANGING  cs_layout       = es_layout
                                 ct_fieldcatalog = et_fieldcatalog ).
@@ -119,33 +85,23 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_RESULT_WD" CMPNAME="CREATE_WT_FCAT" SCONAME="IO_TABLE" VERSION="1" LANGU="1" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
   <source>METHOD create_wt_fcat.
   DATA: lr_data             TYPE REF TO data,
-      lo_structdescr      TYPE REF TO cl_abap_structdescr,
-      lo_elemdescr        TYPE REF TO cl_abap_elemdescr,
-      lt_dfies            TYPE ddfields,
-      ls_dfies            TYPE dfies,
-      lv_sytabix          TYPE sytabix,
-      lt_components       TYPE abap_component_tab,
-      ls_component        LIKE LINE OF lt_components.
+        lo_structdescr      TYPE REF TO cl_abap_structdescr,
+        lt_dfies            TYPE ddfields,
+        ls_dfies            TYPE dfies,
+        lv_sytabix          TYPE sytabix.
 
   DATA: ls_fcat         TYPE lvc_s_fcat.
-  DATA: lt_filters      TYPE salv_wd_t_filter_rule_ref,
-        ls_filt         TYPE lvc_s_filt.
-
-  FIELD-SYMBOLS: &lt;fs_filter&gt;  TYPE salv_wd_s_filter_rule_ref.
 
   FIELD-SYMBOLS: &lt;fs_tab&gt;         TYPE ANY TABLE.
 
   ASSIGN io_table-&gt;* TO &lt;fs_tab&gt; .
-
   CREATE DATA lr_data LIKE LINE OF &lt;fs_tab&gt;.
 
   lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data_ref( lr_data ).
 
-  &quot;for DDIC structure get the info directly
-  IF lo_structdescr-&gt;is_ddic_type( ) = abap_true.
-    lt_dfies = lo_structdescr-&gt;get_ddic_field_list( ).
+  lt_dfies = zcl_excel_common=&gt;describe_structure( io_struct = lo_structdescr ).
 
-    LOOP AT lt_dfies INTO ls_dfies.
+  loop at lt_dfies into ls_dfies.
       MOVE-CORRESPONDING ls_dfies TO ls_fcat.
 *      ls_fcat-columnname = ls_dfies-fieldname.
       ls_fcat-col_pos = ls_dfies-position.
@@ -157,32 +113,7 @@ ENDMETHOD.</source>
       get_columns_info( CHANGING xs_fcat = ls_fcat ) .
 
       INSERT ls_fcat INTO TABLE wt_fcat.
-    ENDLOOP.
-  ELSE.
-    &quot;if structure is not DDIC check components
-    lt_components = lo_structdescr-&gt;get_components( ).
-    LOOP AT lt_components INTO ls_component.
-      lv_sytabix = sy-tabix.
-      CLEAR ls_fcat.
-      lo_elemdescr ?= ls_component-type.
-      &quot;component is DDIC
-      IF lo_elemdescr-&gt;is_ddic_type( ) = abap_true.
-        ls_dfies = lo_elemdescr-&gt;get_ddic_field( ).
-        MOVE-CORRESPONDING ls_dfies TO ls_fcat.
-*        ls_fcat-columnname = ls_component-name.
-      ELSE.
-        &quot;component is not DDIC -&gt; return minimum information required
-        ls_fcat-fieldname  = ls_component-name.
-*        ls_fcat-columnname = ls_component-name.
-        ls_fcat-scrtext_m  = ls_component-name.
-      ENDIF.
-      ls_fcat-col_opt = abap_true.
-      ls_fcat-col_pos = lv_sytabix.
-      get_fields_info( CHANGING xs_fcat = ls_fcat ) .
-
-      INSERT ls_fcat INTO TABLE wt_fcat.
-    ENDLOOP.
-  ENDIF.
+  endloop.
 
 ENDMETHOD.</source>
  </method>
