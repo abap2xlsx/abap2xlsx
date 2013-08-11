@@ -42,8 +42,10 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING  &quot;#AU Risk_Level Harmles
   PRIVATE SECTION.
 * ================
     DATA:
-      lx_excel  TYPE REF TO zcx_excel,
-      f_cut     TYPE REF TO zcl_excel_common.  &quot;class under test
+      lx_excel      TYPE REF TO zcx_excel,
+      ls_symsg_act  TYPE symsg,                    &quot; actual   messageinformation of exception
+      ls_symsg_exp  TYPE symsg,                    &quot; expected messageinformation of exception
+      f_cut         TYPE REF TO zcl_excel_common.  &quot;class under test
 
     CLASS-METHODS: class_setup.
     CLASS-METHODS: class_teardown.
@@ -61,6 +63,8 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING  &quot;#AU Risk_Level Harmles
     METHODS: split_file FOR TESTING.
     METHODS: convert_range2column_a_row FOR TESTING.
     METHODS: describe_structure FOR TESTING.
+    METHODS: calculate_cell_distance FOR TESTING.
+    METHODS: shift_formula FOR TESTING.
 ENDCLASS.       &quot;lcl_Excel_Common_Test
 
 
@@ -218,38 +222,36 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=&gt;convert_column2int( &apos;&apos; ).
 
-        zcl_excel_common=&gt;assert_differs(
-          act   = ep_column
-          exp   = &apos;0&apos;
-          msg   = &apos;Wrong column conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
+        zcl_excel_common=&gt;assert_differs( act   = ep_column
+                                          exp   = &apos;0&apos;
+                                          msg   = &apos;Wrong column conversion&apos;
+                                          level = if_aunit_constants=&gt;critical ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals(
-          act   = lx_excel-&gt;error
-          exp   = &apos;Unable to interpret input as column&apos;
-          msg   = &apos;Colum name should be a valid string&apos;
-          level = if_aunit_constants=&gt;fatal
-        ).
+        CLEAR: ls_symsg_act,
+               ls_symsg_exp.
+        ls_symsg_exp-msgid = &apos;ZABAP2XLSX&apos;.
+        ls_symsg_exp-msgno = &apos;800&apos;.
+        ls_symsg_act-msgid = lx_excel-&gt;syst_at_raise-msgid.
+        ls_symsg_act-msgno = lx_excel-&gt;syst_at_raise-msgno.
+        zcl_excel_common=&gt;assert_equals( act   = ls_symsg_act
+                                         exp   = ls_symsg_exp
+                                         msg   = &apos;Colum name should be a valid string&apos;
+                                         level = if_aunit_constants=&gt;fatal ).
     ENDTRY.
 
 * Test 4. Out of bounds
     TRY.
         ep_column = zcl_excel_common=&gt;convert_column2int( &apos;XFE&apos; ).
 
-        zcl_excel_common=&gt;assert_differs(
-          act   = ep_column
-          exp   = 16385
-          msg   = &apos;Wrong column conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
+        zcl_excel_common=&gt;assert_differs( act   = ep_column
+                                          exp   = 16385
+                                          msg   = &apos;Wrong column conversion&apos;
+                                          level = if_aunit_constants=&gt;critical ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals(
-          act   = lx_excel-&gt;error
-          exp   = &apos;Index out of bounds&apos;
-          msg   = &apos;Colum XFE is out of range&apos;
-          level = if_aunit_constants=&gt;fatal
-        ).
+        zcl_excel_common=&gt;assert_equals( act   = lx_excel-&gt;error
+                                         exp   = &apos;Index out of bounds&apos;
+                                         msg   = &apos;Colum XFE is out of range&apos;
+                                         level = if_aunit_constants=&gt;fatal ).
     ENDTRY.
   ENDMETHOD.       &quot;convert_Column2int
 
@@ -887,7 +889,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           exp   = &apos;&apos;
           msg   = &apos;Conversion of range failed&apos;
           level = if_aunit_constants=&gt;critical ).
-  ENDMETHOD.
+  ENDMETHOD.                    &quot;convert_range2column_a_row
 
 
   METHOD describe_structure.
@@ -913,7 +915,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         carrname TYPE s_carrname,
         carrdesc TYPE string,
       END OF t_test.
-    DATA: ls_ttest type t_test.
+    DATA: ls_ttest TYPE t_test.
 
     lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data( p_data = ls_ttest ).
     lt_structure = zcl_excel_common=&gt;describe_structure( io_struct = lo_structdescr ).
@@ -924,7 +926,119 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           msg   = &apos;Describe structure failed&apos;
           level = if_aunit_constants=&gt;critical ).
 
-  ENDMETHOD.
+  ENDMETHOD.                    &quot;describe_structure
+
+
+  METHOD calculate_cell_distance.
+    DATA: lv_offset_rows             TYPE i,
+          lv_offset_cols             TYPE i,
+          lv_message                 TYPE string.
+
+    DEFINE macro_calculate_cell_distance.
+      zcl_excel_common=&gt;calculate_cell_distance( exporting iv_reference_cell = &amp;1
+                                                           iv_current_cell   = &amp;2
+                                                 importing ev_row_difference = lv_offset_rows
+                                                           ev_col_difference = lv_offset_cols ).
+* Check delta columns
+      concatenate &apos;Error calculating column difference in test:&apos;
+                  &amp;1
+                  &apos;-&gt;&apos;
+                  &amp;2
+           into lv_message separated by space.
+      zcl_excel_common=&gt;assert_equals(  act   = lv_offset_cols
+                                        exp   = &amp;3
+                                        msg   = lv_message
+                                        quit  = 0  &quot; continue tests
+                                        level = if_aunit_constants=&gt;critical ).
+* Check delta rows
+      concatenate &apos;Error calculating row difference in test:&apos;
+                  &amp;1
+                  &apos;-&gt;&apos;
+                  &amp;2
+           into lv_message separated by space.
+      zcl_excel_common=&gt;assert_equals(  act   = lv_offset_rows
+                                        exp   = &amp;4
+                                        msg   = lv_message
+                                        quit  = 0  &quot; continue tests
+                                        level = if_aunit_constants=&gt;critical ).
+    END-OF-DEFINITION.
+
+
+    macro_calculate_cell_distance:
+          &apos;C12&apos;        &apos;C12&apos;          0           0        ,  &quot; Same cell
+          &apos;C12&apos;        &apos;C13&apos;          0           1        ,  &quot; Shift down 1 place
+          &apos;C12&apos;        &apos;C25&apos;          0          13        ,  &quot; Shift down some places
+          &apos;C12&apos;        &apos;C11&apos;          0          -1        ,  &quot; Shift up 1 place
+          &apos;C12&apos;        &apos;C1&apos;           0         -11        ,  &quot; Shift up some place
+          &apos;C12&apos;        &apos;D12&apos;          1           0        ,  &quot; Shift right 1 place
+          &apos;C12&apos;        &apos;AA12&apos;        24           0        ,  &quot; Shift right some places
+          &apos;C12&apos;        &apos;B12&apos;         -1           0        ,  &quot; Shift left 1 place
+          &apos;AA12&apos;       &apos;C12&apos;        -24           0        ,  &quot; Shift left some place
+          &apos;AA121&apos;      &apos;C12&apos;        -24        -109        .  &quot; The full package.
+
+  ENDMETHOD.                    &quot;CALCULATE_CELL_DISTANCE
+
+  METHOD shift_formula.
+    DATA: lv_resulting_formula       TYPE string,
+          lv_message                 TYPE string,
+          lv_counter                 TYPE num8.
+
+    DEFINE macro_shift_formula.
+      add 1 to lv_counter.
+      clear lv_resulting_formula.
+      try.
+          lv_resulting_formula = zcl_excel_common=&gt;shift_formula( iv_reference_formula = &amp;1
+                                                                  iv_shift_cols        = &amp;2
+                                                                  iv_shift_rows        = &amp;3 ).
+          concatenate &apos;Wrong result in test&apos;
+                      lv_counter
+                      &apos;shifting formula &apos;
+                      &amp;1
+               into lv_message separated by space.
+          zcl_excel_common=&gt;assert_equals(  act   = lv_resulting_formula
+                                            exp   = &amp;4
+                                            msg   = lv_message
+                                            quit  = 0  &quot; continue tests
+                                            level = if_aunit_constants=&gt;critical ).
+        catch zcx_excel.
+          concatenate &apos;Unexpected exception occurred in test&apos;
+                      lv_counter
+                      &apos;shifting formula &apos;
+                      &amp;1
+               into lv_message separated by space.
+          zcl_excel_common=&gt;assert_equals(  act   = lv_resulting_formula
+                                            exp   = &amp;4
+                                            msg   = lv_message
+                                            quit  = 0  &quot; continue tests
+                                            level = if_aunit_constants=&gt;critical ).
+      endtry.
+    END-OF-DEFINITION.
+
+* Test shifts that should result in a valid output
+    macro_shift_formula:
+          &apos;C17&apos;                                  0   0       &apos;C17&apos;,                       &quot; Very basic check
+          &apos;C17&apos;                                  2   3       &apos;E20&apos;,                       &quot; Check shift right and down
+          &apos;C17&apos;                                 -2  -3       &apos;A14&apos;,                       &quot; Check shift left and up
+          &apos;$C$17&apos;                                1   1       &apos;$C$17&apos;,                     &quot; Fixed columns/rows
+          &apos;SUM($C17:C$23)+C30&apos;                   1  11       &apos;SUM($C28:D$23)+D41&apos;,        &quot; Operators and Ranges, mixed fixed rows or columns
+          &apos;RNGNAME1+C7&apos;                         -1  -4       &apos;RNGNAME1+B3&apos;,               &quot; Operators and Rangename
+          &apos;&quot;Date:&quot;&amp;TEXT(B2)&apos;                     1   1       &apos;&quot;Date:&quot;&amp;TEXT(C3)&apos;,          &quot; String literals and string concatenation
+          &apos;[TEST6.XLSX]SHEET1!A1&apos;                1  11       &apos;[TEST6.XLSX]SHEET1!B12&apos;,    &quot; External sheet reference
+          `X(B13, &quot;KK&quot; )  `                      1   1       `X(C14,&quot;KK&quot;)`,               &quot; superflous blanks, multi-argument functions, literals in function, unknown functions
+*          &apos;SIN((((((B2))))))&apos;                    1   1       &apos;SIN((((((C3))))))&apos;,        &quot; Deep nesting
+*          &apos;SIN(SIN(SIN(SIN(E22))))&apos;              0   1       &apos;SIN(SIN(SIN(SIN(E23))))&apos;,   &quot; Different type of deep nesting
+          `SIN(SIN(SIN(SIN(E22))))`              0   1       &apos;SIN(SIN(SIN(SIN(E23))))&apos;,   &quot; same as above - but with string input instead of Char-input
+          &apos;HEUTE()&apos;                              2   5       &apos;HEUTE()&apos;,                   &quot; Functions w/o arguments, No cellreferences
+          &apos;&quot;B2&quot;&apos;                                 2   5       &apos;&quot;B2&quot;&apos;,                      &quot; No cellreferences
+          &apos;&apos;                                     2   5       &apos;&apos;,                          &quot; Empty
+          &apos;A1+$A1+A$1+$A$1+B2&apos;                  -1   0       &apos;#REF!+$A1+#REF!+$A$1+A2&apos;,   &quot; Referencing error , column only    , underflow
+          &apos;A1+$A1+A$1+$A$1+B2&apos;                   0  -1       &apos;#REF!+#REF!+A$1+$A$1+B1&apos;,   &quot; Referencing error , row only       , underflow
+          &apos;A1+$A1+A$1+$A$1+B2&apos;                  -1  -1       &apos;#REF!+#REF!+#REF!+$A$1+A1&apos;. &quot; Referencing error , row and column , underflow
+  ENDMETHOD.                    &quot;SHIFT_FORMULA
+
+
+
+
 
 ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
  <textPool>
@@ -1011,7 +1125,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="QUIT" VERSION="1" LANGU="E" DESCRIPT="Flow Control in Case of Error" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="AUNIT_FLOWCTRL" PARVALUE="IF_AUNIT_CONSTANTS=&gt;METHOD"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="IGNORE_HASH_SEQUENCE" VERSION="1" LANGU="E" DESCRIPT="Ignore change sequence in hash tables" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_BOOL" PARVALUE="ABAP_FALSE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="ASSERTION_FAILED" VERSION="1" LANGU="E" DESCRIPT="Condition not met" CMPTYPE="1" MTDTYPE="0" EDITORDER="8 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ABAP_BOOL"/>
-  <source>method ASSERT_EQUALS.
+  <source>METHOD assert_equals.
   DATA: ls_seoclass TYPE seoclass.
 
   &quot; Let see &gt;=7.02
@@ -1038,22 +1152,69 @@ endmethod.</source>
       WHERE clsname = &apos;CL_AUNIT_ASSERT&apos;.
 
     IF sy-subrc = 0.
-    CALL METHOD (ls_seoclass-clsname)=&gt;assert_equals
-      EXPORTING
-        exp                  = exp
-        act                  = act
-        msg                  = msg
-        level                = level
-        tol                  = tol
-        quit                 = quit
-        ignore_hash_sequence = ignore_hash_sequence
-      RECEIVING
-        assertion_failed     = assertion_failed.
+      CALL METHOD (ls_seoclass-clsname)=&gt;assert_equals
+        EXPORTING
+          exp                  = exp
+          act                  = act
+          msg                  = msg
+          level                = level
+          tol                  = tol
+          quit                 = quit
+          ignore_hash_sequence = ignore_hash_sequence
+        RECEIVING
+          assertion_failed     = assertion_failed.
     ELSE.
 * We do nothing for now not supported
     ENDIF.
   ENDIF.
-endmethod.</source>
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" VERSION="1" LANGU="E" DESCRIPT="Give distance between two cells" EXPOSURE="2" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="IV_REFERENCE_CELL" VERSION="1" LANGU="E" DESCRIPT="Reference Cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="IV_CURRENT_CELL" VERSION="1" LANGU="E" DESCRIPT="Current Cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="EV_ROW_DIFFERENCE" VERSION="1" LANGU="E" DESCRIPT="Number of rows current cell is below reference cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="EV_COL_DIFFERENCE" VERSION="1" LANGU="E" DESCRIPT="Number of columns current cell is right of reference cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
+  <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD calculate_cell_distance.
+
+  DATA:       lv_reference_row                TYPE i,
+              lv_reference_col_alpha          TYPE zexcel_cell_column_alpha,
+              lv_reference_col                TYPE i,
+              lv_current_row                  TYPE i,
+              lv_current_col_alpha            TYPE zexcel_cell_column_alpha,
+              lv_current_col                  TYPE i.
+
+*--------------------------------------------------------------------*
+* Split reference  cell into numerical row/column representation
+*--------------------------------------------------------------------*
+  convert_columnrow2column_a_row( EXPORTING
+                                    i_columnrow = iv_reference_cell
+                                  IMPORTING
+                                    e_column    = lv_reference_col_alpha
+                                    e_row       = lv_reference_row ).
+  lv_reference_col = convert_column2int( lv_reference_col_alpha ).
+
+*--------------------------------------------------------------------*
+* Split current  cell into numerical row/column representation
+*--------------------------------------------------------------------*
+  convert_columnrow2column_a_row( EXPORTING
+                                    i_columnrow = iv_current_cell
+                                  IMPORTING
+                                    e_column    = lv_current_col_alpha
+                                    e_row       = lv_current_row ).
+  lv_current_col = convert_column2int( lv_current_col_alpha ).
+
+*--------------------------------------------------------------------*
+* Calculate row and column difference
+* Positive:   Current cell below    reference cell
+*         or  Current cell right of reference cell
+* Negative:   Current cell above    reference cell
+*         or  Current cell left  of reference cell
+*--------------------------------------------------------------------*
+  ev_row_difference = lv_current_row - lv_reference_row.
+  ev_col_difference = lv_current_col - lv_reference_col.
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CHAR2HEX" VERSION="1" LANGU="E" DESCRIPT="Character to Hexadecimal" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CHAR2HEX" SCONAME="I_CHAR" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
@@ -1076,21 +1237,31 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="EP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method CONVERT_COLUMN2ALPHA.
+  <source>METHOD convert_column2alpha.
 
-  DATA: lo_conv      TYPE REF TO cl_abap_conv_in_ce,
-        lv_uccpi     TYPE i,
-        lv_text      TYPE sychar02,
-        lv_module    TYPE int4,
-        lv_column    TYPE zexcel_cell_column.
+  DATA:       lv_uccpi                        TYPE i,
+              lv_text                         TYPE sychar02,
+              lv_module                       TYPE int4,
+              lv_column                       TYPE zexcel_cell_column.
+
 * Propagate zcx_excel if error occurs           &quot; issue #155 - less restrictive typing for ip_column
   lv_column = convert_column2int( ip_column ).  &quot; issue #155 - less restrictive typing for ip_column
-  IF lv_column GT 16384 OR lv_column LT 1.
+
+*--------------------------------------------------------------------*
+* Check whether column is in allowed range for EXCEL to handle ( 1-16384 )
+*--------------------------------------------------------------------*
+  IF   lv_column &gt; 16384
+    OR lv_column &lt; 1.
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
         error = &apos;Index out of bounds&apos;.
   ENDIF.
+
+*--------------------------------------------------------------------*
+* Build alpha representation of column
+*--------------------------------------------------------------------*
   WHILE lv_column GT 0.
+
     lv_module = ( lv_column - 1 ) MOD 26.
     lv_uccpi  = 65 + lv_module.
 
@@ -1098,9 +1269,10 @@ endmethod.</source>
 
     lv_text   = cl_abap_conv_in_ce=&gt;uccpi( lv_uccpi ).
     CONCATENATE lv_text ep_column INTO ep_column.
+
   ENDWHILE.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" VERSION="1" LANGU="E" DESCRIPT="Convert column indicator to Integer" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -1147,10 +1319,14 @@ endmethod.</source>
   TRANSLATE lv_column_c TO UPPER CASE.                      &quot; Fix #246
   CONDENSE lv_column_c NO-GAPS.
   IF lv_column_c EQ &apos;&apos;.
-    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    RAISE EXCEPTION TYPE zcx_excel
+*      EXPORTING
+*        error = lv_errormessage.
+    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = lv_errormessage.
+        syst_at_raise = syst.
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -1180,10 +1356,14 @@ endmethod.</source>
 *--------------------------------------------------------------------*
   lv_column_s = lv_column_c.
   IF lv_column_s CN sy-abcde.
-    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    RAISE EXCEPTION TYPE zcx_excel
+*      EXPORTING
+*        error = lv_errormessage.
+    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = lv_errormessage.
+        syst_at_raise = syst.
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -1195,10 +1375,14 @@ endmethod.</source>
   lv_column = lv_column_c.
   lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+0(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
   IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
-    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    RAISE EXCEPTION TYPE zcx_excel
+*      EXPORTING
+*        error = lv_errormessage.
+    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = lv_errormessage.
+        syst_at_raise = syst.
   ENDIF.
   ep_column = lv_modulo.                    &quot; Leftmost digit
 
@@ -1208,10 +1392,14 @@ endmethod.</source>
   CHECK lv_column+1(1) IS NOT INITIAL.      &quot; No need to continue if string ended
   lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+1(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
   IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
-    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    RAISE EXCEPTION TYPE zcx_excel
+*      EXPORTING
+*        error = lv_errormessage.
+    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = lv_errormessage.
+        syst_at_raise = syst.
   ENDIF.
   ep_column = 26 * ep_column + lv_modulo.   &quot; if second digit is present first digit is for 26^1
 
@@ -1221,10 +1409,14 @@ endmethod.</source>
   CHECK lv_column+2(1) IS NOT INITIAL.      &quot; No need to continue if string ended
   lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+2(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
   IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
-    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
+*    RAISE EXCEPTION TYPE zcx_excel
+*      EXPORTING
+*        error = lv_errormessage.
+    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = lv_errormessage.
+        syst_at_raise = syst.
   ENDIF.
   ep_column = 26 * ep_column + lv_modulo.   &quot; if third digit is present first digit is for 26^2 and second digit for 26^1
 
@@ -1242,19 +1434,27 @@ endmethod.</source>
 ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Convert ColumnRow i.e. AB34 to AB and 34" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="I_COLUMNROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="I_COLUMNROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="E_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="E_ROW" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
-  <source>METHOD convert_columnrow2column_a_row.
+  <source>method CONVERT_COLUMNROW2COLUMN_A_ROW.
+*--------------------------------------------------------------------*
   &quot;issue #256 - replacing char processing with regex
+*--------------------------------------------------------------------*
+* Stefan Schmöcker, 2013-08-11
+*    Allow input to be CLIKE instead of STRING
+*--------------------------------------------------------------------*
 
-  DATA: pane_cell_row_a     TYPE string.
+  DATA: pane_cell_row_a     TYPE string,
+        lv_columnrow        type string.
 
-  FIND REGEX &apos;^(\D+)(\d+)$&apos; IN i_columnrow SUBMATCHES e_column
-                                                      pane_cell_row_a.
+  lv_columnrow = i_columnrow.    &quot; Get rid of trailing blanks
+
+  FIND REGEX &apos;^(\D+)(\d+)$&apos; IN lv_columnrow SUBMATCHES e_column
+                                                       pane_cell_row_a.
   e_row = pane_cell_row_a.
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Converts Sheet1!AB34:CD56 to Sheet1, AB, 34, CD, 56" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="I_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -1264,7 +1464,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_ROW_END" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="E_SHEET" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD convert_range2column_a_row.
+  <source>method CONVERT_RANGE2COLUMN_A_ROW.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan Schmöcker,      (done)              2012-12-07
@@ -1347,7 +1547,7 @@ ENDMETHOD.</source>
                                     e_row       = e_row_end ).
 
   e_sheet = unescape_string( lv_sheet ).                  &quot; Return in unescaped form
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert date from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="D"/>
@@ -1422,6 +1622,36 @@ endmethod.</source>
   <source>method DESCRIBE_TABLE.
 endmethod.</source>
  </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Determine formula if copied to another cell" EXPOSURE="2" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="IV_REFERENCE_CELL" VERSION="1" LANGU="E" DESCRIPT="Reference cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="IV_REFERENCE_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Reference formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="IV_CURRENT_CELL" VERSION="1" LANGU="E" DESCRIPT="Current cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="EV_RESULTING_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Resulting formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD determine_resulting_formula.
+
+  DATA:       lv_row_difference               TYPE i,
+              lv_col_difference               TYPE i.
+
+*--------------------------------------------------------------------*
+* Calculate distance of reference and current cell
+*--------------------------------------------------------------------*
+  calculate_cell_distance( EXPORTING
+                             iv_reference_cell = iv_reference_cell
+                             iv_current_cell   = iv_current_cell
+                           IMPORTING
+                             ev_row_difference = lv_row_difference
+                             ev_col_difference = lv_col_difference ).
+
+*--------------------------------------------------------------------*
+* and shift formula by using the row- and columndistance
+*--------------------------------------------------------------------*
+  ev_resulting_formula = shift_formula( iv_reference_formula = iv_reference_formula
+                                        iv_shift_rows        = lv_row_difference
+                                        iv_shift_cols        = lv_col_difference ).
+
+ENDMETHOD.                    &quot;determine_resulting_formula</source>
+ </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ENCRYPT_PASSWORD" VERSION="1" LANGU="E" DESCRIPT="Encrypt password" EXPOSURE="2" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ENCRYPT_PASSWORD" SCONAME="I_PWD" VERSION="1" LANGU="E" DESCRIPT="AES Password" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_AES_PASSWORD"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ENCRYPT_PASSWORD" SCONAME="R_ENCRYPTED_PWD" VERSION="1" LANGU="E" DESCRIPT="AES Password" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_AES_PASSWORD"/>
@@ -1467,7 +1697,7 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" VERSION="1" LANGU="E" DESCRIPT="Escape a string" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" SCONAME="EP_ESCAPED_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
-  <source>METHOD escape_string.
+  <source>method ESCAPE_STRING.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan Schmöcker,      (done)              2012-12-08
@@ -1513,7 +1743,7 @@ endmethod.</source>
 
   ep_escaped_value = lv_value.
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" VERSION="1" LANGU="E" DESCRIPT="Convert date from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
@@ -1604,7 +1834,7 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Creates field catalog for BIND_TABLE based on internal table" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="EP_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG"/>
-  <source>METHOD get_fieldcatalog.
+  <source>method GET_FIELDCATALOG.
   DATA: lr_dref_tab             TYPE REF TO  data,
         lo_salv_table           TYPE REF TO  cl_salv_table,
         lo_salv_columns_table   TYPE REF TO  cl_salv_columns_table,
@@ -1660,7 +1890,7 @@ endmethod.</source>
 
   ENDLOOP.
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Converts number to string representation in Excel format" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="NUMBER_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="NUMERIC"/>
@@ -1744,7 +1974,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="E_TARGET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
-  <source>METHOD recursive_struct_to_class.
+  <source>method RECURSIVE_STRUCT_TO_CLASS.
   &quot; # issue 139
 * is working for me - but after looking through this coding I guess
 * I&apos;ll rewrite this to a version w/o recursion
@@ -1801,6 +2031,347 @@ endmethod.</source>
 
     ENDCASE.
   ENDLOOP.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Shift formula from one cell to another" EXPOSURE="2" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="IV_REFERENCE_FORMULA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="IV_SHIFT_COLS" VERSION="1" LANGU="E" DESCRIPT="Shift formula right by this many columns" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="IV_SHIFT_ROWS" VERSION="1" LANGU="E" DESCRIPT="Shift formula down by this many rows" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="EV_RESULTING_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Resulting formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD shift_formula.
+
+  CONSTANTS:  lcv_operators                   TYPE string VALUE &apos;+-/*^%=&lt;&gt;&amp;, !&apos;,
+              lcv_letters                     TYPE string VALUE &apos;ABCDEFGHIJKLMNOPQRSTUVWXYZ$&apos;,
+              lcv_digits                      TYPE string VALUE &apos;0123456789&apos;,
+              lcv_cell_reference_error        TYPE string VALUE &apos;#REF!&apos;.
+
+  DATA:       lv_tcnt                         TYPE i,         &quot; Counter variable
+              lv_tlen                         TYPE i,         &quot; Temp variable length
+              lv_cnt                          TYPE i,         &quot; Counter variable
+              lv_cnt2                         TYPE i,         &quot; Counter variable
+              lv_offset1                      TYPE i,         &quot; Character offset
+              lv_numchars                     TYPE i,         &quot; Number of characters counter
+              lv_tchar(1)                     TYPE c,         &quot; Temp character
+              lv_tchar2(1)                    TYPE c,         &quot; Temp character
+              lv_cur_form(132)                TYPE c,         &quot; Formula for current cell
+              lv_ref_cell_addr                TYPE string,    &quot; Reference cell address
+              lv_tcol1                        TYPE string,    &quot; Temp column letter
+              lv_tcol2                        TYPE string,    &quot; Temp column letter
+              lv_tcoln                        TYPE i,         &quot; Temp column number
+              lv_trow1                        TYPE string,    &quot; Temp row number
+              lv_trow2                        TYPE string,    &quot; Temp row number
+              lv_flen                         TYPE i,         &quot; Length of reference formula
+              lv_tlen2                        TYPE i,         &quot; Temp variable length
+              lv_substr1                      TYPE string,    &quot; Substring variable
+              lv_abscol                       TYPE string,    &quot; Absolute column symbol
+              lv_absrow                       TYPE string,    &quot; Absolute row symbol
+
+              lv_errormessage                 TYPE string.
+
+  FIELD-SYMBOLS: &lt;find_my_include&gt; TYPE ANY.
+
+*--------------------------------------------------------------------*
+* When copying a cell in EXCEL to another cell any inherent formulas
+* are copied as well.  Cell-references in the formula are being adjusted
+* by the distance of the new cell to the original one
+*--------------------------------------------------------------------*
+* §1 Parse reference formula character by character
+* §2 Identify Cell-references
+* §3 Shift cell-reference
+* §4 Build resulting formula
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* No distance --&gt; Reference = resulting cell/formula
+*--------------------------------------------------------------------*
+  IF    iv_shift_cols = 0
+    AND iv_shift_rows = 0.
+    ev_resulting_formula = iv_reference_formula.
+    EXIT. &quot; done
+  ENDIF.
+
+
+  lv_flen     = STRLEN( iv_reference_formula ).
+  lv_numchars = 1.
+
+*--------------------------------------------------------------------*
+* §1 Parse reference formula character by character
+*--------------------------------------------------------------------*
+  DO lv_flen TIMES.
+
+    CLEAR: lv_tchar,
+           lv_substr1,
+           lv_ref_cell_addr.
+    lv_cnt2 = lv_cnt + 1.
+    IF lv_cnt2 &gt; lv_flen.
+      EXIT. &quot; Done
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Here we have the current character in the formula
+*--------------------------------------------------------------------*
+    lv_tchar = iv_reference_formula+lv_cnt(1).
+
+*--------------------------------------------------------------------*
+* Operators or opening parenthesis will separate possible cellreferences
+*--------------------------------------------------------------------*
+    IF    (    lv_tchar CA lcv_operators
+            OR lv_tchar CA &apos;(&apos; )
+      AND lv_cnt2 = 1.
+      lv_substr1  = iv_reference_formula+lv_offset1(1).
+      CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+      lv_cnt      = lv_cnt + 1.
+      lv_offset1  = lv_cnt.
+      lv_numchars = 1.
+      CONTINUE.       &quot; --&gt; next character in formula can be analyzed
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Quoted literal text holds no cell reference --&gt; advance to end of text
+*--------------------------------------------------------------------*
+    IF lv_tchar EQ &apos;&quot;&apos;.
+      lv_cnt      = lv_cnt + 1.
+      lv_numchars = lv_numchars + 1.
+      lv_tchar     = iv_reference_formula+lv_cnt(1).
+      WHILE lv_tchar NE &apos;&quot;&apos;.
+
+        lv_cnt      = lv_cnt + 1.
+        lv_numchars = lv_numchars + 1.
+        lv_tchar    = iv_reference_formula+lv_cnt(1).
+
+      ENDWHILE.
+      lv_cnt2    = lv_cnt + 1.
+      lv_substr1 = iv_reference_formula+lv_offset1(lv_numchars).
+      CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+      lv_cnt     = lv_cnt + 1.
+      IF lv_cnt = lv_flen.
+        EXIT.
+      ENDIF.
+      lv_offset1  = lv_cnt.
+      lv_numchars = 1.
+      lv_tchar    = iv_reference_formula+lv_cnt(1).
+      lv_cnt2     = lv_cnt + 1.
+      CONTINUE.       &quot; --&gt; next character in formula can be analyzed
+    ENDIF.
+
+
+*--------------------------------------------------------------------*
+* Operators or parenthesis or last character in formula will separate possible cellreferences
+*--------------------------------------------------------------------*
+    IF   lv_tchar CA lcv_operators
+      OR lv_tchar CA &apos;():&apos;
+      OR lv_cnt2  =  lv_flen.
+      IF lv_cnt &gt; 0.
+        lv_substr1 = iv_reference_formula+lv_offset1(lv_numchars).
+*--------------------------------------------------------------------*
+* Check for text concatenation and functions
+*--------------------------------------------------------------------*
+        IF ( lv_tchar CA lcv_operators AND lv_tchar EQ lv_substr1 ) OR lv_tchar EQ &apos;(&apos;.
+          CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+          lv_cnt = lv_cnt + 1.
+          lv_offset1 = lv_cnt.
+          lv_cnt2 = lv_cnt + 1.
+          lv_numchars = 1.
+          CONTINUE.       &quot; --&gt; next character in formula can be analyzed
+        ENDIF.
+
+        lv_tlen = lv_cnt2 - lv_offset1.
+*--------------------------------------------------------------------*
+* Exclude mathematical operators and closing parentheses
+*--------------------------------------------------------------------*
+        IF   lv_tchar CA lcv_operators
+          OR lv_tchar CA &apos;:)&apos;.
+          IF    lv_cnt2     = lv_flen
+            AND lv_numchars = 1.
+            CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+            lv_cnt      = lv_cnt + 1.
+            lv_offset1  = lv_cnt.
+            lv_cnt2     = lv_cnt + 1.
+            lv_numchars = 1.
+            CONTINUE.       &quot; --&gt; next character in formula can be analyzed
+          ELSE.
+            lv_tlen = lv_tlen - 1.
+          ENDIF.
+        ENDIF.
+*--------------------------------------------------------------------*
+* Capture reference cell address
+*--------------------------------------------------------------------*
+        TRY.
+            MOVE: iv_reference_formula+lv_offset1(lv_tlen) TO lv_ref_cell_addr. &quot;Ref cell address
+          CATCH cx_root.
+            lv_errormessage = &apos;Internal error in Class ZCL_EXCEL_COMMON Method SHIFT_FORMULA Spot 1 &apos;.  &quot; Change to messageclass if possible
+            RAISE EXCEPTION TYPE zcx_excel
+              EXPORTING
+                error    = lv_errormessage.
+        ENDTRY.
+
+*--------------------------------------------------------------------*
+* Split cell address into characters and numbers
+*--------------------------------------------------------------------*
+        CLEAR: lv_tlen,
+               lv_tcnt,
+               lv_tcol1,
+               lv_trow1.
+        lv_tlen = STRLEN( lv_ref_cell_addr ).
+        IF lv_tlen &lt;&gt; 0.
+          CLEAR: lv_tcnt.
+          DO lv_tlen TIMES.
+            CLEAR: lv_tchar2.
+            lv_tchar2 = lv_ref_cell_addr+lv_tcnt(1).
+            IF lv_tchar2 CA lcv_letters.
+              CONCATENATE lv_tcol1 lv_tchar2 INTO lv_tcol1.
+            ELSEIF lv_tchar2 CA lcv_digits.
+              CONCATENATE lv_trow1 lv_tchar2 INTO lv_trow1.
+            ENDIF.
+            lv_tcnt = lv_tcnt + 1.
+          ENDDO.
+        ENDIF.
+*--------------------------------------------------------------------*
+* Check for invalid cell address
+*--------------------------------------------------------------------*
+        IF lv_tcol1 IS INITIAL OR lv_trow1 IS INITIAL.
+          CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+          lv_cnt = lv_cnt + 1.
+          lv_offset1 = lv_cnt.
+          lv_cnt2 = lv_cnt + 1.
+          lv_numchars = 1.
+          CONTINUE.
+        ENDIF.
+*--------------------------------------------------------------------*
+* Check for range names
+*--------------------------------------------------------------------*
+        CLEAR: lv_tlen.
+        lv_tlen = STRLEN( lv_tcol1 ).
+        IF lv_tlen GT 3.
+          CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+          lv_cnt = lv_cnt + 1.
+          lv_offset1 = lv_cnt.
+          lv_cnt2 = lv_cnt + 1.
+          lv_numchars = 1.
+          CONTINUE.
+        ENDIF.
+*--------------------------------------------------------------------*
+* Check for valid row
+*--------------------------------------------------------------------*
+        IF lv_trow1 GT 1048576.
+          CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+          lv_cnt = lv_cnt + 1.
+          lv_offset1 = lv_cnt.
+          lv_cnt2 = lv_cnt + 1.
+          lv_numchars = 1.
+          CONTINUE.
+        ENDIF.
+*--------------------------------------------------------------------*
+* Check for absolute column or row reference
+*--------------------------------------------------------------------*
+        CLEAR: lv_tcol2,
+               lv_trow2,
+               lv_abscol,
+               lv_absrow.
+        lv_tlen2 = STRLEN( lv_tcol1 ) - 1.
+        IF lv_tcol1 IS NOT INITIAL.
+          lv_abscol = lv_tcol1(1).
+        ENDIF.
+        IF lv_tlen2 GE 0.
+          lv_absrow = lv_tcol1+lv_tlen2(1).
+        ENDIF.
+        IF lv_abscol EQ &apos;$&apos; AND lv_absrow EQ &apos;$&apos;.
+          lv_tlen2 = lv_tlen2 - 1.
+          IF lv_tlen2 &gt; 0.
+            lv_tcol1 = lv_tcol1+1(lv_tlen2).
+          ENDIF.
+          lv_tlen2 = lv_tlen2 + 1.
+        ELSEIF lv_abscol EQ &apos;$&apos;.
+          lv_tcol1 = lv_tcol1+1(lv_tlen2).
+        ELSEIF lv_absrow EQ &apos;$&apos;.
+          lv_tcol1 = lv_tcol1(lv_tlen2).
+        ENDIF.
+*--------------------------------------------------------------------*
+* Check for valid column
+*--------------------------------------------------------------------*
+        TRY.
+            lv_tcoln = zcl_excel_common=&gt;convert_column2int( lv_tcol1 ) + iv_shift_cols.
+          CATCH zcx_excel.
+            CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+            lv_cnt = lv_cnt + 1.
+            lv_offset1 = lv_cnt.
+            lv_cnt2 = lv_cnt + 1.
+            lv_numchars = 1.
+            CONTINUE.
+        ENDTRY.
+*--------------------------------------------------------------------*
+* Check whether there is a referencing problem
+*--------------------------------------------------------------------*
+        lv_trow2 = lv_trow1 + iv_shift_rows.
+        IF   ( lv_tcoln &lt; 1 AND lv_abscol &lt;&gt; &apos;$&apos; )   &quot; Maybe we should add here max-column and max row-tests as well.
+          OR ( lv_trow2 &lt; 1 AND lv_absrow &lt;&gt; &apos;$&apos; ).  &quot; Check how EXCEL behaves in this case
+*--------------------------------------------------------------------*
+* Referencing problem encountered --&gt; set error
+*--------------------------------------------------------------------*
+          CONCATENATE lv_cur_form lcv_cell_reference_error INTO lv_cur_form.
+        ELSE.
+*--------------------------------------------------------------------*
+* No referencing problems --&gt; adjust row and column
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* Adjust column
+*--------------------------------------------------------------------*
+          IF lv_abscol EQ &apos;$&apos;.
+            CONCATENATE lv_cur_form lv_abscol lv_tcol1 INTO lv_cur_form.
+          ELSEIF iv_shift_cols EQ 0.
+            CONCATENATE lv_cur_form lv_tcol1 INTO lv_cur_form.
+          ELSE.
+            TRY.
+                lv_tcol2 = zcl_excel_common=&gt;convert_column2alpha( lv_tcoln ).
+                CONCATENATE lv_cur_form lv_tcol2 INTO lv_cur_form.
+              CATCH zcx_excel.
+                CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+                lv_cnt = lv_cnt + 1.
+                lv_offset1 = lv_cnt.
+                lv_cnt2 = lv_cnt + 1.
+                lv_numchars = 1.
+                CONTINUE.
+            ENDTRY.
+          ENDIF.
+*--------------------------------------------------------------------*
+* Adjust row
+*--------------------------------------------------------------------*
+          IF lv_absrow EQ &apos;$&apos;.
+            CONCATENATE lv_cur_form lv_absrow lv_trow1 INTO lv_cur_form.
+          ELSEIF iv_shift_rows = 0.
+            CONCATENATE lv_cur_form lv_trow1 INTO lv_cur_form.
+*        elseif lv_trow2 &lt; 1.
+*          CONCATENATE lv_cur_form lc_cell_reference_error INTO lv_cur_form.
+          ELSE.
+            CONCATENATE lv_cur_form lv_trow2 INTO lv_cur_form.
+          ENDIF.
+        ENDIF.
+
+        lv_numchars = 0.
+        IF   lv_tchar CA lcv_operators
+          OR lv_tchar CA &apos;:)&apos;.
+          CONCATENATE lv_cur_form lv_tchar INTO lv_cur_form.
+        ENDIF.
+        lv_offset1 = lv_cnt2.
+      ENDIF.
+    ENDIF.
+    lv_numchars = lv_numchars + 1.
+    lv_cnt   = lv_cnt   + 1.
+    lv_cnt2  = lv_cnt   + 1.
+
+  ENDDO.
+
+
+
+*--------------------------------------------------------------------*
+* Return resulting formula
+*--------------------------------------------------------------------*
+  IF lv_cur_form IS NOT INITIAL.
+    MOVE lv_cur_form TO ev_resulting_formula.
+  ENDIF.
 
 ENDMETHOD.</source>
  </method>
@@ -1956,7 +2527,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" SCONAME="IV_ESCAPED" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" SCONAME="EV_UNESCAPED_STRING" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD unescape_string.
+  <source>method UNESCAPE_STRING.
 
   CONSTANTS   lcv_regex                       TYPE string VALUE `^&apos;[^&apos;]`    &amp; `|` &amp;  &quot; Beginning single &apos; OR
                                                                 `[^&apos;]&apos;$`    &amp; `|` &amp;  &quot; Trailing single &apos;  OR
@@ -2010,6 +2581,6 @@ endmethod.</source>
   REPLACE ALL OCCURRENCES OF `&apos;&apos;` IN ev_unescaped_string WITH `&apos;`.
 
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
 </CLAS>

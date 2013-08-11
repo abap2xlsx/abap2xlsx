@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes
@@ -11,8 +11,8 @@
 *&amp;---------------------------------------------------------------------*
 *&amp;       Class (Implementation)  C_OI_PROXY_ERROR
 *&amp;---------------------------------------------------------------------*
-CLASS C_OI_PROXY_ERROR IMPLEMENTATION.
-  method constructor.
+CLASS c_oi_proxy_error IMPLEMENTATION.
+  METHOD constructor.
 *                IMPORTING object_name TYPE c
 *                          method_name TYPE c.
     error_nr = ret_call_not_flushed.
@@ -24,41 +24,41 @@ CLASS C_OI_PROXY_ERROR IMPLEMENTATION.
     me-&gt;message_nr = &apos;899&apos;.
     me-&gt;param1 = object_name.
     me-&gt;param2 = method_name.
-  endmethod.                    &quot;constructor
+  ENDMETHOD.                    &quot;constructor
 
-  method i_oi_error~flush_error.
-    if error_nr eq 0.
+  METHOD i_oi_error~flush_error.
+    IF error_nr EQ 0.
       me-&gt;i_oi_error~error_code = c_oi_errors=&gt;ret_ok.
       me-&gt;i_oi_error~is_flushed = &apos;X&apos;.
       me-&gt;i_oi_error~has_failed = &apos; &apos;.
       me-&gt;i_oi_error~has_succeeded = &apos;X&apos;.
       me-&gt;message_id = &apos;&apos;.
       me-&gt;message_nr = &apos;000&apos;.
-      call method c_oi_errors=&gt;translate_proxy_error_code
+      CALL METHOD c_oi_errors=&gt;translate_proxy_error_code
         EXPORTING
           errorcode = error_nr
         IMPORTING
           retcode   = me-&gt;i_oi_error~error_code.
-    elseif error_nr eq ret_call_not_flushed.
+    ELSEIF error_nr EQ ret_call_not_flushed.
       &quot;call still not flushed
-      call method c_oi_errors=&gt;translate_proxy_error_code
+      CALL METHOD c_oi_errors=&gt;translate_proxy_error_code
         EXPORTING
           errorcode   = error_nr
           errorstring = me-&gt;param2  &quot;method name
           objectname  = me-&gt;param1
         IMPORTING
           retcode     = me-&gt;i_oi_error~error_code.
-    else.
+    ELSE.
       me-&gt;i_oi_error~is_flushed = &apos;X&apos;.
       me-&gt;i_oi_error~has_succeeded = &apos; &apos;.
       me-&gt;i_oi_error~has_failed = &apos;X&apos;.
-      call method c_oi_errors=&gt;translate_proxy_error_code
+      CALL METHOD c_oi_errors=&gt;translate_proxy_error_code
         EXPORTING
           errorcode   = error_nr
           errorstring = error_string
         IMPORTING
           retcode     = me-&gt;i_oi_error~error_code.
-      call method c_oi_errors=&gt;get_message
+      CALL METHOD c_oi_errors=&gt;get_message
         IMPORTING
           message_id     = me-&gt;message_id
           message_number = me-&gt;message_nr
@@ -66,24 +66,24 @@ CLASS C_OI_PROXY_ERROR IMPLEMENTATION.
           param2         = me-&gt;param2
           param3         = me-&gt;param3
           param4         = me-&gt;param4.
-    endif.
-  endmethod.                    &quot;i_oi_error~flush_error
+    ENDIF.
+  ENDMETHOD.                    &quot;i_oi_error~flush_error
 
-  method i_oi_error~raise_message.
+  METHOD i_oi_error~raise_message.
 *                         IMPORTING type TYPE c.
 *                         EXCEPTIONS message_raised flush_failed.
-    if me-&gt;i_oi_error~has_succeeded is initial.
-      if not me-&gt;i_oi_error~is_flushed is initial.
-        message id message_id type type
-            number message_nr with param1 param2 param3 param4
-            raising message_raised.
-      else.
-        raise flush_failed.
-      endif.
-    endif.
-  endmethod.                    &quot;i_oi_error~raise_message
+    IF me-&gt;i_oi_error~has_succeeded IS INITIAL.
+      IF NOT me-&gt;i_oi_error~is_flushed IS INITIAL.
+        MESSAGE ID message_id TYPE type
+            NUMBER message_nr WITH param1 param2 param3 param4
+            RAISING message_raised.
+      ELSE.
+        RAISE flush_failed.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.                    &quot;i_oi_error~raise_message
 
-  method i_oi_error~get_message.
+  METHOD i_oi_error~get_message.
 *                    EXPORTING message_id TYPE c
 *                              message_number TYPE c
 *                              param1 TYPE c
@@ -95,7 +95,7 @@ CLASS C_OI_PROXY_ERROR IMPLEMENTATION.
 
     message_id = me-&gt;message_id.
     message_number = me-&gt;message_nr.
-  endmethod.                    &quot;i_oi_error~get_message
+  ENDMETHOD.                    &quot;i_oi_error~get_message
 ENDCLASS.               &quot;C_OI_PROXY_ERROR
 
 *&amp;---------------------------------------------------------------------*
@@ -103,41 +103,41 @@ ENDCLASS.               &quot;C_OI_PROXY_ERROR
 *&amp;---------------------------------------------------------------------*
 CLASS lcl_gui_alv_grid IMPLEMENTATION.
 
-  method get_alv_attributes.
-    create data et_table like io_grid-&gt;mt_outtab.
+  METHOD get_alv_attributes.
+    CREATE DATA et_table LIKE io_grid-&gt;mt_outtab.
     et_table = io_grid-&gt;mt_outtab.
-  endmethod.                    &quot;get_data
+  ENDMETHOD.                    &quot;get_data
 
 ENDCLASS.               &quot;CL_GRID_ACCESSION</localImplementation>
  <localTypes>*&quot;* use this source file for any type declarations (class
 *&quot;* definitions, interfaces or data types) you need for method
 *&quot;* implementation or private method&apos;s signature
-type-pools: SYDES.
-type-pools: SLIS.
+TYPE-POOLS: sydes.
+TYPE-POOLS: slis.
 *--------------------------------------------------------------------*
 * CLASS c_oi_proxy_error
 *--------------------------------------------------------------------*
 * use for method bind_ALV
 *--------------------------------------------------------------------*
-class c_oi_proxy_error definition.
-  public section.
-    interfaces: i_oi_error.
-    data: error_nr type i.
-    data: error_string type sy-msgv1.
+CLASS c_oi_proxy_error DEFINITION.
+  PUBLIC SECTION.
+    INTERFACES: i_oi_error.
+    DATA: error_nr TYPE i.
+    DATA: error_string TYPE sy-msgv1.
 
-    methods: constructor importing object_name type c
-                                   method_name type c.
-  private section.
-    constants:
-          ret_call_not_flushed        type i value -999999.
+    METHODS: constructor IMPORTING object_name TYPE c
+                                   method_name TYPE c.
+  PRIVATE SECTION.
+    CONSTANTS:
+          ret_call_not_flushed        TYPE i VALUE -999999.
 
-    data: message_id type sy-msgid,
-          message_nr type sy-msgno,
-          param1 type sy-msgv1,
-          param2 type sy-msgv2,
-          param3 type sy-msgv3,
-          param4 type sy-msgv4.
-endclass.
+    DATA: message_id TYPE sy-msgid,
+          message_nr TYPE sy-msgno,
+          param1 TYPE sy-msgv1,
+          param2 TYPE sy-msgv2,
+          param3 TYPE sy-msgv3,
+          param4 TYPE sy-msgv4.
+ENDCLASS.                    &quot;c_oi_proxy_error DEFINITION
 
 *--------------------------------------------------------------------*
 * CLASS lcl_gui_alv_grid
@@ -145,17 +145,17 @@ endclass.
 * to get protected attribute and method of cl_gui_alv_grid
 * use for method bind_ALV
 *--------------------------------------------------------------------*
-class lcl_gui_alv_grid definition inheriting from cl_gui_alv_grid.
+CLASS lcl_gui_alv_grid DEFINITION INHERITING FROM cl_gui_alv_grid.
 
-  public section.
+  PUBLIC SECTION.
 * get ALV grid data
-    methods: get_alv_attributes
-      importing
-        Io_grid   type ref to cl_gui_alv_grid &quot; ALV grid
-      exporting
-        ET_table  type ref to data.           &quot; dta table
+    METHODS: get_alv_attributes
+      IMPORTING
+        io_grid   TYPE REF TO cl_gui_alv_grid &quot; ALV grid
+      EXPORTING
+        et_table  TYPE REF TO data.           &quot; dta table
 
-endclass.</localTypes>
+ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
@@ -222,7 +222,7 @@ endclass.</localTypes>
 *--------------------------------------------------------------------*
 * adjust internal representation
 *--------------------------------------------------------------------*
-  clear:  me-&gt;print_title_col_from,
+  CLEAR:  me-&gt;print_title_col_from,
           me-&gt;print_title_col_to  .
 
 
@@ -240,7 +240,7 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
 * adjust internal representation
 *--------------------------------------------------------------------*
-  clear:  me-&gt;print_title_row_from,
+  CLEAR:  me-&gt;print_title_row_from,
           me-&gt;print_title_row_to  .
 
 
@@ -3032,7 +3032,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="IP_BORDERS_TOP_COLOR_TINT" VERSION="1" LANGU="E" DESCRIPT="Tint" CMPTYPE="1" MTDTYPE="0" EDITORDER="98 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_STYLE_COLOR_TINT" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="99 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD change_cell_style.
+  <source>method CHANGE_CELL_STYLE.
   &quot; issue # 139
   DATA: stylemapping    TYPE zexcel_s_stylemapping,
 
@@ -3328,7 +3328,7 @@ endmethod.</source>
                       ip_row    = ip_row
                       ip_style  = ep_guid ).
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Ref to parent document" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
@@ -3954,7 +3954,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_SET_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update range for print title" EXPOSURE="0" STATE="1" EDITORDER="57 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_SET_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update range for print title" EXPOSURE="0" STATE="1" EDITORDER="58 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method PRINT_TITLE_SET_RANGE.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
@@ -4063,7 +4063,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_DATA_TYPE" VERSION="1" LANGU="E" DESCRIPT="Cell data type" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_DATA_TYPE" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_ABAP_TYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type" CMPTYPE="1" MTDTYPE="0" EDITORDER="8 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_TYPEKIND" PAROPTIONL="X"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD set_cell.
+  <source>method SET_CELL.
 
   DATA: lv_column                 TYPE zexcel_cell_column,
         ls_sheet_content          TYPE zexcel_s_cell_data,
@@ -4093,8 +4093,8 @@ endmethod.</source>
 * Begin of change issue #152 - don&apos;t touch exisiting style if only value is passed
 *  lv_style_guid = ip_style.
   lv_column = zcl_excel_common=&gt;convert_column2int( ip_column ).
-  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH KEY cell_row    = ip_row
-                                                                 cell_column = lv_column.
+  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH TABLE KEY cell_row    = ip_row      &quot; Changed to access via table key , Stefan Schmöcker, 2013-08-03
+                                                                       cell_column = lv_column.
   IF sy-subrc = 0.
     IF ip_style IS INITIAL.
       &quot; If no style is provided as method-parameter and cell is found use cell&apos;s current style
@@ -4287,9 +4287,43 @@ endmethod.</source>
   ENDIF.
 * End of Fix issue #162
 
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Set cell formula" EXPOSURE="2" STATE="1" EDITORDER="45 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="IP_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Cell Formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_FORMULA"/>
+  <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD set_cell_formula.
+  DATA:
+              lv_column                       TYPE zexcel_cell_column,
+              ls_sheet_content                LIKE LINE OF me-&gt;sheet_content.
+
+  FIELD-SYMBOLS:
+              &lt;sheet_content&gt;                 LIKE LINE OF me-&gt;sheet_content.
+
+*--------------------------------------------------------------------*
+* Get cell to set formula into
+*--------------------------------------------------------------------*
+  lv_column = zcl_excel_common=&gt;convert_column2int( ip_column ).
+  READ TABLE me-&gt;sheet_content ASSIGNING &lt;sheet_content&gt; WITH TABLE KEY cell_row    = ip_row
+                                                                        cell_column = lv_column.
+  IF sy-subrc &lt;&gt; 0.                                                                           &quot; Create new entry in sheet_content if necessary
+    CHECK ip_formula IS INITIAL.                                                              &quot; no need to create new entry in sheet_content when no formula is passed
+    ls_sheet_content-cell_row    = ip_row.
+    ls_sheet_content-cell_column = lv_column.
+    INSERT ls_sheet_content INTO TABLE me-&gt;sheet_content ASSIGNING &lt;sheet_content&gt;.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* Fieldsymbol now holds the relevant cell
+*--------------------------------------------------------------------*
+  &lt;sheet_content&gt;-cell_formula = ip_formula.
+
+
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Set cell style" EXPOSURE="2" STATE="1" EDITORDER="45 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Set cell style" EXPOSURE="2" STATE="1" EDITORDER="46 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_STYLE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
@@ -4319,7 +4353,7 @@ ENDMETHOD.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_COLUMN_WIDTH" VERSION="1" LANGU="E" DESCRIPT="Set column width" EXPOSURE="2" STATE="1" EDITORDER="46 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_COLUMN_WIDTH" VERSION="1" LANGU="E" DESCRIPT="Set column width" EXPOSURE="2" STATE="1" EDITORDER="47 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_COLUMN_WIDTH" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_COLUMN_WIDTH" SCONAME="IP_WIDTH_FIX" VERSION="1" LANGU="E" DESCRIPT="A positive value will set column width" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE" PARVALUE="0"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_COLUMN_WIDTH" SCONAME="IP_WIDTH_AUTOSIZE" VERSION="1" LANGU="E" DESCRIPT="Autosize column" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;X&apos;"/>
@@ -4355,7 +4389,7 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Sets default date format" EXPOSURE="2" STATE="1" EDITORDER="47 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Sets default date format" EXPOSURE="2" STATE="1" EDITORDER="48 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" SCONAME="IP_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Default date format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_NUMBER_FORMAT"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method SET_DEFAULT_EXCEL_DATE_FORMAT.
@@ -4369,7 +4403,7 @@ endmethod.</source>
   default_excel_date_format = ip_default_excel_date_format.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" VERSION="1" LANGU="E" DESCRIPT="Set the merge range" EXPOSURE="2" STATE="1" EDITORDER="48 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" VERSION="1" LANGU="E" DESCRIPT="Set the merge range" EXPOSURE="2" STATE="1" EDITORDER="49 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_COLUMN_START" VERSION="1" LANGU="E" DESCRIPT="Cell Column Start" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_COLUMN_END" VERSION="1" LANGU="E" DESCRIPT="Cell Column End" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW" PAROPTIONL="X"/>
@@ -4411,13 +4445,13 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Set print gridlines" EXPOSURE="2" STATE="1" EDITORDER="49 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Set print gridlines" EXPOSURE="2" STATE="1" EDITORDER="50 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_PRINT_GRIDLINES" SCONAME="I_PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Print Gridlines" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_PRINT_GRIDLINES"/>
   <source>method SET_PRINT_GRIDLINES.
   me-&gt;print_gridlines = i_print_gridlines.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" VERSION="1" LANGU="E" DESCRIPT="Set row height" EXPOSURE="2" STATE="1" EDITORDER="50 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" VERSION="1" LANGU="E" DESCRIPT="Set row height" EXPOSURE="2" STATE="1" EDITORDER="51 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="IP_HEIGHT_FIX" VERSION="1" LANGU="E" DESCRIPT="A positive value will set row height" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -4448,25 +4482,25 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Set show gridlines" EXPOSURE="2" STATE="1" EDITORDER="51 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Set show gridlines" EXPOSURE="2" STATE="1" EDITORDER="52 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_GRIDLINES" SCONAME="I_SHOW_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Show Gridlines" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHOW_GRIDLINES"/>
   <source>method SET_SHOW_GRIDLINES.
   me-&gt;show_gridlines = i_show_gridlines.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_ROWCOLHEADERS" VERSION="1" LANGU="E" DESCRIPT="Set show colum row headers" EXPOSURE="2" STATE="1" EDITORDER="52 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_ROWCOLHEADERS" VERSION="1" LANGU="E" DESCRIPT="Set show colum row headers" EXPOSURE="2" STATE="1" EDITORDER="53 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_ROWCOLHEADERS" SCONAME="I_SHOW_ROWCOLHEADERS" VERSION="1" LANGU="E" DESCRIPT="Show Gridlines" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHOW_ROWCOLHEADER"/>
   <source>method SET_SHOW_ROWCOLHEADERS.
   me-&gt;show_rowcolheaders = i_show_rowcolheaders.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABCOLOR" VERSION="1" LANGU="E" DESCRIPT="Set tabcolor" EXPOSURE="2" STATE="1" EDITORDER="53 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABCOLOR" VERSION="1" LANGU="E" DESCRIPT="Set tabcolor" EXPOSURE="2" STATE="1" EDITORDER="54 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABCOLOR" SCONAME="IV_TABCOLOR" VERSION="1" LANGU="E" DESCRIPT="Tabcolor" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABCOLOR"/>
   <source>method SET_TABCOLOR.
   me-&gt;tabcolor = iv_tabcolor.
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" VERSION="1" LANGU="E" DESCRIPT="Set cell value from a table" EXPOSURE="2" STATE="1" EDITORDER="54 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" VERSION="1" LANGU="E" DESCRIPT="Set cell value from a table" EXPOSURE="2" STATE="1" EDITORDER="55 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_HDR_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_BODY_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE" PAROPTIONL="X"/>
@@ -4550,10 +4584,10 @@ endmethod.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" VERSION="1" LANGU="E" DESCRIPT="Set WorkSheet Title" EXPOSURE="2" STATE="1" EDITORDER="55 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" VERSION="1" LANGU="E" DESCRIPT="Set WorkSheet Title" EXPOSURE="2" STATE="1" EDITORDER="56 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD set_title.
+  <source>method SET_TITLE.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   The current coding for replacing a named ranges name
@@ -4651,9 +4685,9 @@ endmethod.</source>
   ENDWHILE.
 
 
-ENDMETHOD.</source>
+endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update dimension range" EXPOSURE="0" STATE="1" EDITORDER="56 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update dimension range" EXPOSURE="0" STATE="1" EDITORDER="57 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method UPDATE_DIMENSION_RANGE.
 

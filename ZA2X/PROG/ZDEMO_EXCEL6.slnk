@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL6" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000040" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111822" IDATE="20120324" ITIME="111822" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL6" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Formulas" LENGTH="25 "/>
@@ -17,7 +17,9 @@
 REPORT  zdemo_excel6.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet.
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lv_row                  TYPE syindex,
+      lv_formula              TYPE string.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE &apos;06_Formulas.xlsx&apos;.
@@ -31,14 +33,38 @@ START-OF-SELECTION.
   &quot; Get active sheet
   lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
 
+*--------------------------------------------------------------------*
+*  Get some testdata
+*--------------------------------------------------------------------*
   lo_worksheet-&gt;set_cell( ip_row = 4 ip_column = &apos;C&apos; ip_value = 100  ).
   lo_worksheet-&gt;set_cell( ip_row = 5 ip_column = &apos;C&apos; ip_value = 1000  ).
   lo_worksheet-&gt;set_cell( ip_row = 6 ip_column = &apos;C&apos; ip_value = 150 ).
   lo_worksheet-&gt;set_cell( ip_row = 7 ip_column = &apos;C&apos; ip_value = -10  ).
   lo_worksheet-&gt;set_cell( ip_row = 8 ip_column = &apos;C&apos; ip_value = 500  ).
+
+
+*--------------------------------------------------------------------*
+*  Demonstrate using formulas
+*--------------------------------------------------------------------*
   lo_worksheet-&gt;set_cell( ip_row = 9 ip_column = &apos;C&apos; ip_formula = &apos;SUM(C4:C8)&apos; ).
 
 
+*--------------------------------------------------------------------*
+* Demonstrate standard EXCEL-behaviour when copying a formula to another cell
+* by calculating the resulting formula to put into another cell
+*--------------------------------------------------------------------*
+  DO 10 TIMES.
+
+    lv_formula = zcl_excel_common=&gt;shift_formula( iv_reference_formula = &apos;SUM(C4:C8)&apos;
+                                                  iv_shift_cols        = 0                &quot; Offset in Columns - here we copy in same column --&gt; 0
+                                                  iv_shift_rows        = sy-index ).      &quot; Offset in Row     - here we copy downward --&gt; sy-index
+    lv_row = 9 + sy-index.                                                                &quot; Absolute row = sy-index rows below reference cell
+    lo_worksheet-&gt;set_cell( ip_row = lv_row ip_column = &apos;C&apos; ip_formula = lv_formula ).
+
+  ENDDO.
+
+*--------------------------------------------------------------------*
 *** Create output
+*--------------------------------------------------------------------*
   lcl_output=&gt;output( lo_excel ).</source>
 </PROG>
