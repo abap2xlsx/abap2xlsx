@@ -2582,7 +2582,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IS_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ES_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method BIND_TABLE.
+  <source>METHOD bind_table.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan Schmöcker,      (wi p)              2012-12-01
@@ -2757,15 +2757,29 @@ endmethod.</source>
     LOOP AT ip_table ASSIGNING &lt;fs_table_line&gt;.
 
       ASSIGN COMPONENT &lt;ls_field_catalog&gt;-fieldname OF STRUCTURE &lt;fs_table_line&gt; TO &lt;fs_fldval&gt;.
-      IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
-        me-&gt;set_cell( ip_column = lv_column_alpha
-                      ip_row    = lv_row_int
-                      ip_value  = &lt;fs_fldval&gt;
-                      ip_style  = &lt;ls_field_catalog&gt;-style ).
+      &quot; issue #290 Add formula support in table
+      IF &lt;ls_field_catalog&gt;-formula EQ abap_true.
+        IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
+          me-&gt;set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = &lt;fs_fldval&gt;
+                        ip_style    = &lt;ls_field_catalog&gt;-style ).
+        ELSE.
+          me-&gt;set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = &lt;fs_fldval&gt; ).
+        ENDIF.
       ELSE.
-        me-&gt;set_cell( ip_column = lv_column_alpha
-                      ip_row    = lv_row_int
-                      ip_value  = &lt;fs_fldval&gt; ).
+        IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
+          me-&gt;set_cell( ip_column = lv_column_alpha
+                        ip_row    = lv_row_int
+                        ip_value  = &lt;fs_fldval&gt;
+                        ip_style  = &lt;ls_field_catalog&gt;-style ).
+        ELSE.
+          me-&gt;set_cell( ip_column = lv_column_alpha
+                        ip_row    = lv_row_int
+                        ip_value  = &lt;fs_fldval&gt; ).
+        ENDIF.
       ENDIF.
       ADD 1 TO lv_row_int.
 
@@ -2821,7 +2835,7 @@ endmethod.</source>
   es_table_settings-bottom_right_row    = ls_settings-top_left_row + lv_rows + 1. &quot;Last rows
 
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" VERSION="1" LANGU="E" DESCRIPT="Calculate width of cell" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
