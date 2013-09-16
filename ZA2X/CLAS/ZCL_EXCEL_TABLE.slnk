@@ -1,85 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Represents Excel Table" UUID="A1497B4C00CDF215E1000000C0A8FA19" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <publicSection>class ZCL_EXCEL_TABLE definition
-  public
-  final
-  create public .
-
-*&quot;* public components of class ZCL_EXCEL_TABLE
-*&quot;* do not include other source files here!!!
-public section.
-  type-pools ABAP .
-
-  constants BUILTINSTYLE_DARK1 type ZEXCEL_TABLE_STYLE value &apos;TableStyleDark1&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_DARK2 type ZEXCEL_TABLE_STYLE value &apos;TableStyleDark2&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_DARK3 type ZEXCEL_TABLE_STYLE value &apos;TableStyleDark3&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_DARK4 type ZEXCEL_TABLE_STYLE value &apos;TableStyleDark4&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_DARK5 type ZEXCEL_TABLE_STYLE value &apos;TableStyleDark5&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_LIGHT1 type ZEXCEL_TABLE_STYLE value &apos;TableStyleLight1&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_LIGHT2 type ZEXCEL_TABLE_STYLE value &apos;TableStyleLight2&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_LIGHT3 type ZEXCEL_TABLE_STYLE value &apos;TableStyleLight3&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_LIGHT4 type ZEXCEL_TABLE_STYLE value &apos;TableStyleLight4&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_LIGHT5 type ZEXCEL_TABLE_STYLE value &apos;TableStyleLight5&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_MEDIUM1 type ZEXCEL_TABLE_STYLE value &apos;TableStyleMedium1&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_MEDIUM2 type ZEXCEL_TABLE_STYLE value &apos;TableStyleMedium2&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_MEDIUM3 type ZEXCEL_TABLE_STYLE value &apos;TableStyleMedium3&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_MEDIUM4 type ZEXCEL_TABLE_STYLE value &apos;TableStyleMedium4&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_MEDIUM5 type ZEXCEL_TABLE_STYLE value &apos;TableStyleMedium5&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_MEDIUM9 type ZEXCEL_TABLE_STYLE value &apos;TableStyleMedium9&apos;. &quot;#EC NOTEXT
-  constants BUILTINSTYLE_PIVOT_LIGHT16 type ZEXCEL_TABLE_STYLE value &apos;PivotStyleLight16&apos;. &quot;#EC NOTEXT
-  data FIELDCAT type ZEXCEL_T_FIELDCATALOG .
-  data SETTINGS type ZEXCEL_S_TABLE_SETTINGS .
-  constants TOTALS_FUNCTION_AVERAGE type ZEXCEL_TABLE_TOTALS_FUNCTION value &apos;average&apos;. &quot;#EC NOTEXT
-  constants TOTALS_FUNCTION_COUNT type ZEXCEL_TABLE_TOTALS_FUNCTION value &apos;count&apos;. &quot;#EC NOTEXT
-  constants TOTALS_FUNCTION_MAX type ZEXCEL_TABLE_TOTALS_FUNCTION value &apos;max&apos;. &quot;#EC NOTEXT
-  constants TOTALS_FUNCTION_MIN type ZEXCEL_TABLE_TOTALS_FUNCTION value &apos;min&apos;. &quot;#EC NOTEXT
-  constants TOTALS_FUNCTION_SUM type ZEXCEL_TABLE_TOTALS_FUNCTION value &apos;sum&apos;. &quot;#EC NOTEXT
-
-  methods GET_TOTALS_FORMULA
-    importing
-      !IP_COLUMN type CLIKE
-      !IP_FUNCTION type ZEXCEL_TABLE_TOTALS_FUNCTION
-    returning
-      value(EP_FORMULA) type STRING .
-  methods HAS_TOTALS
-    returning
-      value(EP_RESULT) type ABAP_BOOL .
-  methods SET_DATA
-    importing
-      !IR_DATA type STANDARD TABLE .
-  methods GET_ID
-    returning
-      value(OV_ID) type I .
-  methods SET_ID
-    importing
-      !IV_ID type I .
-  methods CONSTRUCTOR .
-  methods GET_NAME
-    returning
-      value(OV_NAME) type STRING .
-  methods GET_REFERENCE
-    importing
-      !IP_INCLUDE_TOTALS_ROW type ABAP_BOOL default ABAP_TRUE
-    returning
-      value(OV_REFERENCE) type STRING .
-  methods GET_BOTTOM_ROW_INTEGER
-    returning
-      value(EV_ROW) type I .
-  methods GET_RIGHT_COLUMN_INTEGER
-    returning
-      value(EV_COLUMN) type I
-    raising
-      ZCX_EXCEL .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_TABLE
-*&quot;* do not include other source files here!!!
-protected section.</protectedSection>
- <privateSection>*&quot;* private components of class ZCL_EXCEL_TABLE
-*&quot;* do not include other source files here!!!
-private section.
-
-  data ID type I .
-  data NAME type STRING .
-  data TABLE_DATA type ref to DATA .</privateSection>
+<CLAS CLSNAME="ZCL_EXCEL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Represents Excel Table" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -114,6 +34,7 @@ private section.
  <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="TABLE_DATA" VERSION="1" LANGU="E" DESCRIPT="Ref to data" EXPOSURE="0" STATE="1" EDITORDER="22 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="TOTALS_FUNCTION_AVERAGE" VERSION="1" LANGU="E" DESCRIPT="Totals function" EXPOSURE="2" STATE="1" EDITORDER="23 " ATTDECLTYP="2" ATTVALUE="&apos;average&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="TOTALS_FUNCTION_COUNT" VERSION="1" LANGU="E" DESCRIPT="Totals function" EXPOSURE="2" STATE="1" EDITORDER="24 " ATTDECLTYP="2" ATTVALUE="&apos;count&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="TOTALS_FUNCTION_CUSTOM" VERSION="1" LANGU="E" DESCRIPT="Totals function" EXPOSURE="2" STATE="1" EDITORDER="28 " ATTDECLTYP="2" ATTVALUE="&apos;custom&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="TOTALS_FUNCTION_MAX" VERSION="1" LANGU="E" DESCRIPT="Totals function" EXPOSURE="2" STATE="1" EDITORDER="25 " ATTDECLTYP="2" ATTVALUE="&apos;max&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="TOTALS_FUNCTION_MIN" VERSION="1" LANGU="E" DESCRIPT="Totals function" EXPOSURE="2" STATE="1" EDITORDER="26 " ATTDECLTYP="2" ATTVALUE="&apos;min&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="TOTALS_FUNCTION_SUM" VERSION="1" LANGU="E" DESCRIPT="Totals function" EXPOSURE="2" STATE="1" EDITORDER="27 " ATTDECLTYP="2" ATTVALUE="&apos;sum&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -257,6 +178,9 @@ ENDMETHOD.</source>
 
     WHEN zcl_excel_table=&gt;totals_function_average.
       lv_function_id = lc_function_id_average.
+
+    WHEN zcl_excel_table=&gt;totals_function_custom. &quot; issue #292
+      RETURN.
 
     WHEN OTHERS.
       RAISE EXCEPTION TYPE zcx_excel
