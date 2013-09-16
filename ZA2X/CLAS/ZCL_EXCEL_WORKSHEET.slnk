@@ -2832,8 +2832,13 @@ endmethod.</source>
 
   es_table_settings = ls_settings.
   es_table_settings-bottom_right_column = lv_column_alpha.
-  es_table_settings-bottom_right_row    = ls_settings-top_left_row + lv_rows + 1. &quot;Last rows
-
+  &quot; &gt;&gt; Issue #291
+  IF ip_table IS INITIAL.
+    es_table_settings-bottom_right_row    = ls_settings-top_left_row + 2.           &quot;Last rows
+  ELSE.
+    es_table_settings-bottom_right_row    = ls_settings-top_left_row + lv_rows + 1. &quot;Last rows
+  ENDIF.
+  &quot; &lt;&lt; Issue #291
 
 ENDMETHOD.</source>
  </method>
