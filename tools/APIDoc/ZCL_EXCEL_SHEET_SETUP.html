@@ -1,0 +1,1115 @@
+<HTML>
+<HEAD>
+<TITLE>
+ZCL_EXCEL_SHEET_SETUP
+</TITLE>
+<link rel="stylesheet" type="text/css" href="css/style_class.css" />
+<link rel="stylesheet" type="text/css" href="css/style_function_groups.css" />
+<link rel="stylesheet" type="text/css" href="css/style_object_list.css" />
+</HEAD>
+<BODY>
+<H1>ZCL_EXCEL_SHEET_SETUP</H1>
+<BR/>
+Description:
+Sheet setup
+<BR/>
+Visibility:
+Public
+<BR/>
+<H2>Attributes: </H2>
+<TABLE width="100%">
+<TR class="top">
+<TD>Name</TD>
+<TD>Level</TD>
+<TD>Visibility</TD>
+<TD>Read-Only</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Description</TD>
+<TD>Initial Value</TD>
+</TR>
+<TR>
+<TD>C_BREAK_COLUMN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_BREAK</TD>
+<TD>Worksheet Break</TD>
+<TD>2</TD>
+</TR>
+<TR>
+<TD>C_BREAK_NONE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_BREAK</TD>
+<TD>Worksheet Break</TD>
+<TD>0</TD>
+</TR>
+<TR>
+<TD>C_BREAK_ROW</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_BREAK</TD>
+<TD>Worksheet Break</TD>
+<TD>1</TD>
+</TR>
+<TR>
+<TD>C_CC_AS_DISPLAYED</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Cell comments</TD>
+<TD>'asDisplayed'</TD>
+</TR>
+<TR>
+<TD>C_CC_AT_END</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Cell comments</TD>
+<TD>'atEnd'</TD>
+</TR>
+<TR>
+<TD>C_CC_NONE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Cell commenct</TD>
+<TD>'none'</TD>
+</TR>
+<TR>
+<TD>C_ORD_DOWNTHENOVER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Page order</TD>
+<TD>'downThenOver'</TD>
+</TR>
+<TR>
+<TD>C_ORD_OVERTHENDOWN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Page order</TD>
+<TD>'overThenDown'</TD>
+</TR>
+<TR>
+<TD>C_ORIENTATION_DEFAULT</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_ORIENATATION</TD>
+<TD>Sheet orientation</TD>
+<TD>'default'</TD>
+</TR>
+<TR>
+<TD>C_ORIENTATION_LANDSCAPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_ORIENATATION</TD>
+<TD>Sheet orientation</TD>
+<TD>'landscape'</TD>
+</TR>
+<TR>
+<TD>C_ORIENTATION_PORTRAIT</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_ORIENATATION</TD>
+<TD>Sheet orientation</TD>
+<TD>'portrait'</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_6_3_4_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>38</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A2_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>64</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A3</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>8</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A3_EXTRA_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>61</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A3_EXTRA_TV_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>66</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A3_TV_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>65</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A4</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>9</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A4_EXTRA_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>51</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A4_PLUS_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>58</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A4_SMALL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>10</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A4_TV_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>53</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A5</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>11</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A5_EXTRA_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>62</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_A5_TV_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>59</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_B4</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>12</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_B4_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>33</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_B5</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>13</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_B5_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>34</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_B6_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>35</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_C</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>24</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_C3_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>29</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_C4_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>30</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_C5_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>28</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_C65_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>32</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_C6_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>31</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_D</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>25</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_DE_LEG_FANFOLD</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>41</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_DE_STD_FANFOLD</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>40</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_DL_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>27</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_E</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>26</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_EXECUTIVE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>7</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_FOLIO</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>14</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_INVITE_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>47</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_ISO_B4</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>42</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_ISO_B5_EXTRA_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>63</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_ITALY_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>36</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_JIS_B5_TV_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>60</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_JPN_DBL_POSTCARD</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>43</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LEDGER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>4</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LEGAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>5</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LEGAL_EXTRA_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>49</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LETTER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>1</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LETTER_EXTRA_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>48</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LETTER_EXTV_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>54</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LETTER_PLUS_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>57</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LETTER_SMALL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>2</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_LETTER_TV_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>52</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_MONARCH_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>37</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_NO10_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>20</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_NO11_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>21</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_NO12_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>22</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_NO14_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>23</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_NO9_ENVELOPE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>19</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_NOTE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>18</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_QUARTO</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>15</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_STANDARD_1</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>16</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_STANDARD_2</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>17</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_STANDARD_PAPER_1</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>44</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_STANDARD_PAPER_2</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>45</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_STANDARD_PAPER_3</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>46</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_STATEMENT</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>6</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_SUPERA_A4_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>55</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_SUPERB_A3_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>56</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_TABLOID</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>3</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_TABL_EXTRA_PAPER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>50</TD>
+</TR>
+<TR>
+<TD>C_PAPERSIZE_US_STD_FANFOLD</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_PAPER_SIZE</TD>
+<TD>Fill Type</TD>
+<TD>39</TD>
+</TR>
+<TR>
+<TD>C_PE_BLANK</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Print error</TD>
+<TD>'blank'</TD>
+</TR>
+<TR>
+<TD>C_PE_DASH</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Print error</TD>
+<TD>'dash'</TD>
+</TR>
+<TR>
+<TD>C_PE_DISPLAYED</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Print error</TD>
+<TD>'displayed'</TD>
+</TR>
+<TR>
+<TD>C_PE_NA</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Print error</TD>
+<TD>'NA'</TD>
+</TR>
+<TR>
+<TD>BLACK_AND_WHITE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>Print black and white</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>CELL_COMMENTS</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRINGVAL</TD>
+<TD>This attribute specifies how to print cell comments</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>COPIES</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Number of copies to print</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>DRAFT</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>Print without graphics</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>ERRORS</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRINGVAL</TD>
+<TD>Specifies how to print cell values for cells with errors</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>FIRST_PAGE_NUMBER</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Page number for first printed page</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>FIT_TO_HEIGHT</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Flag indicating whether the Fit to Page print option is enab</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>FIT_TO_PAGE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>Number of vertical pages to fit on</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>FIT_TO_WIDTH</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Number of horizontal pages to fit on</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>HORIZONTAL_DPI</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Horizontal print resolution of the device</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MARGIN_BOTTOM</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DEC_8_2</TD>
+<TD>Margin bottom</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MARGIN_FOOTER</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DEC_8_2</TD>
+<TD>Margin footer</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MARGIN_HEADER</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DEC_8_2</TD>
+<TD>Margin header</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MARGIN_LEFT</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DEC_8_2</TD>
+<TD>Margin left</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MARGIN_RIGHT</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DEC_8_2</TD>
+<TD>Margin right</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MARGIN_TOP</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DEC_8_2</TD>
+<TD>Margin top</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>ORIENTATION</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_SHEET_ORIENATATION</TD>
+<TD>Sheet orientation</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>PAGE_ORDER</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Order of printed pages</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>PAPER_HEIGHT</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Height of custom paper as a number followed by a unit id</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>PAPER_SIZE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Paper size</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>PAPER_WIDTH</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Width of custom paper as a number followed by a unit id</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>SCALE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Scale 10 - 400 (percent)</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>USE_FIRST_PAGE_NUM</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>Use firstPageNumber value for first page number</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>USE_PRINTER_DEFAULTS</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>Use the printer’s defaults settings for page setup values</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>VERTICAL_DPI</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>INT2</TD>
+<TD>Vertical print resolution of the device</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>HORIZONTAL_CENTERED</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>horizontal Centered</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>VERTICAL_CENTERED</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>vertical Centered</TD>
+<TD></TD>
+</TR>
+</TABLE>
+<H2>Events: </H2>
+<BR/>
+</BODY>
+</HTML>

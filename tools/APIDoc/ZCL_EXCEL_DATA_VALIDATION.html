@@ -1,0 +1,395 @@
+<HTML>
+<HEAD>
+<TITLE>
+ZCL_EXCEL_DATA_VALIDATION
+</TITLE>
+<link rel="stylesheet" type="text/css" href="css/style_class.css" />
+<link rel="stylesheet" type="text/css" href="css/style_function_groups.css" />
+<link rel="stylesheet" type="text/css" href="css/style_object_list.css" />
+</HEAD>
+<BODY>
+<H1>ZCL_EXCEL_DATA_VALIDATION</H1>
+<BR/>
+Description:
+Data validation
+<BR/>
+Visibility:
+Public
+<BR/>
+<H2>Attributes: </H2>
+<TABLE width="100%">
+<TR class="top">
+<TD>Name</TD>
+<TD>Level</TD>
+<TD>Visibility</TD>
+<TD>Read-Only</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Description</TD>
+<TD>Initial Value</TD>
+</TR>
+<TR>
+<TD>ERRORSTYLE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_ERROR_STYLE</TD>
+<TD>Data validation error style</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>OPERATOR</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>ALLOWBLANK</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>General Flag</TD>
+<TD>'X'</TD>
+</TR>
+<TR>
+<TD>CELL_COLUMN</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CELL_COLUMN_ALPHA</TD>
+<TD>Cell Column</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>CELL_COLUMN_TO</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CELL_COLUMN_ALPHA</TD>
+<TD>Cell Column</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>CELL_ROW</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CELL_ROW</TD>
+<TD>Cell Row</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>CELL_ROW_TO</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CELL_ROW</TD>
+<TD>Cell Row</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>C_TYPE_CUSTOM</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'custom'</TD>
+</TR>
+<TR>
+<TD>C_TYPE_LIST</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'list'</TD>
+</TR>
+<TR>
+<TD>SHOWERRORMESSAGE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>General Flag</TD>
+<TD>'X'</TD>
+</TR>
+<TR>
+<TD>SHOWINPUTMESSAGE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>General Flag</TD>
+<TD>'X'</TD>
+</TR>
+<TR>
+<TD>TYPE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>FORMULA1</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_VALIDATION_FORMULA1</TD>
+<TD>Validation formula1</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>FORMULA2</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_VALIDATION_FORMULA1</TD>
+<TD>Validation formula2</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>C_TYPE_NONE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'none'</TD>
+</TR>
+<TR>
+<TD>C_TYPE_DATE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'date'</TD>
+</TR>
+<TR>
+<TD>C_TYPE_DECIMAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'decimal'</TD>
+</TR>
+<TR>
+<TD>C_TYPE_TEXTLENGTH</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'textLength'</TD>
+</TR>
+<TR>
+<TD>C_TYPE_TIME</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'time'</TD>
+</TR>
+<TR>
+<TD>C_TYPE_WHOLE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_TYPE</TD>
+<TD>Data validation type</TD>
+<TD>'whole'</TD>
+</TR>
+<TR>
+<TD>C_STYLE_STOP</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_ERROR_STYLE</TD>
+<TD>Data validation error style</TD>
+<TD>'stop'</TD>
+</TR>
+<TR>
+<TD>C_STYLE_WARNING</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_ERROR_STYLE</TD>
+<TD>Data validation error style</TD>
+<TD>'warning'</TD>
+</TR>
+<TR>
+<TD>C_STYLE_INFORMATION</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_ERROR_STYLE</TD>
+<TD>Data validation error style</TD>
+<TD>'information'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_BETWEEN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'between'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_EQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'equal'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_GREATERTHAN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'greaterThan'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_GREATERTHANOREQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'greaterThanOrEqual'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_LESSTHAN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'lessThan'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_LESSTHANOREQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'lessThanOrEqual'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_NOTBETWEEN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'notBetween'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_NOTEQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_DATA_VAL_OPERATOR</TD>
+<TD>Data validation operator</TD>
+<TD>'notEqual'</TD>
+</TR>
+<TR>
+<TD>SHOWDROPDOWN</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>FLAG</TD>
+<TD>Show DropDown</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>ERRORTITLE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD></TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>ERROR</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD></TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>PROMPTTITLE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD></TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>PROMPT</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD></TD>
+<TD></TD>
+</TR>
+</TABLE>
+<H2>Events: </H2>
+<BR/>
+</BODY>
+</HTML>

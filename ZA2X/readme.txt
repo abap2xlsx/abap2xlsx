@@ -1,1 +1,0 @@
-Check out the Installation Guide at http://wiki.sdn.sap.com/wiki/display/ABAP/Installation+Guide
