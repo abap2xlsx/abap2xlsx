@@ -1,0 +1,505 @@
+<HTML>
+<HEAD>
+<TITLE>
+ZCL_EXCEL_STYLE_CONDITIONAL
+</TITLE>
+<link rel="stylesheet" type="text/css" href="css/style_class.css" />
+<link rel="stylesheet" type="text/css" href="css/style_function_groups.css" />
+<link rel="stylesheet" type="text/css" href="css/style_object_list.css" />
+</HEAD>
+<BODY>
+<H1>ZCL_EXCEL_STYLE_CONDITIONAL</H1>
+<BR/>
+Description:
+Font Style
+<BR/>
+Visibility:
+Public
+<BR/>
+<H2>Attributes: </H2>
+<TABLE width="100%">
+<TR class="top">
+<TD>Name</TD>
+<TD>Level</TD>
+<TD>Visibility</TD>
+<TD>Read-Only</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Description</TD>
+<TD>Initial Value</TD>
+</TR>
+<TR>
+<TD>C_CFVO_TYPE_FORMULA</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_TYPE</TD>
+<TD>Condition type</TD>
+<TD>'formula'</TD>
+</TR>
+<TR>
+<TD>C_CFVO_TYPE_NUMBER</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_TYPE</TD>
+<TD>Condition type</TD>
+<TD>'num'</TD>
+</TR>
+<TR>
+<TD>C_CFVO_TYPE_PERCENT</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_TYPE</TD>
+<TD>Condition type</TD>
+<TD>'percent'</TD>
+</TR>
+<TR>
+<TD>C_CFVO_TYPE_PERCENTILE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_TYPE</TD>
+<TD>Condition type</TD>
+<TD>'percentile'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3ARROWS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'3Arrows'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3ARROWSGRAY</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'3ArrowsGray'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3FLAGS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'3Flags'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3SIGNS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'3Signs'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3SYMBOLS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'3Symbols'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3SYMBOLS2</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'3Symbols2'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3TRAFFICLIGHTS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>''</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_3TRAFFICLIGHTS2</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'3TrafficLights2'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_4ARROWS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'4Arrows'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_4ARROWSGRAY</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'4ArrowsGray'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_4RATING</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'4Rating'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_4REDTOBLACK</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'4RedToBlack'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_4TRAFFICLIGHTS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'4TrafficLights'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_5ARROWS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'5Arrows'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_5ARROWSGRAY</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'5ArrowsGray'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_5QUARTERS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'5Quarters'</TD>
+</TR>
+<TR>
+<TD>C_ICONSET_5RATING</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE_ICONSET</TD>
+<TD>Condition rule iconset</TD>
+<TD>'5Rating'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_BEGINSWITH</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'beginsWith'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_BETWEEN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'between'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_CONTAINSTEXT</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'containsText'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_ENDSWITH</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'endsWith'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_EQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'equal'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_GREATERTHAN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'greaterThan'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_GREATERTHANOREQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'greaterThanOrEqual'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_LESSTHAN</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'lessThan'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_LESSTHANOREQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'lessThanOrEqual'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_NONE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>''</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_NOTCONTAINS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'notContains'</TD>
+</TR>
+<TR>
+<TD>C_OPERATOR_NOTEQUAL</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_OPERATOR</TD>
+<TD>Condition operator</TD>
+<TD>'notEqual'</TD>
+</TR>
+<TR>
+<TD>C_RULE_CELLIS</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE</TD>
+<TD>Condition rule</TD>
+<TD>'cellIs'</TD>
+</TR>
+<TR>
+<TD>C_RULE_CONTAINSTEXT</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE</TD>
+<TD>Condition rule</TD>
+<TD>'containsText'</TD>
+</TR>
+<TR>
+<TD>C_RULE_EXPRESSION</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE</TD>
+<TD>Condition rule</TD>
+<TD>'expression'</TD>
+</TR>
+<TR>
+<TD>C_RULE_ICONSET</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE</TD>
+<TD>Condition rule</TD>
+<TD>'iconSet'</TD>
+</TR>
+<TR>
+<TD>C_RULE_NONE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE</TD>
+<TD>Condition rule</TD>
+<TD>'none'</TD>
+</TR>
+<TR>
+<TD>C_SHOWVALUE_FALSE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_SHOW_VALUE</TD>
+<TD>Condition type</TD>
+<TD>0</TD>
+</TR>
+<TR>
+<TD>C_SHOWVALUE_TRUE</TD>
+<TD>Constant</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_SHOW_VALUE</TD>
+<TD>Condition type</TD>
+<TD>1</TD>
+</TR>
+<TR>
+<TD>MODE_CELLIS</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_CELLIS</TD>
+<TD>Iconset settings</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MODE_EXPRESSION</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_EXPRESSION</TD>
+<TD>Expression settings</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>MODE_ICONSET</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITIONAL_ICONSET</TD>
+<TD>Iconset settings</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>PRIORITY</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_STYLE_PRIORITY</TD>
+<TD>Style Priority</TD>
+<TD>1</TD>
+</TR>
+<TR>
+<TD>RULE</TD>
+<TD>Instance Attribute</TD>
+<TD>Public</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_CONDITION_RULE</TD>
+<TD>Condition rule</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>START_CELL</TD>
+<TD>Instance Attribute</TD>
+<TD>Private</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_S_CELL_DATA</TD>
+<TD>Cell data</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>STOP_CELL</TD>
+<TD>Instance Attribute</TD>
+<TD>Private</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_S_CELL_DATA</TD>
+<TD>Cell data</TD>
+<TD></TD>
+</TR>
+</TABLE>
+<H2>Events: </H2>
+<BR/>
+</BODY>
+</HTML>

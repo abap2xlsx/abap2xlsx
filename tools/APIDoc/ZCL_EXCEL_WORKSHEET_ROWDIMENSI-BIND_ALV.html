@@ -1,0 +1,241 @@
+<HTML>
+<HEAD>
+<TITLE>
+BIND_ALV
+</TITLE>
+<link rel="stylesheet" type="text/css" href="css/style_class.css" />
+<link rel="stylesheet" type="text/css" href="css/style_function_groups.css" />
+<link rel="stylesheet" type="text/css" href="css/style_object_list.css" />
+</HEAD>
+<H1>BIND_ALV</H1>
+<BR/>
+<P>
+Description:
+Set cell value from ALV object
+<BR/>
+Visibility:
+Public
+<BR/>
+Other Properties:
+</P>
+<BR/>
+<BR/>
+<TABLE width="100%">
+<TR class="top">
+<TD>Category</TD>
+<TD>Declaration Level</TD>
+<TD>Abstract</TD>
+<TD>Final</TD>
+<TD>Locked</TD>
+</TR>
+<TR>
+<TD>Method</TD>
+<TD>Instance Method</TD>
+<TD>Yes</TD>
+<TD>Yes</TD>
+<TD>Yes</TD>
+</TR>
+</TABLE>
+<BR/>
+<H2>Importing Parameters</H2>
+<TABLE width="100%">
+<TR class="top">
+<TD>Parameter Name</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Default value</TD>
+<TD>Optional</TD>
+<TD>Pass Value</TD>
+<TD>Short text</TD>
+</TR>
+<TR>
+<TD>I_DOCUMENT_URL</TD>
+<TD>Type</TD>
+<TD>CHAR255</TD>
+<TD>SPACE</TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>URL of file, must start with <file://></TD>
+</TR>
+<TR>
+<TD>I_XLS</TD>
+<TD>Type</TD>
+<TD>C</TD>
+<TD>SPACE</TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Export to .xls file?</TD>
+</TR>
+<TR>
+<TD>I_SAVE_PATH</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD></TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Local file path</TD>
+</TR>
+<TR>
+<TD>IO_ALV</TD>
+<TD>Type Ref To</TD>
+<TD>CL_GUI_ALV_GRID</TD>
+<TD></TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>ALV List Viewer</TD>
+</TR>
+<TR>
+<TD>IT_LISTHEADER</TD>
+<TD>Type</TD>
+<TD>SLIS_T_LISTHEADER</TD>
+<TD></TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Top-of-page</TD>
+</TR>
+<TR>
+<TD>I_TOP</TD>
+<TD>Type</TD>
+<TD>I</TD>
+<TD>1</TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Top edge of data block</TD>
+</TR>
+<TR>
+<TD>I_LEFT</TD>
+<TD>Type</TD>
+<TD>I</TD>
+<TD>1</TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Left-hand edge of data block</TD>
+</TR>
+<TR>
+<TD>I_COLUMNS_HEADER</TD>
+<TD>Type</TD>
+<TD>C</TD>
+<TD>'X'</TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Export columns header?</TD>
+</TR>
+<TR>
+<TD>I_COLUMNS_AUTOFIT</TD>
+<TD>Type</TD>
+<TD>C</TD>
+<TD>'X'</TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Autofit columns width?</TD>
+</TR>
+<TR>
+<TD>I_FORMAT_COL_HEADER</TD>
+<TD>Type</TD>
+<TD>SOI_FORMAT_ITEM</TD>
+<TD></TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Column header format</TD>
+</TR>
+<TR>
+<TD>I_FORMAT_SUBTOTAL</TD>
+<TD>Type</TD>
+<TD>SOI_FORMAT_ITEM</TD>
+<TD></TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Subtotal lines format</TD>
+</TR>
+<TR>
+<TD>I_FORMAT_TOTAL</TD>
+<TD>Type</TD>
+<TD>SOI_FORMAT_ITEM</TD>
+<TD></TD>
+<TD>Yes</TD>
+<TD>No</TD>
+<TD>Total line format</TD>
+</TR>
+</TABLE>
+<BR/>
+<BR/>
+<H2>Exporting Parameters</H2>
+<TABLE width="100%">
+<TR class="top">
+<TD>Parameter Name</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Pass Value</TD>
+<TD>Short text</TD>
+</TR>
+</TABLE>
+<BR/>
+<BR/>
+<H2>Changing Parameters</H2>
+<TABLE width="100%">
+<TR class="top">
+<TD>Parameter Name</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Default Value</TD>
+<TD>Optional</TD>
+<TD>Pass Value</TD>
+<TD>Short text</TD>
+</TR>
+</TABLE>
+<BR/>
+<BR/>
+<H2>Returning Parameters</H2>
+<BR/>
+<TABLE width="100%">
+<TR class="top">
+<TD>Parameter Name</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Pass Value</TD>
+<TD>Short text</TD>
+</TR>
+</TABLE>
+<BR/>
+<BR/>
+<H2>Exceptiopns</H2>
+<BR/>
+<TABLE width="100%">
+<TR class="top">
+<TD>Exception</TD>
+<TD>Short Text</TD>
+</TR>
+<TR>
+<TD>MISS_GUIDE</TD>
+<TD>Windows guide is missing</TD>
+</TR>
+<TR>
+<TD>EX_TRANSFER_KKBLO_ERROR</TD>
+<TD>Transfer to KKBLO struct error</TD>
+</TR>
+<TR>
+<TD>FATAL_ERROR</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>INV_DATA_RANGE</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>DIM_MISMATCH_VKEY</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>DIM_MISMATCH_SEMA</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>ERROR_IN_SEMA</TD>
+<TD>Un-know columns Ops, columns Typ</TD>
+</TR>
+</TABLE>
+<BR/>
+<BR/>
+<H2>Method Coment Header</H2>
+<BR/>
+</HTML>

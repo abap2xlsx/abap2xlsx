@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<TITLE>
+ZCL_EXCEL_WRITER_2007
+</TITLE>
+<link rel="stylesheet" type="text/css" href="css/style_class.css" />
+<link rel="stylesheet" type="text/css" href="css/style_function_groups.css" />
+<link rel="stylesheet" type="text/css" href="css/style_object_list.css" />
+</HEAD>
+<BODY>
+<H1>ZCL_EXCEL_WRITER_2007</H1>
+<BR/>
+Description:
+Excel writer 2007
+<BR/>
+Visibility:
+Public
+<BR/>
+<H2>Attributes: </H2>
+<TABLE width="100%">
+<TR class="top">
+<TD>Name</TD>
+<TD>Level</TD>
+<TD>Visibility</TD>
+<TD>Read-Only</TD>
+<TD>Typing</TD>
+<TD>Associated Type</TD>
+<TD>Description</TD>
+<TD>Initial Value</TD>
+</TR>
+<TR>
+<TD>C_CONTENT_TYPES</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Content Type XML File Name</TD>
+<TD>'[Content_Types].xml'</TD>
+</TR>
+<TR>
+<TD>C_DOCPROPS_APP</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>App XML File Name</TD>
+<TD>'docProps/app.xml'</TD>
+</TR>
+<TR>
+<TD>C_DOCPROPS_CORE</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Core XML File Name</TD>
+<TD>'docProps/core.xml'</TD>
+</TR>
+<TR>
+<TD>C_OFF</TD>
+<TD>Constant</TD>
+<TD>Private</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Byte Value</TD>
+<TD>'0'</TD>
+</TR>
+<TR>
+<TD>C_ON</TD>
+<TD>Constant</TD>
+<TD>Private</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Byte Value</TD>
+<TD>'1'</TD>
+</TR>
+<TR>
+<TD>C_RELATIONSHIPS</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>Rels XML File Name</TD>
+<TD>'_rels/.rels'</TD>
+</TR>
+<TR>
+<TD>C_XL_DRAWINGS</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlDrawings XML File Name</TD>
+<TD>'xl/drawings/drawing#.xml'</TD>
+</TR>
+<TR>
+<TD>C_XL_DRAWINGS_RELS</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlDrawings XML File Name</TD>
+<TD>'xl/drawings/_rels/drawing#.xml.rels'</TD>
+</TR>
+<TR>
+<TD>C_XL_RELATIONSHIPS</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlRels XML File Name</TD>
+<TD>'xl/_rels/workbook.xml.rels'</TD>
+</TR>
+<TR>
+<TD>C_XL_SHAREDSTRINGS</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlSharedStrings XML File Name</TD>
+<TD>'xl/sharedStrings.xml'</TD>
+</TR>
+<TR>
+<TD>C_XL_SHEET</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlSheet XML File Name Template</TD>
+<TD>'xl/worksheets/sheet#.xml'</TD>
+</TR>
+<TR>
+<TD>C_XL_SHEET_RELS</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlSheetRels XML File Name Template</TD>
+<TD>'xl/worksheets/_rels/sheet#.xml.rels'</TD>
+</TR>
+<TR>
+<TD>C_XL_STYLES</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlStyles XML File Name</TD>
+<TD>'xl/styles.xml'</TD>
+</TR>
+<TR>
+<TD>C_XL_THEME</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlTheme XML File Name</TD>
+<TD>'xl/theme/theme1.xml'</TD>
+</TR>
+<TR>
+<TD>C_XL_WORKBOOK</TD>
+<TD>Constant</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>STRING</TD>
+<TD>xlWorkbook XML File Name</TD>
+<TD>'xl/workbook.xml'</TD>
+</TR>
+<TR>
+<TD>EXCEL</TD>
+<TD>Instance Attribute</TD>
+<TD>Protected</TD>
+<TD>No</TD>
+<TD>Type Ref To</TD>
+<TD>ZCL_EXCEL</TD>
+<TD>Excel creator</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>SHARED_STRINGS</TD>
+<TD>Instance Attribute</TD>
+<TD>Private</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_T_SHARED_STRING</TD>
+<TD>Shared Strings</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>STYLES_COND_MAPPING</TD>
+<TD>Instance Attribute</TD>
+<TD>Private</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_T_STYLES_COND_MAPPING</TD>
+<TD>Styles mapping</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD>STYLES_MAPPING</TD>
+<TD>Instance Attribute</TD>
+<TD>Private</TD>
+<TD>No</TD>
+<TD>Type</TD>
+<TD>ZEXCEL_T_STYLES_MAPPING</TD>
+<TD>Styles mapping</TD>
+<TD></TD>
+</TR>
+</TABLE>
+<H2>Events: </H2>
+<BR/>
+</BODY>
+</HTML>
