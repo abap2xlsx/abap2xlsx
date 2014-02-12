@@ -5281,6 +5281,43 @@ endmethod.</source>
             &quot; dxf node
             lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
                                                                  parent = lo_document ).
+																 
+&quot;Conditional formatting font style correction by Alessandro Iannacci START
+              READ TABLE lt_fonts into ls_font INDEX ls_cellxfs-FONTID + 1.
+              IF ls_font IS NOT INITIAL.
+                lo_element_font = lo_document-&gt;create_simple_element( name   = lc_xml_node_font
+                                                            parent = lo_document ).
+                IF ls_font-bold EQ abap_true.
+                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_b
+                                                                       parent = lo_document ).
+                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+                ENDIF.
+                IF ls_font-italic EQ abap_true.
+                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_i
+                                                                       parent = lo_document ).
+                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+                ENDIF.
+                IF ls_font-underline EQ abap_true.
+                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_u
+                                                                       parent = lo_document ).
+                  lv_value = ls_font-underline_mode.
+                  lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_val
+                                                    value = lv_value ).
+                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+                ENDIF.
+                IF ls_font-strikethrough EQ abap_true.
+                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_strike
+                                                                       parent = lo_document ).
+                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+                ENDIF.
+                &quot;color
+                create_xl_styles_color_node(
+                    io_document        = lo_document
+                    io_parent          = lo_element_font
+                    is_color           = ls_font-color ).
+                lo_sub_element-&gt;append_child( new_child = lo_element_font ).
+              ENDIF.
+&quot;---Conditional formatting font style correction by Alessandro Iannacci END
 
             READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
             IF ls_fill IS NOT INITIAL.
