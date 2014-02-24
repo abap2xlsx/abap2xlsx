@@ -186,7 +186,7 @@
 
 *--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
-  me-&gt;zif_excel_reader~gv_use_alternate_zip = iv_use_alternate_zip.
+  me-&gt;zif_excel_reader~gv_use_alternate_zip = i_use_alternate_zip.
 *--------------------------------------------------------------------*
 
 
@@ -278,7 +278,7 @@ DATA:         lv_filename                     TYPE string.
 
 *--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
-  me-&gt;zif_excel_reader~gv_use_alternate_zip = iv_use_alternate_zip.
+  me-&gt;zif_excel_reader~gv_use_alternate_zip = i_use_alternate_zip.
 *--------------------------------------------------------------------*
 
 
@@ -287,7 +287,7 @@ DATA:         lv_filename                     TYPE string.
 * Background-processing --&gt; backend  reading
 * Online-processing     --&gt; frontend reading
 *--------------------------------------------------------------------*
-  IF sy-batch = abap_true.
+  IF I_FROM_APPLSERVER = abap_true.
     lv_load_from_source = lcv_load_from_backend.
   ELSE.
     lv_load_from_source = lcv_load_from_frontend.
@@ -373,7 +373,7 @@ DATA:         lv_filename                     TYPE string.
 *--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
   r_excel = me-&gt;zif_excel_reader~load( i_excel2007          = lv_excel_data
-                                       iv_use_alternate_zip = iv_use_alternate_zip ).
+                                       i_use_alternate_zip  = i_use_alternate_zip ).
 *--------------------------------------------------------------------*
 
 
