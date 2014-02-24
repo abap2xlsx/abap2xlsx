@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" VERSION="1" LANGU="E" DESCRIPT="Can read large .xlsx files" UUID="5254000098BB1ED3A2A3C17B14A74D15" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="RPLANTIK" CREATEDON="20140131" CHANGEDON="20140224" CHGDANYON="00000000" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="731" CLSBCCAT="00" WITH_UNIT_TESTS="X" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_READER_2007" CHANGEDBY="RPLANTIK">
+ <types CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="T_CELL_CONTENT" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140131" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" TYPTYPE="4" SRCROW1="4 " SRCCOLUMN1="4 " SRCROW2="9 " SRCCOLUMN2="24 " TYPESRC_LENG="219 " TYPESRC="begin of t_cell_content,
+      datatype type zexcel_cell_data_type,
+      value    type zexcel_cell_value,
+      formula  type zexcel_cell_formula,
+      style    type zexcel_cell_style,
+    end of t_cell_content
+"/>
+ <types CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="T_CELL_COORD" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" TYPTYPE="4" SRCROW1="11 " SRCCOLUMN1="4 " SRCROW2="14 " SRCCOLUMN2="22 " TYPESRC_LENG="134 " TYPESRC="begin of t_cell_coord,
+      row      type zexcel_cell_row,
+      column   type zexcel_cell_column_alpha,
+    end of t_cell_coord
+"/>
+ <types CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="T_CELL" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" TYPTYPE="4" SRCROW1="16 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="21 " TYPESRC_LENG="140 " TYPESRC="begin of t_cell.
+          include type t_cell_coord as coord.
+          include type t_cell_content as content.
+  types: end of t_cell
+"/>
+ <publicSection>class ZCL_EXCEL_HUGE_FILE_READER definition
+  public
+  inheriting from ZCL_EXCEL_READER_2007
+  create public .
+
+public section.</publicSection>
+ <protectedSection>protected section.
+
+  methods LOAD_WORKSHEET
+    redefinition .
+  methods LOAD_SHARED_STRINGS
+    redefinition .</protectedSection>
+ <privateSection>private section.
+
+  types:
+    begin of t_cell_content,
+      datatype type zexcel_cell_data_type,
+      value    type zexcel_cell_value,
+      formula  type zexcel_cell_formula,
+      style    type zexcel_cell_style,
+    end of t_cell_content .
+  types:
+    begin of t_cell_coord,
+      row      type zexcel_cell_row,
+      column   type zexcel_cell_column_alpha,
+    end of t_cell_coord .
+  types:
+    begin of t_cell.
+          include type t_cell_coord as coord.
+          include type t_cell_content as content.
+  types: end of t_cell .
+
+  interface IF_SXML_NODE load .
+  constants C_END_OF_STREAM type IF_SXML_NODE=&gt;NODE_TYPE value IF_SXML_NODE=&gt;CO_NT_FINAL. &quot;#EC NOTEXT
+  constants C_ELEMENT_OPEN type IF_SXML_NODE=&gt;NODE_TYPE value IF_SXML_NODE=&gt;CO_NT_ELEMENT_OPEN. &quot;#EC NOTEXT
+  constants C_ELEMENT_CLOSE type IF_SXML_NODE=&gt;NODE_TYPE value IF_SXML_NODE=&gt;CO_NT_ELEMENT_CLOSE. &quot;#EC NOTEXT
+  data:
+    begin of gs_buffer_style,
+    index type i value -1,
+    guid type zexcel_cell_style,
+    end of gs_buffer_style .
+  constants C_ATTRIBUTE type IF_SXML_NODE=&gt;NODE_TYPE value IF_SXML_NODE=&gt;CO_NT_ATTRIBUTE. &quot;#EC NOTEXT
+
+  methods SKIP_TO
+    importing
+      !IV_ELEMENT_NAME type STRING
+      !IO_READER type ref to IF_SXML_READER
+    raising
+      LCX_NOT_FOUND .
+  methods FILL_CELL_FROM_ATTRIBUTES
+    importing
+      !IO_READER type ref to IF_SXML_READER
+    returning
+      value(ES_CELL) type T_CELL
+    raising
+      LCX_NOT_FOUND .
+  methods READ_SHARED_STRINGS
+    importing
+      !IO_READER type ref to IF_SXML_READER
+    returning
+      value(ET_SHARED_STRINGS) type STRINGTAB .
+  methods GET_CELL_COORD
+    importing
+      !IV_COORD type STRING
+    returning
+      value(ES_COORD) type T_CELL_COORD .
+  methods PUT_CELL_TO_WORKSHEET
+    importing
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+      !IS_CELL type T_CELL .
+  methods GET_SHARED_STRING
+    importing
+      !IV_INDEX type ANY
+    returning
+      value(EV_VALUE) type STRING
+    raising
+      LCX_NOT_FOUND .
+  methods GET_STYLE
+    importing
+      !IV_INDEX type ANY
+    returning
+      value(EV_STYLE_GUID) type ZEXCEL_CELL_STYLE
+    raising
+      LCX_NOT_FOUND .
+  methods READ_WORKSHEET_DATA
+    importing
+      !IO_READER type ref to IF_SXML_READER
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+    raising
+      LCX_NOT_FOUND .
+  methods GET_SXML_READER
+    importing
+      !IV_PATH type STRING
+    returning
+      value(EO_READER) type ref to IF_SXML_READER
+    raising
+      ZCX_EXCEL .</privateSection>
+ <localImplementation>*&quot;* use this source file for the definition and implementation of
+*&quot;* local helper classes, interface definitions and type
+*&quot;* declarations
+
+* Signal &quot;not found&quot;
+class lcx_not_found implementation.
+  method constructor.
+    super-&gt;constructor( textid = textid previous = previous ).
+    me-&gt;error = error.
+  endmethod.
+  method if_message~get_text.
+    result = error.
+  endmethod.
+endclass.</localImplementation>
+ <localTypes>*&quot;* use this source file for any type of declarations (class
+*&quot;* definitions, interfaces or type declarations) you need for
+*&quot;* components in the private section
+
+* Signal for &quot;Not found&quot;
+class lcx_not_found definition inheriting from cx_static_check.
+  public section.
+    data error type string.
+    methods constructor
+      importing error type string
+                textid type sotr_conc optional
+                previous type ref to cx_root optional.
+    methods if_message~get_text redefinition.
+endclass.</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <attribute CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="C_ATTRIBUTE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="5 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ATTRIBUTE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="C_ELEMENT_CLOSE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_CLOSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="C_ELEMENT_OPEN" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_OPEN" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="C_END_OF_STREAM" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_FINAL" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GS_BUFFER_STYLE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="25 " TYPESRC_LENG="117 " TYPESRC="begin of gs_buffer_style,
+    index type i value -1,
+    guid type zexcel_cell_style,
+    end of gs_buffer_style
+"/>
+ <inheritance CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" STATE="1" AUTHOR="RPLANTIK" CREATEDON="20140131" CHANGEDBY="RPLANTIK" CHANGEDON="20140224">
+  <redefinition CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_SHARED_STRINGS" EXPOSURE="1"/>
+  <redefinition CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKSHEET" EXPOSURE="1"/>
+ </inheritance>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fill some cell properties from &lt;c&gt; element attributes" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="SXML Reader Interface" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" SCONAME="ES_CELL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_CELL"/>
+  <exception CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201"/>
+  <source>method fill_cell_from_attributes.
+
+  while io_reader-&gt;node_type ne c_end_of_stream.
+    io_reader-&gt;next_attribute( ).
+    if io_reader-&gt;node_type ne c_attribute.
+      exit.
+    endif.
+    case io_reader-&gt;name.
+      when `t`.
+        es_cell-datatype = io_reader-&gt;value.
+      when `s`.
+        if io_reader-&gt;value is not initial.
+          es_cell-style = get_style( io_reader-&gt;value ).
+        endif.
+      when `r`.
+        es_cell-coord = get_cell_coord( io_reader-&gt;value ).
+    endcase.
+  endwhile.
+
+  io_reader-&gt;current_node( ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_CELL_COORD" VERSION="1" LANGU="E" DESCRIPT='Cell coordinates from expression (like &quot;B2&quot;)' EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_CELL_COORD" SCONAME="IV_COORD" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_CELL_COORD" SCONAME="ES_COORD" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_CELL_COORD"/>
+  <source>method get_cell_coord.
+
+  zcl_excel_common=&gt;convert_columnrow2column_a_row(
+    exporting
+      i_columnrow = iv_coord
+    importing
+      e_column    = es_coord-column
+      e_row       = es_coord-row
+    ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SHARED_STRING" VERSION="1" LANGU="E" DESCRIPT="Read from shared string table" EXPOSURE="0" STATE="1" EDITORDER="6 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SHARED_STRING" SCONAME="IV_INDEX" VERSION="1" LANGU="E" DESCRIPT="Zero-based Index" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SHARED_STRING" SCONAME="EV_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <exception CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SHARED_STRING" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201"/>
+  <source>method get_shared_string.
+  data: lv_tabix type i.
+  lv_tabix = iv_index + 1.
+  read table shared_strings into ev_value index lv_tabix.
+  if sy-subrc ne 0.
+    raise exception type lcx_not_found
+      exporting
+        error = |Entry { iv_index } not found in Shared String Table|.
+  endif.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_STYLE" VERSION="1" LANGU="E" DESCRIPT="Read from style table" EXPOSURE="0" STATE="1" EDITORDER="7 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_STYLE" SCONAME="IV_INDEX" VERSION="1" LANGU="E" DESCRIPT="Zero-based Index" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_STYLE" SCONAME="EV_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Style ID" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <exception CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_STYLE" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201"/>
+  <source>method get_style.
+
+  data: lv_tabix type i,
+        lo_style type ref to zcl_excel_style.
+
+  if gs_buffer_style-index ne iv_index.
+    lv_tabix = iv_index + 1.
+    read table styles into lo_style index lv_tabix.
+    if sy-subrc ne 0.
+      raise exception type lcx_not_found
+        exporting
+          error = |Entry { iv_index } not found in Style Table|.
+    else.
+      gs_buffer_style-index = iv_index.
+      gs_buffer_style-guid  = lo_style-&gt;get_guid( ).
+    endif.
+  endif.
+
+  ev_style_guid = gs_buffer_style-guid.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SXML_READER" VERSION="1" LANGU="E" DESCRIPT="Create an sXML reader for an XML file in the zip archive" EXPOSURE="0" STATE="1" EDITORDER="9 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SXML_READER" SCONAME="IV_PATH" VERSION="1" LANGU="E" DESCRIPT="Path of the file in the archive" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SXML_READER" SCONAME="EO_READER" VERSION="1" LANGU="E" DESCRIPT="sXML reader" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <exception CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="GET_SXML_READER" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201"/>
+  <source>method get_sxml_reader.
+
+  data: lv_xml type xstring.
+
+  lv_xml = get_from_zip_archive( iv_path ).
+  eo_reader = cl_sxml_string_reader=&gt;create( lv_xml ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method LOAD_SHARED_STRINGS.
+
+  data: lo_reader type ref to if_sxml_reader.
+
+  lo_reader = get_sxml_reader( ip_path ).
+
+  shared_strings = read_shared_strings( lo_reader ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " CREATEDON="00000000" CHANGEDON="00000000" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method load_worksheet.
+
+  data: lo_reader type ref to if_sxml_reader.
+
+  lo_reader = get_sxml_reader( ip_path ).
+
+  read_worksheet_data( io_reader    = lo_reader
+                       io_worksheet = io_worksheet ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="PUT_CELL_TO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Put cell data to worksheet" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="PUT_CELL_TO_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="PUT_CELL_TO_WORKSHEET" SCONAME="IS_CELL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_CELL"/>
+  <source>method put_cell_to_worksheet.
+  call method io_worksheet-&gt;set_cell
+    exporting
+      ip_column    = is_cell-column
+      ip_row       = is_cell-row
+      ip_value     = is_cell-value
+      ip_formula   = is_cell-formula
+      ip_data_type = is_cell-datatype
+      ip_style     = is_cell-style.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="READ_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Reads the XML file containing the shared strings" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="READ_SHARED_STRINGS" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="sXML reader" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="READ_SHARED_STRINGS" SCONAME="ET_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRINGTAB"/>
+  <source>method read_shared_strings.
+
+  while io_reader-&gt;node_type ne c_end_of_stream.
+    io_reader-&gt;next_node( ).
+    if io_reader-&gt;node_type eq c_element_close and
+       io_reader-&gt;name eq `t`.
+      append io_reader-&gt;value to et_shared_strings.
+    endif.
+  endwhile.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="READ_WORKSHEET_DATA" VERSION="1" LANGU="E" DESCRIPT="Reads the data, formula and styles of the worksheet&apos;s cells" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="READ_WORKSHEET_DATA" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="Worksheet reader" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="READ_WORKSHEET_DATA" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <exception CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="READ_WORKSHEET_DATA" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201"/>
+  <source>method read_worksheet_data.
+
+  data: ls_cell   type t_cell.
+
+* Skip to &lt;sheetData&gt; element
+  skip_to(  iv_element_name = `sheetData`  io_reader = io_reader ).
+
+* Main loop: Evaluate the &lt;c&gt; elements and its children
+  while io_reader-&gt;node_type ne c_end_of_stream.
+    io_reader-&gt;next_node( ).
+    case io_reader-&gt;node_type.
+      when c_element_open.
+        if io_reader-&gt;name eq `c`.
+          ls_cell = fill_cell_from_attributes( io_reader ).
+        endif.
+      when c_element_close.
+        case io_reader-&gt;name.
+          when `c`.
+            put_cell_to_worksheet( is_cell = ls_cell io_worksheet = io_worksheet ).
+          when `f`.
+            ls_cell-formula = io_reader-&gt;value.
+          when `v`.
+            if ls_cell-datatype eq `s`.
+              ls_cell-value = get_shared_string( ls_cell-value ).
+            else.
+              ls_cell-value = io_reader-&gt;value.
+            endif.
+          when `is`.
+            ls_cell-value = io_reader-&gt;value.
+          when `sheetData`.
+            exit.
+        endcase.
+    endcase.
+  endwhile.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="SKIP_TO" VERSION="1" LANGU="E" DESCRIPT="Go ahead till element with given name is found" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140224" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="SKIP_TO" SCONAME="IV_ELEMENT_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="SKIP_TO" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="SXML Reader Interface" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <exception CLSNAME="ZCL_EXCEL_HUGE_FILE_READER" CMPNAME="SKIP_TO" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="RPLANTIK" CREATEDON="20140201" CHANGEDBY="RPLANTIK" CHANGEDON="20140201"/>
+  <source>method skip_to.
+
+* Skip forward to given element
+  while io_reader-&gt;name ne iv_element_name or
+        io_reader-&gt;node_type ne c_element_open.
+    io_reader-&gt;next_node( ).
+    if io_reader-&gt;node_type = c_end_of_stream.
+      raise exception type lcx_not_found
+        exporting
+          error = |XML error: Didn&apos;t find element &lt;{ iv_element_name }&gt;|.
+    endif.
+  endwhile.
+
+
+endmethod.</source>
+ </method>
+</CLAS>
+
