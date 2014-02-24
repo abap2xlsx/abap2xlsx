@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" VERSION="1" LANGU="E" DESCRIPT="Can read large .xlsx files" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" WITH_UNIT_TESTS="X" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_READER_2007">
+ <types CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="T_CELL_CONTENT" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="4 " SRCCOLUMN1="4 " SRCROW2="9 " SRCCOLUMN2="24 " TYPESRC_LENG="219 " TYPESRC="begin of t_cell_content,
+      datatype type zexcel_cell_data_type,
+      value    type zexcel_cell_value,
+      formula  type zexcel_cell_formula,
+      style    type zexcel_cell_style,
+    end of t_cell_content
+"/>
+ <types CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="T_CELL_COORD" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="11 " SRCCOLUMN1="4 " SRCROW2="14 " SRCCOLUMN2="22 " TYPESRC_LENG="134 " TYPESRC="begin of t_cell_coord,
+      row      type zexcel_cell_row,
+      column   type zexcel_cell_column_alpha,
+    end of t_cell_coord
+"/>
+ <types CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="T_CELL" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="16 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="21 " TYPESRC_LENG="140 " TYPESRC="begin of t_cell.
+          include type t_cell_coord as coord.
+          include type t_cell_content as content.
+  types: end of t_cell
+"/>
+ <localImplementation>*&quot;* use this source file for the definition and implementation of
+*&quot;* local helper classes, interface definitions and type
+*&quot;* declarations
+
+* Signal &quot;not found&quot;
+class lcx_not_found implementation.
+  method constructor.
+    super-&gt;constructor( textid = textid previous = previous ).
+    me-&gt;error = error.
+  endmethod.
+  method if_message~get_text.
+    result = error.
+  endmethod.
+endclass.</localImplementation>
+ <localTypes>*&quot;* use this source file for any type of declarations (class
+*&quot;* definitions, interfaces or type declarations) you need for
+*&quot;* components in the private section
+
+* Signal for &quot;Not found&quot;
+class lcx_not_found definition inheriting from cx_static_check.
+  public section.
+    data error type string.
+    methods constructor
+      importing error type string
+                textid type sotr_conc optional
+                previous type ref to cx_root optional.
+    methods if_message~get_text redefinition.
+endclass.</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <localTestClasses>*&quot;* use this source file for your ABAP unit test classes
+CLASS lcl_test DEFINITION DEFERRED.
+CLASS zcl_excel_reader_huge_file DEFINITION LOCAL FRIENDS lcl_test.
+
+*
+CLASS lcl_test DEFINITION FOR TESTING  &quot; #AU Risk_Level Harmless
+      INHERITING FROM cl_aunit_assert. &quot; #AU Duration Short
+
+  PRIVATE SECTION.
+    DATA:
+      out TYPE REF TO zcl_excel_reader_huge_file, &quot; object under test
+      excel TYPE REF TO zcl_excel,
+      worksheet TYPE REF TO zcl_excel_worksheet.
+    METHODS:
+      setup,
+      test_number FOR TESTING,
+      test_shared_string FOR TESTING,
+      test_shared_string_missing FOR TESTING,
+      test_inline_string FOR TESTING,
+      test_boolean FOR TESTING,
+      test_style FOR TESTING,
+      test_style_missing FOR TESTING,
+      test_formula FOR TESTING,
+      test_read_shared_strings FOR TESTING,
+      test_skip_to_inexistent FOR TESTING,
+      get_reader IMPORTING iv_xml TYPE string RETURNING VALUE(eo_reader) TYPE REF TO if_sxml_reader,
+      assert_value_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_value TYPE string,
+      assert_formula_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_formula TYPE string,
+      assert_style_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_style TYPE zexcel_cell_style,
+      assert_datatype_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_datatype TYPE string.
+
+ENDCLASS.                    &quot;lcl_test DEFINITION
+
+*
+CLASS lcl_test IMPLEMENTATION.
+
+*
+  METHOD test_number.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; t=&quot;n&quot;&gt;&lt;v&gt;17&lt;/v&gt;&lt;/c&gt;`
+      ).
+    out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+    assert_value_equals( `17` ).
+    assert_datatype_equals( `n` ).
+  ENDMETHOD.                    &quot;test_shared_string
+
+*
+  METHOD test_shared_string.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
+    APPEND `Test` TO out-&gt;shared_strings.
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; t=&quot;s&quot;&gt;&lt;v&gt;0&lt;/v&gt;&lt;/c&gt;`
+      ).
+    out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+    assert_value_equals( `Test` ).
+    assert_datatype_equals( `s` ).
+  ENDMETHOD.                    &quot;test_shared_string
+*
+  METHOD test_shared_string_missing.
+
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex TYPE REF TO lcx_not_found,
+          lv_text TYPE string.
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; t=&quot;s&quot;&gt;&lt;v&gt;0&lt;/v&gt;&lt;/c&gt;`
+      ).
+
+    TRY.
+        out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        fail(`Index to non-existent shared string should give an error`).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex-&gt;get_text( ). &quot; &gt;&gt;&gt; May inspect the message in the debugger
+    ENDTRY.
+
+  ENDMETHOD.
+*
+  METHOD test_inline_string.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; t=&quot;inlineStr&quot;&gt;&lt;is&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/is&gt;&lt;/c&gt;`
+      ).
+    out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+    assert_value_equals( `Alpha` ).
+    assert_datatype_equals( `inlineStr` ).
+  ENDMETHOD.                    &quot;test_inline_string
+
+*
+  METHOD test_boolean.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; t=&quot;b&quot;&gt;&lt;v&gt;1&lt;/v&gt;&lt;/c&gt;`
+      ).
+    out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+    assert_value_equals( `1` ).
+    assert_datatype_equals( `b` ).
+  ENDMETHOD.                    &quot;test_boolean
+
+*
+  METHOD test_formula.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; t=&quot;n&quot;&gt;&lt;f&gt;A2*A2&lt;/f&gt;&lt;/c&gt;`
+      ).
+    out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+    assert_formula_equals( `A2*A2` ).
+    assert_datatype_equals( `n` ).
+  ENDMETHOD.                    &quot;test_formula
+
+*
+  METHOD test_style.
+    DATA:
+      lo_reader TYPE REF TO if_sxml_reader,
+      lo_style  TYPE REF TO zcl_excel_style,
+      lv_guid TYPE zexcel_cell_style.
+    CREATE OBJECT lo_style.
+    APPEND lo_style TO out-&gt;styles.
+    lv_guid = lo_style-&gt;get_guid( ).
+
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; s=&quot;0&quot;&gt;&lt;v&gt;18&lt;/v&gt;&lt;/c&gt;`
+      ).
+    out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+
+    assert_style_equals( lv_guid ).
+
+  ENDMETHOD.                    &quot;test_style
+
+*
+  METHOD test_style_missing.
+
+    DATA:
+      lo_reader TYPE REF TO if_sxml_reader,
+      lo_ex TYPE REF TO lcx_not_found,
+      lv_text TYPE string.
+
+    lo_reader = get_reader(
+      `&lt;c r=&quot;A1&quot; s=&quot;0&quot;&gt;&lt;v&gt;18&lt;/v&gt;&lt;/c&gt;`
+      ).
+
+    TRY.
+        out-&gt;read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        fail(`Reference to non-existent style should throw an lcx_not_found exception`).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex-&gt;get_text( ).  &quot; &gt;&gt;&gt; May inspect the message in the debugger
+    ENDTRY.
+
+  ENDMETHOD.                    &quot;test_style
+
+*
+  METHOD test_read_shared_strings.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lt_act TYPE stringtab,
+          lt_exp TYPE stringtab.
+    lo_reader = cl_sxml_string_reader=&gt;create( cl_abap_codepage=&gt;convert_to(
+      `&lt;sst&gt;&lt;si&gt;&lt;t/&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Bravo&lt;/t&gt;&lt;/si&gt;&lt;/sst&gt;`
+      ) ).
+    APPEND :
+     `` TO lt_exp,
+     `Alpha` TO lt_exp,
+     `Bravo` TO lt_exp.
+
+    lt_act = out-&gt;read_shared_strings( lo_reader ).
+
+    assert_equals( act = lt_act
+                   exp = lt_exp ).
+
+  ENDMETHOD.
+
+*
+  METHOD test_skip_to_inexistent.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex TYPE REF TO lcx_not_found,
+          lv_text TYPE string.
+
+    lo_reader = cl_sxml_string_reader=&gt;create( cl_abap_codepage=&gt;convert_to(
+      `&lt;sst&gt;&lt;si&gt;&lt;t/&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Bravo&lt;/t&gt;&lt;/si&gt;&lt;/sst&gt;`
+      ) ).
+    TRY.
+        out-&gt;skip_to( iv_element_name = `nonExistingElement` io_reader = lo_reader ).
+        fail(`Skipping to non-existing element must raise lcx_not_found exception`).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex-&gt;get_text( ). &quot; May inspect exception text in debugger
+    ENDTRY.
+  ENDMETHOD.
+
+*
+  METHOD get_reader.
+    DATA: lv_full TYPE string.
+    CONCATENATE `&lt;root&gt;&lt;sheetData&gt;&lt;row&gt;` iv_xml `&lt;/row&gt;&lt;/sheetData&gt;&lt;/root&gt;` INTO lv_full.
+    eo_reader = cl_sxml_string_reader=&gt;create( cl_abap_codepage=&gt;convert_to( lv_full ) ).
+  ENDMETHOD.                    &quot;get_reader
+*
+  METHOD assert_value_equals.
+
+    FIELD-SYMBOLS: &lt;ls_cell_data&gt; TYPE zexcel_s_cell_data.
+
+    READ TABLE worksheet-&gt;sheet_content ASSIGNING &lt;ls_cell_data&gt;
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    assert_subrc( sy-subrc ).
+
+    assert_equals( act = &lt;ls_cell_data&gt;-cell_value
+                   exp = iv_value ).
+
+  ENDMETHOD.                    &quot;assert_value_equals
+**
+  METHOD assert_formula_equals.
+
+    FIELD-SYMBOLS: &lt;ls_cell_data&gt; TYPE zexcel_s_cell_data.
+
+    READ TABLE worksheet-&gt;sheet_content ASSIGNING &lt;ls_cell_data&gt;
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    assert_subrc( sy-subrc ).
+
+    assert_equals( act = &lt;ls_cell_data&gt;-cell_formula
+                   exp = iv_formula ).
+
+  ENDMETHOD.                    &quot;assert_formula_equals
+*
+  METHOD assert_style_equals.
+
+    FIELD-SYMBOLS: &lt;ls_cell_data&gt; TYPE zexcel_s_cell_data.
+
+    READ TABLE worksheet-&gt;sheet_content ASSIGNING &lt;ls_cell_data&gt;
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    assert_subrc( sy-subrc ).
+
+    assert_equals( act = &lt;ls_cell_data&gt;-cell_style
+                   exp = iv_style ).
+
+  ENDMETHOD.
+*
+  METHOD assert_datatype_equals.
+
+    FIELD-SYMBOLS: &lt;ls_cell_data&gt; TYPE zexcel_s_cell_data.
+
+    READ TABLE worksheet-&gt;sheet_content ASSIGNING &lt;ls_cell_data&gt;
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    assert_subrc( sy-subrc ).
+
+    assert_equals( act = &lt;ls_cell_data&gt;-data_type
+                   exp = iv_datatype ).
+
+  ENDMETHOD.                    &quot;assert_datatype_equals
+  METHOD setup.
+    CREATE OBJECT out.
+    CREATE OBJECT excel.
+    CREATE OBJECT worksheet
+      EXPORTING
+        ip_excel = excel.
+  ENDMETHOD.                    &quot;setup
+ENDCLASS.                    &quot;lcl_test IMPLEMENTATION</localTestClasses>
+ <typeIntfDef CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" TYPEGROUP="IF_SXML_NODE" VERSION="1" TPUTYPE="2" IMPLICIT="X"/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ATTRIBUTE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ATTRIBUTE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ELEMENT_CLOSE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_CLOSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ELEMENT_OPEN" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_OPEN" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_END_OF_STREAM" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_FINAL" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GS_BUFFER_STYLE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="25 " TYPESRC_LENG="117 " TYPESRC="begin of gs_buffer_style,
+    index type i value -1,
+    guid type zexcel_cell_style,
+    end of gs_buffer_style
+"/>
+ <inheritance CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" STATE="1">
+  <redefinition CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_SHARED_STRINGS" EXPOSURE="1"/>
+  <redefinition CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKSHEET" EXPOSURE="1"/>
+ </inheritance>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fill some cell properties from &lt;c&gt; element attributes" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="SXML Reader Interface" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" SCONAME="ES_CELL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_CELL"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="FILL_CELL_FROM_ATTRIBUTES" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <source>method FILL_CELL_FROM_ATTRIBUTES.
+
+  while io_reader-&gt;node_type ne c_end_of_stream.
+    io_reader-&gt;next_attribute( ).
+    if io_reader-&gt;node_type ne c_attribute.
+      exit.
+    endif.
+    case io_reader-&gt;name.
+      when `t`.
+        es_cell-datatype = io_reader-&gt;value.
+      when `s`.
+        if io_reader-&gt;value is not initial.
+          es_cell-style = get_style( io_reader-&gt;value ).
+        endif.
+      when `r`.
+        es_cell-coord = get_cell_coord( io_reader-&gt;value ).
+    endcase.
+  endwhile.
+
+  io_reader-&gt;current_node( ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_CELL_COORD" VERSION="1" LANGU="E" DESCRIPT='Cell coordinates from expression (like &quot;B2&quot;)' EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_CELL_COORD" SCONAME="IV_COORD" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_CELL_COORD" SCONAME="ES_COORD" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_CELL_COORD"/>
+  <source>method GET_CELL_COORD.
+
+  zcl_excel_common=&gt;convert_columnrow2column_a_row(
+    exporting
+      i_columnrow = iv_coord
+    importing
+      e_column    = es_coord-column
+      e_row       = es_coord-row
+    ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SHARED_STRING" VERSION="1" LANGU="E" DESCRIPT="Read from shared string table" EXPOSURE="0" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SHARED_STRING" SCONAME="IV_INDEX" VERSION="1" LANGU="E" DESCRIPT="Zero-based Index" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SHARED_STRING" SCONAME="EV_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SHARED_STRING" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <source>method GET_SHARED_STRING.
+  data: lv_tabix type i.
+  lv_tabix = iv_index + 1.
+  read table shared_strings into ev_value index lv_tabix.
+  if sy-subrc ne 0.
+    raise exception type lcx_not_found
+      exporting
+        error = |Entry { iv_index } not found in Shared String Table|.
+  endif.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_STYLE" VERSION="1" LANGU="E" DESCRIPT="Read from style table" EXPOSURE="0" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_STYLE" SCONAME="IV_INDEX" VERSION="1" LANGU="E" DESCRIPT="Zero-based Index" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_STYLE" SCONAME="EV_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Style ID" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_STYLE" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <source>method GET_STYLE.
+
+  data: lv_tabix type i,
+        lo_style type ref to zcl_excel_style.
+
+  if gs_buffer_style-index ne iv_index.
+    lv_tabix = iv_index + 1.
+    read table styles into lo_style index lv_tabix.
+    if sy-subrc ne 0.
+      raise exception type lcx_not_found
+        exporting
+          error = |Entry { iv_index } not found in Style Table|.
+    else.
+      gs_buffer_style-index = iv_index.
+      gs_buffer_style-guid  = lo_style-&gt;get_guid( ).
+    endif.
+  endif.
+
+  ev_style_guid = gs_buffer_style-guid.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SXML_READER" VERSION="1" LANGU="E" DESCRIPT="Create an sXML reader for an XML file in the zip archive" EXPOSURE="0" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SXML_READER" SCONAME="IV_PATH" VERSION="1" LANGU="E" DESCRIPT="Path of the file in the archive" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SXML_READER" SCONAME="EO_READER" VERSION="1" LANGU="E" DESCRIPT="sXML reader" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SXML_READER" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>method GET_SXML_READER.
+
+  data: lv_xml type xstring.
+
+  lv_xml = get_from_zip_archive( iv_path ).
+  eo_reader = cl_sxml_string_reader=&gt;create( lv_xml ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method LOAD_SHARED_STRINGS.
+
+  data: lo_reader type ref to if_sxml_reader.
+
+  lo_reader = get_sxml_reader( ip_path ).
+
+  shared_strings = read_shared_strings( lo_reader ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method LOAD_WORKSHEET.
+
+  data: lo_reader type ref to if_sxml_reader.
+
+  lo_reader = get_sxml_reader( ip_path ).
+
+  read_worksheet_data( io_reader    = lo_reader
+                       io_worksheet = io_worksheet ).
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="PUT_CELL_TO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Put cell data to worksheet" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="PUT_CELL_TO_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="PUT_CELL_TO_WORKSHEET" SCONAME="IS_CELL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_CELL"/>
+  <source>method PUT_CELL_TO_WORKSHEET.
+  call method io_worksheet-&gt;set_cell
+    exporting
+      ip_column    = is_cell-column
+      ip_row       = is_cell-row
+      ip_value     = is_cell-value
+      ip_formula   = is_cell-formula
+      ip_data_type = is_cell-datatype
+      ip_style     = is_cell-style.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Reads the XML file containing the shared strings" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_SHARED_STRINGS" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="sXML reader" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_SHARED_STRINGS" SCONAME="ET_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRINGTAB"/>
+  <source>method READ_SHARED_STRINGS.
+
+  while io_reader-&gt;node_type ne c_end_of_stream.
+    io_reader-&gt;next_node( ).
+    if io_reader-&gt;node_type eq c_element_close and
+       io_reader-&gt;name eq `t`.
+      append io_reader-&gt;value to et_shared_strings.
+    endif.
+  endwhile.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_WORKSHEET_DATA" VERSION="1" LANGU="E" DESCRIPT="Reads the data, formula and styles of the worksheet&apos;s cells" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_WORKSHEET_DATA" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="Worksheet reader" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_WORKSHEET_DATA" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_WORKSHEET_DATA" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <source>method READ_WORKSHEET_DATA.
+
+  data: ls_cell   type t_cell.
+
+* Skip to &lt;sheetData&gt; element
+  skip_to(  iv_element_name = `sheetData`  io_reader = io_reader ).
+
+* Main loop: Evaluate the &lt;c&gt; elements and its children
+  while io_reader-&gt;node_type ne c_end_of_stream.
+    io_reader-&gt;next_node( ).
+    case io_reader-&gt;node_type.
+      when c_element_open.
+        if io_reader-&gt;name eq `c`.
+          ls_cell = fill_cell_from_attributes( io_reader ).
+        endif.
+      when c_element_close.
+        case io_reader-&gt;name.
+          when `c`.
+            put_cell_to_worksheet( is_cell = ls_cell io_worksheet = io_worksheet ).
+          when `f`.
+            ls_cell-formula = io_reader-&gt;value.
+          when `v`.
+            if ls_cell-datatype eq `s`.
+              ls_cell-value = get_shared_string( ls_cell-value ).
+            else.
+              ls_cell-value = io_reader-&gt;value.
+            endif.
+          when `is`.
+            ls_cell-value = io_reader-&gt;value.
+          when `sheetData`.
+            exit.
+        endcase.
+    endcase.
+  endwhile.
+
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="SKIP_TO" VERSION="1" LANGU="E" DESCRIPT="Go ahead till element with given name is found" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="SKIP_TO" SCONAME="IV_ELEMENT_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="SKIP_TO" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="SXML Reader Interface" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="SKIP_TO" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 "/>
+  <source>method SKIP_TO.
+
+* Skip forward to given element
+  while io_reader-&gt;name ne iv_element_name or
+        io_reader-&gt;node_type ne c_element_open.
+    io_reader-&gt;next_node( ).
+    if io_reader-&gt;node_type = c_end_of_stream.
+      raise exception type lcx_not_found
+        exporting
+          error = |XML error: Didn&apos;t find element &lt;{ iv_element_name }&gt;|.
+    endif.
+  endwhile.
+
+
+endmethod.</source>
+ </method>
+</CLAS>
