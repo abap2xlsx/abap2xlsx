@@ -106,8 +106,8 @@
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ALTERNATE_ZIP" VERSION="1" LANGU="E" DESCRIPT="Alternate Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="OBJECT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="EXCEL2007" VERSION="1" LANGU="E" DESCRIPT="Excel 2007 data" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="MT_REF_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Referenced formulae before resolving" EXPOSURE="0" STATE="1" EDITORDER="6 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TYT_REF_FORMULAE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRINGTAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" EXPOSURE="1" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRINGTAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_ABAP_ZIP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~CAN_READ_FILE">
   <source>method ZIF_EXCEL_READER~CAN_READ_FILE.
@@ -120,7 +120,7 @@
 *--------------------------------------------------------------------*
 * For now always Unknown
   r_readable = abap_undefined.
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD">
   <source>method ZIF_EXCEL_READER~LOAD.
@@ -186,7 +186,7 @@ endmethod.</source>
 
 *--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
-  me-&gt;zif_excel_reader~gv_use_alternate_zip = iv_use_alternate_zip.
+  me-&gt;zif_excel_reader~gv_use_alternate_zip = i_use_alternate_zip.
 *--------------------------------------------------------------------*
 
 
@@ -223,10 +223,10 @@ endmethod.</source>
   ENDWHILE.
 
 
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD_FILE">
-  <source>method ZIF_EXCEL_READER~LOAD_FILE.
+  <source>METHOD zif_excel_reader~load_file.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   decision whether to load from frontend or backend
@@ -255,126 +255,24 @@ endmethod.</source>
 * changes: passing new optional input parameter to private attribute
 *--------------------------------------------------------------------*
 
-  CONSTANTS:  lcv_load_from_frontend          TYPE char1 VALUE &apos;F&apos;,
-              lcv_load_from_backend           TYPE char1 VALUE &apos;B&apos;.
+    DATA: lv_excel_data TYPE xstring.
 
-  DATA:       lv_load_from_source             TYPE char1,
+* issue#234 - error reading xlsx written by libre office
+    me-&gt;zif_excel_reader~gv_use_alternate_zip = i_use_alternate_zip.
 
-              lv_filelength                   TYPE i,
-              lt_binary_data                  TYPE STANDARD TABLE OF x255 WITH NON-UNIQUE DEFAULT KEY,
-              ls_binary_data                  LIKE LINE OF lt_binary_data,
-*   Background processing
-              lv_max_length_line              TYPE i,
-              lv_actual_length_line           TYPE i,
-
-              lv_errormessage                 TYPE string,                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
-              lv_excel_data                   TYPE xstring.                         &quot; Binary content of .xlsx file
-
-
-*--------------------------------------------------------------------*
-* ToDos: 2do§1 Decision whether to load from frontend or backend
-*--------------------------------------------------------------------*
+    IF i_from_applserver = abap_true.
+      lv_excel_data = me-&gt;read_from_applserver( i_filename = i_filename ).
+    ELSE.
+      lv_excel_data = me-&gt;read_from_local_file( i_filename = i_filename ).
+    ENDIF.
 
 *--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
-  me-&gt;zif_excel_reader~gv_use_alternate_zip = iv_use_alternate_zip.
+    r_excel = me-&gt;zif_excel_reader~load( i_excel2007          = lv_excel_data
+                                         i_use_alternate_zip  = i_use_alternate_zip ).
 *--------------------------------------------------------------------*
 
-
-*--------------------------------------------------------------------*
-* Autodecide on frontend or backend reading
-* Background-processing --&gt; backend  reading
-* Online-processing     --&gt; frontend reading
-*--------------------------------------------------------------------*
-  IF sy-batch = abap_true.
-    lv_load_from_source = lcv_load_from_backend.
-  ELSE.
-    lv_load_from_source = lcv_load_from_frontend.
-  ENDIF.
-
-  CASE lv_load_from_source.
-
-*--------------------------------------------------------------------*
-* Read from backend
-*--------------------------------------------------------------------*
-    WHEN lcv_load_from_backend.
-      DESCRIBE FIELD ls_binary_data LENGTH lv_max_length_line IN BYTE MODE.
-      OPEN DATASET i_filename FOR INPUT IN BINARY MODE.
-      IF sy-subrc &lt;&gt; 0.
-        lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error    = lv_errormessage.
-      ENDIF.
-      WHILE sy-subrc = 0.
-
-        READ DATASET i_filename INTO ls_binary_data MAXIMUM LENGTH lv_max_length_line ACTUAL LENGTH lv_actual_length_line.
-        APPEND ls_binary_data TO lt_binary_data.
-        lv_filelength = lv_filelength + lv_actual_length_line.
-
-      ENDWHILE.
-      CLOSE DATASET i_filename.
-
-*--------------------------------------------------------------------*
-* Read from frontend
-*--------------------------------------------------------------------*
-    WHEN lcv_load_from_frontend.
-      cl_gui_frontend_services=&gt;gui_upload( EXPORTING
-                                              filename                = i_filename
-                                              filetype                = &apos;BIN&apos;         &quot; We are basically working with zipped directories --&gt; force binary read
-                                            IMPORTING
-                                              filelength              = lv_filelength
-                                            CHANGING
-                                              data_tab                = lt_binary_data
-                                            EXCEPTIONS
-                                              file_open_error         = 1
-                                              file_read_error         = 2
-                                              no_batch                = 3
-                                              gui_refuse_filetransfer = 4
-                                              invalid_type            = 5
-                                              no_authority            = 6
-                                              unknown_error           = 7
-                                              bad_data_format         = 8
-                                              header_not_allowed      = 9
-                                              separator_not_allowed   = 10
-                                              header_too_long         = 11
-                                              unknown_dp_error        = 12
-                                              access_denied           = 13
-                                              dp_out_of_memory        = 14
-                                              disk_full               = 15
-                                              dp_timeout              = 16
-                                              not_supported_by_gui    = 17
-                                              error_no_gui            = 18
-                                              OTHERS                  = 19 ).
-      IF sy-subrc &lt;&gt; 0.
-        lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error    = lv_errormessage.
-      ENDIF.
-
-  ENDCASE.
-
-
-*--------------------------------------------------------------------*
-* Binary data needs to be provided as XSTRING for further processing
-*--------------------------------------------------------------------*
-  CALL FUNCTION &apos;SCMS_BINARY_TO_XSTRING&apos;
-    EXPORTING
-      input_length = lv_filelength
-    IMPORTING
-      buffer       = lv_excel_data
-    TABLES
-      binary_tab   = lt_binary_data.
-
-*--------------------------------------------------------------------*
-* issue#234 - error reading xlsx written by libre office
-  r_excel = me-&gt;zif_excel_reader~load( i_excel2007          = lv_excel_data
-                                       iv_use_alternate_zip = iv_use_alternate_zip ).
-*--------------------------------------------------------------------*
-
-
-endmethod.</source>
+  ENDMETHOD.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="IP_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
@@ -425,7 +323,7 @@ endmethod.</source>
   ENDWHILE.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -551,7 +449,7 @@ endmethod.</source>
 * issue#234 - end of insertion
 *--------------------------------------------------------------------*
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -597,7 +495,7 @@ endmethod.</source>
   lo_parser-&gt;set_validating( mode = if_ixml_parser=&gt;co_no_validation ).
   lo_parser-&gt;parse( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
@@ -749,7 +647,7 @@ endmethod.</source>
     lo_drawing-&gt;load_chart_attributes( rel_drawing-content_xml ).
   endif.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Loads shared strings table" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -868,7 +766,7 @@ endmethod.</source>
     lo_node_si ?= lo_node_si-&gt;get_next( ).
   ENDWHILE.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads styles" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -1107,7 +1005,7 @@ endmethod.</source>
     ENDWHILE.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -1237,7 +1135,7 @@ endmethod.</source>
   ENDWHILE.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -1355,7 +1253,7 @@ endmethod.</source>
   ENDWHILE.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fonts&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -1481,7 +1379,7 @@ endmethod.</source>
   ENDWHILE.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -1594,13 +1492,13 @@ endmethod.</source>
 * 2do§1     Is 49 really the last predefined format?
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IV_WORKBOOK_FULL_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD load_workbook.
+  <source>method LOAD_WORKBOOK.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Move macro-reading from zcl_excel_reader_xlsm to this class
@@ -2013,13 +1911,13 @@ endmethod.</source>
 
   ENDWHILE.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD load_worksheet.
+  <source>method LOAD_WORKSHEET.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Header/footer
@@ -2134,6 +2032,7 @@ ENDMETHOD.</source>
           END OF lty_datavalidation.
 
 
+
   CONSTANTS:  lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
               lc_xml_attr_true_int            TYPE string VALUE &apos;1&apos;,
               lc_rel_drawing                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
@@ -2226,7 +2125,6 @@ ENDMETHOD.</source>
               lo_data_validation              TYPE REF TO zcl_excel_data_validation,
               lv_datavalidation_range         TYPE string,
               lt_datavalidation_range         TYPE TABLE OF string.
-
 
 *--------------------------------------------------------------------*
 * §2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
@@ -2666,7 +2564,6 @@ ENDMETHOD.</source>
   &quot; End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
 
   &quot; Start fix 276 Read data validations
-  &quot;Add merge cell information
   lo_ixml_datavalidations = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;dataValidation&apos; ).
   lo_ixml_iterator = lo_ixml_datavalidations-&gt;create_iterator( ).
   lo_ixml_datavalidation_elem  ?= lo_ixml_iterator-&gt;get_next( ).
@@ -2717,7 +2614,7 @@ ENDMETHOD.</source>
   ENDWHILE.
   &quot; End fix 276 Read data validations
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -2787,11 +2684,6 @@ ENDMETHOD.</source>
     path2 = path.
     zcl_excel_common=&gt;split_file( EXPORTING ip_file = path2
                                   IMPORTING ep_extension = file_ext2 ).
-*    CALL FUNCTION &apos;CV120_SPLIT_FILE&apos;
-*      EXPORTING
-*        pf_file       = path2
-*      IMPORTING
-*        pfx_extension = file_ext2.
     rel_drawing-file_ext = file_ext2.
 
     &quot;-------------Added by Alessandro Iannacci - Should load graph xml
@@ -2841,7 +2733,110 @@ ENDMETHOD.</source>
 
   ENDDO.
 
-endmethod.</source>
+  endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>METHOD read_from_applserver.
+
+    DATA: lv_filelength                   TYPE i,
+          lt_binary_data                  TYPE STANDARD TABLE OF x255 WITH NON-UNIQUE DEFAULT KEY,
+          ls_binary_data                  LIKE LINE OF lt_binary_data,
+          lv_filename                     TYPE string,
+          lv_max_length_line              TYPE i,
+          lv_actual_length_line           TYPE i,
+          lv_errormessage                 TYPE string.
+
+    MOVE i_filename TO lv_filename.
+
+    DESCRIBE FIELD ls_binary_data LENGTH lv_max_length_line IN BYTE MODE.
+    OPEN DATASET lv_filename FOR INPUT IN BINARY MODE.
+    IF sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = lv_errormessage.
+    ENDIF.
+    WHILE sy-subrc = 0.
+
+      READ DATASET lv_filename INTO ls_binary_data MAXIMUM LENGTH lv_max_length_line ACTUAL LENGTH lv_actual_length_line.
+      APPEND ls_binary_data TO lt_binary_data.
+      lv_filelength = lv_filelength + lv_actual_length_line.
+
+    ENDWHILE.
+    CLOSE DATASET lv_filename.
+
+*--------------------------------------------------------------------*
+* Binary data needs to be provided as XSTRING for further processing
+*--------------------------------------------------------------------*
+    CALL FUNCTION &apos;SCMS_BINARY_TO_XSTRING&apos;
+      EXPORTING
+        input_length = lv_filelength
+      IMPORTING
+        buffer       = r_excel_data
+      TABLES
+        binary_tab   = lt_binary_data.
+  ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>METHOD read_from_local_file.
+    DATA:  lv_filelength                   TYPE i,
+           lt_binary_data                  TYPE STANDARD TABLE OF x255 WITH NON-UNIQUE DEFAULT KEY,
+           ls_binary_data                  LIKE LINE OF lt_binary_data,
+           lv_filename                     TYPE string,
+           lv_errormessage                 TYPE string.
+
+    MOVE i_filename TO lv_filename.
+
+    cl_gui_frontend_services=&gt;gui_upload( EXPORTING
+                                            filename                = lv_filename
+                                            filetype                = &apos;BIN&apos;         &quot; We are basically working with zipped directories --&gt; force binary read
+                                          IMPORTING
+                                            filelength              = lv_filelength
+                                          CHANGING
+                                            data_tab                = lt_binary_data
+                                          EXCEPTIONS
+                                            file_open_error         = 1
+                                            file_read_error         = 2
+                                            no_batch                = 3
+                                            gui_refuse_filetransfer = 4
+                                            invalid_type            = 5
+                                            no_authority            = 6
+                                            unknown_error           = 7
+                                            bad_data_format         = 8
+                                            header_not_allowed      = 9
+                                            separator_not_allowed   = 10
+                                            header_too_long         = 11
+                                            unknown_dp_error        = 12
+                                            access_denied           = 13
+                                            dp_out_of_memory        = 14
+                                            disk_full               = 15
+                                            dp_timeout              = 16
+                                            not_supported_by_gui    = 17
+                                            error_no_gui            = 18
+                                            OTHERS                  = 19 ).
+    IF sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = lv_errormessage.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Binary data needs to be provided as XSTRING for further processing
+*--------------------------------------------------------------------*
+    CALL FUNCTION &apos;SCMS_BINARY_TO_XSTRING&apos;
+      EXPORTING
+        input_length = lv_filelength
+      IMPORTING
+        buffer       = r_excel_data
+      TABLES
+        binary_tab   = lt_binary_data.
+
+  ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -2885,10 +2880,10 @@ endmethod.</source>
   REPLACE REGEX &apos;[^/]*/\.\./&apos; IN rp_result WITH ``.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_REFERENCED_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Resolve referenced formulae" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD resolve_referenced_formulae.
+  <source>method RESOLVE_REFERENCED_FORMULAE.
   TYPES:      BEGIN OF ty_referenced_cells,
                 sheet                         TYPE REF TO zcl_excel_worksheet,
                 si                            TYPE i,
@@ -2984,6 +2979,6 @@ endmethod.</source>
     ENDLOOP.
 
   ENDLOOP.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
 </CLAS>
