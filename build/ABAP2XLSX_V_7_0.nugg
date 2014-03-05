@@ -4494,9 +4494,20 @@
   </method>
   <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_DATA" VERSION="1" LANGU="E" DESCRIPT="Sets the reference to table data" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
    <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_DATA" SCONAME="IR_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
-   <source>method SET_DATA.
-  GET  REFERENCE OF ir_data INTO me-&gt;table_data.
-  endmethod.</source>
+   <source>METHOD set_data.
+
+  DATA lr_temp TYPE REF TO data.
+
+  FIELD-SYMBOLS: &lt;lt_table_temp&gt;  TYPE ANY TABLE,
+                 &lt;lt_table&gt;       TYPE ANY TABLE.
+
+  GET REFERENCE OF ir_data INTO lr_temp.
+  ASSIGN lr_temp-&gt;* TO &lt;lt_table_temp&gt;.
+  CREATE DATA table_data LIKE &lt;lt_table_temp&gt;.
+  ASSIGN me-&gt;table_data-&gt;* TO &lt;lt_table&gt;.
+  &lt;lt_table&gt; = &lt;lt_table_temp&gt;.
+
+ENDMETHOD.</source>
   </method>
   <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_ID" VERSION="1" LANGU="E" DESCRIPT="Sets the ID" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
    <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_ID" SCONAME="IV_ID" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
@@ -7572,7 +7583,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
    <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="IP_BORDERS_TOP_COLOR_TINT" VERSION="1" LANGU="E" DESCRIPT="Tint" CMPTYPE="1" MTDTYPE="0" EDITORDER="98 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_STYLE_COLOR_TINT" PAROPTIONL="X"/>
    <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="99 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
    <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-   <source>method CHANGE_CELL_STYLE.
+   <source>METHOD change_cell_style.
   &quot; issue # 139
   DATA: stylemapping    TYPE zexcel_s_stylemapping,
 
@@ -7748,15 +7759,15 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
   ENDIF.
 
   IF ip_protection IS SUPPLIED.
-    MOVE-CORRESPONDING ip_alignment  TO complete_style-alignment.
+    MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
     IF ip_xprotection IS SUPPLIED.
       MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
     ELSE.
       IF ip_protection-hidden IS NOT INITIAL.
-        complete_style-protection-hidden = &apos;X&apos;.
+        complete_stylex-protection-hidden = &apos;X&apos;.
       ENDIF.
       IF ip_protection-locked IS NOT INITIAL.
-        complete_style-protection-locked = &apos;X&apos;.
+        complete_stylex-protection-locked = &apos;X&apos;.
       ENDIF.
     ENDIF.
   ENDIF.
@@ -7868,7 +7879,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
                       ip_row    = ip_row
                       ip_style  = ep_guid ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
   </method>
   <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
    <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Ref to parent document" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
