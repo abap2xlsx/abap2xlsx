@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -35,7 +35,7 @@
   me-&gt;excel = io_excel.
 
   ep_file = me-&gt;create( ).
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -232,7 +232,7 @@ endmethod.</source>
 * STEP 12: Create the final zip
   ep_excel = lo_zip-&gt;save( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;[Content_Types].xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -507,7 +507,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/app.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -730,7 +730,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/core.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -855,7 +855,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;_rels/.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -954,12 +954,12 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_CHARTS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/charts/chart1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_CHARTS" SCONAME="IO_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_CHARTS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD create_xl_charts.
+  <source>method CREATE_XL_CHARTS.
 
 
 ** Constant node name
@@ -1859,7 +1859,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
@@ -1939,7 +1939,7 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
@@ -2038,7 +2038,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" SCONAME="IO_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
@@ -2352,7 +2352,7 @@ endmethod.</source>
                                                               parent = io_document ).
   ep_anchor-&gt;append_child( new_child = lo_element_clientdata ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/_rels/workbook.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -2500,7 +2500,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sharedStrings.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -2617,17 +2617,17 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sheet.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD create_xl_sheet.
+  <source>method CREATE_XL_SHEET.
 *--------------------------------------------------------------------*
 * issue #237   - Error writing column-style
-*              - Stefan Schmöcker,                          2012-11-01
+*              - Stefan SchmÃ¶cker,                          2012-11-01
 *--------------------------------------------------------------------*
 
   TYPES: BEGIN OF cfvo,
@@ -4275,7 +4275,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
@@ -4445,11 +4445,11 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_STYLES.
+  <source>METHOD create_xl_styles.
 
 
 ** Constant node name
@@ -4596,6 +4596,7 @@ endmethod.</source>
         lv_fills_count    TYPE i,
         lv_borders_count  TYPE i,
         lv_cellxfs_count  TYPE i,
+        lv_index          TYPE i,
         lv_align_flag     TYPE c.
 
 **********************************************************************
@@ -5224,6 +5225,45 @@ endmethod.</source>
             lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
                                                                  parent = lo_document ).
 
+            &quot;Conditional formatting font style correction by Alessandro Iannacci START
+            lv_index = ls_cellxfs-fontid + 1.
+            READ TABLE lt_fonts INTO ls_font INDEX lv_index.
+            IF ls_font IS NOT INITIAL.
+              lo_element_font = lo_document-&gt;create_simple_element( name   = lc_xml_node_font
+                                                          parent = lo_document ).
+              IF ls_font-bold EQ abap_true.
+                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_b
+                                                                     parent = lo_document ).
+                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+              ENDIF.
+              IF ls_font-italic EQ abap_true.
+                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_i
+                                                                     parent = lo_document ).
+                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+              ENDIF.
+              IF ls_font-underline EQ abap_true.
+                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_u
+                                                                     parent = lo_document ).
+                lv_value = ls_font-underline_mode.
+                lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_val
+                                                  value = lv_value ).
+                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+              ENDIF.
+              IF ls_font-strikethrough EQ abap_true.
+                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_strike
+                                                                     parent = lo_document ).
+                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+              ENDIF.
+              &quot;color
+              create_xl_styles_color_node(
+                  io_document        = lo_document
+                  io_parent          = lo_element_font
+                  is_color           = ls_font-color ).
+              lo_sub_element-&gt;append_child( new_child = lo_element_font ).
+            ENDIF.
+            &quot;---Conditional formatting font style correction by Alessandro Iannacci END
+
+
             READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
             IF ls_fill IS NOT INITIAL.
               &quot; fill properties
@@ -5281,43 +5321,6 @@ endmethod.</source>
             &quot; dxf node
             lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
                                                                  parent = lo_document ).
-																 
-&quot;Conditional formatting font style correction by Alessandro Iannacci START
-              READ TABLE lt_fonts into ls_font INDEX ls_cellxfs-FONTID + 1.
-              IF ls_font IS NOT INITIAL.
-                lo_element_font = lo_document-&gt;create_simple_element( name   = lc_xml_node_font
-                                                            parent = lo_document ).
-                IF ls_font-bold EQ abap_true.
-                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_b
-                                                                       parent = lo_document ).
-                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-                ENDIF.
-                IF ls_font-italic EQ abap_true.
-                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_i
-                                                                       parent = lo_document ).
-                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-                ENDIF.
-                IF ls_font-underline EQ abap_true.
-                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_u
-                                                                       parent = lo_document ).
-                  lv_value = ls_font-underline_mode.
-                  lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_val
-                                                    value = lv_value ).
-                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-                ENDIF.
-                IF ls_font-strikethrough EQ abap_true.
-                  lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_strike
-                                                                       parent = lo_document ).
-                  lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-                ENDIF.
-                &quot;color
-                create_xl_styles_color_node(
-                    io_document        = lo_document
-                    io_parent          = lo_element_font
-                    is_color           = ls_font-color ).
-                lo_sub_element-&gt;append_child( new_child = lo_element_font ).
-              ENDIF.
-&quot;---Conditional formatting font style correction by Alessandro Iannacci END
 
             READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
             IF ls_fill IS NOT INITIAL.
@@ -5402,7 +5405,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos; color node" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -5453,12 +5456,12 @@ endmethod.</source>
   ENDIF.
 
   io_parent-&gt;append_child( new_child = lo_sub_element ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD create_xl_table.
+  <source>method CREATE_XL_TABLE.
 
   DATA: lc_xml_node_table         TYPE string VALUE &apos;table&apos;,
         lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
@@ -5630,7 +5633,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -5719,20 +5722,20 @@ ENDMETHOD.</source>
       buffer = ep_content.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_WORKBOOK.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-07
+*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmöcker,                             2012-12-01
+*           - Stefan SchmÃ¶cker,                             2012-12-01
 * changes:  correction of pointer to localSheetId
 *--------------------------------------------------------------------*
 
@@ -5913,7 +5916,7 @@ endmethod.</source>
     lo_sub_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_sheet
                                                             parent = lo_document ).
     lo_worksheet ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-    lv_syindex = sy-index.                                                                  &quot; question by Stefan Schmöcker 2012-12-02:  sy-index seems to do the job - but is it proven to work or purely coincedence
+    lv_syindex = sy-index.                                                                  &quot; question by Stefan SchmÃ¶cker 2012-12-02:  sy-index seems to do the job - but is it proven to work or purely coincedence
     lv_value = lo_worksheet-&gt;get_title( ).
     SHIFT lv_syindex RIGHT DELETING TRAILING space.
     SHIFT lv_syindex LEFT DELETING LEADING space.
@@ -6040,7 +6043,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
@@ -6053,7 +6056,7 @@ endmethod.</source>
   ELSE.
     ep_boolean = &apos;false&apos;.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="0" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="IP_CELL_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
@@ -6066,6 +6069,6 @@ endmethod.</source>
   READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
   ep_index = ls_shared_string-string_no.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
 </CLAS>
