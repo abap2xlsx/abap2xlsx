@@ -113,7 +113,7 @@
   <source>method ZIF_EXCEL_READER~CAN_READ_FILE.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: nothing done in code
 *          but started discussion about killing this method
@@ -126,12 +126,12 @@
   <source>method ZIF_EXCEL_READER~LOAD.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Map Document Properties to ZCL_EXCEL
+*        2do§1   Map Document Properties to ZCL_EXCEL
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          removing unused variables
@@ -141,7 +141,7 @@
 *          adding me-&gt; where possible
 *--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
-*              - Stefan SchmÃ¶cker,                          2012-11-07
+*              - Stefan Schmöcker,                          2012-11-07
 * changes: passing new optional input parameter to private attribute
 *--------------------------------------------------------------------*
 
@@ -153,9 +153,9 @@
               ls_relationship                 TYPE t_relationship.
 
 *--------------------------------------------------------------------*
-* Â§1  Create EXCEL-Object we want to return to caller
+* §1  Create EXCEL-Object we want to return to caller
 
-* Â§2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
+* §2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
 *     us where in this folder structure the data for the workbook
 *     is located in the xlsx zip-archive
 *
@@ -168,7 +168,7 @@
 *                       |--&gt;  theme
 *                       |--&gt;  worksheets
 
-* Â§3  Extracting from this the path&amp;file where the workbook is located
+* §3  Extracting from this the path&amp;file where the workbook is located
 *     Following is an example how this file could be set up
 *        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;true&quot;?&gt;
 *        &lt;Relationships xmlns=&quot;http://schemas.openxmlformats.org/package/2006/relationships&quot;&gt;
@@ -180,7 +180,7 @@
 
 
 *--------------------------------------------------------------------*
-* Â§1  Create EXCEL-Object we want to return to caller
+* §1  Create EXCEL-Object we want to return to caller
 *--------------------------------------------------------------------*
   CREATE OBJECT r_excel.
 
@@ -191,13 +191,13 @@
 
 
 *--------------------------------------------------------------------*
-* Â§2  Get file in folderstructure
+* §2  Get file in folderstructure
 *--------------------------------------------------------------------*
   me-&gt;excel2007 = i_excel2007.
   lo_rels = me-&gt;get_ixml_from_zip_archive( &apos;_rels/.rels&apos; ).
 
 *--------------------------------------------------------------------*
-* Â§3  Cycle through the Relationship Tags and use the ones we need
+* §3  Cycle through the Relationship Tags and use the ones we need
 *--------------------------------------------------------------------*
   lo_node ?= lo_rels-&gt;find_from_name( &apos;Relationship&apos; ).               &quot;#EC NOTEXT
   WHILE lo_node IS BOUND.
@@ -209,7 +209,7 @@
     CASE ls_relationship-type.
 
       WHEN lcv_core_properties.
-        &quot; 2doÂ§1   Map Document Properties to ZCL_EXCEL
+        &quot; 2do§1   Map Document Properties to ZCL_EXCEL
 
       WHEN lcv_office_document.
         me-&gt;load_workbook( iv_workbook_full_filename  = ls_relationship-target
@@ -229,16 +229,16 @@
   <source>METHOD zif_excel_reader~load_file.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   decision whether to load from frontend or backend
+*        2do§1   decision whether to load from frontend or backend
 *                current behavior ( autodecide ) should be default
 *                add optional parameter to allow user to choose
 *                to load from backend even when online
-*        2doÂ§2   loosen typing of i_filename to CLIKE
+*        2do§2   loosen typing of i_filename to CLIKE
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-05
+*              - Stefan Schmöcker,      (done)              2012-11-05
 *              - ...
 * changes: renaming variables to naming conventions
 *          renaming variables to indicate what they are used for
@@ -251,7 +251,7 @@
 *          added errorhandling for open dataset
 *--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
-*              - Stefan SchmÃ¶cker,                          2012-11-07
+*              - Stefan Schmöcker,                          2012-11-07
 * changes: passing new optional input parameter to private attribute
 *--------------------------------------------------------------------*
 
@@ -280,7 +280,7 @@
   <source>method FILL_STRUCT_FROM_ATTRIBUTES.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -332,7 +332,7 @@
   <source>method GET_FROM_ZIP_ARCHIVE.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
@@ -340,7 +340,7 @@
 *          message made to support multilinguality
 *--------------------------------------------------------------------**--------------------------------------------------------------------*
 * issue#234 - error reading xlsx written by libre office
-*              - Stefan SchmÃ¶cker,                          2012-11-07
+*              - Stefan Schmöcker,                          2012-11-07
 * changes: copying coding and using ALTERNATE_ZIP in ELSE-Branch
 *--------------------------------------------------------------------*
 
@@ -459,12 +459,12 @@
   <source>method GET_IXML_FROM_ZIP_ARCHIVE.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Add comment what is being achieved here
+*        2do§1   Add comment what is being achieved here
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
+*              - Stefan Schmöcker,      (done)              2012-11-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          removing unnecessary type-pool
@@ -480,7 +480,7 @@
 
 
 *--------------------------------------------------------------------*
-*  2doÂ§1  ????  Something happens here   ???
+*  2do§1  ????  Something happens here   ???
 *--------------------------------------------------------------------*
   lv_content        = me-&gt;get_from_zip_archive( i_filename ).
   lo_ixml           = cl_ixml=&gt;create( ).
@@ -655,12 +655,12 @@
   <source>method LOAD_SHARED_STRINGS.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Support partial formatting of strings in cells
+*        2do§1   Support partial formatting of strings in cells
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-11
+*              - Stefan Schmöcker,      (done)              2012-11-11
 *              - ...
 * changes: renaming variables to naming conventions
 *          renaming variables to indicate what they are used for
@@ -683,10 +683,10 @@
 
 *--------------------------------------------------------------------*
 
-* Â§1  Parse shared strings file and get into internal table
+* §1  Parse shared strings file and get into internal table
 *   So far I have encountered 2 ways how a string can be represented in the shared strings file
-*   Â§1.1 - &quot;simple&quot; strings
-*   Â§1.2 - rich text formatted strings
+*   §1.1 - &quot;simple&quot; strings
+*   §1.2 - rich text formatted strings
 
 *     Following is an example how this file could be set up; 2 strings in simple formatting, 3rd string rich textformatted
 
@@ -738,15 +738,15 @@
       lv_tag_name = lo_node_si_child-&gt;get_name( ).
       IF lv_tag_name = &apos;t&apos;.
 *--------------------------------------------------------------------*
-*   Â§1.1 - &quot;simple&quot; strings
+*   §1.1 - &quot;simple&quot; strings
 *                Example:  see above
 *--------------------------------------------------------------------*
         &lt;lv_shared_string&gt; = lo_node_si_child-&gt;get_value( ).
       ELSE.
 *--------------------------------------------------------------------*
-*   Â§1.2 - rich text formatted strings
+*   §1.2 - rich text formatted strings
 *       it is sufficient to strip the &lt;t&gt;...&lt;/t&gt; tag from each &lt;r&gt;-tag and concatenate these
-*       as long as rich text formatting is not supported (2doÂ§1) ignore all info about formatting
+*       as long as rich text formatting is not supported (2do§1) ignore all info about formatting
 *                Example:  see above
 *--------------------------------------------------------------------*
         WHILE lo_node_si_child IS BOUND.                                             &quot; actually these children of &lt;si&gt; are &lt;r&gt;-tags
@@ -776,7 +776,7 @@
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (wip )              2012-11-25
+*              - Stefan Schmöcker,      (wip )              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -844,16 +844,16 @@
 *--------------------------------------------------------------------*
 * To build a complete style that fully describes how a cell looks like
 * we need the various parts
-* Â§1 - Numberformat
-* Â§2 - Fillstyle
-* Â§3 - Borders
-* Â§4 - Font
-* Â§5 - Alignment
-* Â§6 - Protection
+* §1 - Numberformat
+* §2 - Fillstyle
+* §3 - Borders
+* §4 - Font
+* §5 - Alignment
+* §6 - Protection
 
 *          Following is an example how this part of a file could be set up
 *              ...
-*              parts with various formatinformation - see Â§1,Â§2,Â§3,Â§4
+*              parts with various formatinformation - see §1,§2,§3,§4
 *              ...
 *          &lt;cellXfs count=&quot;26&quot;&gt;
 *              &lt;xf numFmtId=&quot;0&quot; borderId=&quot;0&quot; fillId=&quot;0&quot; fontId=&quot;0&quot; xfId=&quot;0&quot;/&gt;
@@ -871,17 +871,17 @@
 
 *--------------------------------------------------------------------*
 * The styles are build up from
-* Â§1 number formats
-* Â§2 fill styles
-* Â§3 border styles
-* Â§4 fonts
+* §1 number formats
+* §2 fill styles
+* §3 border styles
+* §4 fonts
 * These need to be read before we can try to build up a complete
 * style that describes the look of a cell
 *--------------------------------------------------------------------*
-  lt_num_formats   = load_style_num_formats( lo_styles_xml ).   &quot; Â§1
-  lt_fills         = load_style_fills( lo_styles_xml ).         &quot; Â§2
-  lt_borders       = load_style_borders( lo_styles_xml ).       &quot; Â§3
-  lt_fonts         = load_style_fonts( lo_styles_xml ).         &quot; Â§4
+  lt_num_formats   = load_style_num_formats( lo_styles_xml ).   &quot; §1
+  lt_fills         = load_style_fills( lo_styles_xml ).         &quot; §2
+  lt_borders       = load_style_borders( lo_styles_xml ).       &quot; §3
+  lt_fonts         = load_style_fonts( lo_styles_xml ).         &quot; §4
 
 *--------------------------------------------------------------------*
 * Now everything is prepared to build a &quot;full&quot; style
@@ -899,7 +899,7 @@
                                    CHANGING
                                      cp_structure = ls_xf ).
 *--------------------------------------------------------------------*
-* Â§2 fill style
+* §2 fill style
 *--------------------------------------------------------------------*
       IF ls_xf-applyfill = &apos;1&apos; AND ls_xf-fillid IS NOT INITIAL.
         lv_index = ls_xf-fillid + 1.
@@ -910,7 +910,7 @@
       ENDIF.
 
 *--------------------------------------------------------------------*
-* Â§1 number format
+* §1 number format
 *--------------------------------------------------------------------*
       IF ls_xf-numfmtid IS NOT INITIAL.
         READ TABLE lt_num_formats INTO ls_num_format WITH TABLE KEY id = ls_xf-numfmtid.
@@ -920,7 +920,7 @@
       ENDIF.
 
 *--------------------------------------------------------------------*
-* Â§3 border style
+* §3 border style
 *--------------------------------------------------------------------*
       IF ls_xf-applyborder = &apos;1&apos; AND ls_xf-borderid IS NOT INITIAL.
         lv_index = ls_xf-borderid + 1.
@@ -931,7 +931,7 @@
       ENDIF.
 
 *--------------------------------------------------------------------*
-* Â§4 font
+* §4 font
 *--------------------------------------------------------------------*
       IF ls_xf-applyfont = &apos;1&apos; AND ls_xf-fontid IS NOT INITIAL.
         lv_index = ls_xf-fontid + 1.
@@ -942,7 +942,7 @@
       ENDIF.
 
 *--------------------------------------------------------------------*
-* Â§5 - Alignment
+* §5 - Alignment
 *--------------------------------------------------------------------*
       lo_node_cellxfs_xf_alignment ?= lo_node_cellxfs_xf-&gt;find_from_name( &apos;alignment&apos; ).
       IF lo_node_cellxfs_xf_alignment IS BOUND.
@@ -976,7 +976,7 @@
       ENDIF.
 
 *--------------------------------------------------------------------*
-* Â§6 - Protection
+* §6 - Protection
 *--------------------------------------------------------------------*
       lo_node_cellxfs_xf_protection ?= lo_node_cellxfs_xf-&gt;find_from_name( &apos;protection&apos; ).
       IF lo_node_cellxfs_xf_protection IS BOUND.
@@ -1014,7 +1014,7 @@
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-25
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -1030,11 +1030,11 @@
 
 *--------------------------------------------------------------------*
 * We need a table of used borderformats to build up our styles
-* Â§1    A cell has 4 outer borders and 2 diagonal &quot;borders&quot;
+* §1    A cell has 4 outer borders and 2 diagonal &quot;borders&quot;
 *       These borders can be formatted separately but the diagonal borders
 *       are always being formatted the same
 *       We&apos;ll parse through the &lt;border&gt;-tag for each of the bordertypes
-* Â§2    and read the corresponding formatting information
+* §2    and read the corresponding formatting information
 
 *          Following is an example how this part of a file could be set up
 *          &lt;border diagonalDown=&quot;1&quot;&gt;
@@ -1077,7 +1077,7 @@
     lo_node_bordertype ?= lo_node_border-&gt;get_first_child( ).
     WHILE lo_node_bordertype IS BOUND.
 *--------------------------------------------------------------------*
-* Â§1 Determine what kind of border we are talking about
+* §1 Determine what kind of border we are talking about
 *--------------------------------------------------------------------*
 * Up, down, left, right, diagonal
 *--------------------------------------------------------------------*
@@ -1103,7 +1103,7 @@
       ENDCASE.
 
 *--------------------------------------------------------------------*
-* Â§2 Read the border-formatting
+* §2 Read the border-formatting
 *--------------------------------------------------------------------*
       lo_border-&gt;border_style = lo_node_bordertype-&gt;get_attribute( &apos;style&apos; ).
       lo_node_bordercolor ?= lo_node_bordertype-&gt;find_from_name( &apos;color&apos; ).
@@ -1143,12 +1143,12 @@
   <source>method LOAD_STYLE_FILLS.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Support gradientFill
+*        2do§1   Support gradientFill
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-25
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -1239,7 +1239,7 @@
 * gradientFill
 *--------------------------------------------------------------------*
       WHEN &apos;gradientFill&apos;.
-        &quot; 2doÂ§1   Support gradientFill
+        &quot; 2do§1   Support gradientFill
 
       WHEN OTHERS.
 
@@ -1262,7 +1262,7 @@
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-25
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -1387,12 +1387,12 @@
   <source>method LOAD_STYLE_NUM_FORMATS.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Explain gaps in predefined formats
+*        2do§1   Explain gaps in predefined formats
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-25
+*              - Stefan Schmöcker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          adding comments to explain what we are trying to achieve
@@ -1404,12 +1404,12 @@
 *--------------------------------------------------------------------*
 * We need a table of used numberformats to build up our styles
 * there are two kinds of numberformats
-* Â§1 those that have been explicitly added by the createor of the excel-file
-* Â§2 and built-in numberformats
+* §1 those that have been explicitly added by the createor of the excel-file
+* §2 and built-in numberformats
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
-* Â§1   Get non-internal numberformats that are found in the file explicitly
+* §1   Get non-internal numberformats that are found in the file explicitly
 
 *         Following is an example how this part of a file could be set up
 *         &lt;numFmts count=&quot;1&quot;&gt;
@@ -1438,7 +1438,7 @@
   END-OF-DEFINITION.
 
 *--------------------------------------------------------------------*
-* Â§1 Get internal predefined numberformats
+* §1 Get internal predefined numberformats
 *--------------------------------------------------------------------*
   predefined_format    &apos;1&apos;        &apos;0&apos;.
   predefined_format    &apos;2&apos;        &apos;0.00&apos;.
@@ -1462,7 +1462,7 @@
   predefined_format   &apos;20&apos;        &apos;h:mm&apos;.
   predefined_format   &apos;21&apos;        &apos;h:mm:ss&apos;.
   predefined_format   &apos;22&apos;        &apos;m/d/yyyy h:mm&apos;.
-* 2doÂ§1     Why is there a gap in here?
+* 2do§1     Why is there a gap in here?
 
 
 
@@ -1480,7 +1480,7 @@
   predefined_format   &apos;38&apos;        &apos;#,##0_);[Red](#,##0)&apos;.
   predefined_format   &apos;39&apos;        &apos;#,##0.00_);(#,##0.00)&apos;.
   predefined_format   &apos;40&apos;        &apos;#,##0.00_);[Red](#,##0.00)&apos;.
-* 2doÂ§1     Why is there a gap in here?
+* 2do§1     Why is there a gap in here?
 
 
 
@@ -1489,7 +1489,7 @@
   predefined_format   &apos;47&apos;        &apos;mm:ss.0&apos;.
   predefined_format   &apos;48&apos;        &apos;##0.0E+0&apos;.
   predefined_format   &apos;49&apos;        &apos;@&apos;.
-* 2doÂ§1     Is 49 really the last predefined format?
+* 2do§1     Is 49 really the last predefined format?
 
 
   endmethod.</source>
@@ -1501,14 +1501,14 @@
   <source>method LOAD_WORKBOOK.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Move macro-reading from zcl_excel_reader_xlsm to this class
+*        2do§1   Move macro-reading from zcl_excel_reader_xlsm to this class
 *                autodetect existance of macro/vba content
 *                Allow inputparameter to explicitly tell reader to ignore vba-content
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-10
+*              - Stefan Schmöcker,      (done)              2012-11-10
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -1520,15 +1520,15 @@
 *                                                             ip_excel renamed while being at it                --&gt; rename to io_excel
 *--------------------------------------------------------------------*
 * issue #232   - Read worksheetstate hidden/veryHidden
-*              - Stefan SchmÃ¶cker,                          2012-11-11
+*              - Stefan Schmöcker,                          2012-11-11
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan SchmÃ¶cker,                             2012-12-02
+*           - Stefan Schmöcker,                             2012-12-02
 * changes:    correction in named ranges to correctly attach
 *             sheetlocal names/ranges to the correct sheet
 *--------------------------------------------------------------------*
 * issue#284 - Copied formulae ignored when reading excelfile
-*           - Stefan SchmÃ¶cker,                             2013-08-02
+*           - Stefan Schmöcker,                             2013-08-02
 * changes:    initialize area to hold referenced formulaedata
 *             after all worksheets have been read resolve formuae
 *--------------------------------------------------------------------*
@@ -1591,7 +1591,7 @@
 
 *--------------------------------------------------------------------*
 
-* Â§1  Get the position of files related to this workbook
+* §1  Get the position of files related to this workbook
 *         Usually this will be &lt;root&gt;/xl/workbook.xml
 *         Thus the workbookroot will be &lt;root&gt;/xl/
 *         The position of all related files will be given in file
@@ -1611,19 +1611,19 @@
 *            &lt;Relationship Target=&quot;sharedStrings.xml&quot; Type=&quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&quot; Id=&quot;rId7&quot;/&gt;
 *        &lt;/Relationships&gt;
 *
-* Â§2  Load data that is relevant to the complete workbook
+* §2  Load data that is relevant to the complete workbook
 *     Currently supported is:
-*   Â§2.1    Shared strings  - This holds all strings that are used in all worksheets
-*   Â§2.2    Styles          - This holds all styles that are used in all worksheets
-*   Â§2.3    Worksheets      - For each worksheet in the workbook one entry appears here to point to the file that holds the content of this worksheet
-*   Â§2.4    [Themes]                - not supported
-*   Â§2.5    [VBA (Macro)]           - supported in class zcl_excel_reader_xlsm but should be moved here and autodetect
+*   §2.1    Shared strings  - This holds all strings that are used in all worksheets
+*   §2.2    Styles          - This holds all styles that are used in all worksheets
+*   §2.3    Worksheets      - For each worksheet in the workbook one entry appears here to point to the file that holds the content of this worksheet
+*   §2.4    [Themes]                - not supported
+*   §2.5    [VBA (Macro)]           - supported in class zcl_excel_reader_xlsm but should be moved here and autodetect
 *   ...
 *
-* Â§3  Some information is held in the workbookfile as well
-*   Â§3.1    Names and order of of worksheets
-*   Â§3.2    Active worksheet
-*   Â§3.3    Defined names
+* §3  Some information is held in the workbookfile as well
+*   §3.1    Names and order of of worksheets
+*   §3.2    Active worksheet
+*   §3.3    Defined names
 *   ...
 *     Following is an example how this file could be set up
 
@@ -1648,7 +1648,7 @@
   CLEAR me-&gt;mt_ref_formulae.                                                                              &quot; ins issue#284
 
 *--------------------------------------------------------------------*
-* Â§1  Get the position of files related to this workbook
+* §1  Get the position of files related to this workbook
 *     Entry into this method is with the filename of the workbook
 *--------------------------------------------------------------------*
   CALL FUNCTION &apos;TRINT_SPLIT_FILE_AND_PATH&apos;
@@ -1670,7 +1670,7 @@
     CASE ls_relationship-type.
 
 *--------------------------------------------------------------------*
-*   Â§2.1    Shared strings  - This holds all strings that are used in all worksheets
+*   §2.1    Shared strings  - This holds all strings that are used in all worksheets
 *--------------------------------------------------------------------*
       WHEN lcv_shared_strings.
         CONCATENATE lv_path ls_relationship-target
@@ -1678,7 +1678,7 @@
         me-&gt;load_shared_strings( lv_full_filename ).
 
 *--------------------------------------------------------------------*
-*   Â§2.3    Worksheets
+*   §2.3    Worksheets
 *           For each worksheet in the workbook one entry appears here to point to the file that holds the content of this worksheet
 *           Shared strings and styles have to be present before we can start with creating the worksheets
 *           thus we only store this information for use when parsing the workbookfile for sheetinformations
@@ -1687,7 +1687,7 @@
         APPEND ls_relationship TO lt_worksheets.
 
 *--------------------------------------------------------------------*
-*   Â§2.2    Styles           - This holds the styles that are used in all worksheets
+*   §2.2    Styles           - This holds the styles that are used in all worksheets
 *--------------------------------------------------------------------*
       WHEN lcv_styles.
         CONCATENATE lv_path ls_relationship-target
@@ -1704,12 +1704,12 @@
   ENDWHILE.
 
 *--------------------------------------------------------------------*
-* Â§3  Some information held in the workbookfile
+* §3  Some information held in the workbookfile
 *--------------------------------------------------------------------*
   lo_workbook = me-&gt;get_ixml_from_zip_archive( iv_workbook_full_filename ).
 
 *--------------------------------------------------------------------*
-*   Â§3.1    Names and order of of worksheets
+*   §3.1    Names and order of of worksheets
 *--------------------------------------------------------------------*
   lo_node           ?= lo_workbook-&gt;find_from_name( &apos;sheet&apos; ).
   lv_workbook_index  = 1.
@@ -1772,7 +1772,7 @@
                                       &quot; ins issue#284
 *--------------------------------------------------------------------*
 *   #229: Set active worksheet - begin coding
-*   Â§3.2    Active worksheet
+*   §3.2    Active worksheet
 *--------------------------------------------------------------------*
   lv_zexcel_active_worksheet = 1.                                 &quot; First sheet = active sheet if nothing else specified.
   lo_node ?=  lo_workbook-&gt;find_from_name( &apos;workbookView&apos; ).
@@ -1790,7 +1790,7 @@
 
 
 *--------------------------------------------------------------------*
-*   Â§3.3    Defined names
+*   §3.3    Defined names
 *           So far I have encountered these
 *             - named ranges      - sheetlocal
 *             - named ranges      - workbookglobal
@@ -1920,7 +1920,7 @@
   <source>method LOAD_WORKSHEET.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Header/footer
+*        2do§1   Header/footer
 *
 *                Please don&apos;t just delete these ToDos if they are not
 *                needed but leave a comment that states this
@@ -1928,7 +1928,7 @@
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,
+*              - Stefan Schmöcker,
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code                                            (started)
@@ -2009,6 +2009,28 @@
               rgb                             TYPE string,
               theme                           TYPE string,
           END OF lty_tabcolor.
+
+  TYPES:  BEGIN OF lty_datavalidation,
+              type                            TYPE zexcel_data_val_type,
+              allowblank                      TYPE flag,
+              showinputmessage                TYPE flag,
+              showerrormessage                TYPE flag,
+              showdropdown                    TYPE flag,
+              operator                        TYPE zexcel_data_val_operator,
+              formula1                        TYPE zexcel_validation_formula1,
+              formula2                        TYPE zexcel_validation_formula1,
+              sqref                           TYPE string,
+              cell_column                     TYPE zexcel_cell_column_alpha,
+              cell_column_to                  TYPE zexcel_cell_column_alpha,
+              cell_row                        TYPE zexcel_cell_row,
+              cell_row_to                     TYPE zexcel_cell_row,
+              error                           TYPE string,
+              errortitle                      TYPE string,
+              prompt                          TYPE string,
+              prompttitle                     TYPE string,
+              errorstyle                      TYPE zexcel_data_val_error_style,
+          END OF lty_datavalidation.
+
 
 
   CONSTANTS:  lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
@@ -2095,11 +2117,17 @@
               lo_ixml_rels_worksheet          TYPE REF TO if_ixml_document,
               lv_rels_worksheet_path          TYPE string,
               lv_stripped_name                TYPE chkfile,
-              lv_dirname                      TYPE string.
+              lv_dirname                      TYPE string,
 
+              lo_ixml_datavalidations         TYPE REF TO if_ixml_node_collection,
+              lo_ixml_datavalidation_elem     TYPE REF TO if_ixml_element,
+              ls_datavalidation               TYPE lty_datavalidation,
+              lo_data_validation              TYPE REF TO zcl_excel_data_validation,
+              lv_datavalidation_range         TYPE string,
+              lt_datavalidation_range         TYPE TABLE OF string.
 
 *--------------------------------------------------------------------*
-* Â§2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
+* §2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
 *     us where in this folder structure the data for the workbook
 *     is located in the xlsx zip-archive
 *
@@ -2498,7 +2526,7 @@
       ls_odd_footer-left_value = lo_ixml_hf_value_elem-&gt;get_value( ).
     ENDIF.
 
-*        2doÂ§1   Header/footer
+*        2do§1   Header/footer
     &quot; TODO.. get the rest.
 
     io_worksheet-&gt;sheet_setup-&gt;set_header_footer( ip_odd_header   = ls_odd_header
@@ -2534,6 +2562,57 @@
     ENDIF.
   ENDIF.
   &quot; End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
+
+  &quot; Start fix 276 Read data validations
+  lo_ixml_datavalidations = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;dataValidation&apos; ).
+  lo_ixml_iterator = lo_ixml_datavalidations-&gt;create_iterator( ).
+  lo_ixml_datavalidation_elem  ?= lo_ixml_iterator-&gt;get_next( ).
+  WHILE lo_ixml_datavalidation_elem  IS BOUND.
+    fill_struct_from_attributes( EXPORTING
+                                   ip_element = lo_ixml_datavalidation_elem
+                                 CHANGING
+                                   cp_structure = ls_datavalidation ).
+    clear lo_ixml_formula_elem.
+    lo_ixml_formula_elem = lo_ixml_datavalidation_elem-&gt;find_from_name( name = &apos;formula1&apos; ).
+    if lo_ixml_formula_elem is bound.
+      ls_datavalidation-formula1 = lo_ixml_formula_elem-&gt;get_value( ).
+    endif.
+    clear lo_ixml_formula_elem.
+    lo_ixml_formula_elem = lo_ixml_datavalidation_elem-&gt;find_from_name( name = &apos;formula2&apos; ).
+    if lo_ixml_formula_elem is bound.
+      ls_datavalidation-formula2 = lo_ixml_formula_elem-&gt;get_value( ).
+    endif.
+    SPLIT ls_datavalidation-sqref AT space INTO TABLE lt_datavalidation_range.
+    LOOP AT lt_datavalidation_range INTO lv_datavalidation_range.
+      zcl_excel_common=&gt;convert_range2column_a_row( EXPORTING
+                                                      i_range = lv_datavalidation_range
+                                                    IMPORTING
+                                                      e_column_start = ls_datavalidation-cell_column
+                                                      e_column_end   = ls_datavalidation-cell_column_to
+                                                      e_row_start    = ls_datavalidation-cell_row
+                                                      e_row_end      = ls_datavalidation-cell_row_to ).
+      lo_data_validation                   = io_worksheet-&gt;add_new_data_validation( ).
+      lo_data_validation-&gt;type             = ls_datavalidation-type.
+      lo_data_validation-&gt;allowblank       = ls_datavalidation-allowblank.
+      lo_data_validation-&gt;showinputmessage = ls_datavalidation-showinputmessage.
+      lo_data_validation-&gt;showerrormessage = ls_datavalidation-showerrormessage.
+      lo_data_validation-&gt;showdropdown     = ls_datavalidation-showdropdown.
+      lo_data_validation-&gt;operator         = ls_datavalidation-operator.
+      lo_data_validation-&gt;formula1         = ls_datavalidation-formula1.
+      lo_data_validation-&gt;formula2         = ls_datavalidation-formula2.
+      lo_data_validation-&gt;prompttitle      = ls_datavalidation-prompttitle.
+      lo_data_validation-&gt;prompt           = ls_datavalidation-prompt.
+      lo_data_validation-&gt;errortitle       = ls_datavalidation-errortitle.
+      lo_data_validation-&gt;error            = ls_datavalidation-error.
+      lo_data_validation-&gt;errorstyle       = ls_datavalidation-errorstyle.
+      lo_data_validation-&gt;cell_row         = ls_datavalidation-cell_row.
+      lo_data_validation-&gt;cell_row_to      = ls_datavalidation-cell_row_to.
+      lo_data_validation-&gt;cell_column      = ls_datavalidation-cell_column.
+      lo_data_validation-&gt;cell_column_to   = ls_datavalidation-cell_column_to.
+    endloop.
+    lo_ixml_datavalidation_elem ?= lo_ixml_iterator-&gt;get_next( ).
+  ENDWHILE.
+  &quot; End fix 276 Read data validations
 
   endmethod.</source>
  </method>
@@ -2765,10 +2844,10 @@
   <source>method RESOLVE_PATH.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2doÂ§1   Determine whether the replacement should be done
+*        2do§1   Determine whether the replacement should be done
 *                iterative to allow /../../..   or something alike
-*        2doÂ§2   Determine whether /./ has to be supported as well
-*        2doÂ§3   Create unit-test for this method
+*        2do§2   Determine whether /./ has to be supported as well
+*        2do§3   Create unit-test for this method
 *
 *                Please don&apos;t just delete these ToDos if they are not
 *                needed but leave a comment that states this
@@ -2776,14 +2855,14 @@
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-11
+*              - Stefan Schmöcker,      (done)              2012-11-11
 *              - ...
 * changes: replaced previous coding by regular expression
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
-* Â§1  This routine will receive a path, that may have a relative pathname (/../) included somewhere
+* §1  This routine will receive a path, that may have a relative pathname (/../) included somewhere
 *     The output should be a resolved path without relative references
 *     Example:  Input     xl/worksheets/../drawings/drawing1.xml
 *               Output    xl/drawings/drawing1.xml
@@ -2791,7 +2870,7 @@
 
   rp_result = ip_path.
 *--------------------------------------------------------------------*
-* Â§1  Remove relative pathnames
+* §1  Remove relative pathnames
 *--------------------------------------------------------------------*
 *  Regular expression   [^/]*/\.\./
 *                       [^/]*            --&gt; any number of characters other than /
