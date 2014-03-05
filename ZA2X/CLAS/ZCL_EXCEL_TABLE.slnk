@@ -41,11 +41,11 @@
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CONSTRUCTOR.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_BOTTOM_ROW_INTEGER" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_BOTTOM_ROW_INTEGER" SCONAME="EV_ROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
-  <source>METHOD get_bottom_row_integer.
+  <source>method GET_BOTTOM_ROW_INTEGER.
   DATA: lv_table_lines TYPE i.
   FIELD-SYMBOLS: &lt;fs_table&gt; TYPE STANDARD TABLE.
 
@@ -66,13 +66,13 @@ endmethod.</source>
   IF me-&gt;has_totals( ) = abap_true.&quot;  ????  AND ip_include_totals_row = abap_true.
     ADD 1 TO ev_row.
   ENDIF.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_ID" VERSION="1" LANGU="E" DESCRIPT="Gets the ID" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_ID" SCONAME="OV_ID" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
   <source>method GET_ID.
   ov_id = id.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_NAME" VERSION="1" LANGU="E" DESCRIPT="Gets the name" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_NAME" SCONAME="OV_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
@@ -84,7 +84,7 @@ endmethod.</source>
   ENDIF.
 
   ov_name = me-&gt;name.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" SCONAME="IP_INCLUDE_TOTALS_ROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_BOOL" PARVALUE="ABAP_TRUE"/>
@@ -128,12 +128,12 @@ endmethod.</source>
               &apos;:&apos;
               lv_right_column lv_bottom_row_string INTO ov_reference.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_RIGHT_COLUMN_INTEGER" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_RIGHT_COLUMN_INTEGER" SCONAME="EV_COLUMN" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
   <exception CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_RIGHT_COLUMN_INTEGER" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD get_right_column_integer.
+  <source>method GET_RIGHT_COLUMN_INTEGER.
   DATA: lv_column         TYPE zexcel_cell_column,
         lv_table_lines    TYPE i,
         ls_field_catalog  TYPE zexcel_s_fieldcatalog.
@@ -148,7 +148,7 @@ endmethod.</source>
     ADD 1 TO ev_column.
   ENDLOOP.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Returns formula for totals row based on column  name and fun" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -189,7 +189,7 @@ ENDMETHOD.</source>
   ENDCASE.
 
   CONCATENATE &apos;SUBTOTAL(&apos; lv_function_id &apos;,[&apos; ip_column &apos;])&apos; INTO ep_formula.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="HAS_TOTALS" VERSION="1" LANGU="E" DESCRIPT="Determines if any column has totals function" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="HAS_TOTALS" SCONAME="EP_RESULT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ABAP_BOOL"/>
@@ -205,18 +205,29 @@ endmethod.</source>
     ENDIF.
   ENDLOOP.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_DATA" VERSION="1" LANGU="E" DESCRIPT="Sets the reference to table data" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_DATA" SCONAME="IR_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
-  <source>method SET_DATA.
-  GET  REFERENCE OF ir_data INTO me-&gt;table_data.
-endmethod.</source>
+  <source>METHOD set_data.
+
+  DATA lr_temp TYPE REF TO data.
+
+  FIELD-SYMBOLS: &lt;lt_table_temp&gt;  TYPE ANY TABLE,
+                 &lt;lt_table&gt;       TYPE ANY TABLE.
+
+  GET REFERENCE OF ir_data INTO lr_temp.
+  ASSIGN lr_temp-&gt;* TO &lt;lt_table_temp&gt;.
+  CREATE DATA table_data LIKE &lt;lt_table_temp&gt;.
+  ASSIGN me-&gt;table_data-&gt;* TO &lt;lt_table&gt;.
+  &lt;lt_table&gt; = &lt;lt_table_temp&gt;.
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_ID" VERSION="1" LANGU="E" DESCRIPT="Sets the ID" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="SET_ID" SCONAME="IV_ID" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
   <source>method SET_ID.
   id = iv_id.
-endmethod.</source>
+  endmethod.</source>
  </method>
 </CLAS>
