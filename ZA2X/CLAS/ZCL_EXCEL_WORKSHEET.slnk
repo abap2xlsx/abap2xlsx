@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1"/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes
@@ -159,10 +159,16 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
+  <language SPRAS="1">
+   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
+  </language>
+  <language SPRAS="2">
+   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
+  </language>
   <language SPRAS="D">
    <textElement ID="I" KEY="001" ENTRY="Tabelle" LENGTH="132 "/>
-   <textElement ID="I" KEY="400" ENTRY="Tabelle überschneidet sich mit schon eingebundener Tabelle und wird diesem Tabellenblatt nicht hinzugefügt." LENGTH="132 "/>
-   <textElement ID="I" KEY="401" ENTRY="Für Druckbereich Wiederholungsspalten wurde ein ungültiger Bereich übergeben" LENGTH="132 "/>
+   <textElement ID="I" KEY="400" ENTRY="Tabelle Ã¼berschneidet sich mit schon eingebundener Tabelle und wird diesem Tabellenblatt nicht hinzugefÃ¼gt." LENGTH="132 "/>
+   <textElement ID="I" KEY="401" ENTRY="FÃ¼r Druckbereich Wiederholungsspalten wurde ein ungÃ¼ltiger Bereich Ã¼bergeben" LENGTH="132 "/>
    <textElement ID="I" KEY="402" ENTRY="Nicht erlaubtes Zeichen in Titel des Arbeitblatts.  Liste der verbotenen Zeichen: /\[]*?:" LENGTH="132 "/>
    <textElement ID="I" KEY="403" ENTRY="Blattname darf nicht mit &amp; beginnen." LENGTH="132 "/>
   </language>
@@ -172,6 +178,15 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
    <textElement ID="I" KEY="401" ENTRY="Invalid range supplied for print-title repeatable columns" LENGTH="132 "/>
    <textElement ID="I" KEY="402" ENTRY="Found illegal character in sheetname. List of forbidden characters: /\[]*?:" LENGTH="132 "/>
    <textElement ID="I" KEY="403" ENTRY="Sheetname may not start with &amp;" LENGTH="132 "/>
+  </language>
+  <language SPRAS="I">
+   <textElement ID="I" KEY="001" ENTRY="Foglio1" LENGTH="132 "/>
+  </language>
+  <language SPRAS="L">
+   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
+  </language>
+  <language SPRAS="S">
+   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_WORKSHEET" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
@@ -217,7 +232,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" EXPOSURE="0" STATE="1" EDITORDER="31 " ATTDECLTYP="0" ATTVALUE="&apos;Worksheet&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPPER_CELL" VERSION="1" LANGU="E" DESCRIPT="Top left range cell" EXPOSURE="0" STATE="1" EDITORDER="32 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS">
-  <source>METHOD zif_excel_sheet_printsettings~clear_print_repeat_columns.
+  <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS.
 
 *--------------------------------------------------------------------*
 * adjust internal representation
@@ -232,10 +247,10 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
   me-&gt;print_title_set_range( ).
 
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS">
-  <source>METHOD zif_excel_sheet_printsettings~clear_print_repeat_rows.
+  <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS.
 
 *--------------------------------------------------------------------*
 * adjust internal representation
@@ -250,25 +265,25 @@ ENDMETHOD.</source>
   me-&gt;print_title_set_range( ).
 
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS">
-  <source>METHOD zif_excel_sheet_printsettings~get_print_repeat_columns.
+  <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS.
   ev_columns_from = me-&gt;print_title_col_from.
   ev_columns_to   = me-&gt;print_title_col_to.
-ENDMETHOD.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS">
-  <source>METHOD zif_excel_sheet_printsettings~get_print_repeat_rows.
+  <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS.
   ev_rows_from = me-&gt;print_title_row_from.
   ev_rows_to   = me-&gt;print_title_row_to.
-ENDMETHOD.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS">
-  <source>METHOD zif_excel_sheet_printsettings~set_print_repeat_columns.
+  <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmöcker,                             2012-12-02
+*           - Stefan SchmÃ¶cker,                             2012-12-02
 *--------------------------------------------------------------------*
 
   DATA:     lv_col_from_int                 TYPE i,
@@ -311,13 +326,13 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
   me-&gt;print_title_set_range( ).
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS">
-  <source>METHOD zif_excel_sheet_printsettings~set_print_repeat_rows.
+  <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmöcker,                             2012-12-02
+*           - Stefan SchmÃ¶cker,                             2012-12-02
 *--------------------------------------------------------------------*
 
   DATA:     lv_errormessage                 TYPE string.
@@ -357,7 +372,7 @@ ENDMETHOD.</source>
   me-&gt;print_title_set_range( ).
 
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE">
   <source>method ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE.
@@ -366,7 +381,7 @@ ENDMETHOD.</source>
   ELSE.
     ep_style = me-&gt;excel-&gt;get_default_style( ).
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE">
   <source>method ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE.
@@ -380,12 +395,12 @@ endmethod.</source>
   ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_normal = 100.
   ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_pagelayoutview = 100 .
   ZIF_EXCEL_SHEET_PROPERTIES~zoomscale_sheetlayoutview = 100 .
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE">
   <source>method ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE.
   zif_excel_sheet_properties~style = ip_style.
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE">
   <source>method ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE.
@@ -411,17 +426,17 @@ endmethod.</source>
   me-&gt;zif_excel_sheet_protection~sheet                  = zif_excel_sheet_protection=&gt;c_noactive.
   me-&gt;zif_excel_sheet_protection~sort                   = zif_excel_sheet_protection=&gt;c_noactive.
 
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME">
   <source>method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME.
   me-&gt;zif_excel_sheet_vba_project~codename = ip_codename.
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WORKSHEET" CPDNAME="ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR">
   <source>method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR.
   me-&gt;zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
-endmethod.</source>
+  endmethod.</source>
  </interfaceMethod>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Add drawing to the sheet" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_DRAWING" SCONAME="IP_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
@@ -432,7 +447,7 @@ endmethod.</source>
     WHEN zcl_excel_drawing=&gt;type_chart.
       charts-&gt;include( ip_drawing ).
   ENDCASE.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_CONDITIONAL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Creates a new conditional formatting" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_CONDITIONAL_STYLE" SCONAME="EO_CONDITIONAL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
@@ -440,7 +455,7 @@ endmethod.</source>
 
   CREATE OBJECT eo_conditional_style.
   conditional_styles-&gt;add( eo_conditional_style ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_DATA_VALIDATION" VERSION="1" LANGU="E" DESCRIPT="Creates a new data validation" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_DATA_VALIDATION" SCONAME="EO_DATA_VALIDATION" VERSION="1" LANGU="E" DESCRIPT="Data validation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_DATA_VALIDATION"/>
@@ -448,7 +463,7 @@ endmethod.</source>
 
   CREATE OBJECT eo_data_validation.
   data_validations-&gt;add( eo_data_validation ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_RANGE" VERSION="1" LANGU="E" DESCRIPT="Create a new local range" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="ADD_NEW_RANGE" SCONAME="EO_RANGE" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_RANGE"/>
@@ -456,7 +471,7 @@ endmethod.</source>
 * Create default blank range
   CREATE OBJECT eo_range.
   ranges-&gt;add( eo_range ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_ALV" VERSION="1" LANGU="E" DESCRIPT="Set cell value from ALV object" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_ALV" SCONAME="IO_ALV" VERSION="1" LANGU="E" DESCRIPT="ALV List Viewer object ( ALV, SALV, ...)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="OBJECT"/>
@@ -485,7 +500,7 @@ endmethod.</source>
     catch zcx_excel .
   endtry.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_ALV_OLE2" VERSION="1" LANGU="E" DESCRIPT="Set cell value from ALV object (OLE2)" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_ALV_OLE2" SCONAME="I_DOCUMENT_URL" VERSION="1" LANGU="E" DESCRIPT="URL of file, must start with &lt;file://&gt;" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR255" PARVALUE="SPACE"/>
@@ -2076,8 +2091,8 @@ endmethod.</source>
           set country space.
 * Hier wird nur die korrekte Kommaseparatierung gemacht, wenn die
 * Zeichen einer
-* Zahl enthalten sind. Das ist f#ÄÂÄÂÄÂÃ¢ÂÂ#r Timestamps, die auch &quot;:&quot; enthalten.
-* F#ÄÂÄÂÄÂÃ¢ÂÂ#r die
+* Zahl enthalten sind. Das ist f#Ã„Â‚Ã‚Â‚Ã„Â†Ã‚Â’Ã„Â‚Ã‚ÂƒÃƒÂ¢Ã‚Â€Ã‚Âš#r Timestamps, die auch &quot;:&quot; enthalten.
+* F#Ã„Â‚Ã‚Â‚Ã„Â†Ã‚Â’Ã„Â‚Ã‚ÂƒÃƒÂ¢Ã‚Â€Ã‚Âš#r die
 * darf keine Kommaseparierung stattfinden.
 * Changing for correction request - Y6BK041073
           if contentsitem-value co &apos;0123456789.,-+E &apos;.
@@ -2574,7 +2589,7 @@ endmethod.</source>
     li_document_size.
 
   close_document.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" VERSION="1" LANGU="E" DESCRIPT="Set cell value from a table" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
@@ -2582,10 +2597,10 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="IS_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ES_TABLE_SETTINGS" VERSION="1" LANGU="E" DESCRIPT="Excel table binding settings" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABLE_SETTINGS"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="BIND_TABLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD bind_table.
+  <source>method BIND_TABLE.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wi p)              2012-12-01
+*              - Stefan SchmÃ¶cker,      (wi p)              2012-12-01
 *              - ...
 *          aligning code
 *          message made to support multilinguality
@@ -2840,7 +2855,7 @@ endmethod.</source>
   ENDIF.
   &quot; &lt;&lt; Issue #291
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" VERSION="1" LANGU="E" DESCRIPT="Calculate width of cell" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -2869,7 +2884,7 @@ ENDMETHOD.</source>
     ep_width = ep_width * stylemapping-complete_style-font-size / 11.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_COLUMN_WIDTHS" VERSION="1" LANGU="E" DESCRIPT="Calculate widths for auto-size columns" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_COLUMN_WIDTHS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -2927,7 +2942,7 @@ endmethod.</source>
 *        ).
 *        &quot; For an easy start we just take the number of characters as the width
 *        width = strlen( cell_value ).
-*        &quot; Addition to solve issue #120, contribution by Stefan Schm#ÄÂÄÂÄÂÃ¢ÂÂ#cker
+*        &quot; Addition to solve issue #120, contribution by Stefan Schm#Ã„Â‚Ã‚Â‚Ã„Â†Ã‚Â’Ã„Â‚Ã‚ÂƒÃƒÂ¢Ã‚Â€Ã‚Âš#cker
 *        &quot; Calculate width using Font Size and Font Type
 *        IF    cell_style IS BOUND
 *          AND cell_style-&gt;font IS BOUND.
@@ -2948,7 +2963,7 @@ endmethod.</source>
     ENDLOOP.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Change cell style" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -3051,7 +3066,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="IP_BORDERS_TOP_COLOR_TINT" VERSION="1" LANGU="E" DESCRIPT="Tint" CMPTYPE="1" MTDTYPE="0" EDITORDER="98 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_STYLE_COLOR_TINT" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="99 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CHANGE_CELL_STYLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method CHANGE_CELL_STYLE.
+  <source>METHOD change_cell_style.
   &quot; issue # 139
   DATA: stylemapping    TYPE zexcel_s_stylemapping,
 
@@ -3227,15 +3242,15 @@ endmethod.</source>
   ENDIF.
 
   IF ip_protection IS SUPPLIED.
-    MOVE-CORRESPONDING ip_alignment  TO complete_style-alignment.
+    MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
     IF ip_xprotection IS SUPPLIED.
       MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
     ELSE.
       IF ip_protection-hidden IS NOT INITIAL.
-        complete_style-protection-hidden = &apos;X&apos;.
+        complete_stylex-protection-hidden = &apos;X&apos;.
       ENDIF.
       IF ip_protection-locked IS NOT INITIAL.
-        complete_style-protection-locked = &apos;X&apos;.
+        complete_stylex-protection-locked = &apos;X&apos;.
       ENDIF.
     ENDIF.
   ENDIF.
@@ -3347,7 +3362,7 @@ endmethod.</source>
                       ip_row    = ip_row
                       ip_style  = ep_guid ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CONSTRUCTOR" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Ref to parent document" CMPTYPE="1" MTDTYPE="2" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
@@ -3396,7 +3411,7 @@ endmethod.</source>
   upper_cell-cell_row     = 1.
   upper_cell-cell_column  = 1.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="DELETE_MERGE" VERSION="1" LANGU="E" DESCRIPT="Delete the used merges" EXPOSURE="2" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method DELETE_MERGE.
@@ -3404,7 +3419,7 @@ endmethod.</source>
   DELETE sheet_content_merge INDEX 1.
   DELETE sheet_content_merge INDEX 1.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="FREEZE_PANES" VERSION="1" LANGU="E" DESCRIPT="Freeze panes for supplied number of rows and/or columns" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="FREEZE_PANES" SCONAME="IP_NUM_COLUMNS" VERSION="1" LANGU="E" DESCRIPT="Number of  columns to freeze (starting from left-most)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I" PAROPTIONL="X"/>
@@ -3434,7 +3449,7 @@ endmethod.</source>
 
   freeze_pane_cell_column = ip_num_columns + 1.
   freeze_pane_cell_row = ip_num_rows + 1.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GENERATE_TITLE" VERSION="1" LANGU="E" DESCRIPT="Generate title for worksheet (called if none is supplied )" EXPOSURE="0" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GENERATE_TITLE" SCONAME="EP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE"/>
@@ -3469,7 +3484,7 @@ endmethod.</source>
 
     ADD 1 TO sheetnumber.
   ENDDO.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ACTIVE_CELL" VERSION="1" LANGU="E" DESCRIPT="Get used range dimension" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ACTIVE_CELL" SCONAME="EP_ACTIVE_CELL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
@@ -3485,7 +3500,7 @@ endmethod.</source>
   SHIFT lv_active_row LEFT DELETING LEADING space.
   CONCATENATE lv_active_column lv_active_row INTO ep_active_cell.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" VERSION="1" LANGU="E" DESCRIPT="Get cell value" EXPOSURE="2" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -3511,7 +3526,7 @@ endmethod.</source>
   ep_value = ls_sheet_content-cell_value.
   ep_guid  = ls_sheet_content-cell_style.     &quot; issue 139 - added this to be used for columnwidth calculation
 
-  &quot; Addition to solve issue #120, contribution by Stefan Schm#ÄÂÄÂÄÂÃ¢ÂÂ#cker
+  &quot; Addition to solve issue #120, contribution by Stefan Schm#Ã„Â‚Ã‚Â‚Ã„Â†Ã‚Â’Ã„Â‚Ã‚ÂƒÃƒÂ¢Ã‚Â€Ã‚Âš#cker
   DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
         style          TYPE REF TO zcl_excel_style.
   IF ep_style IS REQUESTED.
@@ -3524,7 +3539,7 @@ endmethod.</source>
       ENDIF.
     ENDWHILE.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSION" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -3551,33 +3566,33 @@ endmethod.</source>
     r_column_dimension = &lt;fs_column_dimension&gt;-column_dimension.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Get column dimensions" EXPOSURE="2" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSIONS" SCONAME="R_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Collection of column dimensions" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_COLUMNDIME"/>
   <source>method GET_COLUMN_DIMENSIONS.
   r_column_dimension[] = me-&gt;column_dimensions[].
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COND_STYLES_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get conditional styles iterator" EXPOSURE="2" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COND_STYLES_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
   <source>method GET_COND_STYLES_ITERATOR.
 
   eo_iterator = me-&gt;conditional_styles-&gt;get_iterator( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get conditional styles iterator" EXPOSURE="2" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
   <source>method GET_DATA_VALIDATIONS_ITERATOR.
 
   eo_iterator = me-&gt;data_validations-&gt;get_iterator( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_SIZE" VERSION="1" LANGU="E" DESCRIPT="Get the number of data validation objects" EXPOSURE="2" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DATA_VALIDATIONS_SIZE" SCONAME="EP_SIZE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
   <source>method GET_DATA_VALIDATIONS_SIZE.
   ep_size = me-&gt;data_validations-&gt;size( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" SCONAME="R_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_COLUMNDIME"/>
@@ -3591,7 +3606,7 @@ endmethod.</source>
   ENDIF.
 
   r_column_dimension = me-&gt;default_column_dimension.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Gets default date format" EXPOSURE="2" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_EXCEL_DATE_FORMAT" SCONAME="EP_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Default date format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_NUMBER_FORMAT"/>
@@ -3617,7 +3632,7 @@ endmethod.</source>
   ENDIF.
 
   ep_default_excel_date_format = default_excel_date_format.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_EXCEL_TIME_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Gets default time format" EXPOSURE="2" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_EXCEL_TIME_FORMAT" SCONAME="EP_DEFAULT_EXCEL_TIME_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Default date format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_NUMBER_FORMAT"/>
@@ -3653,7 +3668,7 @@ endmethod.</source>
   ENDCASE.
 
   ep_default_excel_time_format = default_excel_time_format.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="25 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_ROW_DIMENSION" SCONAME="R_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_ROWDIMENSI"/>
@@ -3663,7 +3678,7 @@ endmethod.</source>
   ENDIF.
 
   r_row_dimension = me-&gt;default_row_dimension.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Get used range dimension" EXPOSURE="2" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DIMENSION_RANGE" SCONAME="EP_DIMENSION_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
@@ -3683,7 +3698,7 @@ endmethod.</source>
     CONCATENATE upper_cell-cell_coords &apos;:&apos; lower_cell-cell_coords INTO ep_dimension_range.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Gets drawing attached to the sheet" EXPOSURE="2" STATE="1" EDITORDER="27 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DRAWINGS" SCONAME="IP_TYPE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" PAROPTIONL="X"/>
@@ -3715,7 +3730,7 @@ endmethod.</source>
       ENDWHILE.
     WHEN OTHERS.
   ENDCASE.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DRAWINGS_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get iterator for drawings collection" EXPOSURE="2" STATE="1" EDITORDER="28 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DRAWINGS_ITERATOR" SCONAME="IP_TYPE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE"/>
@@ -3727,7 +3742,7 @@ endmethod.</source>
     WHEN zcl_excel_drawing=&gt;type_chart.
       eo_iterator = charts-&gt;get_iterator( ).
   ENDCASE.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_FREEZE_CELL" VERSION="1" LANGU="E" DESCRIPT="Gets the coordinates of cell determining freeze panes" EXPOSURE="2" STATE="1" EDITORDER="29 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_FREEZE_CELL" SCONAME="EP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
@@ -3735,7 +3750,7 @@ endmethod.</source>
   <source>method GET_FREEZE_CELL.
   ep_row = me-&gt;freeze_pane_cell_row.
   ep_column = me-&gt;freeze_pane_cell_column.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_GUID" VERSION="1" LANGU="E" DESCRIPT="Get sheet guid" EXPOSURE="2" STATE="1" EDITORDER="30 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_GUID" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="UUID"/>
@@ -3743,7 +3758,7 @@ endmethod.</source>
 
   ep_guid = me-&gt;guid.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_COLUMN" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="31 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_COLUMN" SCONAME="R_HIGHEST_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
@@ -3751,7 +3766,7 @@ endmethod.</source>
   <source>method GET_HIGHEST_COLUMN.
   me-&gt;update_dimension_range( ).
   r_highest_column = me-&gt;lower_cell-cell_column.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_ROW" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="32 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HIGHEST_ROW" SCONAME="R_HIGHEST_ROW" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
@@ -3759,19 +3774,19 @@ endmethod.</source>
   <source>method GET_HIGHEST_ROW.
   me-&gt;update_dimension_range( ).
   r_highest_row = me-&gt;lower_cell-cell_row.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HYPERLINKS_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get iterator for links collection" EXPOSURE="2" STATE="1" EDITORDER="33 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HYPERLINKS_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
   <source>method GET_HYPERLINKS_ITERATOR.
   eo_iterator = hyperlinks-&gt;get_iterator( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HYPERLINKS_SIZE" VERSION="1" LANGU="E" DESCRIPT="Gets the size of links collection" EXPOSURE="2" STATE="1" EDITORDER="34 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_HYPERLINKS_SIZE" SCONAME="EP_SIZE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
   <source>method GET_HYPERLINKS_SIZE.
   ep_size = hyperlinks-&gt;size( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_MERGE" VERSION="1" LANGU="E" DESCRIPT="Get the merge range" EXPOSURE="2" STATE="1" EDITORDER="35 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_MERGE" SCONAME="MERGE_RANGE" VERSION="1" LANGU="E" DESCRIPT="Table of Strings" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING_TABLE"/>
@@ -3847,7 +3862,7 @@ endmethod.</source>
 *    SEPARATED BY &apos;:&apos;.
 *  ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_RANGES_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get ranges iterator" EXPOSURE="2" STATE="1" EDITORDER="36 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_RANGES_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
@@ -3855,7 +3870,7 @@ endmethod.</source>
 
   eo_iterator = me-&gt;ranges-&gt;get_iterator( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="37 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSION" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
@@ -3877,31 +3892,31 @@ endmethod.</source>
     r_row_dimension = &lt;fs_row_dimension&gt;-row_dimension.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Get column dimensions" EXPOSURE="2" STATE="1" EDITORDER="38 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSIONS" SCONAME="R_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Collection of column dimensions" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_ROWDIMENSIO"/>
   <source>method GET_ROW_DIMENSIONS.
   r_row_dimension[] = me-&gt;row_dimensions[].
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABCOLOR" VERSION="1" LANGU="E" DESCRIPT="get tabcolor" EXPOSURE="2" STATE="1" EDITORDER="39 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABCOLOR" SCONAME="EV_TABCOLOR" VERSION="1" LANGU="E" DESCRIPT="Color ARGB" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_S_TABCOLOR"/>
   <source>method GET_TABCOLOR.
   ev_tabcolor = me-&gt;tabcolor.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_ITERATOR" VERSION="1" LANGU="E" DESCRIPT="Get iterator for tables collection" EXPOSURE="2" STATE="1" EDITORDER="40 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_ITERATOR" SCONAME="EO_ITERATOR" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION_ITERATOR"/>
   <source>method GET_TABLES_ITERATOR.
   eo_iterator = tables-&gt;if_object_collection~get_iterator( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_SIZE" VERSION="1" LANGU="E" DESCRIPT="Gets the size of tables collection" EXPOSURE="2" STATE="1" EDITORDER="41 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TABLES_SIZE" SCONAME="EP_SIZE" VERSION="1" LANGU="E" DESCRIPT="Size" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
   <source>method GET_TABLES_SIZE.
   ep_size = tables-&gt;if_object_collection~size( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TITLE" VERSION="1" LANGU="E" DESCRIPT="Get WorkSheet Title" EXPOSURE="2" STATE="1" EDITORDER="42 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_TITLE" SCONAME="IP_ESCAPED" VERSION="1" LANGU="E" DESCRIPT="Return escaped?" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;" PAROPTIONL="X"/>
@@ -3914,7 +3929,7 @@ endmethod.</source>
   ELSE.
     ep_title = me-&gt;title.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_VALUE_TYPE" VERSION="1" LANGU="E" DESCRIPT="Get abap type kind and apply conversion routine" EXPOSURE="0" STATE="1" EDITORDER="43 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_VALUE_TYPE" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -3971,13 +3986,13 @@ endmethod.</source>
     ENDIF.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_SET_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update range for print title" EXPOSURE="0" STATE="1" EDITORDER="58 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method PRINT_TITLE_SET_RANGE.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmöcker,                             2012-12-02
+*           - Stefan SchmÃ¶cker,                             2012-12-02
 *--------------------------------------------------------------------*
 
 
@@ -4070,7 +4085,7 @@ endmethod.</source>
 
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" VERSION="1" LANGU="E" DESCRIPT="Set cell value" EXPOSURE="2" STATE="1" EDITORDER="44 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -4112,7 +4127,7 @@ endmethod.</source>
 * Begin of change issue #152 - don&apos;t touch exisiting style if only value is passed
 *  lv_style_guid = ip_style.
   lv_column = zcl_excel_common=&gt;convert_column2int( ip_column ).
-  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH TABLE KEY cell_row    = ip_row      &quot; Changed to access via table key , Stefan Schmöcker, 2013-08-03
+  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH TABLE KEY cell_row    = ip_row      &quot; Changed to access via table key , Stefan SchmÃ¶cker, 2013-08-03
                                                                        cell_column = lv_column.
   IF sy-subrc = 0.
     IF ip_style IS INITIAL.
@@ -4306,14 +4321,14 @@ endmethod.</source>
   ENDIF.
 * End of Fix issue #162
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Set cell formula" EXPOSURE="2" STATE="1" EDITORDER="45 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="IP_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Cell Formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_FORMULA"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD set_cell_formula.
+  <source>method SET_CELL_FORMULA.
   DATA:
               lv_column                       TYPE zexcel_cell_column,
               ls_sheet_content                LIKE LINE OF me-&gt;sheet_content.
@@ -4340,7 +4355,7 @@ endmethod.</source>
   &lt;sheet_content&gt;-cell_formula = ip_formula.
 
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Set cell style" EXPOSURE="2" STATE="1" EDITORDER="46 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_STYLE" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -4370,7 +4385,7 @@ ENDMETHOD.</source>
     set_cell( ip_column = ip_column ip_row = ip_row ip_value = &apos;&apos; ip_style = ip_style ).
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_COLUMN_WIDTH" VERSION="1" LANGU="E" DESCRIPT="Set column width" EXPOSURE="2" STATE="1" EDITORDER="47 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_COLUMN_WIDTH" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -4406,7 +4421,7 @@ endmethod.</source>
   column_dimension-&gt;set_auto_size( ip_width_autosize ).
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Sets default date format" EXPOSURE="2" STATE="1" EDITORDER="48 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" SCONAME="IP_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Default date format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_NUMBER_FORMAT"/>
@@ -4420,7 +4435,7 @@ endmethod.</source>
   ENDIF.
 
   default_excel_date_format = ip_default_excel_date_format.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" VERSION="1" LANGU="E" DESCRIPT="Set the merge range" EXPOSURE="2" STATE="1" EDITORDER="49 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_COLUMN_START" VERSION="1" LANGU="E" DESCRIPT="Cell Column Start" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" PAROPTIONL="X"/>
@@ -4462,13 +4477,13 @@ endmethod.</source>
   CONCATENATE ip_column_end lv_row_alpha INTO ls_sheet_content-cell_coords.
   INSERT ls_sheet_content INTO TABLE sheet_content_merge.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Set print gridlines" EXPOSURE="2" STATE="1" EDITORDER="50 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_PRINT_GRIDLINES" SCONAME="I_PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Print Gridlines" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_PRINT_GRIDLINES"/>
   <source>method SET_PRINT_GRIDLINES.
   me-&gt;print_gridlines = i_print_gridlines.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" VERSION="1" LANGU="E" DESCRIPT="Set row height" EXPOSURE="2" STATE="1" EDITORDER="51 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -4499,25 +4514,25 @@ endmethod.</source>
 
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Set show gridlines" EXPOSURE="2" STATE="1" EDITORDER="52 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_GRIDLINES" SCONAME="I_SHOW_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Show Gridlines" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHOW_GRIDLINES"/>
   <source>method SET_SHOW_GRIDLINES.
   me-&gt;show_gridlines = i_show_gridlines.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_ROWCOLHEADERS" VERSION="1" LANGU="E" DESCRIPT="Set show colum row headers" EXPOSURE="2" STATE="1" EDITORDER="53 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_ROWCOLHEADERS" SCONAME="I_SHOW_ROWCOLHEADERS" VERSION="1" LANGU="E" DESCRIPT="Show Gridlines" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHOW_ROWCOLHEADER"/>
   <source>method SET_SHOW_ROWCOLHEADERS.
   me-&gt;show_rowcolheaders = i_show_rowcolheaders.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABCOLOR" VERSION="1" LANGU="E" DESCRIPT="Set tabcolor" EXPOSURE="2" STATE="1" EDITORDER="54 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABCOLOR" SCONAME="IV_TABCOLOR" VERSION="1" LANGU="E" DESCRIPT="Tabcolor" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_TABCOLOR"/>
   <source>method SET_TABCOLOR.
   me-&gt;tabcolor = iv_tabcolor.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" VERSION="1" LANGU="E" DESCRIPT="Set cell value from a table" EXPOSURE="2" STATE="1" EDITORDER="55 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TABLE" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
@@ -4601,7 +4616,7 @@ endmethod.</source>
     ENDIF.
   ENDLOOP.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" VERSION="1" LANGU="E" DESCRIPT="Set WorkSheet Title" EXPOSURE="2" STATE="1" EDITORDER="56 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_TITLE" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE"/>
@@ -4609,20 +4624,20 @@ endmethod.</source>
   <source>method SET_TITLE.
 *--------------------------------------------------------------------*
 * ToDos:
-*        2do§1   The current coding for replacing a named ranges name
+*        2doÂ§1   The current coding for replacing a named ranges name
 *                after renaming a sheet should be checked if it is
 *                really working if sheetname should be escaped
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wip )              2012-12-08
+*              - Stefan SchmÃ¶cker,      (wip )              2012-12-08
 *              - ...
 * changes: aligning code
 *          message made to support multilinguality
 *--------------------------------------------------------------------*
 * issue#243 - &apos; is not allowed as first character in sheet title
-*              - Stefan Schmöcker,                          2012-12-02
+*              - Stefan SchmÃ¶cker,                          2012-12-02
 * changes: added additional check for &apos; as first character
 *--------------------------------------------------------------------*
   DATA:       lo_worksheets_iterator          TYPE REF TO cl_object_collection_iterator,
@@ -4685,7 +4700,7 @@ endmethod.</source>
 * After changing this worksheet&apos;s title we have to adjust
 * all ranges that are referring to this worksheet.
 *--------------------------------------------------------------------*
-* 2do§1  -  Check if the following quickfix is solid
+* 2doÂ§1  -  Check if the following quickfix is solid
 *           I fear it isn&apos;t - but this implementation is better then
 *           nothing at all since it handles a supposed majority of cases
 *--------------------------------------------------------------------*
@@ -4704,7 +4719,7 @@ endmethod.</source>
   ENDWHILE.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Update dimension range" EXPOSURE="0" STATE="1" EDITORDER="57 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="UPDATE_DIMENSION_RANGE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -4747,6 +4762,6 @@ endmethod.</source>
   SHIFT lv_row_alpha LEFT DELETING LEADING space.
   CONCATENATE lv_column_alpha lv_row_alpha INTO lower_cell-cell_coords.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
 </CLAS>
