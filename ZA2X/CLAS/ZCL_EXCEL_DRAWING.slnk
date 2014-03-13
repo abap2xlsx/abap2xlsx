@@ -1,140 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" UUID="F950494D16947660E1000000C0A8FA28" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <publicSection>class ZCL_EXCEL_DRAWING definition
-  public
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_DRAWING
-*&quot;* do not include other source files here!!!
-  type-pools ABAP .
-
-  constants C_GRAPH_PIE type ZEXCEL_GRAPH_TYPE value &apos;1&apos;. &quot;#EC NOTEXT
-  constants C_GRAPH_LINE type ZEXCEL_GRAPH_TYPE value &apos;2&apos;. &quot;#EC NOTEXT
-  constants C_GRAPH_BARS type ZEXCEL_GRAPH_TYPE value &apos;0&apos;. &quot;#EC NOTEXT
-  data GRAPH_TYPE type ZEXCEL_GRAPH_TYPE .
-  data TITLE type STRING value &apos;image1.jpg&apos;. &quot;#EC NOTEXT .
-  data X_REFERENCES type CHAR1 .
-  data Y_REFERENCES type CHAR1 .
-  constants TYPE_IMAGE type ZEXCEL_DRAWING_TYPE value &apos;image&apos;. &quot;#EC NOTEXT
-  constants TYPE_CHART type ZEXCEL_DRAWING_TYPE value &apos;chart&apos;. &quot;#EC NOTEXT
-  constants ANCHOR_ABSOLUTE type ZEXCEL_DRAWING_ANCHOR value &apos;ABS&apos;. &quot;#EC NOTEXT
-  constants ANCHOR_ONE_CELL type ZEXCEL_DRAWING_ANCHOR value &apos;ONE&apos;. &quot;#EC NOTEXT
-  constants ANCHOR_TWO_CELL type ZEXCEL_DRAWING_ANCHOR value &apos;TWO&apos;. &quot;#EC NOTEXT
-  data GRAPH type ref to ZCL_EXCEL_GRAPH .
-  constants C_MEDIA_TYPE_BMP type STRING value &apos;bmp&apos;. &quot;#EC NOTEXT
-  constants C_MEDIA_TYPE_XML type STRING value &apos;xml&apos;. &quot;#EC NOTEXT
-  constants C_MEDIA_TYPE_JPG type STRING value &apos;jpg&apos;. &quot;#EC NOTEXT
-
-  methods CONSTRUCTOR
-    importing
-      !IP_TYPE type ZEXCEL_DRAWING_TYPE default ZCL_EXCEL_DRAWING=&gt;TYPE_IMAGE
-      !IP_TITLE type ZEXCEL_SHEET_TITLE optional .
-  methods CREATE_MEDIA_NAME
-    importing
-      !IP_INDEX type I .
-  methods GET_FROM_COL
-    returning
-      value(R_FROM_COL) type ZEXCEL_CELL_COLUMN .
-  methods GET_FROM_ROW
-    returning
-      value(R_FROM_ROW) type ZEXCEL_CELL_ROW .
-  methods GET_GUID
-    returning
-      value(EP_GUID) type GUID_16 .
-  methods GET_HEIGHT_EMU_STR
-    returning
-      value(R_HEIGHT) type STRING .
-  methods GET_MEDIA
-    returning
-      value(R_MEDIA) type XSTRING .
-  methods GET_MEDIA_NAME
-    returning
-      value(R_NAME) type STRING .
-  methods GET_MEDIA_TYPE
-    returning
-      value(R_TYPE) type STRING .
-  methods GET_NAME
-    returning
-      value(R_NAME) type STRING .
-  methods GET_TO_COL
-    returning
-      value(R_TO_COL) type ZEXCEL_CELL_COLUMN .
-  methods GET_TO_ROW
-    returning
-      value(R_TO_ROW) type ZEXCEL_CELL_ROW .
-  methods GET_WIDTH_EMU_STR
-    returning
-      value(R_WIDTH) type STRING .
-  class-methods PIXEL2EMU
-    importing
-      !IP_PIXEL type INT4
-      !IP_DPI type INT2 optional
-    returning
-      value(R_EMU) type INT4 .
-  methods SET_MEDIA
-    importing
-      !IP_MEDIA type XSTRING optional
-      !IP_MEDIA_TYPE type STRING
-      !IP_WIDTH type INT4 default 0
-      !IP_HEIGHT type INT4 default 0 .
-  methods SET_MEDIA_MIME
-    importing
-      !IP_IO type SKWF_IO
-      !IP_WIDTH type INT4
-      !IP_HEIGHT type INT4 .
-  methods SET_MEDIA_WWW
-    importing
-      !IP_KEY type WWWDATATAB
-      !IP_WIDTH type INT4
-      !IP_HEIGHT type INT4 .
-  methods SET_POSITION
-    importing
-      !IP_FROM_ROW type ZEXCEL_CELL_ROW
-      !IP_FROM_COL type ZEXCEL_CELL_COLUMN_ALPHA
-      !IP_ROWOFF type INT4 optional
-      !IP_COLOFF type INT4 optional .
-  methods SET_POSITION2
-    importing
-      !IP_FROM type ZEXCEL_DRAWING_LOCATION
-      !IP_TO type ZEXCEL_DRAWING_LOCATION
-      !IP_ANCHOR type ZEXCEL_DRAWING_ANCHOR optional .
-  methods GET_POSITION
-    returning
-      value(RP_POSITION) type ZEXCEL_DRAWING_POSITION .
-  methods GET_TYPE
-    returning
-      value(RP_TYPE) type ZEXCEL_DRAWING_TYPE .
-  methods GET_INDEX
-    returning
-      value(RP_INDEX) type STRING .
-  methods LOAD_CHART_ATTRIBUTES
-    importing
-      value(IP_CHART) type ref to IF_IXML_DOCUMENT .</publicSection>
- <protectedSection>*&quot;* protected components of class ZCL_EXCEL_DRAWING
-*&quot;* do not include other source files here!!!
-protected section.</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_DRAWING
-*&quot;* do not include other source files here!!!
-
-  data TYPE type ZEXCEL_DRAWING_TYPE value TYPE_IMAGE. &quot;#EC NOTEXT .
-  data INDEX type STRING .
-  data ANCHOR type ZEXCEL_DRAWING_ANCHOR value ANCHOR_ONE_CELL. &quot;#EC NOTEXT .
-  constants C_MEDIA_SOURCE_WWW type CHAR1 value 1. &quot;#EC NOTEXT
-  constants C_MEDIA_SOURCE_XSTRING type CHAR1 value 0. &quot;#EC NOTEXT
-  constants C_MEDIA_SOURCE_MIME type CHAR1 value 2. &quot;#EC NOTEXT
-  data GUID type GUID_16 .
-  data MEDIA type XSTRING .
-  data MEDIA_KEY_WWW type WWWDATATAB .
-  data MEDIA_NAME type STRING .
-  data MEDIA_SOURCE type CHAR1 .
-  data MEDIA_TYPE type STRING .
-  data IO type SKWF_IO .
-  data FROM_LOC type ZEXCEL_DRAWING_LOCATION .
-  data TO_LOC type ZEXCEL_DRAWING_LOCATION .
-  data SIZE type ZEXCEL_DRAWING_SIZE .</privateSection>
+<CLAS CLSNAME="ZCL_EXCEL_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -198,7 +63,7 @@ protected section.</protectedSection>
   anchor = anchor_one_cell.
   from_loc-col = 1.
   from_loc-row = 1.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CREATE_MEDIA_NAME" VERSION="1" LANGU="E" DESCRIPT="Generate media name image#.ext" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="CREATE_MEDIA_NAME" SCONAME="IP_INDEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
@@ -210,19 +75,19 @@ endmethod.</source>
   index = ip_index.
   CONCATENATE me-&gt;type index INTO media_name.
   CONDENSE media_name NO-GAPS.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_FROM_COL" VERSION="1" LANGU="E" DESCRIPT="From col" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_FROM_COL" SCONAME="R_FROM_COL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
   <source>method GET_FROM_COL.
   r_from_col = me-&gt;from_loc-col.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_FROM_ROW" VERSION="1" LANGU="E" DESCRIPT="From row" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_FROM_ROW" SCONAME="R_FROM_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <source>method GET_FROM_ROW.
   r_from_row = me-&gt;from_loc-row.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_GUID" VERSION="1" LANGU="E" DESCRIPT="Get sheet guid" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_GUID" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="GUID_16"/>
@@ -230,20 +95,20 @@ endmethod.</source>
 
   ep_guid = me-&gt;guid.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_HEIGHT_EMU_STR" VERSION="1" LANGU="E" DESCRIPT="Height of bitmap in EMU as string" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_HEIGHT_EMU_STR" SCONAME="R_HEIGHT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method GET_HEIGHT_EMU_STR.
   r_height = pixel2emu( size-height ).
   CONDENSE r_height NO-GAPS.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get index" EXPOSURE="2" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_INDEX" SCONAME="RP_INDEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method GET_INDEX.
   rp_index = me-&gt;index.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_MEDIA" VERSION="1" LANGU="E" DESCRIPT="Returns media as XSTRING" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_MEDIA" SCONAME="R_MEDIA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -304,25 +169,25 @@ endmethod.</source>
           failed       = 1
           OTHERS       = 2.
   ENDCASE.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_MEDIA_NAME" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_MEDIA_NAME" SCONAME="R_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method GET_MEDIA_NAME.
   CONCATENATE media_name  `.` media_type INTO r_name.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_MEDIA_TYPE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_MEDIA_TYPE" SCONAME="R_TYPE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method GET_MEDIA_TYPE.
   r_type = media_type.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_NAME" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_NAME" SCONAME="R_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method GET_NAME.
   r_name = title.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_POSITION" VERSION="1" LANGU="E" DESCRIPT="Get position of drawing" EXPOSURE="2" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_POSITION" SCONAME="RP_POSITION" VERSION="1" LANGU="E" DESCRIPT="Drawing position for Excel" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_POSITION"/>
@@ -331,36 +196,36 @@ endmethod.</source>
   rp_position-from = from_loc.
   rp_position-to = to_loc.
   rp_position-size = size.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_TO_COL" VERSION="1" LANGU="E" DESCRIPT="To col" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_TO_COL" SCONAME="R_TO_COL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
   <source>method GET_TO_COL.
   r_to_col = me-&gt;to_loc-col.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_TO_ROW" VERSION="1" LANGU="E" DESCRIPT="To row" EXPOSURE="2" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_TO_ROW" SCONAME="R_TO_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <source>method GET_TO_ROW.
   r_to_row = me-&gt;to_loc-row.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_TYPE" VERSION="1" LANGU="E" DESCRIPT="Get drawing type" EXPOSURE="2" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_TYPE" SCONAME="RP_TYPE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE"/>
   <source>method GET_TYPE.
   rp_type = me-&gt;type.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_WIDTH_EMU_STR" VERSION="1" LANGU="E" DESCRIPT="Width of bitmap in EMU as string" EXPOSURE="2" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="GET_WIDTH_EMU_STR" SCONAME="R_WIDTH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method GET_WIDTH_EMU_STR.
   r_width = pixel2emu( size-width ).
   CONDENSE r_width NO-GAPS.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="LOAD_CHART_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Load chart attributes" EXPOSURE="2" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="LOAD_CHART_ATTRIBUTES" SCONAME="IP_CHART" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
-  <source>METHOD load_chart_attributes.
+  <source>method LOAD_CHART_ATTRIBUTES.
   DATA: node                TYPE REF TO if_ixml_element.
   DATA: node2               TYPE REF TO if_ixml_element.
   DATA: node3               TYPE REF TO if_ixml_element.
@@ -1042,12 +907,12 @@ endmethod.</source>
   me-&gt;graph-&gt;pagemargins = ls_pagemargins.
 
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="PIXEL2EMU" VERSION="1" LANGU="E" DESCRIPT="Convert pixel to EMU" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="PIXEL2EMU" SCONAME="IP_PIXEL" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="PIXEL2EMU" SCONAME="IP_DPI" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT2" PAROPTIONL="X"/>
-  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="PIXEL2EMU" SCONAME="R_EMU" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
+  <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="PIXEL2EMU" SCONAME="R_EMU" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method PIXEL2EMU.
 * suppose 96 DPI
   IF ip_dpi IS SUPPLIED.
@@ -1056,14 +921,14 @@ ENDMETHOD.</source>
 * suppose 96 DPI
     r_emu = ip_pixel  * 914400 / 96.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" VERSION="1" LANGU="E" DESCRIPT="Add media to drawing as XSTRING" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_MEDIA" VERSION="1" LANGU="E" DESCRIPT="used only for template of charts" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_MEDIA_TYPE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_WIDTH" VERSION="1" LANGU="E" DESCRIPT="used only for image types, not for charts" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4" PARVALUE="0"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA" SCONAME="IP_HEIGHT" VERSION="1" LANGU="E" DESCRIPT="used only for image types, not for charts" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4" PARVALUE="0"/>
-  <source>METHOD set_media.
+  <source>method SET_MEDIA.
   IF ip_media IS SUPPLIED.
     media = ip_media.
   ENDIF.
@@ -1075,7 +940,7 @@ endmethod.</source>
   IF ip_height IS SUPPLIED.
     size-height = ip_height.
   ENDIF.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA_MIME" VERSION="1" LANGU="E" DESCRIPT="Add media from mime repository" EXPOSURE="2" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA_MIME" SCONAME="IP_IO" VERSION="1" LANGU="E" DESCRIPT="KW Framework: Object Key" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SKWF_IO"/>
@@ -1100,7 +965,7 @@ ENDMETHOD.</source>
 
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA_WWW" VERSION="1" LANGU="E" DESCRIPT="Add media from www repository SMW0" EXPOSURE="2" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_MEDIA_WWW" SCONAME="IP_KEY" VERSION="1" LANGU="E" DESCRIPT="Contents of table WWWDATA" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="WWWDATATAB"/>
@@ -1124,14 +989,14 @@ endmethod.</source>
 
   size-width  = ip_width.
   size-height = ip_height.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION" VERSION="1" LANGU="E" DESCRIPT="Set position of drawing" EXPOSURE="2" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION" SCONAME="IP_FROM_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION" SCONAME="IP_FROM_COL" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION" SCONAME="IP_ROWOFF" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION" SCONAME="IP_COLOFF" VERSION="1" LANGU="E" DESCRIPT="Natural number" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4" PAROPTIONL="X"/>
-  <source>METHOD set_position.
+  <source>method SET_POSITION.
   from_loc-col = zcl_excel_common=&gt;convert_column2int( ip_from_col ) - 1.
   IF ip_coloff IS SUPPLIED.
     from_loc-col_offset = ip_coloff.
@@ -1141,7 +1006,7 @@ endmethod.</source>
     from_loc-row_offset = ip_rowoff.
   ENDIF.
   anchor = anchor_one_cell.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION2" VERSION="1" LANGU="E" DESCRIPT="Set position of drawing" EXPOSURE="2" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_DRAWING" CMPNAME="SET_POSITION2" SCONAME="IP_FROM" VERSION="1" LANGU="E" DESCRIPT="Drawing location for Excel" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_LOCATION"/>
@@ -1171,6 +1036,6 @@ ENDMETHOD.</source>
   me-&gt;to_loc = ip_to.
   me-&gt;anchor = lv_anchor.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
 </CLAS>
