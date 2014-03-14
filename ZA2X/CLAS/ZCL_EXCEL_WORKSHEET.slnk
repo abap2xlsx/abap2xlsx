@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_METRIC" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="9 " SRCCOLUMN2="32 " TYPESRC_LENG="143 " TYPESRC="BEGIN OF mty_s_font_metric,
+           char       TYPE c LENGTH 1,
+           char_width TYPE tdcwidths,
+         END OF mty_s_font_metric
+"/>
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_METRICS" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="11 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="30 " TYPESRC_LENG="105 " TYPESRC="mty_th_font_metrics
+           TYPE HASHED TABLE OF mty_s_font_metric
+           WITH UNIQUE KEY char
+"/>
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_CACHE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="15 " SRCCOLUMN1="4 " SRCROW2="21 " SRCCOLUMN2="31 " TYPESRC_LENG="306 " TYPESRC="BEGIN OF mty_s_font_cache,
+           font_name       TYPE zexcel_style_font_name,
+           font_height     TYPE tdfontsize,
+           flag_bold       TYPE abap_bool,
+           flag_italic     TYPE abap_bool,
+           th_font_metrics TYPE mty_th_font_metrics,
+         END OF mty_s_font_cache
+"/>
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_CACHE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="23 " SRCCOLUMN1="4 " SRCROW2="25 " SRCCOLUMN2="69 " TYPESRC_LENG="141 " TYPESRC="mty_th_font_cache
+           TYPE HASHED TABLE OF mty_s_font_cache
+           WITH UNIQUE KEY font_name font_height flag_bold flag_italic
+"/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
@@ -214,6 +235,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GUID" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" EXPOSURE="0" STATE="1" EDITORDER="17 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="UUID" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Colletion of hyperlinks" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_OBJECT_COLLECTION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="LOWER_CELL" VERSION="1" LANGU="E" DESCRIPT="Bottom right range cell" EXPOSURE="0" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTH_FONT_CACHE" VERSION="1" LANGU="E" DESCRIPT="Hash table containing fonts and their metrics" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="MTY_TH_FONT_CACHE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Print Gridlines" EXPOSURE="2" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTRDONLY="X" ATTVALUE="ABAP_FALSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_PRINT_GRIDLINES" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_COL_FROM" VERSION="1" LANGU="E" DESCRIPT="Cell Column" EXPOSURE="0" STATE="1" EDITORDER="33 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="PRINT_TITLE_COL_TO" VERSION="1" LANGU="E" DESCRIPT="Cell Column" EXPOSURE="0" STATE="1" EDITORDER="34 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -2860,31 +2882,255 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" VERSION="1" LANGU="E" DESCRIPT="Calculate width of cell" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
-  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" SCONAME="EP_WIDTH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" SCONAME="EP_WIDTH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="FLOAT"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_CELL_WIDTH" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method CALCULATE_CELL_WIDTH.
-  DATA: cell_value    TYPE zexcel_cell_value,
-        guid          TYPE zexcel_cell_style,
-        stylemapping  TYPE zexcel_s_stylemapping.
+  <source>*--------------------------------------------------------------------*
+* issue #293   - Roberto Bianco
+*              - Christian Assig                            2014-03-14
+*
+* changes: - Calculate widths using SAPscript font metrics
+*            (transaction SE73)
+*          - Calculate the width of dates
+*          - Add additional width for auto filter buttons
+*          - Add cell padding to simulate Excel behavior
+*--------------------------------------------------------------------*
+METHOD calculate_cell_width.
 
-  me-&gt;get_cell( EXPORTING ip_column = ip_column  &quot; Cell Column
-                          ip_row    = ip_row      &quot; Cell Row
-                IMPORTING ep_value  = cell_value
-                          ep_guid   = guid ).&quot; Cell Value ).
+  CONSTANTS:
+    lc_default_font_name   TYPE zexcel_style_font_name VALUE &apos;Calibri&apos;, &quot;#EC NOTEXT
+    lc_default_font_height TYPE tdfontsize VALUE &apos;110&apos;,
+    lc_excel_cell_padding  TYPE float VALUE &apos;0.75&apos;.
 
+  DATA: ld_cell_value                 TYPE zexcel_cell_value,
+        ld_current_character          TYPE c LENGTH 1,
+        ld_style_guid                 TYPE zexcel_cell_style,
+        ls_stylemapping               TYPE zexcel_s_stylemapping,
+        lo_table_object               TYPE REF TO object,
+        lo_table                      TYPE REF TO zcl_excel_table,
+        ld_table_top_left_column      TYPE zexcel_cell_column,
+        ld_table_bottom_right_column  TYPE zexcel_cell_column,
+        ld_flag_contains_auto_filter  TYPE abap_bool VALUE abap_false,
+        ld_flag_bold                  TYPE abap_bool VALUE abap_false,
+        ld_flag_italic                TYPE abap_bool VALUE abap_false,
+        ld_date                       TYPE d,
+        ld_date_char                  TYPE c LENGTH 50,
+        ld_font_height                TYPE tdfontsize VALUE lc_default_font_height,
+        lt_itcfc                      TYPE STANDARD TABLE OF itcfc,
+        ld_offset                     TYPE i,
+        ld_uccp                       TYPE i,
+        ls_font_metric                TYPE mty_s_font_metric,
+        ld_width_from_font_metrics    TYPE i,
+        ld_font_family                TYPE itcfh-tdfamily,
+        ld_font_name                  TYPE zexcel_style_font_name VALUE lc_default_font_name,
+        lt_font_families              LIKE STANDARD TABLE OF ld_font_family,
+        ls_font_cache                 TYPE mty_s_font_cache.
 
-  ep_width = STRLEN( cell_value ).
-  TRY.
-      stylemapping = me-&gt;excel-&gt;get_style_to_guid( guid ).
-    CATCH zcx_excel.
-      EXIT.  &quot; Do nothing if no style was found
-  ENDTRY.
+  FIELD-SYMBOLS: &lt;ls_font_cache&gt;  TYPE mty_s_font_cache,
+                 &lt;ls_font_metric&gt; TYPE mty_s_font_metric,
+                 &lt;ls_itcfc&gt;       TYPE itcfc.
 
-  IF stylemapping-complete_stylex-font-size = &apos;X&apos;.
-    ep_width = ep_width * stylemapping-complete_style-font-size / 11.
+  &quot; Determine cell content and cell style
+  me-&gt;get_cell( EXPORTING ip_column = ip_column
+                          ip_row    = ip_row
+                IMPORTING ep_value  = ld_cell_value
+                          ep_guid   = ld_style_guid ).
+
+  &quot; ABAP2XLSX uses tables to define areas containing headers and
+  &quot; auto-filters. Find out if the current cell is in the header
+  &quot; of one of these tables.
+  LOOP AT me-&gt;tables-&gt;collection INTO lo_table_object.
+    &quot; Downcast: OBJECT -&gt; ZCL_EXCEL_TABLE
+    lo_table ?= lo_table_object.
+
+    &quot; Convert column letters to corresponding integer values
+    ld_table_top_left_column =
+      zcl_excel_common=&gt;convert_column2int(
+        lo_table-&gt;settings-top_left_column ).
+
+    ld_table_bottom_right_column =
+      zcl_excel_common=&gt;convert_column2int(
+        lo_table-&gt;settings-bottom_right_column ).
+
+    &quot; Is the current cell part of the table header?
+    IF ip_column BETWEEN ld_table_top_left_column AND
+                         ld_table_bottom_right_column AND
+       ip_row    EQ lo_table-&gt;settings-top_left_row.
+      &quot; Current cell is part of the table header
+      &quot; -&gt; Assume that an auto filter is present and that the font is
+      &quot;    bold
+      ld_flag_contains_auto_filter = abap_true.
+      ld_flag_bold = abap_true.
+    ENDIF.
+  ENDLOOP.
+
+  &quot; If a style GUID is present, read style attributes
+  IF ld_style_guid IS NOT INITIAL.
+    TRY.
+        &quot; Read style attributes
+        ls_stylemapping = me-&gt;excel-&gt;get_style_to_guid( ld_style_guid ).
+
+        &quot; If the current cell contains the default date format,
+        &quot; convert the cell value to a date and calculate its length
+        IF ls_stylemapping-complete_style-number_format-format_code =
+           zcl_excel_style_number_format=&gt;c_format_date_std.
+
+          &quot; Convert excel date to ABAP date
+          ld_date =
+            zcl_excel_common=&gt;excel_string_to_date( ld_cell_value ).
+
+          &quot; Format ABAP date using user&apos;s formatting settings
+          WRITE ld_date TO ld_date_char.
+
+          &quot; Remember the formatted date to calculate the cell size
+          ld_cell_value = ld_date_char.
+
+        ENDIF.
+
+        &quot; Read the font size and convert it to the font height
+        &quot; used by SAPscript (multiplication by 10)
+        IF ls_stylemapping-complete_stylex-font-size = abap_true.
+          ld_font_height = ls_stylemapping-complete_style-font-size * 10.
+        ENDIF.
+
+        &quot; If set, remember the font name
+        IF ls_stylemapping-complete_stylex-font-name = abap_true.
+          ld_font_name = ls_stylemapping-complete_style-font-name.
+        ENDIF.
+
+        &quot; If set, remember whether font is bold and italic.
+        IF ls_stylemapping-complete_stylex-font-bold = abap_true.
+          ld_flag_bold = ls_stylemapping-complete_style-font-bold.
+        ENDIF.
+
+        IF ls_stylemapping-complete_stylex-font-italic = abap_true.
+          ld_flag_italic = ls_stylemapping-complete_style-font-italic.
+        ENDIF.
+
+      CATCH zcx_excel ##NO_HANDLER.
+        &quot; Style GUID is present, but style was not found
+        &quot; Continue with default values
+
+    ENDTRY.
   ENDIF.
 
-  endmethod.</source>
+  &quot; Check if the same font (font name and font attributes) was already
+  &quot; used before
+  READ TABLE mth_font_cache
+    WITH TABLE KEY
+      font_name   = ld_font_name
+      font_height = ld_font_height
+      flag_bold   = ld_flag_bold
+      flag_italic = ld_flag_italic
+    ASSIGNING &lt;ls_font_cache&gt;.
+
+  IF sy-subrc &lt;&gt; 0.
+    &quot; Font is used for the first time
+    &quot; Add the font to our local font cache
+    ls_font_cache-font_name   = ld_font_name.
+    ls_font_cache-font_height = ld_font_height.
+    ls_font_cache-flag_bold   = ld_flag_bold.
+    ls_font_cache-flag_italic = ld_flag_italic.
+    INSERT ls_font_cache INTO TABLE mth_font_cache
+      ASSIGNING &lt;ls_font_cache&gt;.
+
+    &quot; Determine the SAPscript font family name from the Excel
+    &quot; font name
+    SELECT tdfamily
+      FROM tfo01
+      INTO TABLE lt_font_families
+      UP TO 1 ROWS
+      WHERE tdtext = ld_font_name.
+
+    &quot; Check if a matching font family was found
+    &quot; Fonts can be uploaded from TTF files using transaction SE73
+    IF lines( lt_font_families ) &gt; 0.
+      READ TABLE lt_font_families INDEX 1 INTO ld_font_family.
+
+      &quot; Load font metrics (returns a table with the size of each letter
+      &quot; in the font)
+      CALL FUNCTION &apos;LOAD_FONT&apos;
+        EXPORTING
+          family      = ld_font_family
+          height      = ld_font_height
+          printer     = &apos;SWIN&apos;
+          bold        = ld_flag_bold
+          italic      = ld_flag_italic
+        TABLES
+          metric      = lt_itcfc
+        EXCEPTIONS
+          font_family = 1
+          codepage    = 2
+          device_type = 3
+          OTHERS      = 4.
+      IF sy-subrc &lt;&gt; 0.
+        CLEAR lt_itcfc.
+      ENDIF.
+
+      &quot; For faster access, convert each character number to the actual
+      &quot; character, and store the characters and their sizes in a hash
+      &quot; table
+      LOOP AT lt_itcfc ASSIGNING &lt;ls_itcfc&gt;.
+        ld_uccp = &lt;ls_itcfc&gt;-cpcharno.
+        ls_font_metric-char =
+          cl_abap_conv_in_ce=&gt;uccpi( ld_uccp ).
+        ls_font_metric-char_width = &lt;ls_itcfc&gt;-tdcwidths.
+        INSERT ls_font_metric
+          INTO TABLE &lt;ls_font_cache&gt;-th_font_metrics.
+      ENDLOOP.
+
+    ENDIF.
+  ENDIF.
+
+  &quot; Calculate the cell width
+  &quot; If available, use font metrics
+  IF lines( &lt;ls_font_cache&gt;-th_font_metrics ) = 0.
+    &quot; Font metrics are not available
+    &quot; -&gt; Calculate the cell width using only the font size
+    ep_width =
+      strlen( ld_cell_value ) * ld_font_height / lc_default_font_height
+      + lc_excel_cell_padding.
+
+  ELSE.
+    &quot; Font metrics are available
+
+    &quot; Calculate the size of the text by adding the sizes of each
+    &quot; letter
+    DO strlen( ld_cell_value ) TIMES.
+      &quot; Subtract 1, because the first character is at offset 0
+      ld_offset = sy-index - 1.
+
+      &quot; Read the current character from the cell value
+      ld_current_character = ld_cell_value+ld_offset(1).
+
+      &quot; Look up the size of the current letter
+      READ TABLE &lt;ls_font_cache&gt;-th_font_metrics
+        WITH TABLE KEY char = ld_current_character
+        ASSIGNING &lt;ls_font_metric&gt;.
+      IF sy-subrc = 0.
+        &quot; The size of the letter is known
+        &quot; -&gt; Add the actual size of the letter
+        ADD &lt;ls_font_metric&gt;-char_width TO ld_width_from_font_metrics.
+      ELSE.
+        &quot; The size of the letter is unknown
+        &quot; -&gt; Add the font height as the default letter size
+        ADD ld_font_height TO ld_width_from_font_metrics.
+      ENDIF.
+    ENDDO.
+
+    &quot; Add cell padding (Excel makes columns a bit wider than the space
+    &quot; that is needed for the text itself) and convert unit
+    &quot; (division by 100)
+    ep_width = ld_width_from_font_metrics / 100 + lc_excel_cell_padding.
+  ENDIF.
+
+  &quot; If the current cell contains an auto filter, make it a bit wider.
+  &quot; The size used by the auto filter button does not depend on the font
+  &quot; size.
+  IF ld_flag_contains_auto_filter = abap_true.
+    ADD 2 TO ep_width.
+  ENDIF.
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_COLUMN_WIDTHS" VERSION="1" LANGU="E" DESCRIPT="Calculate widths for auto-size columns" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="CALCULATE_COLUMN_WIDTHS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -2906,7 +3152,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
   DATA: cell_style  TYPE REF TO zcl_excel_style.
   DATA: count       TYPE int4.
   DATA: highest_row TYPE int4.
-  DATA: width       TYPE i.
+  DATA: width       TYPE float.
 
   FIELD-SYMBOLS: &lt;column_dimension&gt; LIKE LINE OF column_dimensions.
   FIELD-SYMBOLS: &lt;auto_size&gt;        LIKE LINE OF auto_sizes.
