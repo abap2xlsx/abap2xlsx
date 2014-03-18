@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
-<types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_METRIC" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="9 " SRCCOLUMN2="32 " TYPESRC_LENG="143 " TYPESRC="BEGIN OF mty_s_font_metric,
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_METRIC" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="4 " SRCCOLUMN1="4 " SRCROW2="7 " SRCCOLUMN2="32 " TYPESRC_LENG="139 " TYPESRC="BEGIN OF mty_s_font_metric,
            char       TYPE c LENGTH 1,
            char_width TYPE tdcwidths,
          END OF mty_s_font_metric
 "/>
- <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_METRICS" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="11 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="30 " TYPESRC_LENG="105 " TYPESRC="mty_th_font_metrics
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_METRICS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="9 " SRCCOLUMN1="4 " SRCROW2="11 " SRCCOLUMN2="30 " TYPESRC_LENG="102 " TYPESRC="mty_th_font_metrics
            TYPE HASHED TABLE OF mty_s_font_metric
            WITH UNIQUE KEY char
 "/>
- <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_CACHE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="15 " SRCCOLUMN1="4 " SRCROW2="21 " SRCCOLUMN2="31 " TYPESRC_LENG="306 " TYPESRC="BEGIN OF mty_s_font_cache,
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_CACHE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="13 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="31 " TYPESRC_LENG="299 " TYPESRC="BEGIN OF mty_s_font_cache,
            font_name       TYPE zexcel_style_font_name,
            font_height     TYPE tdfontsize,
            flag_bold       TYPE abap_bool,
@@ -17,7 +17,7 @@
            th_font_metrics TYPE mty_th_font_metrics,
          END OF mty_s_font_cache
 "/>
- <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_CACHE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="23 " SRCCOLUMN1="4 " SRCROW2="25 " SRCCOLUMN2="69 " TYPESRC_LENG="141 " TYPESRC="mty_th_font_cache
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_CACHE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="23 " SRCCOLUMN2="69 " TYPESRC_LENG="138 " TYPESRC="mty_th_font_cache
            TYPE HASHED TABLE OF mty_s_font_cache
            WITH UNIQUE KEY font_name font_height flag_bold flag_italic
 "/>
@@ -2634,7 +2634,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
 
   CONSTANTS:
               lc_top_left_column              TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
-              lc_top_left_row                 TYPE zexcel_cell_row VALUE &apos;3&apos;.
+              lc_top_left_row                 TYPE zexcel_cell_row VALUE 3.
 
   DATA:
               lv_row_int                      TYPE zexcel_cell_row,
@@ -4797,7 +4797,7 @@ ENDMETHOD.</source>
         ls_newline      TYPE REF TO data,
         ls_header       TYPE x030l,
         lt_dfies        TYPE ddfields,
-        lv_row_header   TYPE zexcel_cell_row VALUE &apos;2&apos;,
+        lv_row_header   TYPE zexcel_cell_row VALUE 2,
         lv_col_header   TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
         lv_row_int      TYPE zexcel_cell_row,
         lv_column_int   TYPE zexcel_cell_column,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" LANGU="E" DESCRIPT="ALV grid interface implementation" UUID="4F25C0C5503300EAE1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSABSTRCT="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_CONVERTER_ALV" REFCLSNAME="ZIF_EXCEL_CONVERTER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" IMPABSTRCT="X"/>
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" LANGU="E" DESCRIPT="ALV grid interface implementation" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSABSTRCT="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_CONVERTER_ALV" REFCLSNAME="ZIF_EXCEL_CONVERTER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" IMPABSTRCT="X" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -31,7 +31,7 @@ TYPES: BEGIN OF ts_col_converter,
  <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" VERSION="1" LANGU="E" DESCRIPT="Apply sort criteria to data table" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" SCONAME="IT_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="APPLY_SORT" SCONAME="EO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
-  <source>METHOD apply_sort.
+  <source>method APPLY_SORT.
   DATA: lt_otab  TYPE abap_sortorder_tab,
         ls_otab  TYPE abap_sortorder.
 
@@ -62,7 +62,7 @@ TYPES: BEGIN OF ts_col_converter,
     SORT &lt;fs_table&gt; BY (lt_otab).
   ENDIF.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="CLASS_CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CLASS_CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CLASS_CONSTRUCTOR.
@@ -271,12 +271,12 @@ ENDMETHOD.</source>
   ls_color-fillcolor = &apos;FFFFFFFF&apos;. &quot; 255 255 255 White
   INSERT ls_color INTO TABLE wt_colors.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" VERSION="1" LANGU="E" DESCRIPT="Create color table for formating" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_COLOR" SCONAME="ET_COLORS" VERSION="1" LANGU="E" DESCRIPT="Table type for color information of cells for converter" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_COL"/>
-  <source>METHOD get_color.
+  <source>method GET_COLOR.
   DATA: ls_con_col TYPE zexcel_s_converter_col,
         ls_color   TYPE ts_col_converter,
         l_line     TYPE i,
@@ -340,7 +340,7 @@ endmethod.</source>
       ENDIF.
     ENDLOOP.
   ENDIF.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" VERSION="1" LANGU="E" DESCRIPT="Create filter values" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="GET_FILTER" SCONAME="ET_FILTER" VERSION="1" LANGU="E" DESCRIPT="Table type for filter information of cells for converter" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_FIL"/>
@@ -360,10 +360,10 @@ ENDMETHOD.</source>
 
   FIELD-SYMBOLS: &lt;fs_tab&gt;  TYPE STANDARD TABLE,
                  &lt;fs_ltab&gt; TYPE STANDARD TABLE,
-                 &lt;fs_stab&gt; TYPE ANY,
-                 &lt;fs&gt;      TYPE ANY,
-                 &lt;fs1&gt;     TYPE ANY,
-                 &lt;fs_srange&gt; TYPE ANY,
+                 &lt;fs_stab&gt; TYPE any,
+                 &lt;fs&gt;      TYPE any,
+                 &lt;fs1&gt;     TYPE any,
+                 &lt;fs_srange&gt; TYPE any,
                  &lt;fs_trange&gt; TYPE STANDARD TABLE.
 
   IF ws_option-filter = abap_false.
@@ -446,7 +446,7 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" VERSION="1" LANGU="E" DESCRIPT="Create fieldcatalog and layout" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" SCONAME="CS_LAYOUT" VERSION="1" LANGU="E" DESCRIPT="Converter settings for table" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_LAYO"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER_ALV" CMPNAME="UPDATE_CATALOG" SCONAME="CT_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Conter table for tabel fields" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CONVERTER_FCAT"/>
-  <source>METHOD update_catalog.
+  <source>method UPDATE_CATALOG.
   DATA: ls_fieldcatalog   TYPE zexcel_s_converter_fcat,
         ls_ref            TYPE salv_s_ddic_reference,
         ls_fcat           TYPE lvc_s_fcat,
@@ -562,6 +562,6 @@ ENDMETHOD.</source>
     &lt;fs_scat&gt;-sort_level = cs_layout-max_subtotal_level.
   ENDLOOP.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
 </CLAS>

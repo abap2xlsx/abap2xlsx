@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20100809" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000067" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111821" IDATE="20120324" ITIME="111821" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL11" VARCL="X" SUBC="1" RSTAT="K" RMAND="000" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
-   <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="56 "/>
+   <textElement ID="I" KEY="00A" ENTRY="Select by master data" LENGTH="132 "/>
+   <textElement ID="I" KEY="00B" ENTRY="Select by relationship" LENGTH="132 "/>
+   <textElement ID="R" ENTRY="abap2xlsx Demo: Export Organisation and Contact Persons" LENGTH="55 "/>
    <textElement ID="S" KEY="COUNTRY" ENTRY="D       ." LENGTH="19 "/>
    <textElement ID="S" KEY="MAXSEL" ENTRY="D       ." LENGTH="27 "/>
    <textElement ID="S" KEY="MD" ENTRY="        Select by master data" LENGTH="29 "/>
-   <textElement ID="S" KEY="PARTNER" ENTRY="D       ." LENGTH="17 "/>
+   <textElement ID="S" KEY="PARTNER" ENTRY="D       ." LENGTH="24 "/>
    <textElement ID="S" KEY="PARTNERC" ENTRY="D       ." LENGTH="19 "/>
    <textElement ID="S" KEY="POSTLCOD" ENTRY="D       ." LENGTH="19 "/>
    <textElement ID="S" KEY="P_PATH" ENTRY="D       ." LENGTH="21 "/>
@@ -52,7 +54,7 @@ INCLUDE zdemo_excel_outputopt_incl.
 
 PARAMETERS: md TYPE flag RADIOBUTTON GROUP act.
 
-SELECTION-SCREEN BEGIN OF BLOCK a WITH FRAME TITLE a.
+SELECTION-SCREEN BEGIN OF BLOCK a WITH FRAME TITLE text-00a.
 PARAMETERS: partnerc TYPE bu_type   DEFAULT 2, &quot; Organizations
             postlcod TYPE ad_pstcd1 DEFAULT &apos;8334*&apos;,
             country  TYPE land1     DEFAULT &apos;DE&apos;,
@@ -61,14 +63,10 @@ SELECTION-SCREEN END OF BLOCK a.
 
 PARAMETERS: rel TYPE flag RADIOBUTTON GROUP act DEFAULT &apos;X&apos;.
 
-SELECTION-SCREEN BEGIN OF BLOCK b WITH FRAME TITLE b.
+SELECTION-SCREEN BEGIN OF BLOCK b WITH FRAME TITLE text-00b.
 PARAMETERS: reltyp TYPE bu_reltyp DEFAULT &apos;BUR011&apos;,
             partner TYPE bu_partner DEFAULT &apos;191&apos;.
 SELECTION-SCREEN END OF BLOCK b.
-
-INITIALIZATION.
-  a = &apos;Select by master data&apos;.
-  b = &apos;Select by relationship&apos;.
 
 START-OF-SELECTION.
   IF md = abap_true.

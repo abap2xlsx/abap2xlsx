@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" UUID="02023211AE4F1EE28EDF2A8F8A97065E" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_GRAPH" VERSION="1" LANGU="E" DESCRIPT="Graphic" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <types CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="S_STYLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="22 " TYPESRC_LENG="108 " TYPESRC="BEGIN OF s_style,
               c14style type i,
               cstyle   type i,
@@ -27,331 +27,6 @@
                   footer TYPE string,
           END OF s_pagemargins
 "/>
- <publicSection>class ZCL_EXCEL_GRAPH definition
-  public
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_GRAPH
-*&quot;* do not include other source files here!!!
-
-  types:
-    BEGIN OF s_style,
-              c14style type i,
-              cstyle   type i,
-         end of s_style .
-  types:
-    BEGIN OF s_series,
-                  idx               TYPE i,
-                  order             TYPE i,
-                  invertifnegative  TYPE string,
-                  symbol            TYPE string,
-                  smooth            TYPE string,
-                  lbl               TYPE string,
-                  ref               TYPE string,
-                  sername           TYPE string,
-          END OF s_series .
-  types:
-    t_series TYPE STANDARD TABLE OF s_series .
-  types:
-    BEGIN OF s_pagemargins,
-                  b TYPE string,
-                  l TYPE string,
-                  r TYPE string,
-                  t TYPE string,
-                  header TYPE string,
-                  footer TYPE string,
-          END OF s_pagemargins .
-
-  data NS_1904VAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_LANGVAL type STRING value &apos;it-IT&apos;. &quot;#EC NOTEXT .
-  data NS_ROUNDEDCORNERSVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data PAGEMARGINS type S_PAGEMARGINS .
-  data NS_AUTOTITLEDELETEDVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_PLOTVISONLYVAL type STRING value &apos;1&apos;. &quot;#EC NOTEXT .
-  data NS_DISPBLANKSASVAL type STRING value &apos;gap&apos;. &quot;#EC NOTEXT .
-  data NS_SHOWDLBLSOVERMAXVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data SERIES type T_SERIES .
-  data NS_C14STYLEVAL type STRING value &apos;102&apos;. &quot;#EC NOTEXT .
-  data PRINT_LABEL type C value &apos;X&apos;. &quot;#EC NOTEXT .
-  data NS_STYLEVAL type STRING value &apos;2&apos;. &quot;#EC NOTEXT .
-  constants:
-    BEGIN OF c_style_default,
-              c14style type i value &apos;102&apos;,
-              cstyle   type i value &apos;2&apos;,
-             END OF c_style_default .
-  constants:
-    BEGIN OF c_style_1,
-              c14style type i value &apos;101&apos;,
-              cstyle   type i value &apos;1&apos;,
-             END OF c_style_1 .
-  constants:
-    BEGIN OF c_style_3,
-              c14style type i value &apos;103&apos;,
-              cstyle   type i value &apos;3&apos;,
-             END OF c_style_3 .
-  constants:
-    BEGIN OF c_style_4,
-              c14style type i value &apos;104&apos;,
-              cstyle   type i value &apos;4&apos;,
-             END OF c_style_4 .
-  constants:
-    BEGIN OF c_style_5,
-              c14style type i value &apos;105&apos;,
-              cstyle   type i value &apos;5&apos;,
-             END OF c_style_5 .
-  constants:
-    BEGIN OF c_style_6,
-              c14style type i value &apos;106&apos;,
-              cstyle   type i value &apos;6&apos;,
-             END OF c_style_6 .
-  constants:
-    BEGIN OF c_style_7,
-              c14style type i value &apos;107&apos;,
-              cstyle   type i value &apos;7&apos;,
-             END OF c_style_7 .
-  constants:
-    BEGIN OF c_style_8,
-              c14style type i value &apos;108&apos;,
-              cstyle   type i value &apos;8&apos;,
-             END OF c_style_8 .
-  constants:
-    BEGIN OF c_style_9,
-              c14style type i value &apos;109&apos;,
-              cstyle   type i value &apos;9&apos;,
-             END OF c_style_9 .
-  constants:
-    BEGIN OF c_style_10,
-              c14style type i value &apos;110&apos;,
-              cstyle   type i value &apos;10&apos;,
-             END OF c_style_10 .
-  constants:
-    BEGIN OF c_style_11,
-              c14style type i value &apos;111&apos;,
-              cstyle   type i value &apos;11&apos;,
-             END OF c_style_11 .
-  constants:
-    BEGIN OF c_style_12,
-              c14style type i value &apos;112&apos;,
-              cstyle   type i value &apos;12&apos;,
-             END OF c_style_12 .
-  constants:
-    BEGIN OF c_style_13,
-              c14style type i value &apos;113&apos;,
-              cstyle   type i value &apos;13&apos;,
-             END OF c_style_13 .
-  constants:
-    BEGIN OF c_style_14,
-              c14style type i value &apos;114&apos;,
-              cstyle   type i value &apos;14&apos;,
-             END OF c_style_14 .
-  constants:
-    BEGIN OF c_style_15,
-              c14style type i value &apos;115&apos;,
-              cstyle   type i value &apos;15&apos;,
-             END OF c_style_15 .
-  constants:
-    BEGIN OF c_style_16,
-              c14style type i value &apos;116&apos;,
-              cstyle   type i value &apos;16&apos;,
-             END OF c_style_16 .
-  constants:
-    BEGIN OF c_style_17,
-              c14style type i value &apos;117&apos;,
-              cstyle   type i value &apos;17&apos;,
-             END OF c_style_17 .
-  constants:
-    BEGIN OF c_style_18,
-              c14style type i value &apos;118&apos;,
-              cstyle   type i value &apos;18&apos;,
-             END OF c_style_18 .
-  constants:
-    BEGIN OF c_style_19,
-              c14style type i value &apos;119&apos;,
-              cstyle   type i value &apos;19&apos;,
-             END OF c_style_19 .
-  constants:
-    BEGIN OF c_style_20,
-              c14style type i value &apos;120&apos;,
-              cstyle   type i value &apos;20&apos;,
-             END OF c_style_20 .
-  constants:
-    BEGIN OF c_style_21,
-              c14style type i value &apos;121&apos;,
-              cstyle   type i value &apos;21&apos;,
-             END OF c_style_21 .
-  constants:
-    BEGIN OF c_style_22,
-              c14style type i value &apos;122&apos;,
-              cstyle   type i value &apos;22&apos;,
-             END OF c_style_22 .
-  constants:
-    BEGIN OF c_style_23,
-              c14style type i value &apos;123&apos;,
-              cstyle   type i value &apos;23&apos;,
-             END OF c_style_23 .
-  constants:
-    BEGIN OF c_style_24,
-              c14style type i value &apos;124&apos;,
-              cstyle   type i value &apos;24&apos;,
-             END OF c_style_24 .
-  constants:
-    BEGIN OF c_style_25,
-              c14style type i value &apos;125&apos;,
-              cstyle   type i value &apos;25&apos;,
-             END OF c_style_25 .
-  constants:
-    BEGIN OF c_style_26,
-              c14style type i value &apos;126&apos;,
-              cstyle   type i value &apos;26&apos;,
-             END OF c_style_26 .
-  constants:
-    BEGIN OF c_style_27,
-              c14style type i value &apos;127&apos;,
-              cstyle   type i value &apos;27&apos;,
-             END OF c_style_27 .
-  constants:
-    BEGIN OF c_style_28,
-              c14style type i value &apos;128&apos;,
-              cstyle   type i value &apos;28&apos;,
-             END OF c_style_28 .
-  constants:
-    BEGIN OF c_style_29,
-              c14style type i value &apos;129&apos;,
-              cstyle   type i value &apos;29&apos;,
-             END OF c_style_29 .
-  constants:
-    BEGIN OF c_style_30,
-              c14style type i value &apos;130&apos;,
-              cstyle   type i value &apos;30&apos;,
-             END OF c_style_30 .
-  constants:
-    BEGIN OF c_style_31,
-              c14style type i value &apos;131&apos;,
-              cstyle   type i value &apos;31&apos;,
-             END OF c_style_31 .
-  constants:
-    BEGIN OF c_style_32,
-              c14style type i value &apos;132&apos;,
-              cstyle   type i value &apos;32&apos;,
-             END OF c_style_32 .
-  constants:
-    BEGIN OF c_style_33,
-              c14style type i value &apos;133&apos;,
-              cstyle   type i value &apos;33&apos;,
-             END OF c_style_33 .
-  constants:
-    BEGIN OF c_style_34,
-              c14style type i value &apos;134&apos;,
-              cstyle   type i value &apos;34&apos;,
-             END OF c_style_34 .
-  constants:
-    BEGIN OF c_style_35,
-              c14style type i value &apos;135&apos;,
-              cstyle   type i value &apos;35&apos;,
-             END OF c_style_35 .
-  constants:
-    BEGIN OF c_style_36,
-              c14style type i value &apos;136&apos;,
-              cstyle   type i value &apos;36&apos;,
-             END OF c_style_36 .
-  constants:
-    BEGIN OF c_style_37,
-              c14style type i value &apos;137&apos;,
-              cstyle   type i value &apos;37&apos;,
-             END OF c_style_37 .
-  constants:
-    BEGIN OF c_style_38,
-              c14style type i value &apos;138&apos;,
-              cstyle   type i value &apos;38&apos;,
-             END OF c_style_38 .
-  constants:
-    BEGIN OF c_style_39,
-              c14style type i value &apos;139&apos;,
-              cstyle   type i value &apos;39&apos;,
-             END OF c_style_39 .
-  constants:
-    BEGIN OF c_style_40,
-              c14style type i value &apos;140&apos;,
-              cstyle   type i value &apos;40&apos;,
-             END OF c_style_40 .
-  constants:
-    BEGIN OF c_style_41,
-              c14style type i value &apos;141&apos;,
-              cstyle   type i value &apos;41&apos;,
-             END OF c_style_41 .
-  constants:
-    BEGIN OF c_style_42,
-              c14style type i value &apos;142&apos;,
-              cstyle   type i value &apos;42&apos;,
-             END OF c_style_42 .
-  constants:
-    BEGIN OF c_style_43,
-              c14style type i value &apos;143&apos;,
-              cstyle   type i value &apos;43&apos;,
-             END OF c_style_43 .
-  constants:
-    BEGIN OF c_style_44,
-              c14style type i value &apos;144&apos;,
-              cstyle   type i value &apos;44&apos;,
-             END OF c_style_44 .
-  constants:
-    BEGIN OF c_style_45,
-              c14style type i value &apos;145&apos;,
-              cstyle   type i value &apos;45&apos;,
-             END OF c_style_45 .
-  constants:
-    BEGIN OF c_style_46,
-              c14style type i value &apos;146&apos;,
-              cstyle   type i value &apos;46&apos;,
-             END OF c_style_46 .
-  constants:
-    BEGIN OF c_style_47,
-              c14style type i value &apos;147&apos;,
-              cstyle   type i value &apos;47&apos;,
-             END OF c_style_47 .
-  constants:
-    BEGIN OF c_style_48,
-              c14style type i value &apos;148&apos;,
-              cstyle   type i value &apos;48&apos;,
-             END OF c_style_48 .
-  constants C_SHOW_TRUE type C value &apos;1&apos;. &quot;#EC NOTEXT
-  constants C_SHOW_FALSE type C value &apos;0&apos;. &quot;#EC NOTEXT
-  constants C_PRINT_LBL_TRUE type C value &apos;1&apos;. &quot;#EC NOTEXT
-  constants C_PRINT_LBL_FALSE type C value &apos;0&apos;. &quot;#EC NOTEXT
-
-  methods CONSTRUCTOR .
-  methods CREATE_SERIE
-    importing
-      !IP_IDX type I optional
-      !IP_ORDER type I
-      !IP_INVERTIFNEGATIVE type STRING optional
-      !IP_SYMBOL type STRING optional
-      !IP_SMOOTH type C optional
-      !IP_LBL_FROM_COL type ZEXCEL_CELL_COLUMN_ALPHA optional
-      !IP_LBL_FROM_ROW type ZEXCEL_CELL_ROW optional
-      !IP_LBL_TO_COL type ZEXCEL_CELL_COLUMN_ALPHA optional
-      !IP_LBL_TO_ROW type ZEXCEL_CELL_ROW optional
-      !IP_LBL type STRING optional
-      !IP_REF_FROM_COL type ZEXCEL_CELL_COLUMN_ALPHA optional
-      !IP_REF_FROM_ROW type ZEXCEL_CELL_ROW optional
-      !IP_REF_TO_COL type ZEXCEL_CELL_COLUMN_ALPHA optional
-      !IP_REF_TO_ROW type ZEXCEL_CELL_ROW optional
-      !IP_REF type STRING optional
-      !IP_SERNAME type STRING
-      !IP_SHEET type ZEXCEL_SHEET_TITLE optional .
-  methods SET_STYLE
-    importing
-      !IP_STYLE type S_STYLE .
-  methods SET_PRINT_LBL
-    importing
-      !IP_VALUE type C .</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_GRAPH
-*&quot;* do not include other source files here!!!</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_GRAPH
-*&quot;* do not include other source files here!!!</privateSection>
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>
@@ -364,244 +39,244 @@ public section.
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_PRINT_LBL_TRUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" EXPOSURE="2" STATE="1" EDITORDER="63 " ATTDECLTYP="2" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="C" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_SHOW_FALSE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" EXPOSURE="2" STATE="1" EDITORDER="62 " ATTDECLTYP="2" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="C" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_SHOW_TRUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" EXPOSURE="2" STATE="1" EDITORDER="61 " ATTDECLTYP="2" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="C" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_1" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="14 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="55 " SRCCOLUMN1="4 " SRCROW2="58 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_1,
-              c14style type i value &apos;101&apos;,
-              cstyle   type i value &apos;1&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_1" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="14 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="55 " SRCCOLUMN1="4 " SRCROW2="58 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_1,
+              c14style type i value 101,
+              cstyle   type i value 1,
              END OF c_style_1
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_10" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="22 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="95 " SRCCOLUMN1="4 " SRCROW2="98 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_10,
-              c14style type i value &apos;110&apos;,
-              cstyle   type i value &apos;10&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_10" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="22 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="95 " SRCCOLUMN1="4 " SRCROW2="98 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_10,
+              c14style type i value 110,
+              cstyle   type i value 10,
              END OF c_style_10
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_11" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="23 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="100 " SRCCOLUMN1="4 " SRCROW2="103 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_11,
-              c14style type i value &apos;111&apos;,
-              cstyle   type i value &apos;11&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_11" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="23 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="100 " SRCCOLUMN1="4 " SRCROW2="103 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_11,
+              c14style type i value 111,
+              cstyle   type i value 11,
              END OF c_style_11
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_12" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="24 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="105 " SRCCOLUMN1="4 " SRCROW2="108 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_12,
-              c14style type i value &apos;112&apos;,
-              cstyle   type i value &apos;12&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_12" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="24 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="105 " SRCCOLUMN1="4 " SRCROW2="108 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_12,
+              c14style type i value 112,
+              cstyle   type i value 12,
              END OF c_style_12
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_13" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="25 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="110 " SRCCOLUMN1="4 " SRCROW2="113 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_13,
-              c14style type i value &apos;113&apos;,
-              cstyle   type i value &apos;13&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_13" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="25 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="110 " SRCCOLUMN1="4 " SRCROW2="113 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_13,
+              c14style type i value 113,
+              cstyle   type i value 13,
              END OF c_style_13
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_14" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="26 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="115 " SRCCOLUMN1="4 " SRCROW2="118 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_14,
-              c14style type i value &apos;114&apos;,
-              cstyle   type i value &apos;14&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_14" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="26 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="115 " SRCCOLUMN1="4 " SRCROW2="118 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_14,
+              c14style type i value 114,
+              cstyle   type i value 14,
              END OF c_style_14
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_15" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="27 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="120 " SRCCOLUMN1="4 " SRCROW2="123 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_15,
-              c14style type i value &apos;115&apos;,
-              cstyle   type i value &apos;15&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_15" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="27 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="120 " SRCCOLUMN1="4 " SRCROW2="123 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_15,
+              c14style type i value 115,
+              cstyle   type i value 15,
              END OF c_style_15
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_16" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="28 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="125 " SRCCOLUMN1="4 " SRCROW2="128 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_16,
-              c14style type i value &apos;116&apos;,
-              cstyle   type i value &apos;16&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_16" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="28 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="125 " SRCCOLUMN1="4 " SRCROW2="128 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_16,
+              c14style type i value 116,
+              cstyle   type i value 16,
              END OF c_style_16
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_17" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="29 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="130 " SRCCOLUMN1="4 " SRCROW2="133 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_17,
-              c14style type i value &apos;117&apos;,
-              cstyle   type i value &apos;17&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_17" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="29 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="130 " SRCCOLUMN1="4 " SRCROW2="133 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_17,
+              c14style type i value 117,
+              cstyle   type i value 17,
              END OF c_style_17
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_18" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="30 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="135 " SRCCOLUMN1="4 " SRCROW2="138 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_18,
-              c14style type i value &apos;118&apos;,
-              cstyle   type i value &apos;18&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_18" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="30 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="135 " SRCCOLUMN1="4 " SRCROW2="138 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_18,
+              c14style type i value 118,
+              cstyle   type i value 18,
              END OF c_style_18
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_19" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="31 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="140 " SRCCOLUMN1="4 " SRCROW2="143 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_19,
-              c14style type i value &apos;119&apos;,
-              cstyle   type i value &apos;19&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_19" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="31 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="140 " SRCCOLUMN1="4 " SRCROW2="143 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_19,
+              c14style type i value 119,
+              cstyle   type i value 19,
              END OF c_style_19
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_20" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="32 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="145 " SRCCOLUMN1="4 " SRCROW2="148 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_20,
-              c14style type i value &apos;120&apos;,
-              cstyle   type i value &apos;20&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_20" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="32 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="145 " SRCCOLUMN1="4 " SRCROW2="148 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_20,
+              c14style type i value 120,
+              cstyle   type i value 20,
              END OF c_style_20
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_21" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="33 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="150 " SRCCOLUMN1="4 " SRCROW2="153 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_21,
-              c14style type i value &apos;121&apos;,
-              cstyle   type i value &apos;21&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_21" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="33 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="150 " SRCCOLUMN1="4 " SRCROW2="153 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_21,
+              c14style type i value 121,
+              cstyle   type i value 21,
              END OF c_style_21
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_22" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="34 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="155 " SRCCOLUMN1="4 " SRCROW2="158 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_22,
-              c14style type i value &apos;122&apos;,
-              cstyle   type i value &apos;22&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_22" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="34 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="155 " SRCCOLUMN1="4 " SRCROW2="158 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_22,
+              c14style type i value 122,
+              cstyle   type i value 22,
              END OF c_style_22
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_23" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="35 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="160 " SRCCOLUMN1="4 " SRCROW2="163 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_23,
-              c14style type i value &apos;123&apos;,
-              cstyle   type i value &apos;23&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_23" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="35 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="160 " SRCCOLUMN1="4 " SRCROW2="163 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_23,
+              c14style type i value 123,
+              cstyle   type i value 23,
              END OF c_style_23
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_24" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="36 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="165 " SRCCOLUMN1="4 " SRCROW2="168 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_24,
-              c14style type i value &apos;124&apos;,
-              cstyle   type i value &apos;24&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_24" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="36 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="165 " SRCCOLUMN1="4 " SRCROW2="168 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_24,
+              c14style type i value 124,
+              cstyle   type i value 24,
              END OF c_style_24
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_25" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="37 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="170 " SRCCOLUMN1="4 " SRCROW2="173 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_25,
-              c14style type i value &apos;125&apos;,
-              cstyle   type i value &apos;25&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_25" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="37 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="170 " SRCCOLUMN1="4 " SRCROW2="173 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_25,
+              c14style type i value 125,
+              cstyle   type i value 25,
              END OF c_style_25
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_26" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="38 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="175 " SRCCOLUMN1="4 " SRCROW2="178 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_26,
-              c14style type i value &apos;126&apos;,
-              cstyle   type i value &apos;26&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_26" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="38 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="175 " SRCCOLUMN1="4 " SRCROW2="178 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_26,
+              c14style type i value 126,
+              cstyle   type i value 26,
              END OF c_style_26
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_27" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="39 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="180 " SRCCOLUMN1="4 " SRCROW2="183 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_27,
-              c14style type i value &apos;127&apos;,
-              cstyle   type i value &apos;27&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_27" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="39 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="180 " SRCCOLUMN1="4 " SRCROW2="183 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_27,
+              c14style type i value 127,
+              cstyle   type i value 27,
              END OF c_style_27
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_28" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="40 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="185 " SRCCOLUMN1="4 " SRCROW2="188 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_28,
-              c14style type i value &apos;128&apos;,
-              cstyle   type i value &apos;28&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_28" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="40 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="185 " SRCCOLUMN1="4 " SRCROW2="188 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_28,
+              c14style type i value 128,
+              cstyle   type i value 28,
              END OF c_style_28
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_29" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="41 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="190 " SRCCOLUMN1="4 " SRCROW2="193 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_29,
-              c14style type i value &apos;129&apos;,
-              cstyle   type i value &apos;29&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_29" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="41 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="190 " SRCCOLUMN1="4 " SRCROW2="193 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_29,
+              c14style type i value 129,
+              cstyle   type i value 29,
              END OF c_style_29
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_3" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="60 " SRCCOLUMN1="4 " SRCROW2="63 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_3,
-              c14style type i value &apos;103&apos;,
-              cstyle   type i value &apos;3&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_3" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="60 " SRCCOLUMN1="4 " SRCROW2="63 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_3,
+              c14style type i value 103,
+              cstyle   type i value 3,
              END OF c_style_3
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_30" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="42 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="195 " SRCCOLUMN1="4 " SRCROW2="198 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_30,
-              c14style type i value &apos;130&apos;,
-              cstyle   type i value &apos;30&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_30" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="42 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="195 " SRCCOLUMN1="4 " SRCROW2="198 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_30,
+              c14style type i value 130,
+              cstyle   type i value 30,
              END OF c_style_30
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_31" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="43 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="200 " SRCCOLUMN1="4 " SRCROW2="203 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_31,
-              c14style type i value &apos;131&apos;,
-              cstyle   type i value &apos;31&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_31" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="43 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="200 " SRCCOLUMN1="4 " SRCROW2="203 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_31,
+              c14style type i value 131,
+              cstyle   type i value 31,
              END OF c_style_31
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_32" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="44 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="205 " SRCCOLUMN1="4 " SRCROW2="208 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_32,
-              c14style type i value &apos;132&apos;,
-              cstyle   type i value &apos;32&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_32" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="44 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="205 " SRCCOLUMN1="4 " SRCROW2="208 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_32,
+              c14style type i value 132,
+              cstyle   type i value 32,
              END OF c_style_32
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_33" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="45 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="210 " SRCCOLUMN1="4 " SRCROW2="213 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_33,
-              c14style type i value &apos;133&apos;,
-              cstyle   type i value &apos;33&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_33" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="45 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="210 " SRCCOLUMN1="4 " SRCROW2="213 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_33,
+              c14style type i value 133,
+              cstyle   type i value 33,
              END OF c_style_33
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_34" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="46 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="215 " SRCCOLUMN1="4 " SRCROW2="218 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_34,
-              c14style type i value &apos;134&apos;,
-              cstyle   type i value &apos;34&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_34" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="46 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="215 " SRCCOLUMN1="4 " SRCROW2="218 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_34,
+              c14style type i value 134,
+              cstyle   type i value 34,
              END OF c_style_34
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_35" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="47 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="220 " SRCCOLUMN1="4 " SRCROW2="223 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_35,
-              c14style type i value &apos;135&apos;,
-              cstyle   type i value &apos;35&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_35" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="47 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="220 " SRCCOLUMN1="4 " SRCROW2="223 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_35,
+              c14style type i value 135,
+              cstyle   type i value 35,
              END OF c_style_35
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_36" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="48 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="225 " SRCCOLUMN1="4 " SRCROW2="228 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_36,
-              c14style type i value &apos;136&apos;,
-              cstyle   type i value &apos;36&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_36" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="48 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="225 " SRCCOLUMN1="4 " SRCROW2="228 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_36,
+              c14style type i value 136,
+              cstyle   type i value 36,
              END OF c_style_36
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_37" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="49 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="230 " SRCCOLUMN1="4 " SRCROW2="233 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_37,
-              c14style type i value &apos;137&apos;,
-              cstyle   type i value &apos;37&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_37" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="49 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="230 " SRCCOLUMN1="4 " SRCROW2="233 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_37,
+              c14style type i value 137,
+              cstyle   type i value 37,
              END OF c_style_37
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_38" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="50 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="235 " SRCCOLUMN1="4 " SRCROW2="238 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_38,
-              c14style type i value &apos;138&apos;,
-              cstyle   type i value &apos;38&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_38" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="50 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="235 " SRCCOLUMN1="4 " SRCROW2="238 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_38,
+              c14style type i value 138,
+              cstyle   type i value 38,
              END OF c_style_38
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_39" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="51 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="240 " SRCCOLUMN1="4 " SRCROW2="243 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_39,
-              c14style type i value &apos;139&apos;,
-              cstyle   type i value &apos;39&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_39" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="51 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="240 " SRCCOLUMN1="4 " SRCROW2="243 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_39,
+              c14style type i value 139,
+              cstyle   type i value 39,
              END OF c_style_39
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_4" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="65 " SRCCOLUMN1="4 " SRCROW2="68 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_4,
-              c14style type i value &apos;104&apos;,
-              cstyle   type i value &apos;4&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_4" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="65 " SRCCOLUMN1="4 " SRCROW2="68 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_4,
+              c14style type i value 104,
+              cstyle   type i value 4,
              END OF c_style_4
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_40" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="52 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="245 " SRCCOLUMN1="4 " SRCROW2="248 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_40,
-              c14style type i value &apos;140&apos;,
-              cstyle   type i value &apos;40&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_40" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="52 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="245 " SRCCOLUMN1="4 " SRCROW2="248 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_40,
+              c14style type i value 140,
+              cstyle   type i value 40,
              END OF c_style_40
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_41" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="53 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="250 " SRCCOLUMN1="4 " SRCROW2="253 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_41,
-              c14style type i value &apos;141&apos;,
-              cstyle   type i value &apos;41&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_41" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="53 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="250 " SRCCOLUMN1="4 " SRCROW2="253 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_41,
+              c14style type i value 141,
+              cstyle   type i value 41,
              END OF c_style_41
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_42" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="54 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="255 " SRCCOLUMN1="4 " SRCROW2="258 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_42,
-              c14style type i value &apos;142&apos;,
-              cstyle   type i value &apos;42&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_42" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="54 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="255 " SRCCOLUMN1="4 " SRCROW2="258 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_42,
+              c14style type i value 142,
+              cstyle   type i value 42,
              END OF c_style_42
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_43" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="55 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="260 " SRCCOLUMN1="4 " SRCROW2="263 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_43,
-              c14style type i value &apos;143&apos;,
-              cstyle   type i value &apos;43&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_43" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="55 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="260 " SRCCOLUMN1="4 " SRCROW2="263 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_43,
+              c14style type i value 143,
+              cstyle   type i value 43,
              END OF c_style_43
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_44" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="56 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="265 " SRCCOLUMN1="4 " SRCROW2="268 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_44,
-              c14style type i value &apos;144&apos;,
-              cstyle   type i value &apos;44&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_44" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="56 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="265 " SRCCOLUMN1="4 " SRCROW2="268 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_44,
+              c14style type i value 144,
+              cstyle   type i value 44,
              END OF c_style_44
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_45" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="57 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="270 " SRCCOLUMN1="4 " SRCROW2="273 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_45,
-              c14style type i value &apos;145&apos;,
-              cstyle   type i value &apos;45&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_45" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="57 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="270 " SRCCOLUMN1="4 " SRCROW2="273 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_45,
+              c14style type i value 145,
+              cstyle   type i value 45,
              END OF c_style_45
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_46" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="58 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="275 " SRCCOLUMN1="4 " SRCROW2="278 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_46,
-              c14style type i value &apos;146&apos;,
-              cstyle   type i value &apos;46&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_46" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="58 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="275 " SRCCOLUMN1="4 " SRCROW2="278 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_46,
+              c14style type i value 146,
+              cstyle   type i value 46,
              END OF c_style_46
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_47" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="59 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="280 " SRCCOLUMN1="4 " SRCROW2="283 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_47,
-              c14style type i value &apos;147&apos;,
-              cstyle   type i value &apos;47&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_47" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="59 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="280 " SRCCOLUMN1="4 " SRCROW2="283 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_47,
+              c14style type i value 147,
+              cstyle   type i value 47,
              END OF c_style_47
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_48" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="60 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="285 " SRCCOLUMN1="4 " SRCROW2="288 " SRCCOLUMN2="29 " TYPESRC_LENG="141 " TYPESRC="BEGIN OF c_style_48,
-              c14style type i value &apos;148&apos;,
-              cstyle   type i value &apos;48&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_48" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="60 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="285 " SRCCOLUMN1="4 " SRCROW2="288 " SRCCOLUMN2="29 " TYPESRC_LENG="137 " TYPESRC="BEGIN OF c_style_48,
+              c14style type i value 148,
+              cstyle   type i value 48,
              END OF c_style_48
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_5" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="70 " SRCCOLUMN1="4 " SRCROW2="73 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_5,
-              c14style type i value &apos;105&apos;,
-              cstyle   type i value &apos;5&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_5" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="70 " SRCCOLUMN1="4 " SRCROW2="73 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_5,
+              c14style type i value 105,
+              cstyle   type i value 5,
              END OF c_style_5
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_6" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="18 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="75 " SRCCOLUMN1="4 " SRCROW2="78 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_6,
-              c14style type i value &apos;106&apos;,
-              cstyle   type i value &apos;6&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_6" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="18 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="75 " SRCCOLUMN1="4 " SRCROW2="78 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_6,
+              c14style type i value 106,
+              cstyle   type i value 6,
              END OF c_style_6
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_7" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="19 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="80 " SRCCOLUMN1="4 " SRCROW2="83 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_7,
-              c14style type i value &apos;107&apos;,
-              cstyle   type i value &apos;7&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_7" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="19 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="80 " SRCCOLUMN1="4 " SRCROW2="83 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_7,
+              c14style type i value 107,
+              cstyle   type i value 7,
              END OF c_style_7
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_8" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="20 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="85 " SRCCOLUMN1="4 " SRCROW2="88 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_8,
-              c14style type i value &apos;108&apos;,
-              cstyle   type i value &apos;8&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_8" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="20 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="85 " SRCCOLUMN1="4 " SRCROW2="88 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_8,
+              c14style type i value 108,
+              cstyle   type i value 8,
              END OF c_style_8
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_9" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="21 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="90 " SRCCOLUMN1="4 " SRCROW2="93 " SRCCOLUMN2="28 " TYPESRC_LENG="138 " TYPESRC="BEGIN OF c_style_9,
-              c14style type i value &apos;109&apos;,
-              cstyle   type i value &apos;9&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_9" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="21 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="90 " SRCCOLUMN1="4 " SRCROW2="93 " SRCCOLUMN2="28 " TYPESRC_LENG="134 " TYPESRC="BEGIN OF c_style_9,
+              c14style type i value 109,
+              cstyle   type i value 9,
              END OF c_style_9
 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_DEFAULT" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="50 " SRCCOLUMN1="4 " SRCROW2="53 " SRCCOLUMN2="34 " TYPESRC_LENG="150 " TYPESRC="BEGIN OF c_style_default,
-              c14style type i value &apos;102&apos;,
-              cstyle   type i value &apos;2&apos;,
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="C_STYLE_DEFAULT" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="50 " SRCCOLUMN1="4 " SRCROW2="53 " SRCCOLUMN2="34 " TYPESRC_LENG="146 " TYPESRC="BEGIN OF c_style_default,
+              c14style type i value 102,
+              cstyle   type i value 2,
              END OF c_style_default
 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="NS_1904VAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -625,7 +300,7 @@ public section.
   me-&gt;pagemargins-t = &apos;0.75&apos;.
   me-&gt;pagemargins-header = &apos;0.3&apos;.
   me-&gt;pagemargins-footer = &apos;0.3&apos;.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_IDX" VERSION="1" LANGU="E" DESCRIPT="Automatic if not provided" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I" PAROPTIONL="X"/>
@@ -645,7 +320,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_REF" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="15 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_SERNAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="16 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="CREATE_SERIE" SCONAME="IP_SHEET" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="17 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" PAROPTIONL="X"/>
-  <source>METHOD create_serie.
+  <source>method CREATE_SERIE.
   DATA ls_serie TYPE s_series.
 
   DATA: lv_start_row_c  TYPE char7,
@@ -688,21 +363,21 @@ endmethod.</source>
   ls_serie-sername = ip_sername.
   APPEND ls_serie TO me-&gt;series.
   SORT me-&gt;series BY order ASCENDING.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="SET_PRINT_LBL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="SET_PRINT_LBL" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
   <source>method SET_PRINT_LBL.
   me-&gt;print_label = ip_value.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="SET_STYLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH" CMPNAME="SET_STYLE" SCONAME="IP_STYLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="S_STYLE"/>
-  <source>METHOD set_style.
+  <source>method SET_STYLE.
   me-&gt;ns_c14styleval = ip_style-c14style.
   CONDENSE me-&gt;ns_c14styleval NO-GAPS.
   me-&gt;ns_styleval = ip_style-cstyle.
   CONDENSE me-&gt;ns_styleval NO-GAPS.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
 </CLAS>

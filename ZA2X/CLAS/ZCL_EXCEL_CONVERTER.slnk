@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER" VERSION="1" LANGU="E" DESCRIPT="Salv converter" UUID="52070EEC59BF31F0E1008000C008015A" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER" VERSION="1" LANGU="E" DESCRIPT="Salv converter" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="10 " SRCCOLUMN2="29 " TYPESRC_LENG="149 " TYPESRC="BEGIN OF t_relationship,
            id     TYPE string,
            type   TYPE string,
@@ -82,6 +82,15 @@ TYPES:   BEGIN OF ts_color_styles,
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
+  <language SPRAS="1">
+   <textElement ID="I" KEY="001" ENTRY="Sheet1" LENGTH="15 "/>
+   <textElement ID="I" KEY="002" ENTRY="Grand" LENGTH="10 "/>
+   <textElement ID="I" KEY="003" ENTRY="Total" LENGTH="10 "/>
+   <textElement ID="I" KEY="004" ENTRY="Minimum" LENGTH="10 "/>
+   <textElement ID="I" KEY="005" ENTRY="Maximum" LENGTH="10 "/>
+   <textElement ID="I" KEY="006" ENTRY="Average" LENGTH="10 "/>
+   <textElement ID="I" KEY="007" ENTRY="Count" LENGTH="10 "/>
+  </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="001" ENTRY="Sheet1" LENGTH="15 "/>
    <textElement ID="I" KEY="002" ENTRY="Grand" LENGTH="10 "/>
@@ -126,7 +135,7 @@ TYPES:   BEGIN OF ts_color_styles,
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="ASK_OPTION" VERSION="1" LANGU="E" DESCRIPT="Ask for user option data" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="ASK_OPTION" SCONAME="RS_OPTION" VERSION="1" LANGU="E" DESCRIPT="Converter options for grid configuration" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_OPTION"/>
   <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="ASK_OPTION" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD ask_option.
+  <source>method ASK_OPTION.
   DATA: ls_sval TYPE sval,
         lt_sval TYPE STANDARD TABLE OF sval,
         l_returncode TYPE string,
@@ -213,7 +222,7 @@ TYPES:   BEGIN OF ts_color_styles,
       rs_option = ws_option.
     ENDIF.
   ENDIF.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_CELLS" VERSION="1" LANGU="E" DESCRIPT="Create table with set cell method" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_CELLS" SCONAME="R_FREEZE_COL" VERSION="1" LANGU="E" DESCRIPT="Byte Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT1"/>
@@ -230,7 +239,7 @@ ENDMETHOD.</source>
                                 i_col_int = w_col_int ) .
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create table with bind table method" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="BIND_TABLE" SCONAME="I_STYLE_TABLE" VERSION="1" LANGU="E" DESCRIPT="Name of the table style" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_TABLE_STYLE"/>
@@ -296,10 +305,10 @@ endmethod.</source>
     endif.
   endloop.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CLASS_CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CLASS_CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD class_constructor.
+  <source>method CLASS_CONSTRUCTOR.
   DATA: ls_objects TYPE ts_alv_types.
   DATA: ls_option TYPE zexcel_s_converter_option,
         l_uname TYPE sy-uname.
@@ -338,7 +347,7 @@ endmethod.</source>
     init_option( ) .
   ENDIF.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CLEAN_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Sort and check on fieldcatalog" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CLEAN_FIELDCATALOG.
@@ -375,7 +384,7 @@ ENDMETHOD.</source>
                                            i_decimals  = &lt;fs_sfcat&gt;-decimals   ).
   ENDLOOP.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" VERSION="1" LANGU="E" DESCRIPT="Convert" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="IS_OPTION" VERSION="1" LANGU="E" DESCRIPT="Converter options for grid configuration" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_OPTION" PAROPTIONL="X"/>
@@ -388,7 +397,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="8 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="CO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="9 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL" PAROPTIONL="X"/>
   <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CONVERT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD convert.
+  <source>method CONVERT.
 
   IF is_option IS SUPPLIED.
     ws_option = is_option.
@@ -441,7 +450,7 @@ endmethod.</source>
   create_worksheet( i_table       = i_table
                     i_style_table = i_style_table ) .
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_COLOR_STYLE" VERSION="1" LANGU="E" DESCRIPT="Create new color style based on cell style" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_COLOR_STYLE" SCONAME="I_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
@@ -466,7 +475,7 @@ ENDMETHOD.</source>
 
     ro_style = lo_style.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_SUBTOTAL" VERSION="1" LANGU="E" DESCRIPT="Create formular for subtotal" EXPOSURE="0" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_SUBTOTAL" SCONAME="I_ROW_INT_START" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
@@ -484,7 +493,7 @@ endmethod.</source>
 
   l_func_num = get_function_number( i_totals_function = i_totals_function ).
   concatenate &apos;SUBTOTAL(&apos; l_func_num &apos;,&apos; i_column l_row_alpha_start &apos;:&apos; i_column l_row_alpha_end &apos;)&apos; into r_formula.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_TOTAL" VERSION="1" LANGU="E" DESCRIPT="Create formular for column total" EXPOSURE="0" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_FORMULAR_TOTAL" SCONAME="I_ROW_INT" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
@@ -499,7 +508,7 @@ endmethod.</source>
   l_row_e_alpha = i_row_int.
 
   concatenate i_totals_function &apos;(&apos; i_column l_row_alpha &apos;:&apos; i_column l_row_e_alpha &apos;)&apos; into r_formula.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_PATH" VERSION="1" LANGU="E" DESCRIPT="Create file path for download" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_PATH" SCONAME="R_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
@@ -556,7 +565,7 @@ endmethod.</source>
     ENDDO.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_HDR" VERSION="1" LANGU="E" DESCRIPT="Create header  style" EXPOSURE="0" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_HDR" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
@@ -573,7 +582,7 @@ endmethod.</source>
     lo_style-&gt;alignment-&gt;horizontal = i_alignment.
   endif.
   ro_style = lo_style .
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_NORMAL" VERSION="1" LANGU="E" DESCRIPT="Create line style for stripped" EXPOSURE="0" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_NORMAL" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
@@ -604,7 +613,7 @@ endmethod.</source>
     ro_style = lo_style .
 
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_STRIPPED" VERSION="1" LANGU="E" DESCRIPT="Create line style for stripped" EXPOSURE="0" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_STRIPPED" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
@@ -630,7 +639,7 @@ endmethod.</source>
   endif.
   ro_style = lo_style.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_SUBTOTAL" VERSION="1" LANGU="E" DESCRIPT="Create subtotals style" EXPOSURE="0" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_SUBTOTAL" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
@@ -657,7 +666,7 @@ endmethod.</source>
 
   ro_style = lo_style .
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_TOTAL" VERSION="1" LANGU="E" DESCRIPT="Create totals style" EXPOSURE="0" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_STYLE_TOTAL" SCONAME="I_ALIGNMENT" VERSION="1" LANGU="E" DESCRIPT="Alignment" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_ALIGNMENT" PAROPTIONL="X"/>
@@ -700,7 +709,7 @@ endmethod.</source>
 
   ro_style = lo_style .
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create table based on fieldcatalog" EXPOSURE="0" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_TABLE.
@@ -768,7 +777,7 @@ endmethod.</source>
     ENDIF.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_TEXT_SUBTOTAL" VERSION="1" LANGU="E" DESCRIPT="Create subtoal text for column" EXPOSURE="0" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="CREATE_TEXT_SUBTOTAL" SCONAME="I_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
@@ -793,7 +802,7 @@ endmethod.</source>
       CLEAR l_func.
   ENDCASE.
 
-  WRITE i_value TO l_string.
+  MOVE i_value TO l_string.
 
   CONCATENATE l_string l_func INTO r_text SEPARATED BY space.
 
@@ -841,7 +850,7 @@ ENDMETHOD.</source>
     ENDIF.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="EXECUTE_CONVERTER" VERSION="1" LANGU="E" DESCRIPT="Execute the converter based on object provided" EXPOSURE="0" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="EXECUTE_CONVERTER" SCONAME="IO_OBJECT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="OBJECT"/>
@@ -891,7 +900,7 @@ endmethod.</source>
     GET REFERENCE OF it_table INTO wo_table.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_COLOR_STYLE" VERSION="1" LANGU="E" DESCRIPT="Look up color style and create if needed" EXPOSURE="0" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_COLOR_STYLE" SCONAME="I_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
@@ -953,7 +962,7 @@ endmethod.</source>
     r_style = i_style.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" VERSION="1" LANGU="E" DESCRIPT="Create excel file" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="E_BYTECOUNT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
@@ -993,7 +1002,7 @@ endmethod.</source>
     endif.
   endif.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FUNCTION_NUMBER" VERSION="1" LANGU="E" DESCRIPT="Convert function name into internal number" EXPOSURE="0" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FUNCTION_NUMBER" SCONAME="I_TOTALS_FUNCTION" VERSION="1" LANGU="E" DESCRIPT="Totals function for table column (xml ST_TotalsRowFunction)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION"/>
@@ -1026,15 +1035,15 @@ endmethod.</source>
     when others.
       clear r_function_number.
   endcase.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_OPTION" VERSION="1" LANGU="E" DESCRIPT="Get user option data" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_OPTION" SCONAME="RS_OPTION" VERSION="1" LANGU="E" DESCRIPT="Converter options for grid configuration" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_OPTION"/>
-  <source>METHOD get_option.
+  <source>method GET_OPTION.
 
   rs_option = ws_option.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_STYLE" VERSION="1" LANGU="E" DESCRIPT="Get style for cell" EXPOSURE="0" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_STYLE" SCONAME="I_TYPE" VERSION="1" LANGU="E" DESCRIPT="Cell type for converter" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
@@ -1086,25 +1095,25 @@ ENDMETHOD.</source>
       INSERT ls_styles INTO TABLE wt_styles.
     ENDIF.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="INIT_OPTION" VERSION="1" LANGU="E" DESCRIPT="Init option structure" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD init_option.
+  <source>method INIT_OPTION.
 
   ws_option-filter = abap_true.
   ws_option-hidenc = abap_true.
   ws_option-subtot = abap_true.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_NORMAL" VERSION="1" LANGU="E" DESCRIPT="Bind cells with normal loop" EXPOSURE="0" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_NORMAL" SCONAME="I_ROW_INT" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_NORMAL" SCONAME="I_COL_INT" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_NORMAL" SCONAME="R_FREEZE_COL" VERSION="1" LANGU="E" DESCRIPT="Natural Number" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT1"/>
   <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_NORMAL" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD loop_normal.
+  <source>method LOOP_NORMAL.
   DATA: lo_data           TYPE REF TO data,
-        l_row_header      TYPE zexcel_cell_row VALUE &apos;2&apos;,
+        l_row_header      TYPE zexcel_cell_row VALUE 2,
         l_col_header      TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
         l_row_int_start   TYPE zexcel_cell_row,
         l_row_int_end     TYPE zexcel_cell_row,
@@ -1217,7 +1226,7 @@ ENDMETHOD.</source>
                               ip_style     = &lt;fs_sfcat&gt;-style_total ).
     ENDIF.
   ENDLOOP.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_SUBTOTAL" VERSION="1" LANGU="E" DESCRIPT="Bind cells with subtotal loop" EXPOSURE="0" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="LOOP_SUBTOTAL" SCONAME="I_ROW_INT" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
@@ -1227,7 +1236,7 @@ ENDMETHOD.</source>
   <source>method LOOP_SUBTOTAL.
 
   DATA: lo_data           TYPE REF TO data,
-        l_row_header      TYPE zexcel_cell_row VALUE &apos;2&apos;,
+        l_row_header      TYPE zexcel_cell_row VALUE 2,
         l_col_header      TYPE zexcel_cell_column_alpha VALUE &apos;B&apos;,
         l_row_int_start   TYPE zexcel_cell_row,
         l_row_int_end     TYPE zexcel_cell_row,
@@ -1566,7 +1575,7 @@ ENDMETHOD.</source>
     ENDIF.
   ENDLOOP.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="OPEN_FILE" VERSION="1" LANGU="E" DESCRIPT="Open excel file" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method OPEN_FILE.
@@ -1620,7 +1629,7 @@ endmethod.</source>
   endif.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_AUTOFILTER_AREA" VERSION="1" LANGU="E" DESCRIPT="Create autofilter" EXPOSURE="0" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method SET_AUTOFILTER_AREA.
@@ -1646,7 +1655,7 @@ endmethod.</source>
     wo_autofilter-&gt;set_filter_area( is_area = ls_area ) .
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_CELL_FORMAT" VERSION="1" LANGU="E" DESCRIPT="SET CELL FORMAT" EXPOSURE="0" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_CELL_FORMAT" SCONAME="I_INTTYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type (C,D,N,...)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INTTYPE"/>
@@ -1673,10 +1682,10 @@ endmethod.</source>
       r_format = &apos;#,##0&apos;.
   ENDCASE.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Set fieldcatalog from table" EXPOSURE="0" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD set_fieldcatalog.
+  <source>method SET_FIELDCATALOG.
 
   DATA: lr_data             TYPE REF TO data,
         lo_structdescr      TYPE REF TO cl_abap_structdescr,
@@ -1703,11 +1712,11 @@ endmethod.</source>
 
   clean_fieldcatalog( ).
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_OPTION" VERSION="1" LANGU="E" DESCRIPT="Set user option data" EXPOSURE="2" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="SET_OPTION" SCONAME="IS_OPTION" VERSION="1" LANGU="E" DESCRIPT="Converter options for grid configuration" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_CONVERTER_OPTION"/>
-  <source>METHOD set_option.
+  <source>method SET_OPTION.
 
   IF ws_indx-begdt IS INITIAL.
     ws_indx-begdt = sy-datum.
@@ -1723,7 +1732,7 @@ ENDMETHOD.</source>
     ws_option = is_option.
   ENDIF.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" VERSION="1" LANGU="E" DESCRIPT="Write excel file" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" SCONAME="I_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
@@ -1751,6 +1760,6 @@ ENDMETHOD.</source>
                                                       filetype     = &apos;BIN&apos;
                                              changing data_tab     = lt_file ).
   endif.
-endmethod.</source>
+  endmethod.</source>
  </method>
 </CLAS>
