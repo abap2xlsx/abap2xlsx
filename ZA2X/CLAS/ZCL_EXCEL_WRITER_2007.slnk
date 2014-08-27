@@ -3739,7 +3739,7 @@
 
         ls_colorscale = lo_style_conditional-&gt;mode_colorscale.
 
-        CLEAR lt_cfvo.
+        CLEAR: lt_cfvo, lt_colors.
         lo_element_3 = lo_document-&gt;create_simple_element( name = lc_xml_node_colorscale
                                                            parent = lo_document ).
 
