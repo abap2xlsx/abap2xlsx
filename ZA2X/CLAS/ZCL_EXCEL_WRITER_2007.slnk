@@ -2624,7 +2624,16 @@
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method CREATE_XL_SHEET.
+  <source>METHOD create_xl_sheet.
+*--------------------------------------------------------------------*
+* issue #330   - Adding ColorScale conditional formatting
+*              - Ivan Femia,                                2014-08-25
+*--------------------------------------------------------------------*
+
+  TYPES: BEGIN OF colors,
+          colorrgb TYPE zexcel_color,
+         END OF colors.
+
 *--------------------------------------------------------------------*
 * issue #237   - Error writing column-style
 *              - Stefan SchmÃ¶cker,                          2012-11-01
@@ -2675,6 +2684,7 @@
         lc_xml_node_cfrule              TYPE string VALUE &apos;cfRule&apos;,
         lc_xml_node_color               TYPE string VALUE &apos;color&apos;,      &quot; Databar by Albert Lladanosa
         lc_xml_node_databar             TYPE string VALUE &apos;dataBar&apos;,    &quot; Databar by Albert Lladanosa
+        lc_xml_node_colorscale          TYPE string VALUE &apos;colorScale&apos;,
         lc_xml_node_iconset             TYPE string VALUE &apos;iconSet&apos;,
         lc_xml_node_cfvo                TYPE string VALUE &apos;cfvo&apos;,
         lc_xml_node_formula             TYPE string VALUE &apos;formula&apos;,
@@ -2827,11 +2837,14 @@
         lv_style_guid               TYPE zexcel_cell_style,
         lv_flag                     TYPE c,
         ls_databar                  TYPE zexcel_conditional_databar,      &quot; Databar by Albert Lladanosa
+        ls_colorscale               TYPE zexcel_conditional_colorscale,
         ls_iconset                  TYPE zexcel_conditional_iconset,
         ls_cellis                   TYPE zexcel_conditional_cellis,
         ls_expression               TYPE zexcel_conditional_expression,
         lt_cfvo                     TYPE TABLE OF cfvo,
         ls_cfvo                     TYPE cfvo,
+        lt_colors                   TYPE TABLE OF colors,
+        ls_colors                   TYPE colors,
         lv_cell_row_s               TYPE string,
         ls_last_row                 TYPE zexcel_s_cell_data,
         ls_style_mapping            TYPE zexcel_s_styles_mapping,
@@ -3682,7 +3695,7 @@
                                     value = lv_value ).
 
     CASE lo_style_conditional-&gt;rule.
-      &quot; Start &gt;&gt; Databar by Albert Lladanosa
+        &quot; Start &gt;&gt; Databar by Albert Lladanosa
       WHEN zcl_excel_style_conditional=&gt;c_rule_databar.
 
         ls_databar = lo_style_conditional-&gt;mode_databar.
@@ -3721,7 +3734,64 @@
         lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; color node
 
         lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; databar node
-      &quot; End &lt;&lt; Databar by Albert Lladanosa
+        &quot; End &lt;&lt; Databar by Albert Lladanosa
+      WHEN zcl_excel_style_conditional=&gt;c_rule_colorscale.
+
+        ls_colorscale = lo_style_conditional-&gt;mode_colorscale.
+
+        CLEAR lt_cfvo.
+        lo_element_3 = lo_document-&gt;create_simple_element( name = lc_xml_node_colorscale
+                                                           parent = lo_document ).
+
+        MOVE ls_colorscale-cfvo1_value TO ls_cfvo-value.
+        MOVE ls_colorscale-cfvo1_type  TO ls_cfvo-type.
+        APPEND ls_cfvo TO lt_cfvo.
+
+        MOVE ls_colorscale-cfvo2_value TO ls_cfvo-value.
+        MOVE ls_colorscale-cfvo2_type  TO ls_cfvo-type.
+        APPEND ls_cfvo TO lt_cfvo.
+
+        MOVE ls_colorscale-cfvo3_value TO ls_cfvo-value.
+        MOVE ls_colorscale-cfvo3_type  TO ls_cfvo-type.
+        APPEND ls_cfvo TO lt_cfvo.
+
+        APPEND ls_colorscale-colorrgb1 TO lt_colors.
+        APPEND ls_colorscale-colorrgb2 TO lt_colors.
+        APPEND ls_colorscale-colorrgb3 TO lt_colors.
+
+        LOOP AT lt_cfvo INTO ls_cfvo.
+
+          IF ls_cfvo IS INITIAL.
+            CONTINUE.
+          ENDIF.
+
+          &quot; cfvo node
+          lo_element_4 = lo_document-&gt;create_simple_element( name = lc_xml_node_cfvo
+                                                             parent = lo_document ).
+          lv_value = ls_cfvo-type.
+          lo_element_4-&gt;set_attribute_ns( name = lc_xml_attr_type
+                                          value = lv_value ).
+          lv_value = ls_cfvo-value.
+          lo_element_4-&gt;set_attribute_ns( name = lc_xml_attr_val
+                                          value = lv_value ).
+          lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; cfvo node
+        ENDLOOP.
+        LOOP AT lt_colors INTO ls_colors.
+
+          IF ls_colors IS INITIAL.
+            CONTINUE.
+          ENDIF.
+
+          lo_element_4 = lo_document-&gt;create_simple_element( name = lc_xml_node_color
+                                                             parent = lo_document ).
+          lv_value = ls_colors-colorrgb.
+          lo_element_4-&gt;set_attribute_ns( name = lc_xml_attr_tabcolor_rgb
+                                          value = lv_value ).
+
+          lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; color node
+        ENDLOOP.
+
+        lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; databar node
       WHEN zcl_excel_style_conditional=&gt;c_rule_iconset.
 
         ls_iconset = lo_style_conditional-&gt;mode_iconset.
@@ -4275,7 +4345,7 @@
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
