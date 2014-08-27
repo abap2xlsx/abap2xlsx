@@ -5533,7 +5533,7 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_TABLE.
+  <source>METHOD create_xl_table.
 
   DATA: lc_xml_node_table         TYPE string VALUE &apos;table&apos;,
         lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
@@ -5621,14 +5621,16 @@ ENDMETHOD.</source>
 * STEP 4: Create subnodes
 
   &quot; autoFilter
-  lo_element = lo_document-&gt;create_simple_element( name   = &apos;autoFilter&apos;
-                                                   parent = lo_document ).
+  IF io_table-&gt;settings-nofilters EQ abap_false.
+    lo_element = lo_document-&gt;create_simple_element( name   = &apos;autoFilter&apos;
+                                                     parent = lo_document ).
 
-  lv_ref = io_table-&gt;get_reference( ip_include_totals_row = abap_false ).
-  lo_element-&gt;set_attribute_ns( name  = &apos;ref&apos;
-                                value = lv_ref ).
+    lv_ref = io_table-&gt;get_reference( ip_include_totals_row = abap_false ).
+    lo_element-&gt;set_attribute_ns( name  = &apos;ref&apos;
+                                  value = lv_ref ).
 
-  lo_element_root-&gt;append_child( new_child = lo_element ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
 
   &quot;columns
   lo_element = lo_document-&gt;create_simple_element( name   = &apos;tableColumns&apos;
@@ -5705,7 +5707,7 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
