@@ -3006,7 +3006,7 @@ METHOD calculate_cell_width.
           ld_flag_italic = ls_stylemapping-complete_style-font-italic.
         ENDIF.
 
-      CATCH zcx_excel ##NO_HANDLER.
+      CATCH zcx_excel. "#EC NO_HANDLER
         &quot; Style GUID is present, but style was not found
         &quot; Continue with default values
 
