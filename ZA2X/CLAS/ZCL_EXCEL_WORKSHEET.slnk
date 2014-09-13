@@ -2917,6 +2917,7 @@ METHOD calculate_cell_width.
         ld_font_height                TYPE tdfontsize VALUE lc_default_font_height,
         lt_itcfc                      TYPE STANDARD TABLE OF itcfc,
         ld_offset                     TYPE i,
+        ld_length                     TYPE i,
         ld_uccp                       TYPE i,
         ls_font_metric                TYPE mty_s_font_metric,
         ld_width_from_font_metrics    TYPE i,
@@ -3006,7 +3007,7 @@ METHOD calculate_cell_width.
           ld_flag_italic = ls_stylemapping-complete_style-font-italic.
         ENDIF.
 
-      CATCH zcx_excel. "#EC NO_HANDLER
+      CATCH zcx_excel. &quot;#EC NO_HANDLER
         &quot; Style GUID is present, but style was not found
         &quot; Continue with default values
 
@@ -3086,8 +3087,9 @@ METHOD calculate_cell_width.
   IF lines( &lt;ls_font_cache&gt;-th_font_metrics ) = 0.
     &quot; Font metrics are not available
     &quot; -&gt; Calculate the cell width using only the font size
+    ld_length = strlen( ld_cell_value ).
     ep_width =
-      strlen( ld_cell_value ) * ld_font_height / lc_default_font_height
+      ld_length * ld_font_height / lc_default_font_height
       + lc_excel_cell_padding.
 
   ELSE.
@@ -3095,7 +3097,8 @@ METHOD calculate_cell_width.
 
     &quot; Calculate the size of the text by adding the sizes of each
     &quot; letter
-    DO strlen( ld_cell_value ) TIMES.
+    ld_length = strlen( ld_cell_value ).
+    DO ld_length TIMES.
       &quot; Subtract 1, because the first character is at offset 0
       ld_offset = sy-index - 1.
 
