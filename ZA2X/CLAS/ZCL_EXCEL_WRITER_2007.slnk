@@ -740,6 +740,7 @@
 ** Constant node name
   DATA: lc_xml_node_coreproperties  TYPE string VALUE &apos;coreProperties&apos;,
         lc_xml_node_creator         TYPE string VALUE &apos;creator&apos;,
+        lc_xml_node_description     TYPE string VALUE &apos;description&apos;,
         lc_xml_node_lastmodifiedby  TYPE string VALUE &apos;lastModifiedBy&apos;,
         lc_xml_node_created         TYPE string VALUE &apos;created&apos;,
         lc_xml_node_modified        TYPE string VALUE &apos;modified&apos;,
@@ -806,6 +807,14 @@
                                                       prefix = lc_dc_ns
                                                       parent = lo_document ).
   lv_value = excel-&gt;zif_excel_book_properties~creator.
+  lo_element-&gt;set_value( value = lv_value ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
+
+  &quot; Description node
+  lo_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_description
+                                                      prefix = lc_dc_ns
+                                                      parent = lo_document ).
+  lv_value = excel-&gt;zif_excel_book_properties~description.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
