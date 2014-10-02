@@ -3174,6 +3174,10 @@ ENDMETHOD.</source>
 *      col_alpha = zcl_excel_common=&gt;convert_column2alpha( &lt;auto_size&gt;-col_index ).&quot; issue #155 - less restrictive typing for ip_column
       count = 1.
       WHILE count &lt;= highest_row.
+* Do not check merged cells
+        IF is_cell_merged(
+            ip_column    = &lt;auto_size&gt;-col_index
+            ip_row       = count ) = abap_false.
 * Start of change # issue 139 - Dateretention of cellstyles
 *        IF cell_style IS BOUND.
 *          CREATE OBJECT cell_style.
@@ -3195,11 +3199,12 @@ ENDMETHOD.</source>
 *          width = cell_style-&gt;font-&gt;calculate_text_width( cell_value ).
 *        ENDIF.
 *        width = calculate_cell_width( ip_column = col_alpha                &quot; issue #155 - less restrictive typing for ip_column
-        width = calculate_cell_width( ip_column = &lt;auto_size&gt;-col_index     &quot; issue #155 - less restrictive typing for ip_column
-                                      ip_row    = count ).
+         width = calculate_cell_width( ip_column = &lt;auto_size&gt;-col_index     &quot; issue #155 - less restrictive typing for ip_column
+                                       ip_row    = count ).
 * End of change # issue 139 - Dateretention of cellstyles
-        IF width &gt; &lt;auto_size&gt;-width.
-          &lt;auto_size&gt;-width = width.
+         IF width &gt; &lt;auto_size&gt;-width.
+           &lt;auto_size&gt;-width = width.
+         ENDIF.
         ENDIF.
         count = count + 1.
       ENDWHILE.
