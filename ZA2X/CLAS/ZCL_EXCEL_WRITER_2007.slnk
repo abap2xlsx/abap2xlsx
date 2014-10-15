@@ -2580,6 +2580,7 @@
     lv_sytabix = sy-tabix - 1.
     MOVE lv_sytabix                    TO ls_shared_string-string_no.
     MOVE &lt;fs_sheet_content&gt;-cell_value TO ls_shared_string-string_value.
+    MOVE &lt;fs_sheet_content&gt;-data_type TO ls_shared_string-string_type.
     APPEND ls_shared_string TO shared_strings.
   ENDLOOP.
 
@@ -2614,6 +2615,9 @@
                                                      parent = lo_document ).
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_t
                                                          parent = lo_document ).
+    if &lt;fs_sheet_string&gt;-string_type EQ &apos;s_leading_blanks&apos;.
+        lo_sub_element-&gt;set_attribute( name = &apos;space&apos; namespace = &apos;xml&apos; value = &apos;preserve&apos; ).
+    endif.
     lo_sub_element-&gt;set_value( value = &lt;fs_sheet_string&gt;-string_value ).
     lo_element-&gt;append_child( new_child = lo_sub_element ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
@@ -3489,15 +3493,20 @@
       lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
     ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL. &quot;cell can have just style or formula
       IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
-        lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
+        IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
+          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
+                                        value = &apos;s&apos; ).
+        ELSE.
+          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
                                         value = &lt;ls_sheet_content&gt;-data_type ).
+        ENDIF.
       ENDIF.
 
       &quot; value node
       lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_v
                                                        parent = lo_document ).
 
-      IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos;.
+      IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos; or &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
         lv_value = me-&gt;get_shared_string_index( &lt;ls_sheet_content&gt;-cell_value ).
         CONDENSE lv_value.
         lo_element_4-&gt;set_value( value = lv_value ).

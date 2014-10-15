@@ -69,7 +69,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel27 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Conditional Formatting
   SUBMIT zdemo_excel28 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: CSV writer
   &quot; SUBMIT zdemo_excel29 WITH p_path  = p_path AND RETURN. &quot; abap2xlsx Demo: Macro enabled workbook
-  SUBMIT zdemo_excel30 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: ABAP Cell data types
+  SUBMIT zdemo_excel30 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: ABAP Cell data types + leading blanks string
   SUBMIT zdemo_excel31 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Autosize Column with different Font sizes
   &quot; zdemo_excel32 is not added because it uses ALV and cannot be processed (Native)
   SUBMIT zdemo_excel33 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Table autofilter
