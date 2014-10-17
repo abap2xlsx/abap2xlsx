@@ -4962,12 +4962,19 @@ ENDMETHOD.</source>
         is_color           = ls_fill-fgcolor
         iv_color_elem_name = lc_xml_node_fgcolor ).
 
-    &quot; bgcolor
-    create_xl_styles_color_node(
-        io_document        = lo_document
-        io_parent          = lo_sub_element
-        is_color           = ls_fill-bgcolor
-        iv_color_elem_name = lc_xml_node_bgcolor ).
+    IF  ls_fill-fgcolor-rgb IS INITIAL AND
+        ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
+        ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
+        ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
+
+      &quot; bgcolor
+      create_xl_styles_color_node(
+          io_document        = lo_document
+          io_parent          = lo_sub_element
+          is_color           = ls_fill-bgcolor
+          iv_color_elem_name = lc_xml_node_bgcolor ).
+
+    ENDIF.
 
     lo_element_fill-&gt;append_child( new_child = lo_sub_element ).&quot;pattern
     lo_element_fills-&gt;append_child( new_child = lo_element_fill ).
@@ -5372,12 +5379,19 @@ ENDMETHOD.</source>
                   is_color           = ls_fill-fgcolor
                   iv_color_elem_name = lc_xml_node_fgcolor ).
 
-              &quot; bgcolor
-              create_xl_styles_color_node(
-                  io_document        = lo_document
-                  io_parent          = lo_sub_element_2
-                  is_color           = ls_fill-bgcolor
-                  iv_color_elem_name = lc_xml_node_bgcolor ).
+              IF  ls_fill-fgcolor-rgb IS INITIAL AND
+                ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
+                ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
+                ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
+
+                &quot; bgcolor
+                create_xl_styles_color_node(
+                    io_document        = lo_document
+                    io_parent          = lo_sub_element_2
+                    is_color           = ls_fill-bgcolor
+                    iv_color_elem_name = lc_xml_node_bgcolor ).
+
+              ENDIF.
 
               lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
 
@@ -5430,12 +5444,19 @@ ENDMETHOD.</source>
                   is_color           = ls_fill-fgcolor
                   iv_color_elem_name = lc_xml_node_fgcolor ).
 
-              &quot; bgcolor
-              create_xl_styles_color_node(
-                  io_document        = lo_document
-                  io_parent          = lo_sub_element_2
-                  is_color           = ls_fill-bgcolor
-                  iv_color_elem_name = lc_xml_node_bgcolor ).
+              IF  ls_fill-fgcolor-rgb IS INITIAL AND
+                ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
+                ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
+                ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
+
+                &quot; bgcolor
+                create_xl_styles_color_node(
+                    io_document        = lo_document
+                    io_parent          = lo_sub_element_2
+                    is_color           = ls_fill-bgcolor
+                    iv_color_elem_name = lc_xml_node_bgcolor ).
+
+              ENDIF.
 
               lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
 
@@ -5502,7 +5523,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_PARENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IV_COLOR_ELEM_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PARVALUE="&apos;color&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IS_COLOR" VERSION="1" LANGU="E" DESCRIPT="Color" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_STYLE_COLOR"/>
-  <source>method CREATE_XL_STYLES_COLOR_NODE.
+  <source>METHOD create_xl_styles_color_node.
   DATA: lo_sub_element TYPE REF TO if_ixml_element,
         lv_value TYPE string.
 
@@ -5511,7 +5532,7 @@ ENDMETHOD.</source>
              lc_xml_attr_indexed           TYPE string VALUE &apos;indexed&apos;,
              lc_xml_attr_tint              TYPE string VALUE &apos;tint&apos;.
 
-&quot;add node only if at least one attribute is set
+  &quot;add node only if at least one attribute is set
   CHECK is_color-rgb IS NOT INITIAL OR
         is_color-indexed &lt;&gt; zcl_excel_style_color=&gt;c_indexed_not_set OR
         is_color-theme &lt;&gt; zcl_excel_style_color=&gt;c_theme_not_set OR
@@ -5546,7 +5567,7 @@ ENDMETHOD.</source>
   ENDIF.
 
   io_parent-&gt;append_child( new_child = lo_sub_element ).
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
