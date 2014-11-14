@@ -65,6 +65,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING  &quot;#AU Risk_Level Harmles
     METHODS: describe_structure FOR TESTING.
     METHODS: calculate_cell_distance FOR TESTING.
     METHODS: shift_formula FOR TESTING.
+    METHODS: is_cell_in_range FOR TESTING.
 ENDCLASS.       &quot;lcl_Excel_Common_Test
 
 
@@ -1036,9 +1037,117 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           &apos;A1+$A1+A$1+$A$1+B2&apos;                  -1  -1       &apos;#REF!+#REF!+#REF!+$A$1+A1&apos;. &quot; Referencing error , row and column , underflow
   ENDMETHOD.                    &quot;SHIFT_FORMULA
 
+  METHOD is_cell_in_range.
+    DATA ep_cell_in_range TYPE abap_bool.
 
+* Test 1: upper left corner (in range)
+    TRY.
+      ep_cell_in_range = zcl_excel_common=&gt;is_cell_in_range(
+          ip_column   = &apos;B&apos;
+          ip_row      = 2
+          ip_range    = &apos;B2:D4&apos; ).
 
+      zcl_excel_common=&gt;assert_equals(
+          act   = ep_cell_in_range
+          exp   = abap_true
+          msg   = &apos;Check cell in range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+     CATCH zcx_excel.
+        zcl_excel_common=&gt;fail(
+            msg    = &apos;Unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical ).
+    ENDTRY.
 
+* Test 2: lower right corner (in range)
+    TRY.
+      ep_cell_in_range = zcl_excel_common=&gt;is_cell_in_range(
+          ip_column   = &apos;D&apos;
+          ip_row      = 4
+          ip_range    = &apos;B2:D4&apos; ).
+
+      zcl_excel_common=&gt;assert_equals(
+          act   = ep_cell_in_range
+          exp   = abap_true
+          msg   = &apos;Check cell in range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+     CATCH zcx_excel.
+        zcl_excel_common=&gt;fail(
+            msg    = &apos;Unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical ).
+    ENDTRY.
+
+* Test 3: left side (out of range)
+    TRY.
+      ep_cell_in_range = zcl_excel_common=&gt;is_cell_in_range(
+          ip_column   = &apos;A&apos;
+          ip_row      = 3
+          ip_range    = &apos;B2:D4&apos; ).
+
+      zcl_excel_common=&gt;assert_equals(
+          act   = ep_cell_in_range
+          exp   = abap_false
+          msg   = &apos;Check cell in range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+     CATCH zcx_excel.
+        zcl_excel_common=&gt;fail(
+            msg    = &apos;Unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical ).
+    ENDTRY.
+
+* Test 4: upper side (out of range)
+    TRY.
+      ep_cell_in_range = zcl_excel_common=&gt;is_cell_in_range(
+          ip_column   = &apos;C&apos;
+          ip_row      = 1
+          ip_range    = &apos;B2:D4&apos; ).
+
+      zcl_excel_common=&gt;assert_equals(
+          act   = ep_cell_in_range
+          exp   = abap_false
+          msg   = &apos;Check cell in range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+     CATCH zcx_excel.
+        zcl_excel_common=&gt;fail(
+            msg    = &apos;Unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical ).
+    ENDTRY.
+
+* Test 5: right side (out of range)
+    TRY.
+      ep_cell_in_range = zcl_excel_common=&gt;is_cell_in_range(
+          ip_column   = &apos;E&apos;
+          ip_row      = 3
+          ip_range    = &apos;B2:D4&apos; ).
+
+      zcl_excel_common=&gt;assert_equals(
+          act   = ep_cell_in_range
+          exp   = abap_false
+          msg   = &apos;Check cell in range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+     CATCH zcx_excel.
+        zcl_excel_common=&gt;fail(
+            msg    = &apos;Unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical ).
+    ENDTRY.
+
+* Test 6: lower side (out of range)
+    TRY.
+      ep_cell_in_range = zcl_excel_common=&gt;is_cell_in_range(
+          ip_column   = &apos;C&apos;
+          ip_row      = 5
+          ip_range    = &apos;B2:D4&apos; ).
+
+      zcl_excel_common=&gt;assert_equals(
+          act   = ep_cell_in_range
+          exp   = abap_false
+          msg   = &apos;Check cell in range failed&apos;
+          level = if_aunit_constants=&gt;critical ).
+     CATCH zcx_excel.
+        zcl_excel_common=&gt;fail(
+            msg    = &apos;Unexpected exception&apos;
+            level  = if_aunit_constants=&gt;critical ).
+    ENDTRY.
+  ENDMETHOD.
 
 ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
  <textPool>
