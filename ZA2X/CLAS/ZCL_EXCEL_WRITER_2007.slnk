@@ -3249,9 +3249,11 @@
 *        lv_value = me-&gt;excel-&gt;get_style_index_in_styles( lv_style_guid ).                                  &quot;del issue #237
         CLEAR ls_style_mapping.
         READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
-        lv_style_index = ls_style_mapping-style.
-        IF lv_style_index &gt; 0.                                                                              &quot;ins issue #237
-          lv_value = lv_style_index - 1.                                                                    &quot;ins issue #237
+*        lv_style_index = ls_style_mapping-style.                                                            &quot;del issue #295
+*        IF lv_style_index &gt; 0.                                                                              &quot;ins issue #237 - del issue #295
+*          lv_value = lv_style_index - 1.                                                                    &quot;ins issue #237 - del issue #295
+        IF sy-subrc = 0.                                                                                     &quot;ins issue #295
+          lv_value = ls_style_mapping-style.                                                                 &quot;ins issue #295
           SHIFT lv_value RIGHT DELETING TRAILING space.
           SHIFT lv_value LEFT DELETING LEADING space.
           lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_style
