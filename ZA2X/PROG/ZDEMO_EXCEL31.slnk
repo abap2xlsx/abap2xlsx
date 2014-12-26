@@ -142,6 +142,23 @@ START-OF-SELECTION.
   column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;C&apos; ).
   column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
 
+  &quot; Add sheet for merged cells
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Merged cells&apos; ).
+
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 1 ip_value = &apos;This is a very long header text&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 2 ip_value = &apos;Some data&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 3 ip_value = &apos;Some more data&apos; ).
+
+  lo_worksheet-&gt;set_merge(
+    EXPORTING
+      ip_column_start = &apos;A&apos;
+      ip_column_end   = &apos;C&apos;
+      ip_row          = 1 ).
+
+  column_dimension = lo_worksheet-&gt;get_column_dimension( &apos;A&apos; ).
+  column_dimension-&gt;set_auto_size( ip_auto_size = abap_true ).
+
   lo_excel-&gt;set_active_sheet_index( i_active_worksheet = 1 ).
 
 *** Create output
