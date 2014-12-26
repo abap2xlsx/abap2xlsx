@@ -79,7 +79,8 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel37 WITH p_upfile  = lv_upfile
                        WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Simplest call of the reader and writer - passthrough data
   SUBMIT zdemo_excel38 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Show off integration of drawings ( here using the SAP-Icons )
-  SUBMIT ZDEMO_EXCEL39 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Charts
+  SUBMIT zdemo_excel39 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Charts
+  SUBMIT zdemo_excel40 WITH p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Demo Printsettings
   &quot;
   &quot; Reader/Writer Demo must always run at the end
   &quot; to make sure all documents where created
