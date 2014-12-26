@@ -184,8 +184,8 @@ class lcl_test implementation.
     append `` to out-&gt;shared_strings.
     append `t` to out-&gt;shared_strings.
     lo_reader = get_reader(
-      `&lt;c r=&quot;A1&quot; t=&quot;s&quot;&gt;&lt;v&gt;0&lt;/v&gt;&lt;/c&gt;` &amp;&amp;
-      `&lt;c r=&quot;A2&quot; t=&quot;inlineStr&quot;&gt;&lt;is&gt;&lt;t&gt;&lt;/t&gt;&lt;/is&gt;&lt;/c&gt;` &amp;&amp;
+      `&lt;c r=&quot;A1&quot; t=&quot;s&quot;&gt;&lt;v&gt;0&lt;/v&gt;&lt;/c&gt;` &amp;
+      `&lt;c r=&quot;A2&quot; t=&quot;inlineStr&quot;&gt;&lt;is&gt;&lt;t&gt;&lt;/t&gt;&lt;/is&gt;&lt;/c&gt;` &amp;
       `&lt;c r=&quot;A3&quot; t=&quot;s&quot;&gt;&lt;v&gt;1&lt;/v&gt;&lt;/c&gt;`
       ).
 
@@ -239,12 +239,16 @@ class lcl_test implementation.
 
 *
   method test_read_shared_strings.
-    data: lo_reader type ref to if_sxml_reader,
+    data: lo_c2x type ref to cl_abap_conv_out_ce,
+          lv_xstring type xstring,
+          lo_reader type ref to if_sxml_reader,
           lt_act type stringtab,
           lt_exp type stringtab.
-    lo_reader = cl_sxml_string_reader=&gt;create( cl_abap_codepage=&gt;convert_to(
-      `&lt;sst&gt;&lt;si&gt;&lt;t/&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Bravo&lt;/t&gt;&lt;/si&gt;&lt;/sst&gt;`
-      ) ).
+
+    lo_c2x = cl_abap_conv_out_ce=&gt;create( ).
+    lo_c2x-&gt;convert( exporting data   = `&lt;sst&gt;&lt;si&gt;&lt;t/&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Bravo&lt;/t&gt;&lt;/si&gt;&lt;/sst&gt;`
+                     importing buffer = lv_xstring ).
+    lo_reader = cl_sxml_string_reader=&gt;create( lv_xstring ).
     append :
      `` to lt_exp,
      `Alpha` to lt_exp,
@@ -259,13 +263,16 @@ class lcl_test implementation.
 
 *
   method test_skip_to_inexistent.
-    data: lo_reader type ref to if_sxml_reader,
+    data: lo_c2x type ref to cl_abap_conv_out_ce,
+          lv_xstring type xstring,
+          lo_reader type ref to if_sxml_reader,
           lo_ex type ref to lcx_not_found,
           lv_text type string.
 
-    lo_reader = cl_sxml_string_reader=&gt;create( cl_abap_codepage=&gt;convert_to(
-      `&lt;sst&gt;&lt;si&gt;&lt;t/&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Bravo&lt;/t&gt;&lt;/si&gt;&lt;/sst&gt;`
-      ) ).
+    lo_c2x = cl_abap_conv_out_ce=&gt;create( ).
+    lo_c2x-&gt;convert( exporting data   = `&lt;sst&gt;&lt;si&gt;&lt;t/&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/si&gt;&lt;si&gt;&lt;t&gt;Bravo&lt;/t&gt;&lt;/si&gt;&lt;/sst&gt;`
+                     importing buffer = lv_xstring ).
+    lo_reader = cl_sxml_string_reader=&gt;create( lv_xstring ).
     try.
         out-&gt;skip_to( iv_element_name = `nonExistingElement` io_reader = lo_reader ).
         fail(`Skipping to non-existing element must raise lcx_not_found exception`).
@@ -276,9 +283,14 @@ class lcl_test implementation.
 
 *
   method get_reader.
-    data: lv_full type string.
+    data: lv_full type string,
+          lo_c2x type ref to cl_abap_conv_out_ce,
+          lv_xstring type xstring.
     concatenate `&lt;root&gt;&lt;sheetData&gt;&lt;row&gt;` iv_xml `&lt;/row&gt;&lt;/sheetData&gt;&lt;/root&gt;` into lv_full.
-    eo_reader = cl_sxml_string_reader=&gt;create( cl_abap_codepage=&gt;convert_to( lv_full ) ).
+    lo_c2x = cl_abap_conv_out_ce=&gt;create( ).
+    lo_c2x-&gt;convert( exporting data   = lv_full
+                     importing buffer = lv_xstring ).
+    eo_reader = cl_sxml_string_reader=&gt;create( lv_xstring ).
   endmethod.                    &quot;get_reader
 *
   method assert_value_equals.
@@ -411,13 +423,15 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SHARED_STRING" SCONAME="EV_VALUE" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GET_SHARED_STRING" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="D" MTDTYPE="0" EDITORDER="1 "/>
   <source>method GET_SHARED_STRING.
-  data: lv_tabix type i.
+  data: lv_tabix type i,
+        lv_error type string.
   lv_tabix = iv_index + 1.
   read table shared_strings into ev_value index lv_tabix.
   if sy-subrc ne 0.
+    concatenate &apos;Entry &apos; iv_index &apos; not found in Shared String Table&apos; into lv_error.
     raise exception type lcx_not_found
       exporting
-        error = |Entry { iv_index } not found in Shared String Table|.
+        error = lv_error.
   endif.
 endmethod.</source>
  </method>
@@ -428,15 +442,17 @@ endmethod.</source>
   <source>method GET_STYLE.
 
   data: lv_tabix type i,
-        lo_style type ref to zcl_excel_style.
+        lo_style type ref to zcl_excel_style,
+        lv_error type string.
 
   if gs_buffer_style-index ne iv_index.
     lv_tabix = iv_index + 1.
     read table styles into lo_style index lv_tabix.
     if sy-subrc ne 0.
+      concatenate &apos;Entry &apos; iv_index &apos; not found in Style Table&apos; into lv_error.
       raise exception type lcx_not_found
         exporting
-          error = |Entry { iv_index } not found in Style Table|.
+          error = lv_error.
     else.
       gs_buffer_style-index = iv_index.
       gs_buffer_style-guid  = lo_style-&gt;get_guid( ).
@@ -565,14 +581,17 @@ endmethod.</source>
   <exception CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="SKIP_TO" SCONAME="LCX_NOT_FOUND" VERSION="1" LANGU="D" MTDTYPE="0" EDITORDER="1 "/>
   <source>method SKIP_TO.
 
+  data: lv_error type string.
+
 * Skip forward to given element
   while io_reader-&gt;name ne iv_element_name or
         io_reader-&gt;node_type ne c_element_open.
     io_reader-&gt;next_node( ).
     if io_reader-&gt;node_type = c_end_of_stream.
+      concatenate &apos;XML error: Didn&apos;&apos;t find element &lt;&apos; iv_element_name &apos;&gt;&apos; into lv_error.
       raise exception type lcx_not_found
         exporting
-          error = |XML error: Didn&apos;t find element &lt;{ iv_element_name }&gt;|.
+          error = lv_error.
     endif.
   endwhile.
 
