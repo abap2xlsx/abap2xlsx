@@ -21,10 +21,10 @@
            TYPE HASHED TABLE OF mty_s_font_cache
            WITH UNIQUE KEY font_name font_height flag_bold flag_italic
 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
- <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WORKSHEET" REFCLSNAME="ZIF_EXCEL_SHEET_PRINTSETTINGS" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes
@@ -180,12 +180,6 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
-  <language SPRAS="1">
-   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
-  </language>
-  <language SPRAS="2">
-   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
-  </language>
   <language SPRAS="D">
    <textElement ID="I" KEY="001" ENTRY="Tabelle" LENGTH="132 "/>
    <textElement ID="I" KEY="400" ENTRY="Tabelle Ã¼berschneidet sich mit schon eingebundener Tabelle und wird diesem Tabellenblatt nicht hinzugefÃ¼gt." LENGTH="132 "/>
@@ -199,15 +193,6 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
    <textElement ID="I" KEY="401" ENTRY="Invalid range supplied for print-title repeatable columns" LENGTH="132 "/>
    <textElement ID="I" KEY="402" ENTRY="Found illegal character in sheetname. List of forbidden characters: /\[]*?:" LENGTH="132 "/>
    <textElement ID="I" KEY="403" ENTRY="Sheetname may not start with &amp;" LENGTH="132 "/>
-  </language>
-  <language SPRAS="I">
-   <textElement ID="I" KEY="001" ENTRY="Foglio1" LENGTH="132 "/>
-  </language>
-  <language SPRAS="L">
-   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
-  </language>
-  <language SPRAS="S">
-   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_WORKSHEET" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
@@ -2650,6 +2635,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
               lo_table                        TYPE REF TO zcl_excel_table,
               lt_column_name_buffer           TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
               lv_value                        TYPE string,
+              lv_value_lowercase              TYPE string,
               lv_syindex                      TYPE char3,
               lv_errormessage                 TYPE string,                                            &quot;ins issue #237
 
@@ -2766,11 +2752,12 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
       &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
     ENDIF.
     WHILE 1 = 1.
-
-      READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value BINARY SEARCH.
+      lv_value_lowercase = lv_value.
+      TRANSLATE lv_value_lowercase TO LOWER CASE.
+      READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
       IF sy-subrc &lt;&gt; 0.
         &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
-        INSERT lv_value INTO TABLE lt_column_name_buffer.
+        INSERT lv_value_lowercase INTO TABLE lt_column_name_buffer.
         EXIT.
       ELSE.
         lv_syindex = sy-index.
@@ -3007,7 +2994,7 @@ METHOD calculate_cell_width.
           ld_flag_italic = ls_stylemapping-complete_style-font-italic.
         ENDIF.
 
-      CATCH zcx_excel. &quot;#EC NO_HANDLER
+      CATCH zcx_excel ##NO_HANDLER.
         &quot; Style GUID is present, but style was not found
         &quot; Continue with default values
 
@@ -3088,9 +3075,7 @@ METHOD calculate_cell_width.
     &quot; Font metrics are not available
     &quot; -&gt; Calculate the cell width using only the font size
     ld_length = strlen( ld_cell_value ).
-    ep_width =
-      ld_length * ld_font_height / lc_default_font_height
-      + lc_excel_cell_padding.
+    ep_width = ld_length * ld_font_height / lc_default_font_height + lc_excel_cell_padding.
 
   ELSE.
     &quot; Font metrics are available
