@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_PROPERTIES" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
@@ -23,7 +23,7 @@ CLASS zcl_tc_excel DEFINITION FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS
 .
-*?﻿&lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;
+*?ï»¿&lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;
 *?&lt;asx:values&gt;
 *?&lt;TESTCLASS_OPTIONS&gt;
 *?&lt;TEST_CLASS&gt;zcl_Tc_Excel
@@ -122,8 +122,8 @@ ENDCLASS.       &quot;zcl_Tc_Excel</localTestClasses>
  <attribute CLSNAME="ZCL_EXCEL" CMPNAME="T_STYLEMAPPING1" VERSION="1" LANGU="E" DESCRIPT="Stylemapping:  Values -&gt; GUID" EXPOSURE="0" STATE="1" EDITORDER="11 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLEMAPPING1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL" CMPNAME="T_STYLEMAPPING2" VERSION="1" LANGU="E" DESCRIPT="Stylemapping:  GUID -&gt; Values" EXPOSURE="0" STATE="1" EDITORDER="12 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLEMAPPING2" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL" CMPNAME="USE_TEMPLATE" VERSION="1" LANGU="E" DESCRIPT="Checkbox" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XFELD" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL" CMPNAME="VERSION" VERSION="1" LANGU="E" DESCRIPT="abap2xlsx version" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;7.0.2&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR10" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL" CMPNAME="WORKSHEETS" VERSION="1" LANGU="E" DESCRIPT="Worksheets collection" EXPOSURE="0" STATE="1" EDITORDER="13 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEETS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL" CMPNAME="VERSION" VERSION="1" LANGU="E" DESCRIPT="abap2xlsx version" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;7.0.1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR10" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL" CMPNAME="WORKSHEETS" VERSION="1" LANGU="E" DESCRIPT="Worksheets collection" EXPOSURE="1" STATE="1" EDITORDER="13 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEETS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL" CPDNAME="ZIF_EXCEL_BOOK_PROPERTIES~INITIALIZE">
   <source>METHOD zif_excel_book_properties~initialize.
   DATA: lv_timestamp TYPE timestampl.
@@ -244,11 +244,6 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL" CMPNAME="ADD_STATIC_STYLES" VERSION="1" LANGU="E" DESCRIPT="Add static styles to styles iterator" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method ADD_STATIC_STYLES.
   &quot; # issue 139
-* sp#Ã‚Æ’Ãƒâ€šÃ‚Â¤ter hier noch die Worksheets abklappern, welche Styles #Ã‚Æ’Ãƒâ€š#berhaupt noch ben#Ã‚Æ’Ãƒâ€š#tigt werden
-* und nur diese dann auch hier zur Verf#Ã‚Æ’Ãƒâ€š#gung stellen
-* Da muss ich noch mal nachfragen, ob die beiden ersten Styles, die scheinbar immer mit dem
-* EXCEL-Objekt erzeugt werden evtl. immer ben#Ã‚Æ’Ãƒâ€š#tigt werden, egal ob verwendet oder nicht
-* Aber als Start fange ich mal an einfach alle static styles der Reihe nach hinzuzuf#Ã‚Æ’Ãƒâ€š#gen
   FIELD-SYMBOLS: &lt;style1&gt; LIKE LINE OF t_stylemapping1,
                  &lt;style2&gt; LIKE LINE OF t_stylemapping2.
   DATA: style TYPE REF TO zcl_excel_style.
@@ -536,7 +531,7 @@ ENDMETHOD.</source>
   me-&gt;default_style = ip_style.
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL" CMPNAME="STYLEMAPPING_DYNAMIC_STYLE" VERSION="1" LANGU="E" DESCRIPT="Convert dynamic style to static stlyeentry" EXPOSURE="0" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL" CMPNAME="STYLEMAPPING_DYNAMIC_STYLE" VERSION="1" LANGU="E" DESCRIPT="Convert dynamic style to static styleentry" EXPOSURE="0" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL" CMPNAME="STYLEMAPPING_DYNAMIC_STYLE" SCONAME="IP_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE"/>
   <parameter CLSNAME="ZCL_EXCEL" CMPNAME="STYLEMAPPING_DYNAMIC_STYLE" SCONAME="EO_STYLE2" VERSION="1" LANGU="E" DESCRIPT="Stypemapping" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_S_STYLEMAPPING"/>
   <source>method STYLEMAPPING_DYNAMIC_STYLE.

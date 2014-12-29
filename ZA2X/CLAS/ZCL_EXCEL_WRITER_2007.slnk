@@ -4373,40 +4373,40 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IV_DRAWING_INDEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_SHEET_RELS.
+  <source>METHOD create_xl_sheet_rels.
 
 
 ** Constant node name
-  DATA: lc_xml_node_relationships   TYPE string VALUE &apos;Relationships&apos;,
-        lc_xml_node_relationship    TYPE string VALUE &apos;Relationship&apos;,
+  DATA: lc_xml_node_relationships  TYPE string VALUE &apos;Relationships&apos;,
+        lc_xml_node_relationship   TYPE string VALUE &apos;Relationship&apos;,
         &quot; Node attributes
-        lc_xml_attr_id              TYPE string VALUE &apos;Id&apos;,
-        lc_xml_attr_type            TYPE string VALUE &apos;Type&apos;,
-        lc_xml_attr_target          TYPE string VALUE &apos;Target&apos;,
-        lc_xml_attr_target_mode     TYPE string VALUE &apos;TargetMode&apos;,
-        lc_xml_val_external         TYPE string VALUE &apos;External&apos;,
+        lc_xml_attr_id             TYPE string VALUE &apos;Id&apos;,
+        lc_xml_attr_type           TYPE string VALUE &apos;Type&apos;,
+        lc_xml_attr_target         TYPE string VALUE &apos;Target&apos;,
+        lc_xml_attr_target_mode    TYPE string VALUE &apos;TargetMode&apos;,
+        lc_xml_val_external        TYPE string VALUE &apos;External&apos;,
         &quot; Node namespace
-        lc_xml_node_rels_ns         TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
-        lc_xml_node_rid_table_tp    TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/table&apos;,
-        lc_xml_node_rid_printer_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;,
-        lc_xml_node_rid_drawing_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
-        lc_xml_node_rid_link_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;.
+        lc_xml_node_rels_ns        TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
+        lc_xml_node_rid_table_tp   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/table&apos;,
+        lc_xml_node_rid_printer_tp TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;,
+        lc_xml_node_rid_drawing_tp TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
+        lc_xml_node_rid_link_tp    TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
-        lo_element_root   TYPE REF TO if_ixml_element,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer,
-        lo_iterator       TYPE REF TO cl_object_collection_iterator,
-        lo_table          TYPE REF TO zcl_excel_table,
-        lo_link           TYPE REF TO zcl_excel_hyperlink.
+  DATA: lo_ixml          TYPE REF TO if_ixml,
+        lo_document      TYPE REF TO if_ixml_document,
+        lo_element_root  TYPE REF TO if_ixml_element,
+        lo_element       TYPE REF TO if_ixml_element,
+        lo_encoding      TYPE REF TO if_ixml_encoding,
+        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+        lo_ostream       TYPE REF TO if_ixml_ostream,
+        lo_renderer      TYPE REF TO if_ixml_renderer,
+        lo_iterator      TYPE REF TO cl_object_collection_iterator,
+        lo_table         TYPE REF TO zcl_excel_table,
+        lo_link          TYPE REF TO zcl_excel_hyperlink.
 
-  DATA: lv_value          TYPE string,
-        lv_relation_id    TYPE i,
-        lv_index_str      TYPE string.
+  DATA: lv_value       TYPE string,
+        lv_relation_id TYPE i,
+        lv_index_str   TYPE string.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -4435,6 +4435,7 @@ ENDMETHOD.</source>
   lo_iterator = io_worksheet-&gt;get_hyperlinks_iterator( ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
     lo_link ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+    CHECK lo_link-&gt;is_internal( ) = abap_false.  &quot; issue #340 - don&apos;t put internal links here
     ADD 1 TO lv_relation_id.
 
     lv_value = lv_relation_id.
@@ -4537,7 +4538,7 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
