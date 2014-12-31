@@ -462,7 +462,7 @@ endmethod.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive and convert to ixml document" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="IS_NORMALIZING" VERSION="1" LANGU="E" DESCRIPT="Boolean Variable (X=True, -=False, Space=Unknown)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="BOOLEAN" PARVALUE="&apos;X&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="R_IXML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -493,7 +493,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads drawing anchor" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IT_RELATED_DRAWINGS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_REL_DRAWINGS"/>
@@ -1931,6 +1931,11 @@ ENDMETHOD.</source>
 *          add a list of open ToDos here
 *          adding comments to explain what we are trying to achieve (started)
 *--------------------------------------------------------------------*
+* issue #345 - Dump on small pagemargins
+*              Took the chance to modularize this very long method
+*              by extracting the code that needed correction into
+*              own method ( load_worksheet_pagemargins )
+*--------------------------------------------------------------------*
   TYPES:  BEGIN OF lty_cell,
               r                               TYPE string,
               t                               TYPE string,
@@ -1979,15 +1984,6 @@ ENDMETHOD.</source>
               orientation                     TYPE string,
               scale                           TYPE string,
           END OF lty_page_setup.
-
-  TYPES:  BEGIN OF lty_page_margins,
-              footer                          TYPE string,
-              header                          TYPE string,
-              bottom                          TYPE string,
-              top                             TYPE string,
-              right                           TYPE string,
-              left                            TYPE string,
-          END OF lty_page_margins.
 
   TYPES:  BEGIN OF lty_sheetformatpr,
               customheight                    TYPE string,
@@ -2083,8 +2079,6 @@ ENDMETHOD.</source>
               ls_even_footer                  TYPE zexcel_s_worksheet_head_foot,
               lo_ixml_hf_value_elem           TYPE REF TO if_ixml_element,
 
-              lo_ixml_pagemargins_elem        TYPE REF TO if_ixml_element,
-              ls_pagemargins                  TYPE lty_page_margins,
               lo_ixml_pagesetup_elem          TYPE REF TO if_ixml_element,
               ls_pagesetup                    TYPE lty_page_setup,
 
@@ -2102,7 +2096,7 @@ ENDMETHOD.</source>
               lo_ixml_rows                    TYPE REF TO if_ixml_node_collection,
               ls_row                          TYPE lty_row,
               lv_max_col                      TYPE i,     &quot;for use with SPANS element
-*              lv_min_col                      TYPE i,     &quot;for use with SPANS element                    &quot; not in use currently
+*              lv_min_col                     TYPE i,     &quot;for use with SPANS element                    &quot; not in use currently
               lv_max_col_s                    TYPE char10,     &quot;for use with SPANS element
               lv_min_col_s                    TYPE char10,     &quot;for use with SPANS element
               lo_row_dimension                TYPE REF TO zcl_excel_worksheet_rowdimensi,
@@ -2502,19 +2496,9 @@ ENDMETHOD.</source>
   ENDIF.
 
   &quot; Read in page margins
-  lo_ixml_pagemargins_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;pageMargins&apos; ).
-  IF lo_ixml_pagemargins_elem IS NOT INITIAL.
-    fill_struct_from_attributes( EXPORTING
-                                   ip_element = lo_ixml_pagemargins_elem
-                                 CHANGING
-                                   cp_structure = ls_pagemargins ).
-    io_worksheet-&gt;sheet_setup-&gt;margin_bottom = ls_pagemargins-bottom.
-    io_worksheet-&gt;sheet_setup-&gt;margin_footer = ls_pagemargins-footer.
-    io_worksheet-&gt;sheet_setup-&gt;margin_header = ls_pagemargins-header.
-    io_worksheet-&gt;sheet_setup-&gt;margin_left   = ls_pagemargins-left.
-    io_worksheet-&gt;sheet_setup-&gt;margin_right  = ls_pagemargins-right.
-    io_worksheet-&gt;sheet_setup-&gt;margin_top    = ls_pagemargins-top.
-  ENDIF.
+  me-&gt;load_worksheet_pagemargins( EXPORTING
+                                    io_ixml_worksheet = lo_ixml_worksheet
+                                    io_worksheet      = io_worksheet ).
 
   &quot; Read in page setup
   lo_ixml_pagesetup_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;pageSetup&apos; ).
@@ -2757,7 +2741,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Load hyperlinks of worksheet" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Loads hyperlinks of worksheet" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" SCONAME="IT_EXTERNAL_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Table with external hyperlinks" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="GTT_EXTERNAL_HYPERLINKS"/>
@@ -2828,6 +2812,41 @@ ENDMETHOD.</source>
 
   ENDWHILE.
 
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" VERSION="1" LANGU="E" DESCRIPT="Loads pagemargings of worksheet" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD load_worksheet_pagemargins.
+
+  TYPES:  BEGIN OF lty_page_margins,
+            footer TYPE string,
+            header TYPE string,
+            bottom TYPE string,
+            top    TYPE string,
+            right  TYPE string,
+            left   TYPE string,
+          END OF lty_page_margins.
+
+  DATA:lo_ixml_pagemargins_elem TYPE REF TO if_ixml_element,
+       ls_pagemargins           TYPE lty_page_margins.
+
+
+  lo_ixml_pagemargins_elem = io_ixml_worksheet-&gt;find_from_name( &apos;pageMargins&apos; ).
+  IF lo_ixml_pagemargins_elem IS NOT INITIAL.
+    fill_struct_from_attributes( EXPORTING
+                                   ip_element = lo_ixml_pagemargins_elem
+                                 CHANGING
+                                   cp_structure = ls_pagemargins ).
+    io_worksheet-&gt;sheet_setup-&gt;margin_bottom = zcl_excel_common=&gt;excel_string_to_number( ls_pagemargins-bottom ).
+    io_worksheet-&gt;sheet_setup-&gt;margin_footer = zcl_excel_common=&gt;excel_string_to_number( ls_pagemargins-footer ).
+    io_worksheet-&gt;sheet_setup-&gt;margin_header = zcl_excel_common=&gt;excel_string_to_number( ls_pagemargins-header ).
+    io_worksheet-&gt;sheet_setup-&gt;margin_left   = zcl_excel_common=&gt;excel_string_to_number( ls_pagemargins-left   ).
+    io_worksheet-&gt;sheet_setup-&gt;margin_right  = zcl_excel_common=&gt;excel_string_to_number( ls_pagemargins-right  ).
+    io_worksheet-&gt;sheet_setup-&gt;margin_top    = zcl_excel_common=&gt;excel_string_to_number( ls_pagemargins-top    ).
+  ENDIF.
 
 ENDMETHOD.</source>
  </method>

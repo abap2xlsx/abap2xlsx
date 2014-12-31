@@ -2,12 +2,23 @@
 <PROG NAME="ZDEMO_EXCEL37" VARCL="X" SUBC="1" RSTAT="T" RMAND="100" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="D">
-   <textElement ID="R" ENTRY="Xlsx-Datei lesen und dann wieder ausgeben" LENGTH="70 "/>
+   <textElement ID="I" KEY="CLS" ENTRY="Auswahl der Reader- und Writerklasse" LENGTH="70 "/>
+   <textElement ID="I" KEY="DUM" ENTRY="Dump bei unbeh. Exception.  Man weiß wenn man das braucht" LENGTH="60 "/>
+   <textElement ID="I" KEY="ERR" ENTRY="Besondere Schalter" LENGTH="60 "/>
+   <textElement ID="R" ENTRY="Xlsx-Datei lesen und dann wieder ausgeben = Arbeiten mit Templates" LENGTH="70 "/>
+   <textElement ID="S" KEY="CB_DUMP" ENTRY="        Dump bei unbeh. Exceptions" LENGTH="36 "/>
+   <textElement ID="S" KEY="CB_ERRL" ENTRY="        Exceptionposition anzeigen" LENGTH="34 "/>
+   <textElement ID="S" KEY="LB_READ" ENTRY="        Reader-Klasse" LENGTH="21 "/>
+   <textElement ID="S" KEY="LB_WRITE" ENTRY="        Writer-Klasse" LENGTH="21 "/>
    <textElement ID="S" KEY="P_UPFILE" ENTRY="        Hochzuladende Datei" LENGTH="27 "/>
   </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="CLS" ENTRY="Choose reader- and writerclass to use" LENGTH="70 "/>
-   <textElement ID="R" ENTRY="Read xlsx-file and output" LENGTH="25 "/>
+   <textElement ID="I" KEY="DUM" ENTRY="Dump on uncaught exception - you&apos;ll know when you need this" LENGTH="60 "/>
+   <textElement ID="I" KEY="ERR" ENTRY="Special switches" LENGTH="60 "/>
+   <textElement ID="R" ENTRY="Read xlsx-file and output = using templates" LENGTH="43 "/>
+   <textElement ID="S" KEY="CB_DUMP" ENTRY="        Dump for uncaught exceptions" LENGTH="36 "/>
+   <textElement ID="S" KEY="CB_ERRL" ENTRY="        Show position of exception" LENGTH="34 "/>
    <textElement ID="S" KEY="LB_READ" ENTRY="        Reader-class" LENGTH="20 "/>
    <textElement ID="S" KEY="LB_WRITE" ENTRY="        Writer-class" LENGTH="20 "/>
    <textElement ID="S" KEY="P_UPFILE" ENTRY="        File to upload" LENGTH="22 "/>
@@ -15,14 +26,17 @@
  </textPool>
  <source>REPORT zdemo_excel37.
 
-DATA: excel        TYPE REF TO zcl_excel,
-      reader       TYPE REF TO zif_excel_reader,
-      go_error     TYPE REF TO cx_root,
-      gv_message   TYPE string,
-      lv_extension TYPE string.
+DATA: excel                 TYPE REF TO zcl_excel,
+      reader                TYPE REF TO zif_excel_reader,
+      go_error              TYPE REF TO cx_root,
+      gv_message            TYPE string,
+      lv_extension          TYPE string,
+      gv_error_program_name TYPE syrepid,
+      gv_error_include_name TYPE syrepid,
+      gv_error_line         TYPE i.
 
 
-CONSTANTS: gc_save_file_name TYPE string VALUE &apos;37-passthrough.xlsx&apos;.
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;37- Read template and output.xlsx&apos;.
 
 SELECTION-SCREEN BEGIN OF BLOCK blx WITH FRAME.
 PARAMETERS: p_upfile TYPE string DEFAULT &apos;c:\temp\whatever.xlsx&apos; LOWER CASE.
@@ -35,82 +49,51 @@ PARAMETERS: lb_read   TYPE seoclsname AS LISTBOX VISIBLE LENGTH 40 LOWER CASE OB
 PARAMETERS: lb_write  TYPE seoclsname AS LISTBOX VISIBLE LENGTH 40 LOWER CASE OBLIGATORY DEFAULT &apos;Autodetect&apos;(001).
 SELECTION-SCREEN END OF BLOCK cls.
 
+SELECTION-SCREEN BEGIN OF BLOCK bl_err WITH FRAME TITLE text-err.
+PARAMETERS: cb_errl AS CHECKBOX DEFAULT &apos;X&apos;.
+SELECTION-SCREEN BEGIN OF LINE.
+PARAMETERS: cb_dump AS CHECKBOX DEFAULT space.
+SELECTION-SCREEN COMMENT (60) cmt_dump FOR FIELD cb_dump.
+SELECTION-SCREEN END OF LINE.
+SELECTION-SCREEN END OF BLOCK bl_err.
+
 INITIALIZATION.
   PERFORM setup_listboxes.
+  cmt_dump = text-dum.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_upfile.
   PERFORM f4_p_upfile CHANGING p_upfile.
 
 
 START-OF-SELECTION.
-
-  TRY.
-      CASE lb_read.
-        WHEN &apos;Autodetect&apos;(001).
-          FIND REGEX &apos;(\.xlsx|\.xlsm)\s*$&apos; IN p_upfile SUBMATCHES lv_extension.
-          TRANSLATE lv_extension TO UPPER CASE.
-          CASE lv_extension.
-
-            WHEN &apos;.XLSX&apos;.
-              CREATE OBJECT reader TYPE zcl_excel_reader_2007.
-              excel = reader-&gt;load_file(  p_upfile ).
-              &quot;Use template for charts
-              excel-&gt;use_template = abap_true.
-
-            WHEN &apos;.XLSM&apos;.
-              CREATE OBJECT reader TYPE zcl_excel_reader_xlsm.
-              excel = reader-&gt;load_file(  p_upfile ).
-              &quot;Use template for charts
-              excel-&gt;use_template = abap_true.
-
-            WHEN OTHERS.
-              MESSAGE &apos;Unsupported filetype&apos; TYPE &apos;I&apos;.
-              RETURN.
-
-          ENDCASE.
-
-        WHEN OTHERS.
-          CREATE OBJECT reader TYPE (lb_read).
-          &quot;Use template for charts
-          excel-&gt;use_template = abap_true.
-
-      ENDCASE.
-
-      CASE lb_write.
-
-        WHEN &apos;Autodetect&apos;(001).
-          FIND REGEX &apos;(\.xlsx|\.xlsm)\s*$&apos; IN p_upfile SUBMATCHES lv_extension.
-          TRANSLATE lv_extension TO UPPER CASE.
-          CASE lv_extension.
-
-            WHEN &apos;.XLSX&apos;.
-              lcl_output=&gt;output( excel ).
-
-            WHEN &apos;.XLSM&apos;.
-              lcl_output=&gt;output( cl_excel            = excel
-                                  iv_writerclass_name = &apos;ZCL_EXCEL_WRITER_XLSM&apos; ).
-
-            WHEN OTHERS.
-              MESSAGE &apos;Unsupported filetype&apos; TYPE &apos;I&apos;.
-              RETURN.
-
-          ENDCASE.
-
-        WHEN OTHERS.
-          lcl_output=&gt;output( cl_excel            = excel
-                              iv_writerclass_name = lb_write ).
-      ENDCASE.
-
-
-
+  IF cb_dump IS INITIAL.
+    TRY.
+        PERFORM read_template.
+        PERFORM write_template.
 *** Create output
-    CATCH cx_root INTO go_error.
-      MESSAGE &apos;Error reading excelfile&apos; TYPE &apos;I&apos;.
-      gv_message = go_error-&gt;get_text( ).
-      IF gv_message IS NOT INITIAL.
-        MESSAGE gv_message TYPE &apos;I&apos;.
-      ENDIF.
-  ENDTRY.
+      CATCH cx_root INTO go_error.
+        MESSAGE &apos;Error reading excelfile&apos; TYPE &apos;I&apos;.
+        gv_message = go_error-&gt;get_text( ).
+        IF cb_errl = &apos; &apos;.
+          IF gv_message IS NOT INITIAL.
+            MESSAGE gv_message TYPE &apos;I&apos;.
+          ENDIF.
+        ELSE.
+          go_error-&gt;get_source_position( IMPORTING program_name = gv_error_program_name
+                                                   include_name = gv_error_include_name
+                                                   source_line  = gv_error_line         ).
+          WRITE:/ &apos;Errormessage:&apos;       ,gv_message.
+          WRITE:/ &apos;Errorposition:&apos;,
+                AT /10 &apos;Program:&apos;       ,gv_error_program_name,
+                AT /10 &apos;include_name:&apos;  ,gv_error_include_name,
+                AT /10 &apos;source_line:&apos;   ,gv_error_line.
+        ENDIF.
+    ENDTRY.
+  ELSE.  &quot; This will dump if an error occurs.  In some cases the information given in cx_root is not helpful - this will show exactly where the problem is
+    PERFORM read_template.
+    PERFORM write_template.
+  ENDIF.
+
 
 
 *&amp;---------------------------------------------------------------------*
@@ -258,5 +241,77 @@ FORM get_implementing_classds  USING    iv_interface_name       TYPE clike
   ENDLOOP.
 
 
-ENDFORM.                    &quot; GET_IMPLEMENTING_CLASSDS</source>
+ENDFORM.                    &quot; GET_IMPLEMENTING_CLASSDS
+
+
+*&amp;---------------------------------------------------------------------*
+*&amp;      Form  READ_TEMPLATE
+*&amp;---------------------------------------------------------------------*
+FORM read_template RAISING zcx_excel .
+
+  CASE lb_read.
+    WHEN &apos;Autodetect&apos;(001).
+      FIND REGEX &apos;(\.xlsx|\.xlsm)\s*$&apos; IN p_upfile SUBMATCHES lv_extension.
+      TRANSLATE lv_extension TO UPPER CASE.
+      CASE lv_extension.
+
+        WHEN &apos;.XLSX&apos;.
+          CREATE OBJECT reader TYPE zcl_excel_reader_2007.
+          excel = reader-&gt;load_file(  p_upfile ).
+          &quot;Use template for charts
+          excel-&gt;use_template = abap_true.
+
+        WHEN &apos;.XLSM&apos;.
+          CREATE OBJECT reader TYPE zcl_excel_reader_xlsm.
+          excel = reader-&gt;load_file(  p_upfile ).
+          &quot;Use template for charts
+          excel-&gt;use_template = abap_true.
+
+        WHEN OTHERS.
+          MESSAGE &apos;Unsupported filetype&apos; TYPE &apos;I&apos;.
+          RETURN.
+
+      ENDCASE.
+
+    WHEN OTHERS.
+      CREATE OBJECT reader TYPE (lb_read).
+      &quot;Use template for charts
+      excel-&gt;use_template = abap_true.
+
+  ENDCASE.
+
+ENDFORM.                    &quot; READ_TEMPLATE
+
+
+*&amp;---------------------------------------------------------------------*
+*&amp;      Form  WRITE_TEMPLATE
+*&amp;---------------------------------------------------------------------*
+FORM write_template  RAISING zcx_excel.
+
+  CASE lb_write.
+
+    WHEN &apos;Autodetect&apos;(001).
+      FIND REGEX &apos;(\.xlsx|\.xlsm)\s*$&apos; IN p_upfile SUBMATCHES lv_extension.
+      TRANSLATE lv_extension TO UPPER CASE.
+      CASE lv_extension.
+
+        WHEN &apos;.XLSX&apos;.
+          lcl_output=&gt;output( excel ).
+
+        WHEN &apos;.XLSM&apos;.
+          lcl_output=&gt;output( cl_excel            = excel
+                              iv_writerclass_name = &apos;ZCL_EXCEL_WRITER_XLSM&apos; ).
+
+        WHEN OTHERS.
+          MESSAGE &apos;Unsupported filetype&apos; TYPE &apos;I&apos;.
+          RETURN.
+
+      ENDCASE.
+
+    WHEN OTHERS.
+      lcl_output=&gt;output( cl_excel            = excel
+                          iv_writerclass_name = lb_write ).
+  ENDCASE.
+
+ENDFORM.                    &quot; WRITE_TEMPLATE</source>
 </PROG>
