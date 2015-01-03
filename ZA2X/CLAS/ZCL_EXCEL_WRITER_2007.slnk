@@ -2669,6 +2669,9 @@
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Declarations 1 - end
 *--------------------------------------------------------------------*
+** Constants
+  CONSTANTS:
+        lc_dummy_cell_content       TYPE zexcel_s_cell_data-cell_value VALUE &apos;})~~~ This is a dummy value for ABAP2XLSX and you should never find this in a real excelsheet Ihope&apos;.
 
 
 ** Constant node name
@@ -2875,6 +2878,9 @@
         lv_next_row                 TYPE i,
         ls_sheet_content            LIKE LINE OF io_worksheet-&gt;sheet_content,
         ls_sheet_content_empty      LIKE LINE OF io_worksheet-&gt;sheet_content,
+        lv_last_row                 TYPE i,
+        lts_row_dimensions          TYPE zexcel_t_worksheet_rowdimensio,
+        lts_row_outlines            TYPE zcl_excel_worksheet=&gt;mty_ts_outlines_row,
         col_count                   TYPE int4,
         merge_count                 TYPE int4,
         write_current_row           TYPE boolean,
@@ -2892,7 +2898,8 @@
   FIELD-SYMBOLS: &lt;ls_sheet_content&gt; TYPE zexcel_s_cell_data,
                  &lt;fs_range_merge&gt;   LIKE LINE OF lt_range_merge,
                  &lt;column_dimension&gt; TYPE zexcel_s_worksheet_columndime,
-                 &lt;row_dimension&gt;    TYPE zexcel_s_worksheet_rowdimensio.
+                 &lt;row_dimension&gt;    TYPE zexcel_s_worksheet_rowdimensio,
+                 &lt;ls_row_outline&gt;   LIKE LINE OF lts_row_outlines.
 
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Declarations 2 - start
@@ -3156,16 +3163,19 @@
     ENDIF.
   ENDIF.
   &quot; outlineLevelRow
-  LOOP AT row_dimensions ASSIGNING &lt;row_dimension&gt;.
-    IF &lt;row_dimension&gt;-row_dimension-&gt;get_outline_level( ) &gt; outline_level_row.
-      outline_level_row = &lt;row_dimension&gt;-row_dimension-&gt;get_outline_level( ).
-    ENDIF.
-  ENDLOOP.
-  lv_value = outline_level_row.
-  SHIFT lv_value RIGHT DELETING TRAILING space.
-  SHIFT lv_value LEFT DELETING LEADING space.
-  lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_outlinelevelrow
-                                value = lv_value ).
+* Excel is recalculating the outlinelevel on startup from the outline levels found in the rows
+* If we place anything incorrect here it gets corrected, if don&apos;t place anything it gets added
+* So no need to calculate the outlinelevel here ( at least for rows - probably for columns as well but I haven&apos;t tested yet
+*  LOOP AT row_dimensions ASSIGNING &lt;row_dimension&gt;.
+*    IF &lt;row_dimension&gt;-row_dimension-&gt;get_outline_level( ) &gt; outline_level_row.
+*      outline_level_row = &lt;row_dimension&gt;-row_dimension-&gt;get_outline_level( ).
+*    ENDIF.
+*  ENDLOOP.
+*  lv_value = outline_level_row.
+*  SHIFT lv_value RIGHT DELETING TRAILING space.
+*  SHIFT lv_value LEFT DELETING LEADING space.
+*  lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_outlinelevelrow
+*                                value = lv_value ).
   &quot; outlineLevelCol
   LOOP AT column_dimensions ASSIGNING &lt;column_dimension&gt;.
     IF &lt;column_dimension&gt;-column_dimension-&gt;get_outline_level( ) &gt; outline_level_col.
@@ -3357,7 +3367,47 @@
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - end
 *--------------------------------------------------------------------*
+* We have problems when the first rows or trailing rows are not set but we have rowinformation
+* to solve this we add dummycontent into first and last line that will not be set
+* Set first line if necessary
+  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = 1.
+  IF sy-subrc &lt;&gt; 0.
+    ls_sheet_content_empty-cell_row      = 1.
+    ls_sheet_content_empty-cell_column   = 1.
+    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
+    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
+  ENDIF.
+* Set last line if necessary
+* Last row with cell content
+  lv_last_row = io_worksheet-&gt;get_highest_row( ).
+* Last line with row-information set directly ( like line height, hidden-status ... )  lts_row_dimensions = io_worksheet-&gt;get_row_dimensions( ).
+  SORT lts_row_dimensions BY row DESCENDING.
+  READ TABLE lts_row_dimensions INDEX 1 ASSIGNING &lt;row_dimension&gt;.
+  IF sy-subrc = 0 AND &lt;row_dimension&gt;-row &gt; lv_last_row.
+    lv_last_row = &lt;row_dimension&gt;-row.
+  ENDIF.
+* Last line with row-information set indirectly by row outline
+  lts_row_outlines = io_worksheet-&gt;get_row_outlines( ).
+  LOOP AT lts_row_outlines ASSIGNING &lt;ls_row_outline&gt;.
+    IF &lt;ls_row_outline&gt;-collapsed = &apos;X&apos;.
+      lv_current_row = &lt;ls_row_outline&gt;-row_to + 1.  &quot; collapsed-status may be set on following row
+    ELSE.
+      lv_current_row = &lt;ls_row_outline&gt;-row_to.  &quot; collapsed-status may be set on following row
+    ENDIF.
+    IF lv_current_row &gt; lv_last_row.
+      lv_last_row = lv_current_row.
+    ENDIF.
+  ENDLOOP.
+  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = lv_last_row.
+  IF sy-subrc &lt;&gt; 0.
+    ls_sheet_content_empty-cell_row      = lv_last_row.
+    ls_sheet_content_empty-cell_column   = 1.
+    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
+    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
+  ENDIF.
 
+
+  CLEAR ls_sheet_content.
   LOOP AT io_worksheet-&gt;sheet_content INTO ls_sheet_content.
     READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
     IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
@@ -3382,10 +3432,10 @@
       ELSE.
 * Check if empty row is really necessary - this is basically the case when we have information in row_dimension
         lo_row_dim_empty = io_worksheet-&gt;get_row_dimension( lv_current_row ).
-        CHECK lo_row_dim_empty-&gt;get_row_height( )   &gt;= 0 OR
-              lo_row_dim_empty-&gt;get_collapsed( )     = abap_true OR
-              lo_row_dim_empty-&gt;get_outline_level( ) &gt; 0 OR
-              lo_row_dim_empty-&gt;get_xf_index( )     &lt;&gt; 0.
+        CHECK lo_row_dim_empty-&gt;get_row_height( )                 &gt;= 0          OR
+              lo_row_dim_empty-&gt;get_collapsed( io_worksheet )      = abap_true  OR
+              lo_row_dim_empty-&gt;get_outline_level( io_worksheet )  &gt; 0          OR
+              lo_row_dim_empty-&gt;get_xf_index( )                   &lt;&gt; 0.
         &quot; Dummyentry A1
         ls_sheet_content_empty-cell_row      = lv_current_row.
         ls_sheet_content_empty-cell_column   = 1.
@@ -3403,7 +3453,7 @@
         ENDIF.
         IF ls_last_row-cell_row IS NOT INITIAL.
           &quot; Row visibility of previos row.
-          IF row_dimension-&gt;get_visible( ) = abap_false OR
+          IF row_dimension-&gt;get_visible( io_worksheet ) = abap_false OR
              l_autofilter_hidden = abap_true.
             lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
           ENDIF.
@@ -3429,8 +3479,8 @@
         row_dimension = io_worksheet-&gt;get_row_dimension( &lt;ls_sheet_content&gt;-cell_row ).
         &quot; Do we need the row dimension attributes?
         IF row_dimension-&gt;get_row_height( )   &gt;= 0 OR
-           row_dimension-&gt;get_collapsed( )     = abap_true OR
-           row_dimension-&gt;get_outline_level( ) &gt; 0 OR
+           row_dimension-&gt;get_collapsed( io_worksheet )     = abap_true OR
+           row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0 OR
            row_dimension-&gt;get_xf_index( )     &lt;&gt; 0 OR
            l_autofilter_hidden = abap_true.
           &quot; Row dimensions
@@ -3440,12 +3490,12 @@
             lo_element_2-&gt;set_attribute_ns( name  = &apos;ht&apos; value = lv_value ).
           ENDIF.
           &quot; Collapsed
-          IF row_dimension-&gt;get_collapsed( ) = abap_true.
+          IF row_dimension-&gt;get_collapsed( io_worksheet ) = abap_true.
             lo_element_2-&gt;set_attribute_ns( name  = &apos;collapsed&apos; value = &apos;true&apos;).
           ENDIF.
           &quot; Outline level
-          IF row_dimension-&gt;get_outline_level( ) &gt; 0.
-            lv_value = row_dimension-&gt;get_outline_level( ).
+          IF row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0.
+            lv_value = row_dimension-&gt;get_outline_level( io_worksheet ).
             SHIFT lv_value RIGHT DELETING TRAILING space.
             SHIFT lv_value LEFT DELETING LEADING space.
             lo_element_2-&gt;set_attribute_ns( name  = &apos;outlineLevel&apos; value = lv_value ).
@@ -3527,7 +3577,8 @@
       CONDENSE lv_value.
       lo_element_4-&gt;set_value( value = lv_value ).
       lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
-    ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL. &quot;cell can have just style or formula
+    ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL           &quot;cell can have just style or formula
+       AND &lt;ls_sheet_content&gt;-cell_value &lt;&gt; lc_dummy_cell_content.
       IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
         IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
           lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
@@ -3578,6 +3629,7 @@
     ENDIF.
     lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; row node
   ENDIF.
+  DELETE io_worksheet-&gt;sheet_content WHERE cell_value = lc_dummy_cell_content.  &quot; Get rid of dummyentries
 
   lo_element_root-&gt;append_child( new_child = lo_element ). &quot; sheetData node
 
