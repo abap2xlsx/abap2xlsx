@@ -3380,7 +3380,8 @@
 * Set last line if necessary
 * Last row with cell content
   lv_last_row = io_worksheet-&gt;get_highest_row( ).
-* Last line with row-information set directly ( like line height, hidden-status ... )  lts_row_dimensions = io_worksheet-&gt;get_row_dimensions( ).
+* Last line with row-information set directly ( like line height, hidden-status ... )
+  lts_row_dimensions = io_worksheet-&gt;get_row_dimensions( ).
   SORT lts_row_dimensions BY row DESCENDING.
   READ TABLE lts_row_dimensions INDEX 1 ASSIGNING &lt;row_dimension&gt;.
   IF sy-subrc = 0 AND &lt;row_dimension&gt;-row &gt; lv_last_row.
