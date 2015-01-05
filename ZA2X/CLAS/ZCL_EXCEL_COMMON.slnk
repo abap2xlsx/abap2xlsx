@@ -2213,7 +2213,7 @@ endmethod.</source>
               lv_numchars                     TYPE i,         &quot; Number of characters counter
               lv_tchar(1)                     TYPE c,         &quot; Temp character
               lv_tchar2(1)                    TYPE c,         &quot; Temp character
-              lv_cur_form(132)                TYPE c,         &quot; Formula for current cell
+              lv_cur_form(2000)               TYPE c,         &quot; Formula for current cell
               lv_ref_cell_addr                TYPE string,    &quot; Reference cell address
               lv_tcol1                        TYPE string,    &quot; Temp column letter
               lv_tcol2                        TYPE string,    &quot; Temp column letter
