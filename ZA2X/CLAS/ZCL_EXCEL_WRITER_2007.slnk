@@ -37,6 +37,12 @@
   ep_file = me-&gt;create( ).
   endmethod.</source>
  </interfaceMethod>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="ADD_FURTHER_DATA_TO_ZIP" VERSION="1" LANGU="E" DESCRIPT="Add further data to zip ( used by child-classes )" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="ADD_FURTHER_DATA_TO_ZIP" SCONAME="IO_ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="CL_ABAP_ZIP"/>
+  <source>METHOD add_further_data_to_zip.
+* Can be used by child classes like xlsm-writer to write additional data to zip archive
+ENDMETHOD.</source>
+ </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE.
@@ -228,8 +234,11 @@
     &quot;-------------------------------------------------
   ENDWHILE.
 
+* Second to last step: Allow further information put into the zip archive by child classes
+  add_further_data_to_zip( lo_zip ).
+
 **********************************************************************
-* STEP 12: Create the final zip
+* Last step: Create the final zip
   ep_excel = lo_zip-&gt;save( ).
 
   endmethod.</source>
