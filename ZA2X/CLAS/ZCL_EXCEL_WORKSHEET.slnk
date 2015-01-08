@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_METRIC" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="4 " SRCCOLUMN1="4 " SRCROW2="7 " SRCCOLUMN2="32 " TYPESRC_LENG="139 " TYPESRC="BEGIN OF mty_s_font_metric,
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_METRIC" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="9 " SRCCOLUMN2="32 " TYPESRC_LENG="139 " TYPESRC="BEGIN OF mty_s_font_metric,
            char       TYPE c LENGTH 1,
            char_width TYPE tdcwidths,
          END OF mty_s_font_metric
 "/>
- <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_METRICS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="9 " SRCCOLUMN1="4 " SRCROW2="11 " SRCCOLUMN2="30 " TYPESRC_LENG="102 " TYPESRC="mty_th_font_metrics
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_METRICS" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="11 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="30 " TYPESRC_LENG="102 " TYPESRC="mty_th_font_metrics
            TYPE HASHED TABLE OF mty_s_font_metric
            WITH UNIQUE KEY char
 "/>
- <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_CACHE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="13 " SRCCOLUMN1="4 " SRCROW2="19 " SRCCOLUMN2="31 " TYPESRC_LENG="299 " TYPESRC="BEGIN OF mty_s_font_cache,
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_S_FONT_CACHE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="15 " SRCCOLUMN1="4 " SRCROW2="21 " SRCCOLUMN2="31 " TYPESRC_LENG="299 " TYPESRC="BEGIN OF mty_s_font_cache,
            font_name       TYPE zexcel_style_font_name,
            font_height     TYPE tdfontsize,
            flag_bold       TYPE abap_bool,
@@ -17,7 +17,7 @@
            th_font_metrics TYPE mty_th_font_metrics,
          END OF mty_s_font_cache
 "/>
- <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_CACHE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="21 " SRCCOLUMN1="4 " SRCROW2="23 " SRCCOLUMN2="69 " TYPESRC_LENG="138 " TYPESRC="mty_th_font_cache
+ <types CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="MTY_TH_FONT_CACHE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="23 " SRCCOLUMN1="4 " SRCROW2="25 " SRCCOLUMN2="69 " TYPESRC_LENG="138 " TYPESRC="mty_th_font_cache
            TYPE HASHED TABLE OF mty_s_font_cache
            WITH UNIQUE KEY font_name font_height flag_bold flag_italic
 "/>
@@ -180,25 +180,47 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
-  <language SPRAS="1">
-   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
-  </language>
-  <language SPRAS="2">
-   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
-  </language>
   <language SPRAS="D">
-   <textElement ID="I" KEY="001" ENTRY="Tabelle" LENGTH="132 "/>
-   <textElement ID="I" KEY="400" ENTRY="Tabelle Ã¼berschneidet sich mit schon eingebundener Tabelle und wird diesem Tabellenblatt nicht hinzugefÃ¼gt." LENGTH="132 "/>
-   <textElement ID="I" KEY="401" ENTRY="FÃ¼r Druckbereich Wiederholungsspalten wurde ein ungÃ¼ltiger Bereich Ã¼bergeben" LENGTH="132 "/>
-   <textElement ID="I" KEY="402" ENTRY="Nicht erlaubtes Zeichen in Titel des Arbeitblatts.  Liste der verbotenen Zeichen: /\[]*?:" LENGTH="132 "/>
-   <textElement ID="I" KEY="403" ENTRY="Blattname darf nicht mit &amp; beginnen." LENGTH="132 "/>
+   <textElement ID="I" KEY="001" ENTRY="Blatt" LENGTH="5 "/>
+   <textElement ID="I" KEY="101" ENTRY="Daten erfolgreich exportiert" LENGTH="35 "/>
+   <textElement ID="I" KEY="102" ENTRY="Komplette Style-Information erwartet mit korrespondierendem Feld" LENGTH="64 "/>
+   <textElement ID="I" KEY="103" ENTRY="Spalten oder Zeilen zum Einfrieren angeben!" LENGTH="54 "/>
+   <textElement ID="I" KEY="104" ENTRY="Spaltenzahl muss positiv sein" LENGTH="46 "/>
+   <textElement ID="I" KEY="105" ENTRY="Zeilenzahl muss positiv sein" LENGTH="43 "/>
+   <textElement ID="I" KEY="106" ENTRY="Wert oder Formel angeben!" LENGTH="35 "/>
+   <textElement ID="I" KEY="107" ENTRY="Ungültiger Datentyp" LENGTH="32 "/>
+   <textElement ID="I" KEY="108" ENTRY="Spaltenbreite muss positiv sein" LENGTH="47 "/>
+   <textElement ID="I" KEY="109" ENTRY="Eingabe nicht als Zahl interpretierbar" LENGTH="44 "/>
+   <textElement ID="I" KEY="110" ENTRY="Datumsformat ist leer" LENGTH="35 "/>
+   <textElement ID="I" KEY="111" ENTRY="Zeilenhöhe muss positiv sein" LENGTH="45 "/>
+   <textElement ID="I" KEY="112" ENTRY="Eingabe nicht als Zahl interpretierbar" LENGTH="44 "/>
+   <textElement ID="I" KEY="113" ENTRY="Doppeltes Blatt &amp;" LENGTH="21 "/>
+   <textElement ID="I" KEY="400" ENTRY="Tabelle überlappt mit vorhandener Tabelle" LENGTH="78 "/>
+   <textElement ID="I" KEY="401" ENTRY="Ungültiger Bereich für Druck-Titel-Spalten" LENGTH="57 "/>
+   <textElement ID="I" KEY="402" ENTRY="Ungültiges Zeichen aus /\[]*?: in Blattname" LENGTH="75 "/>
+   <textElement ID="I" KEY="403" ENTRY="Blattname startet mit &amp;" LENGTH="30 "/>
+   <textElement ID="I" KEY="404" ENTRY="Ungültiger Bereich für Druck-Titel-Zeilen" LENGTH="54 "/>
   </language>
   <language SPRAS="E">
-   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="132 "/>
-   <textElement ID="I" KEY="400" ENTRY="Table overlaps with previously bound table and will not be added to worksheet." LENGTH="132 "/>
-   <textElement ID="I" KEY="401" ENTRY="Invalid range supplied for print-title repeatable columns" LENGTH="132 "/>
-   <textElement ID="I" KEY="402" ENTRY="Found illegal character in sheetname. List of forbidden characters: /\[]*?:" LENGTH="132 "/>
-   <textElement ID="I" KEY="403" ENTRY="Sheetname may not start with &amp;" LENGTH="132 "/>
+   <textElement ID="I" KEY="001" ENTRY="Sheet" LENGTH="5 "/>
+   <textElement ID="I" KEY="101" ENTRY="Data has been exported successfully" LENGTH="35 "/>
+   <textElement ID="I" KEY="102" ENTRY="Complete styleinfo has to be supplied with corresponding X-field" LENGTH="64 "/>
+   <textElement ID="I" KEY="103" ENTRY="Please provide number of rows and/or columns to freeze" LENGTH="54 "/>
+   <textElement ID="I" KEY="104" ENTRY="Number of columns to freeze should be positive" LENGTH="46 "/>
+   <textElement ID="I" KEY="105" ENTRY="Number of rows to freeze should be positive" LENGTH="43 "/>
+   <textElement ID="I" KEY="106" ENTRY="Please provide the value or formula" LENGTH="35 "/>
+   <textElement ID="I" KEY="107" ENTRY="Invalid data type of input value" LENGTH="32 "/>
+   <textElement ID="I" KEY="108" ENTRY="Please supply a positive number as column-width" LENGTH="47 "/>
+   <textElement ID="I" KEY="109" ENTRY="Unable to interpret supplied input as number" LENGTH="44 "/>
+   <textElement ID="I" KEY="110" ENTRY="Default date format cannot be blank" LENGTH="35 "/>
+   <textElement ID="I" KEY="111" ENTRY="Please supply a positive number as row-height" LENGTH="45 "/>
+   <textElement ID="I" KEY="112" ENTRY="Unable to interpret supplied input as number" LENGTH="44 "/>
+   <textElement ID="I" KEY="113" ENTRY="Duplicate sheetname &amp;" LENGTH="21 "/>
+   <textElement ID="I" KEY="400" ENTRY="Table overlaps with previously bound table and will not be added to worksheet." LENGTH="78 "/>
+   <textElement ID="I" KEY="401" ENTRY="Invalid range supplied for print-title repeatable columns" LENGTH="57 "/>
+   <textElement ID="I" KEY="402" ENTRY="Found illegal character in sheetname. List of forbidden characters: /\[]*?:" LENGTH="75 "/>
+   <textElement ID="I" KEY="403" ENTRY="Sheetname may not start with &amp;" LENGTH="30 "/>
+   <textElement ID="I" KEY="404" ENTRY="Invalid range supplied for print-title repeatable rows" LENGTH="54 "/>
   </language>
   <language SPRAS="I">
    <textElement ID="I" KEY="001" ENTRY="Foglio1" LENGTH="132 "/>
@@ -368,14 +390,14 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
 * Check if valid range is supplied
 *--------------------------------------------------------------------*
   IF iv_rows_from &lt; 1.
-    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rowumns&apos;(401).
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rows&apos;(404).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
         error = lv_errormessage.
   ENDIF.
 
   IF  iv_rows_from &gt; iv_rows_to.
-    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rowumns&apos;(401).
+    lv_errormessage = &apos;Invalid range supplied for print-title repeatable rows&apos;(404).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
         error = lv_errormessage.
@@ -1466,7 +1488,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
   create object l_error
     EXPORTING
       object_name = &apos;OLE_DOCUMENT_PROXY&apos;
-      method_name = &apos;get_ranges_names&apos;.
+      method_name = &apos;get_ranges_names&apos;. &quot;#EC NOTEXT
 
   call method c_oi_errors=&gt;add_error
     EXPORTING
@@ -2604,7 +2626,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
 
 * if save successfully -&gt; raise successful message
 *  message i499(sy) with &apos;Document is Exported to &apos; p_path.
-  message i499(sy) with &apos;Data has been exported successfully&apos;.
+  message i499(sy) with &apos;Data has been exported successfully&apos;(101).
 
   clear:
     ls_path,
@@ -2762,7 +2784,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
     ELSEIF &lt;ls_field_catalog&gt;-scrtext_l IS NOT INITIAL.
       lv_value = &lt;ls_field_catalog&gt;-scrtext_l.
     ELSE.
-      lv_value = &apos;Column&apos;.  &quot; default value as Excel does
+      lv_value = &apos;Column&apos;.  &quot;#EC NOTEXT   &quot; default value as Excel does
       &lt;ls_field_catalog&gt;-scrtext_l = lv_value.
     ENDIF.
     WHILE 1 = 1.
@@ -2917,7 +2939,6 @@ METHOD calculate_cell_width.
         ld_font_height                TYPE tdfontsize VALUE lc_default_font_height,
         lt_itcfc                      TYPE STANDARD TABLE OF itcfc,
         ld_offset                     TYPE i,
-        ld_length                     TYPE i,
         ld_uccp                       TYPE i,
         ls_font_metric                TYPE mty_s_font_metric,
         ld_width_from_font_metrics    TYPE i,
@@ -3007,7 +3028,7 @@ METHOD calculate_cell_width.
           ld_flag_italic = ls_stylemapping-complete_style-font-italic.
         ENDIF.
 
-      CATCH zcx_excel. &quot;#EC NO_HANDLER
+      CATCH zcx_excel ##NO_HANDLER.
         &quot; Style GUID is present, but style was not found
         &quot; Continue with default values
 
@@ -3087,9 +3108,8 @@ METHOD calculate_cell_width.
   IF lines( &lt;ls_font_cache&gt;-th_font_metrics ) = 0.
     &quot; Font metrics are not available
     &quot; -&gt; Calculate the cell width using only the font size
-    ld_length = strlen( ld_cell_value ).
     ep_width =
-      ld_length * ld_font_height / lc_default_font_height
+      strlen( ld_cell_value ) * ld_font_height / lc_default_font_height
       + lc_excel_cell_padding.
 
   ELSE.
@@ -3097,8 +3117,7 @@ METHOD calculate_cell_width.
 
     &quot; Calculate the size of the text by adding the sizes of each
     &quot; letter
-    ld_length = strlen( ld_cell_value ).
-    DO ld_length TIMES.
+    DO strlen( ld_cell_value ) TIMES.
       &quot; Subtract 1, because the first character is at offset 0
       ld_offset = sy-index - 1.
 
@@ -3376,9 +3395,11 @@ ENDMETHOD.</source>
 *  move_supplied_multistyles: complete.
   IF ip_complete IS SUPPLIED.
     IF ip_xcomplete IS NOT SUPPLIED.
+      DATA l_error TYPE string.
+      l_error = &apos;Complete styleinfo has to be supplied with corresponding X-field&apos;(102).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
-          error = &apos;Complete styleinfo has to be supplied with corresponding X-field&apos;.
+          error = l_error.
     ENDIF.
     MOVE-CORRESPONDING ip_complete  TO complete_style.
     MOVE-CORRESPONDING ip_xcomplete TO complete_stylex.
@@ -3622,7 +3643,7 @@ ENDMETHOD.</source>
 
   me-&gt;excel = ip_excel.
 
-  CALL FUNCTION &apos;GUID_CREATE&apos;
+  CALL METHOD ZCL_EXCEL_COMMON=&gt;GUID_CREATE
     IMPORTING
       ev_guid_16 = me-&gt;guid.
 
@@ -3674,31 +3695,37 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="FREEZE_PANES" SCONAME="IP_NUM_COLUMNS" VERSION="1" LANGU="E" DESCRIPT="Number of  columns to freeze (starting from left-most)" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="FREEZE_PANES" SCONAME="IP_NUM_ROWS" VERSION="1" LANGU="E" DESCRIPT="Number of rows to freeze (starting from top-most)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I" PAROPTIONL="X"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="FREEZE_PANES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method FREEZE_PANES.
-  data: lv_xsplit type i,
-        lv_ysplit type i.
+  <source>METHOD freeze_panes.
+  DATA: lv_xsplit TYPE i,
+        lv_ysplit TYPE i,
+        l_error   TYPE string.
 
   IF ip_num_columns IS NOT SUPPLIED AND ip_num_rows IS NOT SUPPLIED.
+    l_error = &apos;Please provide number of rows and/or columns to freeze&apos;(103).
     RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = &apos;Pleas provide number of rows and/or columns to freeze&apos;.
+      EXPORTING
+        error = l_error.
   ENDIF.
 
   IF ip_num_columns IS SUPPLIED AND ip_num_columns &lt;= 0.
+    l_error = &apos;Number of columns to freeze should be positive&apos;(104).
     RAISE EXCEPTION TYPE zcx_excel
-              EXPORTING
-                error = &apos;Number of columns to freeze should be positive&apos;.
+      EXPORTING
+        error = l_error.
+
   ENDIF.
 
   IF ip_num_rows IS SUPPLIED AND ip_num_rows &lt;= 0.
+    l_error = &apos;Number of rows to freeze should be positive&apos;(105).
     RAISE EXCEPTION TYPE zcx_excel
-              EXPORTING
-                error = &apos;Number of rows to freeze should be positive&apos;.
+      EXPORTING
+        error = l_error.
+
   ENDIF.
 
   freeze_pane_cell_column = ip_num_columns + 1.
   freeze_pane_cell_row = ip_num_rows + 1.
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GENERATE_TITLE" VERSION="1" LANGU="E" DESCRIPT="Generate title for worksheet (called if none is supplied )" EXPOSURE="0" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GENERATE_TITLE" SCONAME="EP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE"/>
@@ -3796,11 +3823,12 @@ ENDMETHOD.</source>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_COLUMN_DIMENSION" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method GET_COLUMN_DIMENSION.
   FIELD-SYMBOLS: &lt;fs_column_dimension&gt; LIKE LINE OF column_dimensions.
+  DATA: l_s_column_dimension LIKE LINE OF column_dimensions.
   DATA: lv_column_alpha TYPE zexcel_cell_column_alpha.                  &quot; issue #155 - less restrictive typing for ip_column
 
   lv_column_alpha = zcl_excel_common=&gt;convert_column2alpha( ip_column ).&quot; issue #155 - less restrictive typing for ip_column
   READ TABLE me-&gt;column_dimensions ASSIGNING &lt;fs_column_dimension&gt;
-    WITH KEY column = lv_column_alpha.                                  &quot; issue #155 - less restrictive typing for ip_column
+    WITH TABLE KEY column = lv_column_alpha.                                  &quot; issue #155 - less restrictive typing for ip_column
 
   IF NOT &lt;fs_column_dimension&gt; IS ASSIGNED.
     CREATE OBJECT r_column_dimension
@@ -3808,9 +3836,12 @@ ENDMETHOD.</source>
         ip_index     = lv_column_alpha                                     &quot; issue #155 - less restrictive typing for ip_column
         ip_excel     = me-&gt;excel                                           &quot; issue #157 - Allow style for columns
         ip_worksheet = me.                                                 &quot; issue #157 - Allow style for columns
-    APPEND INITIAL LINE TO me-&gt;column_dimensions ASSIGNING &lt;fs_column_dimension&gt;.
-    &lt;fs_column_dimension&gt;-column = lv_column_alpha.                     &quot; issue #155 - less restrictive typing for ip_column
-    &lt;fs_column_dimension&gt;-column_dimension = r_column_dimension.
+*    APPEND INITIAL LINE TO me-&gt;column_dimensions ASSIGNING &lt;fs_column_dimension&gt;.
+*    &lt;fs_column_dimension&gt;-column = lv_column_alpha.                     &quot; issue #155 - less restrictive typing for ip_column
+*    &lt;fs_column_dimension&gt;-column_dimension = r_column_dimension.
+    l_s_column_dimension-column = lv_column_alpha.                     &quot; issue #155 - less restrictive typing for ip_column
+    l_s_column_dimension-column_dimension = r_column_dimension.
+    INSERT l_s_column_dimension INTO TABLE me-&gt;column_dimensions.
   ELSE.
     r_column_dimension = &lt;fs_column_dimension&gt;-column_dimension.
   ENDIF.
@@ -3843,8 +3874,9 @@ ENDMETHOD.</source>
   ep_size = me-&gt;data_validations-&gt;size( ).
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Get column dimension at a specific column" EXPOSURE="2" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" SCONAME="R_COLUMN_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_COLUMNDIME"/>
+  <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_DEFAULT_COLUMN_DIMENSION" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method GET_DEFAULT_COLUMN_DIMENSION.
   IF me-&gt;default_column_dimension IS NOT BOUND.
     CREATE OBJECT me-&gt;default_column_dimension
@@ -4125,18 +4157,22 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSION" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="INT4"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_ROW_DIMENSION" SCONAME="R_ROW_DIMENSION" VERSION="1" LANGU="E" DESCRIPT="Worksheet ColumnDimension" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET_ROWDIMENSI"/>
   <source>method GET_ROW_DIMENSION.
+  DATA: l_s_row_dimension LIKE LINE OF row_dimensions.
   FIELD-SYMBOLS: &lt;fs_row_dimension&gt; LIKE LINE OF row_dimensions.
 
   READ TABLE me-&gt;row_dimensions ASSIGNING &lt;fs_row_dimension&gt;
-    WITH KEY row = ip_row.
+    WITH TABLE KEY row = ip_row.
 
   IF NOT &lt;fs_row_dimension&gt; IS ASSIGNED.
     CREATE OBJECT r_row_dimension
       EXPORTING
         ip_index = ip_row.
-    APPEND INITIAL LINE TO me-&gt;row_dimensions ASSIGNING &lt;fs_row_dimension&gt;.
-    &lt;fs_row_dimension&gt;-row = ip_row.
-    &lt;fs_row_dimension&gt;-row_dimension = r_row_dimension.
+*    APPEND INITIAL LINE TO me-&gt;row_dimensions ASSIGNING &lt;fs_row_dimension&gt;.
+*    &lt;fs_row_dimension&gt;-row = ip_row.
+*    &lt;fs_row_dimension&gt;-row_dimension = r_row_dimension.
+    l_s_row_dimension-row = ip_row.
+    l_s_row_dimension-row_dimension = r_row_dimension.
+    INSERT l_s_row_dimension INTO TABLE me-&gt;row_dimensions.
   ELSE.
     r_row_dimension = &lt;fs_row_dimension&gt;-row_dimension.
   ENDIF.
@@ -4346,7 +4382,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_DATA_TYPE" VERSION="1" LANGU="E" DESCRIPT="Cell data type" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_DATA_TYPE" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="IP_ABAP_TYPE" VERSION="1" LANGU="E" DESCRIPT="ABAP data type" CMPTYPE="1" MTDTYPE="0" EDITORDER="8 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_TYPEKIND" PAROPTIONL="X"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method SET_CELL.
+  <source>METHOD set_cell.
 
   DATA: lv_column                 TYPE zexcel_cell_column,
         ls_sheet_content          TYPE zexcel_s_cell_data,
@@ -4359,7 +4395,8 @@ ENDMETHOD.</source>
         lv_style_guid             TYPE zexcel_cell_style,
         lo_addit                  TYPE REF TO cl_abap_elemdescr,
         lo_value                  TYPE REF TO data,
-        lo_value_new              TYPE REF TO data.
+        lo_value_new              TYPE REF TO data,
+        l_error                   TYPE string.
 
   FIELD-SYMBOLS: &lt;fs_sheet_content&gt; TYPE zexcel_s_cell_data,
                  &lt;fs_numeric&gt;       TYPE numeric,
@@ -4368,9 +4405,10 @@ ENDMETHOD.</source>
                  &lt;fs_value&gt;         TYPE simple.
 
   IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED.
+    l_error = &apos;Please provide the value or formula&apos;(106).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Please provide the value or formula&apos;.
+        error = l_error.
   ENDIF.
 
 * Begin of change issue #152 - don&apos;t touch exisiting style if only value is passed
@@ -4473,9 +4511,10 @@ ENDMETHOD.</source>
 * End of change issue #152 - don&apos;t touch exisiting style if only value is passed
 
         WHEN OTHERS.
+          l_error = &apos;Invalid data type of input value&apos;(107).
           RAISE EXCEPTION TYPE zcx_excel
             EXPORTING
-              error = &apos;Invalid data type of input value&apos;.
+              error = l_error.
       ENDCASE.
     ENDIF.
 
@@ -4570,7 +4609,7 @@ ENDMETHOD.</source>
   ENDIF.
 * End of Fix issue #162
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Set cell formula" EXPOSURE="2" STATE="1" EDITORDER="45 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_CELL_FORMULA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -4644,6 +4683,7 @@ ENDMETHOD.</source>
   <source>method SET_COLUMN_WIDTH.
   DATA: column_dimension  TYPE REF TO zcl_excel_worksheet_columndime.
   DATA: width             TYPE float.
+  DATA: l_error           TYPE string.
 
   column_dimension = me-&gt;get_column_dimension( ip_column ).
 
@@ -4652,17 +4692,19 @@ ENDMETHOD.</source>
     TRY.
         width = ip_width_fix.
         IF width &lt;= 0.
+          l_error = &apos;Please supply a positive number as column-width&apos;(108).
           RAISE EXCEPTION TYPE zcx_excel
             EXPORTING
-              error = &apos;Please supply a positive number as column-width&apos;.
+              error = l_error.
         ENDIF.
         column_dimension-&gt;set_width( width ).
         EXIT.
       CATCH cx_sy_conversion_no_number.
 * Strange stuff passed --&gt; raise error
+        l_error = &apos;Unable to interpret supplied input as number&apos;(109).
         RAISE EXCEPTION TYPE zcx_excel
           EXPORTING
-            error = &apos;Unable to interpret supplied input as number&apos;.
+            error = l_error.
     ENDTRY.
   ENDIF.
 
@@ -4675,16 +4717,18 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Sets default date format" EXPOSURE="2" STATE="1" EDITORDER="48 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" SCONAME="IP_DEFAULT_EXCEL_DATE_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Default date format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_NUMBER_FORMAT"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_DEFAULT_EXCEL_DATE_FORMAT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method SET_DEFAULT_EXCEL_DATE_FORMAT.
+  <source>METHOD set_default_excel_date_format.
 
   IF ip_default_excel_date_format IS INITIAL.
+    DATA l_error TYPE string.
+    l_error = &apos;Default date format cannot be blank&apos;(110).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Default date format cannot be blank&apos;.
+        error = l_error.
   ENDIF.
 
   default_excel_date_format = ip_default_excel_date_format.
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" VERSION="1" LANGU="E" DESCRIPT="Set the merge range" EXPOSURE="2" STATE="1" EDITORDER="49 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_MERGE" SCONAME="IP_COLUMN_START" VERSION="1" LANGU="E" DESCRIPT="Cell Column Start" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA" PAROPTIONL="X"/>
@@ -4738,9 +4782,10 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="IP_ROW" VERSION="1" LANGU="E" DESCRIPT="Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="IP_HEIGHT_FIX" VERSION="1" LANGU="E" DESCRIPT="A positive value will set row height" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_ROW_HEIGHT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method SET_ROW_HEIGHT.
+  <source>METHOD set_row_height.
   DATA: row_dimension     TYPE REF TO zcl_excel_worksheet_rowdimensi.
   DATA: height            TYPE float.
+  DATA: l_error           TYPE string.
 
   row_dimension = me-&gt;get_row_dimension( ip_row ).
 
@@ -4748,22 +4793,24 @@ ENDMETHOD.</source>
   TRY.
       height = ip_height_fix.
       IF height &lt;= 0.
+        l_error = &apos;Please supply a positive number as row-height&apos;(111).
         RAISE EXCEPTION TYPE zcx_excel
           EXPORTING
-            error = &apos;Please supply a positive number as row-height&apos;.
+            error = l_error.
       ENDIF.
       row_dimension-&gt;set_row_height( height ).
       EXIT.
     CATCH cx_sy_conversion_no_number.
 * Strange stuff passed --&gt; raise error
+      l_error = &apos;Unable to interpret supplied input as number&apos;(112).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
-          error = &apos;Unable to interpret supplied input as number&apos;.
+          error = l_error.
   ENDTRY.
 
 
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Set show gridlines" EXPOSURE="2" STATE="1" EDITORDER="52 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="SET_SHOW_GRIDLINES" SCONAME="I_SHOW_GRIDLINES" VERSION="1" LANGU="E" DESCRIPT="Show Gridlines" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHOW_GRIDLINES"/>
@@ -4930,7 +4977,7 @@ ENDMETHOD.</source>
     lo_worksheet ?= lo_worksheets_iterator-&gt;get_next( ).
     CHECK me-&gt;guid &lt;&gt; lo_worksheet-&gt;get_guid( ).  &quot; Don&apos;t check against itself
     IF ip_title = lo_worksheet-&gt;get_title( ).  &quot; Not unique --&gt; raise exception
-      errormessage = &apos;Duplicate sheetname &amp;&apos;.
+      errormessage = &apos;Duplicate sheetname &amp;&apos;(113).
       REPLACE &apos;&amp;&apos; IN errormessage WITH ip_title.
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING

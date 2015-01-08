@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="4 " SRCCOLUMN1="4 " SRCROW2="11 " SRCCOLUMN2="32 " TYPESRC_LENG="283 " TYPESRC="BEGIN OF ty_ref_formulae,
-
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="32 " TYPESRC_LENG="275 " TYPESRC="BEGIN OF ty_ref_formulae,
            sheet      TYPE REF TO zcl_excel_worksheet,
-
            row        TYPE i,
-
            column     TYPE i,
-
            si         TYPE i,
-
            ref        TYPE string,
-
            formula    TYPE string,
-
          END   OF ty_ref_formulae
-
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="13 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="89 " TYPESRC_LENG="88 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
-
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="15 " SRCCOLUMN1="4 " SRCROW2="15 " SRCCOLUMN2="89 " TYPESRC_LENG="87 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="12 " SRCCOLUMN2="29 " TYPESRC_LENG="319 " TYPESRC='BEGIN OF t_relationship,
            id         TYPE string,
@@ -52,7 +43,7 @@
               codename            TYPE string,
          END OF t_sheetpr
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="D" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="38 " SRCCOLUMN1="4 " SRCROW2="42 " SRCCOLUMN2="22 " TYPESRC_LENG="261 " TYPESRC="BEGIN OF t_range,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="38 " SRCCOLUMN1="4 " SRCROW2="42 " SRCCOLUMN2="22 " TYPESRC_LENG="261 " TYPESRC="BEGIN OF t_range,
               name            TYPE string,
               hidden          type string,       &quot;inserted with issue #235 because Autofilters didn&apos;t passthrough
               localsheetid    TYPE string,       &quot; issue #163
@@ -80,14 +71,14 @@
     tint TYPE string,
   END OF t_color
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="D" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="66 " SRCCOLUMN1="4 " SRCROW2="71 " SRCCOLUMN2="23 " TYPESRC_LENG="175 " TYPESRC="BEGIN OF t_rel_drawing,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="66 " SRCCOLUMN1="4 " SRCROW2="71 " SRCCOLUMN2="23 " TYPESRC_LENG="175 " TYPESRC="BEGIN OF t_rel_drawing,
       id TYPE string,
       content TYPE xstring,
       file_ext TYPE string,
       content_xml TYPE REF TO IF_IXML_DOCUMENT,
     END OF t_rel_drawing
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="D" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="73 " SRCCOLUMN1="4 " SRCROW2="73 " SRCCOLUMN2="82 " TYPESRC_LENG="80 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="73 " SRCCOLUMN1="4 " SRCROW2="73 " SRCCOLUMN2="82 " TYPESRC_LENG="80 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
 "/>
  <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
@@ -97,175 +88,66 @@
     id     TYPE string,
     type   TYPE string,
     target TYPE string,
-    END OF t_relationship.
-
-*
-  CLASS lcl_abap_zip_archive DEFINITION
-      INHERITING FROM lcl_zip_archive
-      CREATE PRIVATE.
-    PUBLIC SECTION.
-      CLASS-METHODS create
-        IMPORTING i_data TYPE xstring
-        RETURNING value(r_zip) TYPE REF TO lcl_zip_archive
-        RAISING zcx_excel.
-      METHODS read REDEFINITION.
-    PRIVATE SECTION.
-      DATA: abap_zip TYPE REF TO cl_abap_zip.
-      METHODS constructor IMPORTING i_data TYPE xstring
-                          RAISING zcx_excel.
-  ENDCLASS.                    &quot;lcl_abap_zip_archive DEFINITION
-
-*
-  CLASS lcl_alternate_zip_archive DEFINITION
-    INHERITING FROM lcl_zip_archive
-    CREATE PRIVATE.
-    PUBLIC SECTION.
-      CLASS-METHODS create
-        IMPORTING i_data TYPE xstring
-                  i_alternate_zip_class TYPE seoclsname
-        RETURNING value(r_zip) TYPE REF TO lcl_zip_archive
-        RAISING zcx_excel.
-      METHODS read REDEFINITION.
-    PRIVATE SECTION.
-      DATA: alternate_zip TYPE REF TO object.
-      METHODS constructor
-        IMPORTING i_data TYPE xstring
-                  i_alternate_zip_class TYPE seoclsname
-        RAISING zcx_excel.
-  ENDCLASS.                    &quot;lcl_alternate_zip_archive DEFINITION
-
-*
-  CLASS lcl_abap_zip_archive IMPLEMENTATION.
-    METHOD create.
-      CREATE OBJECT r_zip TYPE lcl_abap_zip_archive
-        EXPORTING
-          i_data = i_data.
-    ENDMETHOD.                    &quot;create
-    METHOD constructor.
-      DATA: lv_errormessage TYPE string.
-      super-&gt;constructor( ).
-      CREATE OBJECT abap_zip.
-      abap_zip-&gt;load(
-                 EXPORTING
-                   zip = i_data
-                 EXCEPTIONS
-                   zip_parse_error = 1
-                   OTHERS          = 2 ).
-      IF sy-subrc &lt;&gt; 0.
-        lv_errormessage = &apos;ZIP parse error&apos;(002).
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = lv_errormessage.
-      ENDIF.
-
-    ENDMETHOD.                    &quot;constructor
-    METHOD read.
-      DATA: lv_errormessage TYPE string.
-      CALL METHOD abap_zip-&gt;get
-        EXPORTING
-          name                    = i_filename
-        IMPORTING
-          content                 = r_content
-        EXCEPTIONS
-          zip_index_error         = 1
-          zip_decompression_error = 2
-          OTHERS                  = 3.
-      IF sy-subrc &lt;&gt; 0.
-        lv_errormessage = &apos;File not found in zip-archive&apos;(003).
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = lv_errormessage.
-      ENDIF.
-
-    ENDMETHOD.                    &quot;read
-  ENDCLASS.                    &quot;lcl_abap_zip_archive IMPLEMENTATION
-
-*
-  CLASS lcl_alternate_zip_archive IMPLEMENTATION.
-    METHOD create.
-      CREATE OBJECT r_zip TYPE lcl_alternate_zip_archive
-        EXPORTING
-          i_alternate_zip_class = i_alternate_zip_class
-          i_data                = i_data.
-    ENDMETHOD.                    &quot;create
-    METHOD constructor.
-      DATA: lv_errormessage TYPE string.
-      super-&gt;constructor( ).
-      CREATE OBJECT alternate_zip TYPE (i_alternate_zip_class).
-      TRY.
-          CALL METHOD alternate_zip-&gt;(&apos;LOAD&apos;)
-            EXPORTING
-              zip             = i_data
-            EXCEPTIONS
-              zip_parse_error = 1
-              OTHERS          = 2.
-        CATCH cx_sy_dyn_call_illegal_method.
-          lv_errormessage = &apos;Method LOAD missing in alternative zipclass&apos;. &quot;#EC NOTEXT   This is a workaround until class CL_ABAP_ZIP is fixed
-          RAISE EXCEPTION TYPE zcx_excel
-            EXPORTING
-              error = lv_errormessage.
-      ENDTRY.
-
-      IF sy-subrc &lt;&gt; 0.
-        lv_errormessage = &apos;ZIP parse error&apos;(002).
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = lv_errormessage.
-      ENDIF.
-
-    ENDMETHOD.                    &quot;constructor
-    METHOD read.
-      DATA: lv_errormessage TYPE string.
-      TRY.
-          CALL METHOD alternate_zip-&gt;(&apos;GET&apos;)
-            EXPORTING
-              name                    = i_filename
-            IMPORTING
-              content                 = r_content    &quot; Contents
-            EXCEPTIONS
-              zip_index_error         = 1
-              zip_decompression_error = 2
-              OTHERS                  = 3.
-        CATCH cx_sy_dyn_call_illegal_method.
-          lv_errormessage = &apos;Method GET missing in alternative zipclass&apos;. &quot;#EC NOTEXT   This is a workaround until class CL_ABAP_ZIP is fixed
-          RAISE EXCEPTION TYPE zcx_excel
-            EXPORTING
-              error = lv_errormessage.
-      ENDTRY.
-      IF sy-subrc &lt;&gt; 0.
-        lv_errormessage = &apos;File not found in zip-archive&apos;(003).
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = lv_errormessage.
-      ENDIF.
-
-    ENDMETHOD.                    &quot;read
-  ENDCLASS.                    &quot;lcl_alternate_zip_archive IMPLEMENTATION</localImplementation>
+    END OF t_relationship.</localImplementation>
  <localTypes>*&quot;* use this source file for any type declarations (class
 *&quot;* definitions, interfaces or data types) you need for method
-*&quot;* implementation or private method&apos;s signature
-
-*
-class lcl_zip_archive definition abstract.
-  public section.
-    methods read abstract
-      importing i_filename type csequence
-      returning value(r_content) type xstring &quot; Remember copy-on-write!
-      raising zcx_excel.
-endclass.</localTypes>
+*&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
+ <textPool>
+  <language SPRAS="D">
+   <textElement ID="I" KEY="001" ENTRY="Datei kann nicht gelesen werden" LENGTH="50 "/>
+   <textElement ID="I" KEY="002" ENTRY="ZIP-Format nicht korrekt" LENGTH="30 "/>
+   <textElement ID="I" KEY="003" ENTRY="Datei fehlt in ZIP-Archiv" LENGTH="40 "/>
+  </language>
+  <language SPRAS="E">
+   <textElement ID="I" KEY="001" ENTRY="A problem occured when reading the file" LENGTH="50 "/>
+   <textElement ID="I" KEY="002" ENTRY="ZIP parse error" LENGTH="30 "/>
+   <textElement ID="I" KEY="003" ENTRY="File not found in ZIP-archive" LENGTH="40 "/>
+  </language>
+ </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_READER_2007" TYPEGROUP="IXML" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
  <forwardDeclaration>IXML</forwardDeclaration>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="MT_REF_FORMULAE" VERSION="1" LANGU="D" DESCRIPT="Referenced formulae before resolving" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TYT_REF_FORMULAE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="D" DESCRIPT="Table with Strings" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRINGTAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="D" EXPOSURE="1" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ZIP" VERSION="1" LANGU="D" DESCRIPT="Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="LCL_ZIP_ARCHIVE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ALTERNATE_ZIP" VERSION="1" LANGU="E" DESCRIPT="Alternate Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="OBJECT" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="EXCEL2007" VERSION="1" LANGU="E" DESCRIPT="Excel 2007 data" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="MT_REF_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Referenced formulae before resolving" EXPOSURE="0" STATE="1" EDITORDER="6 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TYT_REF_FORMULAE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" EXPOSURE="1" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRINGTAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="CL_ABAP_ZIP" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~CAN_READ_FILE">
+  <source>method ZIF_EXCEL_READER~CAN_READ_FILE.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-07
+*              - ...
+* changes: nothing done in code
+*          but started discussion about killing this method
+*--------------------------------------------------------------------*
+* For now always Unknown
+  r_readable = abap_undefined.
+  endmethod.</source>
+ </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD">
-  <source>METHOD zif_excel_reader~load.
+  <source>method ZIF_EXCEL_READER~LOAD.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Map Document Properties to ZCL_EXCEL
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-07
+*              - ...
+* changes: renaming variables to naming conventions
+*          removing unused variables
+*          aligning code
+*          adding comments to explain what we are trying to achieve
+*          commenting on problems/future enhancements/todos we already know of or should decide upon
+*          adding me-&gt; where possible
+*--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+*              - Stefan Schmöcker,                          2012-11-07
+* changes: passing new optional input parameter to private attribute
 *--------------------------------------------------------------------*
 
   CONSTANTS:  lcv_core_properties             TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&apos;,
@@ -307,35 +189,36 @@ endclass.</localTypes>
 *--------------------------------------------------------------------*
   CREATE OBJECT r_excel.
 
-  zip = create_zip_archive( i_xlsx_binary = i_excel2007
-                            i_use_alternate_zip = i_use_alternate_zip ).
+*--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+  me-&gt;zif_excel_reader~gv_use_alternate_zip = i_use_alternate_zip.
+*--------------------------------------------------------------------*
+
 
 *--------------------------------------------------------------------*
 * §2  Get file in folderstructure
 *--------------------------------------------------------------------*
-  lo_rels = get_ixml_from_zip_archive( &apos;_rels/.rels&apos; ).
+  me-&gt;excel2007 = i_excel2007.
+  lo_rels = me-&gt;get_ixml_from_zip_archive( &apos;_rels/.rels&apos; ).
 
 *--------------------------------------------------------------------*
 * §3  Cycle through the Relationship Tags and use the ones we need
 *--------------------------------------------------------------------*
-  lo_node ?= lo_rels-&gt;find_from_name( &apos;Relationship&apos; ).     &quot;#EC NOTEXT
+  lo_node ?= lo_rels-&gt;find_from_name( &apos;Relationship&apos; ).               &quot;#EC NOTEXT
   WHILE lo_node IS BOUND.
 
-    fill_struct_from_attributes( EXPORTING
-                                   ip_element   = lo_node
-                                 CHANGING
-                                   cp_structure = ls_relationship ).
+    me-&gt;fill_struct_from_attributes( EXPORTING
+                                       ip_element   = lo_node
+                                     CHANGING
+                                       cp_structure = ls_relationship ).
     CASE ls_relationship-type.
-
-      WHEN lcv_office_document.
-*--------------------------------------------------------------------*
-* Parse workbook - main part here
-*--------------------------------------------------------------------*
-        load_workbook( iv_workbook_full_filename  = ls_relationship-target
-                       io_excel                   = r_excel ).
 
       WHEN lcv_core_properties.
         &quot; 2do§1   Map Document Properties to ZCL_EXCEL
+
+      WHEN lcv_office_document.
+        me-&gt;load_workbook( iv_workbook_full_filename  = ls_relationship-target
+                           io_excel                   = r_excel ).
 
       WHEN OTHERS.
 
@@ -345,49 +228,61 @@ endclass.</localTypes>
   ENDWHILE.
 
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </interfaceMethod>
  <interfaceMethod CLSNAME="ZCL_EXCEL_READER_2007" CPDNAME="ZIF_EXCEL_READER~LOAD_FILE">
   <source>METHOD zif_excel_reader~load_file.
-
-  DATA: lv_excel_data TYPE xstring.
-
 *--------------------------------------------------------------------*
-* Read file into binary string
+* ToDos:
+*        2do§1   decision whether to load from frontend or backend
+*                current behavior ( autodecide ) should be default
+*                add optional parameter to allow user to choose
+*                to load from backend even when online
+*        2do§2   loosen typing of i_filename to CLIKE
 *--------------------------------------------------------------------*
-  IF i_from_applserver = abap_true.
-    lv_excel_data = read_from_applserver( i_filename ).
-  ELSE.
-    lv_excel_data = read_from_local_file( i_filename ).
-  ENDIF.
 
 *--------------------------------------------------------------------*
-* Parse Excel data into ZCL_EXCEL object from binary string
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-05
+*              - ...
+* changes: renaming variables to naming conventions
+*          renaming variables to indicate what they are used for
+*          adding comments to explain what we are trying to achieve
+*          message made to support multilinguality
+*          aligning code
+*          commenting on problems/future enhancements/todos we already know of or should decide upon
+*          adding issue # that has initiated the change - date provided to allow cleaning of code after a certain period
+*          explicit declaration of type of table instead of implicit declaration
+*          added errorhandling for open dataset
 *--------------------------------------------------------------------*
-  r_excel = zif_excel_reader~load( i_excel2007          = lv_excel_data
-                                   i_use_alternate_zip  = i_use_alternate_zip ).
+* issue#234 - error reading xlsx written by libre office
+*              - Stefan Schmöcker,                          2012-11-07
+* changes: passing new optional input parameter to private attribute
+*--------------------------------------------------------------------*
 
-ENDMETHOD.</source>
+    DATA: lv_excel_data TYPE xstring.
+
+* issue#234 - error reading xlsx written by libre office
+    me-&gt;zif_excel_reader~gv_use_alternate_zip = i_use_alternate_zip.
+
+    IF i_from_applserver = abap_true.
+      lv_excel_data = me-&gt;read_from_applserver( i_filename = i_filename ).
+    ELSE.
+      lv_excel_data = me-&gt;read_from_local_file( i_filename = i_filename ).
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+    r_excel = me-&gt;zif_excel_reader~load( i_excel2007          = lv_excel_data
+                                         i_use_alternate_zip  = i_use_alternate_zip ).
+*--------------------------------------------------------------------*
+
+  ENDMETHOD.</source>
  </interfaceMethod>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="CREATE_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Create the zip reference object" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="CREATE_ZIP_ARCHIVE" SCONAME="I_XLSX_BINARY" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="CREATE_ZIP_ARCHIVE" SCONAME="I_USE_ALTERNATE_ZIP" VERSION="1" LANGU="E" DESCRIPT="Object Type Name" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SEOCLSNAME" PAROPTIONL="X"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="CREATE_ZIP_ARCHIVE" SCONAME="E_ZIP" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="LCL_ZIP_ARCHIVE"/>
-  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="CREATE_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD create_zip_archive.
-  CASE i_use_alternate_zip.
-    WHEN space.
-      e_zip = lcl_abap_zip_archive=&gt;create( i_xlsx_binary ).
-    WHEN OTHERS.
-      e_zip = lcl_alternate_zip_archive=&gt;create( i_data                = i_xlsx_binary
-                                                 i_alternate_zip_class = i_use_alternate_zip ).
-  ENDCASE.
-ENDMETHOD.</source>
- </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="IP_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="CP_STRUCTURE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
-  <source>method fill_struct_from_attributes.
+  <source>method FILL_STRUCT_FROM_ATTRIBUTES.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan Schmöcker,      (done)              2012-11-07
@@ -397,12 +292,12 @@ ENDMETHOD.</source>
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 
-  data:       lv_name                         type string,
-              lo_attributes                   type ref to if_ixml_named_node_map,
-              lo_attribute                    type ref to if_ixml_attribute,
-              lo_iterator                     type ref to if_ixml_node_iterator.
+  DATA:       lv_name                         TYPE string,
+              lo_attributes                   TYPE REF TO if_ixml_named_node_map,
+              lo_attribute                    TYPE REF TO if_ixml_attribute,
+              lo_iterator                     TYPE REF TO if_ixml_node_iterator.
 
-  field-symbols: &lt;component&gt;                  type any.
+  FIELD-SYMBOLS: &lt;component&gt;                  TYPE ANY.
 
 *--------------------------------------------------------------------*
 * The values of named attributes of a tag are being read and moved into corresponding
@@ -415,54 +310,182 @@ ENDMETHOD.</source>
 *   structure has fieldnames Id and Target these would be filled with
 *   &quot;rId3&quot; and &quot;docProps/app.xml&quot; respectively
 *--------------------------------------------------------------------*
-  clear cp_structure.
+  CLEAR cp_structure.
 
   lo_attributes  = ip_element-&gt;get_attributes( ).
   lo_iterator    = lo_attributes-&gt;create_iterator( ).
   lo_attribute  ?= lo_iterator-&gt;get_next( ).
-  while lo_attribute is bound.
+  WHILE lo_attribute IS BOUND.
 
     lv_name = lo_attribute-&gt;get_name( ).
-    translate lv_name to upper case.
-    assign component lv_name of structure cp_structure to &lt;component&gt;.
-    if sy-subrc = 0.
+    TRANSLATE lv_name TO UPPER CASE.
+    ASSIGN COMPONENT lv_name OF STRUCTURE cp_structure TO &lt;component&gt;.
+    IF sy-subrc = 0.
       &lt;component&gt; = lo_attribute-&gt;get_value( ).
-    endif.
+    ENDIF.
     lo_attribute ?= lo_iterator-&gt;get_next( ).
 
-  endwhile.
+  ENDWHILE.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="R_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD get_from_zip_archive.
+  <source>method GET_FROM_ZIP_ARCHIVE.
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-07
+*              - ...
+* changes: aligning code
+*          adding comments to explain what we are trying to achieve
+*          changed message passed with exception
+*          message made to support multilinguality
+*--------------------------------------------------------------------**--------------------------------------------------------------------*
+* issue#234 - error reading xlsx written by libre office
+*              - Stefan Schmöcker,                          2012-11-07
+* changes: copying coding and using ALTERNATE_ZIP in ELSE-Branch
+*--------------------------------------------------------------------*
 
-  ASSERT zip IS BOUND. &quot; zip object has to exist at this point
+  DATA:         lv_errormessage                 TYPE string.                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
 
-  r_content = zip-&gt;read(  i_filename ).
 
-ENDMETHOD.</source>
+*--------------------------------------------------------------------*
+* An xlsx-file is basically a zip-archive
+* From this zip-archive we need to extract one file in binary form
+*--------------------------------------------------------------------*
+  IF me-&gt;zif_excel_reader~gv_use_alternate_zip IS INITIAL.  &quot;+#234
+*--------------------------------------------------------------------*
+* Setup ABAP zip-class with binary exceldata if not done already
+*--------------------------------------------------------------------*
+    IF me-&gt;zip IS NOT BOUND.
+      CREATE OBJECT me-&gt;zip.
+      zip-&gt;load( EXPORTING
+                   zip             = me-&gt;excel2007
+                 EXCEPTIONS
+                   zip_parse_error = 1
+                   OTHERS          = 2 ).
+      IF sy-subrc &lt;&gt; 0.
+        lv_errormessage = &apos;ZIP parse error&apos;(002).
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+      ENDIF.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Extract requested filename from archive if possible
+*--------------------------------------------------------------------*
+    zip-&gt;get( EXPORTING
+                name                    = i_filename
+              IMPORTING
+                content                 = r_content    &quot; Contents
+              EXCEPTIONS
+                zip_index_error         = 1
+                zip_decompression_error = 2
+                OTHERS                  = 3 ).
+    IF sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;File not found in ZIP-archive           &apos;(003).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = lv_errormessage.
+    ENDIF.
+*--------------------------------------------------------------------*
+* issue#234 - begin of insertion
+*--------------------------------------------------------------------*
+  ELSE.
+*--------------------------------------------------------------------*
+* Setup alternate ABAP zip-class with binary exceldata if not done already
+* May become obsolete if SAP fixes  standard CL_ABAP_ZIP
+*--------------------------------------------------------------------*
+    IF me-&gt;alternate_zip IS NOT BOUND.
+      CREATE OBJECT me-&gt;alternate_zip TYPE (zif_excel_reader~gv_use_alternate_zip).
+      TRY.
+          CALL METHOD me-&gt;alternate_zip-&gt;(&apos;LOAD&apos;)
+            EXPORTING
+              zip             = me-&gt;excel2007
+            EXCEPTIONS
+              zip_parse_error = 1
+              OTHERS          = 2.
+        CATCH cx_sy_dyn_call_illegal_method.
+          lv_errormessage = &apos;Method LOAD missing in alternative zipclass&apos;.  &quot;#EC NOTEXT   This is a workaround until class CL_ABAP_ZIP is fixed
+          RAISE EXCEPTION TYPE zcx_excel
+            EXPORTING
+              error = lv_errormessage.
+      ENDTRY.
+
+      IF sy-subrc &lt;&gt; 0.
+        lv_errormessage = &apos;ZIP parse error&apos;(002).
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+      ENDIF.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+* Extract requested filename from archive if possible
+*--------------------------------------------------------------------*
+    TRY.
+        CALL METHOD me-&gt;alternate_zip-&gt;(&apos;GET&apos;)
+          EXPORTING
+            name                    = i_filename
+          IMPORTING
+            content                 = r_content    &quot; Contents
+          EXCEPTIONS
+            zip_index_error         = 1
+            zip_decompression_error = 2
+            OTHERS                  = 3.
+      CATCH cx_sy_dyn_call_illegal_method.
+          lv_errormessage = &apos;Method GET missing in alternative zipclass&apos;.   &quot;#EC NOTEXT   This is a workaround until class CL_ABAP_ZIP is fixed
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+    ENDTRY.
+    IF sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;File not found in ZIP-archive           &apos;(003).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = lv_errormessage.
+    ENDIF.
+  ENDIF.
+*--------------------------------------------------------------------*
+* issue#234 - end of insertion
+*--------------------------------------------------------------------*
+
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="IS_NORMALIZING" VERSION="1" LANGU="D" DESCRIPT="Boolean Variable (X=True, -=False, Space=Unknown)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="BOOLEAN" PARVALUE="&apos;X&apos;" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="IS_NORMALIZING" VERSION="1" LANGU="E" DESCRIPT="Boolean Variable (X=True, -=False, Space=Unknown)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="BOOLEAN" PARVALUE="&apos;X&apos;" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="R_IXML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD get_ixml_from_zip_archive.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   Add comment what is being achieved here
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmöcker,      (done)              2012-11-07
+*              - ...
+* changes: renaming variables to naming conventions
+*          removing unnecessary type-pool
+*          aligning code
+*--------------------------------------------------------------------*
 
   DATA:       lv_content                     TYPE xstring,
+
               lo_ixml                        TYPE REF TO if_ixml,
               lo_streamfactory               TYPE REF TO if_ixml_stream_factory,
               lo_istream                     TYPE REF TO if_ixml_istream,
               lo_parser                      TYPE REF TO if_ixml_parser.
 
+
 *--------------------------------------------------------------------*
-* Load XML file from archive into an input stream,
-* and parse that stream into an ixml object
+*  2do§1  ????  Something happens here   ???
 *--------------------------------------------------------------------*
   lv_content        = me-&gt;get_from_zip_archive( i_filename ).
   lo_ixml           = cl_ixml=&gt;create( ).
@@ -472,16 +495,17 @@ ENDMETHOD.</source>
   lo_parser         = lo_ixml-&gt;create_parser( stream_factory = lo_streamfactory
                                               istream        = lo_istream
                                               document       = r_ixml ).
+
   lo_parser-&gt;set_normalizing( is_normalizing ).
   lo_parser-&gt;set_validating( mode = if_ixml_parser=&gt;co_no_validation ).
   lo_parser-&gt;parse( ).
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="D" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="D" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="D" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IT_RELATED_DRAWINGS" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_REL_DRAWINGS"/>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IT_RELATED_DRAWINGS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_REL_DRAWINGS"/>
   <source>method LOAD_DRAWING_ANCHOR.
 
   TYPES: BEGIN OF t_c_nv_pr,
@@ -632,7 +656,7 @@ ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Loads shared strings table" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="D" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method LOAD_SHARED_STRINGS.
 *--------------------------------------------------------------------*
 * ToDos:
@@ -752,7 +776,7 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads styles" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
-  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="D" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method LOAD_STYLES.
 
 *--------------------------------------------------------------------*
@@ -1365,7 +1389,7 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="EP_NUM_FORMATS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_NUM_FORMATS"/>
-  <source>method LOAD_STYLE_NUM_FORMATS.
+  <source>METHOD load_style_num_formats.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Explain gaps in predefined formats
@@ -1421,28 +1445,28 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
 * §1 Get internal predefined numberformats
 *--------------------------------------------------------------------*
-  predefined_format    &apos;1&apos;        &apos;0&apos;.
-  predefined_format    &apos;2&apos;        &apos;0.00&apos;.
-  predefined_format    &apos;3&apos;        &apos;#,##0&apos;.
-  predefined_format    &apos;4&apos;        &apos;#,##0.00&apos;.
-  predefined_format    &apos;5&apos;        &apos;$#,##0_);($#,##0)&apos;.
-  predefined_format    &apos;6&apos;        &apos;$#,##0_);[Red]($#,##0)&apos;.
-  predefined_format    &apos;7&apos;        &apos;$#,##0.00_);($#,##0.00)&apos;.
-  predefined_format    &apos;8&apos;        &apos;$#,##0.00_);[Red]($#,##0.00)&apos;.
-  predefined_format    &apos;9&apos;        &apos;0%&apos;.
-  predefined_format   &apos;10&apos;        &apos;0.00%&apos;.
-  predefined_format   &apos;11&apos;        &apos;0.00E+00&apos;.
-  predefined_format   &apos;12&apos;        &apos;# ?/?&apos;.
-  predefined_format   &apos;13&apos;        &apos;# ??/??&apos;.
-  predefined_format   &apos;14&apos;        &apos;m/d/yyyy&apos;.
-  predefined_format   &apos;15&apos;        &apos;d-mmm-yy&apos;.
-  predefined_format   &apos;16&apos;        &apos;d-mmm&apos;.
-  predefined_format   &apos;17&apos;        &apos;mmm-yy&apos;.
-  predefined_format   &apos;18&apos;        &apos;h:mm AM/PM&apos;.
-  predefined_format   &apos;19&apos;        &apos;h:mm:ss AM/PM&apos;.
-  predefined_format   &apos;20&apos;        &apos;h:mm&apos;.
-  predefined_format   &apos;21&apos;        &apos;h:mm:ss&apos;.
-  predefined_format   &apos;22&apos;        &apos;m/d/yyyy h:mm&apos;.
+  predefined_format    &apos;1&apos;        &apos;0&apos;.                      &quot;#EC NOTEXT
+  predefined_format    &apos;2&apos;        &apos;0.00&apos;.                   &quot;#EC NOTEXT
+  predefined_format    &apos;3&apos;        &apos;#,##0&apos;.                  &quot;#EC NOTEXT
+  predefined_format    &apos;4&apos;        &apos;#,##0.00&apos;.               &quot;#EC NOTEXT
+  predefined_format    &apos;5&apos;        &apos;$#,##0_);($#,##0)&apos;.      &quot;#EC NOTEXT
+  predefined_format    &apos;6&apos;        &apos;$#,##0_);[Red]($#,##0)&apos;. &quot;#EC NOTEXT
+  predefined_format    &apos;7&apos;        &apos;$#,##0.00_);($#,##0.00)&apos;. &quot;#EC NOTEXT
+  predefined_format    &apos;8&apos;        &apos;$#,##0.00_);[Red]($#,##0.00)&apos;. &quot;#EC NOTEXT
+  predefined_format    &apos;9&apos;        &apos;0%&apos;.                     &quot;#EC NOTEXT
+  predefined_format   &apos;10&apos;        &apos;0.00%&apos;.                  &quot;#EC NOTEXT
+  predefined_format   &apos;11&apos;        &apos;0.00E+00&apos;.               &quot;#EC NOTEXT
+  predefined_format   &apos;12&apos;        &apos;# ?/?&apos;.                  &quot;#EC NOTEXT
+  predefined_format   &apos;13&apos;        &apos;# ??/??&apos;.                &quot;#EC NOTEXT
+  predefined_format   &apos;14&apos;        &apos;m/d/yyyy&apos;.               &quot;#EC NOTEXT
+  predefined_format   &apos;15&apos;        &apos;d-mmm-yy&apos;.               &quot;#EC NOTEXT
+  predefined_format   &apos;16&apos;        &apos;d-mmm&apos;.                  &quot;#EC NOTEXT
+  predefined_format   &apos;17&apos;        &apos;mmm-yy&apos;.                 &quot;#EC NOTEXT
+  predefined_format   &apos;18&apos;        &apos;h:mm AM/PM&apos;.             &quot;#EC NOTEXT
+  predefined_format   &apos;19&apos;        &apos;h:mm:ss AM/PM&apos;.          &quot;#EC NOTEXT
+  predefined_format   &apos;20&apos;        &apos;h:mm&apos;.                   &quot;#EC NOTEXT
+  predefined_format   &apos;21&apos;        &apos;h:mm:ss&apos;.                &quot;#EC NOTEXT
+  predefined_format   &apos;22&apos;        &apos;m/d/yyyy h:mm&apos;.          &quot;#EC NOTEXT
 * 2do§1     Why is there a gap in here?
 
 
@@ -1457,28 +1481,28 @@ ENDMETHOD.</source>
 
 
 
-  predefined_format   &apos;37&apos;        &apos;#,##0_);(#,##0)&apos;.
-  predefined_format   &apos;38&apos;        &apos;#,##0_);[Red](#,##0)&apos;.
-  predefined_format   &apos;39&apos;        &apos;#,##0.00_);(#,##0.00)&apos;.
-  predefined_format   &apos;40&apos;        &apos;#,##0.00_);[Red](#,##0.00)&apos;.
+  predefined_format   &apos;37&apos;        &apos;#,##0_);(#,##0)&apos;.        &quot;#EC NOTEXT
+  predefined_format   &apos;38&apos;        &apos;#,##0_);[Red](#,##0)&apos;.   &quot;#EC NOTEXT
+  predefined_format   &apos;39&apos;        &apos;#,##0.00_);(#,##0.00)&apos;.  &quot;#EC NOTEXT
+  predefined_format   &apos;40&apos;        &apos;#,##0.00_);[Red](#,##0.00)&apos;. &quot;#EC NOTEXT
 * 2do§1     Why is there a gap in here?
 
 
 
-  predefined_format   &apos;45&apos;        &apos;mm:ss&apos;.
-  predefined_format   &apos;46&apos;        &apos;[h]:mm:ss&apos;.
-  predefined_format   &apos;47&apos;        &apos;mm:ss.0&apos;.
-  predefined_format   &apos;48&apos;        &apos;##0.0E+0&apos;.
-  predefined_format   &apos;49&apos;        &apos;@&apos;.
+  predefined_format   &apos;45&apos;        &apos;mm:ss&apos;.                  &quot;#EC NOTEXT
+  predefined_format   &apos;46&apos;        &apos;[h]:mm:ss&apos;.              &quot;#EC NOTEXT
+  predefined_format   &apos;47&apos;        &apos;mm:ss.0&apos;.                &quot;#EC NOTEXT
+  predefined_format   &apos;48&apos;        &apos;##0.0E+0&apos;.               &quot;#EC NOTEXT
+  predefined_format   &apos;49&apos;        &apos;@&apos;.                      &quot;#EC NOTEXT
 * 2do§1     Is 49 really the last predefined format?
 
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IV_WORKBOOK_FULL_FILENAME" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IO_EXCEL" VERSION="1" LANGU="D" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
-  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="D" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IV_WORKBOOK_FULL_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method LOAD_WORKBOOK.
 *--------------------------------------------------------------------*
 * ToDos:
@@ -1897,8 +1921,8 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
-  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="D" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method LOAD_WORKSHEET.
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD load_worksheet.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Header/footer
@@ -2107,6 +2131,9 @@ ENDMETHOD.</source>
               lv_datavalidation_range         TYPE string,
               lt_datavalidation_range         TYPE TABLE OF string.
 
+  DATA: lv_errormessage TYPE string,
+        lo_ex           TYPE REF TO cx_root.
+
 *--------------------------------------------------------------------*
 * §2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
 *     us where in this folder structure the data for the workbook
@@ -2133,7 +2160,7 @@ ENDMETHOD.</source>
     INTO lv_rels_worksheet_path.
   TRY.                                                                          &quot; +#222  _rels/xxx.rels might not be present.  If not found there can be no drawings --&gt; just ignore this section
       lo_ixml_rels_worksheet = me-&gt;get_ixml_from_zip_archive( lv_rels_worksheet_path ).
-      lo_ixml_node ?= lo_ixml_rels_worksheet-&gt;find_from_name( &apos;Relationship&apos; ).
+      lo_ixml_node ?= lo_ixml_rels_worksheet-&gt;find_from_name( &apos;Relationship&apos; ). &quot;#EC NOTEXT
     CATCH zcx_excel.                              &quot;#EC NO_HANDLER +#222
       &quot; +#222   No errorhandling necessary - node will be unbound if error occurs
   ENDTRY.                                                   &quot; +#222
@@ -2164,7 +2191,7 @@ ENDMETHOD.</source>
   lo_ixml_worksheet = me-&gt;get_ixml_from_zip_archive( ip_path ).
 
 
-  lo_ixml_tabcolor ?= lo_ixml_worksheet-&gt;find_from_name( &apos;tabColor&apos; ).
+  lo_ixml_tabcolor ?= lo_ixml_worksheet-&gt;find_from_name( &apos;tabColor&apos; ). &quot;#EC NOTEXT
   IF lo_ixml_tabcolor IS BOUND.
     fill_struct_from_attributes( EXPORTING
                                    ip_element = lo_ixml_tabcolor
@@ -2177,7 +2204,7 @@ ENDMETHOD.</source>
     ENDIF.
   ENDIF.
 
-  lo_ixml_rows = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;row&apos; ).
+  lo_ixml_rows = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;row&apos; ). &quot;#EC NOTEXT
   lo_ixml_iterator = lo_ixml_rows-&gt;create_iterator( ).
   lo_ixml_row_elem ?= lo_ixml_iterator-&gt;get_next( ).
   WHILE lo_ixml_row_elem IS BOUND.
@@ -2240,7 +2267,7 @@ ENDMETHOD.</source>
           lv_index = lo_ixml_value_elem-&gt;get_value( ) + 1.
           READ TABLE shared_strings INTO lv_cell_value INDEX lv_index.
         WHEN &apos;inlineStr&apos;. &quot; inlineStr values are kept in special node
-          lo_ixml_value_elem = lo_ixml_cell_elem-&gt;find_from_name( name = &apos;is&apos; ).
+          lo_ixml_value_elem = lo_ixml_cell_elem-&gt;find_from_name( name = &apos;is&apos; ). &quot;#EC NOTEXT
           IF lo_ixml_value_elem IS BOUND.
             lv_cell_value = lo_ixml_value_elem-&gt;get_value( ).
           ENDIF.
@@ -2290,8 +2317,11 @@ ENDMETHOD.</source>
               ls_ref_formula-ref       = ls_formula_attributes-ref.
               ls_ref_formula-formula   = lv_cell_formula.
               INSERT ls_ref_formula INTO TABLE me-&gt;mt_ref_formulae.
-            CATCH cx_root.
-              BREAK-POINT.
+            CATCH cx_root INTO lo_ex.
+              lv_errormessage = lo_ex-&gt;if_message~get_text( ).
+              RAISE EXCEPTION TYPE zcx_excel
+                EXPORTING
+                  error = lv_errormessage.
           ENDTRY.
         ENDIF.
 *--------------------------------------------------------------------*
@@ -2324,9 +2354,9 @@ ENDMETHOD.</source>
 *       reason - libre office doesn&apos;t use SPAN in row - definitions
 *--------------------------------------------------------------------*
   IF lv_max_col = 0.
-    lo_ixml_imension_elem = lo_ixml_worksheet-&gt;find_from_name( name = &apos;dimension&apos; ).
+    lo_ixml_imension_elem = lo_ixml_worksheet-&gt;find_from_name( name = &apos;dimension&apos; ). &quot;#EC NOTEXT
     IF lo_ixml_imension_elem IS BOUND.
-      lv_dimension_range = lo_ixml_imension_elem-&gt;get_attribute( &apos;ref&apos; ).
+      lv_dimension_range = lo_ixml_imension_elem-&gt;get_attribute( &apos;ref&apos; ). &quot;#EC NOTEXT
       IF lv_dimension_range CS &apos;:&apos;.
         REPLACE REGEX &apos;\D+\d+:(\D+)\d+&apos; IN lv_dimension_range WITH &apos;$1&apos;.  &quot; Get max column
       ELSE.
@@ -2340,7 +2370,7 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
 
   &quot;Get the customized column width
-  lo_ixml_columns = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;col&apos; ).
+  lo_ixml_columns = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;col&apos; ). &quot;#EC NOTEXT
   lo_ixml_iterator = lo_ixml_columns-&gt;create_iterator( ).
   lo_ixml_column_elem ?= lo_ixml_iterator-&gt;get_next( ).
   WHILE lo_ixml_column_elem IS BOUND.
@@ -2420,7 +2450,7 @@ ENDMETHOD.</source>
   ENDWHILE.
 
   &quot;Now we need to get information from the sheetView node
-  lo_ixml_sheetview_elem = lo_ixml_worksheet-&gt;find_from_name( name = &apos;sheetView&apos; ).
+  lo_ixml_sheetview_elem = lo_ixml_worksheet-&gt;find_from_name( name = &apos;sheetView&apos; ). &quot;#EC NOTEXT
   fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_sheetview_elem CHANGING cp_structure = ls_sheetview ).
   IF ls_sheetview-showgridlines IS INITIAL OR
      ls_sheetview-showgridlines = lc_xml_attr_true OR
@@ -2434,7 +2464,7 @@ ENDMETHOD.</source>
 
 
   &quot;Add merge cell information
-  lo_ixml_mergecells = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;mergeCell&apos; ).
+  lo_ixml_mergecells = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;mergeCell&apos; ). &quot;#EC NOTEXT
   lo_ixml_iterator = lo_ixml_mergecells-&gt;create_iterator( ).
   lo_ixml_mergecell_elem ?= lo_ixml_iterator-&gt;get_next( ).
   WHILE lo_ixml_mergecell_elem IS BOUND.
@@ -2458,7 +2488,7 @@ ENDMETHOD.</source>
   ENDWHILE.
 
   &quot; read sheet format properties
-  lo_ixml_sheetformatpr_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;sheetFormatPr&apos; ).
+  lo_ixml_sheetformatpr_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;sheetFormatPr&apos; ). &quot;#EC NOTEXT
   IF lo_ixml_sheetformatpr_elem IS NOT INITIAL.
     fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_sheetformatpr_elem CHANGING cp_structure = ls_sheetformatpr ).
     IF ls_sheetformatpr-customheight = &apos;1&apos;.
@@ -2471,7 +2501,7 @@ ENDMETHOD.</source>
   ENDIF.
 
   &quot; Read in page margins
-  lo_ixml_pagemargins_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;pageMargins&apos; ).
+  lo_ixml_pagemargins_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;pageMargins&apos; ). &quot;#EC NOTEXT
   IF lo_ixml_pagemargins_elem IS NOT INITIAL.
     fill_struct_from_attributes( EXPORTING
                                    ip_element = lo_ixml_pagemargins_elem
@@ -2486,7 +2516,7 @@ ENDMETHOD.</source>
   ENDIF.
 
   &quot; Read in page setup
-  lo_ixml_pagesetup_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;pageSetup&apos; ).
+  lo_ixml_pagesetup_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;pageSetup&apos; ). &quot;#EC NOTEXT
   IF lo_ixml_pagesetup_elem IS NOT INITIAL.
     fill_struct_from_attributes( EXPORTING
                                    ip_element = lo_ixml_pagesetup_elem
@@ -2497,12 +2527,12 @@ ENDMETHOD.</source>
   ENDIF.
 
   &quot; Read header footer
-  lo_ixml_headerfooter_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;headerFooter&apos; ).
+  lo_ixml_headerfooter_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;headerFooter&apos; ). &quot;#EC NOTEXT
   IF lo_ixml_headerfooter_elem IS NOT INITIAL.
     fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_headerfooter_elem CHANGING cp_structure = ls_headerfooter ).
     io_worksheet-&gt;sheet_setup-&gt;diff_oddeven_headerfooter = ls_headerfooter-differentoddeven.
 
-    lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem-&gt;find_from_name( &apos;oddFooter&apos; ).
+    lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem-&gt;find_from_name( &apos;oddFooter&apos; ). &quot;#EC NOTEXT
     IF lo_ixml_hf_value_elem IS NOT INITIAL.
       ls_odd_footer-left_value = lo_ixml_hf_value_elem-&gt;get_value( ).
     ENDIF.
@@ -2519,7 +2549,7 @@ ENDMETHOD.</source>
 
   &quot; Start fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
   &quot; Read pane
-  lo_ixml_pane_elem = lo_ixml_sheetview_elem-&gt;find_from_name( name = &apos;pane&apos; ).
+  lo_ixml_pane_elem = lo_ixml_sheetview_elem-&gt;find_from_name( name = &apos;pane&apos; ). &quot;#EC NOTEXT
   IF lo_ixml_pane_elem IS BOUND.
     fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_pane_elem CHANGING cp_structure = ls_excel_pane ).
     &quot; Issue #194
@@ -2545,7 +2575,7 @@ ENDMETHOD.</source>
   &quot; End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
 
   &quot; Start fix 276 Read data validations
-  lo_ixml_datavalidations = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;dataValidation&apos; ).
+  lo_ixml_datavalidations = lo_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;dataValidation&apos; ). &quot;#EC NOTEXT
   lo_ixml_iterator = lo_ixml_datavalidations-&gt;create_iterator( ).
   lo_ixml_datavalidation_elem  ?= lo_ixml_iterator-&gt;get_next( ).
   WHILE lo_ixml_datavalidation_elem  IS BOUND.
@@ -2553,16 +2583,16 @@ ENDMETHOD.</source>
                                    ip_element = lo_ixml_datavalidation_elem
                                  CHANGING
                                    cp_structure = ls_datavalidation ).
-    clear lo_ixml_formula_elem.
-    lo_ixml_formula_elem = lo_ixml_datavalidation_elem-&gt;find_from_name( name = &apos;formula1&apos; ).
-    if lo_ixml_formula_elem is bound.
+    CLEAR lo_ixml_formula_elem.
+    lo_ixml_formula_elem = lo_ixml_datavalidation_elem-&gt;find_from_name( name = &apos;formula1&apos; ). &quot;#EC NOTEXT
+    IF lo_ixml_formula_elem IS BOUND.
       ls_datavalidation-formula1 = lo_ixml_formula_elem-&gt;get_value( ).
-    endif.
-    clear lo_ixml_formula_elem.
-    lo_ixml_formula_elem = lo_ixml_datavalidation_elem-&gt;find_from_name( name = &apos;formula2&apos; ).
-    if lo_ixml_formula_elem is bound.
+    ENDIF.
+    CLEAR lo_ixml_formula_elem.
+    lo_ixml_formula_elem = lo_ixml_datavalidation_elem-&gt;find_from_name( name = &apos;formula2&apos; ). &quot;#EC NOTEXT
+    IF lo_ixml_formula_elem IS BOUND.
       ls_datavalidation-formula2 = lo_ixml_formula_elem-&gt;get_value( ).
-    endif.
+    ENDIF.
     SPLIT ls_datavalidation-sqref AT space INTO TABLE lt_datavalidation_range.
     LOOP AT lt_datavalidation_range INTO lv_datavalidation_range.
       zcl_excel_common=&gt;convert_range2column_a_row( EXPORTING
@@ -2590,17 +2620,17 @@ ENDMETHOD.</source>
       lo_data_validation-&gt;cell_row_to      = ls_datavalidation-cell_row_to.
       lo_data_validation-&gt;cell_column      = ls_datavalidation-cell_column.
       lo_data_validation-&gt;cell_column_to   = ls_datavalidation-cell_column_to.
-    endloop.
+    ENDLOOP.
     lo_ixml_datavalidation_elem ?= lo_ixml_iterator-&gt;get_next( ).
   ENDWHILE.
   &quot; End fix 276 Read data validations
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="D" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="D" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
-  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="D" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method LOAD_WORKSHEET_DRAWING.
 
   TYPES: BEGIN OF t_c_nv_pr,
@@ -2617,10 +2647,10 @@ ENDMETHOD.</source>
     id TYPE string,
     END OF t_chart.
 
-  CONSTANTS: lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
+  CONSTANTS: lc_xml_attr_true                TYPE string VALUE &apos;true&apos;, &quot;#EC NOTEXT
              lc_xml_attr_true_int            TYPE string VALUE &apos;1&apos;.
-  CONSTANTS: lc_rel_chart       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart&apos;,
-             lc_rel_image       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/image&apos;.
+  CONSTANTS: lc_rel_chart       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart&apos;, &quot;#EC NOTEXT
+             lc_rel_image       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/image&apos;. &quot;#EC NOTEXT
 
   DATA: drawing             TYPE REF TO if_ixml_document,
         anchors             TYPE REF TO if_ixml_node_collection,
@@ -2648,11 +2678,11 @@ ENDMETHOD.</source>
     IMPORTING
       stripped_name = stripped_name
       file_path     = dirname.
-  CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos;
+  CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos; &quot;#EC NOTEXT
     INTO rels_drawing_path.
   rels_drawing_path = resolve_path( rels_drawing_path ).
   rels_drawing = me-&gt;get_ixml_from_zip_archive( rels_drawing_path ).
-  node ?= rels_drawing-&gt;find_from_name( &apos;Relationship&apos; ).
+  node ?= rels_drawing-&gt;find_from_name( &apos;Relationship&apos; ). &quot;#EC NOTEXT
   WHILE node IS BOUND.
     fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
 
@@ -2685,7 +2715,7 @@ ENDMETHOD.</source>
   drawing = me-&gt;get_ixml_from_zip_archive( ip_path ).
 
 * one-cell anchor **************
-  anchors = drawing-&gt;get_elements_by_tag_name( name = &apos;oneCellAnchor&apos; namespace = &apos;xdr&apos; ).
+  anchors = drawing-&gt;get_elements_by_tag_name( name = &apos;oneCellAnchor&apos; namespace = &apos;xdr&apos; ). &quot;#EC NOTEXT
   coll_length = anchors-&gt;get_length( ).
   iterator = anchors-&gt;create_iterator( ).
   DO coll_length TIMES.
@@ -2700,7 +2730,7 @@ ENDMETHOD.</source>
   ENDDO.
 
 * two-cell anchor ******************
-  anchors = drawing-&gt;get_elements_by_tag_name( name = &apos;twoCellAnchor&apos; namespace = &apos;xdr&apos; ).
+  anchors = drawing-&gt;get_elements_by_tag_name( name = &apos;twoCellAnchor&apos; namespace = &apos;xdr&apos; ). &quot;#EC NOTEXT
   coll_length = anchors-&gt;get_length( ).
   iterator = anchors-&gt;create_iterator( ).
   DO coll_length TIMES.
@@ -2716,9 +2746,10 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="D" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="I_FILENAME" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD read_from_applserver.
 
     DATA: lv_filelength                   TYPE i,
@@ -2760,9 +2791,10 @@ ENDMETHOD.</source>
         binary_tab   = lt_binary_data.
   ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="D" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="I_FILENAME" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD read_from_local_file.
     DATA:  lv_filelength                   TYPE i,
            lt_binary_data                  TYPE STANDARD TABLE OF x255 WITH NON-UNIQUE DEFAULT KEY,
@@ -2819,9 +2851,9 @@ ENDMETHOD.</source>
 
   ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="D" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="RP_RESULT" VERSION="1" LANGU="D" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="RP_RESULT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method RESOLVE_PATH.
 *--------------------------------------------------------------------*
 * ToDos:
@@ -2863,7 +2895,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_REFERENCED_FORMULAE" VERSION="1" LANGU="D" DESCRIPT="Resolve referenced formulae" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_REFERENCED_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Resolve referenced formulae" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method RESOLVE_REFERENCED_FORMULAE.
   TYPES:      BEGIN OF ty_referenced_cells,
                 sheet                         TYPE REF TO zcl_excel_worksheet,

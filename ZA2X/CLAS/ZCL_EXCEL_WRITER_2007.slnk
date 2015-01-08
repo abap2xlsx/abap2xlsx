@@ -27,9 +27,9 @@
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="xlTheme XML File Name" EXPOSURE="1" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTVALUE="&apos;xl/theme/theme1.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="1" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="1" STATE="1" EDITORDER="17 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="1" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_COND_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="0" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_COND_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="0" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WRITER_2007" CPDNAME="ZIF_EXCEL_WRITER~WRITE_FILE">
   <source>method ZIF_EXCEL_WRITER~WRITE_FILE.
   me-&gt;excel = io_excel.
@@ -37,8 +37,9 @@
   ep_file = me-&gt;create( ).
   endmethod.</source>
  </interfaceMethod>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method CREATE.
 
 * Office 2007 file format is a cab of several xml files with extension .xlsx
@@ -240,40 +241,40 @@
 
 
 ** Constant node name
-  DATA: lc_xml_node_types         TYPE string VALUE &apos;Types&apos;,
-        lc_xml_node_override      TYPE string VALUE &apos;Override&apos;,
-        lc_xml_node_default       TYPE string VALUE &apos;Default&apos;,
+  DATA: lc_xml_node_types         TYPE string VALUE &apos;Types&apos;,                    &quot;#EC NOTEXT
+        lc_xml_node_override      TYPE string VALUE &apos;Override&apos;,                 &quot;#EC NOTEXT
+        lc_xml_node_default       TYPE string VALUE &apos;Default&apos;,                  &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_partname      TYPE string VALUE &apos;PartName&apos;,
-        lc_xml_attr_extension     TYPE string VALUE &apos;Extension&apos;,
-        lc_xml_attr_contenttype   TYPE string VALUE &apos;ContentType&apos;,
+        lc_xml_attr_partname      TYPE string VALUE &apos;PartName&apos;,                 &quot;#EC NOTEXT
+        lc_xml_attr_extension     TYPE string VALUE &apos;Extension&apos;,                &quot;#EC NOTEXT
+        lc_xml_attr_contenttype   TYPE string VALUE &apos;ContentType&apos;,              &quot;#EC NOTEXT
         &quot; Node namespace
-        lc_xml_node_types_ns      TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/content-types&apos;,
+        lc_xml_node_types_ns      TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/content-types&apos;, &quot;#EC NOTEXT
         &quot; Node extension
-        lc_xml_node_rels_ext      TYPE string VALUE &apos;rels&apos;,
-        lc_xml_node_xml_ext       TYPE string VALUE &apos;xml&apos;,
+        lc_xml_node_rels_ext      TYPE string VALUE &apos;rels&apos;,                     &quot;#EC NOTEXT
+        lc_xml_node_xml_ext       TYPE string VALUE &apos;xml&apos;,                      &quot;#EC NOTEXT
         &quot; Node partnumber
-        lc_xml_node_theme_pn      TYPE string VALUE &apos;/xl/theme/theme1.xml&apos;,
-        lc_xml_node_styles_pn     TYPE string VALUE &apos;/xl/styles.xml&apos;,
-        lc_xml_node_workb_pn      TYPE string VALUE &apos;/xl/workbook.xml&apos;,
-        lc_xml_node_props_pn      TYPE string VALUE &apos;/docProps/app.xml&apos;,
-        lc_xml_node_worksheet_pn  TYPE string VALUE &apos;/xl/worksheets/sheet#.xml&apos;,
-        lc_xml_node_strings_pn    TYPE string VALUE &apos;/xl/sharedStrings.xml&apos;,
-        lc_xml_node_core_pn       TYPE string VALUE &apos;/docProps/core.xml&apos;,
-        lc_xml_node_chart_pn      TYPE string VALUE &apos;/xl/charts/chart#.xml&apos;,
+        lc_xml_node_theme_pn      TYPE string VALUE &apos;/xl/theme/theme1.xml&apos;,     &quot;#EC NOTEXT
+        lc_xml_node_styles_pn     TYPE string VALUE &apos;/xl/styles.xml&apos;,           &quot;#EC NOTEXT
+        lc_xml_node_workb_pn      TYPE string VALUE &apos;/xl/workbook.xml&apos;,         &quot;#EC NOTEXT
+        lc_xml_node_props_pn      TYPE string VALUE &apos;/docProps/app.xml&apos;,        &quot;#EC NOTEXT
+        lc_xml_node_worksheet_pn  TYPE string VALUE &apos;/xl/worksheets/sheet#.xml&apos;,&quot;#EC NOTEXT
+        lc_xml_node_strings_pn    TYPE string VALUE &apos;/xl/sharedStrings.xml&apos;,    &quot;#EC NOTEXT
+        lc_xml_node_core_pn       TYPE string VALUE &apos;/docProps/core.xml&apos;,       &quot;#EC NOTEXT
+        lc_xml_node_chart_pn      TYPE string VALUE &apos;/xl/charts/chart#.xml&apos;,    &quot;#EC NOTEXT
         &quot; Node contentType
-        lc_xml_node_theme_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.theme+xml&apos;,
-        lc_xml_node_styles_ct     TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml&apos;,
-        lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml&apos;,
-        lc_xml_node_rels_ct       TYPE string VALUE &apos;application/vnd.openxmlformats-package.relationships+xml&apos;,
-        lc_xml_node_xml_ct        TYPE string VALUE &apos;application/xml&apos;,
-        lc_xml_node_props_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.extended-properties+xml&apos;,
-        lc_xml_node_worksheet_ct  TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml&apos;,
-        lc_xml_node_strings_ct    TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml&apos;,
-        lc_xml_node_core_ct       TYPE string VALUE &apos;application/vnd.openxmlformats-package.core-properties+xml&apos;,
-        lc_xml_node_table_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml&apos;,
-        lc_xml_node_drawings_ct   TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.drawing+xml&apos;,
-        lc_xml_node_chart_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.drawingml.chart+xml&apos;.
+        lc_xml_node_theme_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.theme+xml&apos;,                        &quot;#EC NOTEXT
+        lc_xml_node_styles_ct     TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml&apos;,         &quot;#EC NOTEXT
+        lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml&apos;,     &quot;#EC NOTEXT
+        lc_xml_node_rels_ct       TYPE string VALUE &apos;application/vnd.openxmlformats-package.relationships+xml&apos;,                       &quot;#EC NOTEXT
+        lc_xml_node_xml_ct        TYPE string VALUE &apos;application/xml&apos;,                                                                &quot;#EC NOTEXT
+        lc_xml_node_props_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.extended-properties+xml&apos;,          &quot;#EC NOTEXT
+        lc_xml_node_worksheet_ct  TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml&apos;,      &quot;#EC NOTEXT
+        lc_xml_node_strings_ct    TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml&apos;,  &quot;#EC NOTEXT
+        lc_xml_node_core_ct       TYPE string VALUE &apos;application/vnd.openxmlformats-package.core-properties+xml&apos;,                     &quot;#EC NOTEXT
+        lc_xml_node_table_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml&apos;,          &quot;#EC NOTEXT
+        lc_xml_node_drawings_ct   TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.drawing+xml&apos;,                      &quot;#EC NOTEXT
+        lc_xml_node_chart_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.drawingml.chart+xml&apos;.              &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -515,28 +516,28 @@
 
 
 ** Constant node name
-  DATA: lc_xml_node_properties        TYPE string VALUE &apos;Properties&apos;,
-        lc_xml_node_application       TYPE string VALUE &apos;Application&apos;,
-        lc_xml_node_docsecurity       TYPE string VALUE &apos;DocSecurity&apos;,
-        lc_xml_node_scalecrop         TYPE string VALUE &apos;ScaleCrop&apos;,
-        lc_xml_node_headingpairs      TYPE string VALUE &apos;HeadingPairs&apos;,
-        lc_xml_node_vector            TYPE string VALUE &apos;vector&apos;,
-        lc_xml_node_variant           TYPE string VALUE &apos;variant&apos;,
-        lc_xml_node_lpstr             TYPE string VALUE &apos;lpstr&apos;,
-        lc_xml_node_i4                TYPE string VALUE &apos;i4&apos;,
-        lc_xml_node_titlesofparts     TYPE string VALUE &apos;TitlesOfParts&apos;,
-        lc_xml_node_company           TYPE string VALUE &apos;Company&apos;,
-        lc_xml_node_linksuptodate     TYPE string VALUE &apos;LinksUpToDate&apos;,
-        lc_xml_node_shareddoc         TYPE string VALUE &apos;SharedDoc&apos;,
-        lc_xml_node_hyperlinkschanged TYPE string VALUE &apos;HyperlinksChanged&apos;,
-        lc_xml_node_appversion        TYPE string VALUE &apos;AppVersion&apos;,
-        &quot; Namespace prefix
-        lc_vt_ns                      TYPE string VALUE &apos;vt&apos;,
-        lc_xml_node_props_ns          TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/extended-properties&apos;,
-        lc_xml_node_props_vt_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes&apos;,
+  DATA: lc_xml_node_properties        TYPE string VALUE &apos;Properties&apos;,         &quot;#EC NOTEXT
+        lc_xml_node_application       TYPE string VALUE &apos;Application&apos;,        &quot;#EC NOTEXT
+        lc_xml_node_docsecurity       TYPE string VALUE &apos;DocSecurity&apos;,        &quot;#EC NOTEXT
+        lc_xml_node_scalecrop         TYPE string VALUE &apos;ScaleCrop&apos;,          &quot;#EC NOTEXT
+        lc_xml_node_headingpairs      TYPE string VALUE &apos;HeadingPairs&apos;,       &quot;#EC NOTEXT
+        lc_xml_node_vector            TYPE string VALUE &apos;vector&apos;,             &quot;#EC NOTEXT
+        lc_xml_node_variant           TYPE string VALUE &apos;variant&apos;,            &quot;#EC NOTEXT
+        lc_xml_node_lpstr             TYPE string VALUE &apos;lpstr&apos;,              &quot;#EC NOTEXT
+        lc_xml_node_i4                TYPE string VALUE &apos;i4&apos;,                 &quot;#EC NOTEXT
+        lc_xml_node_titlesofparts     TYPE string VALUE &apos;TitlesOfParts&apos;,      &quot;#EC NOTEXT
+        lc_xml_node_company           TYPE string VALUE &apos;Company&apos;,            &quot;#EC NOTEXT
+        lc_xml_node_linksuptodate     TYPE string VALUE &apos;LinksUpToDate&apos;,      &quot;#EC NOTEXT
+        lc_xml_node_shareddoc         TYPE string VALUE &apos;SharedDoc&apos;,          &quot;#EC NOTEXT
+        lc_xml_node_hyperlinkschanged TYPE string VALUE &apos;HyperlinksChanged&apos;,  &quot;#EC NOTEXT
+        lc_xml_node_appversion        TYPE string VALUE &apos;AppVersion&apos;,         &quot;#EC NOTEXT
+        &quot; Namespace prefix                                                    &quot;#EC NOTEXT
+        lc_vt_ns                      TYPE string VALUE &apos;vt&apos;,                 &quot;#EC NOTEST
+        lc_xml_node_props_ns          TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/extended-properties&apos;, &quot;#EC NOTEXT
+        lc_xml_node_props_vt_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes&apos;,      &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_size              TYPE string VALUE &apos;size&apos;,
-        lc_xml_attr_basetype          TYPE string VALUE &apos;baseType&apos;.
+        lc_xml_attr_size              TYPE string VALUE &apos;size&apos;,               &quot;#EC NOTEXT
+        lc_xml_attr_basetype          TYPE string VALUE &apos;baseType&apos;.           &quot;#EC NOTEXT
 
   DATA: lo_ixml                 TYPE REF TO if_ixml,
         lo_document             TYPE REF TO if_ixml_document,
@@ -738,26 +739,25 @@
 
 
 ** Constant node name
-  DATA: lc_xml_node_coreproperties  TYPE string VALUE &apos;coreProperties&apos;,
-        lc_xml_node_creator         TYPE string VALUE &apos;creator&apos;,
-        lc_xml_node_description     TYPE string VALUE &apos;description&apos;,
-        lc_xml_node_lastmodifiedby  TYPE string VALUE &apos;lastModifiedBy&apos;,
-        lc_xml_node_created         TYPE string VALUE &apos;created&apos;,
-        lc_xml_node_modified        TYPE string VALUE &apos;modified&apos;,
+  DATA: lc_xml_node_coreproperties  TYPE string VALUE &apos;coreProperties&apos;,   &quot;#EC NOTEXT
+        lc_xml_node_creator         TYPE string VALUE &apos;creator&apos;,          &quot;#EC NOTEXT
+        lc_xml_node_lastmodifiedby  TYPE string VALUE &apos;lastModifiedBy&apos;,   &quot;#EC NOTEXT
+        lc_xml_node_created         TYPE string VALUE &apos;created&apos;,          &quot;#EC NOTEXT
+        lc_xml_node_modified        TYPE string VALUE &apos;modified&apos;,         &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_type            TYPE string VALUE &apos;type&apos;,
-        lc_xml_attr_target          TYPE string VALUE &apos;dcterms:W3CDTF&apos;,
+        lc_xml_attr_type            TYPE string VALUE &apos;type&apos;,             &quot;#EC NOTEXT
+        lc_xml_attr_target          TYPE string VALUE &apos;dcterms:W3CDTF&apos;,   &quot;#EC NOTEXT
         &quot; Node namespace
-        lc_cp_ns                    TYPE string VALUE &apos;cp&apos;,
-        lc_dc_ns                    TYPE string VALUE &apos;dc&apos;,
-        lc_dcterms_ns               TYPE string VALUE &apos;dcterms&apos;,
-*        lc_dcmitype_ns              TYPE string VALUE &apos;dcmitype&apos;,
-        lc_xsi_ns                   TYPE string VALUE &apos;xsi&apos;,
-        lc_xml_node_cp_ns           TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/metadata/core-properties&apos;,
-        lc_xml_node_dc_ns           TYPE string VALUE &apos;http://purl.org/dc/elements/1.1/&apos;,
-        lc_xml_node_dcterms_ns      TYPE string VALUE &apos;http://purl.org/dc/terms/&apos;,
-        lc_xml_node_dcmitype_ns     TYPE string VALUE &apos;http://purl.org/dc/dcmitype/&apos;,
-        lc_xml_node_xsi_ns          TYPE string VALUE &apos;http://www.w3.org/2001/XMLSchema-instance&apos;.
+        lc_cp_ns                    TYPE string VALUE &apos;cp&apos;,               &quot;#EC NOTEXT
+        lc_dc_ns                    TYPE string VALUE &apos;dc&apos;,               &quot;#EC NOTEXT
+        lc_dcterms_ns               TYPE string VALUE &apos;dcterms&apos;,          &quot;#EC NOTEXT
+*        lc_dcmitype_ns              TYPE string VALUE &apos;dcmitype&apos;,         &quot;#EC NOTEXT
+        lc_xsi_ns                   TYPE string VALUE &apos;xsi&apos;,              &quot;#EC NOTEXT
+        lc_xml_node_cp_ns           TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/metadata/core-properties&apos;,  &quot;#EC NOTEXT
+        lc_xml_node_dc_ns           TYPE string VALUE &apos;http://purl.org/dc/elements/1.1/&apos;,                                         &quot;#EC NOTEXT
+        lc_xml_node_dcterms_ns      TYPE string VALUE &apos;http://purl.org/dc/terms/&apos;,                                                &quot;#EC NOTEXT
+        lc_xml_node_dcmitype_ns     TYPE string VALUE &apos;http://purl.org/dc/dcmitype/&apos;,                                             &quot;#EC NOTEXT
+        lc_xml_node_xsi_ns          TYPE string VALUE &apos;http://www.w3.org/2001/XMLSchema-instance&apos;.                                &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -807,14 +807,6 @@
                                                       prefix = lc_dc_ns
                                                       parent = lo_document ).
   lv_value = excel-&gt;zif_excel_book_properties~creator.
-  lo_element-&gt;set_value( value = lv_value ).
-  lo_element_root-&gt;append_child( new_child = lo_element ).
-
-  &quot; Description node
-  lo_element = lo_document-&gt;create_simple_element_ns( name   = lc_xml_node_description
-                                                      prefix = lc_dc_ns
-                                                      parent = lo_document ).
-  lv_value = excel-&gt;zif_excel_book_properties~description.
   lo_element-&gt;set_value( value = lv_value ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
 
@@ -872,26 +864,26 @@
 
 
 ** Constant node name
-  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,
-        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
-        &quot; Node attributes
-        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,
-        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,
-        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,
+  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,     &quot;#EC NOTEXT
+        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,      &quot;#EC NOTEXT
+        &quot; Node attributes                                                &quot;#EC NOTEXT
+        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,                &quot;#EC NOTEXT
+        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,              &quot;#EC NOTEXT
+        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,            &quot;#EC NOTEXT
         &quot; Node namespace
-        lc_xml_node_rels_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
+        lc_xml_node_rels_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;, &quot;#EC NOTEXT
         &quot; Node id
-        lc_xml_node_rId1_id       TYPE string VALUE &apos;rId1&apos;,
-        lc_xml_node_rId2_id       TYPE string VALUE &apos;rId2&apos;,
-        lc_xml_node_rId3_id       TYPE string VALUE &apos;rId3&apos;,
+        lc_xml_node_rId1_id       TYPE string VALUE &apos;rId1&apos;,              &quot;#EC NOTEXT
+        lc_xml_node_rId2_id       TYPE string VALUE &apos;rId2&apos;,              &quot;#EC NOTEXT
+        lc_xml_node_rId3_id       TYPE string VALUE &apos;rId3&apos;,              &quot;#EC NOTEXT
         &quot; Node type
-        lc_xml_node_rId1_tp       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&apos;,
-        lc_xml_node_rId2_tp       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&apos;,
-        lc_xml_node_rId3_tp       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties&apos;,
+        lc_xml_node_rId1_tp       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument&apos;,      &quot;#EC NOTEXT
+        lc_xml_node_rId2_tp       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&apos;,   &quot;#EC NOTEXT
+        lc_xml_node_rId3_tp       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties&apos;, &quot;#EC NOTEXT
         &quot; Node target
-        lc_xml_node_rId1_tg       TYPE string VALUE &apos;xl/workbook.xml&apos;,
-        lc_xml_node_rId2_tg       TYPE string VALUE &apos;docProps/core.xml&apos;,
-        lc_xml_node_rId3_tg       TYPE string VALUE &apos;docProps/app.xml&apos;.
+        lc_xml_node_rId1_tg       TYPE string VALUE &apos;xl/workbook.xml&apos;,   &quot;#EC NOTEXT
+        lc_xml_node_rId2_tg       TYPE string VALUE &apos;docProps/core.xml&apos;, &quot;#EC NOTEXT
+        lc_xml_node_rId3_tg       TYPE string VALUE &apos;docProps/app.xml&apos;.  &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -1144,36 +1136,36 @@
   lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_date1904
                                                        parent = lo_element_root ).
   lo_element-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_1904val ).
+                                    value = lo_chart-&gt;ns_1904val ). &quot;#EC NOTEXT
 
   lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_lang
                                                        parent = lo_element_root ).
   lo_element-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_langval ).
+                                    value = lo_chart-&gt;ns_langval ). &quot;#EC NOTEXT
 
   lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_roundedcorners
                                                        parent = lo_element_root ).
   lo_element-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_roundedcornersval ).
+                                    value = lo_chart-&gt;ns_roundedcornersval ). &quot;#EC NOTEXT
 
   lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_altcont
                                                        parent = lo_element_root ).
   lo_element-&gt;set_attribute_ns( name  = &apos;xmlns:mc&apos;
-                                    value = lc_xml_node_altcont_ns_mc ).
+                                    value = lc_xml_node_altcont_ns_mc ). &quot;#EC NOTEXT
 
   &quot;Choice
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_choice
                                                        parent = lo_element ).
   lo_element2-&gt;set_attribute_ns( name  = &apos;Requires&apos;
-                                    value = lc_xml_node_choice_ns_requires ).
+                                    value = lc_xml_node_choice_ns_requires ). &quot;#EC NOTEXT
   lo_element2-&gt;set_attribute_ns( name  = &apos;xmlns:c14&apos;
-                                    value = lc_xml_node_choice_ns_c14 ).
+                                    value = lc_xml_node_choice_ns_c14 ). &quot;#EC NOTEXT
 
   &quot;C14:style
   lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_style
                                                        parent = lo_element2 ).
   lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_c14styleval ).
+                                    value = lo_chart-&gt;ns_c14styleval ). &quot;#EC NOTEXT
 
   &quot;Fallback
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_fallback
@@ -1183,7 +1175,7 @@
   lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_style2
                                                        parent = lo_element2 ).
   lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_styleval ).
+                                    value = lo_chart-&gt;ns_styleval ). &quot;#EC NOTEXT
 
   &quot;---------------------------CHART
   lo_element = lo_document-&gt;create_simple_element( name = lc_xml_node_chart
@@ -1191,7 +1183,7 @@
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_autotitledeleted
                                                        parent = lo_element ).
   lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_autotitledeletedval ).
+                                    value = lo_chart-&gt;ns_autotitledeletedval ). &quot;#EC NOTEXT
 
   &quot;plotArea
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_plotarea
@@ -1206,15 +1198,15 @@
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_bardir
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_bardirval ).
+                                value = lo_chartb-&gt;ns_bardirval ). &quot;#EC NOTEXT
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_grouping
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_groupingval ).
+                                value = lo_chartb-&gt;ns_groupingval ). &quot;#EC NOTEXT
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_varycolors
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_varycolorsval ).
+                                value = lo_chartb-&gt;ns_varycolorsval ). &quot;#EC NOTEXT
 
       &quot;series
       LOOP AT lo_chartb-&gt;series INTO ls_serie.
@@ -1229,13 +1221,13 @@
         ENDIF.
         CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lv_str ).
+                                value = lv_str ). &quot;#EC NOTEXT
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
                                                    parent = lo_element4 ).
         lv_str = ls_serie-order.
         CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lv_str ).
+                                value = lv_str ). &quot;#EC NOTEXT
         IF ls_serie-sername IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
                                                     parent = lo_element4 ).
@@ -1246,7 +1238,7 @@
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_invertifnegative
                                                    parent = lo_element4 ).
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = ls_serie-invertifnegative ).
+                                value = ls_serie-invertifnegative ). &quot;#EC NOTEXT
         IF ls_serie-lbl IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_cat
                                                      parent = lo_element4 ).
@@ -1273,32 +1265,32 @@
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showlegendkey
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_showlegendkeyval ).
+                                value = lo_chartb-&gt;ns_showlegendkeyval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showval
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_showvalval ).
+                                value = lo_chartb-&gt;ns_showvalval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showcatname
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_showcatnameval ).
+                                value = lo_chartb-&gt;ns_showcatnameval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showsername
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_showsernameval ).
+                                value = lo_chartb-&gt;ns_showsernameval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showpercent
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_showpercentval ).
+                                value = lo_chartb-&gt;ns_showpercentval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showbubblesize
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_showbubblesizeval ).
+                                value = lo_chartb-&gt;ns_showbubblesizeval ). &quot;#EC NOTEXT
 
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_gapwidth
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartb-&gt;ns_gapwidthval ).
+                                value = lo_chartb-&gt;ns_gapwidthval ). &quot;#EC NOTEXT
 
       &quot;axes
       lo_el_rootchart = lo_element3.
@@ -1306,7 +1298,7 @@
         lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_el_rootchart ).
         lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = ls_ax-axid ).
+                                value = ls_ax-axid ). &quot;#EC NOTEXT
         CASE ls_ax-type.
           WHEN zcl_excel_graph_bars=&gt;c_catax.
             lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_catax
@@ -1314,116 +1306,116 @@
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axid ).
+                                           value = ls_ax-axid ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_scaling
                                                    parent = lo_element3 ).
             lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_orientation
                                                    parent = lo_element4 ).
             lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-orientation ).
+                                           value = ls_ax-orientation ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_delete
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-delete ).
+                                           value = ls_ax-delete ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axpos ).
+                                           value = ls_ax-axpos ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
-                                           value = ls_ax-formatcode ).
+                                           value = ls_ax-formatcode ). &quot;#EC NOTEXT
             lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
-                                           value = ls_ax-sourcelinked ).
+                                           value = ls_ax-sourcelinked ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-majortickmark ).
+                                           value = ls_ax-majortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-minortickmark ).
+                                           value = ls_ax-minortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-ticklblpos ).
+                                           value = ls_ax-ticklblpos ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossax ).
+                                           value = ls_ax-crossax ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crosses ).
+                                           value = ls_ax-crosses ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_auto
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-auto ).
+                                           value = ls_ax-auto ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lblalgn
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-lblalgn ).
+                                           value = ls_ax-lblalgn ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lbloffset
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-lbloffset ).
+                                           value = ls_ax-lbloffset ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_nomultilvllbl
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-nomultilvllbl ).
+                                           value = ls_ax-nomultilvllbl ). &quot;#EC NOTEXT
           WHEN zcl_excel_graph_bars=&gt;c_valax.
             lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_valax
                                                    parent = lo_element2 ).
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axid ).
+                                           value = ls_ax-axid ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_scaling
                                                    parent = lo_element3 ).
             lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_orientation
                                                    parent = lo_element4 ).
             lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-orientation ).
+                                           value = ls_ax-orientation ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_delete
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-delete ).
+                                           value = ls_ax-delete ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axpos ).
+                                           value = ls_ax-axpos ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majorgridlines
                                                    parent = lo_element3 ).
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
-                                           value = ls_ax-formatcode ).
+                                           value = ls_ax-formatcode ). &quot;#EC NOTEXT
             lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
-                                           value = ls_ax-sourcelinked ).
+                                           value = ls_ax-sourcelinked ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-majortickmark ).
+                                           value = ls_ax-majortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-minortickmark ).
+                                           value = ls_ax-minortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-ticklblpos ).
+                                           value = ls_ax-ticklblpos ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossax ).
+                                           value = ls_ax-crossax ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crosses ).
+                                           value = ls_ax-crosses ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossbetween
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossbetween ).
+                                           value = ls_ax-crossbetween ). &quot;#EC NOTEXT
           WHEN OTHERS.
         ENDCASE.
       ENDLOOP.
@@ -1436,7 +1428,7 @@
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_varycolors
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_varycolorsval ).
+                                value = lo_chartp-&gt;ns_varycolorsval ). &quot;#EC NOTEXT
 
       &quot;series
       LOOP AT lo_chartp-&gt;series INTO ls_serie.
@@ -1451,13 +1443,13 @@
         ENDIF.
         CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lv_str ).
+                                value = lv_str ). &quot;#EC NOTEXT
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
                                                    parent = lo_element4 ).
         lv_str = ls_serie-order.
         CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lv_str ).
+                                value = lv_str ). &quot;#EC NOTEXT
         IF ls_serie-sername IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
                                                     parent = lo_element4 ).
@@ -1491,35 +1483,35 @@
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showlegendkey
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_showlegendkeyval ).
+                                value = lo_chartp-&gt;ns_showlegendkeyval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showval
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_showvalval ).
+                                value = lo_chartp-&gt;ns_showvalval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showcatname
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_showcatnameval ).
+                                value = lo_chartp-&gt;ns_showcatnameval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showsername
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_showsernameval ).
+                                value = lo_chartp-&gt;ns_showsernameval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showpercent
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_showpercentval ).
+                                value = lo_chartp-&gt;ns_showpercentval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showbubblesize
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_showbubblesizeval ).
+                                value = lo_chartp-&gt;ns_showbubblesizeval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showleaderlines
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_showleaderlinesval ).
+                                value = lo_chartp-&gt;ns_showleaderlinesval ). &quot;#EC NOTEXT
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_firstsliceang
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartp-&gt;ns_firstsliceangval ).
+                                value = lo_chartp-&gt;ns_firstsliceangval ). &quot;#EC NOTEXT
     WHEN zcl_excel_drawing=&gt;c_graph_line.
       &quot;----line
       lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_linechart
@@ -1527,11 +1519,11 @@
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_grouping
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_groupingval ).
+                                value = lo_chartl-&gt;ns_groupingval ). &quot;#EC NOTEXT
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_varycolors
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_varycolorsval ).
+                                value = lo_chartl-&gt;ns_varycolorsval ). &quot;#EC NOTEXT
 
       &quot;series
       LOOP AT lo_chartl-&gt;series INTO ls_serie.
@@ -1546,13 +1538,13 @@
         ENDIF.
         CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lv_str ).
+                                value = lv_str ). &quot;#EC NOTEXT
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_order
                                                    parent = lo_element4 ).
         lv_str = ls_serie-order.
         CONDENSE lv_str.
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lv_str ).
+                                value = lv_str ). &quot;#EC NOTEXT
         IF ls_serie-sername IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_tx
                                                     parent = lo_element4 ).
@@ -1565,7 +1557,7 @@
         lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_symbol
                                                    parent = lo_element5 ).
         lo_element6-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = ls_serie-symbol ).
+                                value = ls_serie-symbol ). &quot;#EC NOTEXT
         IF ls_serie-lbl IS NOT INITIAL.
           lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_cat
                                                      parent = lo_element4 ).
@@ -1587,7 +1579,7 @@
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_smooth
                                                      parent = lo_element4 ).
         lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = ls_serie-smooth ).
+                                value = ls_serie-smooth ). &quot;#EC NOTEXT
       ENDLOOP.
       &quot;endseries
 
@@ -1596,36 +1588,36 @@
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showlegendkey
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_showlegendkeyval ).
+                                value = lo_chartl-&gt;ns_showlegendkeyval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showval
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_showvalval ).
+                                value = lo_chartl-&gt;ns_showvalval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showcatname
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_showcatnameval ).
+                                value = lo_chartl-&gt;ns_showcatnameval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showsername
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_showsernameval ).
+                                value = lo_chartl-&gt;ns_showsernameval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showpercent
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_showpercentval ).
+                                value = lo_chartl-&gt;ns_showpercentval ). &quot;#EC NOTEXT
       lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_showbubblesize
                                                    parent = lo_element4 ).
       lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;ns_showbubblesizeval ).
+                                value = lo_chartl-&gt;ns_showbubblesizeval ). &quot;#EC NOTEXT
 
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_marker
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;NS_MARKERVAL ).
+                                value = lo_chartl-&gt;NS_MARKERVAL ). &quot;#EC NOTEXT
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_smooth
                                                    parent = lo_element3 ).
       lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = lo_chartl-&gt;NS_SMOOTHVAL ).
+                                value = lo_chartl-&gt;NS_SMOOTHVAL ). &quot;#EC NOTEXT
 
       &quot;axes
       lo_el_rootchart = lo_element3.
@@ -1633,7 +1625,7 @@
         lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_el_rootchart ).
         lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                value = ls_ax-axid ).
+                                value = ls_ax-axid ). &quot;#EC NOTEXT
         CASE ls_ax-type.
           WHEN zcl_excel_graph_line=&gt;c_catax.
             lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_catax
@@ -1641,116 +1633,116 @@
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axid ).
+                                           value = ls_ax-axid ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_scaling
                                                    parent = lo_element3 ).
             lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_orientation
                                                    parent = lo_element4 ).
             lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-orientation ).
+                                           value = ls_ax-orientation ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_delete
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-delete ).
+                                           value = ls_ax-delete ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axpos ).
+                                           value = ls_ax-axpos ). &quot;#EC NOTEXT
 *            lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
 *                                                   parent = lo_element3 ).
 *            lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
-*                                           value = ls_ax-formatcode ).
+*                                           value = ls_ax-formatcode ). &quot;#EC NOTEXT
 *            lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
-*                                           value = ls_ax-sourcelinked ).
+*                                           value = ls_ax-sourcelinked ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-majortickmark ).
+                                           value = ls_ax-majortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-minortickmark ).
+                                           value = ls_ax-minortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-ticklblpos ).
+                                           value = ls_ax-ticklblpos ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossax ).
+                                           value = ls_ax-crossax ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crosses ).
+                                           value = ls_ax-crosses ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_auto
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-auto ).
+                                           value = ls_ax-auto ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lblalgn
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-lblalgn ).
+                                           value = ls_ax-lblalgn ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_lbloffset
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-lbloffset ).
+                                           value = ls_ax-lbloffset ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_nomultilvllbl
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-nomultilvllbl ).
+                                           value = ls_ax-nomultilvllbl ). &quot;#EC NOTEXT
           WHEN zcl_excel_graph_line=&gt;c_valax.
             lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_valax
                                                    parent = lo_element2 ).
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axid
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axid ).
+                                           value = ls_ax-axid ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_scaling
                                                    parent = lo_element3 ).
             lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_orientation
                                                    parent = lo_element4 ).
             lo_element5-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-orientation ).
+                                           value = ls_ax-orientation ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_delete
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-delete ).
+                                           value = ls_ax-delete ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_axpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-axpos ).
+                                           value = ls_ax-axpos ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majorgridlines
                                                    parent = lo_element3 ).
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_numfmt
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;formatCode&apos;
-                                           value = ls_ax-formatcode ).
+                                           value = ls_ax-formatcode ). &quot;#EC NOTEXT
             lo_element4-&gt;set_attribute_ns( name  = &apos;sourceLinked&apos;
-                                           value = ls_ax-sourcelinked ).
+                                           value = ls_ax-sourcelinked ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_majortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-majortickmark ).
+                                           value = ls_ax-majortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_minortickmark
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-minortickmark ).
+                                           value = ls_ax-minortickmark ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_ticklblpos
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-ticklblpos ).
+                                           value = ls_ax-ticklblpos ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossax
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossax ).
+                                           value = ls_ax-crossax ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crosses
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crosses ).
+                                           value = ls_ax-crosses ). &quot;#EC NOTEXT
             lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_crossbetween
                                                    parent = lo_element3 ).
             lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                           value = ls_ax-crossbetween ).
+                                           value = ls_ax-crossbetween ). &quot;#EC NOTEXT
           WHEN OTHERS.
         ENDCASE.
       ENDLOOP.
@@ -1769,37 +1761,37 @@
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
                                                      parent = lo_element2 ).
         lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                  value = lo_chartb-&gt;ns_legendposval ).
+                                  value = lo_chartb-&gt;ns_legendposval ). &quot;#EC NOTEXT
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
                                                      parent = lo_element2 ).
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
                                                      parent = lo_element2 ).
         lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                  value = lo_chartb-&gt;ns_overlayval ).
+                                  value = lo_chartb-&gt;ns_overlayval ). &quot;#EC NOTEXT
       WHEN zcl_excel_drawing=&gt;c_graph_line.
         &quot;----line
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
                                                      parent = lo_element2 ).
         lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                  value = lo_chartl-&gt;ns_legendposval ).
+                                  value = lo_chartl-&gt;ns_legendposval ). &quot;#EC NOTEXT
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
                                                      parent = lo_element2 ).
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
                                                      parent = lo_element2 ).
         lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                  value = lo_chartl-&gt;ns_overlayval ).
+                                  value = lo_chartl-&gt;ns_overlayval ). &quot;#EC NOTEXT
       WHEN zcl_excel_drawing=&gt;c_graph_pie.
         &quot;----pie
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_legendpos
                                                      parent = lo_element2 ).
         lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                  value = lo_chartp-&gt;ns_legendposval ).
+                                  value = lo_chartp-&gt;ns_legendposval ). &quot;#EC NOTEXT
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_layout
                                                      parent = lo_element2 ).
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlay
                                                      parent = lo_element2 ).
         lo_element3-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                  value = lo_chartp-&gt;ns_overlayval ).
+                                  value = lo_chartp-&gt;ns_overlayval ). &quot;#EC NOTEXT
         lo_element3 = lo_document-&gt;create_simple_element( name = lc_xml_node_txpr
                                                      parent = lo_element2 ).
         lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_bodypr
@@ -1811,13 +1803,13 @@
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_ppr
                                                      parent = lo_element4 ).
         lo_element5-&gt;set_attribute_ns( name  = &apos;rtl&apos;
-                                  value = lo_chartp-&gt;ns_pprrtl ).
+                                  value = lo_chartp-&gt;ns_pprrtl ). &quot;#EC NOTEXT
         lo_element6 = lo_document-&gt;create_simple_element( name = lc_xml_node_defrpr
                                                      parent = lo_element5 ).
         lo_element5 = lo_document-&gt;create_simple_element( name = lc_xml_node_endpararpr
                                                      parent = lo_element4 ).
         lo_element5-&gt;set_attribute_ns( name  = &apos;lang&apos;
-                                  value = lo_chartp-&gt;ns_endpararprlang ).
+                                  value = lo_chartp-&gt;ns_endpararprlang ). &quot;#EC NOTEXT
       WHEN OTHERS.
     ENDCASE.
   ENDIF.
@@ -1825,15 +1817,15 @@
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_plotvisonly
                                                        parent = lo_element ).
   lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_plotvisonlyval ).
+                                    value = lo_chart-&gt;ns_plotvisonlyval ). &quot;#EC NOTEXT
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_dispblanksas
                                                        parent = lo_element ).
   lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_dispblanksasval ).
+                                    value = lo_chart-&gt;ns_dispblanksasval ). &quot;#EC NOTEXT
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_showdlblsovermax
                                                        parent = lo_element ).
   lo_element2-&gt;set_attribute_ns( name  = &apos;val&apos;
-                                    value = lo_chart-&gt;ns_showdlblsovermaxval ).
+                                    value = lo_chart-&gt;ns_showdlblsovermaxval ). &quot;#EC NOTEXT
   &quot;---------------------------END OF CHART
 
   &quot;printSettings
@@ -1846,17 +1838,17 @@
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_pagemargins
                                                        parent = lo_element ).
   lo_element2-&gt;set_attribute_ns( name  = &apos;b&apos;
-                                    value = lo_chart-&gt;pagemargins-b ).
+                                    value = lo_chart-&gt;pagemargins-b ). &quot;#EC NOTEXT
   lo_element2-&gt;set_attribute_ns( name  = &apos;l&apos;
-                                    value = lo_chart-&gt;pagemargins-l ).
+                                    value = lo_chart-&gt;pagemargins-l ). &quot;#EC NOTEXT
   lo_element2-&gt;set_attribute_ns( name  = &apos;r&apos;
-                                    value = lo_chart-&gt;pagemargins-r ).
+                                    value = lo_chart-&gt;pagemargins-r ). &quot;#EC NOTEXT
   lo_element2-&gt;set_attribute_ns( name  = &apos;t&apos;
-                                    value = lo_chart-&gt;pagemargins-t ).
+                                    value = lo_chart-&gt;pagemargins-t ). &quot;#EC NOTEXT
   lo_element2-&gt;set_attribute_ns( name  = &apos;header&apos;
-                                    value = lo_chart-&gt;pagemargins-header ).
+                                    value = lo_chart-&gt;pagemargins-header ). &quot;#EC NOTEXT
   lo_element2-&gt;set_attribute_ns( name  = &apos;footer&apos;
-                                    value = lo_chart-&gt;pagemargins-footer ).
+                                    value = lo_chart-&gt;pagemargins-footer ). &quot;#EC NOTEXT
   &quot;pageSetup
   lo_element2 = lo_document-&gt;create_simple_element( name = lc_xml_node_pagesetup
                                                        parent = lo_element ).
@@ -1956,16 +1948,16 @@
   <source>method CREATE_XL_DRAWINGS_RELS.
 
 ** Constant node name
-  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,
-        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
+  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,   &quot;#EC NOTEXT
+        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,    &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,
-        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,
-        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,
+        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,              &quot;#EC NOTEXT
+        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,            &quot;#EC NOTEXT
+        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,          &quot;#EC NOTEXT
         &quot; Node namespace
-        lc_xml_node_rels_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
-        lc_xml_node_rid_image_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/image&apos;,
-        lc_xml_node_rid_chart_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart&apos;.
+        lc_xml_node_rels_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,               &quot;#EC NOTEXT
+        lc_xml_node_rid_image_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/image&apos;,  &quot;#EC NOTEXT
+        lc_xml_node_rid_chart_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart&apos;.  &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -1989,7 +1981,7 @@
 **********************************************************************
 * STEP 2: Set document attributes
   lo_encoding = lo_ixml-&gt;create_encoding( byte_order = if_ixml_encoding=&gt;co_platform_endian
-                                          character_set = &apos;utf-8&apos; ).
+                                          character_set = &apos;utf-8&apos; ). &quot;#EC NOTEXT
   lo_document = lo_ixml-&gt;create_document( ).
   lo_document-&gt;set_encoding( lo_encoding ).
   lo_document-&gt;set_standalone( abap_true ).
@@ -1999,7 +1991,7 @@
   lo_element_root  = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationships
                                                          parent = lo_document ).
   lo_element_root-&gt;set_attribute_ns( name  = &apos;xmlns&apos;
-                                     value = lc_xml_node_rels_ns ).
+                                     value = lc_xml_node_rels_ns ). &quot;#EC NOTEXT
 
 **********************************************************************
 * STEP 4: Create subnodes
@@ -2024,12 +2016,12 @@
     lv_value = lo_drawing-&gt;get_media_name( ).
     CASE lo_drawing-&gt;get_type( ).
       WHEN zcl_excel_drawing=&gt;type_image.
-        CONCATENATE &apos;../media/&apos; lv_value INTO lv_value.
+        CONCATENATE &apos;../media/&apos; lv_value INTO lv_value. &quot;#EC NOTEXT
         lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
                                       value = lc_xml_node_rid_image_tp ).
 
       WHEN zcl_excel_drawing=&gt;type_chart.
-        CONCATENATE &apos;../charts/&apos; lv_value INTO lv_value.
+        CONCATENATE &apos;../charts/&apos; lv_value INTO lv_value. &quot;#EC NOTEXT
         lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
                                       value = lc_xml_node_rid_chart_tp ).
 
@@ -2369,26 +2361,26 @@
 
 
 ** Constant node name
-  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,
-        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
+  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;, &quot;#EC NOTEXT
+        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,  &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,
-        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,
-        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,
+        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,            &quot;#EC NOTEXT
+        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,          &quot;#EC NOTEXT
+        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,        &quot;#EC NOTEXT
         &quot; Node namespace
-        lc_xml_node_rels_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
+        lc_xml_node_rels_ns       TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;, &quot;#EC NOTEXT
         &quot; Node id
-        lc_xml_node_ridx_id       TYPE string VALUE &apos;rId#&apos;,
+        lc_xml_node_ridx_id       TYPE string VALUE &apos;rId#&apos;,          &quot;#EC NOTEXT
         &quot; Node type
-        lc_xml_node_rid_sheet_tp      TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,
-        lc_xml_node_rid_theme_tp      TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme&apos;,
-        lc_xml_node_rid_styles_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles&apos;,
-        lc_xml_node_rid_shared_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;,
+        lc_xml_node_rid_sheet_tp      TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet&apos;,     &quot;#EC NOTEXT
+        lc_xml_node_rid_theme_tp      TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme&apos;,         &quot;#EC NOTEXT
+        lc_xml_node_rid_styles_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles&apos;,        &quot;#EC NOTEXT
+        lc_xml_node_rid_shared_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings&apos;, &quot;#EC NOTEXT
         &quot; Node target
-        lc_xml_node_ridx_tg           TYPE string VALUE &apos;worksheets/sheet#.xml&apos;,
-        lc_xml_node_rid_shared_tg     TYPE string VALUE &apos;sharedStrings.xml&apos;,
-        lc_xml_node_rid_styles_tg     TYPE string VALUE &apos;styles.xml&apos;,
-        lc_xml_node_rid_theme_tg      TYPE string VALUE &apos;theme/theme1.xml&apos;.
+        lc_xml_node_ridx_tg           TYPE string VALUE &apos;worksheets/sheet#.xml&apos;, &quot;#EC NOTEXT
+        lc_xml_node_rid_shared_tg     TYPE string VALUE &apos;sharedStrings.xml&apos;,     &quot;#EC NOTEXT
+        lc_xml_node_rid_styles_tg     TYPE string VALUE &apos;styles.xml&apos;,            &quot;#EC NOTEXT
+        lc_xml_node_rid_theme_tg      TYPE string VALUE &apos;theme/theme1.xml&apos;.      &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -2411,7 +2403,7 @@
 **********************************************************************
 * STEP 2: Set document attributes
   lo_encoding = lo_ixml-&gt;create_encoding( byte_order = if_ixml_encoding=&gt;co_platform_endian
-                                          character_set = &apos;utf-8&apos; ).
+                                          character_set = &apos;utf-8&apos; ). &quot;#EC NOTEXT
   lo_document = lo_ixml-&gt;create_document( ).
   lo_document-&gt;set_encoding( lo_encoding ).
   lo_document-&gt;set_standalone( abap_true ).
@@ -2421,7 +2413,7 @@
   lo_element_root  = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationships
                                                          parent = lo_document ).
   lo_element_root-&gt;set_attribute_ns( name  = &apos;xmlns&apos;
-                                     value = lc_xml_node_rels_ns ).
+                                     value = lc_xml_node_rels_ns ). &quot;#EC NOTEXT
 
 **********************************************************************
 * STEP 4: Create subnodes
@@ -2559,7 +2551,8 @@
     APPEND LINES OF lo_worksheet-&gt;sheet_content TO lt_cell_data.
   ENDWHILE.
 
-  DELETE lt_cell_data WHERE cell_formula IS NOT INITIAL. &quot; delete formula content
+  DELETE lt_cell_data WHERE cell_formula IS NOT INITIAL &quot; delete formula content
+                         OR data_type    NE &apos;s&apos;.        &quot; MvC: Only shared strings
 
   DESCRIBE TABLE lt_cell_data LINES lv_count.
   MOVE lv_count TO lv_count_str.
@@ -2580,7 +2573,6 @@
     lv_sytabix = sy-tabix - 1.
     MOVE lv_sytabix                    TO ls_shared_string-string_no.
     MOVE &lt;fs_sheet_content&gt;-cell_value TO ls_shared_string-string_value.
-    MOVE &lt;fs_sheet_content&gt;-data_type TO ls_shared_string-string_type.
     APPEND ls_shared_string TO shared_strings.
   ENDLOOP.
 
@@ -2615,9 +2607,6 @@
                                                      parent = lo_document ).
     lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_t
                                                          parent = lo_document ).
-    if &lt;fs_sheet_string&gt;-string_type EQ &apos;s_leading_blanks&apos;.
-        lo_sub_element-&gt;set_attribute( name = &apos;space&apos; namespace = &apos;xml&apos; value = &apos;preserve&apos; ).
-    endif.
     lo_sub_element-&gt;set_value( value = &lt;fs_sheet_string&gt;-string_value ).
     lo_element-&gt;append_child( new_child = lo_sub_element ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
@@ -2637,16 +2626,7 @@
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD create_xl_sheet.
-*--------------------------------------------------------------------*
-* issue #330   - Adding ColorScale conditional formatting
-*              - Ivan Femia,                                2014-08-25
-*--------------------------------------------------------------------*
-
-  TYPES: BEGIN OF colors,
-          colorrgb TYPE zexcel_color,
-         END OF colors.
-
+  <source>method CREATE_XL_SHEET.
 *--------------------------------------------------------------------*
 * issue #237   - Error writing column-style
 *              - Stefan SchmÃ¶cker,                          2012-11-01
@@ -2688,6 +2668,8 @@
         lc_xml_node_row                 TYPE string VALUE &apos;row&apos;,
         lc_xml_node_c                   TYPE string VALUE &apos;c&apos;,
         lc_xml_node_v                   TYPE string VALUE &apos;v&apos;,
+        lc_xml_node_is                  TYPE string VALUE &apos;is&apos;,
+        lc_xml_node_t                   TYPE string VALUE &apos;t&apos;,
         lc_xml_node_f                   TYPE string VALUE &apos;f&apos;,
         lc_xml_node_sheetprotection     TYPE string VALUE &apos;sheetProtection&apos;,
         lc_xml_node_pagemargins         TYPE string VALUE &apos;pageMargins&apos;,
@@ -2697,7 +2679,6 @@
         lc_xml_node_cfrule              TYPE string VALUE &apos;cfRule&apos;,
         lc_xml_node_color               TYPE string VALUE &apos;color&apos;,      &quot; Databar by Albert Lladanosa
         lc_xml_node_databar             TYPE string VALUE &apos;dataBar&apos;,    &quot; Databar by Albert Lladanosa
-        lc_xml_node_colorscale          TYPE string VALUE &apos;colorScale&apos;,
         lc_xml_node_iconset             TYPE string VALUE &apos;iconSet&apos;,
         lc_xml_node_cfvo                TYPE string VALUE &apos;cfvo&apos;,
         lc_xml_node_formula             TYPE string VALUE &apos;formula&apos;,
@@ -2829,6 +2810,8 @@
         lo_element_2          TYPE REF TO if_ixml_element,
         lo_element_3          TYPE REF TO if_ixml_element,
         lo_element_4          TYPE REF TO if_ixml_element,
+        lo_element_5          TYPE REF TO if_ixml_element,
+        lo_element_6          TYPE REF TO if_ixml_element,
         lo_encoding           TYPE REF TO if_ixml_encoding,
         lo_streamfactory      TYPE REF TO if_ixml_stream_factory,
         lo_ostream            TYPE REF TO if_ixml_ostream,
@@ -2850,14 +2833,11 @@
         lv_style_guid               TYPE zexcel_cell_style,
         lv_flag                     TYPE c,
         ls_databar                  TYPE zexcel_conditional_databar,      &quot; Databar by Albert Lladanosa
-        ls_colorscale               TYPE zexcel_conditional_colorscale,
         ls_iconset                  TYPE zexcel_conditional_iconset,
         ls_cellis                   TYPE zexcel_conditional_cellis,
         ls_expression               TYPE zexcel_conditional_expression,
         lt_cfvo                     TYPE TABLE OF cfvo,
         ls_cfvo                     TYPE cfvo,
-        lt_colors                   TYPE TABLE OF colors,
-        ls_colors                   TYPE colors,
         lv_cell_row_s               TYPE string,
         ls_last_row                 TYPE zexcel_s_cell_data,
         ls_style_mapping            TYPE zexcel_s_styles_mapping,
@@ -3247,9 +3227,7 @@
 *        lv_value = &lt;column_dimension&gt;-column_dimension-&gt;get_xf_index( ).                                   &quot;del issue #157 -  set column style
         lv_style_guid = &lt;column_dimension&gt;-column_dimension-&gt;get_column_style_guid( ).                      &quot;ins issue #157 -  set column style
 *        lv_value = me-&gt;excel-&gt;get_style_index_in_styles( lv_style_guid ).                                  &quot;del issue #237
-        CLEAR ls_style_mapping.
-        READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
-        lv_style_index = ls_style_mapping-style.
+        lv_style_index = me-&gt;excel-&gt;get_style_index_in_styles( lv_style_guid ).                             &quot;ins issue #237
         IF lv_style_index &gt; 0.                                                                              &quot;ins issue #237
           lv_value = lv_style_index - 1.                                                                    &quot;ins issue #237
           SHIFT lv_value RIGHT DELETING TRAILING space.
@@ -3443,7 +3421,7 @@
       LOOP AT lt_table_areas TRANSPORTING NO FIELDS WHERE top    &lt;= &lt;ls_sheet_content&gt;-cell_row
                                                       AND bottom &gt;= &lt;ls_sheet_content&gt;-cell_row
                                                       AND left   &lt;= &lt;ls_sheet_content&gt;-cell_column
-                                                      AND right  &gt;= &lt;ls_sheet_content&gt;-cell_column.
+                                                      AND right  &gt;= &lt;ls_sheet_content&gt;-cell_column. &quot;#EC CI_SORTSEQ
         EXIT.
       ENDLOOP.
       IF sy-subrc = 0.
@@ -3493,23 +3471,29 @@
       lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
     ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL. &quot;cell can have just style or formula
       IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
-        IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
-          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
-                                        value = &apos;s&apos; ).
-        ELSE.
-          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
+        lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
                                         value = &lt;ls_sheet_content&gt;-data_type ).
-        ENDIF.
       ENDIF.
 
-      &quot; value node
-      lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_v
-                                                       parent = lo_document ).
+      if &lt;ls_sheet_content&gt;-data_type NE &apos;inlineStr&apos;. &quot; MvC
+        &quot; value node
+        lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_v
+                                                           parent = lo_document ).
+      endif.
 
-      IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos; or &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
+      IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos;.
         lv_value = me-&gt;get_shared_string_index( &lt;ls_sheet_content&gt;-cell_value ).
         CONDENSE lv_value.
         lo_element_4-&gt;set_value( value = lv_value ).
+      ELSEIF &lt;ls_sheet_content&gt;-data_type EQ &apos;inlineStr&apos;.    &quot; MvC
+        lv_value = &lt;ls_sheet_content&gt;-cell_value.
+        CONDENSE lv_value.
+        lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_is
+                                                           parent = lo_document ).
+        lo_element_5 = lo_document-&gt;create_simple_element( name   = lc_xml_node_t
+                                                           parent = lo_document ).
+        lo_element_5-&gt;set_value( value = lv_value ).
+        lo_element_4-&gt;append_child( new_child = lo_element_5 ).
       ELSE.
         lv_value = &lt;ls_sheet_content&gt;-cell_value.
         CONDENSE lv_value.
@@ -3715,7 +3699,7 @@
                                     value = lv_value ).
 
     CASE lo_style_conditional-&gt;rule.
-        &quot; Start &gt;&gt; Databar by Albert Lladanosa
+      &quot; Start &gt;&gt; Databar by Albert Lladanosa
       WHEN zcl_excel_style_conditional=&gt;c_rule_databar.
 
         ls_databar = lo_style_conditional-&gt;mode_databar.
@@ -3754,64 +3738,7 @@
         lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; color node
 
         lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; databar node
-        &quot; End &lt;&lt; Databar by Albert Lladanosa
-      WHEN zcl_excel_style_conditional=&gt;c_rule_colorscale.
-
-        ls_colorscale = lo_style_conditional-&gt;mode_colorscale.
-
-        CLEAR: lt_cfvo, lt_colors.
-        lo_element_3 = lo_document-&gt;create_simple_element( name = lc_xml_node_colorscale
-                                                           parent = lo_document ).
-
-        MOVE ls_colorscale-cfvo1_value TO ls_cfvo-value.
-        MOVE ls_colorscale-cfvo1_type  TO ls_cfvo-type.
-        APPEND ls_cfvo TO lt_cfvo.
-
-        MOVE ls_colorscale-cfvo2_value TO ls_cfvo-value.
-        MOVE ls_colorscale-cfvo2_type  TO ls_cfvo-type.
-        APPEND ls_cfvo TO lt_cfvo.
-
-        MOVE ls_colorscale-cfvo3_value TO ls_cfvo-value.
-        MOVE ls_colorscale-cfvo3_type  TO ls_cfvo-type.
-        APPEND ls_cfvo TO lt_cfvo.
-
-        APPEND ls_colorscale-colorrgb1 TO lt_colors.
-        APPEND ls_colorscale-colorrgb2 TO lt_colors.
-        APPEND ls_colorscale-colorrgb3 TO lt_colors.
-
-        LOOP AT lt_cfvo INTO ls_cfvo.
-
-          IF ls_cfvo IS INITIAL.
-            CONTINUE.
-          ENDIF.
-
-          &quot; cfvo node
-          lo_element_4 = lo_document-&gt;create_simple_element( name = lc_xml_node_cfvo
-                                                             parent = lo_document ).
-          lv_value = ls_cfvo-type.
-          lo_element_4-&gt;set_attribute_ns( name = lc_xml_attr_type
-                                          value = lv_value ).
-          lv_value = ls_cfvo-value.
-          lo_element_4-&gt;set_attribute_ns( name = lc_xml_attr_val
-                                          value = lv_value ).
-          lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; cfvo node
-        ENDLOOP.
-        LOOP AT lt_colors INTO ls_colors.
-
-          IF ls_colors IS INITIAL.
-            CONTINUE.
-          ENDIF.
-
-          lo_element_4 = lo_document-&gt;create_simple_element( name = lc_xml_node_color
-                                                             parent = lo_document ).
-          lv_value = ls_colors-colorrgb.
-          lo_element_4-&gt;set_attribute_ns( name = lc_xml_attr_tabcolor_rgb
-                                          value = lv_value ).
-
-          lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; color node
-        ENDLOOP.
-
-        lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; databar node
+      &quot; End &lt;&lt; Databar by Albert Lladanosa
       WHEN zcl_excel_style_conditional=&gt;c_rule_iconset.
 
         ls_iconset = lo_style_conditional-&gt;mode_iconset.
@@ -4365,7 +4292,7 @@
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
@@ -4375,20 +4302,20 @@ ENDMETHOD.</source>
 
 
 ** Constant node name
-  DATA: lc_xml_node_relationships   TYPE string VALUE &apos;Relationships&apos;,
-        lc_xml_node_relationship    TYPE string VALUE &apos;Relationship&apos;,
+  DATA: lc_xml_node_relationships   TYPE string VALUE &apos;Relationships&apos;,  &quot;#EC NOTEXT
+        lc_xml_node_relationship    TYPE string VALUE &apos;Relationship&apos;,   &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_id              TYPE string VALUE &apos;Id&apos;,
-        lc_xml_attr_type            TYPE string VALUE &apos;Type&apos;,
-        lc_xml_attr_target          TYPE string VALUE &apos;Target&apos;,
-        lc_xml_attr_target_mode     TYPE string VALUE &apos;TargetMode&apos;,
-        lc_xml_val_external         TYPE string VALUE &apos;External&apos;,
+        lc_xml_attr_id              TYPE string VALUE &apos;Id&apos;,             &quot;#EC NOTEXT
+        lc_xml_attr_type            TYPE string VALUE &apos;Type&apos;,           &quot;#EC NOTEXT
+        lc_xml_attr_target          TYPE string VALUE &apos;Target&apos;,         &quot;#EC NOTEXT
+        lc_xml_attr_target_mode     TYPE string VALUE &apos;TargetMode&apos;,     &quot;#EC NOTEXT
+        lc_xml_val_external         TYPE string VALUE &apos;External&apos;,       &quot;#EC NOTEXT
         &quot; Node namespace
-        lc_xml_node_rels_ns         TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
-        lc_xml_node_rid_table_tp    TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/table&apos;,
-        lc_xml_node_rid_printer_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;,
-        lc_xml_node_rid_drawing_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
-        lc_xml_node_rid_link_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;.
+        lc_xml_node_rels_ns         TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,                        &quot;#EC NOTEXT
+        lc_xml_node_rid_table_tp    TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/table&apos;,           &quot;#EC NOTEXT
+        lc_xml_node_rid_printer_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;, &quot;#EC NOTEXT
+        lc_xml_node_rid_drawing_tp  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,         &quot;#EC NOTEXT
+        lc_xml_node_rid_link_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;.       &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -4413,7 +4340,7 @@ ENDMETHOD.</source>
 **********************************************************************
 * STEP 2: Set document attributes
   lo_encoding = lo_ixml-&gt;create_encoding( byte_order = if_ixml_encoding=&gt;co_platform_endian
-                                          character_set = &apos;utf-8&apos; ).
+                                          character_set = &apos;utf-8&apos; ). &quot;#EC NOTEXT
   lo_document = lo_ixml-&gt;create_document( ).
   lo_document-&gt;set_encoding( lo_encoding ).
   lo_document-&gt;set_standalone( abap_true ).
@@ -4423,7 +4350,7 @@ ENDMETHOD.</source>
   lo_element_root  = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationships
                                                          parent = lo_document ).
   lo_element_root-&gt;set_attribute_ns( name  = &apos;xmlns&apos;
-                                     value = lc_xml_node_rels_ns ).
+                                     value = lc_xml_node_rels_ns ). &quot;#EC NOTEXT
 
 **********************************************************************
 * STEP 4: Create subnodes
@@ -4437,7 +4364,7 @@ ENDMETHOD.</source>
 
     lv_value = lv_relation_id.
     CONDENSE lv_value.
-    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value. &quot;#EC NOTEXT
 
     lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
                                                      parent = lo_document ).
@@ -4465,7 +4392,7 @@ ENDMETHOD.</source>
 
     lv_value = lv_relation_id.
     CONDENSE lv_value.
-    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value. &quot;#EC NOTEXT
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
                                   value = lv_value ).
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
@@ -4474,7 +4401,7 @@ ENDMETHOD.</source>
     lv_index_str = iv_drawing_index.
     CONDENSE lv_index_str NO-GAPS.
     MOVE me-&gt;c_xl_drawings TO lv_value.
-    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value.
+    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value. &quot;#EC NOTEXT
     REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                               value = lv_value ).
@@ -4498,7 +4425,7 @@ ENDMETHOD.</source>
                                   value = lc_xml_node_rid_table_tp ).
 
     lv_value = lo_table-&gt;get_name( ).
-    CONCATENATE &apos;../tables/&apos; lv_value &apos;.xml&apos; INTO lv_value.
+    CONCATENATE &apos;../tables/&apos; lv_value &apos;.xml&apos; INTO lv_value.   &quot;#EC NOTEXT
     lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
                               value = lv_value ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
@@ -4962,19 +4889,12 @@ ENDMETHOD.</source>
         is_color           = ls_fill-fgcolor
         iv_color_elem_name = lc_xml_node_fgcolor ).
 
-    IF  ls_fill-fgcolor-rgb IS INITIAL AND
-        ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
-        ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
-        ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
-
-      &quot; bgcolor
-      create_xl_styles_color_node(
-          io_document        = lo_document
-          io_parent          = lo_sub_element
-          is_color           = ls_fill-bgcolor
-          iv_color_elem_name = lc_xml_node_bgcolor ).
-
-    ENDIF.
+    &quot; bgcolor
+    create_xl_styles_color_node(
+        io_document        = lo_document
+        io_parent          = lo_sub_element
+        is_color           = ls_fill-bgcolor
+        iv_color_elem_name = lc_xml_node_bgcolor ).
 
     lo_element_fill-&gt;append_child( new_child = lo_sub_element ).&quot;pattern
     lo_element_fills-&gt;append_child( new_child = lo_element_fill ).
@@ -5273,7 +5193,8 @@ ENDMETHOD.</source>
                                                        parent = lo_document ).
 
   lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_name
-                                    value = &apos;Normal&apos; ).
+                                    value = &apos;Normal&apos; ).  &quot;#EC NOTEXT
+
   lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_xfid
                                     value = c_off ).
   lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_builtinid
@@ -5379,19 +5300,12 @@ ENDMETHOD.</source>
                   is_color           = ls_fill-fgcolor
                   iv_color_elem_name = lc_xml_node_fgcolor ).
 
-              IF  ls_fill-fgcolor-rgb IS INITIAL AND
-                ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
-                ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
-                ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
-
-                &quot; bgcolor
-                create_xl_styles_color_node(
-                    io_document        = lo_document
-                    io_parent          = lo_sub_element_2
-                    is_color           = ls_fill-bgcolor
-                    iv_color_elem_name = lc_xml_node_bgcolor ).
-
-              ENDIF.
+              &quot; bgcolor
+              create_xl_styles_color_node(
+                  io_document        = lo_document
+                  io_parent          = lo_sub_element_2
+                  is_color           = ls_fill-bgcolor
+                  iv_color_elem_name = lc_xml_node_bgcolor ).
 
               lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
 
@@ -5444,19 +5358,12 @@ ENDMETHOD.</source>
                   is_color           = ls_fill-fgcolor
                   iv_color_elem_name = lc_xml_node_fgcolor ).
 
-              IF  ls_fill-fgcolor-rgb IS INITIAL AND
-                ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
-                ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
-                ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
-
-                &quot; bgcolor
-                create_xl_styles_color_node(
-                    io_document        = lo_document
-                    io_parent          = lo_sub_element_2
-                    is_color           = ls_fill-bgcolor
-                    iv_color_elem_name = lc_xml_node_bgcolor ).
-
-              ENDIF.
+              &quot; bgcolor
+              create_xl_styles_color_node(
+                  io_document        = lo_document
+                  io_parent          = lo_sub_element_2
+                  is_color           = ls_fill-bgcolor
+                  iv_color_elem_name = lc_xml_node_bgcolor ).
 
               lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
 
@@ -5523,7 +5430,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_PARENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IV_COLOR_ELEM_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PARVALUE="&apos;color&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IS_COLOR" VERSION="1" LANGU="E" DESCRIPT="Color" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_S_STYLE_COLOR"/>
-  <source>METHOD create_xl_styles_color_node.
+  <source>method CREATE_XL_STYLES_COLOR_NODE.
   DATA: lo_sub_element TYPE REF TO if_ixml_element,
         lv_value TYPE string.
 
@@ -5532,7 +5439,7 @@ ENDMETHOD.</source>
              lc_xml_attr_indexed           TYPE string VALUE &apos;indexed&apos;,
              lc_xml_attr_tint              TYPE string VALUE &apos;tint&apos;.
 
-  &quot;add node only if at least one attribute is set
+&quot;add node only if at least one attribute is set
   CHECK is_color-rgb IS NOT INITIAL OR
         is_color-indexed &lt;&gt; zcl_excel_style_color=&gt;c_indexed_not_set OR
         is_color-theme &lt;&gt; zcl_excel_style_color=&gt;c_theme_not_set OR
@@ -5567,25 +5474,26 @@ ENDMETHOD.</source>
   ENDIF.
 
   io_parent-&gt;append_child( new_child = lo_sub_element ).
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD create_xl_table.
+  <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>method CREATE_XL_TABLE.
 
-  DATA: lc_xml_node_table         TYPE string VALUE &apos;table&apos;,
-        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
+  DATA: lc_xml_node_table         TYPE string VALUE &apos;table&apos;,          &quot;#EC NOTEXT
+        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,   &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_id            TYPE string VALUE &apos;id&apos;,
-        lc_xml_attr_name          TYPE string VALUE &apos;name&apos;,
-        lc_xml_attr_display_name  TYPE string VALUE &apos;displayName&apos;,
-        lc_xml_attr_ref           TYPE string VALUE &apos;ref&apos;,
-        lc_xml_attr_totals        TYPE string VALUE &apos;totalsRowShown&apos;,
+        lc_xml_attr_id            TYPE string VALUE &apos;id&apos;,             &quot;#EC NOTEXT
+        lc_xml_attr_name          TYPE string VALUE &apos;name&apos;,           &quot;#EC NOTEXT
+        lc_xml_attr_display_name  TYPE string VALUE &apos;displayName&apos;,    &quot;#EC NOTEXT
+        lc_xml_attr_ref           TYPE string VALUE &apos;ref&apos;,            &quot;#EC NOTEXT
+        lc_xml_attr_totals        TYPE string VALUE &apos;totalsRowShown&apos;, &quot;#EC NOTEXT
         &quot; Node namespace
-        lc_xml_node_table_ns      TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
+        lc_xml_node_table_ns      TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;, &quot;#EC NOTEXT
         &quot; Node id
-        lc_xml_node_ridx_id       TYPE string VALUE &apos;rId#&apos;.
+        lc_xml_node_ridx_id       TYPE string VALUE &apos;rId#&apos;.           &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -5633,6 +5541,7 @@ ENDMETHOD.</source>
   lo_element_root-&gt;set_attribute_ns( name  = lc_xml_attr_id
                                      value = lv_value ).
 
+  ##NO_TEXT
   FIND ALL OCCURRENCES OF REGEX &apos;[^_a-zA-Z0-9]&apos; IN io_table-&gt;settings-table_name IGNORING CASE MATCH COUNT lv_match.
   IF io_table-&gt;settings-table_name IS NOT INITIAL AND lv_match EQ 0.
     lv_table_name = io_table-&gt;settings-table_name.
@@ -5660,16 +5569,14 @@ ENDMETHOD.</source>
 * STEP 4: Create subnodes
 
   &quot; autoFilter
-  IF io_table-&gt;settings-nofilters EQ abap_false.
-    lo_element = lo_document-&gt;create_simple_element( name   = &apos;autoFilter&apos;
-                                                     parent = lo_document ).
+  lo_element = lo_document-&gt;create_simple_element( name   = &apos;autoFilter&apos;
+                                                   parent = lo_document ).
 
-    lv_ref = io_table-&gt;get_reference( ip_include_totals_row = abap_false ).
-    lo_element-&gt;set_attribute_ns( name  = &apos;ref&apos;
-                                  value = lv_ref ).
+  lv_ref = io_table-&gt;get_reference( ip_include_totals_row = abap_false ).
+  lo_element-&gt;set_attribute_ns( name  = &apos;ref&apos;
+                                value = lv_ref ).
 
-    lo_element_root-&gt;append_child( new_child = lo_element ).
-  ENDIF.
+  lo_element_root-&gt;append_child( new_child = lo_element ).
 
   &quot;columns
   lo_element = lo_document-&gt;create_simple_element( name   = &apos;tableColumns&apos;
@@ -5746,7 +5653,7 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -5789,37 +5696,69 @@ ENDMETHOD.</source>
         lv_xl_theme_31 TYPE string,
         lv_xl_theme_32 TYPE string.
 
+  ##NO_TEXT
   lv_xl_theme_01 = &apos;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_02 = &apos;&lt;a:theme xmlns:a=&quot;http://schemas.openxmlformats.org/drawingml/2006/main&quot; name=&quot;Office Theme&quot;&gt;&lt;a:themeElements&gt;&lt;a:clrScheme name=&quot;Office&quot;&gt;&lt;a:dk1&gt;&lt;a:sysClr val=&quot;windowText&quot; lastClr=&quot;000000&quot;/&gt;&lt;/a:dk1&gt;&lt;a:lt1&gt;&lt;a:sysClr val=&quot;window&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_03 = &apos;lastClr=&quot;FFFFFF&quot;/&gt;&lt;/a:lt1&gt;&lt;a:dk2&gt;&lt;a:srgbClr val=&quot;1F497D&quot;/&gt;&lt;/a:dk2&gt;&lt;a:lt2&gt;&lt;a:srgbClr val=&quot;EEECE1&quot;/&gt;&lt;/a:lt2&gt;&lt;a:accent1&gt;&lt;a:srgbClr val=&quot;4F81BD&quot;/&gt;&lt;/a:accent1&gt;&lt;a:accent2&gt;&lt;a:srgbClr val=&quot;C0504D&quot;/&gt;&lt;/a:accent2&gt;&lt;a:accent3&gt;&lt;a:srgbClr &apos;.
+  ##NO_TEXT
   lv_xl_theme_04 = &apos;val=&quot;9BBB59&quot;/&gt;&lt;/a:accent3&gt;&lt;a:accent4&gt;&lt;a:srgbClr val=&quot;8064A2&quot;/&gt;&lt;/a:accent4&gt;&lt;a:accent5&gt;&lt;a:srgbClr val=&quot;4BACC6&quot;/&gt;&lt;/a:accent5&gt;&lt;a:accent6&gt;&lt;a:srgbClr val=&quot;F79646&quot;/&gt;&lt;/a:accent6&gt;&lt;a:hlink&gt;&lt;a:srgbClr val=&quot;0000FF&quot;/&gt;&lt;/a:hlink&gt;&lt;a:folHlink&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_05 = &apos;&lt;a:srgbClr val=&quot;800080&quot;/&gt;&lt;/a:folHlink&gt;&lt;/a:clrScheme&gt;&lt;a:fontScheme name=&quot;Office&quot;&gt;&lt;a:majorFont&gt;&lt;a:latin typeface=&quot;Cambria&quot;/&gt;&lt;a:ea typeface=&quot;&quot;/&gt;&lt;a:cs typeface=&quot;&quot;/&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_06 = &apos;&lt;a:font script=&quot;Arab&quot; typeface=&quot;Times New Roman&quot;/&gt;&lt;a:font script=&quot;Hebr&quot; typeface=&quot;Times New Roman&quot;/&gt;&lt;a:font script=&quot;Thai&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_07 = &apos;typeface=&quot;Tahoma&quot;/&gt;&lt;a:font script=&quot;Ethi&quot; typeface=&quot;Nyala&quot;/&gt;&lt;a:font script=&quot;Beng&quot; typeface=&quot;Vrinda&quot;/&gt;&lt;a:font script=&quot;Gujr&quot; typeface=&quot;Shruti&quot;/&gt;&lt;a:font script=&quot;Khmr&quot; typeface=&quot;MoolBoran&quot;/&gt;&lt;a:font script=&quot;Knda&quot; typeface=&quot;Tunga&quot;/&gt;&lt;a:font &apos;.
+  ##NO_TEXT
   lv_xl_theme_08 = &apos;script=&quot;Guru&quot; typeface=&quot;Raavi&quot;/&gt;&lt;a:font script=&quot;Cans&quot; typeface=&quot;Euphemia&quot;/&gt;&lt;a:font script=&quot;Cher&quot; typeface=&quot;Plantagenet Cherokee&quot;/&gt;&lt;a:font script=&quot;Yiii&quot; typeface=&quot;Microsoft Yi Baiti&quot;/&gt;&lt;a:font script=&quot;Tibt&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_09 = &apos;typeface=&quot;Microsoft Himalaya&quot;/&gt;&lt;a:font script=&quot;Thaa&quot; typeface=&quot;MV Boli&quot;/&gt;&lt;a:font script=&quot;Deva&quot; typeface=&quot;Mangal&quot;/&gt;&lt;a:font script=&quot;Telu&quot; typeface=&quot;Gautami&quot;/&gt;&lt;a:font script=&quot;Taml&quot; typeface=&quot;Latha&quot;/&gt;&lt;a:font script=&quot;Syrc&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_10 = &apos;typeface=&quot;Estrangelo Edessa&quot;/&gt;&lt;a:font script=&quot;Orya&quot; typeface=&quot;Kalinga&quot;/&gt;&lt;a:font script=&quot;Mlym&quot; typeface=&quot;Kartika&quot;/&gt;&lt;a:font script=&quot;Laoo&quot; typeface=&quot;DokChampa&quot;/&gt;&lt;a:font script=&quot;Sinh&quot; typeface=&quot;Iskoola Pota&quot;/&gt;&lt;a:font script=&quot;Mong&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_11 = &apos;typeface=&quot;Mongolian Baiti&quot;/&gt;&lt;a:font script=&quot;Viet&quot; typeface=&quot;Times New Roman&quot;/&gt;&lt;a:font script=&quot;Uigh&quot; typeface=&quot;Microsoft Uighur&quot;/&gt;&lt;/a:majorFont&gt;&lt;a:minorFont&gt;&lt;a:latin typeface=&quot;Calibri&quot;/&gt;&lt;a:ea typeface=&quot;&quot;/&gt;&lt;a:cs typeface=&quot;&quot;/&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_12 = &apos;&lt;a:font script=&quot;Arab&quot; typeface=&quot;Arial&quot;/&gt;&lt;a:font script=&quot;Hebr&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_13 = &apos;typeface=&quot;Arial&quot;/&gt;&lt;a:font script=&quot;Thai&quot; typeface=&quot;Tahoma&quot;/&gt;&lt;a:font script=&quot;Ethi&quot; typeface=&quot;Nyala&quot;/&gt;&lt;a:font script=&quot;Beng&quot; typeface=&quot;Vrinda&quot;/&gt;&lt;a:font script=&quot;Gujr&quot; typeface=&quot;Shruti&quot;/&gt;&lt;a:font script=&quot;Khmr&quot; typeface=&quot;DaunPenh&quot;/&gt;&lt;a:font &apos;.
+  ##NO_TEXT
   lv_xl_theme_14 = &apos;script=&quot;Knda&quot; typeface=&quot;Tunga&quot;/&gt;&lt;a:font script=&quot;Guru&quot; typeface=&quot;Raavi&quot;/&gt;&lt;a:font script=&quot;Cans&quot; typeface=&quot;Euphemia&quot;/&gt;&lt;a:font script=&quot;Cher&quot; typeface=&quot;Plantagenet Cherokee&quot;/&gt;&lt;a:font script=&quot;Yiii&quot; typeface=&quot;Microsoft Yi Baiti&quot;/&gt;&lt;a:font &apos;.
+  ##NO_TEXT
   lv_xl_theme_15 = &apos;script=&quot;Tibt&quot; typeface=&quot;Microsoft Himalaya&quot;/&gt;&lt;a:font script=&quot;Thaa&quot; typeface=&quot;MV Boli&quot;/&gt;&lt;a:font script=&quot;Deva&quot; typeface=&quot;Mangal&quot;/&gt;&lt;a:font script=&quot;Telu&quot; typeface=&quot;Gautami&quot;/&gt;&lt;a:font script=&quot;Taml&quot; typeface=&quot;Latha&quot;/&gt;&lt;a:font script=&quot;Syrc&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_16 = &apos;typeface=&quot;Estrangelo Edessa&quot;/&gt;&lt;a:font script=&quot;Orya&quot; typeface=&quot;Kalinga&quot;/&gt;&lt;a:font script=&quot;Mlym&quot; typeface=&quot;Kartika&quot;/&gt;&lt;a:font script=&quot;Laoo&quot; typeface=&quot;DokChampa&quot;/&gt;&lt;a:font script=&quot;Sinh&quot; typeface=&quot;Iskoola Pota&quot;/&gt;&lt;a:font script=&quot;Mong&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_17 = &apos;typeface=&quot;Mongolian Baiti&quot;/&gt;&lt;a:font script=&quot;Viet&quot; typeface=&quot;Arial&quot;/&gt;&lt;a:font script=&quot;Uigh&quot; typeface=&quot;Microsoft Uighur&quot;/&gt;&lt;/a:minorFont&gt;&lt;/a:fontScheme&gt;&lt;a:fmtScheme name=&quot;Office&quot;&gt;&lt;a:fillStyleLst&gt;&lt;a:solidFill&gt;&lt;a:schemeClr val=&quot;phClr&quot;/&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_18 = &apos;&lt;/a:solidFill&gt;&lt;a:gradFill rotWithShape=&quot;1&quot;&gt;&lt;a:gsLst&gt;&lt;a:gs pos=&quot;0&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:tint val=&quot;50000&quot;/&gt;&lt;a:satMod val=&quot;300000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;a:gs pos=&quot;35000&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:tint val=&quot;37000&quot;/&gt;&lt;a:satMod &apos;.
+  ##NO_TEXT
   lv_xl_theme_19 = &apos;val=&quot;300000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;a:gs pos=&quot;100000&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:tint val=&quot;15000&quot;/&gt;&lt;a:satMod val=&quot;350000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;/a:gsLst&gt;&lt;a:lin ang=&quot;16200000&quot; scaled=&quot;1&quot;/&gt;&lt;/a:gradFill&gt;&lt;a:gradFill rotWithShape=&quot;1&quot;&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_20 = &apos;&lt;a:gsLst&gt;&lt;a:gs pos=&quot;0&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:shade val=&quot;51000&quot;/&gt;&lt;a:satMod val=&quot;130000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;a:gs pos=&quot;80000&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:shade val=&quot;93000&quot;/&gt;&lt;a:satMod val=&quot;130000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;a:gs &apos;.
+  ##NO_TEXT
   lv_xl_theme_21 = &apos;pos=&quot;100000&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:shade val=&quot;94000&quot;/&gt;&lt;a:satMod val=&quot;135000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;/a:gsLst&gt;&lt;a:lin ang=&quot;16200000&quot; scaled=&quot;0&quot;/&gt;&lt;/a:gradFill&gt;&lt;/a:fillStyleLst&gt;&lt;a:lnStyleLst&gt;&lt;a:ln w=&quot;9525&quot; cap=&quot;flat&quot; cmpd=&quot;sng&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_22 = &apos;algn=&quot;ctr&quot;&gt;&lt;a:solidFill&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:shade val=&quot;95000&quot;/&gt;&lt;a:satMod val=&quot;105000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:solidFill&gt;&lt;a:prstDash val=&quot;solid&quot;/&gt;&lt;/a:ln&gt;&lt;a:ln w=&quot;25400&quot; cap=&quot;flat&quot; cmpd=&quot;sng&quot; algn=&quot;ctr&quot;&gt;&lt;a:solidFill&gt;&lt;a:schemeClr &apos;.
+  ##NO_TEXT
   lv_xl_theme_23 = &apos;val=&quot;phClr&quot;/&gt;&lt;/a:solidFill&gt;&lt;a:prstDash val=&quot;solid&quot;/&gt;&lt;/a:ln&gt;&lt;a:ln w=&quot;38100&quot; cap=&quot;flat&quot; cmpd=&quot;sng&quot; algn=&quot;ctr&quot;&gt;&lt;a:solidFill&gt;&lt;a:schemeClr val=&quot;phClr&quot;/&gt;&lt;/a:solidFill&gt;&lt;a:prstDash val=&quot;solid&quot;/&gt;&lt;/a:ln&gt;&lt;/a:lnStyleLst&gt;&lt;a:effectStyleLst&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_24 = &apos;&lt;a:effectStyle&gt;&lt;a:effectLst&gt;&lt;a:outerShdw blurRad=&quot;40000&quot; dist=&quot;20000&quot; dir=&quot;5400000&quot; rotWithShape=&quot;0&quot;&gt;&lt;a:srgbClr val=&quot;000000&quot;&gt;&lt;a:alpha val=&quot;38000&quot;/&gt;&lt;/a:srgbClr&gt;&lt;/a:outerShdw&gt;&lt;/a:effectLst&gt;&lt;/a:effectStyle&gt;&lt;a:effectStyle&gt;&lt;a:effectLst&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_25 = &apos;&lt;a:outerShdw blurRad=&quot;40000&quot; dist=&quot;23000&quot; dir=&quot;5400000&quot; rotWithShape=&quot;0&quot;&gt;&lt;a:srgbClr val=&quot;000000&quot;&gt;&lt;a:alpha val=&quot;35000&quot;/&gt;&lt;/a:srgbClr&gt;&lt;/a:outerShdw&gt;&lt;/a:effectLst&gt;&lt;/a:effectStyle&gt;&lt;a:effectStyle&gt;&lt;a:effectLst&gt;&lt;a:outerShdw blurRad=&quot;40000&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_26 = &apos;dist=&quot;23000&quot; dir=&quot;5400000&quot; rotWithShape=&quot;0&quot;&gt;&lt;a:srgbClr val=&quot;000000&quot;&gt;&lt;a:alpha val=&quot;35000&quot;/&gt;&lt;/a:srgbClr&gt;&lt;/a:outerShdw&gt;&lt;/a:effectLst&gt;&lt;a:scene3d&gt;&lt;a:camera prst=&quot;orthographicFront&quot;&gt;&lt;a:rot lat=&quot;0&quot; lon=&quot;0&quot; rev=&quot;0&quot;/&gt;&lt;/a:camera&gt;&lt;a:lightRig &apos;.
+  ##NO_TEXT
   lv_xl_theme_27 = &apos;rig=&quot;threePt&quot; dir=&quot;t&quot;&gt;&lt;a:rot lat=&quot;0&quot; lon=&quot;0&quot; rev=&quot;1200000&quot;/&gt;&lt;/a:lightRig&gt;&lt;/a:scene3d&gt;&lt;a:sp3d&gt;&lt;a:bevelT w=&quot;63500&quot; h=&quot;25400&quot;/&gt;&lt;/a:sp3d&gt;&lt;/a:effectStyle&gt;&lt;/a:effectStyleLst&gt;&lt;a:bgFillStyleLst&gt;&lt;a:solidFill&gt;&lt;a:schemeClr val=&quot;phClr&quot;/&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_28 = &apos;&lt;/a:solidFill&gt;&lt;a:gradFill rotWithShape=&quot;1&quot;&gt;&lt;a:gsLst&gt;&lt;a:gs pos=&quot;0&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:tint val=&quot;40000&quot;/&gt;&lt;a:satMod val=&quot;350000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;a:gs pos=&quot;40000&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:tint val=&quot;45000&quot;/&gt;&lt;a:shade &apos;.
+  ##NO_TEXT
   lv_xl_theme_29 = &apos;val=&quot;99000&quot;/&gt;&lt;a:satMod val=&quot;350000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;a:gs pos=&quot;100000&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:shade val=&quot;20000&quot;/&gt;&lt;a:satMod val=&quot;255000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;/a:gsLst&gt;&lt;a:path path=&quot;circle&quot;&gt;&lt;a:fillToRect l=&quot;50000&quot; &apos;.
+  ##NO_TEXT
   lv_xl_theme_30 = &apos;t=&quot;-80000&quot; r=&quot;50000&quot; b=&quot;180000&quot;/&gt;&lt;/a:path&gt;&lt;/a:gradFill&gt;&lt;a:gradFill rotWithShape=&quot;1&quot;&gt;&lt;a:gsLst&gt;&lt;a:gs pos=&quot;0&quot;&gt;&lt;a:schemeClr val=&quot;phClr&quot;&gt;&lt;a:tint val=&quot;80000&quot;/&gt;&lt;a:satMod val=&quot;300000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;a:gs pos=&quot;100000&quot;&gt;&lt;a:schemeClr &apos;.
+  ##NO_TEXT
   lv_xl_theme_31 = &apos;val=&quot;phClr&quot;&gt;&lt;a:shade val=&quot;30000&quot;/&gt;&lt;a:satMod val=&quot;200000&quot;/&gt;&lt;/a:schemeClr&gt;&lt;/a:gs&gt;&lt;/a:gsLst&gt;&lt;a:path path=&quot;circle&quot;&gt;&lt;a:fillToRect l=&quot;50000&quot; t=&quot;50000&quot; r=&quot;50000&quot; b=&quot;50000&quot;/&gt;&lt;/a:path&gt;&lt;/a:gradFill&gt;&lt;/a:bgFillStyleLst&gt;&lt;/a:fmtScheme&gt;&apos;.
+  ##NO_TEXT
   lv_xl_theme_32 = &apos;&lt;/a:themeElements&gt;&lt;a:objectDefaults/&gt;&lt;a:extraClrSchemeLst/&gt;&lt;/a:theme&gt;&apos;.
 
 
@@ -5837,8 +5776,9 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method CREATE_XL_WORKBOOK.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
@@ -6158,7 +6098,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="1" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="EP_BOOLEAN" VERSION="1" LANGU="E" DESCRIPT="Boolean value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="CHAR5"/>
   <source>method FLAG2BOOL.
@@ -6171,7 +6111,7 @@ ENDMETHOD.</source>
   ENDIF.
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="0" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="1" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="IP_CELL_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="EP_INDEX" VERSION="1" LANGU="E" DESCRIPT="Natural Number" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
   <source>method GET_SHARED_STRING_INDEX.

@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" UUID="0202322174CD1EE0A391D25CAFCCC6E6" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_WRITER_2007">
- <publicSection>class ZCL_EXCEL_WRITER_XLSM definition
-  public
-  inheriting from ZCL_EXCEL_WRITER_2007
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_WRITER_XLSM
-*&quot;* do not include other source files here!!!</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_WRITER_XLSM
-*&quot;* do not include other source files here!!!
-
-  constants C_XL_VBAPROJECT type STRING value &apos;xl/vbaProject.bin&apos;. &quot;#EC NOTEXT
-
-  methods CREATE_CONTENT_TYPES
-    redefinition .
-  methods CREATE_XL_RELATIONSHIPS
-    redefinition .
-  methods CREATE_XL_SHEET
-    redefinition .
-  methods CREATE_XL_WORKBOOK
-    redefinition .
-  methods CREATE
-    redefinition .</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_WRITER_XLSM
-*&quot;* do not include other source files here!!!</privateSection>
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_WRITER_2007">
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>
@@ -233,21 +205,21 @@ public section.
 * STEP 12: Create the final zip
   ep_excel = lo_zip-&gt;save( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method CREATE_CONTENT_TYPES.
+  <source>METHOD create_content_types.
 ** Constant node name
-  DATA: lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.ms-excel.sheet.macroEnabled.main+xml&apos;,
-        lc_xml_node_default       TYPE string VALUE &apos;Default&apos;,
+  DATA: lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.ms-excel.sheet.macroEnabled.main+xml&apos;, &quot;#EC NOTEXT
+        lc_xml_node_default       TYPE string VALUE &apos;Default&apos;,          &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_partname      TYPE string VALUE &apos;PartName&apos;,
-        lc_xml_attr_extension     TYPE string VALUE &apos;Extension&apos;,
-        lc_xml_attr_contenttype   TYPE string VALUE &apos;ContentType&apos;,
-        lc_xml_attr_codename      TYPE string VALUE &apos;codeName&apos;,
-        lc_xml_node_workb_pn      TYPE string VALUE &apos;/xl/workbook.xml&apos;,
-        lc_xml_node_bin_ext       TYPE string VALUE &apos;bin&apos;,
-        lc_xml_node_bin_ct        TYPE string VALUE &apos;application/vnd.ms-office.vbaProject&apos;.
+        lc_xml_attr_partname      TYPE string VALUE &apos;PartName&apos;,         &quot;#EC NOTEXT
+        lc_xml_attr_extension     TYPE string VALUE &apos;Extension&apos;,        &quot;#EC NOTEXT
+        lc_xml_attr_contenttype   TYPE string VALUE &apos;ContentType&apos;,      &quot;#EC NOTEXT
+        lc_xml_attr_codename      TYPE string VALUE &apos;codeName&apos;,         &quot;#EC NOTEXT
+        lc_xml_node_workb_pn      TYPE string VALUE &apos;/xl/workbook.xml&apos;, &quot;#EC NOTEXT
+        lc_xml_node_bin_ext       TYPE string VALUE &apos;bin&apos;,              &quot;#EC NOTEXT
+        lc_xml_node_bin_ct        TYPE string VALUE &apos;application/vnd.ms-office.vbaProject&apos;. &quot;#EC NOTEXT
 
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
@@ -292,7 +264,7 @@ endmethod.</source>
 **********************************************************************
 * STEP 3: modify XML changing the contentType of node Override /xl/workbook.xml
 
-  lo_collection = lo_document-&gt;get_elements_by_tag_name( &apos;Override&apos; ).
+  lo_collection = lo_document-&gt;get_elements_by_tag_name( &apos;Override&apos; ). &quot;#EC NOTEXT
   lo_iterator = lo_collection-&gt;create_iterator( ).
   lo_element ?= lo_iterator-&gt;get_next( ).
   WHILE lo_element IS BOUND.
@@ -315,24 +287,24 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_XL_RELATIONSHIPS.
 
 ** Constant node name
-  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,
-        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,
+  DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;, &quot;#EC NOTEXT
+        lc_xml_node_relationship  TYPE string VALUE &apos;Relationship&apos;,  &quot;#EC NOTEXT
         &quot; Node attributes
-        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,
-        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,
-        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,
+        lc_xml_attr_id            TYPE string VALUE &apos;Id&apos;,            &quot;#EC NOTEXT
+        lc_xml_attr_type          TYPE string VALUE &apos;Type&apos;,          &quot;#EC NOTEXT
+        lc_xml_attr_target        TYPE string VALUE &apos;Target&apos;,        &quot;#EC NOTEXT
         &quot; Node id
-        lc_xml_node_ridx_id       TYPE string VALUE &apos;rId#&apos;,
+        lc_xml_node_ridx_id       TYPE string VALUE &apos;rId#&apos;,          &quot;#EC NOTEXT
         &quot; Node type
-        lc_xml_node_rid_vba_tp     TYPE string VALUE &apos;http://schemas.microsoft.com/office/2006/relationships/vbaProject&apos;,
+        lc_xml_node_rid_vba_tp     TYPE string VALUE &apos;http://schemas.microsoft.com/office/2006/relationships/vbaProject&apos;, &quot;#EC NOTEXT
         &quot; Node target
-        lc_xml_node_rid_vba_tg      TYPE string VALUE &apos;vbaProject.bin&apos;.
+        lc_xml_node_rid_vba_tg      TYPE string VALUE &apos;vbaProject.bin&apos;. &quot;#EC NOTEXT
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -393,7 +365,7 @@ endmethod.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_XL_SHEET.
@@ -457,7 +429,7 @@ endmethod.</source>
   lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method CREATE_XL_WORKBOOK.
@@ -520,6 +492,6 @@ endmethod.</source>
   lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
-endmethod.</source>
+  endmethod.</source>
  </method>
 </CLAS>

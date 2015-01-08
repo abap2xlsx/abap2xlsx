@@ -82,22 +82,23 @@ TYPES:   BEGIN OF ts_color_styles,
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
-  <language SPRAS="1">
-   <textElement ID="I" KEY="001" ENTRY="Sheet1" LENGTH="15 "/>
-   <textElement ID="I" KEY="002" ENTRY="Grand" LENGTH="10 "/>
-   <textElement ID="I" KEY="003" ENTRY="Total" LENGTH="10 "/>
+  <language SPRAS="D">
+   <textElement ID="I" KEY="001" ENTRY="Blatt1" LENGTH="10 "/>
+   <textElement ID="I" KEY="002" ENTRY="Gesamt" LENGTH="10 "/>
+   <textElement ID="I" KEY="003" ENTRY="Summe" LENGTH="10 "/>
    <textElement ID="I" KEY="004" ENTRY="Minimum" LENGTH="10 "/>
    <textElement ID="I" KEY="005" ENTRY="Maximum" LENGTH="10 "/>
-   <textElement ID="I" KEY="006" ENTRY="Average" LENGTH="10 "/>
-   <textElement ID="I" KEY="007" ENTRY="Count" LENGTH="10 "/>
+   <textElement ID="I" KEY="006" ENTRY="Durchschnitt" LENGTH="12 "/>
+   <textElement ID="I" KEY="007" ENTRY="Anzahl" LENGTH="10 "/>
+   <textElement ID="I" KEY="008" ENTRY="Excel-Anlegeoptionen" LENGTH="30 "/>
   </language>
   <language SPRAS="E">
-   <textElement ID="I" KEY="001" ENTRY="Sheet1" LENGTH="15 "/>
+   <textElement ID="I" KEY="001" ENTRY="Sheet1" LENGTH="10 "/>
    <textElement ID="I" KEY="002" ENTRY="Grand" LENGTH="10 "/>
    <textElement ID="I" KEY="003" ENTRY="Total" LENGTH="10 "/>
    <textElement ID="I" KEY="004" ENTRY="Minimum" LENGTH="10 "/>
    <textElement ID="I" KEY="005" ENTRY="Maximum" LENGTH="10 "/>
-   <textElement ID="I" KEY="006" ENTRY="Average" LENGTH="10 "/>
+   <textElement ID="I" KEY="006" ENTRY="Average" LENGTH="12 "/>
    <textElement ID="I" KEY="007" ENTRY="Count" LENGTH="10 "/>
    <textElement ID="I" KEY="008" ENTRY="Excel creation options" LENGTH="30 "/>
   </language>
@@ -313,7 +314,7 @@ TYPES:   BEGIN OF ts_color_styles,
   DATA: ls_option TYPE zexcel_s_converter_option,
         l_uname TYPE sy-uname.
 
-  GET PARAMETER ID &apos;ZUS&apos; FIELD l_uname.
+  GET PARAMETER ID &apos;ZUS&apos; FIELD l_uname. &quot;#EC EXISTS
   IF l_uname IS INITIAL OR l_uname = space.
     l_uname = sy-uname.
   ENDIF.
@@ -339,7 +340,7 @@ TYPES:   BEGIN OF ts_color_styles,
 
   CONCATENATE &apos;EXCEL_&apos; sy-uname INTO ws_indx-srtfd.
 
-  IMPORT p1 = ls_option FROM DATABASE indx(xl) TO ws_indx ID ws_indx-srtfd.
+  IMPORT p1 = ls_option FROM DATABASE indx(xl) TO ws_indx ID ws_indx-srtfd. &quot;#EC ENHOK
 
   IF sy-subrc = 0.
     ws_option = ls_option.
@@ -532,7 +533,7 @@ TYPES:   BEGIN OF ts_color_styles,
   IF sy-subrc &lt;&gt; 0.
 *       MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
 *                  WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
-    CONCATENATE &apos;Excel_&apos; w_fcount &apos;.xlsx&apos; INTO r_path.
+    CONCATENATE &apos;Excel_&apos; w_fcount &apos;.xlsx&apos; INTO r_path. &quot;#EC NOTEXT
   ELSE.
     DO.
       ADD 1 TO w_fcount.
@@ -550,7 +551,7 @@ TYPES:   BEGIN OF ts_color_styles,
         l_sep = &apos;&apos;.
       ENDIF.
 
-      CONCATENATE l_path l_sep &apos;Excel_&apos; w_fcount &apos;.xlsx&apos; INTO r_path.
+      CONCATENATE l_path l_sep &apos;Excel_&apos; w_fcount &apos;.xlsx&apos; INTO r_path. &quot;#EC NOTEXT
 
       IF cl_gui_frontend_services=&gt;file_exist( file  = r_path ) = abap_true.
         cl_gui_frontend_services=&gt;file_delete( EXPORTING filename = r_path
@@ -964,10 +965,11 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" VERSION="1" LANGU="E" DESCRIPT="Create excel file" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" VERSION="1" LANGU="E" DESCRIPT="Create excel file" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="E_BYTECOUNT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="ET_FILE" VERSION="1" LANGU="E" DESCRIPT="GBT: SOLIX as Table Type" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="SOLIX_TAB"/>
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="E_FILE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="XSTRING"/>
+  <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method GET_FILE.
   data: lo_excel_writer         type ref to zif_excel_writer,
         lo_excel                type ref to zcl_excel.
@@ -1577,7 +1579,8 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="OPEN_FILE" VERSION="1" LANGU="E" DESCRIPT="Open excel file" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="OPEN_FILE" VERSION="1" LANGU="E" DESCRIPT="Open excel file" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="OPEN_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method OPEN_FILE.
   data: l_bytecount             type i,
         lt_file                 type solix_tab,
@@ -1734,8 +1737,9 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" VERSION="1" LANGU="E" DESCRIPT="Write excel file" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" VERSION="1" LANGU="E" DESCRIPT="Write excel file" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" SCONAME="I_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
+  <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method WRITE_FILE.
   data: l_bytecount             type i,
       lt_file                 type solix_tab,

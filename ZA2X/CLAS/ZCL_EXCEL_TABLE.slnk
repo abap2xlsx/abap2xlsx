@@ -8,6 +8,14 @@
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
+ <textPool>
+  <language SPRAS="D">
+   <textElement ID="I" KEY="001" ENTRY="Ungültige Summenformel. Siehe ZCL_ für mögliche Werte" LENGTH="70 "/>
+  </language>
+  <language SPRAS="E">
+   <textElement ID="I" KEY="001" ENTRY="Invalid totals formula. See ZCL_ for possible values" LENGTH="70 "/>
+  </language>
+ </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_TABLE" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
  <forwardDeclaration>ABAP</forwardDeclaration>
  <attribute CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="BUILTINSTYLE_DARK1" VERSION="1" LANGU="E" DESCRIPT="Built in table style" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;TableStyleDark1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_TABLE_STYLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -81,9 +89,10 @@
   ov_name = me-&gt;name.
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" SCONAME="IP_INCLUDE_TOTALS_ROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_BOOL" PARVALUE="ABAP_TRUE"/>
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" SCONAME="OV_REFERENCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <exception CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_REFERENCE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method GET_REFERENCE.
   DATA: lv_column         TYPE zexcel_cell_column,
         lv_table_lines TYPE i,
@@ -145,11 +154,12 @@
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Returns formula for totals row based on column  name and fun" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Returns formula for totals row based on column  name and fun" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" SCONAME="IP_FUNCTION" VERSION="1" LANGU="E" DESCRIPT="Totals function for table column (xml ST_TotalsRowFunction)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_TABLE_TOTALS_FUNCTION"/>
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" SCONAME="EP_FORMULA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
-  <source>method GET_TOTALS_FORMULA.
+  <exception CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="GET_TOTALS_FORMULA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD get_totals_formula.
   CONSTANTS:  lc_function_id_sum TYPE string VALUE &apos;109&apos;,
               lc_function_id_min TYPE string VALUE &apos;105&apos;,
               lc_function_id_max TYPE string VALUE &apos;104&apos;,
@@ -178,13 +188,15 @@
       RETURN.
 
     WHEN OTHERS.
+      DATA l_error TYPE string.
+      l_error = &apos;Invalid totals formula. See ZCL_ for possible values&apos;(001).
       RAISE EXCEPTION TYPE zcx_excel
-    EXPORTING
-      error = &apos;Invalid totals formula. See ZCL_ for possible values&apos;.
+        EXPORTING
+          error = l_error.
   ENDCASE.
 
   CONCATENATE &apos;SUBTOTAL(&apos; lv_function_id &apos;,[&apos; ip_column &apos;])&apos; INTO ep_formula.
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="HAS_TOTALS" VERSION="1" LANGU="E" DESCRIPT="Determines if any column has totals function" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_TABLE" CMPNAME="HAS_TOTALS" SCONAME="EP_RESULT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ABAP_BOOL"/>

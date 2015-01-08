@@ -1,19 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CUSTOMUI" VERSION="1" LANGU="E" DESCRIPT="Excel customUI" UUID="0202322174CD1ED0A39E69743DBD5775" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDON="00000000" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <publicSection>class ZCL_EXCEL_CUSTOMUI definition
-  public
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_CUSTOMUI
-*&quot;* do not include other source files here!!!</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_CUSTOMUI
-*&quot;* do not include other source files here!!!</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_CUSTOMUI
-*&quot;* do not include other source files here!!!</privateSection>
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_CUSTOMUI" VERSION="1" LANGU="E" DESCRIPT="Excel customUI" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>

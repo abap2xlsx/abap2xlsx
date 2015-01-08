@@ -46,8 +46,6 @@ ENDMETHOD.</source>
   CLEAR: es_layout,
          et_fieldcatalog.
 
-  break rturnheim.
-
   IF lo_result IS BOUND.
     lo_data = get_table( io_object = lo_result-&gt;r_model-&gt;r_data ).
     IF lo_data IS BOUND.

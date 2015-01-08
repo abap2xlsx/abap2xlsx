@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<XSLT XSLTDESC="ZEXCEL_TR_SHARED_STRINGS" DEVCLASS="$TMP" LANGU="D" DESCRIPT="ZEXECL Simple transformation for SharedStrings.xml">
+ <source>&lt;?sap.transform simple?&gt;
+&lt;tt:transform xmlns:tt=&quot;http://www.sap.com/transformation-templates&quot;&gt;
+
+  &lt;tt:root name=&quot;ROOT&quot;/&gt;
+  &lt;tt:root name=&quot;SHARED_STRINGS&quot;/&gt;
+
+  &lt;tt:template&gt;
+    &lt;sst xmlns=&quot;http://schemas.openxmlformats.org/spreadsheetml/2006/main&quot;&gt;
+      &lt;tt:attribute name=&quot;count&quot; value-ref=&quot;ROOT.COUNT&quot;/&gt;
+      &lt;tt:attribute name=&quot;uniqueCount&quot; value-ref=&quot;ROOT.UNIQUE_COUNT&quot;/&gt;
+      &lt;tt:loop ref=&quot;SHARED_STRINGS&quot;&gt;
+        &lt;si&gt;
+          &lt;t&gt;
+            &lt;tt:value ref=&quot;STRING_VALUE&quot;/&gt;
+          &lt;/t&gt;
+        &lt;/si&gt;
+      &lt;/tt:loop&gt;
+    &lt;/sst&gt;
+  &lt;/tt:template&gt;
+
+&lt;/tt:transform&gt;</source>
+</XSLT>

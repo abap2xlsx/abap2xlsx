@@ -8,1051 +8,23 @@
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <localTestClasses>CLASS lcl_excel_common_test DEFINITION DEFERRED.
-CLASS zcl_excel_common DEFINITION LOCAL FRIENDS lcl_excel_common_test.
-
-*----------------------------------------------------------------------*
-*       CLASS lcl_Excel_Common_Test DEFINITION
-*----------------------------------------------------------------------*
-*
-*----------------------------------------------------------------------*
-CLASS lcl_excel_common_test DEFINITION FOR TESTING  &quot;#AU Risk_Level Harmless
-                                 .                  &quot;#AU Duration Short
-*?ï»¿&lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;
-*?&lt;asx:values&gt;
-*?&lt;TESTCLASS_OPTIONS&gt;
-*?&lt;TEST_CLASS&gt;lcl_Excel_Common_Test
-*?&lt;/TEST_CLASS&gt;
-*?&lt;TEST_MEMBER&gt;f_Cut
-*?&lt;/TEST_MEMBER&gt;
-*?&lt;OBJECT_UNDER_TEST&gt;ZCL_EXCEL_COMMON
-*?&lt;/OBJECT_UNDER_TEST&gt;
-*?&lt;OBJECT_IS_LOCAL/&gt;
-*?&lt;GENERATE_FIXTURE&gt;X
-*?&lt;/GENERATE_FIXTURE&gt;
-*?&lt;GENERATE_CLASS_FIXTURE&gt;X
-*?&lt;/GENERATE_CLASS_FIXTURE&gt;
-*?&lt;GENERATE_INVOCATION&gt;X
-*?&lt;/GENERATE_INVOCATION&gt;
-*?&lt;GENERATE_ASSERT_EQUAL&gt;X
-*?&lt;/GENERATE_ASSERT_EQUAL&gt;
-*?&lt;/TESTCLASS_OPTIONS&gt;
-*?&lt;/asx:values&gt;
-*?&lt;/asx:abap&gt;
-  PRIVATE SECTION.
-* ================
-    DATA:
-      lx_excel      TYPE REF TO zcx_excel,
-      ls_symsg_act  TYPE symsg,                    &quot; actual   messageinformation of exception
-      ls_symsg_exp  TYPE symsg,                    &quot; expected messageinformation of exception
-      f_cut         TYPE REF TO zcl_excel_common.  &quot;class under test
-
-    CLASS-METHODS: class_setup.
-    CLASS-METHODS: class_teardown.
-    METHODS: setup.
-    METHODS: teardown.
-*    METHODS: char2hex FOR TESTING.
-    METHODS: convert_column2alpha FOR TESTING.
-    METHODS: convert_column2int FOR TESTING.
-    METHODS: date_to_excel_string FOR TESTING.
-    METHODS: encrypt_password FOR TESTING.
-    METHODS: excel_string_to_date FOR TESTING.
-    METHODS: excel_string_to_time FOR TESTING.
-*    METHODS: number_to_excel_string FOR TESTING.
-    METHODS: time_to_excel_string FOR TESTING.
-    METHODS: split_file FOR TESTING.
-    METHODS: convert_range2column_a_row FOR TESTING.
-    METHODS: describe_structure FOR TESTING.
-    METHODS: calculate_cell_distance FOR TESTING.
-    METHODS: shift_formula FOR TESTING.
-ENDCLASS.       &quot;lcl_Excel_Common_Test
-
-
-*----------------------------------------------------------------------*
-*       CLASS lcl_Excel_Common_Test IMPLEMENTATION
-*----------------------------------------------------------------------*
-*
-*----------------------------------------------------------------------*
-CLASS lcl_excel_common_test IMPLEMENTATION.
-* ===========================================
-
-  METHOD class_setup.
-* ===================
-
-
-  ENDMETHOD.       &quot;class_Setup
-
-
-  METHOD class_teardown.
-* ======================
-
-
-  ENDMETHOD.       &quot;class_Teardown
-
-
-  METHOD setup.
-* =============
-
-    CREATE OBJECT f_cut.
-  ENDMETHOD.       &quot;setup
-
-
-  METHOD teardown.
-* ================
-
-
-  ENDMETHOD.       &quot;teardown
-
-
-  METHOD convert_column2alpha.
-* ============================
-    DATA ep_column TYPE zexcel_cell_column_alpha.
-
-* Test 1. Simple test
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2alpha( 1 ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_column
-          exp   = &apos;A&apos;
-          msg   = &apos;Wrong column conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 2. Max column for OXML #16,384 = XFD
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2alpha( 16384 ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_column
-          exp   = &apos;XFD&apos;
-          msg   = &apos;Wrong column conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 3. Index 0 is out of bounds
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2alpha( 0 ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_column
-          exp   = &apos;A&apos;
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals(
-          act   = lx_excel-&gt;error
-          exp   = &apos;Index out of bounds&apos;
-          msg   = &apos;Colum index 0 is out of bounds, min column index is 1&apos;
-          level = if_aunit_constants=&gt;fatal
-        ).
-    ENDTRY.
-
-* Test 4. Exception should be thrown index out of bounds
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2alpha( 16385 ).
-
-        zcl_excel_common=&gt;assert_differs(
-          act   = ep_column
-          exp   = &apos;XFE&apos;
-          msg   = &apos;Colum index 16385 is out of bounds, max column index is 16384&apos;
-          level = if_aunit_constants=&gt;fatal
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals(
-          act   = lx_excel-&gt;error
-          exp   = &apos;Index out of bounds&apos;
-          msg   = &apos;Wrong exception is thrown&apos;
-          level = if_aunit_constants=&gt;tolerable
-        ).
-    ENDTRY.
-  ENDMETHOD.       &quot;convert_Column2alpha
-
-
-  METHOD convert_column2int.
-* ==========================
-    DATA ep_column TYPE zexcel_cell_column.
-
-* Test 1. Basic test
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2int( &apos;A&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_column
-          exp   = 1
-          msg   = &apos;Wrong column conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 2. Max column
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2int( &apos;XFD&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_column
-          exp   = 16384
-          msg   = &apos;Wrong column conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 3. Out of bounds
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2int( &apos;&apos; ).
-
-        zcl_excel_common=&gt;assert_differs( act   = ep_column
-                                          exp   = &apos;0&apos;
-                                          msg   = &apos;Wrong column conversion&apos;
-                                          level = if_aunit_constants=&gt;critical ).
-      CATCH zcx_excel INTO lx_excel.
-        CLEAR: ls_symsg_act,
-               ls_symsg_exp.
-        ls_symsg_exp-msgid = &apos;ZABAP2XLSX&apos;.
-        ls_symsg_exp-msgno = &apos;800&apos;.
-        ls_symsg_act-msgid = lx_excel-&gt;syst_at_raise-msgid.
-        ls_symsg_act-msgno = lx_excel-&gt;syst_at_raise-msgno.
-        zcl_excel_common=&gt;assert_equals( act   = ls_symsg_act
-                                         exp   = ls_symsg_exp
-                                         msg   = &apos;Colum name should be a valid string&apos;
-                                         level = if_aunit_constants=&gt;fatal ).
-    ENDTRY.
-
-* Test 4. Out of bounds
-    TRY.
-        ep_column = zcl_excel_common=&gt;convert_column2int( &apos;XFE&apos; ).
-
-        zcl_excel_common=&gt;assert_differs( act   = ep_column
-                                          exp   = 16385
-                                          msg   = &apos;Wrong column conversion&apos;
-                                          level = if_aunit_constants=&gt;critical ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals( act   = lx_excel-&gt;error
-                                         exp   = &apos;Index out of bounds&apos;
-                                         msg   = &apos;Colum XFE is out of range&apos;
-                                         level = if_aunit_constants=&gt;fatal ).
-    ENDTRY.
-  ENDMETHOD.       &quot;convert_Column2int
-
-
-  METHOD date_to_excel_string.
-* ============================
-    DATA ep_value TYPE zexcel_cell_value.
-
-* Test 1. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=&gt;date_to_excel_string( &apos;19000101&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = 1
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-* Check around the &quot;Excel Leap Year&quot; 1900
-    TRY.
-        ep_value = zcl_excel_common=&gt;date_to_excel_string( &apos;19000228&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = 59
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-    TRY.
-        ep_value = zcl_excel_common=&gt;date_to_excel_string( &apos;19000301&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = 61
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-
-* Test 2. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=&gt;date_to_excel_string( &apos;99991212&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = 2958446
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 3. Initial date
-    TRY.
-        DATA: lv_date TYPE d.
-        ep_value = zcl_excel_common=&gt;date_to_excel_string( lv_date ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 2. Basic conversion
-    TRY.
-        DATA exp_value TYPE zexcel_cell_value VALUE 0.
-        ep_value = zcl_excel_common=&gt;date_to_excel_string( &apos;18991231&apos; ).
-
-        zcl_excel_common=&gt;assert_differs(
-              act   = ep_value
-              exp   = exp_value
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals(
-          act   = lx_excel-&gt;error
-          exp   = &apos;Index out of bounds&apos;
-          msg   = &apos;Dates prior of 1900 are not available in excel&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-    ENDTRY.
-
-  ENDMETHOD.       &quot;date_To_Excel_String
-
-
-  METHOD encrypt_password.
-* ========================
-    DATA lv_encrypted_pwd TYPE zexcel_aes_password.
-
-    TRY.
-        lv_encrypted_pwd = zcl_excel_common=&gt;encrypt_password( &apos;test&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = lv_encrypted_pwd
-              exp   = &apos;CBEB&apos;
-              msg   = &apos;Wrong password encryption&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-  ENDMETHOD.       &quot;encrypt_Password
-
-
-  METHOD excel_string_to_date.
-* ============================
-    DATA ep_value TYPE d.
-
-
-* Test 1. Simple test -&gt; ABAP Manage also date prior of 1900
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;0&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;18991231&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;tolerable
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-* Check around the &quot;Excel Leap Year&quot; 1900
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;59&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = &apos;19000228&apos;
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;61&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = &apos;19000301&apos;
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 2. Simple test
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;1&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;19000101&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 3. Index 0 is out of bounds
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;2958446&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;99991212&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 4. Exception should be thrown index out of bounds
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_date( &apos;2958447&apos; ).
-
-        zcl_excel_common=&gt;assert_differs(
-          act   = ep_value
-          exp   = &apos;99991212&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;fatal
-        ).
-
-        zcl_excel_common=&gt;assert_differs(
-          act   = ep_value
-          exp   = &apos;00000000&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;fatal
-        ).
-
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals(
-          act   = lx_excel-&gt;error
-          exp   = &apos;Index out of bounds&apos;
-          msg   = &apos;Wrong exception is thrown&apos;
-          level = if_aunit_constants=&gt;tolerable
-        ).
-    ENDTRY.
-  ENDMETHOD.       &quot;excel_String_To_Date
-
-
-  METHOD excel_string_to_time.
-* ============================
-    DATA ep_value TYPE t.
-
-* Test 1. Simple test
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_time( &apos;0&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;000000&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;tolerable
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 2. Simple test
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_time( &apos;1&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;000000&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 3. Simple test
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_time( &apos;0.99999&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;235959&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 4. Also string greater than 1 should be managed
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_time( &apos;4.1&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;022400&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 4. string is not a number
-    TRY.
-        ep_value = zcl_excel_common=&gt;excel_string_to_time( &apos;NaN&apos; ).
-
-        zcl_excel_common=&gt;assert_differs(
-          act   = ep_value
-          exp   = &apos;000000&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;assert_equals(
-          act   = lx_excel-&gt;error
-          exp   = &apos;Unable to interpret time&apos;
-          msg   = &apos;Time should be a valid string&apos;
-          level = if_aunit_constants=&gt;fatal
-        ).
-    ENDTRY.
-  ENDMETHOD.       &quot;excel_String_To_Time
-
-
-  METHOD time_to_excel_string.
-* ============================
-    DATA ep_value TYPE zexcel_cell_value.
-
-* Test 1. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=&gt;time_to_excel_string( &apos;000001&apos; ).
-        &quot; A test directly in Excel returns the value 0.0000115740740740741000
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = &apos;0.0000115740740741&apos;
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 2. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=&gt;time_to_excel_string( &apos;235959&apos; ).
-        &quot; A test directly in Excel returns the value 0.9999884259259260000000
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = &apos;0.9999884259259260&apos;
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 3. Initial date
-    TRY.
-        ep_value = zcl_excel_common=&gt;time_to_excel_string( &apos;000000&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-          act   = ep_value
-          exp   = &apos;0&apos;
-          msg   = &apos;Wrong date conversion&apos;
-          level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-* Test 2. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=&gt;time_to_excel_string( &apos;022400&apos; ).
-
-        zcl_excel_common=&gt;assert_equals(
-              act   = ep_value
-              exp   = &apos;0.1000000000000000&apos;
-              msg   = &apos;Wrong date conversion&apos;
-              level = if_aunit_constants=&gt;critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        zcl_excel_common=&gt;fail(
-            msg    = &apos;unexpected exception&apos;
-            level  = if_aunit_constants=&gt;critical    &quot; Error Severity
-        ).
-    ENDTRY.
-
-  ENDMETHOD.       &quot;time_To_Excel_String
-
-  METHOD split_file.
-* ============================
-
-    DATA: ep_file	TYPE text255,
-    ep_extension  TYPE char10,
-    ep_dotextension	TYPE char10.
-
-
-* Test 1. Basic conversion
-    zcl_excel_common=&gt;split_file( EXPORTING ip_file         = &apos;filename.xml&apos;
-                                  IMPORTING ep_file         = ep_file
-                                            ep_extension    = ep_extension
-                                            ep_dotextension = ep_dotextension ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = ep_file
-          exp   = &apos;filename&apos;
-          msg   = &apos;Split filename failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = ep_extension
-          exp   = &apos;xml&apos;
-          msg   = &apos;Split extension failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = ep_dotextension
-          exp   = &apos;.xml&apos;
-          msg   = &apos;Split extension failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-* Test 2. no extension
-    zcl_excel_common=&gt;split_file( EXPORTING ip_file         = &apos;filename&apos;
-                                  IMPORTING ep_file         = ep_file
-                                            ep_extension    = ep_extension
-                                            ep_dotextension = ep_dotextension ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = ep_file
-          exp   = &apos;filename&apos;
-          msg   = &apos;Split filename failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = ep_extension
-          exp   = &apos;&apos;
-          msg   = &apos;Split extension failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = ep_dotextension
-          exp   = &apos;&apos;
-          msg   = &apos;Split extension failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-  ENDMETHOD.  &quot;split_file
-
-  METHOD convert_range2column_a_row.
-    DATA: lv_range        TYPE string.
-    DATA: lv_column_start TYPE zexcel_cell_column_alpha,
-          lv_column_end   TYPE zexcel_cell_column_alpha,
-          lv_row_start    TYPE zexcel_cell_row,
-          lv_row_end      TYPE zexcel_cell_row,
-          lv_sheet        TYPE string.
-
-* a) input empty --&gt; nothing to do
-    zcl_excel_common=&gt;convert_range2column_a_row(
-      EXPORTING
-        i_range        = lv_range
-      IMPORTING
-        e_column_start = lv_column_start    &quot; Cell Column Start
-        e_column_end   = lv_column_end    &quot; Cell Column End
-        e_row_start    = lv_row_start    &quot; Cell Row
-        e_row_end      = lv_row_end    &quot; Cell Row
-        e_sheet        = lv_sheet    &quot; Title
-    ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_start
-          exp   = &apos;&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_end
-          exp   = &apos;&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_start
-          exp   = &apos;&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_end
-          exp   = &apos;&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_sheet
-          exp   = &apos;&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-* b) sheetname existing - starts with &apos;            example &apos;Sheet 1&apos;!$B$6:$D$13
-    lv_range = `&apos;Sheet 1&apos;!$B$6:$D$13`.
-    zcl_excel_common=&gt;convert_range2column_a_row(
-      EXPORTING
-        i_range        = lv_range
-      IMPORTING
-        e_column_start = lv_column_start    &quot; Cell Column Start
-        e_column_end   = lv_column_end    &quot; Cell Column End
-        e_row_start    = lv_row_start    &quot; Cell Row
-        e_row_end      = lv_row_end    &quot; Cell Row
-        e_sheet        = lv_sheet    &quot; Title
-    ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_start
-          exp   = &apos;B&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_end
-          exp   = &apos;D&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_start
-          exp   = &apos;6&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_end
-          exp   = &apos;13&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_sheet
-          exp   = &apos;Sheet 1&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-* c) sheetname existing - does not start with &apos;    example Sheet1!$B$6:$D$13
-    lv_range = `Sheet1!B6:$D$13`.
-    zcl_excel_common=&gt;convert_range2column_a_row(
-      EXPORTING
-        i_range        = lv_range
-      IMPORTING
-        e_column_start = lv_column_start    &quot; Cell Column Start
-        e_column_end   = lv_column_end    &quot; Cell Column End
-        e_row_start    = lv_row_start    &quot; Cell Row
-        e_row_end      = lv_row_end    &quot; Cell Row
-        e_sheet        = lv_sheet    &quot; Title
-    ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_start
-          exp   = &apos;B&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_end
-          exp   = &apos;D&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_start
-          exp   = &apos;6&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_end
-          exp   = &apos;13&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_sheet
-          exp   = &apos;Sheet1&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-* d) no sheetname - just area                      example $B$6:$D$13
-    lv_range = `$B$6:D13`.
-    zcl_excel_common=&gt;convert_range2column_a_row(
-      EXPORTING
-        i_range        = lv_range
-      IMPORTING
-        e_column_start = lv_column_start    &quot; Cell Column Start
-        e_column_end   = lv_column_end    &quot; Cell Column End
-        e_row_start    = lv_row_start    &quot; Cell Row
-        e_row_end      = lv_row_end    &quot; Cell Row
-        e_sheet        = lv_sheet    &quot; Title
-    ).
-
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_start
-          exp   = &apos;B&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_column_end
-          exp   = &apos;D&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_start
-          exp   = &apos;6&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_row_end
-          exp   = &apos;13&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-    zcl_excel_common=&gt;assert_equals(
-          act   = lv_sheet
-          exp   = &apos;&apos;
-          msg   = &apos;Conversion of range failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-  ENDMETHOD.                    &quot;convert_range2column_a_row
-
-
-  METHOD describe_structure.
-    DATA: ls_test TYPE scarr.
-    DATA: lo_structdescr TYPE REF TO cl_abap_structdescr.
-    DATA: lt_structure TYPE ddfields.
-    FIELD-SYMBOLS: &lt;line&gt; LIKE LINE OF lt_structure.
-
-    &quot; Test with DDIC Type
-    lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data( p_data = ls_test ).
-    lt_structure = zcl_excel_common=&gt;describe_structure( io_struct = lo_structdescr ).
-    READ TABLE lt_structure ASSIGNING &lt;line&gt; INDEX 1.
-    zcl_excel_common=&gt;assert_equals(
-          act   = &lt;line&gt;-fieldname
-          exp   = &apos;MANDT&apos;
-          msg   = &apos;Describe structure failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-    &quot; Test with local defined structure having DDIC and non DDIC elements
-    TYPES:
-      BEGIN OF t_test,
-        carrid   TYPE s_carr_id,
-        carrname TYPE s_carrname,
-        carrdesc TYPE string,
-      END OF t_test.
-    DATA: ls_ttest TYPE t_test.
-
-    lo_structdescr ?= cl_abap_structdescr=&gt;describe_by_data( p_data = ls_ttest ).
-    lt_structure = zcl_excel_common=&gt;describe_structure( io_struct = lo_structdescr ).
-    READ TABLE lt_structure ASSIGNING &lt;line&gt; INDEX 1.
-    zcl_excel_common=&gt;assert_equals(
-          act   = &lt;line&gt;-fieldname
-          exp   = &apos;CARRID&apos;
-          msg   = &apos;Describe structure failed&apos;
-          level = if_aunit_constants=&gt;critical ).
-
-  ENDMETHOD.                    &quot;describe_structure
-
-
-  METHOD calculate_cell_distance.
-    DATA: lv_offset_rows             TYPE i,
-          lv_offset_cols             TYPE i,
-          lv_message                 TYPE string.
-
-    DEFINE macro_calculate_cell_distance.
-      zcl_excel_common=&gt;calculate_cell_distance( exporting iv_reference_cell = &amp;1
-                                                           iv_current_cell   = &amp;2
-                                                 importing ev_row_difference = lv_offset_rows
-                                                           ev_col_difference = lv_offset_cols ).
-* Check delta columns
-      concatenate &apos;Error calculating column difference in test:&apos;
-                  &amp;1
-                  &apos;-&gt;&apos;
-                  &amp;2
-           into lv_message separated by space.
-      zcl_excel_common=&gt;assert_equals(  act   = lv_offset_cols
-                                        exp   = &amp;3
-                                        msg   = lv_message
-                                        quit  = 0  &quot; continue tests
-                                        level = if_aunit_constants=&gt;critical ).
-* Check delta rows
-      concatenate &apos;Error calculating row difference in test:&apos;
-                  &amp;1
-                  &apos;-&gt;&apos;
-                  &amp;2
-           into lv_message separated by space.
-      zcl_excel_common=&gt;assert_equals(  act   = lv_offset_rows
-                                        exp   = &amp;4
-                                        msg   = lv_message
-                                        quit  = 0  &quot; continue tests
-                                        level = if_aunit_constants=&gt;critical ).
-    END-OF-DEFINITION.
-
-
-    macro_calculate_cell_distance:
-          &apos;C12&apos;        &apos;C12&apos;          0           0        ,  &quot; Same cell
-          &apos;C12&apos;        &apos;C13&apos;          0           1        ,  &quot; Shift down 1 place
-          &apos;C12&apos;        &apos;C25&apos;          0          13        ,  &quot; Shift down some places
-          &apos;C12&apos;        &apos;C11&apos;          0          -1        ,  &quot; Shift up 1 place
-          &apos;C12&apos;        &apos;C1&apos;           0         -11        ,  &quot; Shift up some place
-          &apos;C12&apos;        &apos;D12&apos;          1           0        ,  &quot; Shift right 1 place
-          &apos;C12&apos;        &apos;AA12&apos;        24           0        ,  &quot; Shift right some places
-          &apos;C12&apos;        &apos;B12&apos;         -1           0        ,  &quot; Shift left 1 place
-          &apos;AA12&apos;       &apos;C12&apos;        -24           0        ,  &quot; Shift left some place
-          &apos;AA121&apos;      &apos;C12&apos;        -24        -109        .  &quot; The full package.
-
-  ENDMETHOD.                    &quot;CALCULATE_CELL_DISTANCE
-
-  METHOD shift_formula.
-    DATA: lv_resulting_formula       TYPE string,
-          lv_message                 TYPE string,
-          lv_counter                 TYPE num8.
-
-    DEFINE macro_shift_formula.
-      add 1 to lv_counter.
-      clear lv_resulting_formula.
-      try.
-          lv_resulting_formula = zcl_excel_common=&gt;shift_formula( iv_reference_formula = &amp;1
-                                                                  iv_shift_cols        = &amp;2
-                                                                  iv_shift_rows        = &amp;3 ).
-          concatenate &apos;Wrong result in test&apos;
-                      lv_counter
-                      &apos;shifting formula &apos;
-                      &amp;1
-               into lv_message separated by space.
-          zcl_excel_common=&gt;assert_equals(  act   = lv_resulting_formula
-                                            exp   = &amp;4
-                                            msg   = lv_message
-                                            quit  = 0  &quot; continue tests
-                                            level = if_aunit_constants=&gt;critical ).
-        catch zcx_excel.
-          concatenate &apos;Unexpected exception occurred in test&apos;
-                      lv_counter
-                      &apos;shifting formula &apos;
-                      &amp;1
-               into lv_message separated by space.
-          zcl_excel_common=&gt;assert_equals(  act   = lv_resulting_formula
-                                            exp   = &amp;4
-                                            msg   = lv_message
-                                            quit  = 0  &quot; continue tests
-                                            level = if_aunit_constants=&gt;critical ).
-      endtry.
-    END-OF-DEFINITION.
-
-* Test shifts that should result in a valid output
-    macro_shift_formula:
-          &apos;C17&apos;                                  0   0       &apos;C17&apos;,                       &quot; Very basic check
-          &apos;C17&apos;                                  2   3       &apos;E20&apos;,                       &quot; Check shift right and down
-          &apos;C17&apos;                                 -2  -3       &apos;A14&apos;,                       &quot; Check shift left and up
-          &apos;$C$17&apos;                                1   1       &apos;$C$17&apos;,                     &quot; Fixed columns/rows
-          &apos;SUM($C17:C$23)+C30&apos;                   1  11       &apos;SUM($C28:D$23)+D41&apos;,        &quot; Operators and Ranges, mixed fixed rows or columns
-          &apos;RNGNAME1+C7&apos;                         -1  -4       &apos;RNGNAME1+B3&apos;,               &quot; Operators and Rangename
-          &apos;&quot;Date:&quot;&amp;TEXT(B2)&apos;                     1   1       &apos;&quot;Date:&quot;&amp;TEXT(C3)&apos;,          &quot; String literals and string concatenation
-          &apos;[TEST6.XLSX]SHEET1!A1&apos;                1  11       &apos;[TEST6.XLSX]SHEET1!B12&apos;,    &quot; External sheet reference
-          `X(B13, &quot;KK&quot; )  `                      1   1       `X(C14,&quot;KK&quot;)`,               &quot; superflous blanks, multi-argument functions, literals in function, unknown functions
-*          &apos;SIN((((((B2))))))&apos;                    1   1       &apos;SIN((((((C3))))))&apos;,        &quot; Deep nesting
-*          &apos;SIN(SIN(SIN(SIN(E22))))&apos;              0   1       &apos;SIN(SIN(SIN(SIN(E23))))&apos;,   &quot; Different type of deep nesting
-          `SIN(SIN(SIN(SIN(E22))))`              0   1       &apos;SIN(SIN(SIN(SIN(E23))))&apos;,   &quot; same as above - but with string input instead of Char-input
-          &apos;HEUTE()&apos;                              2   5       &apos;HEUTE()&apos;,                   &quot; Functions w/o arguments, No cellreferences
-          &apos;&quot;B2&quot;&apos;                                 2   5       &apos;&quot;B2&quot;&apos;,                      &quot; No cellreferences
-          &apos;&apos;                                     2   5       &apos;&apos;,                          &quot; Empty
-          &apos;A1+$A1+A$1+$A$1+B2&apos;                  -1   0       &apos;#REF!+$A1+#REF!+$A$1+A2&apos;,   &quot; Referencing error , column only    , underflow
-          &apos;A1+$A1+A$1+$A$1+B2&apos;                   0  -1       &apos;#REF!+#REF!+A$1+$A$1+B1&apos;,   &quot; Referencing error , row only       , underflow
-          &apos;A1+$A1+A$1+$A$1+B2&apos;                  -1  -1       &apos;#REF!+#REF!+#REF!+$A$1+A1&apos;. &quot; Referencing error , row and column , underflow
-  ENDMETHOD.                    &quot;SHIFT_FORMULA
-
-
-
-
-
-ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
+ <localTestClasses>*&quot;* use this source file for your ABAP unit test classes</localTestClasses>
  <textPool>
   <language SPRAS="D">
-   <textElement ID="I" KEY="001" ENTRY="Unerlaubter Bereich" LENGTH="60 "/>
-   <textElement ID="I" KEY="002" ENTRY="Eingabe nicht korrekt ?escaped? - &amp;  Wie zum Geier heißt das" LENGTH="60 "/>
-   <textElement ID="I" KEY="003" ENTRY="Eingabe konnte nicht als Spaltenname interpretiert werden" LENGTH="60 "/>
-   <textElement ID="I" KEY="004" ENTRY="Index nicht im erlaubten Bereich" LENGTH="60 "/>
+   <textElement ID="I" KEY="001" ENTRY="Ungültiger Bereich" LENGTH="30 "/>
+   <textElement ID="I" KEY="002" ENTRY="Eingabe nicht korrekt escaped - &amp;" LENGTH="50 "/>
+   <textElement ID="I" KEY="004" ENTRY="Ungültiger Index" LENGTH="40 "/>
+   <textElement ID="I" KEY="005" ENTRY="Wert ist kein gültiges Datum" LENGTH="40 "/>
+   <textElement ID="I" KEY="006" ENTRY="Wert ist keine gültige Zeit" LENGTH="40 "/>
+   <textElement ID="I" KEY="010" ENTRY="Spalte:" LENGTH="10 "/>
   </language>
   <language SPRAS="E">
-   <textElement ID="I" KEY="001" ENTRY="Invalid range" LENGTH="60 "/>
-   <textElement ID="I" KEY="002" ENTRY="Input not properly escaped - &amp;" LENGTH="60 "/>
-   <textElement ID="I" KEY="003" ENTRY="Unable to interpret input as column" LENGTH="60 "/>
-   <textElement ID="I" KEY="004" ENTRY="Index out of bounds" LENGTH="60 "/>
+   <textElement ID="I" KEY="001" ENTRY="Invalid range" LENGTH="30 "/>
+   <textElement ID="I" KEY="002" ENTRY="Input not properly escaped - &amp;" LENGTH="50 "/>
+   <textElement ID="I" KEY="004" ENTRY="Index out of bounds" LENGTH="40 "/>
+   <textElement ID="I" KEY="005" ENTRY="Unable to convert value to date" LENGTH="40 "/>
+   <textElement ID="I" KEY="006" ENTRY="Unable to interpret time" LENGTH="40 "/>
+   <textElement ID="I" KEY="010" ENTRY="Col:" LENGTH="10 "/>
   </language>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_COMMON" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
@@ -1114,7 +86,7 @@ ENDCLASS.       &quot;lcl_Excel_Common_Test</localTestClasses>
 * We do nothing for now not supported
     ENDIF.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" VERSION="1" LANGU="E" DESCRIPT="Ensure Equality of Two Data Objects" EXPOSURE="2" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="EXP" VERSION="1" LANGU="E" DESCRIPT="Data Object with Expected Type" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
@@ -1125,7 +97,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="QUIT" VERSION="1" LANGU="E" DESCRIPT="Flow Control in Case of Error" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="AUNIT_FLOWCTRL" PARVALUE="IF_AUNIT_CONSTANTS=&gt;METHOD"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="IGNORE_HASH_SEQUENCE" VERSION="1" LANGU="E" DESCRIPT="Ignore change sequence in hash tables" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_BOOL" PARVALUE="ABAP_FALSE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ASSERT_EQUALS" SCONAME="ASSERTION_FAILED" VERSION="1" LANGU="E" DESCRIPT="Condition not met" CMPTYPE="1" MTDTYPE="0" EDITORDER="8 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ABAP_BOOL"/>
-  <source>METHOD assert_equals.
+  <source>method ASSERT_EQUALS.
   DATA: ls_seoclass TYPE seoclass.
 
   &quot; Let see &gt;=7.02
@@ -1167,7 +139,7 @@ endmethod.</source>
 * We do nothing for now not supported
     ENDIF.
   ENDIF.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" VERSION="1" LANGU="E" DESCRIPT="Give distance between two cells" EXPOSURE="2" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="IV_REFERENCE_CELL" VERSION="1" LANGU="E" DESCRIPT="Reference Cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -1175,7 +147,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="EV_ROW_DIFFERENCE" VERSION="1" LANGU="E" DESCRIPT="Number of rows current cell is below reference cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="EV_COL_DIFFERENCE" VERSION="1" LANGU="E" DESCRIPT="Number of columns current cell is right of reference cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CALCULATE_CELL_DISTANCE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD calculate_cell_distance.
+  <source>method CALCULATE_CELL_DISTANCE.
 
   DATA:       lv_reference_row                TYPE i,
               lv_reference_col_alpha          TYPE zexcel_cell_column_alpha,
@@ -1214,7 +186,7 @@ ENDMETHOD.</source>
   ev_row_difference = lv_current_row - lv_reference_row.
   ev_col_difference = lv_current_col - lv_reference_col.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CHAR2HEX" VERSION="1" LANGU="E" DESCRIPT="Character to Hexadecimal" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CHAR2HEX" SCONAME="I_CHAR" VERSION="1" LANGU="E" DESCRIPT="Single-Character Indicator" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CHAR1"/>
@@ -1231,7 +203,7 @@ ENDMETHOD.</source>
   CALL METHOD o_conv-&gt;write( data = i_char ).
   r_hex+1 = o_conv-&gt;get_buffer( ). &quot; x&apos;65&apos; must be x&apos;0065&apos;
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" VERSION="1" LANGU="E" DESCRIPT="Convert column indicator to Alpha" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2ALPHA" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
@@ -1252,9 +224,11 @@ endmethod.</source>
 *--------------------------------------------------------------------*
   IF   lv_column &gt; 16384
     OR lv_column &lt; 1.
+    DATA l_error TYPE string.
+    l_error = &apos;Index out of bounds&apos;(004).
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
-        error = &apos;Index out of bounds&apos;.
+        error = l_error.
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -1278,11 +252,11 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="EP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMN2INT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD convert_column2int.
+  <source>method CONVERT_COLUMN2INT.
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-12-29
+*              - Stefan SchmÃ¶cker,      (done)              2012-12-29
 *              - ...
 * changes: renaming variables to naming conventions
 *          removing unused variables
@@ -1291,7 +265,7 @@ ENDMETHOD.</source>
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#246 - error converting lower case column names
-*              - Stefan Schmöcker,                          2012-12-29
+*              - Stefan SchmÃ¶cker,                          2012-12-29
 * changes: translating the correct variable to upper dase
 *          adding missing exception if input is a number
 *          that is out of bounds
@@ -1431,7 +405,7 @@ ENDMETHOD.</source>
   ENDIF.
 
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Convert ColumnRow i.e. AB34 to AB and 34" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_COLUMNROW2COLUMN_A_ROW" SCONAME="I_COLUMNROW" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -1441,7 +415,7 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
   &quot;issue #256 - replacing char processing with regex
 *--------------------------------------------------------------------*
-* Stefan Schmöcker, 2013-08-11
+* Stefan SchmÃ¶cker, 2013-08-11
 *    Allow input to be CLIKE instead of STRING
 *--------------------------------------------------------------------*
 
@@ -1454,7 +428,7 @@ ENDMETHOD.</source>
                                                        pane_cell_row_a.
   e_row = pane_cell_row_a.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" VERSION="1" LANGU="E" DESCRIPT="Converts Sheet1!AB34:CD56 to Sheet1, AB, 34, CD, 56" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="CONVERT_RANGE2COLUMN_A_ROW" SCONAME="I_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -1467,7 +441,7 @@ endmethod.</source>
   <source>method CONVERT_RANGE2COLUMN_A_ROW.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-12-07
+*              - Stefan SchmÃ¶cker,      (done)              2012-12-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -1477,12 +451,12 @@ endmethod.</source>
 *--------------------------------------------------------------------*
 * issue#241 - error when sheetname contains &quot;!&quot;
 *           - sheetname should be returned unescaped
-*              - Stefan Schmöcker,                          2012-12-07
+*              - Stefan SchmÃ¶cker,                          2012-12-07
 * changes: changed coding to support sheetnames with &quot;!&quot;
 *          unescaping sheetname
 *--------------------------------------------------------------------*
 * issue#155 - lessening restrictions of input parameters
-*              - Stefan Schmöcker,                          2012-12-07
+*              - Stefan SchmÃ¶cker,                          2012-12-07
 * changes: i_range changed to clike
 *          e_sheet changed to clike
 *--------------------------------------------------------------------*
@@ -1547,7 +521,7 @@ endmethod.</source>
                                     e_row       = e_row_end ).
 
   e_sheet = unescape_string( lv_sheet ).                  &quot; Return in unescaped form
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert date from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DATE_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="D"/>
@@ -1565,7 +539,7 @@ endmethod.</source>
     lv_date_diff = ip_value - c_excel_baseline_date + 1.
   ENDIF.
   ep_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = lv_date_diff ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DESCRIBE_STRUCTURE" VERSION="1" LANGU="E" DESCRIPT="Describe database info of structure" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DESCRIBE_STRUCTURE" SCONAME="IO_STRUCT" VERSION="1" LANGU="E" DESCRIPT="Runtime Type Services" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="CL_ABAP_STRUCTDESCR"/>
@@ -1616,7 +590,7 @@ endmethod.</source>
       ENDIF.
     ENDLOOP.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Determine formula if copied to another cell" EXPOSURE="2" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="IV_REFERENCE_CELL" VERSION="1" LANGU="E" DESCRIPT="Reference cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -1624,7 +598,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="IV_CURRENT_CELL" VERSION="1" LANGU="E" DESCRIPT="Current cell" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="EV_RESULTING_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Resulting formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="DETERMINE_RESULTING_FORMULA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD determine_resulting_formula.
+  <source>method DETERMINE_RESULTING_FORMULA.
 
   DATA:       lv_row_difference               TYPE i,
               lv_col_difference               TYPE i.
@@ -1646,7 +620,7 @@ endmethod.</source>
                                         iv_shift_rows        = lv_row_difference
                                         iv_shift_cols        = lv_col_difference ).
 
-ENDMETHOD.                    &quot;determine_resulting_formula</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ENCRYPT_PASSWORD" VERSION="1" LANGU="E" DESCRIPT="Encrypt password" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ENCRYPT_PASSWORD" SCONAME="I_PWD" VERSION="1" LANGU="E" DESCRIPT="AES Password" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_AES_PASSWORD"/>
@@ -1688,7 +662,7 @@ ENDMETHOD.                    &quot;determine_resulting_formula</source>
 
   WRITE lv_pwd_hash TO r_encrypted_pwd.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" VERSION="1" LANGU="E" DESCRIPT="Escape a string" EXPOSURE="2" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="ESCAPE_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -1696,19 +670,19 @@ endmethod.</source>
   <source>method ESCAPE_STRING.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-12-08
+*              - Stefan SchmÃ¶cker,      (done)              2012-12-08
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#242 - Support escaping for white-spaces
 *           - Escaping also necessary when &apos; encountered in input
-*              - Stefan Schmöcker,                          2012-12-08
+*              - Stefan SchmÃ¶cker,                          2012-12-08
 * changes: switched check if escaping is necessary to regular expression
 *          and moved the &quot;REPLACE&quot;
 *--------------------------------------------------------------------*
 * issue#155 - lessening restrictions of input parameters
-*              - Stefan Schmöcker,                          2012-12-08
+*              - Stefan SchmÃ¶cker,                          2012-12-08
 * changes: ip_value changed to clike
 *--------------------------------------------------------------------*
   DATA:       lv_value                        TYPE string.
@@ -1739,13 +713,13 @@ endmethod.</source>
 
   ep_escaped_value = lv_value.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" VERSION="1" LANGU="E" DESCRIPT="Convert date from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Date" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="D"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_DATE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method EXCEL_STRING_TO_DATE.
+  <source>METHOD excel_string_to_date.
   DATA: lv_date_int TYPE i.
 
   TRY.
@@ -1758,17 +732,19 @@ endmethod.</source>
         ep_value = ep_value + 1.
       ENDIF.
     CATCH cx_sy_conversion_error.
+      DATA l_error TYPE string.
+      l_error = &apos;Unable to convert value to date&apos;(005).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
-          error = &apos;Index out of bounds&apos;.
+          error = l_error.
   ENDTRY.
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" VERSION="1" LANGU="E" DESCRIPT="Convert time from Excel format to SAP" EXPOSURE="2" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" SCONAME="EP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Time" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="EXCEL_STRING_TO_TIME" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>method EXCEL_STRING_TO_TIME.
+  <source>METHOD excel_string_to_time.
   DATA: lv_seconds_in_day TYPE i,
         lv_day_fraction   TYPE f,
         lc_seconds_in_day TYPE i VALUE 86400.
@@ -1781,11 +757,13 @@ endmethod.</source>
       ep_value = lv_seconds_in_day.
 
     CATCH cx_sy_conversion_error.
+      DATA l_error TYPE string.
+      l_error = &apos;Unable to interpret time&apos;(006).
       RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = &apos;Unable to interpret time&apos;.
+        EXPORTING
+          error = l_error.
   ENDTRY.
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="FAIL" VERSION="1" LANGU="E" DESCRIPT="Report Unconditional Error" EXPOSURE="2" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="FAIL" SCONAME="MSG" VERSION="1" LANGU="E" DESCRIPT="Error Message" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE" PAROPTIONL="X"/>
@@ -1825,7 +803,7 @@ endmethod.</source>
     ENDIF.
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Creates field catalog for BIND_TABLE based on internal table" EXPOSURE="2" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
@@ -1852,6 +830,8 @@ endmethod.</source>
                                 t_table        = &lt;tab&gt;  ).
       lo_salv_columns_table = lo_salv_table-&gt;get_columns( ).
       lt_salv_t_column_ref  = lo_salv_columns_table-&gt;get( ).
+      ##CATCH_ALL
+      ##NO_HANDLER
     CATCH cx_root.
 * maybe some errorhandling here - just haven&apos;t made up my mind yet
   ENDTRY.
@@ -1879,12 +859,51 @@ endmethod.</source>
     IF    &lt;fcat&gt;-scrtext_s IS INITIAL
       AND &lt;fcat&gt;-scrtext_m IS INITIAL
       AND &lt;fcat&gt;-scrtext_l IS INITIAL.
-      CONCATENATE &apos;Col:&apos; &lt;fcat&gt;-fieldname INTO &lt;fcat&gt;-scrtext_l  SEPARATED BY space.
+      CONCATENATE &apos;Col:&apos;(010) &lt;fcat&gt;-fieldname INTO &lt;fcat&gt;-scrtext_l  SEPARATED BY space.
       &lt;fcat&gt;-scrtext_m = &lt;fcat&gt;-scrtext_l.
       &lt;fcat&gt;-scrtext_s = &lt;fcat&gt;-scrtext_l.
     ENDIF.
 
   ENDLOOP.
+
+  endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GUID_CREATE" VERSION="1" LANGU="E" DESCRIPT="Replacement for obsolete GUID_CREATE function module" EXPOSURE="2" STATE="1" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GUID_CREATE" SCONAME="EV_GUID_16" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;RAW&apos; format" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="0" TYPTYPE="1" TYPE="GUID_16"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GUID_CREATE" SCONAME="EV_GUID_22" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;CHAR&apos; format with upper-/lowercase (!)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="0" TYPTYPE="1" TYPE="GUID_22"/>
+  <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GUID_CREATE" SCONAME="EV_GUID_32" VERSION="1" LANGU="E" DESCRIPT="GUID in &apos;CHAR&apos; Format in Uppercase" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="0" TYPTYPE="1" TYPE="GUID_32"/>
+  <source>method GUID_CREATE.
+*
+* Copied from FM &apos;GUID_CREATE&apos; which is now obsolete
+*
+  DATA: l_uuid_16  TYPE sysuuid_x16.
+  DATA: oref       TYPE REF TO cx_uuid_error.
+
+  TRY.
+      l_uuid_16 = cl_system_uuid=&gt;create_uuid_x16_static( ).
+  CATCH cx_uuid_error INTO oref.
+      l_uuid_16 = &apos;0&apos;.
+  ENDTRY.
+
+  IF ev_guid_16 IS SUPPLIED.
+    ev_guid_16 = l_uuid_16.
+  ENDIF.
+
+  &quot; GUID in Length 22 (Format &apos;C&apos; ATTENTION: Upper-/Lowercase !)
+  IF ev_guid_22 IS SUPPLIED.
+    TRY.
+        cl_system_uuid=&gt;convert_uuid_x16_static( EXPORTING uuid = l_uuid_16
+                                                 IMPORTING uuid_c22 = ev_guid_22 ).
+
+  CATCH cx_uuid_error INTO oref.
+        ev_guid_22 = &apos;0000000000000000000000&apos;.
+    ENDTRY.
+  ENDIF.
+
+  &quot; GUID in Length 32 (Format &apos;C&apos; Uppercase only)
+  IF ev_guid_32 IS SUPPLIED.
+    ev_guid_32 = l_uuid_16.
+  ENDIF.
 
 endmethod.</source>
  </method>
@@ -1905,7 +924,7 @@ endmethod.</source>
   ELSEIF ip_value EQ 0.
     ep_value = &apos;0&apos;.
   ENDIF.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" VERSION="1" LANGU="E" DESCRIPT="Move class to structure" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_CLASS_TO_STRUCT" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
@@ -1964,7 +983,7 @@ endmethod.</source>
     ENDCASE.
   ENDLOOP.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" VERSION="1" LANGU="E" DESCRIPT="Move structure to class" EXPOSURE="2" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
@@ -2028,7 +1047,7 @@ endmethod.</source>
     ENDCASE.
   ENDLOOP.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Shift formula from one cell to another" EXPOSURE="2" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="IV_REFERENCE_FORMULA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -2036,7 +1055,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="IV_SHIFT_ROWS" VERSION="1" LANGU="E" DESCRIPT="Shift formula down by this many rows" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="EV_RESULTING_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Resulting formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <exception CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
-  <source>METHOD shift_formula.
+  <source>method SHIFT_FORMULA.
 
   CONSTANTS:  lcv_operators                   TYPE string VALUE &apos;+-/*^%=&lt;&gt;&amp;, !&apos;,
               lcv_letters                     TYPE string VALUE &apos;ABCDEFGHIJKLMNOPQRSTUVWXYZ$&apos;,
@@ -2073,10 +1092,10 @@ endmethod.</source>
 * are copied as well.  Cell-references in the formula are being adjusted
 * by the distance of the new cell to the original one
 *--------------------------------------------------------------------*
-* §1 Parse reference formula character by character
-* §2 Identify Cell-references
-* §3 Shift cell-reference
-* §4 Build resulting formula
+* Â§1 Parse reference formula character by character
+* Â§2 Identify Cell-references
+* Â§3 Shift cell-reference
+* Â§4 Build resulting formula
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
@@ -2093,7 +1112,7 @@ endmethod.</source>
   lv_numchars = 1.
 
 *--------------------------------------------------------------------*
-* §1 Parse reference formula character by character
+* Â§1 Parse reference formula character by character
 *--------------------------------------------------------------------*
   DO lv_flen TIMES.
 
@@ -2197,7 +1216,7 @@ endmethod.</source>
         TRY.
             MOVE: iv_reference_formula+lv_offset1(lv_tlen) TO lv_ref_cell_addr. &quot;Ref cell address
           CATCH cx_root.
-            lv_errormessage = &apos;Internal error in Class ZCL_EXCEL_COMMON Method SHIFT_FORMULA Spot 1 &apos;.  &quot; Change to messageclass if possible
+            lv_errormessage = &apos;Internal error in Class ZCL_EXCEL_COMMON Method SHIFT_FORMULA Spot 1&apos;. &quot;#EC NOTEXT &quot; Change to messageclass if possible
             RAISE EXCEPTION TYPE zcx_excel
               EXPORTING
                 error    = lv_errormessage.
@@ -2369,7 +1388,7 @@ endmethod.</source>
     MOVE lv_cur_form TO ev_resulting_formula.
   ENDIF.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHL01" SCONAME="I_PWD_HASH" VERSION="1" LANGU="E" DESCRIPT="Password hash" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_PWD_HASH"/>
@@ -2389,7 +1408,7 @@ ENDMETHOD.</source>
   ENDDO.
   SET BIT 16 OF r_pwd_hash TO 0.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHR14" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHR14" SCONAME="I_PWD_HASH" VERSION="1" LANGU="E" DESCRIPT="Password hash" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_PWD_HASH"/>
@@ -2416,7 +1435,7 @@ endmethod.</source>
     SET BIT 1 OF r_pwd_hash TO 0.
   ENDDO.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" VERSION="1" LANGU="E" DESCRIPT="File &amp; Extension disconnect (clone of FM CV120_SPLIT_FILE)" EXPOSURE="2" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SPLIT_FILE" SCONAME="IP_FILE" VERSION="1" LANGU="E" DESCRIPT="Original of document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="TEXT255"/>
@@ -2464,7 +1483,7 @@ endmethod.</source>
     ep_file = ip_file(lf_len).
   ENDIF.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="STRUCTURE_CASE" VERSION="1" LANGU="E" DESCRIPT="Case stement for recursive" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="STRUCTURE_CASE" SCONAME="IS_COMPONENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_COMPONENTDESCR"/>
@@ -2483,7 +1502,7 @@ endmethod.</source>
     WHEN OTHERS. &quot;cl_abap_typedescr=&gt;kind_ref or  cl_abap_typedescr=&gt;kind_class or  cl_abap_typedescr=&gt;kind_intf.
 * We skip it. for now.
   ENDCASE.
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="STRUCTURE_RECURSIVE" VERSION="1" LANGU="E" DESCRIPT="Get structure details" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="STRUCTURE_RECURSIVE" SCONAME="IS_COMPONENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ABAP_COMPONENTDESCR"/>
@@ -2503,7 +1522,7 @@ endmethod.</source>
                     CHANGING  xt_components = rt_components ) .
   ENDLOOP.
 
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" VERSION="1" LANGU="E" DESCRIPT="Convert time from SAP format to Excel" EXPOSURE="2" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="TIME_TO_EXCEL_STRING" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T"/>
@@ -2517,7 +1536,7 @@ endmethod.</source>
   lv_seconds_in_day = ip_value - lc_time_baseline.
   lv_day_fraction = lv_seconds_in_day / lc_seconds_in_day.
   ep_value = zcl_excel_common=&gt;number_to_excel_string( ip_value = lv_day_fraction ).
-endmethod.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" VERSION="1" LANGU="E" DESCRIPT="Unescape" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="UNESCAPE_STRING" SCONAME="IV_ESCAPED" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>
@@ -2577,6 +1596,6 @@ endmethod.</source>
   REPLACE ALL OCCURRENCES OF `&apos;&apos;` IN ev_unescaped_string WITH `&apos;`.
 
 
-endmethod.</source>
+  endmethod.</source>
  </method>
 </CLAS>

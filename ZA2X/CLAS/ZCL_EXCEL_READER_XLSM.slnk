@@ -1,30 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_READER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro reader" UUID="0202322174CD1EE0A390E386CB9ED10B" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_READER_2007">
- <publicSection>class ZCL_EXCEL_READER_XLSM definition
-  public
-  inheriting from ZCL_EXCEL_READER_2007
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_READER_XLSM
-*&quot;* do not include other source files here!!!</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_READER_XLSM
-*&quot;* do not include other source files here!!!
-
-  methods LOAD_WORKBOOK
-    redefinition .
-  methods LOAD_WORKSHEET
-    redefinition .</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_READER_XLSM
-*&quot;* do not include other source files here!!!
-
-  methods LOAD_VBAPROJECT
-    importing
-      !IP_PATH type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL .</privateSection>
+<CLAS CLSNAME="ZCL_EXCEL_READER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro reader" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_READER_2007">
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>
@@ -34,24 +9,25 @@ public section.
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <inheritance CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" STATE="1">
-  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKBOOK"/>
-  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKSHEET"/>
+  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKBOOK" EXPOSURE="1"/>
+  <redefinition CLSNAME="ZCL_EXCEL_READER_XLSM" REFCLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" MTDNAME="LOAD_WORKSHEET" EXPOSURE="1"/>
  </inheritance>
- <method CLSNAME="ZCL_EXCEL_READER_XLSM" CMPNAME="LOAD_VBAPROJECT" VERSION="1" LANGU="E" DESCRIPT="Load VBA binary" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_XLSM" CMPNAME="LOAD_VBAPROJECT" VERSION="1" LANGU="E" DESCRIPT="Load VBA binary" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_XLSM" CMPNAME="LOAD_VBAPROJECT" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_XLSM" CMPNAME="LOAD_VBAPROJECT" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_XLSM" CMPNAME="LOAD_VBAPROJECT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD load_vbaproject.
 
-  DATA lv_content TYPE xstring.
+    DATA lv_content TYPE xstring.
 
-  lv_content = me-&gt;get_from_zip_archive( ip_path ).
+    lv_content = me-&gt;get_from_zip_archive( ip_path ).
 
-  ip_excel-&gt;zif_excel_book_vba_project~set_vbaproject( lv_content ).
+    ip_excel-&gt;zif_excel_book_vba_project~set_vbaproject( lv_content ).
 
-ENDMETHOD.</source>
+  ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD load_workbook.
+  <source>method LOAD_WORKBOOK.
   super-&gt;load_workbook( EXPORTING iv_workbook_full_filename = iv_workbook_full_filename
                                   io_excel                  = io_excel ).
 
@@ -78,12 +54,12 @@ ENDMETHOD.</source>
       file_path     = dirname.
 
   &quot; Read Workbook Relationships
-  CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos;
+  CONCATENATE dirname &apos;_rels/&apos; stripped_name &apos;.rels&apos; &quot;#EC NOTEXT
     INTO rels_workbook_path.
 
   rels_workbook = me-&gt;get_ixml_from_zip_archive( rels_workbook_path ).
 
-  node ?= rels_workbook-&gt;find_from_name( &apos;Relationship&apos; ).
+  node ?= rels_workbook-&gt;find_from_name( &apos;Relationship&apos; ). &quot;#EC NOTEXT
   WHILE node IS BOUND.
     me-&gt;fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
 
@@ -101,7 +77,7 @@ ENDMETHOD.</source>
 
   &quot; Read Workbook codeName
   workbook = me-&gt;get_ixml_from_zip_archive( iv_workbook_full_filename ).
-  node ?=  workbook-&gt;find_from_name( &apos;fileVersion&apos; ).
+  node ?=  workbook-&gt;find_from_name( &apos;fileVersion&apos; ). &quot;#EC NOTEXT
   IF node IS BOUND.
 
     fill_struct_from_attributes( EXPORTING ip_element   = node
@@ -112,7 +88,7 @@ ENDMETHOD.</source>
 
   &quot; Read Workbook codeName
   workbook = me-&gt;get_ixml_from_zip_archive( iv_workbook_full_filename ).
-  node ?=  workbook-&gt;find_from_name( &apos;workbookPr&apos; ).
+  node ?=  workbook-&gt;find_from_name( &apos;workbookPr&apos; ). &quot;#EC NOTEXT
   IF node IS BOUND.
 
     fill_struct_from_attributes( EXPORTING ip_element   = node
@@ -121,10 +97,10 @@ ENDMETHOD.</source>
     io_excel-&gt;zif_excel_book_vba_project~set_codename_pr( workbookpr-codename ).
   ENDIF.
 
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>METHOD load_worksheet.
+  <source>method LOAD_WORKSHEET.
 
   super-&gt;load_worksheet( EXPORTING ip_path      = ip_path
                                    io_worksheet = io_worksheet ).
@@ -156,6 +132,6 @@ ENDMETHOD.</source>
 
     io_worksheet-&gt;zif_excel_sheet_vba_project~set_codename_pr( sheetpr-codename ).
   ENDIF.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
 </CLAS>
