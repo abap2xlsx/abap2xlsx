@@ -29,17 +29,17 @@
 DATA: excel                 TYPE REF TO zcl_excel,
       reader                TYPE REF TO zif_excel_reader,
       go_error              TYPE REF TO cx_root,
+      gv_memid_gr8          TYPE text255,
       gv_message            TYPE string,
       lv_extension          TYPE string,
       gv_error_program_name TYPE syrepid,
       gv_error_include_name TYPE syrepid,
       gv_error_line         TYPE i.
 
-
-CONSTANTS: gc_save_file_name TYPE string VALUE &apos;37- Read template and output.xlsx&apos;.
+DATA: gc_save_file_name TYPE string VALUE &apos;37- Read template and output.&amp;&apos;.
 
 SELECTION-SCREEN BEGIN OF BLOCK blx WITH FRAME.
-PARAMETERS: p_upfile TYPE string DEFAULT &apos;c:\temp\whatever.xlsx&apos; LOWER CASE.
+PARAMETERS: p_upfile TYPE string LOWER CASE MEMORY ID gr8.
 SELECTION-SCREEN END OF BLOCK blx.
 
 INCLUDE zdemo_excel_outputopt_incl.
@@ -60,6 +60,12 @@ SELECTION-SCREEN END OF BLOCK bl_err.
 INITIALIZATION.
   PERFORM setup_listboxes.
   cmt_dump = text-dum.
+  GET PARAMETER ID &apos;GR8&apos; FIELD gv_memid_gr8.
+  p_upfile = gv_memid_gr8.
+
+  IF p_upfile IS INITIAL.
+    p_upfile = &apos;c:\temp\whatever.xlsx&apos;.
+  ENDIF.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_upfile.
   PERFORM f4_p_upfile CHANGING p_upfile.
@@ -275,6 +281,7 @@ FORM read_template RAISING zcx_excel .
 
     WHEN OTHERS.
       CREATE OBJECT reader TYPE (lb_read).
+      excel = reader-&gt;load_file(  p_upfile ).
       &quot;Use template for charts
       excel-&gt;use_template = abap_true.
 
@@ -296,9 +303,11 @@ FORM write_template  RAISING zcx_excel.
       CASE lv_extension.
 
         WHEN &apos;.XLSX&apos;.
+          REPLACE &apos;&amp;&apos; IN gc_save_file_name WITH &apos;xlsx&apos;.  &quot; Pass extension for standard writer
           lcl_output=&gt;output( excel ).
 
         WHEN &apos;.XLSM&apos;.
+          REPLACE &apos;&amp;&apos; IN gc_save_file_name WITH &apos;xlsm&apos;.  &quot; Pass extension for macro-writer
           lcl_output=&gt;output( cl_excel            = excel
                               iv_writerclass_name = &apos;ZCL_EXCEL_WRITER_XLSM&apos; ).
 

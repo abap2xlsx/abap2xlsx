@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_READER_2007" VERSION="1" LANGU="E" DESCRIPT="Read Excel 2007 into ZCL_EXCEL" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="32 " TYPESRC_LENG="283 " TYPESRC="BEGIN OF ty_ref_formulae,
-
-           sheet      TYPE REF TO zcl_excel_worksheet,
-
-           row        TYPE i,
-
-           column     TYPE i,
-
-           si         TYPE i,
-
-           ref        TYPE string,
-
-           formula    TYPE string,
-
-         END   OF ty_ref_formulae
-
-"/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="15 " SRCCOLUMN1="4 " SRCROW2="15 " SRCCOLUMN2="89 " TYPESRC_LENG="88 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
-
-"/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="13 " SRCCOLUMN2="24 " TYPESRC_LENG="327 " TYPESRC='BEGIN OF t_relationship,
       id         TYPE string,
       type       TYPE string,
@@ -96,6 +76,26 @@
          END OF gts_external_hyperlink
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTT_EXTERNAL_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Table with external hyperlinks" EXPOSURE="1" STATE="1" EDITORDER="17 " TYPTYPE="4" SRCROW1="81 " SRCCOLUMN1="4 " SRCROW2="81 " SRCCOLUMN2="89 " TYPESRC_LENG="88 " TYPESRC="gtt_external_hyperlinks TYPE HASHED TABLE OF gts_external_hyperlink WITH UNIQUE KEY id
+"/>
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="18 " TYPTYPE="4" SRCROW1="83 " SRCCOLUMN1="4 " SRCROW2="90 " SRCCOLUMN2="32 " TYPESRC_LENG="283 " TYPESRC="BEGIN OF ty_ref_formulae,
+
+           sheet      TYPE REF TO zcl_excel_worksheet,
+
+           row        TYPE i,
+
+           column     TYPE i,
+
+           si         TYPE i,
+
+           ref        TYPE string,
+
+           formula    TYPE string,
+
+         END   OF ty_ref_formulae
+
+"/>
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="19 " TYPTYPE="4" SRCROW1="92 " SRCCOLUMN1="4 " SRCROW2="92 " SRCCOLUMN2="89 " TYPESRC_LENG="88 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
+
 "/>
  <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
@@ -272,7 +272,7 @@ endclass.</localTypes>
  </textPool>
  <typeUsage CLSNAME="ZCL_EXCEL_READER_2007" TYPEGROUP="IXML" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
  <forwardDeclaration>IXML</forwardDeclaration>
- <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="MT_REF_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Referenced formulae before resolving" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TYT_REF_FORMULAE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="MT_REF_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Referenced formulae before resolving" EXPOSURE="1" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TYT_REF_FORMULAE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRINGTAB" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="STYLES" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_STYLE_REFS" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="LCL_ZIP_ARCHIVE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -320,7 +320,11 @@ endclass.</localTypes>
 *--------------------------------------------------------------------*
 * §1  Create EXCEL-Object we want to return to caller
 *--------------------------------------------------------------------*
-  CREATE OBJECT r_excel.
+  IF iv_zcl_excel_classname IS INITIAL.
+    CREATE OBJECT r_excel.
+  ELSE.
+    CREATE OBJECT r_excel TYPE (iv_zcl_excel_classname).
+  ENDIF.
 
   zip = create_zip_archive( i_xlsx_binary = i_excel2007
                             i_use_alternate_zip = i_use_alternate_zip ).
@@ -379,8 +383,9 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
 * Parse Excel data into ZCL_EXCEL object from binary string
 *--------------------------------------------------------------------*
-  r_excel = zif_excel_reader~load( i_excel2007          = lv_excel_data
-                                   i_use_alternate_zip  = i_use_alternate_zip ).
+  r_excel = zif_excel_reader~load( i_excel2007            = lv_excel_data
+                                   i_use_alternate_zip    = i_use_alternate_zip
+                                   iv_zcl_excel_classname = iv_zcl_excel_classname ).
 
 ENDMETHOD.</source>
  </interfaceMethod>

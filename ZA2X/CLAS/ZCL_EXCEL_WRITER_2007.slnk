@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
+ <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="1 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -15,21 +15,21 @@
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_OFF" VERSION="1" LANGU="E" DESCRIPT="Byte Value" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="2" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_ON" VERSION="1" LANGU="E" DESCRIPT="Byte Value" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="2" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Rels XML File Name" EXPOSURE="1" STATE="1" EDITORDER="6 " ATTDECLTYP="2" ATTVALUE="&apos;_rels/.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_CALCCHAIN" VERSION="1" LANGU="E" DESCRIPT="xlcalcChain XML File Name" EXPOSURE="1" STATE="1" EDITORDER="11 " ATTDECLTYP="2" ATTVALUE="&apos;xl/calcChain.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="7 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/drawing#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="8 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/_rels/drawing#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_PRINTERSETTINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="0" STATE="1" EDITORDER="21 " ATTDECLTYP="2" ATTVALUE="&apos;xl/printerSettings/printerSettings#.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="xlRels XML File Name" EXPOSURE="1" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;xl/_rels/workbook.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="xlSharedStrings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="10 " ATTDECLTYP="2" ATTVALUE="&apos;xl/sharedStrings.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="xlSheet XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="12 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/sheet#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="xlSheetRels XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/_rels/sheet#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="xlStyles XML File Name" EXPOSURE="1" STATE="1" EDITORDER="14 " ATTDECLTYP="2" ATTVALUE="&apos;xl/styles.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="xlTheme XML File Name" EXPOSURE="1" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTVALUE="&apos;xl/theme/theme1.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="1" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="1" STATE="1" EDITORDER="17 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="0" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_COND_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_COND_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_CALCCHAIN" VERSION="1" LANGU="E" DESCRIPT="xlcalcChain XML File Name" EXPOSURE="1" STATE="1" EDITORDER="7 " ATTDECLTYP="2" ATTVALUE="&apos;xl/calcChain.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="8 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/drawing#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/_rels/drawing#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_PRINTERSETTINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="0" STATE="1" EDITORDER="10 " ATTDECLTYP="2" ATTVALUE="&apos;xl/printerSettings/printerSettings#.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="xlRels XML File Name" EXPOSURE="1" STATE="1" EDITORDER="11 " ATTDECLTYP="2" ATTVALUE="&apos;xl/_rels/workbook.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="xlSharedStrings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="12 " ATTDECLTYP="2" ATTVALUE="&apos;xl/sharedStrings.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="xlSheet XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/sheet#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="xlSheetRels XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="14 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/_rels/sheet#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="xlStyles XML File Name" EXPOSURE="1" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTVALUE="&apos;xl/styles.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="xlTheme XML File Name" EXPOSURE="1" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="&apos;xl/theme/theme1.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="1" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="1" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="0" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_COND_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_COND_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="21 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WRITER_2007" CPDNAME="ZIF_EXCEL_WRITER~WRITE_FILE">
   <source>method ZIF_EXCEL_WRITER~WRITE_FILE.
   me-&gt;excel = io_excel.
@@ -37,6 +37,12 @@
   ep_file = me-&gt;create( ).
   endmethod.</source>
  </interfaceMethod>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="ADD_FURTHER_DATA_TO_ZIP" VERSION="1" LANGU="E" DESCRIPT="Add further data to zip ( used by child-classes )" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="ADD_FURTHER_DATA_TO_ZIP" SCONAME="IO_ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="CL_ABAP_ZIP"/>
+  <source>METHOD add_further_data_to_zip.
+* Can be used by child classes like xlsm-writer to write additional data to zip archive
+ENDMETHOD.</source>
+ </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE.
@@ -228,8 +234,11 @@
     &quot;-------------------------------------------------
   ENDWHILE.
 
+* Second to last step: Allow further information put into the zip archive by child classes
+  me-&gt;add_further_data_to_zip( lo_zip ).
+
 **********************************************************************
-* STEP 12: Create the final zip
+* Last step: Create the final zip
   ep_excel = lo_zip-&gt;save( ).
 
   endmethod.</source>
@@ -4721,7 +4730,12 @@ ENDMETHOD.</source>
               lc_xml_attr_diagonalup        TYPE string VALUE &apos;diagonalUp&apos;,
               lc_xml_attr_diagonaldown      TYPE string VALUE &apos;diagonalDown&apos;,
               &quot; Node namespace
-              lc_xml_node_ns                TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;.
+              lc_xml_node_ns                TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
+              lc_xml_attr_type 				TYPE string value &apos;type&apos;,
+              lc_xml_attr_bottom 			TYPE string value &apos;bottom&apos;,
+              lc_xml_attr_top 				TYPE string value &apos;top&apos;,
+              lc_xml_attr_right 			TYPE string value &apos;right&apos;,
+              lc_xml_attr_left 				TYPE string value &apos;left&apos;.
 
   DATA: lo_ixml             TYPE REF TO if_ixml,
         lo_document         TYPE REF TO if_ixml_document,
@@ -5039,32 +5053,140 @@ ENDMETHOD.</source>
   LOOP AT lt_fills INTO ls_fill.
     lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
                                                           parent = lo_document ).
-    &quot;pattern
-    lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
-                                                         parent = lo_document ).
-    lv_value = ls_fill-filltype.
-    lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
-                                      value = lv_value ).
-    &quot; fgcolor
-    create_xl_styles_color_node(
-        io_document        = lo_document
-        io_parent          = lo_sub_element
-        is_color           = ls_fill-fgcolor
-        iv_color_elem_name = lc_xml_node_fgcolor ).
 
-    IF  ls_fill-fgcolor-rgb IS INITIAL AND
-        ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
-        ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
-        ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
+ if ls_fill-gradtype is not initial.
+    &quot;gradient
 
-      &quot; bgcolor
+    lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_gradientfill
+                                                        parent = lo_document ).
+    if ls_fill-gradtype-degree is not initial.
+      lv_value = ls_fill-gradtype-degree.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_degree  value = lv_value ).
+    endif.
+    if ls_fill-gradtype-type is not initial.
+      lv_value = ls_fill-gradtype-type.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_type  value = lv_value ).
+    endif.
+    if ls_fill-gradtype-bottom is not initial.
+      lv_value = ls_fill-gradtype-bottom.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_bottom  value = lv_value ).
+    endif.
+    if ls_fill-gradtype-top is not initial.
+      lv_value = ls_fill-gradtype-top.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_top  value = lv_value ).
+    endif.
+    if ls_fill-gradtype-right is not initial.
+      lv_value = ls_fill-gradtype-right.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_right  value = lv_value ).
+    endif.
+    if ls_fill-gradtype-left is not initial.
+      lv_value = ls_fill-gradtype-left.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_left  value = lv_value ).
+    endif.
+
+    if ls_fill-gradtype-position3 is not initial.
+      &quot;create &lt;stop&gt; elements for gradients, we can have 2 or 3 stops in each gradient
+      lo_sub_element_2 =  lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                              parent = lo_sub_element ).
+      lv_value = ls_fill-gradtype-position1.
+      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position value = lv_value ).
+
+      create_xl_styles_color_node(
+          io_document        = lo_document
+          io_parent          = lo_sub_element_2
+          is_color           = ls_fill-bgcolor
+          iv_color_elem_name = lc_xml_node_color ).
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+
+      lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                             parent = lo_sub_element ).
+
+      lv_value = ls_fill-gradtype-position2.
+
+      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
+                                          value = lv_value ).
+
+      create_xl_styles_color_node(
+          io_document        = lo_document
+          io_parent          = lo_sub_element_2
+          is_color           = ls_fill-fgcolor
+          iv_color_elem_name = lc_xml_node_color ).
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+
+      lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                             parent = lo_sub_element ).
+
+      lv_value = ls_fill-gradtype-position3.
+      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
+                                          value = lv_value ).
+
+      create_xl_styles_color_node(
+          io_document        = lo_document
+          io_parent          = lo_sub_element_2
+          is_color           = ls_fill-bgcolor
+          iv_color_elem_name = lc_xml_node_color ).
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+
+    else.
+       &quot;create &lt;stop&gt; elements for gradients, we can have 2 or 3 stops in each gradient
+      lo_sub_element_2 =  lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                              parent = lo_sub_element ).
+      lv_value = ls_fill-gradtype-position1.
+      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position value = lv_value ).
+
+      create_xl_styles_color_node(
+          io_document        = lo_document
+          io_parent          = lo_sub_element_2
+          is_color           = ls_fill-bgcolor
+          iv_color_elem_name = lc_xml_node_color ).
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+
+      lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                             parent = lo_sub_element ).
+
+      lv_value = ls_fill-gradtype-position2.
+      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
+                                          value = lv_value ).
+
+      create_xl_styles_color_node(
+          io_document        = lo_document
+          io_parent          = lo_sub_element_2
+          is_color           = ls_fill-fgcolor
+          iv_color_elem_name = lc_xml_node_color ).
+      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+    endif.
+
+
+
+
+  else.
+      &quot;pattern
+      lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
+                                                           parent = lo_document ).
+      lv_value = ls_fill-filltype.
+      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
+                                        value = lv_value ).
+      &quot; fgcolor
       create_xl_styles_color_node(
           io_document        = lo_document
           io_parent          = lo_sub_element
-          is_color           = ls_fill-bgcolor
-          iv_color_elem_name = lc_xml_node_bgcolor ).
+          is_color           = ls_fill-fgcolor
+          iv_color_elem_name = lc_xml_node_fgcolor ).
 
-    ENDIF.
+      IF  ls_fill-fgcolor-rgb IS INITIAL AND
+          ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
+          ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
+          ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
+
+        &quot; bgcolor
+        create_xl_styles_color_node(
+            io_document        = lo_document
+            io_parent          = lo_sub_element
+            is_color           = ls_fill-bgcolor
+            iv_color_elem_name = lc_xml_node_bgcolor ).
+
+      ENDIF.
+    endif.
 
     lo_element_fill-&gt;append_child( new_child = lo_sub_element ).&quot;pattern
     lo_element_fills-&gt;append_child( new_child = lo_element_fill ).
