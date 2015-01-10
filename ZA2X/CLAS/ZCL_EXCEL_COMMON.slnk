@@ -2132,7 +2132,7 @@ endmethod.</source>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="I_SOURCEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="DATA"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="RECURSIVE_STRUCT_TO_CLASS" SCONAME="E_TARGET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
-  <source>method RECURSIVE_STRUCT_TO_CLASS.
+  <source>METHOD recursive_struct_to_class.
   &quot; # issue 139
 * is working for me - but after looking through this coding I guess
 * I&apos;ll rewrite this to a version w/o recursion
@@ -2172,6 +2172,13 @@ endmethod.</source>
 
     CASE wa_component-type_kind.
       WHEN cl_abap_structdescr=&gt;typekind_struct1 OR cl_abap_structdescr=&gt;typekind_struct2.  &quot; Structure --&gt; use recursion
+        &quot; To avoid dump with attribute GRADTYPE of class ZCL_EXCEL_STYLE_FILL
+        &quot; quick and really dirty fix -&gt; check the attribute name
+        &quot; Border has to be initialized somewhere else
+        IF wa_component-name EQ &apos;GRADTYPE&apos;.
+          flag_class = abap_false.
+        ENDIF.
+
         IF flag_class = abap_true AND &lt;attribute&gt; IS INITIAL.
 * Only borders will be passed as unbound references.  But since we want to set a value we have to create an instance
           CREATE OBJECT o_border.
@@ -2190,7 +2197,7 @@ endmethod.</source>
     ENDCASE.
   ENDLOOP.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Shift formula from one cell to another" EXPOSURE="2" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="SHIFT_FORMULA" SCONAME="IV_REFERENCE_FORMULA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE"/>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL34" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20120319" UNAM="K2_SCHMOECK" UDAT="20120325" VERN="000017" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120325" STIME="233306" IDATE="20120325" ITIME="233306" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL34" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Static Styles (Chess)" LENGTH="37 "/>
@@ -203,11 +203,13 @@ START-OF-SELECTION.
           IF colorflag = 0.
             lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
                                               ip_row                  = row
-                                              ip_fill_fgcolor_rgb     = &apos;FFB5866A&apos; ).
+                                              ip_fill_fgcolor_rgb     = &apos;FFB5866A&apos;
+                                              ip_fill_filltype        = zcl_excel_style_fill=&gt;c_fill_gradient_diagonal135 ).
           ELSE.
             lo_worksheet-&gt;change_cell_style(  ip_column               = col_alpha
                                               ip_row                  = row
-                                              ip_fill_fgcolor_rgb     = &apos;FFF5DEBF&apos; ).
+                                              ip_fill_fgcolor_rgb     = &apos;FFF5DEBF&apos;
+                                              ip_fill_filltype        = zcl_excel_style_fill=&gt;c_fill_gradient_diagonal45 ).
           ENDIF.
 
 
