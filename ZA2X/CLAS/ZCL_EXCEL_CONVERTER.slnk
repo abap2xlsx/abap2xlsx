@@ -852,7 +852,8 @@ ENDMETHOD.</source>
         ls_fieldcatalog         TYPE zexcel_s_converter_fcat,
         lo_if                   TYPE REF TO zif_excel_converter,
         ls_types                TYPE ts_alv_types,
-        lo_addit                TYPE REF TO cl_abap_classdescr.
+        lo_addit                TYPE REF TO cl_abap_classdescr,
+        lo_addit_superclass     type ref to cl_abap_classdescr.
 
   IF io_object IS BOUND.
     TRY.
@@ -862,36 +863,48 @@ ENDMETHOD.</source>
     ENDTRY.
     ls_types-seoclass = lo_addit-&gt;get_relative_name( ).
     READ TABLE wt_objects INTO ls_types WITH TABLE KEY seoclass = ls_types-seoclass.
-    IF sy-subrc = 0.
-      CREATE OBJECT lo_if TYPE (ls_types-clsname).
-
-      TRY.
+    if sy-subrc ne 0.
+      do.
+        free lo_addit_superclass.
+        lo_addit_superclass = lo_addit-&gt;get_super_class_type( ).
+        if lo_addit_superclass is initial.
+          sy-subrc = &apos;4&apos;.
+          exit.
+        endif.
+        lo_addit = lo_addit_superclass.
+        ls_types-seoclass = lo_addit-&gt;get_relative_name( ).
+        read table wt_objects into ls_types with table key seoclass = ls_types-seoclass.
+        if sy-subrc eq 0.
+          exit.
+        endif.
+      enddo.
+    endif.
+    if sy-subrc = 0.
+      CREATE OBJECT lo_if type (ls_types-clsname).
+      try.
         lo_if-&gt;create_fieldcatalog(
-          EXPORTING
-            is_option       = ws_option
-            io_object       = io_object
-            it_table        = it_table
-          IMPORTING
-            es_layout       = ws_layout
-            et_fieldcatalog = wt_fieldcatalog
-            eo_table        = wo_table
-            et_colors       = wt_colors
-            et_filter       = wt_filter
-               ).
-      ENDTRY.
-* data lines of highest level.
-      IF ws_layout-max_subtotal_level &gt; 0.
-        ADD 1 TO ws_layout-max_subtotal_level.
-      ENDIF.
-    ELSE.
-      RAISE EXCEPTION TYPE zcx_excel.
-    ENDIF.
-  ELSE.
-    REFRESH wt_fieldcatalog.
-    GET REFERENCE OF it_table INTO wo_table.
-  ENDIF.
-
-  endmethod.</source>
+        exporting
+          is_option       = ws_option
+          io_object       = io_object
+          it_table        = it_table
+        importing
+          es_layout       = ws_layout
+          et_fieldcatalog = wt_fieldcatalog
+          eo_table        = wo_table
+          et_colors       = wt_colors
+          et_filter       = wt_filter
+          ).
+      endtry.
+*  data lines of highest level.
+      if ws_layout-max_subtotal_level &gt; 0. add 1 to ws_layout-max_subtotal_level. endif.
+    else.
+      RAISE EXCEPTION type zcx_excel.
+    endif.
+  else.
+    refresh wt_fieldcatalog.
+    get reference of it_table into wo_table.
+  endif.
+endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_COLOR_STYLE" VERSION="1" LANGU="E" DESCRIPT="Look up color style and create if needed" EXPOSURE="0" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="GET_COLOR_STYLE" SCONAME="I_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
