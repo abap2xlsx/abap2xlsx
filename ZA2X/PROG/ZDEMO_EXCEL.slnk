@@ -55,6 +55,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel12 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Column size
   SUBMIT zdemo_excel13 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Merge cell
   SUBMIT zdemo_excel14 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Alignment
+  &quot; zdemo_excel15 added at the end
   SUBMIT zdemo_excel16 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Drawing
   SUBMIT zdemo_excel17 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Lock sheet
   SUBMIT zdemo_excel18 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Lock workbook
@@ -81,6 +82,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel38 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Show off integration of drawings ( here using the SAP-Icons )
   SUBMIT zdemo_excel39 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Charts
   SUBMIT zdemo_excel40 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Demo Printsettings
+  SUBMIT zdemo_excel41 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. &quot; abap2xlsx Demo: Inheritance
   &quot;
   &quot; Reader/Writer Demo must always run at the end
   &quot; to make sure all documents where created
