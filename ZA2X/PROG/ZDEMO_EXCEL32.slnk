@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL32" VARCL="X" SUBC="1" CNAM="RTURNHEIM" CDAT="20120212" UNAM="FEMIA" UDAT="20120319" VERN="000027" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120319" STIME="193719" IDATE="20120319" ITIME="193719" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL32" VARCL="X" SUBC="1" RMAND="800" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export ALV" LENGTH="26 "/>

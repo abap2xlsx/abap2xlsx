@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL29" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20110601" UNAM="FEMIA" UDAT="20110602" VERN="000015" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20110602" STIME="111927" IDATE="20110602" ITIME="111927" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL29" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Marco-Enabled workbook" LENGTH="38 "/>

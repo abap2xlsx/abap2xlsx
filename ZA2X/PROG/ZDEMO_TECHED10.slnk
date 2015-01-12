@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_TECHED10" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20111030" UNAM="FEMIA" UDAT="20111030" VERN="000017" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20111101" STIME="103432" IDATE="20111030" ITIME="164752" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_TECHED10" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Hello World" LENGTH="27 "/>
@@ -33,40 +33,10 @@ DATA: lt_files          TYPE filetable,
       lv_rc             TYPE i,
       lv_value          TYPE zexcel_cell_value.
 
-CONSTANTS: lc_default_file_name TYPE string VALUE &apos;TechEd01.xlsx&apos;.
-
-*******************************
-* Selection screen management *
-*******************************
-
-PARAMETERS: p_path TYPE zexcel_export_dir.
-
-AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
-  lv_workdir = p_path.
-  cl_gui_frontend_services=&gt;file_open_dialog( EXPORTING initial_directory = lv_workdir
-                                                        default_filename  = lc_default_file_name
-                                                        file_filter       = &apos;abap2xlsx|*.xlsx&apos;
-                                              CHANGING  file_table        = lt_files
-                                                        rc                = lv_rc ).
-  IF lv_rc EQ 1.
-    READ TABLE lt_files INTO ls_file INDEX 1.
-    lv_full_path = ls_file-filename.
-    p_path = ls_file-filename.
-  ENDIF.
-
-INITIALIZATION.
-  cl_gui_frontend_services=&gt;get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
-  cl_gui_cfw=&gt;flush( ).
-  cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-  CONCATENATE lv_workdir lv_file_separator lc_default_file_name INTO lv_full_path.
-  p_path = lv_full_path.
+CONSTANTS: gc_save_file_name TYPE string VALUE &apos;TechEd01.xlsx&apos;.
+INCLUDE zdemo_excel_outputopt_incl.
 
 START-OF-SELECTION.
-
-  IF lv_full_path IS INITIAL.
-    cl_gui_frontend_services=&gt;get_file_separator( CHANGING file_separator = lv_file_separator ).
-    CONCATENATE lv_workdir lv_file_separator lc_default_file_name INTO lv_full_path.
-  ENDIF.
 
 *******************************
 *    abap2xlsx read XLSX    *
@@ -81,5 +51,8 @@ START-OF-SELECTION.
                                     ip_row    = 10
                           IMPORTING ep_value  = lv_value ).
 
-  WRITE: &apos;abap2xlsx total score is &apos;, lv_value.</source>
+  WRITE: &apos;abap2xlsx total score is &apos;, lv_value.
+
+*** Create output
+  lcl_output=&gt;output( lo_excel ).</source>
 </PROG>

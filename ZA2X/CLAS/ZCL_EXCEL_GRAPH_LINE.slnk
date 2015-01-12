@@ -1,39 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_GRAPH_LINE" VERSION="1" LANGU="E" DESCRIPT="Bars Graphic" UUID="02023211AE4F1EE28FF619A6A974C51E" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_GRAPH">
- <types CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="S_AX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="30 " SRCCOLUMN2="23 " TYPESRC_LENG="715 " TYPESRC="BEGIN OF s_ax,
-                axid TYPE string,
-                type TYPE char5,
-                orientation TYPE string,
-                delete TYPE string,
-                axpos TYPE string,
-                formatcode TYPE string,
-                sourcelinked TYPE string,
-                majortickmark TYPE string,
-                minortickmark TYPE string,
-                ticklblpos TYPE string,
-                crossax TYPE string,
-                crosses TYPE string,
-                auto TYPE string,
-                lblalgn TYPE string,
-                lbloffset TYPE string,
-                nomultilvllbl TYPE string,
-                crossbetween TYPE string,
-             END OF s_ax
-"/>
- <types CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="T_AX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="32 " SRCCOLUMN1="4 " SRCROW2="32 " SRCCOLUMN2="35 " TYPESRC_LENG="34 " TYPESRC="t_ax TYPE STANDARD TABLE OF s_ax
-"/>
- <publicSection>class ZCL_EXCEL_GRAPH_LINE definition
-  public
-  inheriting from ZCL_EXCEL_GRAPH
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_GRAPH_LINE
-*&quot;* do not include other source files here!!!
-
-  types:
-    BEGIN OF s_ax,
+<CLAS CLSNAME="ZCL_EXCEL_GRAPH_LINE" VERSION="1" LANGU="E" DESCRIPT="Bars Graphic" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_GRAPH">
+ <types CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="S_AX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="28 " SRCCOLUMN2="23 " TYPESRC_LENG="715 " TYPESRC="BEGIN OF s_ax,
                 axid TYPE string,
                 type TYPE char5,
                 orientation TYPE string,
@@ -51,73 +18,10 @@ public section.
                 lbloffset TYPE string,
                 nomultilvllbl TYPE string,
                 crossbetween TYPE string,
-             END OF s_ax .
-  types:
-    t_ax TYPE STANDARD TABLE OF s_ax .
-
-  data NS_GROUPINGVAL type STRING value &apos;standard&apos;. &quot;#EC NOTEXT .
-  data NS_VARYCOLORSVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_SHOWLEGENDKEYVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_SHOWVALVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_SHOWCATNAMEVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_SHOWSERNAMEVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_SHOWPERCENTVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_SHOWBUBBLESIZEVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data NS_MARKERVAL type STRING value &apos;1&apos;. &quot;#EC NOTEXT .
-  data NS_SMOOTHVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  data AXES type T_AX .
-  constants:
-    C_VALAX type c length 5 value &apos;VALAX&apos;. &quot;#EC NOTEXT
-  constants:
-    C_CATAX type c length 5 value &apos;CATAX&apos;. &quot;#EC NOTEXT
-  data NS_LEGENDPOSVAL type STRING value &apos;r&apos;. &quot;#EC NOTEXT .
-  data NS_OVERLAYVAL type STRING value &apos;0&apos;. &quot;#EC NOTEXT .
-  constants C_SYMBOL_AUTO type STRING value &apos;auto&apos;. &quot;#EC NOTEXT
-  constants C_SYMBOL_NONE type STRING value &apos;none&apos;. &quot;#EC NOTEXT
-
-  methods CREATE_AX
-    importing
-      !IP_AXID type STRING optional
-      !IP_TYPE type CHAR5
-      !IP_ORIENTATION type STRING optional
-      !IP_DELETE type STRING optional
-      !IP_AXPOS type STRING optional
-      !IP_FORMATCODE type STRING optional
-      !IP_SOURCELINKED type STRING optional
-      !IP_MAJORTICKMARK type STRING optional
-      !IP_MINORTICKMARK type STRING optional
-      !IP_TICKLBLPOS type STRING optional
-      !IP_CROSSAX type STRING optional
-      !IP_CROSSES type STRING optional
-      !IP_AUTO type STRING optional
-      !IP_LBLALGN type STRING optional
-      !IP_LBLOFFSET type STRING optional
-      !IP_NOMULTILVLLBL type STRING optional
-      !IP_CROSSBETWEEN type STRING optional .
-  methods SET_SHOW_LEGEND_KEY
-    importing
-      !IP_VALUE type C .
-  methods SET_SHOW_VALUES
-    importing
-      !IP_VALUE type C .
-  methods SET_SHOW_CAT_NAME
-    importing
-      !IP_VALUE type C .
-  methods SET_SHOW_SER_NAME
-    importing
-      !IP_VALUE type C .
-  methods SET_SHOW_PERCENT
-    importing
-      !IP_VALUE type C .
-  methods SET_VARYCOLOR
-    importing
-      !IP_VALUE type C .</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_GRAPH_LINE
-*&quot;* do not include other source files here!!!</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_GRAPH_LINE
-*&quot;* do not include other source files here!!!</privateSection>
+             END OF s_ax
+"/>
+ <types CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="T_AX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="30 " SRCCOLUMN1="4 " SRCROW2="30 " SRCCOLUMN2="35 " TYPESRC_LENG="34 " TYPESRC="t_ax TYPE STANDARD TABLE OF s_ax
+"/>
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>
@@ -127,11 +31,11 @@ public section.
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="AXES" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="11 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="T_AX" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="C_CATAX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTVALUE="&apos;CATAX&apos;" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="48 " SRCCOLUMN1="4 " SRCROW2="48 " SRCCOLUMN2="26 " TYPESRC_LENG="25 " TYPESRC="C_CATAX type c length 5
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="C_CATAX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTVALUE="&apos;CATAX&apos;" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="46 " SRCCOLUMN1="4 " SRCROW2="46 " SRCCOLUMN2="26 " TYPESRC_LENG="25 " TYPESRC="C_CATAX type c length 5
 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="C_SYMBOL_AUTO" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="&apos;auto&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="C_SYMBOL_NONE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTVALUE="&apos;none&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="C_VALAX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="12 " ATTDECLTYP="2" ATTVALUE="&apos;VALAX&apos;" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="46 " SRCCOLUMN1="4 " SRCROW2="46 " SRCCOLUMN2="26 " TYPESRC_LENG="25 " TYPESRC="C_VALAX type c length 5
+ <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="C_VALAX" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="12 " ATTDECLTYP="2" ATTVALUE="&apos;VALAX&apos;" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="44 " SRCCOLUMN1="4 " SRCROW2="44 " SRCCOLUMN2="26 " TYPESRC_LENG="25 " TYPESRC="C_VALAX type c length 5
 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="NS_GROUPINGVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTVALUE="&apos;standard&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="NS_LEGENDPOSVAL" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="14 " ATTDECLTYP="0" ATTVALUE="&apos;r&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -164,7 +68,7 @@ public section.
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="CREATE_AX" SCONAME="IP_LBLOFFSET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="15 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="CREATE_AX" SCONAME="IP_NOMULTILVLLBL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="16 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="CREATE_AX" SCONAME="IP_CROSSBETWEEN" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="17 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
-  <source>METHOD create_ax.
+  <source>method CREATE_AX.
   DATA ls_ax TYPE s_ax.
   ls_ax-type = ip_type.
 
@@ -309,42 +213,42 @@ public section.
 
   APPEND ls_ax TO me-&gt;axes.
   SORT me-&gt;axes BY axid ASCENDING.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_CAT_NAME" VERSION="1" LANGU="E" DESCRIPT="Show the category name on the bar chart" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_CAT_NAME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
-  <source>METHOD SET_SHOW_CAT_NAME.
+  <source>method SET_SHOW_CAT_NAME.
     ns_showcatnameval = ip_value.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_LEGEND_KEY" VERSION="1" LANGU="E" DESCRIPT="Show the legend key on the bar chart" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_LEGEND_KEY" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
-  <source>METHOD SET_SHOW_LEGEND_KEY.
+  <source>method SET_SHOW_LEGEND_KEY.
   ns_showlegendkeyval = ip_value.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_PERCENT" VERSION="1" LANGU="E" DESCRIPT="Values as percent" EXPOSURE="2" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_PERCENT" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
-  <source>METHOD SET_SHOW_PERCENT.
+  <source>method SET_SHOW_PERCENT.
   ns_showpercentval = ip_value.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_SER_NAME" VERSION="1" LANGU="E" DESCRIPT="Show the serie name on the bar chart" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_SER_NAME" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
-  <source>METHOD SET_SHOW_SER_NAME.
+  <source>method SET_SHOW_SER_NAME.
   ns_showsernameval = ip_value.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_VALUES" VERSION="1" LANGU="E" DESCRIPT="Show values on the bar chart" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_SHOW_VALUES" SCONAME="IP_VALUE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
-  <source>METHOD SET_SHOW_VALUES.
+  <source>method SET_SHOW_VALUES.
   ns_showvalval = ip_value.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_VARYCOLOR" VERSION="1" LANGU="E" DESCRIPT="Show vary colors" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_GRAPH_LINE" CMPNAME="SET_VARYCOLOR" SCONAME="IP_VALUE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="C"/>
-  <source>METHOD set_varycolor.
+  <source>method SET_VARYCOLOR.
   ns_varycolorsval = ip_value.
-ENDMETHOD.</source>
+  endmethod.</source>
  </method>
 </CLAS>

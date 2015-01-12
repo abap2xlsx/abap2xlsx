@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_CONVERTER" VERSION="1" LANGU="E" DESCRIPT="Salv converter" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="6 " SRCCOLUMN1="4 " SRCROW2="10 " SRCCOLUMN2="29 " TYPESRC_LENG="149 " TYPESRC="BEGIN OF t_relationship,
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_RELATIONSHIP" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " TYPTYPE="4" SRCROW1="4 " SRCCOLUMN1="4 " SRCROW2="8 " SRCCOLUMN2="29 " TYPESRC_LENG="149 " TYPESRC="BEGIN OF t_relationship,
            id     TYPE string,
            type   TYPE string,
            target TYPE string,
          END OF t_relationship
 "/>
- <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="12 " SRCCOLUMN1="4 " SRCROW2="18 " SRCCOLUMN2="26 " TYPESRC_LENG="247 " TYPESRC="BEGIN OF t_fileversion,
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_FILEVERSION" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="16 " SRCCOLUMN2="26 " TYPESRC_LENG="247 " TYPESRC="BEGIN OF t_fileversion,
             appname       TYPE string,
             lastedited    TYPE string,
             lowestedited  TYPE string,
@@ -14,18 +14,18 @@
             codename      TYPE string,
        END OF t_fileversion
 "/>
- <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="20 " SRCCOLUMN1="4 " SRCROW2="24 " SRCCOLUMN2="22 " TYPESRC_LENG="147 " TYPESRC="BEGIN OF t_sheet,
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_SHEET" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " TYPTYPE="4" SRCROW1="18 " SRCCOLUMN1="4 " SRCROW2="22 " SRCCOLUMN2="22 " TYPESRC_LENG="147 " TYPESRC="BEGIN OF t_sheet,
               name    TYPE string,
               sheetid TYPE string,
               id      TYPE string,
          END OF t_sheet
 "/>
- <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="27 " TYPESRC_LENG="146 " TYPESRC="BEGIN OF t_workbookpr,
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_WORKBOOKPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="4 " TYPTYPE="4" SRCROW1="24 " SRCCOLUMN1="4 " SRCROW2="27 " SRCCOLUMN2="27 " TYPESRC_LENG="146 " TYPESRC="BEGIN OF t_workbookpr,
               codename            TYPE string,
               defaultthemeversion TYPE string,
          END OF t_workbookpr
 "/>
- <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="31 " SRCCOLUMN1="4 " SRCROW2="33 " SRCCOLUMN2="24 " TYPESRC_LENG="93 " TYPESRC="BEGIN OF t_sheetpr,
+ <types CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="29 " SRCCOLUMN1="4 " SRCROW2="31 " SRCCOLUMN2="24 " TYPESRC_LENG="93 " TYPESRC="BEGIN OF t_sheetpr,
               codename            TYPE string,
          END OF t_sheetpr
 "/>
@@ -82,15 +82,6 @@ TYPES:   BEGIN OF ts_color_styles,
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
  <textPool>
-  <language SPRAS="1">
-   <textElement ID="I" KEY="001" ENTRY="Sheet1" LENGTH="15 "/>
-   <textElement ID="I" KEY="002" ENTRY="Grand" LENGTH="10 "/>
-   <textElement ID="I" KEY="003" ENTRY="Total" LENGTH="10 "/>
-   <textElement ID="I" KEY="004" ENTRY="Minimum" LENGTH="10 "/>
-   <textElement ID="I" KEY="005" ENTRY="Maximum" LENGTH="10 "/>
-   <textElement ID="I" KEY="006" ENTRY="Average" LENGTH="10 "/>
-   <textElement ID="I" KEY="007" ENTRY="Count" LENGTH="10 "/>
-  </language>
   <language SPRAS="E">
    <textElement ID="I" KEY="001" ENTRY="Sheet1" LENGTH="15 "/>
    <textElement ID="I" KEY="002" ENTRY="Grand" LENGTH="10 "/>
