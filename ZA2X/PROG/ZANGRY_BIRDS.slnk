@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZANGRY_BIRDS" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20111120" UNAM="FEMIA" UDAT="20120102" VERN="000045" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120102" STIME="210855" IDATE="20120102" ITIME="210855" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZANGRY_BIRDS" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Styles" LENGTH="25 "/>

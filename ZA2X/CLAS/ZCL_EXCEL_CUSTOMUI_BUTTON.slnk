@@ -1,22 +1,6 @@
-<?xml version="1.0" encoding="utf-16"?>
-<CLAS CLSNAME="ZCL_EXCEL_CUSTOMUI_BUTTON" VERSION="1" LANGU="E" DESCRIPT="Excel customUI Button" UUID="0202322174CD1ED0A39E7C6776BB9775" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDBY="FEMIA" CHANGEDON="20110602" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="702" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
- <implementing CLSNAME="ZCL_EXCEL_CUSTOMUI_BUTTON" REFCLSNAME="ZIF_EXCEL_CUSTOMUI_ELEMENT" VERSION="1" EXPOSURE="2" STATE="1" AUTHOR="FEMIA" CREATEDON="20110602" CHANGEDON="00000000" RELTYPE="1" EDITORDER="1 "/>
- <publicSection>class ZCL_EXCEL_CUSTOMUI_BUTTON definition
-  public
-  final
-  create public .
-
-public section.
-*&quot;* public components of class ZCL_EXCEL_CUSTOMUI_BUTTON
-*&quot;* do not include other source files here!!!
-
-  interfaces ZIF_EXCEL_CUSTOMUI_ELEMENT .</publicSection>
- <protectedSection>protected section.
-*&quot;* protected components of class ZCL_EXCEL_CUSTOMUI_BUTTON
-*&quot;* do not include other source files here!!!</protectedSection>
- <privateSection>private section.
-*&quot;* private components of class ZCL_EXCEL_CUSTOMUI_BUTTON
-*&quot;* do not include other source files here!!!</privateSection>
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_CUSTOMUI_BUTTON" VERSION="1" LANGU="E" DESCRIPT="Excel customUI Button" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <implementing CLSNAME="ZCL_EXCEL_CUSTOMUI_BUTTON" REFCLSNAME="ZIF_EXCEL_CUSTOMUI_ELEMENT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>

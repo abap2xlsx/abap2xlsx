@@ -119,7 +119,7 @@ START-OF-SELECTION.
   lo_style_rotated = lo_excel-&gt;add_new_style( ).
   lo_style_rotated-&gt;alignment-&gt;horizontal   = zcl_excel_style_alignment=&gt;c_horizontal_center.
   lo_style_rotated-&gt;alignment-&gt;vertical     = zcl_excel_style_alignment=&gt;c_vertical_center.
-  lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75Â° == 90Â° + 75Â°
+  lo_style_rotated-&gt;alignment-&gt;textrotation = 165.                        &quot; -75Ã‚Â° == 90Ã‚Â° + 75Ã‚Â°
   lv_style_rotated_guid = lo_style_rotated-&gt;get_guid( ).
 
 
@@ -153,7 +153,7 @@ START-OF-SELECTION.
 
   &quot; Rotated
   lo_worksheet-&gt;set_cell( ip_row = 10 ip_column = &apos;D&apos;
-                          ip_value = &apos;This is a centered text rotated by -75Â°&apos;
+                          ip_value = &apos;This is a centered text rotated by -75Ã‚Â°&apos;
                           ip_style = lv_style_rotated_guid ).
 
   &quot; forced line break

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<DTEL ROLLNAME="ZEXCEL_CONVERTER_OPTION_HIDEHD" DDLANGUAGE="E" DOMNAME="ZEXCEL_CONVERTER_OPTION" ROUTPUTLEN="000000" HEADLEN="20" SCRLEN1="10" SCRLEN2="17" SCRLEN3="30" DDTEXT="Hiden column header for converter with grid object" REPTEXT="Hiden column options" SCRTEXT_S="Hiden col." SCRTEXT_M="Hiden column opt." SCRTEXT_L="Converter hiden column options" AUTHCLASS="00" DTELMASTER="E" DATATYPE="CHAR" LENG="000001" DECIMALS="000000" OUTPUTLEN="000001" VALEXI="X" REFKIND="D">
- <tpara/>
-</DTEL>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" CNAM="HUNGHM" CDAT="20101117" UNAM="RTURNHEIM" UDAT="20120212" VERN="000046" RMAND="800" RLOAD="E" FIXPT="X" SDATE="20120212" STIME="174116" IDATE="20120212" ITIME="174116" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL20" VARCL="X" SUBC="1" RMAND="800" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Bind ALV OLE2" LENGTH="29 "/>

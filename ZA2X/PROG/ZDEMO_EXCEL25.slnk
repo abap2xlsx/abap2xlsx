@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?>
-<PROG NAME="ZDEMO_EXCEL25" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20110317" UNAM="DEVELOPER" UDAT="20120109" VERN="000035" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120109" STIME="023605" IDATE="20120109" ITIME="023605" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL25" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Write Hello World using Logical Path on the App Server" LENGTH="70 "/>
