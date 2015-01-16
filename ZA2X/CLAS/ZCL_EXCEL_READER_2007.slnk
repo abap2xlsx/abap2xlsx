@@ -1265,6 +1265,7 @@ ENDMETHOD.</source>
            lo_node_fill_child                 TYPE REF TO if_ixml_element,
            lo_node_bgcolor                    TYPE REF TO if_ixml_element,
            lo_node_fgcolor                    TYPE REF TO if_ixml_element,
+           lo_node_stop                       TYPE REF TO if_ixml_element,
            lo_fill                            TYPE REF TO zcl_excel_style_fill,
            ls_color                           TYPE t_color.
 
@@ -1343,7 +1344,60 @@ ENDMETHOD.</source>
 * gradientFill
 *--------------------------------------------------------------------*
       WHEN &apos;gradientFill&apos;.
-        &quot; 2do§1   Support gradientFill
+       lo_fill-&gt;gradtype-type   = lo_node_fill_child-&gt;get_attribute( &apos;type&apos; ).
+       lo_fill-&gt;gradtype-top    = lo_node_fill_child-&gt;get_attribute( &apos;top&apos; ).
+       lo_fill-&gt;gradtype-left   = lo_node_fill_child-&gt;get_attribute( &apos;left&apos; ).
+       lo_fill-&gt;gradtype-right  = lo_node_fill_child-&gt;get_attribute( &apos;right&apos; ).
+       lo_fill-&gt;gradtype-bottom = lo_node_fill_child-&gt;get_attribute( &apos;bottom&apos; ).
+       lo_fill-&gt;gradtype-degree = lo_node_fill_child-&gt;get_attribute( &apos;degree&apos; ).
+       free lo_node_stop.
+       lo_node_stop ?= lo_node_fill_child-&gt;find_from_name( &apos;stop&apos; ).
+       while lo_node_stop is bound.
+         if lo_fill-&gt;gradtype-position1 is initial.
+            lo_fill-&gt;gradtype-position1 = lo_node_stop-&gt;get_attribute( &apos;position&apos; ).
+            lo_node_bgcolor = lo_node_stop-&gt;find_from_name( &apos;color&apos; ).
+            IF lo_node_bgcolor IS BOUND.
+               fill_struct_from_attributes( EXPORTING
+                                               ip_element   = lo_node_bgcolor
+                                             CHANGING
+                                               cp_structure = ls_color ).
+
+                lo_fill-&gt;bgcolor-rgb = ls_color-rgb.
+                IF ls_color-indexed IS NOT INITIAL.
+                  lo_fill-&gt;bgcolor-indexed = ls_color-indexed.
+                ENDIF.
+
+                IF ls_color-theme IS NOT INITIAL.
+                  lo_fill-&gt;bgcolor-theme = ls_color-theme.
+                ENDIF.
+                lo_fill-&gt;bgcolor-tint = ls_color-tint.
+            ENDIF.
+         elseif lo_fill-&gt;gradtype-position2 is initial.
+            lo_fill-&gt;gradtype-position2 = lo_node_stop-&gt;get_attribute( &apos;position&apos; ).
+            lo_node_fgcolor = lo_node_stop-&gt;find_from_name( &apos;color&apos; ).
+            IF lo_node_fgcolor IS BOUND.
+              fill_struct_from_attributes( EXPORTING
+                                             ip_element   = lo_node_fgcolor
+                                           CHANGING
+                                             cp_structure = ls_color ).
+
+              lo_fill-&gt;fgcolor-rgb = ls_color-rgb.
+              IF ls_color-indexed IS NOT INITIAL.
+                lo_fill-&gt;fgcolor-indexed = ls_color-indexed.
+              ENDIF.
+
+              IF ls_color-theme IS NOT INITIAL.
+                lo_fill-&gt;fgcolor-theme = ls_color-theme.
+              ENDIF.
+              lo_fill-&gt;fgcolor-tint = ls_color-tint.
+            ENDIF.
+          elseif lo_fill-&gt;gradtype-position3 is initial.
+                lo_fill-&gt;gradtype-position3 = lo_node_stop-&gt;get_attribute( &apos;position&apos; ).
+                &quot;BGColor is filled already with position 1 no need to check again
+          endif.
+
+           lo_node_stop ?= lo_node_stop-&gt;get_next( ).
+        ENDWHILE.
 
       WHEN OTHERS.
 
