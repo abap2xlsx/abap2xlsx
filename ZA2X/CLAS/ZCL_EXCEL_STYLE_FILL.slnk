@@ -50,7 +50,6 @@
  <method CLSNAME="ZCL_EXCEL_STYLE_FILL" CMPNAME="BUILD_GRADIENT" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method build_gradient.
     check check_filltype_is_gradient( ) eq abap_true.
-    clear gradtype.
     case filltype.
       when c_fill_gradient_horizontal90.
         gradtype-degree = &apos;90&apos;.
