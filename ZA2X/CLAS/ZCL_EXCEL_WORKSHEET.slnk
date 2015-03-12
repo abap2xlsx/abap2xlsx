@@ -4776,7 +4776,11 @@ ENDMETHOD.</source>
 * Build new range area to insert into range table
 *--------------------------------------------------------------------*
   ls_merge-row_from = ip_row.
-  ls_merge-row_to   = ip_row_to.
+  IF ip_row IS SUPPLIED AND ip_row IS NOT INITIAL AND ip_row_to IS NOT SUPPLIED.
+    ls_merge-row_to   = ls_merge-row_from.
+  ELSE.
+    ls_merge-row_to   = ip_row_to.
+  ENDIF.
   IF ls_merge-row_from &gt; ls_merge-row_to.
     lv_errormessage = &apos;Merge: First row larger then last row&apos;(405).
     RAISE EXCEPTION TYPE zcx_excel
@@ -4785,7 +4789,11 @@ ENDMETHOD.</source>
   ENDIF.
 
   ls_merge-col_from = zcl_excel_common=&gt;convert_column2int( ip_column_start ).
-  ls_merge-col_to   = zcl_excel_common=&gt;convert_column2int( ip_column_end ).
+  IF ip_column_start IS SUPPLIED AND ip_column_start IS NOT INITIAL AND ip_column_end IS NOT SUPPLIED.
+    ls_merge-col_to   = ls_merge-col_from.
+  ELSE.
+    ls_merge-col_to   = zcl_excel_common=&gt;convert_column2int( ip_column_end ).
+  ENDIF.
   IF ls_merge-col_from &gt; ls_merge-col_to.
     lv_errormessage = &apos;Merge: First column larger then last column&apos;(406).
     RAISE EXCEPTION TYPE zcx_excel
