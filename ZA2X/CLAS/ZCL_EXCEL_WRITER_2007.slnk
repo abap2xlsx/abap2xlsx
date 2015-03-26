@@ -6052,7 +6052,7 @@ ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE_XL_WORKBOOK.
+  <source>METHOD create_xl_workbook.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan SchmÃ¶cker,      (done)              2012-11-07
@@ -6066,69 +6066,69 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
 
 ** Constant node name
-  DATA:       lc_xml_node_workbook            TYPE string VALUE &apos;workbook&apos;,
-              lc_xml_node_fileversion         TYPE string VALUE &apos;fileVersion&apos;,
-              lc_xml_node_workbookpr          TYPE string VALUE &apos;workbookPr&apos;,
-              lc_xml_node_bookviews           TYPE string VALUE &apos;bookViews&apos;,
-              lc_xml_node_workbookview        TYPE string VALUE &apos;workbookView&apos;,
-              lc_xml_node_sheets              TYPE string VALUE &apos;sheets&apos;,
-              lc_xml_node_sheet               TYPE string VALUE &apos;sheet&apos;,
-              lc_xml_node_calcpr              TYPE string VALUE &apos;calcPr&apos;,
-              lc_xml_node_workbookprotection  TYPE string VALUE &apos;workbookProtection&apos;,
-              lc_xml_node_definednames        TYPE string VALUE &apos;definedNames&apos;,
-              lc_xml_node_definedname         TYPE string VALUE &apos;definedName&apos;,
+  DATA:       lc_xml_node_workbook           TYPE string VALUE &apos;workbook&apos;,
+              lc_xml_node_fileversion        TYPE string VALUE &apos;fileVersion&apos;,
+              lc_xml_node_workbookpr         TYPE string VALUE &apos;workbookPr&apos;,
+              lc_xml_node_bookviews          TYPE string VALUE &apos;bookViews&apos;,
+              lc_xml_node_workbookview       TYPE string VALUE &apos;workbookView&apos;,
+              lc_xml_node_sheets             TYPE string VALUE &apos;sheets&apos;,
+              lc_xml_node_sheet              TYPE string VALUE &apos;sheet&apos;,
+              lc_xml_node_calcpr             TYPE string VALUE &apos;calcPr&apos;,
+              lc_xml_node_workbookprotection TYPE string VALUE &apos;workbookProtection&apos;,
+              lc_xml_node_definednames       TYPE string VALUE &apos;definedNames&apos;,
+              lc_xml_node_definedname        TYPE string VALUE &apos;definedName&apos;,
               &quot; Node attributes
-              lc_xml_attr_appname             TYPE string VALUE &apos;appName&apos;,
-              lc_xml_attr_lastedited          TYPE string VALUE &apos;lastEdited&apos;,
-              lc_xml_attr_lowestedited        TYPE string VALUE &apos;lowestEdited&apos;,
-              lc_xml_attr_rupbuild            TYPE string VALUE &apos;rupBuild&apos;,
-              lc_xml_attr_themeversion        TYPE string VALUE &apos;defaultThemeVersion&apos;,
-              lc_xml_attr_xwindow             TYPE string VALUE &apos;xWindow&apos;,
-              lc_xml_attr_ywindow             TYPE string VALUE &apos;yWindow&apos;,
-              lc_xml_attr_windowwidth         TYPE string VALUE &apos;windowWidth&apos;,
-              lc_xml_attr_windowheight        TYPE string VALUE &apos;windowHeight&apos;,
-              lc_xml_attr_activetab           TYPE string VALUE &apos;activeTab&apos;,
-              lc_xml_attr_name                TYPE string VALUE &apos;name&apos;,
-              lc_xml_attr_sheetid             TYPE string VALUE &apos;sheetId&apos;,
-              lc_xml_attr_state               TYPE string VALUE &apos;state&apos;,
-              lc_xml_attr_id                  TYPE string VALUE &apos;id&apos;,
-              lc_xml_attr_calcid              TYPE string VALUE &apos;calcId&apos;,
-              lc_xml_attr_lockrevision        TYPE string VALUE &apos;lockRevision&apos;,
-              lc_xml_attr_lockstructure       TYPE string VALUE &apos;lockStructure&apos;,
-              lc_xml_attr_lockwindows         TYPE string VALUE &apos;lockWindows&apos;,
-              lc_xml_attr_revisionspassword   TYPE string VALUE &apos;revisionsPassword&apos;,
-              lc_xml_attr_workbookpassword    TYPE string VALUE &apos;workbookPassword&apos;,
-              lc_xml_attr_hidden              TYPE string VALUE &apos;hidden&apos;,
-              lc_xml_attr_localsheetid        TYPE string VALUE &apos;localSheetId&apos;,
+              lc_xml_attr_appname            TYPE string VALUE &apos;appName&apos;,
+              lc_xml_attr_lastedited         TYPE string VALUE &apos;lastEdited&apos;,
+              lc_xml_attr_lowestedited       TYPE string VALUE &apos;lowestEdited&apos;,
+              lc_xml_attr_rupbuild           TYPE string VALUE &apos;rupBuild&apos;,
+              lc_xml_attr_themeversion       TYPE string VALUE &apos;defaultThemeVersion&apos;,
+              lc_xml_attr_xwindow            TYPE string VALUE &apos;xWindow&apos;,
+              lc_xml_attr_ywindow            TYPE string VALUE &apos;yWindow&apos;,
+              lc_xml_attr_windowwidth        TYPE string VALUE &apos;windowWidth&apos;,
+              lc_xml_attr_windowheight       TYPE string VALUE &apos;windowHeight&apos;,
+              lc_xml_attr_activetab          TYPE string VALUE &apos;activeTab&apos;,
+              lc_xml_attr_name               TYPE string VALUE &apos;name&apos;,
+              lc_xml_attr_sheetid            TYPE string VALUE &apos;sheetId&apos;,
+              lc_xml_attr_state              TYPE string VALUE &apos;state&apos;,
+              lc_xml_attr_id                 TYPE string VALUE &apos;id&apos;,
+              lc_xml_attr_calcid             TYPE string VALUE &apos;calcId&apos;,
+              lc_xml_attr_lockrevision       TYPE string VALUE &apos;lockRevision&apos;,
+              lc_xml_attr_lockstructure      TYPE string VALUE &apos;lockStructure&apos;,
+              lc_xml_attr_lockwindows        TYPE string VALUE &apos;lockWindows&apos;,
+              lc_xml_attr_revisionspassword  TYPE string VALUE &apos;revisionsPassword&apos;,
+              lc_xml_attr_workbookpassword   TYPE string VALUE &apos;workbookPassword&apos;,
+              lc_xml_attr_hidden             TYPE string VALUE &apos;hidden&apos;,
+              lc_xml_attr_localsheetid       TYPE string VALUE &apos;localSheetId&apos;,
               &quot; Node namespace
-              lc_r_ns                         TYPE string VALUE &apos;r&apos;,
-              lc_xml_node_ns                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
-              lc_xml_node_r_ns                TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;,
+              lc_r_ns                        TYPE string VALUE &apos;r&apos;,
+              lc_xml_node_ns                 TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
+              lc_xml_node_r_ns               TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;,
               &quot; Node id
-              lc_xml_node_ridx_id             TYPE string VALUE &apos;rId#&apos;.
+              lc_xml_node_ridx_id            TYPE string VALUE &apos;rId#&apos;.
 
-  DATA:       lo_ixml                         TYPE REF TO if_ixml,
-              lo_document                     TYPE REF TO if_ixml_document,
-              lo_element_root                 TYPE REF TO if_ixml_element,
-              lo_element                      TYPE REF TO if_ixml_element,
-              lo_element_range                TYPE REF TO if_ixml_element,
-              lo_sub_element                  TYPE REF TO if_ixml_element,
-              lo_encoding                     TYPE REF TO if_ixml_encoding,
-              lo_streamfactory                TYPE REF TO if_ixml_stream_factory,
-              lo_ostream                      TYPE REF TO if_ixml_ostream,
-              lo_renderer                     TYPE REF TO if_ixml_renderer,
-              lo_iterator                     TYPE REF TO cl_object_collection_iterator,
-              lo_iterator_range               TYPE REF TO cl_object_collection_iterator,
-              lo_worksheet                    TYPE REF TO zcl_excel_worksheet,
-              lo_range                        TYPE REF TO zcl_excel_range,
-              lo_autofilters                  TYPE REF TO zcl_excel_autofilters,
-              lo_autofilter                   TYPE REF TO zcl_excel_autofilter.
+  DATA:       lo_ixml           TYPE REF TO if_ixml,
+              lo_document       TYPE REF TO if_ixml_document,
+              lo_element_root   TYPE REF TO if_ixml_element,
+              lo_element        TYPE REF TO if_ixml_element,
+              lo_element_range  TYPE REF TO if_ixml_element,
+              lo_sub_element    TYPE REF TO if_ixml_element,
+              lo_encoding       TYPE REF TO if_ixml_encoding,
+              lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
+              lo_ostream        TYPE REF TO if_ixml_ostream,
+              lo_renderer       TYPE REF TO if_ixml_renderer,
+              lo_iterator       TYPE REF TO cl_object_collection_iterator,
+              lo_iterator_range TYPE REF TO cl_object_collection_iterator,
+              lo_worksheet      TYPE REF TO zcl_excel_worksheet,
+              lo_range          TYPE REF TO zcl_excel_range,
+              lo_autofilters    TYPE REF TO zcl_excel_autofilters,
+              lo_autofilter     TYPE REF TO zcl_excel_autofilter.
 
-  DATA:       lv_xml_node_ridx_id             TYPE string,
-              lv_value                        TYPE string,
-              lv_syindex                      TYPE string,
-              l_guid                          TYPE uuid,
-              lv_active_sheet                 TYPE zexcel_active_worksheet.
+  DATA:       lv_xml_node_ridx_id TYPE string,
+              lv_value            TYPE string,
+              lv_syindex          TYPE string,
+              l_guid              TYPE uuid,
+              lv_active_sheet     TYPE zexcel_active_worksheet.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -6218,6 +6218,12 @@ ENDMETHOD.</source>
                                     value = &apos;8445&apos; ).
   &quot; Set Active Sheet
   lv_active_sheet = excel-&gt;get_active_sheet_index( ).
+* issue #365 - test if sheet exists - otherwise set active worksheet to 1
+  lo_worksheet = excel-&gt;get_worksheet_by_index( lv_active_sheet ).
+  IF lo_worksheet IS NOT BOUND.
+    lv_active_sheet = 1.
+    excel-&gt;SET_ACTIVE_SHEET_INDEX( lv_active_sheet ).
+  ENDIF.
   IF lv_active_sheet &gt; 1.
     lv_active_sheet = lv_active_sheet - 1.
     lv_value = lv_active_sheet.
@@ -6369,7 +6375,7 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
