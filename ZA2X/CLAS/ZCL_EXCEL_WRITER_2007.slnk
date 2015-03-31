@@ -875,6 +875,145 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" VERSION="1" LANGU="E" DESCRIPT="Add DXF-Style ( conditional formatting )" EXPOSURE="1" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IV_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IO_DXF_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IO_IXML_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IT_CELLXFS" VERSION="1" LANGU="E" DESCRIPT="Cell styles" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_CELLXFS"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IT_FONTS" VERSION="1" LANGU="E" DESCRIPT="Table type for styles ZEXCEL_S_STYLE_FONT" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_STYLE_FONT"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IT_FILLS" VERSION="1" LANGU="E" DESCRIPT="Cell Fills" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_STYLE_FILL"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="CV_DFX_COUNT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
+  <source>METHOD create_dxf_style.
+
+  CONSTANTS: lc_xml_node_dxf         TYPE string VALUE &apos;dxf&apos;,
+             lc_xml_node_font        TYPE string VALUE &apos;font&apos;,
+             lc_xml_node_b           TYPE string VALUE &apos;b&apos;,            &quot;bold
+             lc_xml_node_i           TYPE string VALUE &apos;i&apos;,            &quot;italic
+             lc_xml_node_u           TYPE string VALUE &apos;u&apos;,            &quot;underline
+             lc_xml_node_strike      TYPE string VALUE &apos;strike&apos;,       &quot;strikethrough
+             lc_xml_attr_val         TYPE string VALUE &apos;val&apos;,
+             lc_xml_node_fill        TYPE string VALUE &apos;fill&apos;,
+             lc_xml_node_patternfill TYPE string VALUE &apos;patternFill&apos;,
+             lc_xml_attr_patterntype TYPE string VALUE &apos;patternType&apos;,
+             lc_xml_node_fgcolor     TYPE string VALUE &apos;fgColor&apos;,
+             lc_xml_node_bgcolor     TYPE string VALUE &apos;bgColor&apos;,
+             y                       TYPE i VALUE 0.
+
+  DATA: ls_styles_mapping     TYPE zexcel_s_styles_mapping,
+        ls_cellxfs            TYPE zexcel_s_cellxfs,
+        ls_style_cond_mapping TYPE zexcel_s_styles_cond_mapping,
+        lo_sub_element        TYPE REF TO if_ixml_element,
+        lo_sub_element_2      TYPE REF TO if_ixml_element,
+        lv_index              TYPE i,
+        ls_font               TYPE zexcel_s_style_font,
+        lo_element_font       TYPE REF TO if_ixml_element,
+        lv_value              TYPE string,
+        ls_fill               TYPE zexcel_s_style_fill,
+        lo_element_fill       TYPE REF TO if_ixml_element,
+        x.
+
+  CHECK iv_cell_style IS NOT INITIAL.
+
+  READ TABLE me-&gt;styles_mapping INTO ls_styles_mapping WITH KEY guid = iv_cell_style.
+  ADD 1 TO ls_styles_mapping-style. &quot; the numbering starts from 0
+  READ TABLE it_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
+  ADD 1 TO ls_cellxfs-fillid.       &quot; the numbering starts from 0
+
+  READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
+  IF sy-subrc EQ 0.
+    ls_style_cond_mapping-guid  = iv_cell_style.
+    APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
+  ELSE.
+    ls_style_cond_mapping-guid  = iv_cell_style.
+    ls_style_cond_mapping-style = ls_styles_mapping-style.
+    ls_style_cond_mapping-dxf   = cv_dfx_count.
+    APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
+    ADD 1 TO cv_dfx_count.
+
+    &quot; dxf node
+    lo_sub_element = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_dxf
+                                                              parent = io_ixml_document ).
+
+    &quot;Conditional formatting font style correction by Alessandro Iannacci START
+    lv_index = ls_cellxfs-fontid + 1.
+    READ TABLE it_fonts INTO ls_font INDEX lv_index.
+    IF ls_font IS NOT INITIAL.
+      lo_element_font = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_font
+                                                            parent = io_ixml_document ).
+      IF ls_font-bold EQ abap_true.
+        lo_sub_element_2 = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_b
+                                                             parent = io_ixml_document ).
+        lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+      ENDIF.
+      IF ls_font-italic EQ abap_true.
+        lo_sub_element_2 = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_i
+                                                             parent = io_ixml_document ).
+        lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+      ENDIF.
+      IF ls_font-underline EQ abap_true.
+        lo_sub_element_2 = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_u
+                                                             parent = io_ixml_document ).
+        lv_value = ls_font-underline_mode.
+        lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_val
+                                          value = lv_value ).
+        lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+      ENDIF.
+      IF ls_font-strikethrough EQ abap_true.
+        lo_sub_element_2 = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_strike
+                                                             parent = io_ixml_document ).
+        lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
+      ENDIF.
+      &quot;color
+      create_xl_styles_color_node(
+          io_document        = io_ixml_document
+          io_parent          = lo_element_font
+          is_color           = ls_font-color ).
+      lo_sub_element-&gt;append_child( new_child = lo_element_font ).
+    ENDIF.
+    &quot;---Conditional formatting font style correction by Alessandro Iannacci END
+
+
+    READ TABLE it_fills INTO ls_fill INDEX ls_cellxfs-fillid.
+    IF ls_fill IS NOT INITIAL.
+      &quot; fill properties
+      lo_element_fill = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_fill
+                                                               parent = io_ixml_document ).
+      &quot;pattern
+      lo_sub_element_2 = io_ixml_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
+                                                           parent = io_ixml_document ).
+      lv_value = ls_fill-filltype.
+      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
+                                          value = lv_value ).
+      &quot; fgcolor
+      create_xl_styles_color_node(
+          io_document        = io_ixml_document
+          io_parent          = lo_sub_element_2
+          is_color           = ls_fill-fgcolor
+          iv_color_elem_name = lc_xml_node_fgcolor ).
+
+      IF  ls_fill-fgcolor-rgb IS INITIAL AND
+        ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
+        ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
+        ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
+
+        &quot; bgcolor
+        create_xl_styles_color_node(
+            io_document        = io_ixml_document
+            io_parent          = lo_sub_element_2
+            is_color           = ls_fill-bgcolor
+            iv_color_elem_name = lc_xml_node_bgcolor ).
+
+      ENDIF.
+
+      lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
+
+      lo_sub_element-&gt;append_child( new_child = lo_element_fill ).
+    ENDIF.
+  ENDIF.
+
+  io_dxf_element-&gt;append_child( new_child = lo_sub_element ).
+ENDMETHOD.</source>
+ </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;_rels/.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_RELATIONSHIPS.
@@ -2685,155 +2824,155 @@ ENDMETHOD.</source>
 
 
 ** Constant node name
-  DATA: lc_xml_node_worksheet           TYPE string VALUE &apos;worksheet&apos;,
-        lc_xml_node_sheetpr             TYPE string VALUE &apos;sheetPr&apos;,
-        lc_xml_node_tabcolor            TYPE string VALUE &apos;tabColor&apos;,
-        lc_xml_node_outlinepr           TYPE string VALUE &apos;outlinePr&apos;,
-        lc_xml_node_dimension           TYPE string VALUE &apos;dimension&apos;,
-        lc_xml_node_sheetviews          TYPE string VALUE &apos;sheetViews&apos;,
-        lc_xml_node_sheetview           TYPE string VALUE &apos;sheetView&apos;,
-        lc_xml_node_selection           TYPE string VALUE &apos;selection&apos;,
-        lc_xml_node_pane                TYPE string VALUE &apos;pane&apos;,
-        lc_xml_node_sheetformatpr       TYPE string VALUE &apos;sheetFormatPr&apos;,
-        lc_xml_node_cols                TYPE string VALUE &apos;cols&apos;,
-        lc_xml_node_col                 TYPE string VALUE &apos;col&apos;,
-        lc_xml_node_sheetdata           TYPE string VALUE &apos;sheetData&apos;,
-        lc_xml_node_row                 TYPE string VALUE &apos;row&apos;,
-        lc_xml_node_c                   TYPE string VALUE &apos;c&apos;,
-        lc_xml_node_v                   TYPE string VALUE &apos;v&apos;,
-        lc_xml_node_f                   TYPE string VALUE &apos;f&apos;,
-        lc_xml_node_sheetprotection     TYPE string VALUE &apos;sheetProtection&apos;,
-        lc_xml_node_pagemargins         TYPE string VALUE &apos;pageMargins&apos;,
-        lc_xml_node_pagesetup           TYPE string VALUE &apos;pageSetup&apos;,
-        lc_xml_node_pagesetuppr         TYPE string VALUE &apos;pageSetUpPr&apos;,
-        lc_xml_node_condformatting      TYPE string VALUE &apos;conditionalFormatting&apos;,
-        lc_xml_node_cfrule              TYPE string VALUE &apos;cfRule&apos;,
-        lc_xml_node_color               TYPE string VALUE &apos;color&apos;,      &quot; Databar by Albert Lladanosa
-        lc_xml_node_databar             TYPE string VALUE &apos;dataBar&apos;,    &quot; Databar by Albert Lladanosa
-        lc_xml_node_colorscale          TYPE string VALUE &apos;colorScale&apos;,
-        lc_xml_node_iconset             TYPE string VALUE &apos;iconSet&apos;,
-        lc_xml_node_cfvo                TYPE string VALUE &apos;cfvo&apos;,
-        lc_xml_node_formula             TYPE string VALUE &apos;formula&apos;,
-        lc_xml_node_datavalidations     TYPE string VALUE &apos;dataValidations&apos;,
-        lc_xml_node_datavalidation      TYPE string VALUE &apos;dataValidation&apos;,
-        lc_xml_node_formula1            TYPE string VALUE &apos;formula1&apos;,
-        lc_xml_node_formula2            TYPE string VALUE &apos;formula2&apos;,
-        lc_xml_node_mergecell           TYPE string VALUE &apos;mergeCell&apos;,
-        lc_xml_node_mergecells          TYPE string VALUE &apos;mergeCells&apos;,
-        lc_xml_node_drawing             TYPE string VALUE &apos;drawing&apos;,
-        lc_xml_node_headerfooter        TYPE string VALUE &apos;headerFooter&apos;,
-        lc_xml_node_oddheader           TYPE string VALUE &apos;oddHeader&apos;,
-        lc_xml_node_oddfooter           TYPE string VALUE &apos;oddFooter&apos;,
-        lc_xml_node_evenheader          TYPE string VALUE &apos;evenHeader&apos;,
-        lc_xml_node_evenfooter          TYPE string VALUE &apos;evenFooter&apos;,
-        lc_xml_node_autofilter          TYPE string VALUE &apos;autoFilter&apos;,
-        lc_xml_node_filtercolumn        TYPE string VALUE &apos;filterColumn&apos;,
-        lc_xml_node_filters             TYPE string VALUE &apos;filters&apos;,
-        lc_xml_node_filter              TYPE string VALUE &apos;filter&apos;,
+  DATA: lc_xml_node_worksheet          TYPE string VALUE &apos;worksheet&apos;,
+        lc_xml_node_sheetpr            TYPE string VALUE &apos;sheetPr&apos;,
+        lc_xml_node_tabcolor           TYPE string VALUE &apos;tabColor&apos;,
+        lc_xml_node_outlinepr          TYPE string VALUE &apos;outlinePr&apos;,
+        lc_xml_node_dimension          TYPE string VALUE &apos;dimension&apos;,
+        lc_xml_node_sheetviews         TYPE string VALUE &apos;sheetViews&apos;,
+        lc_xml_node_sheetview          TYPE string VALUE &apos;sheetView&apos;,
+        lc_xml_node_selection          TYPE string VALUE &apos;selection&apos;,
+        lc_xml_node_pane               TYPE string VALUE &apos;pane&apos;,
+        lc_xml_node_sheetformatpr      TYPE string VALUE &apos;sheetFormatPr&apos;,
+        lc_xml_node_cols               TYPE string VALUE &apos;cols&apos;,
+        lc_xml_node_col                TYPE string VALUE &apos;col&apos;,
+        lc_xml_node_sheetdata          TYPE string VALUE &apos;sheetData&apos;,
+        lc_xml_node_row                TYPE string VALUE &apos;row&apos;,
+        lc_xml_node_c                  TYPE string VALUE &apos;c&apos;,
+        lc_xml_node_v                  TYPE string VALUE &apos;v&apos;,
+        lc_xml_node_f                  TYPE string VALUE &apos;f&apos;,
+        lc_xml_node_sheetprotection    TYPE string VALUE &apos;sheetProtection&apos;,
+        lc_xml_node_pagemargins        TYPE string VALUE &apos;pageMargins&apos;,
+        lc_xml_node_pagesetup          TYPE string VALUE &apos;pageSetup&apos;,
+        lc_xml_node_pagesetuppr        TYPE string VALUE &apos;pageSetUpPr&apos;,
+        lc_xml_node_condformatting     TYPE string VALUE &apos;conditionalFormatting&apos;,
+        lc_xml_node_cfrule             TYPE string VALUE &apos;cfRule&apos;,
+        lc_xml_node_color              TYPE string VALUE &apos;color&apos;,      &quot; Databar by Albert Lladanosa
+        lc_xml_node_databar            TYPE string VALUE &apos;dataBar&apos;,    &quot; Databar by Albert Lladanosa
+        lc_xml_node_colorscale         TYPE string VALUE &apos;colorScale&apos;,
+        lc_xml_node_iconset            TYPE string VALUE &apos;iconSet&apos;,
+        lc_xml_node_cfvo               TYPE string VALUE &apos;cfvo&apos;,
+        lc_xml_node_formula            TYPE string VALUE &apos;formula&apos;,
+        lc_xml_node_datavalidations    TYPE string VALUE &apos;dataValidations&apos;,
+        lc_xml_node_datavalidation     TYPE string VALUE &apos;dataValidation&apos;,
+        lc_xml_node_formula1           TYPE string VALUE &apos;formula1&apos;,
+        lc_xml_node_formula2           TYPE string VALUE &apos;formula2&apos;,
+        lc_xml_node_mergecell          TYPE string VALUE &apos;mergeCell&apos;,
+        lc_xml_node_mergecells         TYPE string VALUE &apos;mergeCells&apos;,
+        lc_xml_node_drawing            TYPE string VALUE &apos;drawing&apos;,
+        lc_xml_node_headerfooter       TYPE string VALUE &apos;headerFooter&apos;,
+        lc_xml_node_oddheader          TYPE string VALUE &apos;oddHeader&apos;,
+        lc_xml_node_oddfooter          TYPE string VALUE &apos;oddFooter&apos;,
+        lc_xml_node_evenheader         TYPE string VALUE &apos;evenHeader&apos;,
+        lc_xml_node_evenfooter         TYPE string VALUE &apos;evenFooter&apos;,
+        lc_xml_node_autofilter         TYPE string VALUE &apos;autoFilter&apos;,
+        lc_xml_node_filtercolumn       TYPE string VALUE &apos;filterColumn&apos;,
+        lc_xml_node_filters            TYPE string VALUE &apos;filters&apos;,
+        lc_xml_node_filter             TYPE string VALUE &apos;filter&apos;,
         &quot; Node attributes
-        lc_xml_attr_ref                 TYPE string VALUE &apos;ref&apos;,
-        lc_xml_attr_summarybelow        TYPE string VALUE &apos;summaryBelow&apos;,
-        lc_xml_attr_summaryright        TYPE string VALUE &apos;summaryRight&apos;,
-        lc_xml_attr_tabselected         TYPE string VALUE &apos;tabSelected&apos;,
-        lc_xml_attr_showzeros           TYPE string VALUE &apos;showZeros&apos;,
-        lc_xml_attr_zoomscale           TYPE string VALUE &apos;zoomScale&apos;,
-        lc_xml_attr_zoomscalenormal     TYPE string VALUE &apos;zoomScaleNormal&apos;,
-        lc_xml_attr_zoomscalepageview   TYPE string VALUE &apos;zoomScalePageLayoutView&apos;,
-        lc_xml_attr_zoomscalesheetview  TYPE string VALUE &apos;zoomScaleSheetLayoutView&apos;,
-        lc_xml_attr_workbookviewid      TYPE string VALUE &apos;workbookViewId&apos;,
-        lc_xml_attr_showgridlines       TYPE string VALUE &apos;showGridLines&apos;,
-        lc_xml_attr_gridlines           TYPE string VALUE &apos;gridLines&apos;,
-        lc_xml_attr_showrowcolheaders   TYPE string VALUE &apos;showRowColHeaders&apos;,
-        lc_xml_attr_activecell          TYPE string VALUE &apos;activeCell&apos;,
-        lc_xml_attr_sqref               TYPE string VALUE &apos;sqref&apos;,
-        lc_xml_attr_min                 TYPE string VALUE &apos;min&apos;,
-        lc_xml_attr_max                 TYPE string VALUE &apos;max&apos;,
-        lc_xml_attr_hidden              TYPE string VALUE &apos;hidden&apos;,
-        lc_xml_attr_width               TYPE string VALUE &apos;width&apos;,
-        lc_xml_attr_defaultwidth        TYPE string VALUE &apos;9.10&apos;,
-        lc_xml_attr_style               TYPE string VALUE &apos;style&apos;,
-        lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
-        lc_xml_attr_bestfit             TYPE string VALUE &apos;bestFit&apos;,
-        lc_xml_attr_customheight        TYPE string VALUE &apos;customHeight&apos;,
-        lc_xml_attr_customwidth         TYPE string VALUE &apos;customWidth&apos;,
-        lc_xml_attr_collapsed           TYPE string VALUE &apos;collapsed&apos;,
-        lc_xml_attr_defaultrowheight    TYPE string VALUE &apos;defaultRowHeight&apos;,
-        lc_xml_attr_defaultcolwidth     TYPE string VALUE &apos;defaultColWidth&apos;,
-        lc_xml_attr_outlinelevelrow     TYPE string VALUE &apos;x14ac:outlineLevelRow&apos;,
-        lc_xml_attr_outlinelevelcol     TYPE string VALUE &apos;x14ac:outlineLevelCol&apos;,
-        lc_xml_attr_outlinelevel        TYPE string VALUE &apos;outlineLevel&apos;,
-        lc_xml_attr_r                   TYPE string VALUE &apos;r&apos;,
-        lc_xml_attr_s                   TYPE string VALUE &apos;s&apos;,
-        lc_xml_attr_spans               TYPE string VALUE &apos;spans&apos;,
-        lc_xml_attr_t                   TYPE string VALUE &apos;t&apos;,
-        lc_xml_attr_password            TYPE string VALUE &apos;password&apos;,
-        lc_xml_attr_sheet               TYPE string VALUE &apos;sheet&apos;,
-        lc_xml_attr_objects             TYPE string VALUE &apos;objects&apos;,
-        lc_xml_attr_scenarios           TYPE string VALUE &apos;scenarios&apos;,
-        lc_xml_attr_autofilter          TYPE string VALUE &apos;autoFilter&apos;,
-        lc_xml_attr_deletecolumns       TYPE string VALUE &apos;deleteColumns&apos;,
-        lc_xml_attr_deleterows          TYPE string VALUE &apos;deleteRows&apos;,
-        lc_xml_attr_formatcells         TYPE string VALUE &apos;formatCells&apos;,
-        lc_xml_attr_formatcolumns       TYPE string VALUE &apos;formatColumns&apos;,
-        lc_xml_attr_formatrows          TYPE string VALUE &apos;formatRows&apos;,
-        lc_xml_attr_insertcolumns       TYPE string VALUE &apos;insertColumns&apos;,
-        lc_xml_attr_inserthyperlinks    TYPE string VALUE &apos;insertHyperlinks&apos;,
-        lc_xml_attr_insertrows          TYPE string VALUE &apos;insertRows&apos;,
-        lc_xml_attr_pivottables         TYPE string VALUE &apos;pivotTables&apos;,
-        lc_xml_attr_selectlockedcells   TYPE string VALUE &apos;selectLockedCells&apos;,
-        lc_xml_attr_selectunlockedcell  TYPE string VALUE &apos;selectUnlockedCells&apos;,
-        lc_xml_attr_sort                TYPE string VALUE &apos;sort&apos;,
-        lc_xml_attr_left                TYPE string VALUE &apos;left&apos;,
-        lc_xml_attr_right               TYPE string VALUE &apos;right&apos;,
-        lc_xml_attr_top                 TYPE string VALUE &apos;top&apos;,
-        lc_xml_attr_bottom              TYPE string VALUE &apos;bottom&apos;,
-        lc_xml_attr_header              TYPE string VALUE &apos;header&apos;,
-        lc_xml_attr_footer              TYPE string VALUE &apos;footer&apos;,
-        lc_xml_attr_type                TYPE string VALUE &apos;type&apos;,
-        lc_xml_attr_iconset             TYPE string VALUE &apos;iconSet&apos;,
-        lc_xml_attr_showvalue           TYPE string VALUE &apos;showValue&apos;,
-        lc_xml_attr_val                 TYPE string VALUE &apos;val&apos;,
-        lc_xml_attr_dxfid               TYPE string VALUE &apos;dxfId&apos;,
-        lc_xml_attr_priority            TYPE string VALUE &apos;priority&apos;,
-        lc_xml_attr_operator            TYPE string VALUE &apos;operator&apos;,
-        lc_xml_attr_allowblank          TYPE string VALUE &apos;allowBlank&apos;,
-        lc_xml_attr_showinputmessage    TYPE string VALUE &apos;showInputMessage&apos;,
-        lc_xml_attr_showerrormessage    TYPE string VALUE &apos;showErrorMessage&apos;,
-        lc_xml_attr_errortitle          TYPE string VALUE &apos;errorTitle&apos;,
-        lc_xml_attr_error               TYPE string VALUE &apos;error&apos;,
-        lc_xml_attr_prompttitle         TYPE string VALUE &apos;promptTitle&apos;,
-        lc_xml_attr_prompt              TYPE string VALUE &apos;prompt&apos;,
-        lc_xml_attr_count               TYPE string VALUE &apos;count&apos;,
-        lc_xml_attr_blackandwhite       TYPE string VALUE &apos;blackAndWhite&apos;,
-        lc_xml_attr_cellcomments        TYPE string VALUE &apos;cellComments&apos;,
-        lc_xml_attr_copies              TYPE string VALUE &apos;copies&apos;,
-        lc_xml_attr_draft               TYPE string VALUE &apos;draft&apos;,
-        lc_xml_attr_errors              TYPE string VALUE &apos;errors&apos;,
-        lc_xml_attr_firstpagenumber     TYPE string VALUE &apos;firstPageNumber&apos;,
-        lc_xml_attr_fittopage           TYPE string VALUE &apos;fitToPage&apos;,
-        lc_xml_attr_fittoheight         TYPE string VALUE &apos;fitToHeight&apos;,
-        lc_xml_attr_fittowidth          TYPE string VALUE &apos;fitToWidth&apos;,
-        lc_xml_attr_horizontaldpi       TYPE string VALUE &apos;horizontalDpi&apos;,
-        lc_xml_attr_orientation         TYPE string VALUE &apos;orientation&apos;,
-        lc_xml_attr_pageorder           TYPE string VALUE &apos;pageOrder&apos;,
-        lc_xml_attr_paperheight         TYPE string VALUE &apos;paperHeight&apos;,
-        lc_xml_attr_papersize           TYPE string VALUE &apos;paperSize&apos;,
-        lc_xml_attr_paperwidth          TYPE string VALUE &apos;paperWidth&apos;,
-        lc_xml_attr_scale               TYPE string VALUE &apos;scale&apos;,
-        lc_xml_attr_usefirstpagenumber  TYPE string VALUE &apos;useFirstPageNumber&apos;,
-        lc_xml_attr_useprinterdefaults  TYPE string VALUE &apos;usePrinterDefaults&apos;,
-        lc_xml_attr_verticaldpi         TYPE string VALUE &apos;verticalDpi&apos;,
-        lc_xml_attr_differentoddeven    TYPE string VALUE &apos;differentOddEven&apos;,
-        lc_xml_attr_colid               TYPE string VALUE &apos;colId&apos;,
-        lc_xml_attr_filtermode          TYPE string VALUE &apos;filterMode&apos;,
-        lc_xml_attr_tabcolor_rgb        TYPE string VALUE &apos;rgb&apos;,
-        lc_xml_attr_tabcolor_theme      TYPE string VALUE &apos;theme&apos;,
+        lc_xml_attr_ref                TYPE string VALUE &apos;ref&apos;,
+        lc_xml_attr_summarybelow       TYPE string VALUE &apos;summaryBelow&apos;,
+        lc_xml_attr_summaryright       TYPE string VALUE &apos;summaryRight&apos;,
+        lc_xml_attr_tabselected        TYPE string VALUE &apos;tabSelected&apos;,
+        lc_xml_attr_showzeros          TYPE string VALUE &apos;showZeros&apos;,
+        lc_xml_attr_zoomscale          TYPE string VALUE &apos;zoomScale&apos;,
+        lc_xml_attr_zoomscalenormal    TYPE string VALUE &apos;zoomScaleNormal&apos;,
+        lc_xml_attr_zoomscalepageview  TYPE string VALUE &apos;zoomScalePageLayoutView&apos;,
+        lc_xml_attr_zoomscalesheetview TYPE string VALUE &apos;zoomScaleSheetLayoutView&apos;,
+        lc_xml_attr_workbookviewid     TYPE string VALUE &apos;workbookViewId&apos;,
+        lc_xml_attr_showgridlines      TYPE string VALUE &apos;showGridLines&apos;,
+        lc_xml_attr_gridlines          TYPE string VALUE &apos;gridLines&apos;,
+        lc_xml_attr_showrowcolheaders  TYPE string VALUE &apos;showRowColHeaders&apos;,
+        lc_xml_attr_activecell         TYPE string VALUE &apos;activeCell&apos;,
+        lc_xml_attr_sqref              TYPE string VALUE &apos;sqref&apos;,
+        lc_xml_attr_min                TYPE string VALUE &apos;min&apos;,
+        lc_xml_attr_max                TYPE string VALUE &apos;max&apos;,
+        lc_xml_attr_hidden             TYPE string VALUE &apos;hidden&apos;,
+        lc_xml_attr_width              TYPE string VALUE &apos;width&apos;,
+        lc_xml_attr_defaultwidth       TYPE string VALUE &apos;9.10&apos;,
+        lc_xml_attr_style              TYPE string VALUE &apos;style&apos;,
+        lc_xml_attr_true               TYPE string VALUE &apos;true&apos;,
+        lc_xml_attr_bestfit            TYPE string VALUE &apos;bestFit&apos;,
+        lc_xml_attr_customheight       TYPE string VALUE &apos;customHeight&apos;,
+        lc_xml_attr_customwidth        TYPE string VALUE &apos;customWidth&apos;,
+        lc_xml_attr_collapsed          TYPE string VALUE &apos;collapsed&apos;,
+        lc_xml_attr_defaultrowheight   TYPE string VALUE &apos;defaultRowHeight&apos;,
+        lc_xml_attr_defaultcolwidth    TYPE string VALUE &apos;defaultColWidth&apos;,
+        lc_xml_attr_outlinelevelrow    TYPE string VALUE &apos;x14ac:outlineLevelRow&apos;,
+        lc_xml_attr_outlinelevelcol    TYPE string VALUE &apos;x14ac:outlineLevelCol&apos;,
+        lc_xml_attr_outlinelevel       TYPE string VALUE &apos;outlineLevel&apos;,
+        lc_xml_attr_r                  TYPE string VALUE &apos;r&apos;,
+        lc_xml_attr_s                  TYPE string VALUE &apos;s&apos;,
+        lc_xml_attr_spans              TYPE string VALUE &apos;spans&apos;,
+        lc_xml_attr_t                  TYPE string VALUE &apos;t&apos;,
+        lc_xml_attr_password           TYPE string VALUE &apos;password&apos;,
+        lc_xml_attr_sheet              TYPE string VALUE &apos;sheet&apos;,
+        lc_xml_attr_objects            TYPE string VALUE &apos;objects&apos;,
+        lc_xml_attr_scenarios          TYPE string VALUE &apos;scenarios&apos;,
+        lc_xml_attr_autofilter         TYPE string VALUE &apos;autoFilter&apos;,
+        lc_xml_attr_deletecolumns      TYPE string VALUE &apos;deleteColumns&apos;,
+        lc_xml_attr_deleterows         TYPE string VALUE &apos;deleteRows&apos;,
+        lc_xml_attr_formatcells        TYPE string VALUE &apos;formatCells&apos;,
+        lc_xml_attr_formatcolumns      TYPE string VALUE &apos;formatColumns&apos;,
+        lc_xml_attr_formatrows         TYPE string VALUE &apos;formatRows&apos;,
+        lc_xml_attr_insertcolumns      TYPE string VALUE &apos;insertColumns&apos;,
+        lc_xml_attr_inserthyperlinks   TYPE string VALUE &apos;insertHyperlinks&apos;,
+        lc_xml_attr_insertrows         TYPE string VALUE &apos;insertRows&apos;,
+        lc_xml_attr_pivottables        TYPE string VALUE &apos;pivotTables&apos;,
+        lc_xml_attr_selectlockedcells  TYPE string VALUE &apos;selectLockedCells&apos;,
+        lc_xml_attr_selectunlockedcell TYPE string VALUE &apos;selectUnlockedCells&apos;,
+        lc_xml_attr_sort               TYPE string VALUE &apos;sort&apos;,
+        lc_xml_attr_left               TYPE string VALUE &apos;left&apos;,
+        lc_xml_attr_right              TYPE string VALUE &apos;right&apos;,
+        lc_xml_attr_top                TYPE string VALUE &apos;top&apos;,
+        lc_xml_attr_bottom             TYPE string VALUE &apos;bottom&apos;,
+        lc_xml_attr_header             TYPE string VALUE &apos;header&apos;,
+        lc_xml_attr_footer             TYPE string VALUE &apos;footer&apos;,
+        lc_xml_attr_type               TYPE string VALUE &apos;type&apos;,
+        lc_xml_attr_iconset            TYPE string VALUE &apos;iconSet&apos;,
+        lc_xml_attr_showvalue          TYPE string VALUE &apos;showValue&apos;,
+        lc_xml_attr_val                TYPE string VALUE &apos;val&apos;,
+        lc_xml_attr_dxfid              TYPE string VALUE &apos;dxfId&apos;,
+        lc_xml_attr_priority           TYPE string VALUE &apos;priority&apos;,
+        lc_xml_attr_operator           TYPE string VALUE &apos;operator&apos;,
+        lc_xml_attr_allowblank         TYPE string VALUE &apos;allowBlank&apos;,
+        lc_xml_attr_showinputmessage   TYPE string VALUE &apos;showInputMessage&apos;,
+        lc_xml_attr_showerrormessage   TYPE string VALUE &apos;showErrorMessage&apos;,
+        lc_xml_attr_errortitle         TYPE string VALUE &apos;errorTitle&apos;,
+        lc_xml_attr_error              TYPE string VALUE &apos;error&apos;,
+        lc_xml_attr_prompttitle        TYPE string VALUE &apos;promptTitle&apos;,
+        lc_xml_attr_prompt             TYPE string VALUE &apos;prompt&apos;,
+        lc_xml_attr_count              TYPE string VALUE &apos;count&apos;,
+        lc_xml_attr_blackandwhite      TYPE string VALUE &apos;blackAndWhite&apos;,
+        lc_xml_attr_cellcomments       TYPE string VALUE &apos;cellComments&apos;,
+        lc_xml_attr_copies             TYPE string VALUE &apos;copies&apos;,
+        lc_xml_attr_draft              TYPE string VALUE &apos;draft&apos;,
+        lc_xml_attr_errors             TYPE string VALUE &apos;errors&apos;,
+        lc_xml_attr_firstpagenumber    TYPE string VALUE &apos;firstPageNumber&apos;,
+        lc_xml_attr_fittopage          TYPE string VALUE &apos;fitToPage&apos;,
+        lc_xml_attr_fittoheight        TYPE string VALUE &apos;fitToHeight&apos;,
+        lc_xml_attr_fittowidth         TYPE string VALUE &apos;fitToWidth&apos;,
+        lc_xml_attr_horizontaldpi      TYPE string VALUE &apos;horizontalDpi&apos;,
+        lc_xml_attr_orientation        TYPE string VALUE &apos;orientation&apos;,
+        lc_xml_attr_pageorder          TYPE string VALUE &apos;pageOrder&apos;,
+        lc_xml_attr_paperheight        TYPE string VALUE &apos;paperHeight&apos;,
+        lc_xml_attr_papersize          TYPE string VALUE &apos;paperSize&apos;,
+        lc_xml_attr_paperwidth         TYPE string VALUE &apos;paperWidth&apos;,
+        lc_xml_attr_scale              TYPE string VALUE &apos;scale&apos;,
+        lc_xml_attr_usefirstpagenumber TYPE string VALUE &apos;useFirstPageNumber&apos;,
+        lc_xml_attr_useprinterdefaults TYPE string VALUE &apos;usePrinterDefaults&apos;,
+        lc_xml_attr_verticaldpi        TYPE string VALUE &apos;verticalDpi&apos;,
+        lc_xml_attr_differentoddeven   TYPE string VALUE &apos;differentOddEven&apos;,
+        lc_xml_attr_colid              TYPE string VALUE &apos;colId&apos;,
+        lc_xml_attr_filtermode         TYPE string VALUE &apos;filterMode&apos;,
+        lc_xml_attr_tabcolor_rgb       TYPE string VALUE &apos;rgb&apos;,
+        lc_xml_attr_tabcolor_theme     TYPE string VALUE &apos;theme&apos;,
         &quot; Node namespace
-        lc_xml_node_ns                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
-        lc_xml_node_r_ns                TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;,
-        lc_xml_node_comp_ns             TYPE string VALUE &apos;http://schemas.openxmlformats.org/markup-compatibility/2006&apos;,
-        lc_xml_node_comp_pref           TYPE string VALUE &apos;x14ac&apos;,
-        lc_xml_node_ig_ns               TYPE string VALUE &apos;http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac&apos;.
+        lc_xml_node_ns                 TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
+        lc_xml_node_r_ns               TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships&apos;,
+        lc_xml_node_comp_ns            TYPE string VALUE &apos;http://schemas.openxmlformats.org/markup-compatibility/2006&apos;,
+        lc_xml_node_comp_pref          TYPE string VALUE &apos;x14ac&apos;,
+        lc_xml_node_ig_ns              TYPE string VALUE &apos;http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac&apos;.
 
   DATA: lo_ixml               TYPE REF TO if_ixml,
         lo_document           TYPE REF TO if_ixml_document,
@@ -2868,6 +3007,8 @@ ENDMETHOD.</source>
         ls_iconset                  TYPE zexcel_conditional_iconset,
         ls_cellis                   TYPE zexcel_conditional_cellis,
         ls_expression               TYPE zexcel_conditional_expression,
+        ls_conditional_top10        TYPE zexcel_conditional_top10,
+        ls_conditional_above_avg    TYPE zexcel_conditional_above_avg,
         lt_cfvo                     TYPE TABLE OF cfvo,
         ls_cfvo                     TYPE cfvo,
         lt_colors                   TYPE TABLE OF colors,
@@ -3854,6 +3995,7 @@ ENDMETHOD.</source>
 
         lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; databar node
         &quot; End &lt;&lt; Databar by Albert Lladanosa
+
       WHEN zcl_excel_style_conditional=&gt;c_rule_colorscale.
 
         ls_colorscale = lo_style_conditional-&gt;mode_colorscale.
@@ -3911,6 +4053,7 @@ ENDMETHOD.</source>
         ENDLOOP.
 
         lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; databar node
+
       WHEN zcl_excel_style_conditional=&gt;c_rule_iconset.
 
         ls_iconset = lo_style_conditional-&gt;mode_iconset.
@@ -4004,6 +4147,7 @@ ENDMETHOD.</source>
 
 
         lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; iconset node
+
       WHEN zcl_excel_style_conditional=&gt;c_rule_cellis.
         ls_cellis = lo_style_conditional-&gt;mode_cellis.
         READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_cellis-cell_style.
@@ -4020,6 +4164,14 @@ ENDMETHOD.</source>
         lv_value = ls_cellis-formula.
         lo_element_3-&gt;set_value( value = lv_value ).
         lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; formula node
+        IF ls_cellis-formula2 IS NOT INITIAL.
+          lv_value = ls_cellis-formula2.
+          lo_element_3 = lo_document-&gt;create_simple_element( name   = lc_xml_node_formula
+                                                             parent = lo_document ).
+          lo_element_3-&gt;set_value( value = lv_value ).
+          lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; 2nd formula node
+        ENDIF.
+
       WHEN zcl_excel_style_conditional=&gt;c_rule_expression.
         ls_expression = lo_style_conditional-&gt;mode_expression.
         READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_expression-cell_style.
@@ -4033,6 +4185,52 @@ ENDMETHOD.</source>
         lv_value = ls_expression-formula.
         lo_element_3-&gt;set_value( value = lv_value ).
         lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; formula node
+
+* begin of ins issue #366 - missing conditional rules: top10
+      WHEN zcl_excel_style_conditional=&gt;c_rule_top10.
+        ls_conditional_top10 = lo_style_conditional-&gt;mode_top10.
+        READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_conditional_top10-cell_style.
+        lv_value = ls_style_cond_mapping-dxf.
+        CONDENSE lv_value.
+        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_dxfid
+                                        value = lv_value ).
+        lv_value = ls_conditional_top10-topxx_count.
+        CONDENSE lv_value.
+        lo_element_2-&gt;set_attribute_ns( name  = &apos;rank&apos;
+                                        value = lv_value ).
+        IF ls_conditional_top10-bottom = &apos;X&apos;.
+          lo_element_2-&gt;set_attribute_ns( name  = &apos;bottom&apos;
+                                          value = &apos;1&apos; ).
+        ENDIF.
+        IF ls_conditional_top10-percent = &apos;X&apos;.
+          lo_element_2-&gt;set_attribute_ns( name  = &apos;percent&apos;
+                                          value =&apos;1&apos; ).
+        ENDIF.
+
+      WHEN zcl_excel_style_conditional=&gt;c_rule_above_average.
+        ls_conditional_above_avg = lo_style_conditional-&gt;mode_above_average.
+        READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_conditional_above_avg-cell_style.
+        lv_value = ls_style_cond_mapping-dxf.
+        CONDENSE lv_value.
+        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_dxfid
+                                        value = lv_value ).
+
+        IF ls_conditional_above_avg-above_average IS INITIAL. &quot; = below average
+          lo_element_2-&gt;set_attribute_ns( name  = &apos;aboveAverage&apos;
+                                          value = &apos;0&apos; ).
+        ENDIF.
+        IF ls_conditional_above_avg-equal_average = &apos;X&apos;. &quot; = equal average also
+          lo_element_2-&gt;set_attribute_ns( name  = &apos;equalAverage&apos;
+                                          value = &apos;1&apos; ).
+        ENDIF.
+        IF ls_conditional_above_avg-standard_deviation &lt;&gt; 0. &quot; standard deviation instead of value
+          lv_value = ls_conditional_above_avg-standard_deviation.
+          lo_element_2-&gt;set_attribute_ns( name  = &apos;stdDev&apos;
+                                          value = lv_value ).
+        ENDIF.
+
+* end of ins issue #366 - missing conditional rules: top10
+
     ENDCASE.
 
     lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; cfRule node
@@ -4640,59 +4838,65 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_styles.
+*--------------------------------------------------------------------*
+* ToDos:
+*        2do§1   dxfs-cellstyles are used in conditional formats:
+*                CellIs, Expression, top10 ( forthcoming above average as well )
+*                create own method to write dsfx-cellstyle to be reuseable by all these
+*--------------------------------------------------------------------*
 
 
 ** Constant node name
-  CONSTANTS:  lc_xml_node_stylesheet    TYPE string VALUE &apos;styleSheet&apos;,
+  CONSTANTS:  lc_xml_node_stylesheet        TYPE string VALUE &apos;styleSheet&apos;,
               &quot; font
-              lc_xml_node_fonts         TYPE string VALUE &apos;fonts&apos;,
-              lc_xml_node_font          TYPE string VALUE &apos;font&apos;,
-              lc_xml_node_b             TYPE string VALUE &apos;b&apos;,            &quot;bold
-              lc_xml_node_i             TYPE string VALUE &apos;i&apos;,            &quot;italic
-              lc_xml_node_u             TYPE string VALUE &apos;u&apos;,            &quot;underline
-              lc_xml_node_strike        TYPE string VALUE &apos;strike&apos;,       &quot;strikethrough
-              lc_xml_node_sz            TYPE string VALUE &apos;sz&apos;,
-              lc_xml_node_color         TYPE string VALUE &apos;color&apos;,
-              lc_xml_node_name          TYPE string VALUE &apos;name&apos;,
-              lc_xml_node_family        TYPE string VALUE &apos;family&apos;,
-              lc_xml_node_scheme        TYPE string VALUE &apos;scheme&apos;,
+              lc_xml_node_fonts             TYPE string VALUE &apos;fonts&apos;,
+              lc_xml_node_font              TYPE string VALUE &apos;font&apos;,
+              lc_xml_node_b                 TYPE string VALUE &apos;b&apos;,            &quot;bold
+              lc_xml_node_i                 TYPE string VALUE &apos;i&apos;,            &quot;italic
+              lc_xml_node_u                 TYPE string VALUE &apos;u&apos;,            &quot;underline
+              lc_xml_node_strike            TYPE string VALUE &apos;strike&apos;,       &quot;strikethrough
+              lc_xml_node_sz                TYPE string VALUE &apos;sz&apos;,
+              lc_xml_node_color             TYPE string VALUE &apos;color&apos;,
+              lc_xml_node_name              TYPE string VALUE &apos;name&apos;,
+              lc_xml_node_family            TYPE string VALUE &apos;family&apos;,
+              lc_xml_node_scheme            TYPE string VALUE &apos;scheme&apos;,
               &quot; fill
-              lc_xml_node_fills         TYPE string VALUE &apos;fills&apos;,
-              lc_xml_node_fill          TYPE string VALUE &apos;fill&apos;,
-              lc_xml_node_patternfill   TYPE string VALUE &apos;patternFill&apos;,
-              lc_xml_node_fgcolor       TYPE string VALUE &apos;fgColor&apos;,
-              lc_xml_node_bgcolor       TYPE string VALUE &apos;bgColor&apos;,
-              lc_xml_node_gradientfill  TYPE string VALUE &apos;gradientFill&apos;,
-              lc_xml_node_stop          TYPE string VALUE &apos;stop&apos;,
+              lc_xml_node_fills             TYPE string VALUE &apos;fills&apos;,
+              lc_xml_node_fill              TYPE string VALUE &apos;fill&apos;,
+              lc_xml_node_patternfill       TYPE string VALUE &apos;patternFill&apos;,
+              lc_xml_node_fgcolor           TYPE string VALUE &apos;fgColor&apos;,
+              lc_xml_node_bgcolor           TYPE string VALUE &apos;bgColor&apos;,
+              lc_xml_node_gradientfill      TYPE string VALUE &apos;gradientFill&apos;,
+              lc_xml_node_stop              TYPE string VALUE &apos;stop&apos;,
               &quot; borders
-              lc_xml_node_borders       TYPE string VALUE &apos;borders&apos;,
-              lc_xml_node_border        TYPE string VALUE &apos;border&apos;,
-              lc_xml_node_left          TYPE string VALUE &apos;left&apos;,
-              lc_xml_node_right         TYPE string VALUE &apos;right&apos;,
-              lc_xml_node_top           TYPE string VALUE &apos;top&apos;,
-              lc_xml_node_bottom        TYPE string VALUE &apos;bottom&apos;,
-              lc_xml_node_diagonal      TYPE string VALUE &apos;diagonal&apos;,
+              lc_xml_node_borders           TYPE string VALUE &apos;borders&apos;,
+              lc_xml_node_border            TYPE string VALUE &apos;border&apos;,
+              lc_xml_node_left              TYPE string VALUE &apos;left&apos;,
+              lc_xml_node_right             TYPE string VALUE &apos;right&apos;,
+              lc_xml_node_top               TYPE string VALUE &apos;top&apos;,
+              lc_xml_node_bottom            TYPE string VALUE &apos;bottom&apos;,
+              lc_xml_node_diagonal          TYPE string VALUE &apos;diagonal&apos;,
               &quot; numfmt
-              lc_xml_node_numfmts       TYPE string VALUE &apos;numFmts&apos;,
-              lc_xml_node_numfmt        TYPE string VALUE &apos;numFmt&apos;,
+              lc_xml_node_numfmts           TYPE string VALUE &apos;numFmts&apos;,
+              lc_xml_node_numfmt            TYPE string VALUE &apos;numFmt&apos;,
               &quot; Styles
-              lc_xml_node_cellstylexfs  TYPE string VALUE &apos;cellStyleXfs&apos;,
-              lc_xml_node_xf            TYPE string VALUE &apos;xf&apos;,
-              lc_xml_node_cellxfs       TYPE string VALUE &apos;cellXfs&apos;,
-              lc_xml_node_cellstyles    TYPE string VALUE &apos;cellStyles&apos;,
-              lc_xml_node_cellstyle     TYPE string VALUE &apos;cellStyle&apos;,
-              lc_xml_node_dxfs          TYPE string VALUE &apos;dxfs&apos;,
-              lc_xml_node_dxf           TYPE string VALUE &apos;dxf&apos;,
-              lc_xml_node_tablestyles   TYPE string VALUE &apos;tableStyles&apos;,
+              lc_xml_node_cellstylexfs      TYPE string VALUE &apos;cellStyleXfs&apos;,
+              lc_xml_node_xf                TYPE string VALUE &apos;xf&apos;,
+              lc_xml_node_cellxfs           TYPE string VALUE &apos;cellXfs&apos;,
+              lc_xml_node_cellstyles        TYPE string VALUE &apos;cellStyles&apos;,
+              lc_xml_node_cellstyle         TYPE string VALUE &apos;cellStyle&apos;,
+              lc_xml_node_dxfs              TYPE string VALUE &apos;dxfs&apos;,
+              lc_xml_node_dxf               TYPE string VALUE &apos;dxf&apos;,
+              lc_xml_node_tablestyles       TYPE string VALUE &apos;tableStyles&apos;,
               &quot; Colors
-              lc_xml_node_colors        TYPE string VALUE &apos;colors&apos;,
-              lc_xml_node_indexedcolors TYPE string VALUE &apos;indexedColors&apos;,
-              lc_xml_node_rgbcolor      TYPE string VALUE &apos;rgbColor&apos;,
-              lc_xml_node_mrucolors     TYPE string VALUE &apos;mruColors&apos;,
+              lc_xml_node_colors            TYPE string VALUE &apos;colors&apos;,
+              lc_xml_node_indexedcolors     TYPE string VALUE &apos;indexedColors&apos;,
+              lc_xml_node_rgbcolor          TYPE string VALUE &apos;rgbColor&apos;,
+              lc_xml_node_mrucolors         TYPE string VALUE &apos;mruColors&apos;,
               &quot; Alignment
-              lc_xml_node_alignment     TYPE string VALUE &apos;alignment&apos;,
+              lc_xml_node_alignment         TYPE string VALUE &apos;alignment&apos;,
               &quot; Protection
-              lc_xml_node_protection     TYPE string VALUE &apos;protection&apos;,
+              lc_xml_node_protection        TYPE string VALUE &apos;protection&apos;,
               &quot; Node attributes
               lc_xml_attr_count             TYPE string VALUE &apos;count&apos;,
               lc_xml_attr_val               TYPE string VALUE &apos;val&apos;,
@@ -4732,67 +4936,69 @@ ENDMETHOD.</source>
               lc_xml_attr_diagonaldown      TYPE string VALUE &apos;diagonalDown&apos;,
               &quot; Node namespace
               lc_xml_node_ns                TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
-              lc_xml_attr_type 				TYPE string value &apos;type&apos;,
-              lc_xml_attr_bottom 			TYPE string value &apos;bottom&apos;,
-              lc_xml_attr_top 				TYPE string value &apos;top&apos;,
-              lc_xml_attr_right 			TYPE string value &apos;right&apos;,
-              lc_xml_attr_left 				TYPE string value &apos;left&apos;.
+              lc_xml_attr_type              TYPE string VALUE &apos;type&apos;,
+              lc_xml_attr_bottom            TYPE string VALUE &apos;bottom&apos;,
+              lc_xml_attr_top               TYPE string VALUE &apos;top&apos;,
+              lc_xml_attr_right             TYPE string VALUE &apos;right&apos;,
+              lc_xml_attr_left              TYPE string VALUE &apos;left&apos;.
 
-  DATA: lo_ixml             TYPE REF TO if_ixml,
-        lo_document         TYPE REF TO if_ixml_document,
-        lo_element_root     TYPE REF TO if_ixml_element,
-        lo_element_fonts    TYPE REF TO if_ixml_element,
-        lo_element_font     TYPE REF TO if_ixml_element,
-        lo_element_fills    TYPE REF TO if_ixml_element,
-        lo_element_fill     TYPE REF TO if_ixml_element,
-        lo_element_borders  TYPE REF TO if_ixml_element,
-        lo_element_border   TYPE REF TO if_ixml_element,
-        lo_element_numfmts  TYPE REF TO if_ixml_element,
-        lo_element_numfmt   TYPE REF TO if_ixml_element,
-        lo_element_cellxfs  TYPE REF TO if_ixml_element,
-        lo_element          TYPE REF TO if_ixml_element,
-        lo_sub_element      TYPE REF TO if_ixml_element,
-        lo_sub_element_2    TYPE REF TO if_ixml_element,
-        lo_encoding         TYPE REF TO if_ixml_encoding,
-        lo_streamfactory    TYPE REF TO if_ixml_stream_factory,
-        lo_ostream          TYPE REF TO if_ixml_ostream,
-        lo_renderer         TYPE REF TO if_ixml_renderer,
-        lo_iterator         TYPE REF TO cl_object_collection_iterator,
-        lo_iterator2        TYPE REF TO cl_object_collection_iterator,
-        lo_worksheet        TYPE REF TO zcl_excel_worksheet,
+  DATA: lo_ixml              TYPE REF TO if_ixml,
+        lo_document          TYPE REF TO if_ixml_document,
+        lo_element_root      TYPE REF TO if_ixml_element,
+        lo_element_fonts     TYPE REF TO if_ixml_element,
+        lo_element_font      TYPE REF TO if_ixml_element,
+        lo_element_fills     TYPE REF TO if_ixml_element,
+        lo_element_fill      TYPE REF TO if_ixml_element,
+        lo_element_borders   TYPE REF TO if_ixml_element,
+        lo_element_border    TYPE REF TO if_ixml_element,
+        lo_element_numfmts   TYPE REF TO if_ixml_element,
+        lo_element_numfmt    TYPE REF TO if_ixml_element,
+        lo_element_cellxfs   TYPE REF TO if_ixml_element,
+        lo_element           TYPE REF TO if_ixml_element,
+        lo_sub_element       TYPE REF TO if_ixml_element,
+        lo_sub_element_2     TYPE REF TO if_ixml_element,
+        lo_encoding          TYPE REF TO if_ixml_encoding,
+        lo_streamfactory     TYPE REF TO if_ixml_stream_factory,
+        lo_ostream           TYPE REF TO if_ixml_ostream,
+        lo_renderer          TYPE REF TO if_ixml_renderer,
+        lo_iterator          TYPE REF TO cl_object_collection_iterator,
+        lo_iterator2         TYPE REF TO cl_object_collection_iterator,
+        lo_worksheet         TYPE REF TO zcl_excel_worksheet,
         lo_style_conditional TYPE REF TO zcl_excel_style_conditional,
-        lo_style            TYPE REF TO zcl_excel_style.
+        lo_style             TYPE REF TO zcl_excel_style.
 
 
-  DATA: lt_fonts          TYPE zexcel_t_style_font,
-        ls_font           TYPE zexcel_s_style_font,
-        lt_fills          TYPE zexcel_t_style_fill,
-        ls_fill           TYPE zexcel_s_style_fill,
-        lt_borders        TYPE zexcel_t_style_border,
-        ls_border         TYPE zexcel_s_style_border,
-        lt_numfmts        TYPE zexcel_t_style_numfmt,
-        ls_numfmt         TYPE zexcel_s_style_numfmt,
-        lt_protections    TYPE zexcel_t_style_protection,
-        ls_protection     TYPE zexcel_s_style_protection,
-        lt_alignments     TYPE zexcel_t_style_alignment,
-        ls_alignment      TYPE zexcel_s_style_alignment,
-        lt_cellxfs        TYPE zexcel_t_cellxfs,
-        ls_cellxfs        TYPE zexcel_s_cellxfs,
-        ls_styles_mapping TYPE zexcel_s_styles_mapping,
+  DATA: lt_fonts              TYPE zexcel_t_style_font,
+        ls_font               TYPE zexcel_s_style_font,
+        lt_fills              TYPE zexcel_t_style_fill,
+        ls_fill               TYPE zexcel_s_style_fill,
+        lt_borders            TYPE zexcel_t_style_border,
+        ls_border             TYPE zexcel_s_style_border,
+        lt_numfmts            TYPE zexcel_t_style_numfmt,
+        ls_numfmt             TYPE zexcel_s_style_numfmt,
+        lt_protections        TYPE zexcel_t_style_protection,
+        ls_protection         TYPE zexcel_s_style_protection,
+        lt_alignments         TYPE zexcel_t_style_alignment,
+        ls_alignment          TYPE zexcel_s_style_alignment,
+        lt_cellxfs            TYPE zexcel_t_cellxfs,
+        ls_cellxfs            TYPE zexcel_s_cellxfs,
+        ls_styles_mapping     TYPE zexcel_s_styles_mapping,
         ls_style_cond_mapping TYPE zexcel_s_styles_cond_mapping,
-        ls_cellis         TYPE zexcel_conditional_cellis,
-        ls_expression     TYPE zexcel_conditional_expression,
-        lt_colors         TYPE zexcel_t_style_color_argb,
-        ls_color          LIKE LINE OF lt_colors.
+        ls_cellis             TYPE zexcel_conditional_cellis,
+        ls_expression         TYPE zexcel_conditional_expression,
+        ls_conditional_top10  TYPE zexcel_conditional_top10,
 
-  DATA: lv_value          TYPE string,
-        lv_dfx_count      TYPE i,
-        lv_fonts_count    TYPE i,
-        lv_fills_count    TYPE i,
-        lv_borders_count  TYPE i,
-        lv_cellxfs_count  TYPE i,
-        lv_index          TYPE i,
-        lv_align_flag     TYPE c.
+        lt_colors             TYPE zexcel_t_style_color_argb,
+        ls_color              LIKE LINE OF lt_colors.
+
+  DATA: lv_value         TYPE string,
+        lv_dfx_count     TYPE i,
+        lv_fonts_count   TYPE i,
+        lv_fills_count   TYPE i,
+        lv_borders_count TYPE i,
+        lv_cellxfs_count TYPE i,
+        lv_index         TYPE i,
+        lv_align_flag    TYPE c.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -5055,112 +5261,112 @@ ENDMETHOD.</source>
     lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
                                                           parent = lo_document ).
 
- if ls_fill-gradtype is not initial.
-    &quot;gradient
+    IF ls_fill-gradtype IS NOT INITIAL.
+      &quot;gradient
 
-    lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_gradientfill
-                                                        parent = lo_document ).
-    if ls_fill-gradtype-degree is not initial.
-      lv_value = ls_fill-gradtype-degree.
-      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_degree  value = lv_value ).
-    endif.
-    if ls_fill-gradtype-type is not initial.
-      lv_value = ls_fill-gradtype-type.
-      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_type  value = lv_value ).
-    endif.
-    if ls_fill-gradtype-bottom is not initial.
-      lv_value = ls_fill-gradtype-bottom.
-      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_bottom  value = lv_value ).
-    endif.
-    if ls_fill-gradtype-top is not initial.
-      lv_value = ls_fill-gradtype-top.
-      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_top  value = lv_value ).
-    endif.
-    if ls_fill-gradtype-right is not initial.
-      lv_value = ls_fill-gradtype-right.
-      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_right  value = lv_value ).
-    endif.
-    if ls_fill-gradtype-left is not initial.
-      lv_value = ls_fill-gradtype-left.
-      lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_left  value = lv_value ).
-    endif.
+      lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_gradientfill
+                                                          parent = lo_document ).
+      IF ls_fill-gradtype-degree IS NOT INITIAL.
+        lv_value = ls_fill-gradtype-degree.
+        lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_degree  value = lv_value ).
+      ENDIF.
+      IF ls_fill-gradtype-type IS NOT INITIAL.
+        lv_value = ls_fill-gradtype-type.
+        lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_type  value = lv_value ).
+      ENDIF.
+      IF ls_fill-gradtype-bottom IS NOT INITIAL.
+        lv_value = ls_fill-gradtype-bottom.
+        lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_bottom  value = lv_value ).
+      ENDIF.
+      IF ls_fill-gradtype-top IS NOT INITIAL.
+        lv_value = ls_fill-gradtype-top.
+        lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_top  value = lv_value ).
+      ENDIF.
+      IF ls_fill-gradtype-right IS NOT INITIAL.
+        lv_value = ls_fill-gradtype-right.
+        lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_right  value = lv_value ).
+      ENDIF.
+      IF ls_fill-gradtype-left IS NOT INITIAL.
+        lv_value = ls_fill-gradtype-left.
+        lo_sub_element-&gt;set_attribute_ns( name  = lc_xml_attr_left  value = lv_value ).
+      ENDIF.
 
-    if ls_fill-gradtype-position3 is not initial.
-      &quot;create &lt;stop&gt; elements for gradients, we can have 2 or 3 stops in each gradient
-      lo_sub_element_2 =  lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
-                                                              parent = lo_sub_element ).
-      lv_value = ls_fill-gradtype-position1.
-      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position value = lv_value ).
+      IF ls_fill-gradtype-position3 IS NOT INITIAL.
+        &quot;create &lt;stop&gt; elements for gradients, we can have 2 or 3 stops in each gradient
+        lo_sub_element_2 =  lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                                parent = lo_sub_element ).
+        lv_value = ls_fill-gradtype-position1.
+        lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position value = lv_value ).
 
-      create_xl_styles_color_node(
-          io_document        = lo_document
-          io_parent          = lo_sub_element_2
-          is_color           = ls_fill-bgcolor
-          iv_color_elem_name = lc_xml_node_color ).
-      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+        create_xl_styles_color_node(
+            io_document        = lo_document
+            io_parent          = lo_sub_element_2
+            is_color           = ls_fill-bgcolor
+            iv_color_elem_name = lc_xml_node_color ).
+        lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
 
-      lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
-                                                             parent = lo_sub_element ).
+        lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                               parent = lo_sub_element ).
 
-      lv_value = ls_fill-gradtype-position2.
+        lv_value = ls_fill-gradtype-position2.
 
-      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
-                                          value = lv_value ).
+        lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
+                                            value = lv_value ).
 
-      create_xl_styles_color_node(
-          io_document        = lo_document
-          io_parent          = lo_sub_element_2
-          is_color           = ls_fill-fgcolor
-          iv_color_elem_name = lc_xml_node_color ).
-      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+        create_xl_styles_color_node(
+            io_document        = lo_document
+            io_parent          = lo_sub_element_2
+            is_color           = ls_fill-fgcolor
+            iv_color_elem_name = lc_xml_node_color ).
+        lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
 
-      lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
-                                                             parent = lo_sub_element ).
+        lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                               parent = lo_sub_element ).
 
-      lv_value = ls_fill-gradtype-position3.
-      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
-                                          value = lv_value ).
+        lv_value = ls_fill-gradtype-position3.
+        lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
+                                            value = lv_value ).
 
-      create_xl_styles_color_node(
-          io_document        = lo_document
-          io_parent          = lo_sub_element_2
-          is_color           = ls_fill-bgcolor
-          iv_color_elem_name = lc_xml_node_color ).
-      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+        create_xl_styles_color_node(
+            io_document        = lo_document
+            io_parent          = lo_sub_element_2
+            is_color           = ls_fill-bgcolor
+            iv_color_elem_name = lc_xml_node_color ).
+        lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
 
-    else.
-       &quot;create &lt;stop&gt; elements for gradients, we can have 2 or 3 stops in each gradient
-      lo_sub_element_2 =  lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
-                                                              parent = lo_sub_element ).
-      lv_value = ls_fill-gradtype-position1.
-      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position value = lv_value ).
+      ELSE.
+        &quot;create &lt;stop&gt; elements for gradients, we can have 2 or 3 stops in each gradient
+        lo_sub_element_2 =  lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                                parent = lo_sub_element ).
+        lv_value = ls_fill-gradtype-position1.
+        lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position value = lv_value ).
 
-      create_xl_styles_color_node(
-          io_document        = lo_document
-          io_parent          = lo_sub_element_2
-          is_color           = ls_fill-bgcolor
-          iv_color_elem_name = lc_xml_node_color ).
-      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+        create_xl_styles_color_node(
+            io_document        = lo_document
+            io_parent          = lo_sub_element_2
+            is_color           = ls_fill-bgcolor
+            iv_color_elem_name = lc_xml_node_color ).
+        lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
 
-      lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
-                                                             parent = lo_sub_element ).
+        lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_stop
+                                                               parent = lo_sub_element ).
 
-      lv_value = ls_fill-gradtype-position2.
-      lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
-                                          value = lv_value ).
+        lv_value = ls_fill-gradtype-position2.
+        lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_position
+                                            value = lv_value ).
 
-      create_xl_styles_color_node(
-          io_document        = lo_document
-          io_parent          = lo_sub_element_2
-          is_color           = ls_fill-fgcolor
-          iv_color_elem_name = lc_xml_node_color ).
-      lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
-    endif.
-
-
+        create_xl_styles_color_node(
+            io_document        = lo_document
+            io_parent          = lo_sub_element_2
+            is_color           = ls_fill-fgcolor
+            iv_color_elem_name = lc_xml_node_color ).
+        lo_sub_element-&gt;append_child( new_child = lo_sub_element_2 ).
+      ENDIF.
 
 
-  else.
+
+
+    ELSE.
       &quot;pattern
       lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
                                                            parent = lo_document ).
@@ -5187,7 +5393,7 @@ ENDMETHOD.</source>
             iv_color_elem_name = lc_xml_node_bgcolor ).
 
       ENDIF.
-    endif.
+    ENDIF.
 
     lo_element_fill-&gt;append_child( new_child = lo_sub_element ).&quot;pattern
     lo_element_fills-&gt;append_child( new_child = lo_element_fill ).
@@ -5508,176 +5714,54 @@ ENDMETHOD.</source>
     WHILE lo_iterator2-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
       lo_style_conditional ?= lo_iterator2-&gt;if_object_collection_iterator~get_next( ).
       CASE lo_style_conditional-&gt;rule.
+* begin of change issue #366 - missing conditional rules: top10, move dfx-styles to own method
         WHEN zcl_excel_style_conditional=&gt;c_rule_cellis.
-          &quot;if style defined
-          ls_cellis = lo_style_conditional-&gt;mode_cellis.
-          IF ls_cellis-cell_style IS INITIAL.
-            CONTINUE.
-          ENDIF.
-          READ TABLE me-&gt;styles_mapping INTO ls_styles_mapping WITH KEY guid = ls_cellis-cell_style.
-          ADD 1 TO ls_styles_mapping-style. &quot; the numbering starts from 0
-          READ TABLE lt_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
-          ADD 1 TO ls_cellxfs-fillid.       &quot; the numbering starts from 0
+          me-&gt;create_dxf_style( EXPORTING
+                                  iv_cell_style    = lo_style_conditional-&gt;mode_cellis-cell_style
+                                  io_dxf_element   = lo_element
+                                  io_ixml_document = lo_document
+                                  it_cellxfs       = lt_cellxfs
+                                  it_fonts         = lt_fonts
+                                  it_fills         = lt_fills
+                                CHANGING
+                                  cv_dfx_count     = lv_dfx_count ).
 
-          &quot; Style already mapped?
-          READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
-          IF sy-subrc EQ 0.
-            ls_style_cond_mapping-guid  = ls_cellis-cell_style.
-            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
-          ELSE.
-            ls_style_cond_mapping-guid  = ls_cellis-cell_style.
-            ls_style_cond_mapping-style = ls_styles_mapping-style.
-            ls_style_cond_mapping-dxf   = lv_dfx_count.
-            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
-            ADD 1 TO lv_dfx_count.
-
-            &quot; dxf node
-            lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
-                                                                 parent = lo_document ).
-
-            &quot;Conditional formatting font style correction by Alessandro Iannacci START
-            lv_index = ls_cellxfs-fontid + 1.
-            READ TABLE lt_fonts INTO ls_font INDEX lv_index.
-            IF ls_font IS NOT INITIAL.
-              lo_element_font = lo_document-&gt;create_simple_element( name   = lc_xml_node_font
-                                                          parent = lo_document ).
-              IF ls_font-bold EQ abap_true.
-                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_b
-                                                                     parent = lo_document ).
-                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-              ENDIF.
-              IF ls_font-italic EQ abap_true.
-                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_i
-                                                                     parent = lo_document ).
-                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-              ENDIF.
-              IF ls_font-underline EQ abap_true.
-                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_u
-                                                                     parent = lo_document ).
-                lv_value = ls_font-underline_mode.
-                lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_val
-                                                  value = lv_value ).
-                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-              ENDIF.
-              IF ls_font-strikethrough EQ abap_true.
-                lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_strike
-                                                                     parent = lo_document ).
-                lo_element_font-&gt;append_child( new_child = lo_sub_element_2 ).
-              ENDIF.
-              &quot;color
-              create_xl_styles_color_node(
-                  io_document        = lo_document
-                  io_parent          = lo_element_font
-                  is_color           = ls_font-color ).
-              lo_sub_element-&gt;append_child( new_child = lo_element_font ).
-            ENDIF.
-            &quot;---Conditional formatting font style correction by Alessandro Iannacci END
-
-
-            READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
-            IF ls_fill IS NOT INITIAL.
-              &quot; fill properties
-              lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
-                                                                       parent = lo_document ).
-              &quot;pattern
-              lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
-                                                                   parent = lo_document ).
-              lv_value = ls_fill-filltype.
-              lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
-                                                  value = lv_value ).
-              &quot; fgcolor
-              create_xl_styles_color_node(
-                  io_document        = lo_document
-                  io_parent          = lo_sub_element_2
-                  is_color           = ls_fill-fgcolor
-                  iv_color_elem_name = lc_xml_node_fgcolor ).
-
-              IF  ls_fill-fgcolor-rgb IS INITIAL AND
-                ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
-                ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
-                ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
-
-                &quot; bgcolor
-                create_xl_styles_color_node(
-                    io_document        = lo_document
-                    io_parent          = lo_sub_element_2
-                    is_color           = ls_fill-bgcolor
-                    iv_color_elem_name = lc_xml_node_bgcolor ).
-
-              ENDIF.
-
-              lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
-
-              lo_sub_element-&gt;append_child( new_child = lo_element_fill ).
-            ENDIF.
-          ENDIF.
-
-          lo_element-&gt;append_child( new_child = lo_sub_element ).
         WHEN zcl_excel_style_conditional=&gt;c_rule_expression.
-          &quot;if style defined
-          ls_expression = lo_style_conditional-&gt;mode_expression.
-          IF ls_expression-cell_style IS INITIAL.
-            CONTINUE.
-          ENDIF.
-          READ TABLE me-&gt;styles_mapping INTO ls_styles_mapping WITH KEY guid = ls_expression-cell_style.
-          ADD 1 TO ls_styles_mapping-style. &quot; the numbering starts from 0
-          READ TABLE lt_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
-          ADD 1 TO ls_cellxfs-fillid.       &quot; the numbering starts from 0
+          me-&gt;create_dxf_style( EXPORTING
+                        iv_cell_style    = lo_style_conditional-&gt;mode_expression-cell_style
+                        io_dxf_element   = lo_element
+                        io_ixml_document = lo_document
+                        it_cellxfs       = lt_cellxfs
+                        it_fonts         = lt_fonts
+                        it_fills         = lt_fills
+                      CHANGING
+                        cv_dfx_count     = lv_dfx_count ).
 
-          READ TABLE me-&gt;styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
-          IF sy-subrc EQ 0.
-            ls_style_cond_mapping-guid  = ls_expression-cell_style.
-            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
-          ELSE.
-            ls_style_cond_mapping-guid  = ls_expression-cell_style.
-            ls_style_cond_mapping-style = ls_styles_mapping-style.
-            ls_style_cond_mapping-dxf   = lv_dfx_count.
-            APPEND ls_style_cond_mapping TO me-&gt;styles_cond_mapping.
-            ADD 1 TO lv_dfx_count.
 
-            &quot; dxf node
-            lo_sub_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_dxf
-                                                                 parent = lo_document ).
 
-            READ TABLE lt_fills INTO ls_fill INDEX ls_cellxfs-fillid.
-            IF ls_fill IS NOT INITIAL.
-              &quot; fill properties
-              lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
-                                                                       parent = lo_document ).
-              &quot;pattern
-              lo_sub_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_patternfill
-                                                                   parent = lo_document ).
-              lv_value = ls_fill-filltype.
-              lo_sub_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_patterntype
-                                                  value = lv_value ).
-              &quot; fgcolor
-              create_xl_styles_color_node(
-                  io_document        = lo_document
-                  io_parent          = lo_sub_element_2
-                  is_color           = ls_fill-fgcolor
-                  iv_color_elem_name = lc_xml_node_fgcolor ).
+        WHEN zcl_excel_style_conditional=&gt;c_rule_top10.
+          me-&gt;create_dxf_style( EXPORTING
+                                  iv_cell_style    = lo_style_conditional-&gt;mode_top10-cell_style
+                                  io_dxf_element   = lo_element
+                                  io_ixml_document = lo_document
+                                  it_cellxfs       = lt_cellxfs
+                                  it_fonts         = lt_fonts
+                                  it_fills         = lt_fills
+                                CHANGING
+                                  cv_dfx_count     = lv_dfx_count ).
 
-              IF  ls_fill-fgcolor-rgb IS INITIAL AND
-                ls_fill-fgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_not_set AND
-                ls_fill-fgcolor-theme EQ zcl_excel_style_color=&gt;c_theme_not_set AND
-                ls_fill-fgcolor-tint IS INITIAL AND ls_fill-bgcolor-indexed EQ zcl_excel_style_color=&gt;c_indexed_sys_foreground.
+        WHEN zcl_excel_style_conditional=&gt;c_rule_above_average.
+          me-&gt;create_dxf_style( EXPORTING
+                                  iv_cell_style    = lo_style_conditional-&gt;mode_above_average-cell_style
+                                  io_dxf_element   = lo_element
+                                  io_ixml_document = lo_document
+                                  it_cellxfs       = lt_cellxfs
+                                  it_fonts         = lt_fonts
+                                  it_fills         = lt_fills
+                                CHANGING
+                                  cv_dfx_count     = lv_dfx_count ).
+* begin of change issue #366 - missing conditional rules: top10, move dfx-styles to own method
 
-                &quot; bgcolor
-                create_xl_styles_color_node(
-                    io_document        = lo_document
-                    io_parent          = lo_sub_element_2
-                    is_color           = ls_fill-bgcolor
-                    iv_color_elem_name = lc_xml_node_bgcolor ).
-
-              ENDIF.
-
-              lo_element_fill-&gt;append_child( new_child = lo_sub_element_2 ). &quot;pattern
-
-              lo_sub_element-&gt;append_child( new_child = lo_element_fill ).
-            ENDIF.
-          ENDIF.
-
-          lo_element-&gt;append_child( new_child = lo_sub_element ).
         WHEN OTHERS.
           CONTINUE.
       ENDCASE.
