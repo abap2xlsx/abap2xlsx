@@ -3578,9 +3578,13 @@ ENDMETHOD.</source>
 
   CLEAR ls_sheet_content.
   LOOP AT io_worksheet-&gt;sheet_content INTO ls_sheet_content.
-    READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-    IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
+    IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
       CLEAR l_autofilter_hidden.
+    ELSE.
+      READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
+      IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
+        CLEAR l_autofilter_hidden.
+      ENDIF.
     ENDIF.
     CLEAR ls_style_mapping.
 * Create row element
@@ -3676,7 +3680,13 @@ ENDMETHOD.</source>
             lo_element_2-&gt;set_attribute_ns( name  = &apos;customFormat&apos;  value = &apos;1&apos;).
           ENDIF.
         ENDIF.
-        l_autofilter_hidden = abap_true. &quot; First default is not showing
+        IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
+          CLEAR l_autofilter_hidden.
+        ELSE.
+          l_autofilter_hidden = abap_true. &quot; First default is not showing
+        ENDIF.
+      ELSE.
+
       ENDIF.
     ENDWHILE.
 
