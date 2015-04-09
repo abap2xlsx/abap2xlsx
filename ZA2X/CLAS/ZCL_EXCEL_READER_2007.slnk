@@ -2280,188 +2280,188 @@ ENDMETHOD.</source>
 *              own method ( load_worksheet_pagemargins )
 *--------------------------------------------------------------------*
   TYPES:  BEGIN OF lty_cell,
-              r                               TYPE string,
-              t                               TYPE string,
-              s                               TYPE string,
+            r TYPE string,
+            t TYPE string,
+            s TYPE string,
           END OF lty_cell.
 
   TYPES:  BEGIN OF lty_column,
-              min                             TYPE string,
-              max                             TYPE string,
-              width                           TYPE float,
-              customwidth                     TYPE string,
-              style                           TYPE string,
-              bestfit                         TYPE string,
-              collapsed                       TYPE string,
-              hidden                          TYPE string,
-              outlinelevel                    TYPE string,
+            min          TYPE string,
+            max          TYPE string,
+            width        TYPE float,
+            customwidth  TYPE string,
+            style        TYPE string,
+            bestfit      TYPE string,
+            collapsed    TYPE string,
+            hidden       TYPE string,
+            outlinelevel TYPE string,
           END OF lty_column.
 
   TYPES:  BEGIN OF lty_sheetview,
-              showgridlines                   TYPE zexcel_show_gridlines,
-              tabselected                     TYPE string,
-              zoomscalenormal                 TYPE string,
-              workbookviewid                  TYPE string,
-              showrowcolheaders               TYPE string,
+            showgridlines     TYPE zexcel_show_gridlines,
+            tabselected       TYPE string,
+            zoomscalenormal   TYPE string,
+            workbookviewid    TYPE string,
+            showrowcolheaders TYPE string,
           END OF lty_sheetview.
 
   TYPES:  BEGIN OF lty_mergecell,
-              ref                             TYPE string,
+            ref TYPE string,
           END OF lty_mergecell.
 
   TYPES:  BEGIN OF lty_row,
-              r                               TYPE string,
-              customheight                    TYPE string,
-              ht                              TYPE float,
-              spans                           TYPE string,
-              thickbot                        TYPE string,
-              customformat                    TYPE string,
-              thicktop                        TYPE string,
-              collapsed                       TYPE string,
-              hidden                          TYPE string,
-              outlinelevel                    TYPE string,
+            r            TYPE string,
+            customheight TYPE string,
+            ht           TYPE float,
+            spans        TYPE string,
+            thickbot     TYPE string,
+            customformat TYPE string,
+            thicktop     TYPE string,
+            collapsed    TYPE string,
+            hidden       TYPE string,
+            outlinelevel TYPE string,
           END OF lty_row.
 
   TYPES:  BEGIN OF lty_page_setup,
-              id                              TYPE string,
-              orientation                     TYPE string,
-              scale                           TYPE string,
+            id          TYPE string,
+            orientation TYPE string,
+            scale       TYPE string,
           END OF lty_page_setup.
 
   TYPES:  BEGIN OF lty_sheetformatpr,
-              customheight                    TYPE string,
-              defaultrowheight                TYPE string,
-              customwidth                     TYPE string,
-              defaultcolwidth                 TYPE string,
+            customheight     TYPE string,
+            defaultrowheight TYPE string,
+            customwidth      TYPE string,
+            defaultcolwidth  TYPE string,
           END OF lty_sheetformatpr.
 
   TYPES:  BEGIN OF lty_headerfooter,
-              alignwithmargins                TYPE string,
-              differentoddeven                TYPE string,
+            alignwithmargins TYPE string,
+            differentoddeven TYPE string,
           END OF lty_headerfooter.
 
   TYPES:  BEGIN OF lty_tabcolor,
-              rgb                             TYPE string,
-              theme                           TYPE string,
+            rgb   TYPE string,
+            theme TYPE string,
           END OF lty_tabcolor.
 
   TYPES:  BEGIN OF lty_datavalidation,
-              type                            TYPE zexcel_data_val_type,
-              allowblank                      TYPE flag,
-              showinputmessage                TYPE flag,
-              showerrormessage                TYPE flag,
-              showdropdown                    TYPE flag,
-              operator                        TYPE zexcel_data_val_operator,
-              formula1                        TYPE zexcel_validation_formula1,
-              formula2                        TYPE zexcel_validation_formula1,
-              sqref                           TYPE string,
-              cell_column                     TYPE zexcel_cell_column_alpha,
-              cell_column_to                  TYPE zexcel_cell_column_alpha,
-              cell_row                        TYPE zexcel_cell_row,
-              cell_row_to                     TYPE zexcel_cell_row,
-              error                           TYPE string,
-              errortitle                      TYPE string,
-              prompt                          TYPE string,
-              prompttitle                     TYPE string,
-              errorstyle                      TYPE zexcel_data_val_error_style,
+            type             TYPE zexcel_data_val_type,
+            allowblank       TYPE flag,
+            showinputmessage TYPE flag,
+            showerrormessage TYPE flag,
+            showdropdown     TYPE flag,
+            operator         TYPE zexcel_data_val_operator,
+            formula1         TYPE zexcel_validation_formula1,
+            formula2         TYPE zexcel_validation_formula1,
+            sqref            TYPE string,
+            cell_column      TYPE zexcel_cell_column_alpha,
+            cell_column_to   TYPE zexcel_cell_column_alpha,
+            cell_row         TYPE zexcel_cell_row,
+            cell_row_to      TYPE zexcel_cell_row,
+            error            TYPE string,
+            errortitle       TYPE string,
+            prompt           TYPE string,
+            prompttitle      TYPE string,
+            errorstyle       TYPE zexcel_data_val_error_style,
           END OF lty_datavalidation.
 
 
 
-  CONSTANTS:  lc_xml_attr_true                TYPE string VALUE &apos;true&apos;,
-              lc_xml_attr_true_int            TYPE string VALUE &apos;1&apos;,
-              lc_rel_drawing                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
-              lc_rel_hyperlink                TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;,
-              lc_rel_printer                  TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;.
+  CONSTANTS:  lc_xml_attr_true     TYPE string VALUE &apos;true&apos;,
+              lc_xml_attr_true_int TYPE string VALUE &apos;1&apos;,
+              lc_rel_drawing       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
+              lc_rel_hyperlink     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;,
+              lc_rel_printer       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;.
 
-  DATA:       lo_ixml_worksheet               TYPE REF TO if_ixml_document,
-              lo_ixml_cells                   TYPE REF TO if_ixml_node_collection,
-              lo_ixml_iterator                TYPE REF TO if_ixml_node_iterator,
-              lo_ixml_iterator2               TYPE REF TO if_ixml_node_iterator,
-              lo_ixml_row_elem                TYPE REF TO if_ixml_element,
-              lo_ixml_cell_elem               TYPE REF TO if_ixml_element,
-              ls_cell                         TYPE lty_cell,
-              lv_index                        TYPE i,
-              lo_ixml_value_elem              TYPE REF TO if_ixml_element,
-              lo_ixml_formula_elem            TYPE REF TO if_ixml_element,
-              lv_cell_value                   TYPE zexcel_cell_value,
-              lv_cell_formula                 TYPE zexcel_cell_formula,
-              lv_cell_column                  TYPE zexcel_cell_column_alpha,
-              lv_cell_row                     TYPE zexcel_cell_row,
-              lo_excel_style                  TYPE REF TO zcl_excel_style,
-              lv_style_guid                   TYPE zexcel_cell_style,
+  DATA:       lo_ixml_worksheet           TYPE REF TO if_ixml_document,
+              lo_ixml_cells               TYPE REF TO if_ixml_node_collection,
+              lo_ixml_iterator            TYPE REF TO if_ixml_node_iterator,
+              lo_ixml_iterator2           TYPE REF TO if_ixml_node_iterator,
+              lo_ixml_row_elem            TYPE REF TO if_ixml_element,
+              lo_ixml_cell_elem           TYPE REF TO if_ixml_element,
+              ls_cell                     TYPE lty_cell,
+              lv_index                    TYPE i,
+              lo_ixml_value_elem          TYPE REF TO if_ixml_element,
+              lo_ixml_formula_elem        TYPE REF TO if_ixml_element,
+              lv_cell_value               TYPE zexcel_cell_value,
+              lv_cell_formula             TYPE zexcel_cell_formula,
+              lv_cell_column              TYPE zexcel_cell_column_alpha,
+              lv_cell_row                 TYPE zexcel_cell_row,
+              lo_excel_style              TYPE REF TO zcl_excel_style,
+              lv_style_guid               TYPE zexcel_cell_style,
 
-              lo_ixml_imension_elem           TYPE REF TO if_ixml_element, &quot;#+234
-              lv_dimension_range              TYPE string,  &quot;#+234
+              lo_ixml_imension_elem       TYPE REF TO if_ixml_element, &quot;#+234
+              lv_dimension_range          TYPE string,  &quot;#+234
 
-              lo_ixml_sheetview_elem          TYPE REF TO if_ixml_element,
-              ls_sheetview                    TYPE lty_sheetview,
-              lo_ixml_pane_elem               TYPE REF TO if_ixml_element,
-              ls_excel_pane                   TYPE zexcel_pane,
-              lv_pane_cell_row                TYPE zexcel_cell_row,
-              lv_pane_cell_col_a              TYPE zexcel_cell_column_alpha,
-              lv_pane_cell_col                TYPE zexcel_cell_column,
+              lo_ixml_sheetview_elem      TYPE REF TO if_ixml_element,
+              ls_sheetview                TYPE lty_sheetview,
+              lo_ixml_pane_elem           TYPE REF TO if_ixml_element,
+              ls_excel_pane               TYPE zexcel_pane,
+              lv_pane_cell_row            TYPE zexcel_cell_row,
+              lv_pane_cell_col_a          TYPE zexcel_cell_column_alpha,
+              lv_pane_cell_col            TYPE zexcel_cell_column,
 
-              lo_ixml_mergecells              TYPE REF TO if_ixml_node_collection,
-              lo_ixml_mergecell_elem          TYPE REF TO if_ixml_element,
-              ls_mergecell                    TYPE lty_mergecell,
-              lv_merge_column_start           TYPE zexcel_cell_column_alpha,
-              lv_merge_column_end             TYPE zexcel_cell_column_alpha,
-              lv_merge_row_start              TYPE zexcel_cell_row,
-              lv_merge_row_end                TYPE zexcel_cell_row,
+              lo_ixml_mergecells          TYPE REF TO if_ixml_node_collection,
+              lo_ixml_mergecell_elem      TYPE REF TO if_ixml_element,
+              ls_mergecell                TYPE lty_mergecell,
+              lv_merge_column_start       TYPE zexcel_cell_column_alpha,
+              lv_merge_column_end         TYPE zexcel_cell_column_alpha,
+              lv_merge_row_start          TYPE zexcel_cell_row,
+              lv_merge_row_end            TYPE zexcel_cell_row,
 
-              lo_ixml_sheetformatpr_elem      TYPE REF TO if_ixml_element,
-              ls_sheetformatpr                TYPE lty_sheetformatpr,
-              lv_height                       TYPE float,
+              lo_ixml_sheetformatpr_elem  TYPE REF TO if_ixml_element,
+              ls_sheetformatpr            TYPE lty_sheetformatpr,
+              lv_height                   TYPE float,
 
-              lo_ixml_headerfooter_elem       TYPE REF TO if_ixml_element,
-              ls_headerfooter                 TYPE lty_headerfooter,
-              ls_odd_header                   TYPE zexcel_s_worksheet_head_foot,
-              ls_odd_footer                   TYPE zexcel_s_worksheet_head_foot,
-              ls_even_header                  TYPE zexcel_s_worksheet_head_foot,
-              ls_even_footer                  TYPE zexcel_s_worksheet_head_foot,
-              lo_ixml_hf_value_elem           TYPE REF TO if_ixml_element,
+              lo_ixml_headerfooter_elem   TYPE REF TO if_ixml_element,
+              ls_headerfooter             TYPE lty_headerfooter,
+              ls_odd_header               TYPE zexcel_s_worksheet_head_foot,
+              ls_odd_footer               TYPE zexcel_s_worksheet_head_foot,
+              ls_even_header              TYPE zexcel_s_worksheet_head_foot,
+              ls_even_footer              TYPE zexcel_s_worksheet_head_foot,
+              lo_ixml_hf_value_elem       TYPE REF TO if_ixml_element,
 
-              lo_ixml_pagesetup_elem          TYPE REF TO if_ixml_element,
-              ls_pagesetup                    TYPE lty_page_setup,
+              lo_ixml_pagesetup_elem      TYPE REF TO if_ixml_element,
+              ls_pagesetup                TYPE lty_page_setup,
 
-              lo_ixml_columns                 TYPE REF TO if_ixml_node_collection,
-              lo_ixml_column_elem             TYPE REF TO if_ixml_element,
-              ls_column                       TYPE lty_column,
-              lv_column_alpha                 TYPE zexcel_cell_column_alpha,
-              lo_column_dimension             TYPE REF TO zcl_excel_worksheet_columndime,
-              lv_outline_level                TYPE int4,
+              lo_ixml_columns             TYPE REF TO if_ixml_node_collection,
+              lo_ixml_column_elem         TYPE REF TO if_ixml_element,
+              ls_column                   TYPE lty_column,
+              lv_column_alpha             TYPE zexcel_cell_column_alpha,
+              lo_column_dimension         TYPE REF TO zcl_excel_worksheet_columndime,
+              lv_outline_level            TYPE int4,
 
-              lo_ixml_tabcolor                TYPE REF TO if_ixml_element,
-              ls_tabcolor                     TYPE lty_tabcolor,
-              ls_excel_s_tabcolor             TYPE zexcel_s_tabcolor,
+              lo_ixml_tabcolor            TYPE REF TO if_ixml_element,
+              ls_tabcolor                 TYPE lty_tabcolor,
+              ls_excel_s_tabcolor         TYPE zexcel_s_tabcolor,
 
-              lo_ixml_rows                    TYPE REF TO if_ixml_node_collection,
-              ls_row                          TYPE lty_row,
-              lv_max_col                      TYPE i,     &quot;for use with SPANS element
+              lo_ixml_rows                TYPE REF TO if_ixml_node_collection,
+              ls_row                      TYPE lty_row,
+              lv_max_col                  TYPE i,     &quot;for use with SPANS element
 *              lv_min_col                     TYPE i,     &quot;for use with SPANS element                    &quot; not in use currently
-              lv_max_col_s                    TYPE char10,     &quot;for use with SPANS element
-              lv_min_col_s                    TYPE char10,     &quot;for use with SPANS element
-              lo_row_dimension                TYPE REF TO zcl_excel_worksheet_rowdimensi,
+              lv_max_col_s                TYPE char10,     &quot;for use with SPANS element
+              lv_min_col_s                TYPE char10,     &quot;for use with SPANS element
+              lo_row_dimension            TYPE REF TO zcl_excel_worksheet_rowdimensi,
 *---    End of current code aligning -------------------------------------------------------------------
 
-              lv_path                         TYPE string,
-              lo_ixml_node                    TYPE REF TO if_ixml_element,
-              ls_relationship                 TYPE t_relationship,
-              lo_ixml_rels_worksheet          TYPE REF TO if_ixml_document,
-              lv_rels_worksheet_path          TYPE string,
-              lv_stripped_name                TYPE chkfile,
-              lv_dirname                      TYPE string,
+              lv_path                     TYPE string,
+              lo_ixml_node                TYPE REF TO if_ixml_element,
+              ls_relationship             TYPE t_relationship,
+              lo_ixml_rels_worksheet      TYPE REF TO if_ixml_document,
+              lv_rels_worksheet_path      TYPE string,
+              lv_stripped_name            TYPE chkfile,
+              lv_dirname                  TYPE string,
 
-              lt_external_hyperlinks          TYPE gtt_external_hyperlinks,
-              ls_external_hyperlink           LIKE LINE OF lt_external_hyperlinks,
+              lt_external_hyperlinks      TYPE gtt_external_hyperlinks,
+              ls_external_hyperlink       LIKE LINE OF lt_external_hyperlinks,
 
-              lo_ixml_datavalidations         TYPE REF TO if_ixml_node_collection,
-              lo_ixml_datavalidation_elem     TYPE REF TO if_ixml_element,
-              ls_datavalidation               TYPE lty_datavalidation,
-              lo_data_validation              TYPE REF TO zcl_excel_data_validation,
-              lv_datavalidation_range         TYPE string,
-              lt_datavalidation_range         TYPE TABLE OF string.
+              lo_ixml_datavalidations     TYPE REF TO if_ixml_node_collection,
+              lo_ixml_datavalidation_elem TYPE REF TO if_ixml_element,
+              ls_datavalidation           TYPE lty_datavalidation,
+              lo_data_validation          TYPE REF TO zcl_excel_data_validation,
+              lv_datavalidation_range     TYPE string,
+              lt_datavalidation_range     TYPE TABLE OF string.
 
 *--------------------------------------------------------------------*
 * §2  We need to read the the file &quot;\\_rels\.rels&quot; because it tells
@@ -2774,17 +2774,15 @@ ENDMETHOD.</source>
         ADD 1 TO lv_index.
       ENDWHILE.
     ENDIF.
-* Fix 207 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
-*    IF column-hidden = lc_xml_attr_true OR
-*       column-hidden = lc_xml_attr_true_int.
-*      index = column-min.
-*      WHILE index &lt;= column-max.
-*        column_alpha = zcl_excel_common=&gt;convert_column2alpha( index ).
-*        column_dimension =  io_worksheet-&gt;get_column_dimension( column_alpha ).
-*        column_dimension-&gt;set_visible( abap_false ).
-*        ADD 1 TO index.
-*      ENDWHILE.
-*    ENDIF.
+
+* issue #367 - hide columns from
+    IF    ls_column-max    = 16384 &quot; Max = very right column
+      AND ls_column-hidden = 1     &quot; all hidden
+      AND ls_column-min    &gt; 0.
+      io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=&gt;convert_column2alpha( ls_column-min ).
+    ENDIF.
+
+
   ENDWHILE.
 
   &quot;Now we need to get information from the sheetView node

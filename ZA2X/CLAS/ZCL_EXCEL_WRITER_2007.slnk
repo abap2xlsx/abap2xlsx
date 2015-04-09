@@ -3486,6 +3486,23 @@ ENDMETHOD.</source>
       ENDLOOP.      &quot;ins issue #157  -  set sheet style ( add missing columns
 
     ENDIF.
+*--------------------------------------------------------------------*
+* issue #367 add feature hide columns from
+*--------------------------------------------------------------------*
+    IF io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from IS NOT INITIAL.
+      lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_col
+                                                         parent = lo_document ).
+      lv_value = zcl_excel_common=&gt;convert_column2int( io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from ).
+      CONDENSE lv_value NO-GAPS.
+      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_min
+                                      value = lv_value ).
+      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_max
+                                      value = &apos;16384&apos; ).
+      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_hidden
+                                      value = &apos;1&apos; ).
+      lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; col node
+    ENDIF.
+
     lo_element_root-&gt;append_child( new_child = lo_element ). &quot; cols node
   ENDIF.
   &quot; sheetData node
