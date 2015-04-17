@@ -3021,7 +3021,7 @@ METHOD calculate_cell_width.
           ld_flag_italic = ls_stylemapping-complete_style-font-italic.
         ENDIF.
 
-      CATCH zcx_excel ##NO_HANDLER.
+      CATCH zcx_excel.                                  "#EC NO_HANDLER
         &quot; Style GUID is present, but style was not found
         &quot; Continue with default values
 
@@ -3850,7 +3850,7 @@ ENDMETHOD.</source>
   ep_value = ls_sheet_content-cell_value.
   ep_guid  = ls_sheet_content-cell_style.     &quot; issue 139 - added this to be used for columnwidth calculation
 
-  &quot; Addition to solve issue #120, contribution by Stefan Schm#ÃâÃâÃâÃâÃâÃâ ÃâÃâÃâÃâÃâÃÆÃÆÃÂ¢ÃâÃâ¬ÃâÃÅ¡#cker
+  &quot; Addition to solve issue #120, contribution by Stefan Schm#ÃâÃâÃâÃâÃâÃâ ÃâÃâÃâÃâÃâÃÆÃÆÃÂ¢ÃâÃâ¬ÃâÃÅ¡#cker
   DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
         style          TYPE REF TO zcl_excel_style.
   IF ep_style IS REQUESTED.
