@@ -2776,10 +2776,14 @@ ENDMETHOD.</source>
     ENDIF.
 
 * issue #367 - hide columns from
-    IF    ls_column-max    = 16384 &quot; Max = very right column
-      AND ls_column-hidden = 1     &quot; all hidden
-      AND ls_column-min    &gt; 0.
-      io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=&gt;convert_column2alpha( ls_column-min ).
+    IF ls_column-max = zcl_excel_common=&gt;c_excel_sheet_max_col     &quot; Max = very right column
+      IF ls_column-hidden = 1     &quot; all hidden
+        AND ls_column-min &gt; 0.
+       io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=&gt;convert_column2alpha( ls_column-min ).
+      ELSEIF ls_column-style &gt; &apos;&apos;.
+* Set default style for remaining columns
+       io_worksheet-&gt;zif_excel_sheet_properties~set_style( dummy_zexcel_cell_style ).
+      ENDIF.
     ENDIF.
 
 
