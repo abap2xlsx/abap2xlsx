@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" CNAM="FEMIA" CDAT="20100711" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000049" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111821" IDATE="20120324" ITIME="111821" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL3" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: Export internal table" LENGTH="38 "/>
@@ -55,8 +55,9 @@ START-OF-SELECTION.
     SELECT * FROM sflight INTO TABLE lt_test. &quot;#EC CI_NOWHERE
   ENDIF.
 
-  ls_table_settings-table_style  = zcl_excel_table=&gt;builtinstyle_medium2.
-  ls_table_settings-show_row_stripes = abap_true.
+  ls_table_settings-table_style       = zcl_excel_table=&gt;builtinstyle_medium2.
+  ls_table_settings-show_row_stripes  = abap_true.
+  ls_table_settings-nofilters         = abap_true.
 
   lo_worksheet-&gt;bind_table( ip_table          = lt_test
                             is_table_settings = ls_table_settings ).

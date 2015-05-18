@@ -10,33 +10,36 @@
 *&amp;---------------------------------------------------------------------*
 CLASS lcl_output DEFINITION CREATE PRIVATE.
   PUBLIC SECTION.
-    CLASS-METHODS: output         IMPORTING cl_excel TYPE REF TO zcl_excel,
-                   f4_path        RETURNING value(selected_folder) TYPE string,
-                   parametertexts.
+    CLASS-METHODS:
+      output         IMPORTING cl_excel            TYPE REF TO zcl_excel
+                               iv_writerclass_name TYPE clike OPTIONAL,
+      f4_path        RETURNING VALUE(selected_folder) TYPE string,
+      parametertexts.
 
   PRIVATE SECTION.
-    METHODS: download_frontend,
-             download_backend,
-             display_online,
-             send_email.
+    METHODS:
+      download_frontend,
+      download_backend,
+      display_online,
+      send_email.
 
-    DATA: xdata       TYPE xstring,             &quot; Will be used for sending as email
-          t_rawdata   TYPE solix_tab,           &quot; Will be used for downloading or open directly
-          bytecount   TYPE i.                   &quot; Will be used for downloading or open directly
+    DATA: xdata     TYPE xstring,             &quot; Will be used for sending as email
+          t_rawdata TYPE solix_tab,           &quot; Will be used for downloading or open directly
+          bytecount TYPE i.                   &quot; Will be used for downloading or open directly
 ENDCLASS.                    &quot;lcl_output DEFINITION
 
 
 SELECTION-SCREEN BEGIN OF BLOCK bl1 WITH FRAME TITLE txt_bl1.
-PARAMETERS: rb_down RADIOBUTTON GROUP rb1 DEFAULT &apos;X&apos; USER-COMMAND space.
+PARAMETERS: rb_down RADIOBUTTON GROUP rb1 USER-COMMAND space.
 
 PARAMETERS: rb_back RADIOBUTTON GROUP rb1.
 
-PARAMETERS: rb_show RADIOBUTTON GROUP rb1.
+PARAMETERS: rb_show RADIOBUTTON GROUP rb1 DEFAULT &apos;X&apos; .
 
 PARAMETERS: rb_send RADIOBUTTON GROUP rb1.
 
 PARAMETERS: p_path  TYPE string LOWER CASE MODIF ID pat.
-PARAMETERS: p_email TYPE string LOWER CASE MODIF ID ema.
+PARAMETERS: p_email TYPE string LOWER CASE MODIF ID ema OBLIGATORY DEFAULT &apos;insert_your_emailadress@here&apos;.
 PARAMETERS: p_backfn TYPE text40 NO-DISPLAY.
 SELECTION-SCREEN END OF BLOCK bl1.
 
@@ -81,8 +84,13 @@ CLASS lcl_output IMPLEMENTATION.
     DATA: cl_output TYPE REF TO lcl_output,
           cl_writer TYPE REF TO zif_excel_writer.
 
-    CREATE OBJECT cl_output.
-    CREATE OBJECT cl_writer TYPE zcl_excel_writer_2007.
+    IF iv_writerclass_name IS INITIAL.
+      CREATE OBJECT cl_output.
+      CREATE OBJECT cl_writer TYPE zcl_excel_writer_2007.
+    ELSE.
+      CREATE OBJECT cl_output.
+      CREATE OBJECT cl_writer TYPE (iv_writerclass_name).
+    ENDIF.
     cl_output-&gt;xdata = cl_writer-&gt;write_file( cl_excel ).
 
 * After 6.40 via cl_bcs_convert
@@ -123,9 +131,9 @@ CLASS lcl_output IMPLEMENTATION.
   ENDMETHOD.                    &quot;output
 
   METHOD f4_path.
-    DATA: new_path TYPE string,
-          repid    TYPE syrepid,
-          dynnr    TYPE sydynnr,
+    DATA: new_path      TYPE string,
+          repid         TYPE syrepid,
+          dynnr         TYPE sydynnr,
           lt_dynpfields TYPE TABLE OF dynpread,
           ls_dynpfields LIKE LINE OF lt_dynpfields.
 
@@ -239,7 +247,7 @@ CLASS lcl_output IMPLEMENTATION.
       ENDAT.
 
       TRANSFER &lt;rawdata&gt; TO p_backfn.
-      SUBTRACT 255 FROM bytes_remain.  &quot; Solix hat Länge 255
+      SUBTRACT 255 FROM bytes_remain.  &quot; Solix has length 255
 
     ENDLOOP.
 
@@ -256,10 +264,10 @@ CLASS lcl_output IMPLEMENTATION.
   ENDMETHOD.                    &quot;download_backend
 
   METHOD display_online.
-    DATA:error         TYPE REF TO i_oi_error,
-         t_errors      TYPE STANDARD TABLE OF REF TO i_oi_error WITH NON-UNIQUE DEFAULT KEY,
-         cl_control    TYPE REF TO i_oi_container_control,&quot;OIContainerCtrl
-         cl_document   TYPE REF TO i_oi_document_proxy.   &quot;Office Dokument
+    DATA:error       TYPE REF TO i_oi_error,
+         t_errors    TYPE STANDARD TABLE OF REF TO i_oi_error WITH NON-UNIQUE DEFAULT KEY,
+         cl_control  TYPE REF TO i_oi_container_control, &quot;OIContainerCtrl
+         cl_document TYPE REF TO i_oi_document_proxy.   &quot;Office Dokument
 
     c_oi_container_control_creator=&gt;get_container_control( IMPORTING control = cl_control
                                                                      error   = error ).
@@ -289,22 +297,22 @@ CLASS lcl_output IMPLEMENTATION.
 
   METHOD send_email.
 * Needed to send emails
-    DATA: bcs_exception           TYPE REF TO cx_bcs,
-          errortext               TYPE string,
-          cl_send_request         TYPE REF TO cl_bcs,
-          cl_document             TYPE REF TO cl_document_bcs,
-          cl_recipient            TYPE REF TO if_recipient_bcs,
-          cl_sender               TYPE REF TO cl_cam_address_bcs,
-          t_attachment_header     TYPE soli_tab,
-          wa_attachment_header    LIKE LINE OF t_attachment_header,
-          attachment_subject      TYPE sood-objdes,
+    DATA: bcs_exception        TYPE REF TO cx_bcs,
+          errortext            TYPE string,
+          cl_send_request      TYPE REF TO cl_bcs,
+          cl_document          TYPE REF TO cl_document_bcs,
+          cl_recipient         TYPE REF TO if_recipient_bcs,
+          cl_sender            TYPE REF TO cl_cam_address_bcs,
+          t_attachment_header  TYPE soli_tab,
+          wa_attachment_header LIKE LINE OF t_attachment_header,
+          attachment_subject   TYPE sood-objdes,
 
-          sood_bytecount          TYPE sood-objlen,
-          mail_title              TYPE so_obj_des,
-          t_mailtext              TYPE soli_tab,
-          wa_mailtext             LIKE LINE OF t_mailtext,
-          send_to                 TYPE adr6-smtp_addr,
-          sent                    TYPE os_boolean.
+          sood_bytecount       TYPE sood-objlen,
+          mail_title           TYPE so_obj_des,
+          t_mailtext           TYPE soli_tab,
+          wa_mailtext          LIKE LINE OF t_mailtext,
+          send_to              TYPE adr6-smtp_addr,
+          sent                 TYPE os_boolean.
 
 
     mail_title     = &apos;Mail title&apos;.

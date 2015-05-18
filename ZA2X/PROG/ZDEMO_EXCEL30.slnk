@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-2"?>
-<PROG NAME="ZDEMO_EXCEL30" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20110821" UNAM="K2_SCHMOECK" UDAT="20120324" VERN="000039" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" SDATE="20120324" STIME="111822" IDATE="20120324" ITIME="111822" UCCHECK="X">
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL30" VARCL="X" SUBC="1" RSTAT="T" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
  <textPool>
   <language SPRAS="E">
    <textElement ID="R" ENTRY="abap2xlsx Demo: ABAP Cell data types" LENGTH="37 "/>
@@ -29,7 +29,8 @@ DATA: lv_value  TYPE string,
 CONSTANTS: lc_typekind_string TYPE abap_typekind VALUE cl_abap_typedescr=&gt;typekind_string,
            lc_typekind_packed TYPE abap_typekind VALUE cl_abap_typedescr=&gt;typekind_packed,
            lc_typekind_num    TYPE abap_typekind VALUE cl_abap_typedescr=&gt;typekind_num,
-           lc_typekind_date   TYPE abap_typekind VALUE cl_abap_typedescr=&gt;typekind_date.
+           lc_typekind_date   TYPE abap_typekind VALUE cl_abap_typedescr=&gt;typekind_date,
+           lc_typekind_s_ls   TYPE string VALUE &apos;s_leading_blanks&apos;.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE &apos;30_CellDataTypes.xlsx&apos;.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -49,11 +50,13 @@ START-OF-SELECTION.
                           ip_abap_type = lc_typekind_string ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 1 ip_value = &apos;String&apos;
                           ip_abap_type = lc_typekind_string ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Negative Value&apos;
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos; String with leading spaces&apos;
+                          ip_data_type = lc_typekind_s_ls ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos; Negative Value&apos;
                           ip_abap_type = lc_typekind_string ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 1 ip_value = &apos;Packed&apos;
                           ip_abap_type = lc_typekind_string ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 2 ip_value = &apos;50000.00-&apos;
+  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 2 ip_value = &apos;50000.01-&apos;
                           ip_abap_type = lc_typekind_packed ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 1 ip_value = &apos;Number with Percentage&apos;
                           ip_abap_type = lc_typekind_string ).
@@ -65,7 +68,7 @@ START-OF-SELECTION.
                           ip_abap_type = lc_typekind_date ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 3 ip_value = &apos;Positive Value&apos;
                           ip_abap_type = lc_typekind_string ).
-  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 3 ip_value = &apos;5000.00&apos;
+  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 3 ip_value = &apos;5000.02&apos;
                           ip_abap_type = lc_typekind_packed ).
   lo_worksheet-&gt;set_cell( ip_column = &apos;D&apos; ip_row = 3 ip_value = &apos;50 %&apos;
                           ip_abap_type = lc_typekind_num ).
