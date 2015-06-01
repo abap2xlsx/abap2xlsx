@@ -37,13 +37,13 @@
   ep_file = me-&gt;create( ).
   endmethod.</source>
  </interfaceMethod>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="ADD_FURTHER_DATA_TO_ZIP" VERSION="1" LANGU="E" DESCRIPT="Add further data to zip ( used by child-classes )" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="ADD_FURTHER_DATA_TO_ZIP" VERSION="1" LANGU="E" DESCRIPT="Add further data to zip ( used by child-classes )" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="ADD_FURTHER_DATA_TO_ZIP" SCONAME="IO_ZIP" VERSION="1" LANGU="E" DESCRIPT="Zip Utility" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="CL_ABAP_ZIP"/>
   <source>METHOD add_further_data_to_zip.
 * Can be used by child classes like xlsm-writer to write additional data to zip archive
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE.
 
@@ -243,7 +243,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;[Content_Types].xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;[Content_Types].xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_CONTENT_TYPES.
 
@@ -518,7 +518,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/app.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/app.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_APP" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_DOCPROPS_APP.
 
@@ -741,7 +741,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/core.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;docProps/core.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DOCPROPS_CORE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_DOCPROPS_CORE.
 
@@ -875,7 +875,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" VERSION="1" LANGU="E" DESCRIPT="Add DXF-Style ( conditional formatting )" EXPOSURE="1" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" VERSION="1" LANGU="E" DESCRIPT="Add DXF-Style ( conditional formatting )" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IV_CELL_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IO_DXF_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_DXF_STYLE" SCONAME="IO_IXML_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -1014,7 +1014,7 @@ ENDMETHOD.</source>
   io_dxf_element-&gt;append_child( new_child = lo_sub_element ).
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;_rels/.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;_rels/.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_RELATIONSHIPS.
 
@@ -1113,7 +1113,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_CHARTS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/charts/chart1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_CHARTS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/charts/chart1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_CHARTS" SCONAME="IO_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_CHARTS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_CHARTS.
@@ -2018,7 +2018,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_DRAWINGS.
@@ -2098,7 +2098,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_DRAWINGS_RELS.
@@ -2197,7 +2197,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" SCONAME="IO_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" SCONAME="IP_INDEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
@@ -2511,7 +2511,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/_rels/workbook.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/_rels/workbook.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_RELATIONSHIPS.
 
@@ -2659,7 +2659,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sharedStrings.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sharedStrings.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_sharedstrings.
 
@@ -2781,7 +2781,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sheet.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sheet.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -3037,7 +3037,7 @@ ENDMETHOD.</source>
         write_current_row           TYPE boolean,
         lt_values                   TYPE zexcel_t_autofilter_values,
         ls_values                   TYPE zexcel_s_autofilter_values,
-        lv_guid                     TYPE uuid,
+*        lv_guid                     TYPE uuid,
         lo_autofilters              TYPE REF TO zcl_excel_autofilters,
         lo_autofilter               TYPE REF TO zcl_excel_autofilter,
         l_autofilter_hidden         TYPE flag,
@@ -3511,9 +3511,9 @@ ENDMETHOD.</source>
   &quot; Get column count
   col_count      = io_worksheet-&gt;get_highest_column( ).
   &quot; Get autofilter
-  lv_guid        = io_worksheet-&gt;get_guid( ) .
+*  lv_guid        = io_worksheet-&gt;get_guid( ) .
   lo_autofilters = excel-&gt;get_autofilters_reference( ).
-  lo_autofilter  = lo_autofilters-&gt;get( i_sheet_guid = lv_guid ) .
+  lo_autofilter  = lo_autofilters-&gt;get( io_worksheet = io_worksheet ) .
   IF lo_autofilter IS BOUND.
     lt_values           = lo_autofilter-&gt;get_values( ) .
     ls_area             = lo_autofilter-&gt;get_filter_area( ) .
@@ -4631,6 +4631,14 @@ ENDMETHOD.</source>
 
   ENDIF.
 
+* issue #377 pagebreaks
+  TRY.
+      create_xl_sheet_pagebreaks( io_document  = lo_document
+                                  io_parent    = lo_element_root
+                                  io_worksheet = io_worksheet     )  .
+    CATCH zcx_excel. &quot; Ignore Hyperlink reading errors - pass everything we were able to identify
+  ENDTRY.
+
 * drawing
   DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
 
@@ -4691,7 +4699,92 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" VERSION="1" LANGU="E" DESCRIPT="Add pagebreaks if necessary" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" SCONAME="IO_PARENT" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <exception CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD create_xl_sheet_pagebreaks.
+  DATA: lo_pagebreaks     TYPE REF TO zcl_excel_worksheet_pagebreaks,
+        lt_pagebreaks     TYPE zcl_excel_worksheet_pagebreaks=&gt;tt_pagebreak_at,
+        lt_rows           TYPE HASHED TABLE OF int4 WITH UNIQUE KEY table_line,
+        lt_columns        TYPE HASHED TABLE OF int4 WITH UNIQUE KEY table_line,
+
+        lo_node_rowbreaks TYPE REF TO if_ixml_element,
+        lo_node_colbreaks TYPE REF TO if_ixml_element,
+        lo_node_break     TYPE REF TO if_ixml_element,
+
+        lv_value          TYPE string.
+
+
+  FIELD-SYMBOLS: &lt;ls_pagebreak&gt; LIKE LINE OF lt_pagebreaks.
+
+  lo_pagebreaks = io_worksheet-&gt;get_pagebreaks( ).
+  CHECK lo_pagebreaks IS BOUND.
+
+  lt_pagebreaks = lo_pagebreaks-&gt;get_all_pagebreaks( ).
+  CHECK lt_pagebreaks IS NOT INITIAL.  &quot; No need to proceed if don&apos;t have any pagebreaks.
+
+  lo_node_rowbreaks = io_document-&gt;create_simple_element( name   = &apos;rowBreaks&apos;
+                                                          parent = io_document ).
+
+  lo_node_colbreaks = io_document-&gt;create_simple_element( name   = &apos;colBreaks&apos;
+                                                          parent = io_document ).
+
+
+  LOOP AT lt_pagebreaks ASSIGNING &lt;ls_pagebreak&gt;.
+
+* Count how many rows and columns need to be broken
+    INSERT &lt;ls_pagebreak&gt;-cell_row    INTO TABLE lt_rows.
+    IF sy-subrc = 0. &quot; New
+      lv_value = &lt;ls_pagebreak&gt;-cell_row.
+      CONDENSE lv_value.
+
+      lo_node_break = io_document-&gt;create_simple_element( name   = &apos;brk&apos;
+                                                          parent = io_document ).
+      lo_node_break-&gt;set_attribute( name = &apos;id&apos;  value = lv_value ).
+      lo_node_break-&gt;set_attribute( name = &apos;man&apos; value = &apos;1&apos; ).      &quot; Manual break
+      lo_node_break-&gt;set_attribute( name = &apos;max&apos; value = &apos;16383&apos; ).  &quot; Max columns
+
+      lo_node_rowbreaks-&gt;append_child( new_child = lo_node_break ).
+    ENDIF.
+
+    INSERT &lt;ls_pagebreak&gt;-cell_column INTO TABLE lt_columns.
+    IF sy-subrc = 0. &quot; New
+      lv_value = &lt;ls_pagebreak&gt;-cell_column.
+      CONDENSE lv_value.
+
+      lo_node_break = io_document-&gt;create_simple_element( name   = &apos;brk&apos;
+                                                          parent = io_document ).
+      lo_node_break-&gt;set_attribute( name = &apos;id&apos;  value = lv_value ).
+      lo_node_break-&gt;set_attribute( name = &apos;man&apos; value = &apos;1&apos; ).        &quot; Manual break
+      lo_node_break-&gt;set_attribute( name = &apos;max&apos; value = &apos;1048575&apos; ).  &quot; Max rows
+
+      lo_node_colbreaks-&gt;append_child( new_child = lo_node_break ).
+    ENDIF.
+
+
+  ENDLOOP.
+
+  lv_value = lines( lt_rows ).
+  CONDENSE lv_value.
+  lo_node_rowbreaks-&gt;set_attribute( name = &apos;count&apos;             value = lv_value ).
+  lo_node_rowbreaks-&gt;set_attribute( name = &apos;manualBreakCount&apos;  value = lv_value ).
+
+  lv_value = lines( lt_rows ).
+  CONDENSE lv_value.
+  lo_node_colbreaks-&gt;set_attribute( name = &apos;count&apos;             value = lv_value ).
+  lo_node_colbreaks-&gt;set_attribute( name = &apos;manualBreakCount&apos;  value = lv_value ).
+
+
+
+
+  io_parent-&gt;append_child( new_child = lo_node_rowbreaks ).
+  io_parent-&gt;append_child( new_child = lo_node_colbreaks ).
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IV_DRAWING_INDEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -4862,7 +4955,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_styles.
 *--------------------------------------------------------------------*
@@ -5842,7 +5935,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos; color node" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos; color node" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_PARENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IV_COLOR_ELEM_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PARVALUE="&apos;color&apos;"/>
@@ -5893,7 +5986,7 @@ ENDMETHOD.</source>
   io_parent-&gt;append_child( new_child = lo_sub_element ).
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_table.
@@ -6072,7 +6165,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_THEME.
 
@@ -6161,7 +6254,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_workbook.
 *--------------------------------------------------------------------*
@@ -6488,7 +6581,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="EP_BOOLEAN" VERSION="1" LANGU="E" DESCRIPT="Boolean value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="CHAR5"/>
   <source>method FLAG2BOOL.
@@ -6501,7 +6594,7 @@ ENDMETHOD.</source>
   ENDIF.
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="1" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="1" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="IP_CELL_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="EP_INDEX" VERSION="1" LANGU="E" DESCRIPT="Natural Number" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
   <source>METHOD get_shared_string_index.

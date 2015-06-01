@@ -559,7 +559,7 @@ ENDMETHOD.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Get guid of dxf style" EXPOSURE="1" STATE="1" EDITORDER="31 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Get guid of dxf style" EXPOSURE="1" STATE="1" EDITORDER="32 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" SCONAME="IO_IXML_DXF" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" SCONAME="IO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" SCONAME="RV_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
@@ -2776,7 +2776,7 @@ ENDMETHOD.</source>
     ENDIF.
 
 * issue #367 - hide columns from
-    IF ls_column-max = zcl_excel_common=&gt;c_excel_sheet_max_col     &quot; Max = very right column
+    IF ls_column-max = zcl_excel_common=&gt;c_excel_sheet_max_col.     &quot; Max = very right column
       IF ls_column-hidden = 1     &quot; all hidden
         AND ls_column-min &gt; 0.
        io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=&gt;convert_column2alpha( ls_column-min ).
@@ -2975,6 +2975,12 @@ ENDMETHOD.</source>
     CATCH zcx_excel. &quot; Ignore Hyperlink reading errors - pass everything we were able to identify
   ENDTRY.
 
+  &quot; Issue #377 - pagebreaks
+  TRY.
+      me-&gt;load_worksheet_pagebreaks( io_ixml_worksheet      = lo_ixml_worksheet
+                                     io_worksheet           = io_worksheet ).
+    CATCH zcx_excel. &quot; Ignore pagebreak reading errors - pass everything we were able to identify
+  ENDTRY.
 
 
 ENDMETHOD.</source>
@@ -3601,7 +3607,74 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" VERSION="1" LANGU="E" DESCRIPT="Loads pagemargings of worksheet" EXPOSURE="1" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" VERSION="1" LANGU="E" DESCRIPT="Load pagebreaks of worksheet" EXPOSURE="1" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
+  <source>METHOD load_worksheet_pagebreaks.
+
+  DATA: lo_node              TYPE REF TO if_ixml_element,
+        lo_ixml_rowbreaks    TYPE REF TO if_ixml_node_collection,
+        lo_ixml_colbreaks    TYPE REF TO if_ixml_node_collection,
+        lo_ixml_iterator     TYPE REF TO if_ixml_node_iterator,
+        lo_ixml_rowbreak     TYPE REF TO if_ixml_element,
+        lo_ixml_colbreak     TYPE REF TO if_ixml_element,
+        lo_style_conditional TYPE REF TO zcl_excel_style_conditional,
+        lv_count             TYPE i.
+
+
+  DATA: lt_pagebreaks TYPE STANDARD TABLE OF zcl_excel_worksheet_pagebreaks=&gt;ts_pagebreak_at,
+        lo_pagebreaks TYPE REF TO zcl_excel_worksheet_pagebreaks.
+
+  FIELD-SYMBOLS: &lt;ls_pagebreak_row&gt; LIKE LINE OF lt_pagebreaks.
+  FIELD-SYMBOLS: &lt;ls_pagebreak_col&gt; LIKE LINE OF lt_pagebreaks.
+
+*--------------------------------------------------------------------*
+* Get minimal number of cells where to add pagebreaks
+* Since rows and columns are handled in separate nodes
+* Build table to identify these cells
+*--------------------------------------------------------------------*
+  lo_node ?= io_ixml_worksheet-&gt;find_from_name( &apos;rowBreaks&apos; ).
+  lo_ixml_rowbreaks =  lo_node-&gt;get_elements_by_tag_name( name = &apos;brk&apos; ).
+  lo_ixml_iterator  =  lo_ixml_rowbreaks-&gt;create_iterator( ).
+  lo_ixml_rowbreak  ?= lo_ixml_iterator-&gt;get_next( ).
+  WHILE lo_ixml_rowbreak IS BOUND.
+    APPEND INITIAL LINE TO lt_pagebreaks ASSIGNING &lt;ls_pagebreak_row&gt;.
+    &lt;ls_pagebreak_row&gt;-cell_row = lo_ixml_rowbreak-&gt;get_attribute_ns( &apos;id&apos; ).
+
+    lo_ixml_rowbreak  ?= lo_ixml_iterator-&gt;get_next( ).
+  ENDWHILE.
+  CHECK &lt;ls_pagebreak_row&gt; IS ASSIGNED.
+
+  lo_node ?= io_ixml_worksheet-&gt;find_from_name( &apos;colBreaks&apos; ).
+  lo_ixml_colbreaks =  lo_node-&gt;get_elements_by_tag_name( name = &apos;brk&apos; ).
+  lo_ixml_iterator  =  lo_ixml_colbreaks-&gt;create_iterator( ).
+  lo_ixml_colbreak  ?= lo_ixml_iterator-&gt;get_next( ).
+  CLEAR lv_count.
+  WHILE lo_ixml_colbreak IS BOUND.
+    ADD 1 TO lv_count.
+    READ TABLE lt_pagebreaks INDEX lv_count ASSIGNING &lt;ls_pagebreak_col&gt;.
+    IF sy-subrc &lt;&gt; 0.
+      APPEND INITIAL LINE TO lt_pagebreaks ASSIGNING &lt;ls_pagebreak_col&gt;.
+      &lt;ls_pagebreak_col&gt;-cell_row = &lt;ls_pagebreak_row&gt;-cell_row.
+    ENDIF.
+    &lt;ls_pagebreak_col&gt;-cell_column = lo_ixml_colbreak-&gt;get_attribute_ns( &apos;id&apos; ).
+
+    lo_ixml_colbreak  ?= lo_ixml_iterator-&gt;get_next( ).
+  ENDWHILE.
+*--------------------------------------------------------------------*
+* Finally add each pagebreak
+*--------------------------------------------------------------------*
+  lo_pagebreaks = io_worksheet-&gt;get_pagebreaks( ).
+  LOOP AT lt_pagebreaks ASSIGNING &lt;ls_pagebreak_row&gt;.
+    lo_pagebreaks-&gt;add_pagebreak( ip_column = &lt;ls_pagebreak_row&gt;-cell_column
+                                  ip_row    = &lt;ls_pagebreak_row&gt;-cell_row ).
+  ENDLOOP.
+
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" VERSION="1" LANGU="E" DESCRIPT="Loads pagemargings of worksheet" EXPOSURE="1" STATE="1" EDITORDER="27 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -3636,7 +3709,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="27 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="28 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD read_from_applserver.
@@ -3680,7 +3753,7 @@ ENDMETHOD.</source>
         binary_tab   = lt_binary_data.
   ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="28 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="29 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -3740,7 +3813,7 @@ ENDMETHOD.</source>
 
   ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="29 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="30 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="RP_RESULT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method RESOLVE_PATH.
@@ -3784,7 +3857,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_REFERENCED_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Resolve referenced formulae" EXPOSURE="1" STATE="1" EDITORDER="30 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_REFERENCED_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Resolve referenced formulae" EXPOSURE="1" STATE="1" EDITORDER="31 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method RESOLVE_REFERENCED_FORMULAE.
   TYPES:      BEGIN OF ty_referenced_cells,
                 sheet                         TYPE REF TO zcl_excel_worksheet,
