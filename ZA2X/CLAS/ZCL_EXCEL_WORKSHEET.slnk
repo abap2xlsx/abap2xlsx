@@ -3661,9 +3661,10 @@ ENDMETHOD.</source>
 
   me-&gt;excel = ip_excel.
 
-  CALL FUNCTION &apos;GUID_CREATE&apos;
-    IMPORTING
-      ev_guid_16 = me-&gt;guid.
+*  CALL FUNCTION &apos;GUID_CREATE&apos;                                    &quot; del issue #379 - function is outdated in newer releases
+*    IMPORTING
+*      ev_guid_16 = me-&gt;guid.
+  me-&gt;guid = zcl_excel_obsolete_func_wrap=&gt;guid_create( ).        &quot; ins issue #379 - replacement for outdated function call
 
   IF ip_title IS NOT INITIAL.
     lv_title = ip_title.

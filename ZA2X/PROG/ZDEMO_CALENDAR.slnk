@@ -43,7 +43,7 @@
 *&amp; 450 pixel height. They must also be saved in the Export Directory.
 *&amp; In my tests I&apos;ve discovered a limit of 20 MB in the
 *&amp; cl_gui_frontend_services=&gt;gui_download method. So keep your images
-*&amp; smaller or chnage to a server export using OPEN DATASET.
+*&amp; smaller or change to a server export using OPEN DATASET.
 *&amp;---------------------------------------------------------------------*
 
 REPORT  zdemo_calendar.
@@ -368,11 +368,15 @@ START-OF-SELECTION.
     ENDIF.
 
     &quot; Add Calendar
-    CALL FUNCTION &apos;SLS_MISC_GET_LAST_DAY_OF_MONTH&apos;
-      EXPORTING
-        day_in            = date_from
-      IMPORTING
-        last_day_of_month = date_to.
+*    CALL FUNCTION &apos;SLS_MISC_GET_LAST_DAY_OF_MONTH&apos;
+*      EXPORTING
+*        day_in            = date_from
+*      IMPORTING
+*        last_day_of_month = date_to.
+    date_to = date_from.
+    date_to+6(2) = &apos;01&apos;.              &quot; First of month
+    add 31 to date_to.                &quot; Somewhere in following month
+    date_to = date_to - date_to+6(2). &quot; Last of month
     IF p_portr = abap_true.
       zcl_helper=&gt;add_calendar(
         EXPORTING
