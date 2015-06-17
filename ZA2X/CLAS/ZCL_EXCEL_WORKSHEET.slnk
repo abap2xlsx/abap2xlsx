@@ -2812,25 +2812,56 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
       &quot; issue #290 Add formula support in table
       IF &lt;ls_field_catalog&gt;-formula EQ abap_true.
         IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
-          me-&gt;set_cell( ip_column   = lv_column_alpha
+		  IF &lt;ls_field_catalog&gt;-abap_type IS NOT INITIAL.
+            me-&gt;set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
                         ip_formula  = &lt;fs_fldval&gt;
+                        ip_abap_type = &lt;ls_field_catalog&gt;-abap_type
                         ip_style    = &lt;ls_field_catalog&gt;-style ).
+          ELSE.
+            me-&gt;set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = &lt;fs_fldval&gt;
+                          ip_style    = &lt;ls_field_catalog&gt;-style ).
+          ENDIF.
         ELSE.
-          me-&gt;set_cell( ip_column   = lv_column_alpha
+          IF &lt;ls_field_catalog&gt;-abap_type IS NOT INITIAL.
+            me-&gt;set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
-                        ip_formula  = &lt;fs_fldval&gt; ).
+
+                        ip_formula  = &lt;fs_fldval&gt;
+                        ip_abap_type = &lt;ls_field_catalog&gt;-abap_type ).
+          ELSE.
+            me-&gt;set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = &lt;fs_fldval&gt; ).
+          ENDIF.
         ENDIF.
       ELSE.
         IF &lt;ls_field_catalog&gt;-style IS NOT INITIAL.
-          me-&gt;set_cell( ip_column = lv_column_alpha
+          IF &lt;ls_field_catalog&gt;-abap_type IS NOT INITIAL.
+            me-&gt;set_cell( ip_column = lv_column_alpha
                         ip_row    = lv_row_int
                         ip_value  = &lt;fs_fldval&gt;
+                        ip_abap_type = &lt;ls_field_catalog&gt;-abap_type
                         ip_style  = &lt;ls_field_catalog&gt;-style ).
+          ELSE.
+            me-&gt;set_cell( ip_column = lv_column_alpha
+                          ip_row    = lv_row_int
+                          ip_value  = &lt;fs_fldval&gt;
+                          ip_style  = &lt;ls_field_catalog&gt;-style ).
+          ENDIF.
         ELSE.
-          me-&gt;set_cell( ip_column = lv_column_alpha
+          IF &lt;ls_field_catalog&gt;-abap_type IS NOT INITIAL.
+            me-&gt;set_cell( ip_column = lv_column_alpha
                         ip_row    = lv_row_int
+                        ip_abap_type = &lt;ls_field_catalog&gt;-abap_type
                         ip_value  = &lt;fs_fldval&gt; ).
+          ELSE.
+            me-&gt;set_cell( ip_column = lv_column_alpha
+                          ip_row    = lv_row_int
+                          ip_value  = &lt;fs_fldval&gt; ).
+          ENDIF.
         ENDIF.
       ENDIF.
       ADD 1 TO lv_row_int.
