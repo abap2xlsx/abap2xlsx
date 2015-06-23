@@ -73,6 +73,9 @@ START-OF-SELECTION.
       WHEN &apos;CONNID&apos;.
         &lt;fs_field_catalog&gt;-position   = 4.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
+        &lt;fs_field_catalog&gt;-abap_type  = cl_abap_typedescr=&gt;typekind_int.
+        &quot;This avoid the excel warning that the number is formatted as a text: abap2xlsx is not able to recognize numc as a number so it formats the number as a text with
+        &quot;the related warning. You can force the type and the framework will correctly format the number as a number
       WHEN &apos;FLDATE&apos;.
         &lt;fs_field_catalog&gt;-position   = 2.
         &lt;fs_field_catalog&gt;-dynpfld    = abap_true.
