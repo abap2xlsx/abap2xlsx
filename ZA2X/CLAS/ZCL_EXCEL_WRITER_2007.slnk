@@ -1153,6 +1153,7 @@ ENDMETHOD.</source>
                 lc_xml_node_numref              TYPE string VALUE &apos;c:numRef&apos;,
                 lc_xml_node_strref              TYPE string VALUE &apos;c:strRef&apos;,
                 lc_xml_node_f                   TYPE string VALUE &apos;c:f&apos;, &quot;this is the range
+                lc_xml_node_overlap             TYPE string VALUE &apos;c:overlap&apos;,
                 &quot;note: numcache avoided
                 lc_xml_node_dlbls               TYPE string VALUE &apos;c:dLbls&apos;,
                 lc_xml_node_showlegendkey       TYPE string VALUE &apos;c:showLegendKey&apos;,
@@ -1415,6 +1416,12 @@ ENDMETHOD.</source>
         ENDIF.
       ENDLOOP.
       &quot;endseries
+      IF lo_chartb-&gt;ns_groupingval = zcl_excel_graph_bars=&gt;c_groupingval_stacked.
+        lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_overlap
+                                                          parent = lo_element3 ).
+        lo_element4-&gt;set_attribute_ns( name  = &apos;val&apos;
+                                       value = &apos;100&apos; ).
+      ENDIF.
 
       lo_element4 = lo_document-&gt;create_simple_element( name = lc_xml_node_dlbls
                                                    parent = lo_element3 ).
@@ -2724,12 +2731,15 @@ ENDMETHOD.</source>
   SHIFT lv_uniquecount_str RIGHT DELETING TRAILING space.
   SHIFT lv_uniquecount_str LEFT DELETING LEADING space.
 
-  LOOP AT lt_cell_data ASSIGNING &lt;fs_sheet_content&gt;.
-    lv_sytabix = sy-tabix - 1.
+  clear lv_count.
+  LOOP AT lt_cell_data ASSIGNING &lt;fs_sheet_content&gt; where data_type = &apos;s&apos;.
+*    lv_sytabix = sy-tabix - 1.
+    lv_sytabix = lv_count.
     MOVE lv_sytabix                    TO ls_shared_string-string_no.
     MOVE &lt;fs_sheet_content&gt;-cell_value TO ls_shared_string-string_value.
     MOVE &lt;fs_sheet_content&gt;-data_type TO ls_shared_string-string_type.
     APPEND ls_shared_string TO shared_strings.
+    add 1 to lv_count.
   ENDLOOP.
 
 
