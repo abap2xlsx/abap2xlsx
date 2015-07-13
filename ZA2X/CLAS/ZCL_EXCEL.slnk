@@ -181,7 +181,7 @@ ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL" CMPNAME="ADD_NEW_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Create a new drawing" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL" CMPNAME="ADD_NEW_DRAWING" SCONAME="IP_TYPE" VERSION="1" LANGU="E" DESCRIPT="Excel Drawing type" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_DRAWING_TYPE" PARVALUE="ZCL_EXCEL_DRAWING=&gt;TYPE_IMAGE"/>
-  <parameter CLSNAME="ZCL_EXCEL" CMPNAME="ADD_NEW_DRAWING" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_SHEET_TITLE" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZCL_EXCEL" CMPNAME="ADD_NEW_DRAWING" SCONAME="IP_TITLE" VERSION="1" LANGU="E" DESCRIPT="Title" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CLIKE" PAROPTIONL="X"/>
   <parameter CLSNAME="ZCL_EXCEL" CMPNAME="ADD_NEW_DRAWING" SCONAME="EO_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
   <source>method ADD_NEW_DRAWING.
   DATA: lv_guid  TYPE guid_16.
@@ -443,10 +443,10 @@ ENDMETHOD.</source>
   IF sy-subrc &lt;&gt; 0.
     style-complete_style  = ip_cstyle_complete.
     style-complete_stylex = ip_cstylex_complete.
-*    CALL FUNCTION &apos;GUID_CREATE&apos;
+*    CALL FUNCTION &apos;GUID_CREATE&apos;                               &quot; del issue #379 - function is outdated in newer releases
 *      IMPORTING
 *        ev_guid_16 = style-guid.
-    style-guid = zcl_excel_obsolete_func_wrap=&gt;guid_create( ).
+    style-guid = zcl_excel_obsolete_func_wrap=&gt;guid_create( ). &quot; ins issue #379 - replacement for outdated function call
     INSERT style INTO TABLE me-&gt;t_stylemapping1.
     INSERT style INTO TABLE me-&gt;t_stylemapping2.
 
