@@ -62,12 +62,62 @@
  <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="MODE_EXPRESSION" VERSION="1" LANGU="E" DESCRIPT="Expression settings" EXPOSURE="2" STATE="1" EDITORDER="50 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CONDITIONAL_EXPRESSION" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="MODE_ICONSET" VERSION="1" LANGU="E" DESCRIPT="Iconset settings" EXPOSURE="2" STATE="1" EDITORDER="51 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CONDITIONAL_ICONSET" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="MODE_TOP10" VERSION="1" LANGU="E" DESCRIPT="Top10 settings ( topxx_count determines top20,top50... )" EXPOSURE="2" STATE="1" EDITORDER="52 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CONDITIONAL_TOP10" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="MV_RULE_RANGE" VERSION="1" LANGU="E" DESCRIPT="Rule range" EXPOSURE="0" STATE="1" EDITORDER="56 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="PRIORITY" VERSION="1" LANGU="E" DESCRIPT="Style Priority" EXPOSURE="2" STATE="1" EDITORDER="54 " ATTDECLTYP="0" ATTVALUE="1" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_STYLE_PRIORITY" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="RULE" VERSION="1" LANGU="E" DESCRIPT="Condition rule" EXPOSURE="2" STATE="1" EDITORDER="55 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_CONDITION_RULE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="START_CELL" VERSION="1" LANGU="E" DESCRIPT="Cell data" EXPOSURE="0" STATE="1" EDITORDER="56 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="STOP_CELL" VERSION="1" LANGU="E" DESCRIPT="Cell data" EXPOSURE="0" STATE="1" EDITORDER="57 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_S_CELL_DATA" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="ADD_RANGE" VERSION="1" LANGU="E" DESCRIPT="Add range used in conditional formatting" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="ADD_RANGE" SCONAME="IP_START_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
+  <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="ADD_RANGE" SCONAME="IP_START_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="ADD_RANGE" SCONAME="IP_STOP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
+  <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="ADD_RANGE" SCONAME="IP_STOP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
+  <source>METHOD add_range.
+  DATA: lv_column    TYPE zexcel_cell_column,
+        lv_row_alpha TYPE string,
+        lv_col_alpha TYPE string,
+        lv_coords1   TYPE string,
+        lv_coords2   TYPE string.
+
+
+  lv_column = zcl_excel_common=&gt;convert_column2int( ip_start_column ).
+*  me-&gt;mv_cell_data-cell_row     = 1.
+*  me-&gt;mv_cell_data-cell_column  = lv_column.
+*
+  lv_col_alpha = ip_start_column.
+  lv_row_alpha = ip_start_row.
+  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+  SHIFT lv_row_alpha LEFT DELETING LEADING space.
+  CONCATENATE lv_col_alpha lv_row_alpha INTO lv_coords1.
+
+  IF ip_stop_column IS NOT INITIAL.
+    lv_column = zcl_excel_common=&gt;convert_column2int( ip_stop_column ).
+  ELSE.
+    lv_column = zcl_excel_common=&gt;convert_column2int( ip_start_column ).
+  ENDIF.
+
+  IF ip_stop_row IS NOT INITIAL. &quot; If we don&apos;t get explicitly a stop column use start column
+    lv_row_alpha = ip_stop_row.
+  ELSE.
+    lv_row_alpha = ip_start_row.
+  ENDIF.
+  IF ip_stop_column IS NOT INITIAL. &quot; If we don&apos;t get explicitly a stop column use start column
+    lv_col_alpha = ip_stop_column.
+  ELSE.
+    lv_col_alpha = ip_start_column.
+  ENDIF.
+  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+  SHIFT lv_row_alpha LEFT DELETING LEADING space.
+  CONCATENATE lv_col_alpha lv_row_alpha INTO lv_coords2.
+  IF lv_coords2 IS NOT INITIAL AND lv_coords2 &lt;&gt; lv_coords1.
+    CONCATENATE me-&gt;mv_rule_range ` ` lv_coords1 &apos;:&apos; lv_coords2 INTO me-&gt;mv_rule_range.
+  ELSE.
+    CONCATENATE me-&gt;mv_rule_range ` ` lv_coords1  INTO me-&gt;mv_rule_range.
+  ENDIF.
+  SHIFT me-&gt;mv_rule_range LEFT DELETING LEADING space.
+
+ENDMETHOD.</source>
+ </method>
  <method CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" DESCRIPT="CONSTRUCTOR" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method CONSTRUCTOR.
+  <source>METHOD constructor.
 
   DATA: ls_iconset TYPE zexcel_conditional_iconset.
   ls_iconset-iconset     = zcl_excel_style_conditional=&gt;c_iconset_3trafficlights.
@@ -89,13 +139,10 @@
   me-&gt;priority      = 1.
 
 * inizialize dimension range
-  me-&gt;stop_cell-cell_row     = 1.
-  me-&gt;stop_cell-cell_column  = 1.
-  me-&gt;start_cell-cell_row     = 1.
-  me-&gt;start_cell-cell_column  = 1.
-  endmethod.</source>
+  me-&gt;MV_RULE_RANGE     = &apos;A1&apos;.
+ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="FACTORY_COND_STYLE_ICONSET" VERSION="1" LANGU="E" DESCRIPT="Add conditional style of type iconset" EXPOSURE="2" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="FACTORY_COND_STYLE_ICONSET" VERSION="1" LANGU="E" DESCRIPT="Add conditional style of type iconset" EXPOSURE="2" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="FACTORY_COND_STYLE_ICONSET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="FACTORY_COND_STYLE_ICONSET" SCONAME="IV_ICON_TYPE" VERSION="1" LANGU="E" DESCRIPT="Condition rule iconset" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CONDITION_RULE_ICONSET" PARVALUE="C_ICONSET_3TRAFFICLIGHTS2"/>
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="FACTORY_COND_STYLE_ICONSET" SCONAME="IV_CFVO1_TYPE" VERSION="1" LANGU="E" DESCRIPT="Condition type" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CONDITIONAL_TYPE" PARVALUE="C_CFVO_TYPE_PERCENT"/>
@@ -151,38 +198,26 @@ ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="GET_DIMENSION_RANGE" VERSION="1" LANGU="E" DESCRIPT="Get used range dimension" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="GET_DIMENSION_RANGE" SCONAME="EP_DIMENSION_RANGE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
-  <source>method GET_DIMENSION_RANGE.
-  IF stop_cell EQ start_cell. &quot;only one cell
-    ep_dimension_range = start_cell-cell_coords.
-  ELSE.
-    CONCATENATE start_cell-cell_coords &apos;:&apos; stop_cell-cell_coords INTO ep_dimension_range.
-  ENDIF.
-  endmethod.</source>
+  <source>METHOD get_dimension_range.
+
+  ep_dimension_range = me-&gt;mv_rule_range.
+
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="SET_RANGE" VERSION="1" LANGU="E" DESCRIPT="Set range used in conditional formatting" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="SET_RANGE" SCONAME="IP_START_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="SET_RANGE" SCONAME="IP_START_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="SET_RANGE" SCONAME="IP_STOP_ROW" VERSION="1" LANGU="E" DESCRIPT="Cell Row" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_ROW"/>
   <parameter CLSNAME="ZCL_EXCEL_STYLE_CONDITIONAL" CMPNAME="SET_RANGE" SCONAME="IP_STOP_COLUMN" VERSION="1" LANGU="E" DESCRIPT="Cell Column" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_COLUMN_ALPHA"/>
-  <source>method SET_RANGE.
-  DATA: lv_column                 TYPE zexcel_cell_column,
-        lv_row_alpha              TYPE string.
+  <source>METHOD set_range.
 
-  lv_column = zcl_excel_common=&gt;convert_column2int( ip_stop_column ).
-  stop_cell-cell_row     = 1.
-  stop_cell-cell_column  = lv_column.
-  lv_row_alpha = ip_stop_row.
-  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-  SHIFT lv_row_alpha LEFT DELETING LEADING space.
-  CONCATENATE ip_stop_column lv_row_alpha INTO stop_cell-cell_coords.
+  CLEAR: me-&gt;mv_rule_range.
 
-  lv_column = zcl_excel_common=&gt;convert_column2int( ip_start_column ).
-  start_cell-cell_row     = 1.
-  start_cell-cell_column  = lv_column.
-  lv_row_alpha = ip_start_row.
-  SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-  SHIFT lv_row_alpha LEFT DELETING LEADING space.
-  CONCATENATE ip_start_column lv_row_alpha INTO start_cell-cell_coords.
-  endmethod.</source>
+  me-&gt;add_range( ip_start_row    = ip_start_row
+                 ip_start_column = ip_start_column
+                 ip_stop_row     = ip_stop_row
+                 ip_stop_column  = ip_stop_column ).
+
+ENDMETHOD.</source>
  </method>
 </CLAS>
