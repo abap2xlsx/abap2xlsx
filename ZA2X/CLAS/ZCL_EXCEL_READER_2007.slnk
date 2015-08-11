@@ -2961,9 +2961,21 @@ ENDMETHOD.</source>
       lo_data_validation                   = io_worksheet-&gt;add_new_data_validation( ).
       lo_data_validation-&gt;type             = ls_datavalidation-type.
       lo_data_validation-&gt;allowblank       = ls_datavalidation-allowblank.
-      lo_data_validation-&gt;showinputmessage = ls_datavalidation-showinputmessage.
-      lo_data_validation-&gt;showerrormessage = ls_datavalidation-showerrormessage.
-      lo_data_validation-&gt;showdropdown     = ls_datavalidation-showdropdown.
+      IF ls_datavalidation-showinputmessage IS INITIAL.
+        lo_data_validation-&gt;showinputmessage = abap_false.
+      ELSE.
+        lo_data_validation-&gt;showinputmessage = abap_true.
+      ENDIF.
+      IF ls_datavalidation-showerrormessage IS INITIAL.
+        lo_data_validation-&gt;showerrormessage = abap_false.
+      ELSE.
+        lo_data_validation-&gt;showerrormessage = abap_true.
+      ENDIF.
+      IF ls_datavalidation-showdropdown IS INITIAL.
+        lo_data_validation-&gt;showdropdown = abap_false.
+      ELSE.
+        lo_data_validation-&gt;showdropdown = abap_true.
+      ENDIF.
       lo_data_validation-&gt;operator         = ls_datavalidation-operator.
       lo_data_validation-&gt;formula1         = ls_datavalidation-formula1.
       lo_data_validation-&gt;formula2         = ls_datavalidation-formula2.
