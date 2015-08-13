@@ -4725,7 +4725,7 @@ ENDMETHOD.</source>
   lo_renderer-&gt;render( ).
 
 
-  REPLACE FIRST OCCURRENCE OF me-&gt;mv_sheet_data_xstring_dummy IN ep_content WITH me-&gt;mv_sheet_data_xstring IN BYTE MODE.
+*  REPLACE FIRST OCCURRENCE OF me-&gt;mv_sheet_data_xstring_dummy IN ep_content WITH me-&gt;mv_sheet_data_xstring IN BYTE MODE.
 
 ENDMETHOD.</source>
  </method>
@@ -5183,10 +5183,10 @@ ENDMETHOD.</source>
              l_autofilter_hidden = abap_true.
             lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
           ENDIF.
-          lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-          CONCATENATE lv_xstring lv_xstring_partial
-              INTO lv_xstring IN BYTE MODE.
-*          rv_ixml_sheet_data_root-&gt;append_child( new_child = lo_element_2 ). &quot; row node
+*          lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
+*          CONCATENATE lv_xstring lv_xstring_partial
+*              INTO lv_xstring IN BYTE MODE.
+          rv_ixml_sheet_data_root-&gt;append_child( new_child = lo_element_2 ). &quot; row node
         ENDIF.
         &quot; Add new row
         lo_element_2 = io_document-&gt;create_simple_element( name   = lc_xml_node_row
@@ -5362,32 +5362,31 @@ ENDMETHOD.</source>
        l_autofilter_hidden = abap_true.
       lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
     ENDIF.
-    lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-    CONCATENATE lv_xstring lv_xstring_partial
-        INTO lv_xstring IN BYTE MODE.
-*    rv_ixml_sheet_data_root-&gt;append_child( new_child = lo_element_2 ). &quot; row node
+*    lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
+*    CONCATENATE lv_xstring lv_xstring_partial
+*        INTO lv_xstring IN BYTE MODE.
+    rv_ixml_sheet_data_root-&gt;append_child( new_child = lo_element_2 ). &quot; row node
   ENDIF.
   DELETE io_worksheet-&gt;sheet_content WHERE cell_value = lc_dummy_cell_content.  &quot; Get rid of dummyentries
 
-
-
-  me-&gt;mv_sheet_data_xstring = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
-
-
-* Für den Dummystringersatz jetzt alles zurück auf Anfang
-  rv_ixml_sheet_data_root = io_document-&gt;create_simple_element( name   = lc_xml_node_sheetdata
-                                                                parent = io_document ).
-  me-&gt;mv_sheet_data_xstring_dummy = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
-
-  DATA: lv_sheetdata_tag_start TYPE xstring,
-        lv_sheetdata_tag_end   TYPE xstring.
-
-  lv_sheetdata_tag_start = cl_bcs_convert=&gt;string_to_xstring( &apos;&lt;sheetData&gt;&apos; ).
-  lv_sheetdata_tag_end   = cl_bcs_convert=&gt;string_to_xstring( &apos;&lt;/sheetData&gt;&apos; ).
-  CONCATENATE lv_sheetdata_tag_start lv_xstring lv_sheetdata_tag_end
-      INTO lv_xstring IN BYTE MODE.
-*  break x0009004.
-  me-&gt;mv_sheet_data_xstring = lv_xstring.
+*
+*
+*  me-&gt;mv_sheet_data_xstring = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
+*
+*
+** Für den Dummystringersatz jetzt alles zurück auf Anfang
+*  rv_ixml_sheet_data_root = io_document-&gt;create_simple_element( name   = lc_xml_node_sheetdata
+*                                                                parent = io_document ).
+*  me-&gt;mv_sheet_data_xstring_dummy = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
+*
+*  DATA: lv_sheetdata_tag_start TYPE xstring,
+*        lv_sheetdata_tag_end   TYPE xstring.
+*
+*  lv_sheetdata_tag_start = cl_bcs_convert=&gt;string_to_xstring( &apos;&lt;sheetData&gt;&apos; ).
+*  lv_sheetdata_tag_end   = cl_bcs_convert=&gt;string_to_xstring( &apos;&lt;/sheetData&gt;&apos; ).
+*  CONCATENATE lv_sheetdata_tag_start lv_xstring lv_sheetdata_tag_end
+*      INTO lv_xstring IN BYTE MODE.
+*  me-&gt;mv_sheet_data_xstring = lv_xstring.
 
 ENDMETHOD.</source>
  </method>
@@ -5556,6 +5555,16 @@ ENDMETHOD.</source>
         lv_index         TYPE i,
         lv_align_flag    TYPE c.
 
+  TYPES: BEGIN OF ts_built_in_format,
+           num_format TYPE zexcel_number_format,
+           id         TYPE sytabix,
+         END OF ts_built_in_format.
+
+  DATA: lt_built_in_num_formats TYPE HASHED TABLE OF ts_built_in_format WITH UNIQUE KEY num_format,
+        ls_built_in_num_format  LIKE LINE OF lt_built_in_num_formats.
+  FIELD-SYMBOLS: &lt;ls_built_in_format&gt; LIKE LINE OF lt_built_in_num_formats,
+                 &lt;ls_reader_built_in&gt; LIKE LINE OF zcl_excel_style_number_format=&gt;mt_built_in_num_formats.
+
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
   lo_ixml = cl_ixml=&gt;create( ).
@@ -5593,7 +5602,12 @@ ENDMETHOD.</source>
   lo_element_numfmts = lo_document-&gt;create_simple_element( name   = lc_xml_node_numfmts
                                                            parent = lo_document ).
 
-
+* Prepare built-in number formats.
+  LOOP AT zcl_excel_style_number_format=&gt;mt_built_in_num_formats ASSIGNING &lt;ls_reader_built_in&gt;.
+    ls_built_in_num_format-id         = &lt;ls_reader_built_in&gt;-id.
+    ls_built_in_num_format-num_format = &lt;ls_reader_built_in&gt;-format-&gt;format_code.
+    INSERT ls_built_in_num_format INTO TABLE lt_built_in_num_formats.
+  ENDLOOP.
 * Compress styles
   lo_iterator = excel-&gt;get_styles_iterator( ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
@@ -5669,15 +5683,22 @@ ENDMETHOD.</source>
     IF ls_numfmt-numfmt NE zcl_excel_style_number_format=&gt;c_format_date_std.&quot; and ls_numfmt-NUMFMT ne &apos;STD_NDEC&apos;. &quot; ALE Changes on going
       &quot;---
       IF ls_numfmt IS NOT INITIAL.
-
-        READ TABLE lt_numfmts FROM ls_numfmt TRANSPORTING NO FIELDS.
-        IF sy-subrc EQ 0.
-          ls_cellxfs-numfmtid = sy-tabix.
+* issue  #389 - Problem with built-in format ( those are not being taken account of )
+* There are some internal number formats built-in into EXCEL
+* Use these instead of duplicating the entries here, since they seem to be language-dependant and adjust to user settings in excel
+        READ TABLE lt_built_in_num_formats ASSIGNING &lt;ls_built_in_format&gt; WITH TABLE KEY num_format = ls_numfmt-numfmt.
+        IF sy-subrc = 0.
+          ls_cellxfs-numfmtid = &lt;ls_built_in_format&gt;-id.
         ELSE.
-          APPEND ls_numfmt TO lt_numfmts.
-          DESCRIBE TABLE lt_numfmts LINES ls_cellxfs-numfmtid.
+          READ TABLE lt_numfmts FROM ls_numfmt TRANSPORTING NO FIELDS.
+          IF sy-subrc EQ 0.
+            ls_cellxfs-numfmtid = sy-tabix.
+          ELSE.
+            APPEND ls_numfmt TO lt_numfmts.
+            DESCRIBE TABLE lt_numfmts LINES ls_cellxfs-numfmtid.
+          ENDIF.
+          ADD zcl_excel_common=&gt;c_excel_numfmt_offset TO ls_cellxfs-numfmtid. &quot; Add OXML offset for custom styles
         ENDIF.
-        ADD zcl_excel_common=&gt;c_excel_numfmt_offset TO ls_cellxfs-numfmtid. &quot; Add OXML offset for custom styles
         ls_cellxfs-applynumberformat    = 1.
       ELSE.
         ls_cellxfs-applynumberformat    = 0.

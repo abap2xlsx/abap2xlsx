@@ -30,7 +30,7 @@
     END OF t_workbookpr
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_SHEETPR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="5 " TYPTYPE="4" SRCROW1="35 " SRCCOLUMN1="4 " SRCROW2="37 " SRCCOLUMN2="19 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_sheetpr,
-      codename  TYPE string,
+      codename TYPE string,
     END OF t_sheetpr
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_RANGE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="6 " TYPTYPE="4" SRCROW1="39 " SRCCOLUMN1="4 " SRCROW2="43 " SRCCOLUMN2="17 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_range,
@@ -47,37 +47,30 @@
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="51 " SRCCOLUMN1="4 " SRCROW2="51 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="53 " SRCCOLUMN1="4 " SRCROW2="56 " SRCCOLUMN2="22 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_num_format,
-      id     TYPE string,
-      format TYPE REF TO zcl_excel_style_number_format,
-    END OF t_num_format
-"/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="58 " SRCCOLUMN1="4 " SRCROW2="58 " SRCCOLUMN2="69 " TYPESRC_LENG="0 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
-"/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="60 " SRCCOLUMN1="4 " SRCROW2="65 " SRCCOLUMN2="17 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_color,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="53 " SRCCOLUMN1="4 " SRCROW2="58 " SRCCOLUMN2="17 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_color,
       indexed TYPE string,
       rgb     TYPE string,
       theme   TYPE string,
       tint    TYPE string,
     END OF t_color
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="67 " SRCCOLUMN1="4 " SRCROW2="72 " SRCCOLUMN2="23 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_rel_drawing,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="60 " SRCCOLUMN1="4 " SRCROW2="65 " SRCCOLUMN2="23 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_rel_drawing,
       id          TYPE string,
       content     TYPE xstring,
       file_ext    TYPE string,
       content_xml TYPE REF TO if_ixml_document,
     END OF t_rel_drawing
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="74 " SRCCOLUMN1="4 " SRCROW2="74 " SRCCOLUMN2="82 " TYPESRC_LENG="0 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="67 " SRCCOLUMN1="4 " SRCROW2="67 " SRCCOLUMN2="82 " TYPESRC_LENG="0 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTS_EXTERNAL_HYPERLINK" VERSION="1" LANGU="E" DESCRIPT="External hyperlink" EXPOSURE="1" STATE="1" EDITORDER="16 " TYPTYPE="4" SRCROW1="76 " SRCCOLUMN1="4 " SRCROW2="79 " SRCCOLUMN2="32 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF gts_external_hyperlink,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTS_EXTERNAL_HYPERLINK" VERSION="1" LANGU="E" DESCRIPT="External hyperlink" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="69 " SRCCOLUMN1="4 " SRCROW2="72 " SRCCOLUMN2="32 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF gts_external_hyperlink,
       id     TYPE string,
       target TYPE string,
     END OF gts_external_hyperlink
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTT_EXTERNAL_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Table with external hyperlinks" EXPOSURE="1" STATE="1" EDITORDER="17 " TYPTYPE="4" SRCROW1="81 " SRCCOLUMN1="4 " SRCROW2="81 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="gtt_external_hyperlinks TYPE HASHED TABLE OF gts_external_hyperlink WITH UNIQUE KEY id
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTT_EXTERNAL_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Table with external hyperlinks" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="74 " SRCCOLUMN1="4 " SRCROW2="74 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="gtt_external_hyperlinks TYPE HASHED TABLE OF gts_external_hyperlink WITH UNIQUE KEY id
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="18 " TYPTYPE="4" SRCROW1="83 " SRCCOLUMN1="4 " SRCROW2="90 " SRCCOLUMN2="27 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF ty_ref_formulae,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="16 " TYPTYPE="4" SRCROW1="76 " SRCCOLUMN1="4 " SRCROW2="83 " SRCCOLUMN2="27 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF ty_ref_formulae,
       sheet   TYPE REF TO zcl_excel_worksheet,
       row     TYPE i,
       column  TYPE i,
@@ -86,7 +79,7 @@
       formula TYPE string,
     END   OF ty_ref_formulae
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="19 " TYPTYPE="4" SRCROW1="92 " SRCCOLUMN1="4 " SRCROW2="92 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="17 " TYPTYPE="4" SRCROW1="85 " SRCCOLUMN1="4 " SRCROW2="85 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
 "/>
  <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
@@ -499,7 +492,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="IP_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="CP_STRUCTURE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
   <source>method fill_struct_from_attributes.
@@ -1098,12 +1091,12 @@ ENDMETHOD.</source>
   DATA:       lo_styles_xml                 TYPE REF TO if_ixml_document,
               lo_style                      TYPE REF TO zcl_excel_style,
 
-              lt_num_formats                TYPE t_num_formats,
+              lt_num_formats                TYPE zcl_excel_style_number_format=&gt;t_num_formats,
               lt_fills                      TYPE t_fills,
               lt_borders                    TYPE t_borders,
               lt_fonts                      TYPE t_fonts,
 
-              ls_num_format                 TYPE t_num_format,
+              ls_num_format                 TYPE zcl_excel_style_number_format=&gt;t_num_format ,
               ls_fill                       TYPE REF TO zcl_excel_style_fill,
               ls_cell_border                TYPE REF TO zcl_excel_style_borders,
               ls_font                       TYPE REF TO zcl_excel_style_font,
@@ -1720,7 +1713,7 @@ ENDMETHOD.</source>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="EP_NUM_FORMATS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_NUM_FORMATS"/>
-  <source>method LOAD_STYLE_NUM_FORMATS.
+  <source>METHOD load_style_num_formats.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Explain gaps in predefined formats
@@ -1734,18 +1727,23 @@ ENDMETHOD.</source>
 *          adding comments to explain what we are trying to achieve
 *          aligning code
 *--------------------------------------------------------------------*
-  DATA:       lo_node_numfmt                  TYPE REF TO if_ixml_element,
-              ls_num_format                   TYPE t_num_format.
+  DATA:       lo_node_numfmt          TYPE REF TO if_ixml_element,
+              ls_num_format           TYPE ZCL_EXCEL_STYLE_NUMBER_FORMAT=&gt;T_NUM_FORMAT .
 
 *--------------------------------------------------------------------*
 * We need a table of used numberformats to build up our styles
 * there are two kinds of numberformats
-* §1 those that have been explicitly added by the createor of the excel-file
-* §2 and built-in numberformats
+* §1 built-in numberformats
+* §2 and those that have been explicitly added by the createor of the excel-file
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
-* §1   Get non-internal numberformats that are found in the file explicitly
+* §1 built-in numberformats
+*--------------------------------------------------------------------*
+  ep_num_formats = ZCL_EXCEL_STYLE_NUMBER_FORMAT=&gt;mt_built_in_num_formats.
+
+*--------------------------------------------------------------------*
+* §2   Get non-internal numberformats that are found in the file explicitly
 
 *         Following is an example how this part of a file could be set up
 *         &lt;numFmts count=&quot;1&quot;&gt;
@@ -1766,69 +1764,8 @@ ENDMETHOD.</source>
 
   ENDWHILE.
 
-  DEFINE predefined_format.
-    ls_num_format-id                  = &amp;1.
-    create object ls_num_format-format.
-    ls_num_format-format-&gt;format_code = &amp;2.
-    insert ls_num_format into table ep_num_formats.
-  END-OF-DEFINITION.
 
-*--------------------------------------------------------------------*
-* §1 Get internal predefined numberformats
-*--------------------------------------------------------------------*
-  predefined_format    &apos;1&apos;        &apos;0&apos;.
-  predefined_format    &apos;2&apos;        &apos;0.00&apos;.
-  predefined_format    &apos;3&apos;        &apos;#,##0&apos;.
-  predefined_format    &apos;4&apos;        &apos;#,##0.00&apos;.
-  predefined_format    &apos;5&apos;        &apos;$#,##0_);($#,##0)&apos;.
-  predefined_format    &apos;6&apos;        &apos;$#,##0_);[Red]($#,##0)&apos;.
-  predefined_format    &apos;7&apos;        &apos;$#,##0.00_);($#,##0.00)&apos;.
-  predefined_format    &apos;8&apos;        &apos;$#,##0.00_);[Red]($#,##0.00)&apos;.
-  predefined_format    &apos;9&apos;        &apos;0%&apos;.
-  predefined_format   &apos;10&apos;        &apos;0.00%&apos;.
-  predefined_format   &apos;11&apos;        &apos;0.00E+00&apos;.
-  predefined_format   &apos;12&apos;        &apos;# ?/?&apos;.
-  predefined_format   &apos;13&apos;        &apos;# ??/??&apos;.
-  predefined_format   &apos;14&apos;        &apos;m/d/yyyy&apos;.
-  predefined_format   &apos;15&apos;        &apos;d-mmm-yy&apos;.
-  predefined_format   &apos;16&apos;        &apos;d-mmm&apos;.
-  predefined_format   &apos;17&apos;        &apos;mmm-yy&apos;.
-  predefined_format   &apos;18&apos;        &apos;h:mm AM/PM&apos;.
-  predefined_format   &apos;19&apos;        &apos;h:mm:ss AM/PM&apos;.
-  predefined_format   &apos;20&apos;        &apos;h:mm&apos;.
-  predefined_format   &apos;21&apos;        &apos;h:mm:ss&apos;.
-  predefined_format   &apos;22&apos;        &apos;m/d/yyyy h:mm&apos;.
-* 2do§1     Why is there a gap in here?
-
-
-
-
-
-
-
-
-
-
-
-
-
-  predefined_format   &apos;37&apos;        &apos;#,##0_);(#,##0)&apos;.
-  predefined_format   &apos;38&apos;        &apos;#,##0_);[Red](#,##0)&apos;.
-  predefined_format   &apos;39&apos;        &apos;#,##0.00_);(#,##0.00)&apos;.
-  predefined_format   &apos;40&apos;        &apos;#,##0.00_);[Red](#,##0.00)&apos;.
-* 2do§1     Why is there a gap in here?
-
-
-
-  predefined_format   &apos;45&apos;        &apos;mm:ss&apos;.
-  predefined_format   &apos;46&apos;        &apos;[h]:mm:ss&apos;.
-  predefined_format   &apos;47&apos;        &apos;mm:ss.0&apos;.
-  predefined_format   &apos;48&apos;        &apos;##0.0E+0&apos;.
-  predefined_format   &apos;49&apos;        &apos;@&apos;.
-* 2do§1     Is 49 really the last predefined format?
-
-
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IV_WORKBOOK_FULL_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
@@ -3779,7 +3716,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="28 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD read_from_applserver.
@@ -3823,7 +3760,7 @@ ENDMETHOD.</source>
         binary_tab   = lt_binary_data.
   ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="29 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
