@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_WRITER_2007">
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro writer" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " ZSAPLINK_PLUGIN_MAJOR_VERSION="0 " ZSAPLINK_PLUGIN_MINOR_VERSION="1 " ZSAPLINK_PLUGIN_BUILD_VERSION="0 " ZSAPLINK_PLUGIN_INFO1="ZSAPLINK_CLASS is part of the main ZSAPLINK project --&gt; This plugin found there instead of ZSAPLINK_PLUGINS projects" ZSAPLINK_PLUGIN_INFO2="SAPLINK homepage: https://www.assembla.com/spaces/saplink/wiki" ZSAPLINK_PLUGIN_INFO3="Download from https://www.assembla.com/code/saplink/subversion/nodes" ZSAPLINK_PLUGIN_INFO4="and navigate to:  trunk -&gt; core -&gt; ZSAPLINK -&gt; CLAS -&gt; ZSAPLINK_CLASS.slnk" REFCLSNAME="ZCL_EXCEL_WRITER_2007">
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>
@@ -11,7 +11,6 @@
  <attribute CLSNAME="ZCL_EXCEL_WRITER_XLSM" CMPNAME="C_XL_VBAPROJECT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;xl/vbaProject.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <inheritance CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" STATE="1">
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="ADD_FURTHER_DATA_TO_ZIP" EXPOSURE="1"/>
-  <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_CONTENT_TYPES" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_RELATIONSHIPS" EXPOSURE="1"/>
   <redefinition CLSNAME="ZCL_EXCEL_WRITER_XLSM" REFCLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" MTDNAME="CREATE_XL_SHEET" EXPOSURE="1"/>
@@ -28,228 +27,37 @@
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method CREATE.
-
-
-* Office 2007 file format is a cab of several xml files with extension .xlsx
-
-  DATA: lo_zip              TYPE REF TO cl_abap_zip,
-        lo_worksheet        TYPE REF TO zcl_excel_worksheet,
-        lo_active_worksheet TYPE REF TO zcl_excel_worksheet,
-        lo_iterator         TYPE REF TO cl_object_collection_iterator,
-        lo_nested_iterator  TYPE REF TO cl_object_collection_iterator,
-        lo_table            TYPE REF TO zcl_excel_table,
-        lo_drawing          TYPE REF TO zcl_excel_drawing,
-        lo_drawings         TYPE REF TO zcl_excel_drawings.
-
-  DATA: lv_content         TYPE xstring,
-        lv_active          TYPE flag,
-        lv_xl_sheet        TYPE string,
-        lv_xl_sheet_rels   TYPE string,
-        lv_xl_drawing      TYPE string,
-        lv_xl_drawing_rels TYPE string,
-        lv_syindex         TYPE string,
-        lv_value           TYPE string,
-        lv_drawing_index   TYPE i.
-
-**********************************************************************
-* Start of insertion # issue 139 - Dateretention of cellstyles
-    me-&gt;excel-&gt;add_static_styles( ).
-* End of insertion # issue 139 - Dateretention of cellstyles
-
-**********************************************************************
-* STEP 1: Create archive object file (ZIP)
-  CREATE OBJECT lo_zip.
-
-**********************************************************************
-* STEP 2: Add [Content_Types].xml to zip
-  lv_content = me-&gt;create_content_types( ).
-  lo_zip-&gt;add( name    = me-&gt;c_content_types
-               content = lv_content ).
-
-**********************************************************************
-* STEP 3: Add _rels/.rels to zip
-  lv_content = me-&gt;create_relationships( ).
-  lo_zip-&gt;add( name    = me-&gt;c_relationships
-               content = lv_content ).
-
-**********************************************************************
-* STEP 4: Add docProps/app.xml to zip
-  lv_content = me-&gt;create_docprops_app( ).
-  lo_zip-&gt;add( name    = me-&gt;c_docprops_app
-               content = lv_content ).
-
-**********************************************************************
-* STEP 5: Add docProps/core.xml to zip
-  lv_content = me-&gt;create_docprops_core( ).
-  lo_zip-&gt;add( name    = me-&gt;c_docprops_core
-               content = lv_content ).
-
-**********************************************************************
-* STEP 6: Add xl/_rels/workbook.xml.rels to zip
-  lv_content = me-&gt;create_xl_relationships( ).
-  lo_zip-&gt;add( name    = me-&gt;c_xl_relationships
-               content = lv_content ).
-
-**********************************************************************
-* STEP 6: Add xl/_rels/workbook.xml.rels to zip
-  lv_content = me-&gt;create_xl_theme( ).
-  lo_zip-&gt;add( name    = me-&gt;c_xl_theme
-               content = lv_content ).
-
-**********************************************************************
-* STEP 7: Add xl/workbook.xml to zip
-  lv_content = me-&gt;create_xl_workbook( ).
-  lo_zip-&gt;add( name    = me-&gt;c_xl_workbook
-               content = lv_content ).
-
-**********************************************************************
-* STEP 8: Add xl/workbook.xml to zip
-*  lv_content = me-&gt;create_xl_styles_static( ).
-  lv_content = me-&gt;create_xl_styles( ).
-  lo_zip-&gt;add( name    = me-&gt;c_xl_styles
-               content = lv_content ).
-
-**********************************************************************
-* STEP 9: Add sharedStrings.xml to zip
-  lv_content = me-&gt;create_xl_sharedstrings( ).
-  lo_zip-&gt;add( name    = me-&gt;c_xl_sharedstrings
-               content = lv_content ).
-
-**********************************************************************
-* STEP 10: Add sheet#.xml and drawing#.xml to zip
-  lo_iterator = me-&gt;excel-&gt;get_worksheets_iterator( ).
-  lo_active_worksheet = me-&gt;excel-&gt;get_active_worksheet( ).
-  lv_drawing_index = 1.
-
-  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-    IF lo_active_worksheet-&gt;get_guid( ) EQ lo_worksheet-&gt;get_guid( ).
-      lv_active = abap_true.
-    ELSE.
-      lv_active = abap_false.
-    ENDIF.
-
-    lv_content = me-&gt;create_xl_sheet( io_worksheet = lo_worksheet
-                                      iv_active    = lv_active ).
-    lv_xl_sheet = me-&gt;c_xl_sheet.
-    MOVE sy-index TO lv_syindex.
-    SHIFT lv_syindex RIGHT DELETING TRAILING space.
-    SHIFT lv_syindex LEFT DELETING LEADING space.
-    REPLACE ALL OCCURRENCES OF &apos;#&apos; IN lv_xl_sheet WITH lv_syindex.
-    lo_zip-&gt;add( name    = lv_xl_sheet
-                 content = lv_content ).
-
-    lv_xl_sheet_rels = me-&gt;c_xl_sheet_rels.
-    lv_content = me-&gt;create_xl_sheet_rels( io_worksheet = lo_worksheet
-                                           iv_drawing_index = lv_drawing_index ).
-    REPLACE ALL OCCURRENCES OF &apos;#&apos; IN lv_xl_sheet_rels WITH lv_syindex.
-    lo_zip-&gt;add( name    = lv_xl_sheet_rels
-                 content = lv_content ).
-
-    lo_nested_iterator = lo_worksheet-&gt;get_tables_iterator( ).
-
-    WHILE lo_nested_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_table ?= lo_nested_iterator-&gt;if_object_collection_iterator~get_next( ).
-      lv_content = me-&gt;create_xl_table( lo_table ).
-
-      lv_value = lo_table-&gt;get_name( ).
-      CONCATENATE &apos;xl/tables/&apos; lv_value &apos;.xml&apos; INTO lv_value.
-      lo_zip-&gt;add( name = lv_value
-                    content = lv_content ).
-    ENDWHILE.
-
-* Add drawings **********************************
-    lo_drawings = lo_worksheet-&gt;get_drawings( ).
-    IF lo_drawings-&gt;is_empty( ) = abap_false.
-      MOVE lv_drawing_index TO lv_syindex.
-      SHIFT lv_syindex RIGHT DELETING TRAILING space.
-      SHIFT lv_syindex LEFT DELETING LEADING space.
-
-      lv_content = me-&gt;create_xl_drawings( lo_worksheet ).
-      lv_xl_drawing = me-&gt;c_xl_drawings.
-      REPLACE ALL OCCURRENCES OF &apos;#&apos; IN lv_xl_drawing WITH lv_syindex.
-      lo_zip-&gt;add( name    = lv_xl_drawing
-                   content = lv_content ).
-
-      lv_content = me-&gt;create_xl_drawings_rels( lo_worksheet ).
-      lv_xl_drawing_rels = me-&gt;c_xl_drawings_rels.
-      REPLACE ALL OCCURRENCES OF &apos;#&apos; IN lv_xl_drawing_rels WITH lv_syindex.
-      lo_zip-&gt;add( name    = lv_xl_drawing_rels
-                   content = lv_content ).
-      ADD 1 TO lv_drawing_index.
-    ENDIF.
-  ENDWHILE.
-
-**********************************************************************
-* STEP 11: Add media
-  lo_iterator = me-&gt;excel-&gt;get_drawings_iterator( zcl_excel_drawing=&gt;type_image ).
-  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-
-    lv_content = lo_drawing-&gt;get_media( ).
-    lv_value = lo_drawing-&gt;get_media_name( ).
-    CONCATENATE &apos;xl/media/&apos; lv_value INTO lv_value.
-    lo_zip-&gt;add( name    = lv_value
-                 content = lv_content ).
-  ENDWHILE.
-
-**********************************************************************
-* STEP 12: Add charts
-  lo_iterator = me-&gt;excel-&gt;get_drawings_iterator( zcl_excel_drawing=&gt;type_chart ).
-  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-
-    lv_content = lo_drawing-&gt;get_media( ).
-    lv_value = lo_drawing-&gt;get_media_name( ).
-    CONCATENATE &apos;xl/charts/&apos; lv_value INTO lv_value.
-    lo_zip-&gt;add( name    = lv_value
-                 content = lv_content ).
-  ENDWHILE.
-
-**********************************************************************
-* STEP 9: Add vbaProject.bin to zip
-  lo_zip-&gt;add( name    = me-&gt;c_xl_vbaproject
-               content = me-&gt;excel-&gt;zif_excel_book_vba_project~vbaproject ).
-
-**********************************************************************
-* STEP 12: Create the final zip
-  ep_excel = lo_zip-&gt;save( ).
-
-  endmethod.</source>
- </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method CREATE_CONTENT_TYPES.
+  <source>METHOD create_content_types.
 ** Constant node name
-  DATA: lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.ms-excel.sheet.macroEnabled.main+xml&apos;,
-        lc_xml_node_default       TYPE string VALUE &apos;Default&apos;,
+  DATA: lc_xml_node_workb_ct    TYPE string VALUE &apos;application/vnd.ms-excel.sheet.macroEnabled.main+xml&apos;,
+        lc_xml_node_default     TYPE string VALUE &apos;Default&apos;,
         &quot; Node attributes
-        lc_xml_attr_partname      TYPE string VALUE &apos;PartName&apos;,
-        lc_xml_attr_extension     TYPE string VALUE &apos;Extension&apos;,
-        lc_xml_attr_contenttype   TYPE string VALUE &apos;ContentType&apos;,
-        lc_xml_attr_codename      TYPE string VALUE &apos;codeName&apos;,
-        lc_xml_node_workb_pn      TYPE string VALUE &apos;/xl/workbook.xml&apos;,
-        lc_xml_node_bin_ext       TYPE string VALUE &apos;bin&apos;,
-        lc_xml_node_bin_ct        TYPE string VALUE &apos;application/vnd.ms-office.vbaProject&apos;.
+        lc_xml_attr_partname    TYPE string VALUE &apos;PartName&apos;,
+        lc_xml_attr_extension   TYPE string VALUE &apos;Extension&apos;,
+        lc_xml_attr_contenttype TYPE string VALUE &apos;ContentType&apos;,
+        lc_xml_attr_codename    TYPE string VALUE &apos;codeName&apos;,
+        lc_xml_node_workb_pn    TYPE string VALUE &apos;/xl/workbook.xml&apos;,
+        lc_xml_node_bin_ext     TYPE string VALUE &apos;bin&apos;,
+        lc_xml_node_bin_ct      TYPE string VALUE &apos;application/vnd.ms-office.vbaProject&apos;.
 
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
-        lo_document_xml   TYPE REF TO cl_xml_document,
-        lo_element_root   TYPE REF TO if_ixml_node,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_collection     TYPE REF TO if_ixml_node_collection,
-        lo_iterator       TYPE REF TO if_ixml_node_iterator,
-        lo_node           TYPE REF TO if_ixml_node,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer.
+  DATA: lo_ixml          TYPE REF TO if_ixml,
+        lo_document      TYPE REF TO if_ixml_document,
+        lo_document_xml  TYPE REF TO cl_xml_document,
+        lo_element_root  TYPE REF TO if_ixml_node,
+        lo_element       TYPE REF TO if_ixml_element,
+        lo_collection    TYPE REF TO if_ixml_node_collection,
+        lo_iterator      TYPE REF TO if_ixml_node_iterator,
+        lo_node          TYPE REF TO if_ixml_node,
+        lo_encoding      TYPE REF TO if_ixml_encoding,
+        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+        lo_ostream       TYPE REF TO if_ixml_ostream,
+        lo_renderer      TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_subrc                  TYPE sysubrc,
-        lv_contenttype            TYPE string,
-        lv_syindex(2)             TYPE c.
+  DATA: lv_subrc       TYPE sysubrc,
+        lv_contenttype TYPE string,
+        lv_syindex(2)  TYPE c.
 
 **********************************************************************
 * STEP 3: Create standard contentType
@@ -299,10 +107,10 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method CREATE_XL_RELATIONSHIPS.
+  <source>METHOD create_xl_relationships.
 
 ** Constant node name
   DATA: lc_xml_node_relationships TYPE string VALUE &apos;Relationships&apos;,
@@ -314,26 +122,26 @@ ENDMETHOD.</source>
         &quot; Node id
         lc_xml_node_ridx_id       TYPE string VALUE &apos;rId#&apos;,
         &quot; Node type
-        lc_xml_node_rid_vba_tp     TYPE string VALUE &apos;http://schemas.microsoft.com/office/2006/relationships/vbaProject&apos;,
+        lc_xml_node_rid_vba_tp    TYPE string VALUE &apos;http://schemas.microsoft.com/office/2006/relationships/vbaProject&apos;,
         &quot; Node target
-        lc_xml_node_rid_vba_tg      TYPE string VALUE &apos;vbaProject.bin&apos;.
+        lc_xml_node_rid_vba_tg    TYPE string VALUE &apos;vbaProject.bin&apos;.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
-        lo_document_xml   TYPE REF TO cl_xml_document,
-        lo_element_root   TYPE REF TO if_ixml_node,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_node           TYPE REF TO if_ixml_node,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer.
+  DATA: lo_ixml          TYPE REF TO if_ixml,
+        lo_document      TYPE REF TO if_ixml_document,
+        lo_document_xml  TYPE REF TO cl_xml_document,
+        lo_element_root  TYPE REF TO if_ixml_node,
+        lo_element       TYPE REF TO if_ixml_element,
+        lo_node          TYPE REF TO if_ixml_node,
+        lo_encoding      TYPE REF TO if_ixml_encoding,
+        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+        lo_ostream       TYPE REF TO if_ixml_ostream,
+        lo_renderer      TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_xml_node_ridx_tg       TYPE string,
-        lv_xml_node_ridx_id       TYPE string,
-        lv_size                   TYPE i,
-        lv_subrc                  TYPE sysubrc,
-        lv_syindex(2)             TYPE c.
+  DATA: lv_xml_node_ridx_tg TYPE string,
+        lv_xml_node_ridx_id TYPE string,
+        lv_size             TYPE i,
+        lv_subrc            TYPE sysubrc,
+        lv_syindex(2)       TYPE c.
 
 **********************************************************************
 * STEP 3: Create standard relationship
@@ -377,29 +185,29 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method CREATE_XL_SHEET.
+  <source>METHOD create_xl_sheet.
 
 ** Constant node name
   DATA: lc_xml_attr_codename      TYPE string VALUE &apos;codeName&apos;.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
-        lo_document_xml   TYPE REF TO cl_xml_document,
-        lo_element_root   TYPE REF TO if_ixml_node,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_collection     TYPE REF TO if_ixml_node_collection,
-        lo_iterator       TYPE REF TO if_ixml_node_iterator,
-        lo_node           TYPE REF TO if_ixml_node,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer.
+  DATA: lo_ixml          TYPE REF TO if_ixml,
+        lo_document      TYPE REF TO if_ixml_document,
+        lo_document_xml  TYPE REF TO cl_xml_document,
+        lo_element_root  TYPE REF TO if_ixml_node,
+        lo_element       TYPE REF TO if_ixml_element,
+        lo_collection    TYPE REF TO if_ixml_node_collection,
+        lo_iterator      TYPE REF TO if_ixml_node_iterator,
+        lo_node          TYPE REF TO if_ixml_node,
+        lo_encoding      TYPE REF TO if_ixml_encoding,
+        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+        lo_ostream       TYPE REF TO if_ixml_ostream,
+        lo_renderer      TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_subrc                  TYPE sysubrc,
-        lv_syindex(2)             TYPE c.
+  DATA: lv_subrc      TYPE sysubrc,
+        lv_syindex(2) TYPE c.
 
 **********************************************************************
 * STEP 3: Create standard relationship
@@ -414,15 +222,6 @@ ENDMETHOD.</source>
 
   lo_document ?= lo_document_xml-&gt;m_document.
   lo_element_root = lo_document-&gt;if_ixml_node~get_first_child( ).
-
-*  lo_collection = lo_document-&gt;get_elements_by_tag_name( &apos;fileVersion&apos; ).
-*  lo_iterator = lo_collection-&gt;create_iterator( ).
-*  lo_element ?= lo_iterator-&gt;get_next( ).
-*  WHILE lo_element IS BOUND.
-*    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_codename
-*                                  value = me-&gt;excel-&gt;zif_excel_book_vba_project~codename ).
-*    lo_element ?= lo_iterator-&gt;get_next( ).
-*  ENDWHILE.
 
   lo_collection = lo_document-&gt;get_elements_by_tag_name( &apos;sheetPr&apos; ).
   lo_iterator = lo_collection-&gt;create_iterator( ).
@@ -441,29 +240,29 @@ ENDMETHOD.</source>
   lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method CREATE_XL_WORKBOOK.
+  <source>METHOD create_xl_workbook.
 
 ** Constant node name
   DATA: lc_xml_attr_codename      TYPE string VALUE &apos;codeName&apos;.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
-        lo_document_xml   TYPE REF TO cl_xml_document,
-        lo_element_root   TYPE REF TO if_ixml_node,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_collection     TYPE REF TO if_ixml_node_collection,
-        lo_iterator       TYPE REF TO if_ixml_node_iterator,
-        lo_node           TYPE REF TO if_ixml_node,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer.
+  DATA: lo_ixml          TYPE REF TO if_ixml,
+        lo_document      TYPE REF TO if_ixml_document,
+        lo_document_xml  TYPE REF TO cl_xml_document,
+        lo_element_root  TYPE REF TO if_ixml_node,
+        lo_element       TYPE REF TO if_ixml_element,
+        lo_collection    TYPE REF TO if_ixml_node_collection,
+        lo_iterator      TYPE REF TO if_ixml_node_iterator,
+        lo_node          TYPE REF TO if_ixml_node,
+        lo_encoding      TYPE REF TO if_ixml_encoding,
+        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+        lo_ostream       TYPE REF TO if_ixml_ostream,
+        lo_renderer      TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_subrc                  TYPE sysubrc,
-        lv_syindex(2)             TYPE c.
+  DATA: lv_subrc      TYPE sysubrc,
+        lv_syindex(2) TYPE c.
 
 **********************************************************************
 * STEP 3: Create standard relationship
@@ -504,6 +303,6 @@ ENDMETHOD.</source>
   lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
 </CLAS>

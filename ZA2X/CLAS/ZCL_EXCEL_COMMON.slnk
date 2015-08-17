@@ -1961,13 +1961,13 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Creates field catalog for BIND_TABLE based on internal table" EXPOSURE="2" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="IP_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STANDARD TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="GET_FIELDCATALOG" SCONAME="EP_FIELDCATALOG" VERSION="1" LANGU="E" DESCRIPT="Table binding field catalog" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_T_FIELDCATALOG"/>
-  <source>method GET_FIELDCATALOG.
-  DATA: lr_dref_tab             TYPE REF TO  data,
-        lo_salv_table           TYPE REF TO  cl_salv_table,
-        lo_salv_columns_table   TYPE REF TO  cl_salv_columns_table,
-        lt_salv_t_column_ref    TYPE         salv_t_column_ref,
-        ls_salv_t_column_ref    LIKE LINE OF lt_salv_t_column_ref,
-        lo_salv_column_table    TYPE REF TO  cl_salv_column_table.
+  <source>METHOD get_fieldcatalog.
+  DATA: lr_dref_tab           TYPE REF TO data,
+        lo_salv_table         TYPE REF TO cl_salv_table,
+        lo_salv_columns_table TYPE REF TO cl_salv_columns_table,
+        lt_salv_t_column_ref  TYPE salv_t_column_ref,
+        ls_salv_t_column_ref  LIKE LINE OF lt_salv_t_column_ref,
+        lo_salv_column_table  TYPE REF TO cl_salv_column_table.
 
   FIELD-SYMBOLS: &lt;tab&gt;          TYPE STANDARD TABLE.
   FIELD-SYMBOLS: &lt;fcat&gt;         LIKE LINE OF ep_fieldcatalog.
@@ -1997,6 +1997,7 @@ endmethod.</source>
     &lt;fcat&gt;-scrtext_s = ls_salv_t_column_ref-r_column-&gt;get_short_text( ).
     &lt;fcat&gt;-scrtext_m = ls_salv_t_column_ref-r_column-&gt;get_medium_text( ).
     &lt;fcat&gt;-scrtext_l = ls_salv_t_column_ref-r_column-&gt;get_long_text( ).
+    &lt;fcat&gt;-abap_type = lo_salv_column_table-&gt;get_ddic_inttype( ).
 
     &lt;fcat&gt;-dynpfld   = &apos;X&apos;.  &quot; What in the world would we exclude here?
     IF &lt;fcat&gt;-position = 1.  &quot; except for the MANDT-field of most tables ( 1st column that is )
@@ -2017,7 +2018,7 @@ endmethod.</source>
 
   ENDLOOP.
 
-endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="IS_CELL_IN_RANGE" VERSION="1" LANGU="E" DESCRIPT="Check if cell is part of a range" EXPOSURE="2" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_COMMON" CMPNAME="IS_CELL_IN_RANGE" SCONAME="IP_COLUMN" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SIMPLE"/>

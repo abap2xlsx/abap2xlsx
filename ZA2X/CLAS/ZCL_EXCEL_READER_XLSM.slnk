@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_READER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro reader" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " REFCLSNAME="ZCL_EXCEL_READER_2007">
+<CLAS CLSNAME="ZCL_EXCEL_READER_XLSM" VERSION="1" LANGU="E" DESCRIPT="Excel with macro reader" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " ZSAPLINK_PLUGIN_MAJOR_VERSION="0 " ZSAPLINK_PLUGIN_MINOR_VERSION="1 " ZSAPLINK_PLUGIN_BUILD_VERSION="0 " ZSAPLINK_PLUGIN_INFO1="ZSAPLINK_CLASS is part of the main ZSAPLINK project --&gt; This plugin found there instead of ZSAPLINK_PLUGINS projects" ZSAPLINK_PLUGIN_INFO2="SAPLINK homepage: https://www.assembla.com/spaces/saplink/wiki" ZSAPLINK_PLUGIN_INFO3="Download from https://www.assembla.com/code/saplink/subversion/nodes" ZSAPLINK_PLUGIN_INFO4="and navigate to:  trunk -&gt; core -&gt; ZSAPLINK -&gt; CLAS -&gt; ZSAPLINK_CLASS.slnk" REFCLSNAME="ZCL_EXCEL_READER_2007">
  <localImplementation>*&quot;* use this source file for the definition and implementation of
 *&quot;* local helper classes, interface definitions and type
 *&quot;* declarations</localImplementation>
@@ -99,27 +99,15 @@
   endmethod.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="0" EXPOSURE="0" STATE="0" EDITORDER="0 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <source>method LOAD_WORKSHEET.
+  <source>METHOD load_worksheet.
 
   super-&gt;load_worksheet( EXPORTING ip_path      = ip_path
                                    io_worksheet = io_worksheet ).
 
-  DATA: path                TYPE string,
-        node                TYPE REF TO if_ixml_element,
-        worksheet           TYPE REF TO if_ixml_document,
-        sheetpr             TYPE t_sheetpr.
-
-
-*    &quot; Read Workbook codeName
-*  workbook = me-&gt;get_ixml_from_zip_archive( ip_path ).
-*  node ?=  workbook-&gt;find_from_name( &apos;fileVersion&apos; ).
-*  IF node IS BOUND.
-*
-*    fill_struct_from_attributes( EXPORTING ip_element   = node
-*                                 CHANGING  cp_structure = fileversion  ).
-*
-*    IO_WORKSHEET-&gt;zif_excel_book_vba_project~set_codename( fileversion-codename ).
-*  ENDIF.
+  DATA: path      TYPE string,
+        node      TYPE REF TO if_ixml_element,
+        worksheet TYPE REF TO if_ixml_document,
+        sheetpr   TYPE t_sheetpr.
 
   &quot; Read Workbook codeName
   worksheet = me-&gt;get_ixml_from_zip_archive( ip_path ).
@@ -128,9 +116,10 @@
 
     fill_struct_from_attributes( EXPORTING ip_element   = node
                                  CHANGING  cp_structure = sheetpr  ).
-
-    io_worksheet-&gt;zif_excel_sheet_vba_project~set_codename_pr( sheetpr-codename ).
+    IF sheetpr-codename IS NOT INITIAL.
+      io_worksheet-&gt;zif_excel_sheet_vba_project~set_codename_pr( sheetpr-codename ).
+    ENDIF.
   ENDIF.
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
 </CLAS>

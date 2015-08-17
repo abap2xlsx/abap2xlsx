@@ -47,55 +47,39 @@
 "/>
  <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_STYLE_REFS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="10 " TYPTYPE="4" SRCROW1="51 " SRCCOLUMN1="4 " SRCROW2="51 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMAT" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="53 " SRCCOLUMN1="4 " SRCROW2="56 " SRCCOLUMN2="22 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_num_format,
-      id     TYPE string,
-      format TYPE REF TO zcl_excel_style_number_format,
-    END OF t_num_format
-"/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_NUM_FORMATS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="58 " SRCCOLUMN1="4 " SRCROW2="58 " SRCCOLUMN2="69 " TYPESRC_LENG="0 " TYPESRC="t_num_formats TYPE HASHED TABLE OF t_num_format WITH UNIQUE KEY id
-"/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="60 " SRCCOLUMN1="4 " SRCROW2="65 " SRCCOLUMN2="17 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_color,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_COLOR" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="11 " TYPTYPE="4" SRCROW1="53 " SRCCOLUMN1="4 " SRCROW2="58 " SRCCOLUMN2="17 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_color,
       indexed TYPE string,
       rgb     TYPE string,
       theme   TYPE string,
       tint    TYPE string,
     END OF t_color
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="67 " SRCCOLUMN1="4 " SRCROW2="72 " SRCCOLUMN2="23 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_rel_drawing,
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWING" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="12 " TYPTYPE="4" SRCROW1="60 " SRCCOLUMN1="4 " SRCROW2="65 " SRCCOLUMN2="23 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF t_rel_drawing,
       id          TYPE string,
       content     TYPE xstring,
       file_ext    TYPE string,
       content_xml TYPE REF TO if_ixml_document,
     END OF t_rel_drawing
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="74 " SRCCOLUMN1="4 " SRCROW2="74 " SRCCOLUMN2="82 " TYPESRC_LENG="0 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="T_REL_DRAWINGS" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="13 " TYPTYPE="4" SRCROW1="67 " SRCCOLUMN1="4 " SRCROW2="67 " SRCCOLUMN2="82 " TYPESRC_LENG="0 " TYPESRC="t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTS_EXTERNAL_HYPERLINK" VERSION="1" LANGU="E" DESCRIPT="External hyperlink" EXPOSURE="1" STATE="1" EDITORDER="16 " TYPTYPE="4" SRCROW1="76 " SRCCOLUMN1="4 " SRCROW2="79 " SRCCOLUMN2="37 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF gts_external_hyperlink,
-           id     TYPE string,
-           target TYPE string,
-         END OF gts_external_hyperlink
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTS_EXTERNAL_HYPERLINK" VERSION="1" LANGU="E" DESCRIPT="External hyperlink" EXPOSURE="1" STATE="1" EDITORDER="14 " TYPTYPE="4" SRCROW1="69 " SRCCOLUMN1="4 " SRCROW2="72 " SRCCOLUMN2="32 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF gts_external_hyperlink,
+      id     TYPE string,
+      target TYPE string,
+    END OF gts_external_hyperlink
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTT_EXTERNAL_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Table with external hyperlinks" EXPOSURE="1" STATE="1" EDITORDER="17 " TYPTYPE="4" SRCROW1="81 " SRCCOLUMN1="4 " SRCROW2="81 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="gtt_external_hyperlinks TYPE HASHED TABLE OF gts_external_hyperlink WITH UNIQUE KEY id
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GTT_EXTERNAL_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Table with external hyperlinks" EXPOSURE="1" STATE="1" EDITORDER="15 " TYPTYPE="4" SRCROW1="74 " SRCCOLUMN1="4 " SRCROW2="74 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="gtt_external_hyperlinks TYPE HASHED TABLE OF gts_external_hyperlink WITH UNIQUE KEY id
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="18 " TYPTYPE="4" SRCROW1="83 " SRCCOLUMN1="4 " SRCROW2="90 " SRCCOLUMN2="32 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF ty_ref_formulae,
-
-           sheet      TYPE REF TO zcl_excel_worksheet,
-
-           row        TYPE i,
-
-           column     TYPE i,
-
-           si         TYPE i,
-
-           ref        TYPE string,
-
-           formula    TYPE string,
-
-         END   OF ty_ref_formulae
-
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TY_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="16 " TYPTYPE="4" SRCROW1="76 " SRCCOLUMN1="4 " SRCROW2="83 " SRCCOLUMN2="27 " TYPESRC_LENG="0 " TYPESRC="BEGIN OF ty_ref_formulae,
+      sheet   TYPE REF TO zcl_excel_worksheet,
+      row     TYPE i,
+      column  TYPE i,
+      si      TYPE i,
+      ref     TYPE string,
+      formula TYPE string,
+    END   OF ty_ref_formulae
 "/>
- <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="19 " TYPTYPE="4" SRCROW1="92 " SRCCOLUMN1="4 " SRCROW2="92 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
-
+ <types CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="TYT_REF_FORMULAE" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="17 " TYPTYPE="4" SRCROW1="85 " SRCCOLUMN1="4 " SRCROW2="85 " SRCCOLUMN2="89 " TYPESRC_LENG="0 " TYPESRC="tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column
 "/>
  <implementing CLSNAME="ZCL_EXCEL_READER_2007" REFCLSNAME="ZIF_EXCEL_READER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
@@ -405,7 +389,7 @@ ENDMETHOD.</source>
   ENDCASE.
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_ROW_OUTLINES" VERSION="1" LANGU="E" DESCRIPT="Fill row outlines from collapsed and hierarchy information" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_ROW_OUTLINES" VERSION="1" LANGU="E" DESCRIPT="Fill row outlines from collapsed and hierarchy information" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_ROW_OUTLINES" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_ROW_OUTLINES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD fill_row_outlines.
@@ -508,7 +492,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" VERSION="1" LANGU="E" DESCRIPT="Fills structure fields based on XML node attributes" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="IP_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="FILL_STRUCT_FROM_ATTRIBUTES" SCONAME="CP_STRUCTURE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="2" PARPASSTYP="1" TYPTYPE="1" TYPE="ANY"/>
   <source>method fill_struct_from_attributes.
@@ -559,7 +543,7 @@ ENDMETHOD.</source>
 
 endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Get guid of dxf style" EXPOSURE="1" STATE="1" EDITORDER="32 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Get guid of dxf style" EXPOSURE="1" STATE="1" EDITORDER="28 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" SCONAME="IO_IXML_DXF" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" SCONAME="IO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_DXF_STYLE_GUID" SCONAME="RV_STYLE_GUID" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
@@ -689,7 +673,7 @@ endmethod.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive" EXPOSURE="1" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="R_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_FROM_ZIP_ARCHIVE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -701,7 +685,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive and convert to ixml document" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" VERSION="1" LANGU="E" DESCRIPT="Read file from ZIP Archive and convert to ixml document" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="IS_NORMALIZING" VERSION="1" LANGU="E" DESCRIPT="Boolean Variable (X=True, -=False, Space=Unknown)" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="BOOLEAN" PARVALUE="&apos;X&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="GET_IXML_FROM_ZIP_ARCHIVE" SCONAME="R_IXML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
@@ -732,7 +716,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads drawing anchor" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Loads drawing anchor" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_ANCHOR_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DRAWING_ANCHOR" SCONAME="IT_RELATED_DRAWINGS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="T_REL_DRAWINGS"/>
@@ -892,7 +876,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DXF_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads dxf styles" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DXF_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads dxf styles" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DXF_STYLES" SCONAME="IV_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DXF_STYLES" SCONAME="IO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_DXF_STYLES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -938,7 +922,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Loads shared strings table" EXPOSURE="1" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Loads shared strings table" EXPOSURE="1" STATE="1" EDITORDER="5 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_SHARED_STRINGS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method LOAD_SHARED_STRINGS.
@@ -1057,7 +1041,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads styles" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" VERSION="1" LANGU="E" DESCRIPT="Loads styles" EXPOSURE="1" STATE="1" EDITORDER="6 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="IP_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLES" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -1107,12 +1091,12 @@ ENDMETHOD.</source>
   DATA:       lo_styles_xml                 TYPE REF TO if_ixml_document,
               lo_style                      TYPE REF TO zcl_excel_style,
 
-              lt_num_formats                TYPE t_num_formats,
+              lt_num_formats                TYPE zcl_excel_style_number_format=&gt;t_num_formats,
               lt_fills                      TYPE t_fills,
               lt_borders                    TYPE t_borders,
               lt_fonts                      TYPE t_fonts,
 
-              ls_num_format                 TYPE t_num_format,
+              ls_num_format                 TYPE zcl_excel_style_number_format=&gt;t_num_format ,
               ls_fill                       TYPE REF TO zcl_excel_style_fill,
               ls_cell_border                TYPE REF TO zcl_excel_style_borders,
               ls_font                       TYPE REF TO zcl_excel_style_font,
@@ -1296,7 +1280,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;borders&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="8 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_BORDERS" SCONAME="EP_BORDERS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_BORDERS"/>
   <source>method LOAD_STYLE_BORDERS.
@@ -1426,7 +1410,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fills&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FILLS" SCONAME="EP_FILLS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FILLS"/>
   <source>method LOAD_STYLE_FILLS.
@@ -1598,7 +1582,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fonts&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;fonts&apos;  part of styles" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_FONTS" SCONAME="EP_FONTS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_FONTS"/>
   <source>METHOD load_style_fonts.
@@ -1726,10 +1710,10 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" VERSION="1" LANGU="E" DESCRIPT="Loads &apos;number format&apos; part of styles" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="IP_XML" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
-  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="EP_NUM_FORMATS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="T_NUM_FORMATS"/>
-  <source>method LOAD_STYLE_NUM_FORMATS.
+  <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_STYLE_NUM_FORMATS" SCONAME="EP_NUM_FORMATS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="ZCL_EXCEL_STYLE_NUMBER_FORMAT=&gt;T_NUM_FORMATS"/>
+  <source>METHOD load_style_num_formats.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do§1   Explain gaps in predefined formats
@@ -1743,18 +1727,23 @@ ENDMETHOD.</source>
 *          adding comments to explain what we are trying to achieve
 *          aligning code
 *--------------------------------------------------------------------*
-  DATA:       lo_node_numfmt                  TYPE REF TO if_ixml_element,
-              ls_num_format                   TYPE t_num_format.
+  DATA:       lo_node_numfmt          TYPE REF TO if_ixml_element,
+              ls_num_format           TYPE ZCL_EXCEL_STYLE_NUMBER_FORMAT=&gt;T_NUM_FORMAT .
 
 *--------------------------------------------------------------------*
 * We need a table of used numberformats to build up our styles
 * there are two kinds of numberformats
-* §1 those that have been explicitly added by the createor of the excel-file
-* §2 and built-in numberformats
+* §1 built-in numberformats
+* §2 and those that have been explicitly added by the createor of the excel-file
 *--------------------------------------------------------------------*
 
 *--------------------------------------------------------------------*
-* §1   Get non-internal numberformats that are found in the file explicitly
+* §1 built-in numberformats
+*--------------------------------------------------------------------*
+  ep_num_formats = ZCL_EXCEL_STYLE_NUMBER_FORMAT=&gt;mt_built_in_num_formats.
+
+*--------------------------------------------------------------------*
+* §2   Get non-internal numberformats that are found in the file explicitly
 
 *         Following is an example how this part of a file could be set up
 *         &lt;numFmts count=&quot;1&quot;&gt;
@@ -1775,71 +1764,10 @@ ENDMETHOD.</source>
 
   ENDWHILE.
 
-  DEFINE predefined_format.
-    ls_num_format-id                  = &amp;1.
-    create object ls_num_format-format.
-    ls_num_format-format-&gt;format_code = &amp;2.
-    insert ls_num_format into table ep_num_formats.
-  END-OF-DEFINITION.
 
-*--------------------------------------------------------------------*
-* §1 Get internal predefined numberformats
-*--------------------------------------------------------------------*
-  predefined_format    &apos;1&apos;        &apos;0&apos;.
-  predefined_format    &apos;2&apos;        &apos;0.00&apos;.
-  predefined_format    &apos;3&apos;        &apos;#,##0&apos;.
-  predefined_format    &apos;4&apos;        &apos;#,##0.00&apos;.
-  predefined_format    &apos;5&apos;        &apos;$#,##0_);($#,##0)&apos;.
-  predefined_format    &apos;6&apos;        &apos;$#,##0_);[Red]($#,##0)&apos;.
-  predefined_format    &apos;7&apos;        &apos;$#,##0.00_);($#,##0.00)&apos;.
-  predefined_format    &apos;8&apos;        &apos;$#,##0.00_);[Red]($#,##0.00)&apos;.
-  predefined_format    &apos;9&apos;        &apos;0%&apos;.
-  predefined_format   &apos;10&apos;        &apos;0.00%&apos;.
-  predefined_format   &apos;11&apos;        &apos;0.00E+00&apos;.
-  predefined_format   &apos;12&apos;        &apos;# ?/?&apos;.
-  predefined_format   &apos;13&apos;        &apos;# ??/??&apos;.
-  predefined_format   &apos;14&apos;        &apos;m/d/yyyy&apos;.
-  predefined_format   &apos;15&apos;        &apos;d-mmm-yy&apos;.
-  predefined_format   &apos;16&apos;        &apos;d-mmm&apos;.
-  predefined_format   &apos;17&apos;        &apos;mmm-yy&apos;.
-  predefined_format   &apos;18&apos;        &apos;h:mm AM/PM&apos;.
-  predefined_format   &apos;19&apos;        &apos;h:mm:ss AM/PM&apos;.
-  predefined_format   &apos;20&apos;        &apos;h:mm&apos;.
-  predefined_format   &apos;21&apos;        &apos;h:mm:ss&apos;.
-  predefined_format   &apos;22&apos;        &apos;m/d/yyyy h:mm&apos;.
-* 2do§1     Why is there a gap in here?
-
-
-
-
-
-
-
-
-
-
-
-
-
-  predefined_format   &apos;37&apos;        &apos;#,##0_);(#,##0)&apos;.
-  predefined_format   &apos;38&apos;        &apos;#,##0_);[Red](#,##0)&apos;.
-  predefined_format   &apos;39&apos;        &apos;#,##0.00_);(#,##0.00)&apos;.
-  predefined_format   &apos;40&apos;        &apos;#,##0.00_);[Red](#,##0.00)&apos;.
-* 2do§1     Why is there a gap in here?
-
-
-
-  predefined_format   &apos;45&apos;        &apos;mm:ss&apos;.
-  predefined_format   &apos;46&apos;        &apos;[h]:mm:ss&apos;.
-  predefined_format   &apos;47&apos;        &apos;mm:ss.0&apos;.
-  predefined_format   &apos;48&apos;        &apos;##0.0E+0&apos;.
-  predefined_format   &apos;49&apos;        &apos;@&apos;.
-* 2do§1     Is 49 really the last predefined format?
-
-
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Loads workbook" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IV_WORKBOOK_FULL_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="IO_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKBOOK" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -2260,7 +2188,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -2334,6 +2262,8 @@ ENDMETHOD.</source>
             id          TYPE string,
             orientation TYPE string,
             scale       TYPE string,
+            fittoheight TYPE string,
+            fittowidth  TYPE string,
           END OF lty_page_setup.
 
   TYPES:  BEGIN OF lty_sheetformatpr,
@@ -2431,6 +2361,8 @@ ENDMETHOD.</source>
               lo_ixml_hf_value_elem       TYPE REF TO if_ixml_element,
 
               lo_ixml_pagesetup_elem      TYPE REF TO if_ixml_element,
+              lo_ixml_sheetpr             TYPE REF TO if_ixml_element,
+              lv_fit_to_page              TYPE string,
               ls_pagesetup                TYPE lty_page_setup,
 
               lo_ixml_columns             TYPE REF TO if_ixml_node_collection,
@@ -2787,10 +2719,13 @@ ENDMETHOD.</source>
     IF ls_column-max = zcl_excel_common=&gt;c_excel_sheet_max_col.     &quot; Max = very right column
       IF ls_column-hidden = 1     &quot; all hidden
         AND ls_column-min &gt; 0.
-       io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=&gt;convert_column2alpha( ls_column-min ).
+        io_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=&gt;convert_column2alpha( ls_column-min ).
       ELSEIF ls_column-style &gt; &apos;&apos;.
-* Set default style for remaining columns
-       io_worksheet-&gt;zif_excel_sheet_properties~set_style( dummy_zexcel_cell_style ).
+        sy-index = ls_column-style + 1.
+        READ TABLE styles INTO lo_excel_style INDEX sy-index.
+        dummy_zexcel_cell_style = lo_excel_style-&gt;get_guid( ).
+* Set style for remaining columns
+        io_worksheet-&gt;zif_excel_sheet_properties~set_style( dummy_zexcel_cell_style ).
       ENDIF.
     ENDIF.
 
@@ -2853,6 +2788,15 @@ ENDMETHOD.</source>
                                     io_ixml_worksheet = lo_ixml_worksheet
                                     io_worksheet      = io_worksheet ).
 
+* FitToPage
+  lo_ixml_sheetpr ?=  lo_ixml_worksheet-&gt;find_from_name( &apos;pageSetUpPr&apos; ).
+  IF lo_ixml_sheetpr IS BOUND.
+
+    lv_fit_to_page = lo_ixml_sheetpr-&gt;get_attribute_ns( &apos;fitToPage&apos; ).
+    IF lv_fit_to_page IS NOT INITIAL.
+      io_worksheet-&gt;sheet_setup-&gt;fit_to_page = &apos;X&apos;.
+    ENDIF.
+  ENDIF.
   &quot; Read in page setup
   lo_ixml_pagesetup_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;pageSetup&apos; ).
   IF lo_ixml_pagesetup_elem IS NOT INITIAL.
@@ -2862,7 +2806,21 @@ ENDMETHOD.</source>
                                    cp_structure = ls_pagesetup ).
     io_worksheet-&gt;sheet_setup-&gt;orientation = ls_pagesetup-orientation.
     io_worksheet-&gt;sheet_setup-&gt;scale = ls_pagesetup-scale.
+    IF io_worksheet-&gt;sheet_setup-&gt;fit_to_page = &apos;X&apos;.
+      IF ls_pagesetup-fittowidth IS NOT INITIAL.
+        io_worksheet-&gt;sheet_setup-&gt;fit_to_width = ls_pagesetup-fittowidth.
+      ELSE.
+        io_worksheet-&gt;sheet_setup-&gt;fit_to_width = 1.  &quot; Default if not given - Excel doesn&apos;t write this to xml
+      ENDIF.
+      IF ls_pagesetup-fittoheight IS NOT INITIAL.
+        io_worksheet-&gt;sheet_setup-&gt;fit_to_height = ls_pagesetup-fittoheight.
+      ELSE.
+        io_worksheet-&gt;sheet_setup-&gt;fit_to_height = 1. &quot; Default if not given - Excel doesn&apos;t write this to xml
+      ENDIF.
+    ENDIF.
   ENDIF.
+
+
 
   &quot; Read header footer
   lo_ixml_headerfooter_elem = lo_ixml_worksheet-&gt;find_from_name( &apos;headerFooter&apos; ).
@@ -2943,9 +2901,21 @@ ENDMETHOD.</source>
       lo_data_validation                   = io_worksheet-&gt;add_new_data_validation( ).
       lo_data_validation-&gt;type             = ls_datavalidation-type.
       lo_data_validation-&gt;allowblank       = ls_datavalidation-allowblank.
-      lo_data_validation-&gt;showinputmessage = ls_datavalidation-showinputmessage.
-      lo_data_validation-&gt;showerrormessage = ls_datavalidation-showerrormessage.
-      lo_data_validation-&gt;showdropdown     = ls_datavalidation-showdropdown.
+      IF ls_datavalidation-showinputmessage IS INITIAL.
+        lo_data_validation-&gt;showinputmessage = abap_false.
+      ELSE.
+        lo_data_validation-&gt;showinputmessage = abap_true.
+      ENDIF.
+      IF ls_datavalidation-showerrormessage IS INITIAL.
+        lo_data_validation-&gt;showerrormessage = abap_false.
+      ELSE.
+        lo_data_validation-&gt;showerrormessage = abap_true.
+      ENDIF.
+      IF ls_datavalidation-showdropdown IS INITIAL.
+        lo_data_validation-&gt;showdropdown = abap_false.
+      ELSE.
+        lo_data_validation-&gt;showdropdown = abap_true.
+      ENDIF.
       lo_data_validation-&gt;operator         = ls_datavalidation-operator.
       lo_data_validation-&gt;formula1         = ls_datavalidation-formula1.
       lo_data_validation-&gt;formula2         = ls_datavalidation-formula2.
@@ -2993,23 +2963,24 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formattings" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formattings" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>METHOD load_worksheet_cond_format.
 
-  DATA: lo_ixml_cond_formats TYPE REF TO if_ixml_node_collection,
-        lo_ixml_cond_format  TYPE REF TO if_ixml_element,
-        lo_ixml_iterator     TYPE REF TO if_ixml_node_iterator,
-*        lo_ixml_iterator2    TYPE REF TO if_ixml_node_iterator,
-*        lo_ixml              TYPE REF TO if_ixml_element,
-        lo_ixml_rule         TYPE REF TO if_ixml_element,
-*        lo_ixml_rule_iconset TYPE REF TO if_ixml_element,
-        lo_style_conditional TYPE REF TO zcl_excel_style_conditional.
+  DATA: lo_ixml_cond_formats  TYPE REF TO if_ixml_node_collection,
+        lo_ixml_cond_format   TYPE REF TO if_ixml_element,
+        lo_ixml_iterator      TYPE REF TO if_ixml_node_iterator,
+        lo_ixml_rules         TYPE REF TO if_ixml_node_collection,
+        lo_ixml_rule          TYPE REF TO if_ixml_element,
+        lo_ixml_iterator2     TYPE REF TO if_ixml_node_iterator,
+        lo_style_conditional  TYPE REF TO zcl_excel_style_conditional,
+        lo_style_conditional2 TYPE REF TO zcl_excel_style_conditional.
 
 
   DATA: lv_area           TYPE string,
+        lt_areas          TYPE STANDARD TABLE OF string WITH NON-UNIQUE DEFAULT KEY,
         lv_area_start_row TYPE zexcel_cell_row,
         lv_area_end_row   TYPE zexcel_cell_row,
         lv_area_start_col TYPE zexcel_cell_column_alpha,
@@ -3033,9 +3004,13 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
 * Get type of rule
 *--------------------------------------------------------------------*
-    lo_ixml_rule ?= lo_ixml_cond_format-&gt;get_first_child( ). &quot; = cfRule
-    IF lo_ixml_rule IS BOUND.
+    lo_ixml_rules       =  io_ixml_worksheet-&gt;get_elements_by_tag_name( name = &apos;cfRule&apos; ).
+    lo_ixml_iterator2   =  lo_ixml_rules-&gt;create_iterator( ).
+    lo_ixml_rule        ?= lo_ixml_iterator2-&gt;get_next( ).
+*    IF lo_ixml_rule IS BOUND.
+    WHILE lo_ixml_rule IS BOUND.
       lv_rule = lo_ixml_rule-&gt;get_attribute_ns( &apos;type&apos; ).
+      CLEAR lo_style_conditional.
 
 *--------------------------------------------------------------------*
 * Depending on ruletype get additional information
@@ -3084,28 +3059,53 @@ ENDMETHOD.</source>
 
         WHEN OTHERS.
       ENDCASE.
-    ENDIF.
+*    ENDIF.
 
-    IF     lo_style_conditional IS BOUND.
-      lo_style_conditional-&gt;rule      = lv_rule.
-      lo_style_conditional-&gt;priority  = lo_ixml_rule-&gt;get_attribute_ns( &apos;priority&apos; ).
+      IF     lo_style_conditional IS BOUND.
+        lo_style_conditional-&gt;rule      = lv_rule.
+        lo_style_conditional-&gt;priority  = lo_ixml_rule-&gt;get_attribute_ns( &apos;priority&apos; ).
 *--------------------------------------------------------------------*
 * Set area to which conditional formatting belongs
 *--------------------------------------------------------------------*
-      lv_area =  lo_ixml_cond_format-&gt;get_attribute_ns( &apos;sqref&apos; ).
-      zcl_excel_common=&gt;convert_range2column_a_row( EXPORTING
-                                                      i_range        = lv_area
-                                                    IMPORTING
-                                                      e_column_start = lv_area_start_col
-                                                      e_column_end   = lv_area_end_col
-                                                      e_row_start    = lv_area_start_row
-                                                      e_row_end      = lv_area_end_row   ).
-      lo_style_conditional-&gt;set_range( ip_start_column = lv_area_start_col
-                                       ip_stop_column  = lv_area_end_col
-                                       ip_start_row    = lv_area_start_row
-                                       ip_stop_row     = lv_area_end_row   ).
+        lv_area =  lo_ixml_cond_format-&gt;get_attribute_ns( &apos;sqref&apos; ).
+        SPLIT lv_area AT space INTO TABLE lt_areas.
+        DELETE lt_areas WHERE table_line IS INITIAL.
+        LOOP AT lt_areas INTO lv_area.
+*          IF sy-tabix = 1.  &quot; Add futher style for next area
+*            lo_style_conditional2 = lo_style_conditional.
+*          ELSE.
+*            lo_style_conditional2 = io_worksheet-&gt;add_new_conditional_style( ).
+*            lo_style_conditional2-&gt;mode_cellis          = lo_style_conditional-&gt;mode_cellis       .
+*            lo_style_conditional2-&gt;mode_colorscale      = lo_style_conditional-&gt;mode_colorscale   .
+*            lo_style_conditional2-&gt;mode_databar         = lo_style_conditional-&gt;mode_databar      .
+*            lo_style_conditional2-&gt;mode_expression      = lo_style_conditional-&gt;mode_expression   .
+*            lo_style_conditional2-&gt;mode_iconset         = lo_style_conditional-&gt;mode_iconset      .
+*            lo_style_conditional2-&gt;mode_top10           = lo_style_conditional-&gt;mode_top10        .
+*            lo_style_conditional2-&gt;mode_above_average   = lo_style_conditional-&gt;mode_above_average.
+*            lo_style_conditional2-&gt;priority             = lo_style_conditional-&gt;priority          .
+*            lo_style_conditional2-&gt;rule                 = lo_style_conditional-&gt;rule              .
+*          ENDIF.
 
-    ENDIF.
+          zcl_excel_common=&gt;convert_range2column_a_row( EXPORTING
+                                                          i_range        = lv_area
+                                                        IMPORTING
+                                                          e_column_start = lv_area_start_col
+                                                          e_column_end   = lv_area_end_col
+                                                          e_row_start    = lv_area_start_row
+                                                          e_row_end      = lv_area_end_row   ).
+*          lo_style_conditional2-&gt;set_range( ip_start_column = lv_area_start_col
+*                                            ip_stop_column  = lv_area_end_col
+*                                            ip_start_row    = lv_area_start_row
+*                                            ip_stop_row     = lv_area_end_row   ).
+          lo_style_conditional-&gt;add_range( ip_start_column = lv_area_start_col
+                                           ip_stop_column  = lv_area_end_col
+                                           ip_start_row    = lv_area_start_row
+                                           ip_stop_row     = lv_area_end_row   ).
+        ENDLOOP.
+
+      ENDIF.
+      lo_ixml_rule        ?= lo_ixml_iterator2-&gt;get_next( ).
+    ENDWHILE.
 
 
     lo_ixml_cond_format ?= lo_ixml_iterator-&gt;get_next( ).
@@ -3114,7 +3114,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_AA" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type above average" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_AA" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type above average" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_AA" SCONAME="IO_IXML_RULE" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_AA" SCONAME="IO_STYLE_CONDITIONAL" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
   <source>METHOD load_worksheet_cond_format_aa.
@@ -3167,7 +3167,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CI" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type cellIs" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CI" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type cellIs" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CI" SCONAME="IO_IXML_RULE" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CI" SCONAME="IO_STYLE_CONDITIONAL" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
   <source>METHOD load_worksheet_cond_format_ci.
@@ -3208,7 +3208,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CS" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type colorscale" EXPOSURE="1" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CS" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type colorscale" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CS" SCONAME="IO_IXML_RULE" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_CS" SCONAME="IO_STYLE_CONDITIONAL" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
   <source>METHOD load_worksheet_cond_format_cs.
@@ -3266,7 +3266,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_DB" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type databar" EXPOSURE="1" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_DB" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type databar" EXPOSURE="1" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_DB" SCONAME="IO_IXML_RULE" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_DB" SCONAME="IO_STYLE_CONDITIONAL" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
   <source>METHOD load_worksheet_cond_format_db.
@@ -3303,7 +3303,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_EX" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type expression" EXPOSURE="1" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_EX" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type expression" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_EX" SCONAME="IO_IXML_RULE" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_EX" SCONAME="IO_STYLE_CONDITIONAL" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
   <source>METHOD load_worksheet_cond_format_ex.
@@ -3341,7 +3341,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_IS" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type iconset" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_IS" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type iconset" EXPOSURE="1" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_IS" SCONAME="IO_IXML_RULE" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_IS" SCONAME="IO_STYLE_CONDITIONAL" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
   <source>METHOD load_worksheet_cond_format_is.
@@ -3388,7 +3388,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_T10" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type top10" EXPOSURE="1" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_T10" VERSION="1" LANGU="E" DESCRIPT="Load worksheet&apos;s conditional formatting - type top10" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_T10" SCONAME="IO_IXML_RULE" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_COND_FORMAT_T10" SCONAME="IO_STYLE_CONDITIONAL" VERSION="1" LANGU="E" DESCRIPT="Font Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE_CONDITIONAL"/>
   <source>METHOD load_worksheet_cond_format_t10.
@@ -3422,7 +3422,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Loads worksheet drawings" EXPOSURE="1" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_DRAWING" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -3541,7 +3541,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Loads hyperlinks of worksheet" EXPOSURE="1" STATE="1" EDITORDER="25 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Loads hyperlinks of worksheet" EXPOSURE="1" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_HYPERLINKS" SCONAME="IT_EXTERNAL_HYPERLINKS" VERSION="1" LANGU="E" DESCRIPT="Table with external hyperlinks" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="GTT_EXTERNAL_HYPERLINKS"/>
@@ -3615,7 +3615,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" VERSION="1" LANGU="E" DESCRIPT="Load pagebreaks of worksheet" EXPOSURE="1" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" VERSION="1" LANGU="E" DESCRIPT="Load pagebreaks of worksheet" EXPOSURE="1" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEBREAKS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -3684,7 +3684,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" VERSION="1" LANGU="E" DESCRIPT="Loads pagemargings of worksheet" EXPOSURE="1" STATE="1" EDITORDER="27 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" VERSION="1" LANGU="E" DESCRIPT="Loads pagemargings of worksheet" EXPOSURE="1" STATE="1" EDITORDER="25 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="IO_IXML_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="LOAD_WORKSHEET_PAGEMARGINS" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -3719,7 +3719,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="28 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD read_from_applserver.
@@ -3763,7 +3763,7 @@ ENDMETHOD.</source>
         binary_tab   = lt_binary_data.
   ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="29 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" VERSION="1" LANGU="E" DESCRIPT="Load excel data from local file" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_LOCAL_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
@@ -3823,7 +3823,7 @@ ENDMETHOD.</source>
 
   ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="30 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" VERSION="1" LANGU="E" DESCRIPT="Return path after ../ values are removed" EXPOSURE="1" STATE="1" EDITORDER="26 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="IP_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_PATH" SCONAME="RP_RESULT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
   <source>method RESOLVE_PATH.
@@ -3867,7 +3867,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_REFERENCED_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Resolve referenced formulae" EXPOSURE="1" STATE="1" EDITORDER="31 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="RESOLVE_REFERENCED_FORMULAE" VERSION="1" LANGU="E" DESCRIPT="Resolve referenced formulae" EXPOSURE="1" STATE="1" EDITORDER="27 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <source>method RESOLVE_REFERENCED_FORMULAE.
   TYPES:      BEGIN OF ty_referenced_cells,
                 sheet                         TYPE REF TO zcl_excel_worksheet,

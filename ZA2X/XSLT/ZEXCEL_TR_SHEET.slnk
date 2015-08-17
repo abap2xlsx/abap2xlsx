@@ -294,14 +294,14 @@
         &lt;/drawing&gt;
       &lt;/tt:cond&gt;
       &lt;tt:cond check=&quot;WORKSHEET.TABLES_COUNT != 0&quot;&gt;
-        &lt;mergeCells&gt;
+        &lt;tableParts&gt;
           &lt;tt:attribute name=&quot;count&quot; value-ref=&quot;WORKSHEET.TABLES_COUNT&quot; /&gt;
           &lt;tt:loop ref=&quot;WORKSHEET.TABLES&quot;&gt;
             &lt;tablePart&gt;
               &lt;tt:attribute name=&quot;r:id&quot; value-ref=&quot;R_ID&quot; /&gt;
             &lt;/tablePart&gt;
           &lt;/tt:loop&gt;
-        &lt;/mergeCells&gt;
+        &lt;/tableParts&gt;
       &lt;/tt:cond&gt;
     &lt;/worksheet&gt;
   &lt;/tt:template&gt;

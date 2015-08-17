@@ -256,10 +256,10 @@ CLASS lcl_output IMPLEMENTATION.
 
 
 
-    IF sy-calld = &apos;X&apos;.  &quot; no need to display anything if download was selected and report was called for demo purposes
+    IF sy-repid &lt;&gt; sy-cprog AND sy-cprog IS NOT INITIAL.  &quot; no need to display anything if download was selected and report was called for demo purposes
       LEAVE PROGRAM.
     ELSE.
-      MESSAGE &apos;Data transferred to default backend directory&apos; TYPE &apos;I&apos;.
+      MESSAGE &apos;Data transferred to default backend directory&apos; TYPE &apos;S&apos;.
     ENDIF.
   ENDMETHOD.                    &quot;download_backend
 
