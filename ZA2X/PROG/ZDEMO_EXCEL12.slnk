@@ -16,14 +16,14 @@
 
 REPORT  zdemo_excel12.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime,
-      row_dimension           TYPE REF TO zcl_excel_worksheet_rowdimensi.
+DATA: lo_excel         TYPE REF TO zcl_excel,
+      lo_worksheet     TYPE REF TO zcl_excel_worksheet,
+      column_dimension TYPE REF TO zcl_excel_worksheet_columndime,
+      row_dimension    TYPE REF TO zcl_excel_worksheet_rowdimensi.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+DATA: lv_file      TYPE xstring,
+      lv_bytecount TYPE i,
+      lt_file_tab  TYPE solix_tab.
 
 DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
@@ -115,6 +115,10 @@ START-OF-SELECTION.
 * Hint:  the order you create the outlines can be arbitrary
 *        You can start with inner outlines or with outer outlines
 
+*--------------------------------------------------------------------*
+* Hide columns right of column M
+*--------------------------------------------------------------------*
+  lo_worksheet-&gt;zif_excel_sheet_properties~hide_columns_from = &apos;M&apos;.
 
 *** Create output
   lcl_output=&gt;output( lo_excel ).</source>

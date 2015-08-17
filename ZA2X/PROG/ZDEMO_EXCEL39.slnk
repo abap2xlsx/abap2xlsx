@@ -19,21 +19,22 @@
 
 REPORT  zdemo_excel39.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_drawing              TYPE REF TO zcl_excel_drawing.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_drawing   TYPE REF TO zcl_excel_drawing.
 
 DATA lv_value TYPE i.
 
 DATA: ls_io TYPE skwf_io.
 
-DATA: ls_upper  TYPE zexcel_drawing_location,
-      ls_lower  TYPE zexcel_drawing_location.
+DATA: ls_upper TYPE zexcel_drawing_location,
+      ls_lower TYPE zexcel_drawing_location.
 
-DATA lo_bar1  TYPE REF TO zcl_excel_graph_bars.
-DATA lo_bar2 TYPE REF TO zcl_excel_graph_bars.
-DATA lo_pie  TYPE REF TO zcl_excel_graph_pie.
-DATA lo_line TYPE REF TO zcl_excel_graph_line.
+DATA: lo_bar1         TYPE REF TO zcl_excel_graph_bars,
+      lo_bar1_stacked TYPE REF TO zcl_excel_graph_bars,
+      lo_bar2         TYPE REF TO zcl_excel_graph_bars,
+      lo_pie          TYPE REF TO zcl_excel_graph_pie,
+      lo_line         TYPE REF TO zcl_excel_graph_line.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE &apos;39_Charts.xlsx&apos;.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -81,8 +82,8 @@ START-OF-SELECTION.
 
   CALL METHOD lo_bar1-&gt;create_ax
     EXPORTING
-*     ip_axid          =
-      ip_type          = zcl_excel_graph_bars=&gt;c_catax
+*     ip_axid =
+      ip_type = zcl_excel_graph_bars=&gt;c_catax
 *     ip_orientation   =
 *     ip_delete        =
 *     ip_axpos         =
@@ -93,7 +94,7 @@ START-OF-SELECTION.
 *     ip_ticklblpos    =
 *     ip_crossax       =
 *     ip_crosses       =
-*     ip_auto          =
+*     ip_auto =
 *     ip_lblalgn       =
 *     ip_lbloffset     =
 *     ip_nomultilvllbl =
@@ -102,8 +103,8 @@ START-OF-SELECTION.
 
   CALL METHOD lo_bar1-&gt;create_ax
     EXPORTING
-*     ip_axid          =
-      ip_type          = zcl_excel_graph_bars=&gt;c_valax
+*     ip_axid =
+      ip_type = zcl_excel_graph_bars=&gt;c_valax
 *     ip_orientation   =
 *     ip_delete        =
 *     ip_axpos         =
@@ -114,7 +115,7 @@ START-OF-SELECTION.
 *     ip_ticklblpos    =
 *     ip_crossax       =
 *     ip_crosses       =
-*     ip_auto          =
+*     ip_auto =
 *     ip_lblalgn       =
 *     ip_lbloffset     =
 *     ip_nomultilvllbl =
@@ -126,6 +127,43 @@ START-OF-SELECTION.
 
   &quot; Set label to none
   lo_bar1-&gt;set_print_lbl( zcl_excel_graph_bars=&gt;c_show_false ).
+
+* Same barchart - but this time stacked
+  CREATE OBJECT lo_bar1_stacked.
+
+  CALL METHOD lo_bar1_stacked-&gt;create_serie
+    EXPORTING
+      ip_order            = 0
+      ip_invertifnegative = zcl_excel_graph_bars=&gt;c_invertifnegative_no
+      ip_lbl              = &apos;Values!$D$1:$D$3&apos;
+      ip_ref              = &apos;Values!$C$1:$C$3&apos;
+      ip_sername          = &apos;My serie 1&apos;.
+
+  CALL METHOD lo_bar1_stacked-&gt;create_serie
+    EXPORTING
+      ip_order            = 1
+      ip_invertifnegative = zcl_excel_graph_bars=&gt;c_invertifnegative_no
+      ip_lbl              = &apos;Values!$B$1:$B$3&apos;
+      ip_ref              = &apos;Values!$A$1:$A$3&apos;
+      ip_sername          = &apos;My serie 2&apos;.
+
+  CALL METHOD lo_bar1_stacked-&gt;create_ax
+    EXPORTING
+      ip_type = zcl_excel_graph_bars=&gt;c_catax .
+
+  CALL METHOD lo_bar1_stacked-&gt;create_ax
+    EXPORTING
+      ip_type = zcl_excel_graph_bars=&gt;c_valax.
+
+  &quot; Set style
+  lo_bar1_stacked-&gt;set_style( zcl_excel_graph=&gt;c_style_default ).
+
+  &quot; Set label to none
+  lo_bar1_stacked-&gt;set_print_lbl( zcl_excel_graph_bars=&gt;c_show_false ).
+
+  &quot; Make it stacked
+  lo_bar1_stacked-&gt;ns_groupingval = zcl_excel_graph_bars=&gt;c_groupingval_stacked.
+
 
   &quot; Create a bar chart, series and axes
   CREATE OBJECT lo_bar2.
@@ -140,8 +178,8 @@ START-OF-SELECTION.
 
   CALL METHOD lo_bar2-&gt;create_ax
     EXPORTING
-*     ip_axid          =
-      ip_type          = zcl_excel_graph_bars=&gt;c_catax
+*     ip_axid =
+      ip_type = zcl_excel_graph_bars=&gt;c_catax
 *     ip_orientation   =
 *     ip_delete        =
 *     ip_axpos         =
@@ -152,7 +190,7 @@ START-OF-SELECTION.
 *     ip_ticklblpos    =
 *     ip_crossax       =
 *     ip_crosses       =
-*     ip_auto          =
+*     ip_auto =
 *     ip_lblalgn       =
 *     ip_lbloffset     =
 *     ip_nomultilvllbl =
@@ -161,8 +199,8 @@ START-OF-SELECTION.
 
   CALL METHOD lo_bar2-&gt;create_ax
     EXPORTING
-*     ip_axid          =
-      ip_type          = zcl_excel_graph_bars=&gt;c_valax
+*     ip_axid =
+      ip_type = zcl_excel_graph_bars=&gt;c_valax
 *     ip_orientation   =
 *     ip_delete        =
 *     ip_axpos         =
@@ -173,7 +211,7 @@ START-OF-SELECTION.
 *     ip_ticklblpos    =
 *     ip_crossax       =
 *     ip_crosses       =
-*     ip_auto          =
+*     ip_auto =
 *     ip_lblalgn       =
 *     ip_lbloffset     =
 *     ip_nomultilvllbl =
@@ -220,8 +258,8 @@ START-OF-SELECTION.
 
   CALL METHOD lo_line-&gt;create_ax
     EXPORTING
-*     ip_axid          =
-      ip_type          = zcl_excel_graph_line=&gt;c_catax
+*     ip_axid =
+      ip_type = zcl_excel_graph_line=&gt;c_catax
 *     ip_orientation   =
 *     ip_delete        =
 *     ip_axpos         =
@@ -230,7 +268,7 @@ START-OF-SELECTION.
 *     ip_ticklblpos    =
 *     ip_crossax       =
 *     ip_crosses       =
-*     ip_auto          =
+*     ip_auto =
 *     ip_lblalgn       =
 *     ip_lbloffset     =
 *     ip_nomultilvllbl =
@@ -239,8 +277,8 @@ START-OF-SELECTION.
 
   CALL METHOD lo_line-&gt;create_ax
     EXPORTING
-*     ip_axid          =
-      ip_type          = zcl_excel_graph_line=&gt;c_valax
+*     ip_axid =
+      ip_type = zcl_excel_graph_line=&gt;c_valax
 *     ip_orientation   =
 *     ip_delete        =
 *     ip_axpos         =
@@ -251,7 +289,7 @@ START-OF-SELECTION.
 *     ip_ticklblpos    =
 *     ip_crossax       =
 *     ip_crosses       =
-*     ip_auto          =
+*     ip_auto =
 *     ip_lblalgn       =
 *     ip_lbloffset     =
 *     ip_nomultilvllbl =
@@ -309,6 +347,28 @@ START-OF-SELECTION.
   ls_upper-col = 11.
   ls_lower-row = 22.
   ls_lower-col = 21.
+  lo_drawing-&gt;set_position2(
+    EXPORTING
+      ip_from   = ls_upper
+      ip_to     = ls_lower ).
+
+  lo_drawing-&gt;set_media(
+    EXPORTING
+      ip_media_type = zcl_excel_drawing=&gt;c_media_type_xml ).
+
+  lo_worksheet-&gt;add_drawing( lo_drawing ).
+
+  lo_drawing = lo_worksheet-&gt;excel-&gt;add_new_drawing(
+                    ip_type  = zcl_excel_drawing=&gt;type_chart
+                    ip_title = &apos;Stacked CHART BARS WITH 2 SER.&apos; ).
+  lo_drawing-&gt;graph = lo_bar1_stacked.
+  lo_drawing-&gt;graph_type = zcl_excel_drawing=&gt;c_graph_bars.
+
+  &quot;Set chart position (anchor 2 cells)
+  ls_upper-row = 0.
+  ls_upper-col = 1.
+  ls_lower-row = 22.
+  ls_lower-col = 10.
   lo_drawing-&gt;set_position2(
     EXPORTING
       ip_from   = ls_upper

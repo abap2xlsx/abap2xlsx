@@ -221,14 +221,14 @@ CLASS lcl_perform IMPLEMENTATION.
       ENDIF.
     ENDIF.
     IF add_selopt IS INITIAL.
-      SUBMIT (wa_report-progname) AND RETURN
+      SUBMIT (wa_report-progname) AND RETURN                        &quot;#EC CI_SUBMIT
               WITH p_backfn = filename
               WITH rb_back  = &apos;X&apos;
               WITH rb_down  = &apos; &apos;
               WITH rb_send  = &apos; &apos;
               WITH rb_show  = &apos; &apos;.
     ELSE.
-      SUBMIT (wa_report-progname) VIA SELECTION-SCREEN AND RETURN
+      SUBMIT (wa_report-progname) VIA SELECTION-SCREEN AND RETURN   &quot;#EC CI_SUBMIT
               WITH p_backfn = filename
               WITH rb_back  = &apos;X&apos;
               WITH rb_down  = &apos; &apos;

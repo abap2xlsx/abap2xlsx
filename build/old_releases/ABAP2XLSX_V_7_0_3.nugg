@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<nugget name="C:/Users/Ivan/Dropbox/GitHub/abap2xlsx/build/ABAP2XLSX_V_7_0_2.nugg">
+<nugget name="C:/Users/Ivan/Dropbox/GitHub/abap2xlsx/build/ABAP2XLSX_V_7_0_3.nugg">
  <CLAS CLSNAME="ZCL_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
   <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_VBA_PROJECT" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
   <implementing CLSNAME="ZCL_EXCEL" REFCLSNAME="ZIF_EXCEL_BOOK_PROTECTION" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="0 "/>
@@ -10361,6 +10361,7 @@ ENDMETHOD.</source>
            lo_node_fill_child                 TYPE REF TO if_ixml_element,
            lo_node_bgcolor                    TYPE REF TO if_ixml_element,
            lo_node_fgcolor                    TYPE REF TO if_ixml_element,
+           lo_node_stop                       TYPE REF TO if_ixml_element,
            lo_fill                            TYPE REF TO zcl_excel_style_fill,
            ls_color                           TYPE t_color.
 
@@ -10439,7 +10440,60 @@ ENDMETHOD.</source>
 * gradientFill
 *--------------------------------------------------------------------*
       WHEN &apos;gradientFill&apos;.
-        &quot; 2do§1   Support gradientFill
+       lo_fill-&gt;gradtype-type   = lo_node_fill_child-&gt;get_attribute( &apos;type&apos; ).
+       lo_fill-&gt;gradtype-top    = lo_node_fill_child-&gt;get_attribute( &apos;top&apos; ).
+       lo_fill-&gt;gradtype-left   = lo_node_fill_child-&gt;get_attribute( &apos;left&apos; ).
+       lo_fill-&gt;gradtype-right  = lo_node_fill_child-&gt;get_attribute( &apos;right&apos; ).
+       lo_fill-&gt;gradtype-bottom = lo_node_fill_child-&gt;get_attribute( &apos;bottom&apos; ).
+       lo_fill-&gt;gradtype-degree = lo_node_fill_child-&gt;get_attribute( &apos;degree&apos; ).
+       free lo_node_stop.
+       lo_node_stop ?= lo_node_fill_child-&gt;find_from_name( &apos;stop&apos; ).
+       while lo_node_stop is bound.
+         if lo_fill-&gt;gradtype-position1 is initial.
+            lo_fill-&gt;gradtype-position1 = lo_node_stop-&gt;get_attribute( &apos;position&apos; ).
+            lo_node_bgcolor = lo_node_stop-&gt;find_from_name( &apos;color&apos; ).
+            IF lo_node_bgcolor IS BOUND.
+               fill_struct_from_attributes( EXPORTING
+                                               ip_element   = lo_node_bgcolor
+                                             CHANGING
+                                               cp_structure = ls_color ).
+
+                lo_fill-&gt;bgcolor-rgb = ls_color-rgb.
+                IF ls_color-indexed IS NOT INITIAL.
+                  lo_fill-&gt;bgcolor-indexed = ls_color-indexed.
+                ENDIF.
+
+                IF ls_color-theme IS NOT INITIAL.
+                  lo_fill-&gt;bgcolor-theme = ls_color-theme.
+                ENDIF.
+                lo_fill-&gt;bgcolor-tint = ls_color-tint.
+            ENDIF.
+         elseif lo_fill-&gt;gradtype-position2 is initial.
+            lo_fill-&gt;gradtype-position2 = lo_node_stop-&gt;get_attribute( &apos;position&apos; ).
+            lo_node_fgcolor = lo_node_stop-&gt;find_from_name( &apos;color&apos; ).
+            IF lo_node_fgcolor IS BOUND.
+              fill_struct_from_attributes( EXPORTING
+                                             ip_element   = lo_node_fgcolor
+                                           CHANGING
+                                             cp_structure = ls_color ).
+
+              lo_fill-&gt;fgcolor-rgb = ls_color-rgb.
+              IF ls_color-indexed IS NOT INITIAL.
+                lo_fill-&gt;fgcolor-indexed = ls_color-indexed.
+              ENDIF.
+
+              IF ls_color-theme IS NOT INITIAL.
+                lo_fill-&gt;fgcolor-theme = ls_color-theme.
+              ENDIF.
+              lo_fill-&gt;fgcolor-tint = ls_color-tint.
+            ENDIF.
+          elseif lo_fill-&gt;gradtype-position3 is initial.
+                lo_fill-&gt;gradtype-position3 = lo_node_stop-&gt;get_attribute( &apos;position&apos; ).
+                &quot;BGColor is filled already with position 1 no need to check again
+          endif.
+
+           lo_node_stop ?= lo_node_stop-&gt;get_next( ).
+        ENDWHILE.
 
       WHEN OTHERS.
 
@@ -14059,6 +14113,7 @@ ENDMETHOD.</source>
   <method CLSNAME="ZCL_EXCEL_STYLE_FILL" CMPNAME="BUILD_GRADIENT" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
    <source>method build_gradient.
     check check_filltype_is_gradient( ) eq abap_true.
+    clear gradtype.
     case filltype.
       when c_fill_gradient_horizontal90.
         gradtype-degree = &apos;90&apos;.
@@ -27394,7 +27449,6 @@ ENDMETHOD.</source>
   endmethod.</source>
   </interfaceMethod>
  </CLAS>
- <DEVC DEVCLASS="ZABAP2XLSX" CTEXT="abap2xlsx" LANGUAGE="E" MASTERLANG="E" KORRFLAG="X" PDEVCLASS="ZHVE" DLVUNIT="HOME" NAMESPACE="/0CUST/" PARENTCL="ZT3G_NW_DEV" CREATED_BY="FEMIA" CREATED_ON="20140905" CHANGED_BY="FEMIA" CHANGED_ON="20141226" PROJECT_GUID="00000000000000000000000000000000"/>
  <DOMA DOMNAME="ZEXCEL_BOOLE01" DDLANGUAGE="E" DATATYPE="CHAR" LENG="000001" OUTPUTLEN="000001" DECIMALS="000000" VALEXI="X" MASKLEN="0000" DDTEXT="XML Schema bool data type" AUTHCLASS="00" OUTPUTSTYLE="00">
   <dd07v DOMNAME="ZEXCEL_BOOLE01" VALPOS="0001" DDLANGUAGE="E" DOMVALUE_L="1" DDTEXT="True"/>
   <dd07v DOMNAME="ZEXCEL_BOOLE01" VALPOS="0002" DDLANGUAGE="E" DOMVALUE_L="0" DDTEXT="False"/>
@@ -40948,11 +41002,12 @@ CONSTANTS: lv_default_file_name TYPE string VALUE &apos;TechEd01.xlsx&apos;.
   <dd42v TYPENAME="ZEXCEL_T_STYLE_BORDER" KEYFDPOS="0012" ROWTYPEPOS="0032" KEYFIELD="DIAGONALDOWN"/>
  </TTYP>
  <TTYP TYPENAME="ZEXCEL_T_STYLE_COLOR_ARGB" DDLANGUAGE="E" ROWTYPE="ZEXCEL_STYLE_COLOR_ARGB" ROWKIND="E" DATATYPE="CHAR" LENG="000008" DECIMALS="000000" ACCESSMODE="T" KEYDEF="D" KEYKIND="N" KEYFDCOUNT="0000" DDTEXT="Table of  RGB colors" TYPELEN="000008" CTLENG="000000" CTDECIMALS="000000" OCCURS="00000"/>
- <TTYP TYPENAME="ZEXCEL_T_STYLE_FILL" DDLANGUAGE="E" ROWTYPE="ZEXCEL_S_STYLE_FILL" ROWKIND="S" DATATYPE="STRU" LENG="000000" DECIMALS="000000" ACCESSMODE="T" KEYDEF="K" KEYKIND="N" KEYFDCOUNT="0004" DDTEXT="Cell Fills" TYPELEN="000200" CTLENG="000000" CTDECIMALS="000000" OCCURS="00000">
+ <TTYP TYPENAME="ZEXCEL_T_STYLE_FILL" DDLANGUAGE="E" ROWTYPE="ZEXCEL_S_STYLE_FILL" ROWKIND="S" DATATYPE="STRU" LENG="000000" DECIMALS="000000" ACCESSMODE="T" KEYDEF="K" KEYKIND="N" KEYFDCOUNT="0005" DDTEXT="Cell Fills" TYPELEN="000200" CTLENG="000000" CTDECIMALS="000000" OCCURS="00000">
   <dd42v TYPENAME="ZEXCEL_T_STYLE_FILL" KEYFDPOS="0001" ROWTYPEPOS="0001" KEYFIELD="FILLTYPE"/>
   <dd42v TYPENAME="ZEXCEL_T_STYLE_FILL" KEYFDPOS="0002" ROWTYPEPOS="0002" KEYFIELD="ROTATION"/>
   <dd42v TYPENAME="ZEXCEL_T_STYLE_FILL" KEYFDPOS="0003" ROWTYPEPOS="0003" KEYFIELD="FGCOLOR"/>
   <dd42v TYPENAME="ZEXCEL_T_STYLE_FILL" KEYFDPOS="0004" ROWTYPEPOS="0008" KEYFIELD="BGCOLOR"/>
+  <dd42v TYPENAME="ZEXCEL_T_STYLE_FILL" KEYFDPOS="0005" ROWTYPEPOS="0013" KEYFIELD="GRADTYPE"/>
  </TTYP>
  <TTYP TYPENAME="ZEXCEL_T_STYLE_FONT" DDLANGUAGE="E" ROWTYPE="ZEXCEL_S_STYLE_FONT" ROWKIND="S" DATATYPE="STRU" LENG="000000" DECIMALS="000000" ACCESSMODE="T" KEYDEF="K" KEYKIND="N" KEYFDCOUNT="0010" DDTEXT="Table type for styles ZEXCEL_S_STYLE_FONT" TYPELEN="000640" CTLENG="000000" CTDECIMALS="000000" OCCURS="00000">
   <dd42v TYPENAME="ZEXCEL_T_STYLE_FONT" KEYFDPOS="0001" ROWTYPEPOS="0001" KEYFIELD="BOLD"/>

@@ -86,6 +86,7 @@ class lcl_test definition for testing  &quot; #AU Risk_Level Harmless
       test_style_missing for testing,
       test_formula for testing,
       test_read_shared_strings for testing,
+      test_shared_string_some_empty for testing,
       test_skip_to_inexistent for testing,
       get_reader importing iv_xml type string returning value(eo_reader) type ref to if_sxml_reader,
       assert_value_equals importing iv_row type i default 1 iv_col type i default 1 iv_value type string,
@@ -262,6 +263,31 @@ class lcl_test implementation.
   endmethod.
 
 *
+  method test_shared_string_some_empty.
+    data: lo_reader type ref to if_sxml_reader,
+          lt_act type stringtab,
+          lt_exp type stringtab.
+    lo_reader = cl_sxml_string_reader=&gt;create( cl_abap_codepage=&gt;convert_to(
+      `&lt;sst&gt;&lt;si&gt;&lt;t/&gt;&lt;/si&gt;` &amp;
+      `&lt;si&gt;&lt;t&gt;Alpha&lt;/t&gt;&lt;/si&gt;` &amp;
+      `&lt;si&gt;&lt;t/&gt;&lt;/si&gt;` &amp;
+      `&lt;si&gt;&lt;t&gt;Bravo&lt;/t&gt;&lt;/si&gt;&lt;/sst&gt;`
+      ) ).
+    append :
+     `` to lt_exp,
+     `Alpha` to lt_exp,
+     ``      to lt_exp,
+     `Bravo` to lt_exp.
+
+    lt_act = out-&gt;read_shared_strings( lo_reader ).
+
+    assert_equals( act = lt_act
+                   exp = lt_exp ).
+
+  endmethod.
+
+
+*
   method test_skip_to_inexistent.
     data: lo_c2x type ref to cl_abap_conv_out_ce,
           lv_xstring type xstring,
@@ -359,13 +385,16 @@ class lcl_test implementation.
         ip_excel = excel.
   endmethod.                    &quot;setup
 endclass.                    &quot;lcl_test IMPLEMENTATION</localTestClasses>
+ <textPool>
+  <language SPRAS="E"/>
+ </textPool>
  <typeIntfDef CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" TYPEGROUP="IF_SXML_NODE" VERSION="1" TPUTYPE="2" IMPLICIT="X"/>
- <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ATTRIBUTE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ATTRIBUTE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ELEMENT_CLOSE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_CLOSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ELEMENT_OPEN" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_OPEN" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_END_OF_STREAM" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_FINAL" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_NODE_VALUE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="6 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_VALUE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GS_BUFFER_STYLE" VERSION="1" LANGU="E" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="26 " SRCCOLUMN1="4 " SRCROW2="29 " SRCCOLUMN2="25 " TYPESRC_LENG="117 " TYPESRC="begin of gs_buffer_style,
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ATTRIBUTE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ATTRIBUTE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ELEMENT_CLOSE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="3 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_CLOSE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_ELEMENT_OPEN" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="2 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_ELEMENT_OPEN" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_END_OF_STREAM" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_FINAL" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="C_NODE_VALUE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="6 " ATTDECLTYP="2" ATTVALUE="IF_SXML_NODE=&gt;CO_NT_VALUE" ATTEXPVIRT="0" TYPTYPE="1" TYPE="IF_SXML_NODE=&gt;NODE_TYPE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="GS_BUFFER_STYLE" VERSION="1" LANGU="D" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="4" SRCROW1="25 " SRCCOLUMN1="4 " SRCROW2="28 " SRCCOLUMN2="25 " TYPESRC_LENG="117 " TYPESRC="begin of gs_buffer_style,
 
     index type i value -1,
 
@@ -519,13 +548,21 @@ endmethod.</source>
  <method CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Reads the XML file containing the shared strings" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_SHARED_STRINGS" SCONAME="IO_READER" VERSION="1" LANGU="E" DESCRIPT="sXML reader" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_SXML_READER"/>
   <parameter CLSNAME="ZCL_EXCEL_READER_HUGE_FILE" CMPNAME="READ_SHARED_STRINGS" SCONAME="ET_SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Table with Strings" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="STRINGTAB"/>
-  <source>method READ_SHARED_STRINGS.
+  <source>method read_shared_strings.
+
+  data lv_value type string.
 
   while io_reader-&gt;node_type ne c_end_of_stream.
     io_reader-&gt;next_node( ).
-    if io_reader-&gt;node_type eq c_element_close and
-       io_reader-&gt;name eq `t`.
-      append io_reader-&gt;value to et_shared_strings.
+    if io_reader-&gt;name eq `t`.
+      case io_reader-&gt;node_type .
+        when c_element_open .
+          clear lv_value .
+        when c_node_value .
+          lv_value = lv_value &amp;&amp; io_reader-&gt;value .
+        when c_element_close .
+          append lv_value to et_shared_strings.
+      endcase .
     endif.
   endwhile.
 
