@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" LANGU="E" DESCRIPT="ALV grid interface implementation" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSABSTRCT="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+<CLAS CLSNAME="ZCL_EXCEL_CONVERTER_ALV" VERSION="1" LANGU="E" DESCRIPT="ALV grid interface implementation" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSABSTRCT="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " ZSAPLINK_PLUGIN_MAJOR_VERSION="0 " ZSAPLINK_PLUGIN_MINOR_VERSION="1 " ZSAPLINK_PLUGIN_BUILD_VERSION="0 " ZSAPLINK_PLUGIN_INFO1="ZSAPLINK_CLASS is part of the main ZSAPLINK project --&gt; This plugin found there instead of ZSAPLINK_PLUGINS projects" ZSAPLINK_PLUGIN_INFO2="SAPLINK homepage: https://www.assembla.com/spaces/saplink/wiki" ZSAPLINK_PLUGIN_INFO3="Download from https://www.assembla.com/code/saplink/subversion/nodes" ZSAPLINK_PLUGIN_INFO4="and navigate to:  trunk -&gt; core -&gt; ZSAPLINK -&gt; CLAS -&gt; ZSAPLINK_CLASS.slnk">
  <implementing CLSNAME="ZCL_EXCEL_CONVERTER_ALV" REFCLSNAME="ZIF_EXCEL_CONVERTER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" IMPABSTRCT="X" EDITORDER="0 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
@@ -285,7 +285,9 @@ TYPES: BEGIN OF ts_col_converter,
                  &lt;fs_stab&gt; TYPE ANY,
                  &lt;fs&gt;      TYPE ANY,
                  &lt;fs_tcol&gt;  TYPE lvc_t_scol,
-                 &lt;fs_scol&gt;  TYPE lvc_s_scol.
+                 &lt;fs_scol&gt;  TYPE lvc_s_scol,
+                 &lt;ft_slis&gt; type standard table,
+                 &lt;fs_slis&gt; type any.
 
 * Loop trough the table to set the color properties of each line. The color properties field is
 * Char 4 and the characters is set as follows:
@@ -320,24 +322,50 @@ TYPES: BEGIN OF ts_col_converter,
           ENDIF.
         ENDIF.
       ENDIF.
-      IF ws_layo-ctab_fname IS NOT INITIAL.
-        ASSIGN COMPONENT ws_layo-ctab_fname OF STRUCTURE &lt;fs_stab&gt; TO &lt;fs_tcol&gt;.
-        IF sy-subrc = 0.
-          LOOP AT &lt;fs_tcol&gt; ASSIGNING &lt;fs_scol&gt;.
-            READ TABLE wt_colors INTO ls_color WITH TABLE KEY col = &lt;fs_scol&gt;-color-col
-                                                              int = &lt;fs_scol&gt;-color-int
-                                                              inv = &lt;fs_scol&gt;-color-inv.
-            IF sy-subrc = 0.
-              ls_con_col-rownumber  = l_line.
-              ls_con_col-columnname = &lt;fs_scol&gt;-fname.
-              ls_con_col-fontcolor  = ls_color-fontcolor.
-              ls_con_col-fillcolor  = ls_color-fillcolor.
-              ls_con_col-nokeycol	  = &lt;fs_scol&gt;-nokeycol.
-              INSERT ls_con_col INTO TABLE et_colors.
-            ENDIF.
-          ENDLOOP.
-        ENDIF.
-      ENDIF.
+      if ws_layo-ctab_fname is not initial.
+
+        assign component ws_layo-ctab_fname of structure &lt;fs_stab&gt; to &lt;ft_slis&gt;.
+        if sy-subrc = 0.
+          loop at &lt;ft_slis&gt; assigning &lt;fs_slis&gt;.
+            assign component &apos;COLOR&apos; of structure &lt;fs_slis&gt; to &lt;fs&gt;.
+            if sy-subrc = 0.
+              if &lt;fs&gt; is not initial.
+                field-symbols: &lt;col&gt; type any,
+                               &lt;int&gt; type any,
+                               &lt;inv&gt; type any,
+                               &lt;fname&gt; type any,
+                               &lt;nokeycol&gt; type any.
+                assign component &apos;COL&apos; of structure &lt;fs&gt; to &lt;col&gt;.
+                assign component &apos;INT&apos; of structure &lt;fs&gt; to &lt;int&gt;.
+                assign component &apos;INV&apos; of structure &lt;fs&gt; to &lt;inv&gt;.
+                read table wt_colors into ls_color with table key col = &lt;col&gt;
+                                                                  int = &lt;int&gt;
+                                                                  inv = &lt;inv&gt;.
+                if sy-subrc = 0.
+                  ls_con_col-rownumber  = l_line.
+                  assign component &apos;FNAME&apos; of structure &lt;fs_slis&gt; to &lt;fname&gt;.
+                  if sy-subrc ne 0.
+                    assign component &apos;FIELDNAME&apos; of structure &lt;fs_slis&gt; to &lt;fname&gt;.
+                    if sy-subrc eq 0.
+                      ls_con_col-columnname = &lt;fname&gt;.
+                    endif.
+                  else.
+                    ls_con_col-columnname = &lt;fname&gt;.
+                  endif.
+
+                  ls_con_col-fontcolor  = ls_color-fontcolor.
+                  ls_con_col-fillcolor  = ls_color-fillcolor.
+                  assign component &apos;NOKEYCOL&apos; of structure &lt;fs_slis&gt; to &lt;nokeycol&gt;.
+                  if sy-subrc eq 0.
+                    ls_con_col-nokeycol   = &lt;nokeycol&gt;.
+                  endif.
+                  insert ls_con_col into table et_colors.
+                endif.
+              endif.
+            endif.
+          endloop.
+        endif.
+      endif.
     ENDLOOP.
   ENDIF.
   endmethod.</source>
