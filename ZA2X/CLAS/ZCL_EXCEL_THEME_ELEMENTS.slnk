@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CLAS CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" VERSION="1" LANGU="E" DESCRIPT="Theme Elements" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" WITH_UNIT_TESTS="X" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <friends CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" REFCLSNAME="ZCL_EXCEL_THEME" FRIENDTYPE="0" VERSION="1" STATE="1"/>
+ <localImplementation>*&quot;* use this source file for the definition and implementation of
+*&quot;* local helper classes, interface definitions and type
+*&quot;* declarations</localImplementation>
+ <localTypes>*&quot;* use this source file for any type of declarations (class
+*&quot;* definitions, interfaces or type declarations) you need for
+*&quot;* components in the private section</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <localTestClasses>*&quot;* use this source file for your ABAP unit test classes</localTestClasses>
+ <attribute CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="COLOR_SCHEME" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_THEME_COLOR_SCHEME" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="C_COLOR_SCHEME" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;clrScheme&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="C_FMT_SCHEME" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " ATTDECLTYP="2" ATTVALUE="&apos;fmtScheme&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="C_FONT_SCHEME" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " ATTDECLTYP="2" ATTVALUE="&apos;fontScheme&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="C_THEME_ELEMENTS" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " ATTDECLTYP="2" ATTVALUE="&apos;themeElements&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="FMT_SCHEME" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="3 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_THEME_FMT_SCHEME" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="FONT_SCHEME" VERSION="1" LANGU="E" EXPOSURE="1" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL_THEME_FONT_SCHEME" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="BUILD_XML" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="BUILD_XML" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <source>method build_xml.
+    data: lo_theme_element type ref to if_ixml_element.
+    data: lo_theme type ref to if_ixml_element.
+    check io_document is bound.
+    lo_theme ?= io_document-&gt;get_root_element( )..
+    if lo_theme is bound.
+      lo_theme_element ?= io_document-&gt;create_simple_element_ns( prefix = zcl_excel_theme=&gt;c_theme_prefix
+                                                                 name   = c_theme_elements
+                                                              parent = lo_theme ).
+
+      color_scheme-&gt;build_xml( io_document = io_document ).
+      font_scheme-&gt;build_xml( io_document = io_document ).
+      fmt_scheme-&gt;build_xml( io_document = io_document ).
+    endif.
+  endmethod.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="CONSTRUCTOR" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="2" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method constructor.
+    create object color_scheme.
+    create object font_scheme.
+    create object fmt_scheme.
+  endmethod.                    &quot;constructor</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="LOAD" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_THEME_ELEMENTS" CMPNAME="LOAD" SCONAME="IO_ELEMENTS" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
+  <source>method load.
+    data: lo_elements_children type ref to if_ixml_node_list.
+    data: lo_elements_iterator type ref to if_ixml_node_iterator.
+    data: lo_elements_element type ref to if_ixml_element.
+    check io_elements is not initial.
+
+    lo_elements_children = io_elements-&gt;get_children( ).
+    lo_elements_iterator = lo_elements_children-&gt;create_iterator( ).
+    lo_elements_element ?= lo_elements_iterator-&gt;get_next( ).
+    while lo_elements_element is bound.
+      case lo_elements_element-&gt;get_name( ).
+        when c_color_scheme.
+            color_scheme-&gt;load( io_color_scheme = lo_elements_element ).
+        when c_font_scheme.
+            font_scheme-&gt;load( io_font_scheme = lo_elements_element ).
+        when c_fmt_scheme.
+            fmt_scheme-&gt;load( io_fmt_scheme = lo_elements_element ).
+      endcase.
+      lo_elements_element ?= lo_elements_iterator-&gt;get_next( ).
+    endwhile.
+  endmethod.                    &quot;load</source>
+ </method>
+</CLAS>
