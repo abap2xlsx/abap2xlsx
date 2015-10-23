@@ -3533,8 +3533,8 @@ ENDMETHOD.</source>
 *  col_count      = io_worksheet-&gt;get_highest_column( ).
 *  &quot; Get autofilter
 **  lv_guid        = io_worksheet-&gt;get_guid( ) .
-*  lo_autofilters = excel-&gt;get_autofilters_reference( ).
-*  lo_autofilter  = lo_autofilters-&gt;get( io_worksheet = io_worksheet ) .
+  lo_autofilters = excel-&gt;get_autofilters_reference( ).
+  lo_autofilter  = lo_autofilters-&gt;get( io_worksheet = io_worksheet ) .
 *  IF lo_autofilter IS BOUND.
 *    lt_values           = lo_autofilter-&gt;get_values( ) .
 *    ls_area             = lo_autofilter-&gt;get_filter_area( ) .
