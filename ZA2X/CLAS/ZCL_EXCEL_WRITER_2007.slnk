@@ -2810,7 +2810,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #237   - Error writing column-style
-*              - Stefan SchmÃ¶cker,                          2012-11-01
+*              - Stefan Schmoecker,                          2012-11-01
 *--------------------------------------------------------------------*
 
   TYPES: BEGIN OF cfvo,
@@ -6716,13 +6716,13 @@ ENDMETHOD.</source>
   <source>METHOD create_xl_workbook.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
+*              - Stefan Schmoecker,      (done)              2012-11-07
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan SchmÃ¶cker,                             2012-12-01
+*           - Stefan Schmoecker,                             2012-12-01
 * changes:  correction of pointer to localSheetId
 *--------------------------------------------------------------------*
 

@@ -1400,7 +1400,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-12-29
+*              - Stefan Schmoecker,      (done)              2012-12-29
 *              - ...
 * changes: renaming variables to naming conventions
 *          removing unused variables
@@ -1409,7 +1409,7 @@ ENDMETHOD.</source>
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#246 - error converting lower case column names
-*              - Stefan Schmöcker,                          2012-12-29
+*              - Stefan Schmoecker,                          2012-12-29
 * changes: translating the correct variable to upper dase
 *          adding missing exception if input is a number
 *          that is out of bounds
@@ -1559,7 +1559,7 @@ ENDMETHOD.</source>
 *--------------------------------------------------------------------*
   &quot;issue #256 - replacing char processing with regex
 *--------------------------------------------------------------------*
-* Stefan Schmöcker, 2013-08-11
+* Stefan Schmoecker, 2013-08-11
 *    Allow input to be CLIKE instead of STRING
 *--------------------------------------------------------------------*
 
@@ -1585,7 +1585,7 @@ endmethod.</source>
   <source>method CONVERT_RANGE2COLUMN_A_ROW.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-12-07
+*              - Stefan Schmoecker,      (done)              2012-12-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -1595,12 +1595,12 @@ endmethod.</source>
 *--------------------------------------------------------------------*
 * issue#241 - error when sheetname contains &quot;!&quot;
 *           - sheetname should be returned unescaped
-*              - Stefan Schmöcker,                          2012-12-07
+*              - Stefan Schmoecker,                          2012-12-07
 * changes: changed coding to support sheetnames with &quot;!&quot;
 *          unescaping sheetname
 *--------------------------------------------------------------------*
 * issue#155 - lessening restrictions of input parameters
-*              - Stefan Schmöcker,                          2012-12-07
+*              - Stefan Schmoecker,                          2012-12-07
 * changes: i_range changed to clike
 *          e_sheet changed to clike
 *--------------------------------------------------------------------*
@@ -1814,19 +1814,19 @@ endmethod.</source>
   <source>method ESCAPE_STRING.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-12-08
+*              - Stefan Schmoecker,      (done)              2012-12-08
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#242 - Support escaping for white-spaces
 *           - Escaping also necessary when &apos; encountered in input
-*              - Stefan Schmöcker,                          2012-12-08
+*              - Stefan Schmoecker,                          2012-12-08
 * changes: switched check if escaping is necessary to regular expression
 *          and moved the &quot;REPLACE&quot;
 *--------------------------------------------------------------------*
 * issue#155 - lessening restrictions of input parameters
-*              - Stefan Schmöcker,                          2012-12-08
+*              - Stefan Schmoecker,                          2012-12-08
 * changes: ip_value changed to clike
 *--------------------------------------------------------------------*
   DATA:       lv_value                        TYPE string.
