@@ -3093,7 +3093,8 @@ METHOD calculate_cell_width.
       FROM tfo01
       INTO TABLE lt_font_families
       UP TO 1 ROWS
-      WHERE tdtext = ld_font_name.
+      WHERE tdtext = ld_font_name
+      ORDER BY PRIMARY KEY.
 
     &quot; Check if a matching font family was found
     &quot; Fonts can be uploaded from TTF files using transaction SE73
