@@ -2,4 +2,6 @@ Adding Cell comments include:
 - changing [Content_Types].xml to include
  <Override PartName="/xl/comments1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml"/>
 - generate a new file comments[index].xml within the /xl folder
-- add a relationship to the comments[index].xml in \xl\worksheets\_rels\sheet[index].xml.rels
+- reference the relationship to the comments[index].xml in \xl\worksheets\_rels\sheet[index].xml.rels
+- add a new drawing (for displaying the comment itself) in \xl\drawings\vmlDrawing[index].vml
+- reference the new drawing in \xl\worksheets\_rels\sheet[index].xml.rels
