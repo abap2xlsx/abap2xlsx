@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " ZSAPLINK_PLUGIN_MAJOR_VERSION="0 " ZSAPLINK_PLUGIN_MINOR_VERSION="1 " ZSAPLINK_PLUGIN_BUILD_VERSION="0 " ZSAPLINK_PLUGIN_INFO1="ZSAPLINK_CLASS is part of the main ZSAPLINK project --&gt; This plugin found there instead of ZSAPLINK_PLUGINS projects" ZSAPLINK_PLUGIN_INFO2="SAPLINK homepage: https://www.assembla.com/spaces/saplink/wiki" ZSAPLINK_PLUGIN_INFO3="Download from https://www.assembla.com/code/saplink/subversion/nodes" ZSAPLINK_PLUGIN_INFO4="and navigate to:  trunk -&gt; core -&gt; ZSAPLINK -&gt; CLAS -&gt; ZSAPLINK_CLASS.slnk">
+<CLAS CLSNAME="ZCL_EXCEL_WRITER_2007" VERSION="1" LANGU="E" DESCRIPT="Excel writer 2007" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <implementing CLSNAME="ZCL_EXCEL_WRITER_2007" REFCLSNAME="ZIF_EXCEL_WRITER" VERSION="1" EXPOSURE="2" STATE="1" RELTYPE="1" EDITORDER="1 "/>
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
@@ -9,29 +9,29 @@
 *&quot;* implementation or private method&apos;s signature</localTypes>
  <localMacros>*&quot;* use this source file for any macro definitions you need
 *&quot;* in the implementation part of the class</localMacros>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Content Type XML File Name" EXPOSURE="1" STATE="1" EDITORDER="3 " ATTDECLTYP="2" ATTVALUE="&apos;[Content_Types].xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="App XML File Name" EXPOSURE="1" STATE="1" EDITORDER="4 " ATTDECLTYP="2" ATTVALUE="&apos;docProps/app.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Core XML File Name" EXPOSURE="1" STATE="1" EDITORDER="5 " ATTDECLTYP="2" ATTVALUE="&apos;docProps/core.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_OFF" VERSION="1" LANGU="E" DESCRIPT="Byte Value" EXPOSURE="0" STATE="1" EDITORDER="6 " ATTDECLTYP="2" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_ON" VERSION="1" LANGU="E" DESCRIPT="Byte Value" EXPOSURE="0" STATE="1" EDITORDER="7 " ATTDECLTYP="2" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Rels XML File Name" EXPOSURE="1" STATE="1" EDITORDER="8 " ATTDECLTYP="2" ATTVALUE="&apos;_rels/.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_CALCCHAIN" VERSION="1" LANGU="E" DESCRIPT="xlcalcChain XML File Name" EXPOSURE="1" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;xl/calcChain.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="10 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/drawing#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="11 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/_rels/drawing#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_PRINTERSETTINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="0" STATE="1" EDITORDER="12 " ATTDECLTYP="2" ATTVALUE="&apos;xl/printerSettings/printerSettings#.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="xlRels XML File Name" EXPOSURE="1" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTVALUE="&apos;xl/_rels/workbook.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="xlSharedStrings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="14 " ATTDECLTYP="2" ATTVALUE="&apos;xl/sharedStrings.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="xlSheet XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/sheet#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="xlSheetRels XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/_rels/sheet#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="xlStyles XML File Name" EXPOSURE="1" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTVALUE="&apos;xl/styles.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="xlTheme XML File Name" EXPOSURE="1" STATE="1" EDITORDER="18 " ATTDECLTYP="2" ATTVALUE="&apos;xl/theme/theme1.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="1" STATE="1" EDITORDER="19 " ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="1" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="MV_SHEET_DATA_XSTRING" VERSION="1" LANGU="E" DESCRIPT="SheetData as xstring" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="MV_SHEET_DATA_XSTRING_DUMMY" VERSION="1" LANGU="E" DESCRIPT="Empty Sheet data - to be replaced later" EXPOSURE="1" STATE="1" EDITORDER="2 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="XSTRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="1" STATE="1" EDITORDER="21 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_COND_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="22 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_COND_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
- <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="23 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CL_XL_DRAWING_FOR_COMMENTS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings (comments) XML File Name" EXPOSURE="1" STATE="1" EDITORDER="23 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/vmlDrawing#.vml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Content Type XML File Name" EXPOSURE="1" STATE="1" EDITORDER="1 " ATTDECLTYP="2" ATTVALUE="&apos;[Content_Types].xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_APP" VERSION="1" LANGU="E" DESCRIPT="App XML File Name" EXPOSURE="1" STATE="1" EDITORDER="2 " ATTDECLTYP="2" ATTVALUE="&apos;docProps/app.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_DOCPROPS_CORE" VERSION="1" LANGU="E" DESCRIPT="Core XML File Name" EXPOSURE="1" STATE="1" EDITORDER="3 " ATTDECLTYP="2" ATTVALUE="&apos;docProps/core.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_OFF" VERSION="1" LANGU="E" DESCRIPT="Byte Value" EXPOSURE="0" STATE="1" EDITORDER="4 " ATTDECLTYP="2" ATTVALUE="&apos;0&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_ON" VERSION="1" LANGU="E" DESCRIPT="Byte Value" EXPOSURE="0" STATE="1" EDITORDER="5 " ATTDECLTYP="2" ATTVALUE="&apos;1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Rels XML File Name" EXPOSURE="1" STATE="1" EDITORDER="6 " ATTDECLTYP="2" ATTVALUE="&apos;_rels/.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_CALCCHAIN" VERSION="1" LANGU="E" DESCRIPT="xlcalcChain XML File Name" EXPOSURE="1" STATE="1" EDITORDER="7 " ATTDECLTYP="2" ATTVALUE="&apos;xl/calcChain.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_COMMENTS" VERSION="1" LANGU="E" DESCRIPT="xlComments XML File Name" EXPOSURE="1" STATE="1" EDITORDER="22 " ATTDECLTYP="2" ATTVALUE="&apos;xl/comments#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="8 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/drawing#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="9 " ATTDECLTYP="2" ATTVALUE="&apos;xl/drawings/_rels/drawing#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_PRINTERSETTINGS" VERSION="1" LANGU="E" DESCRIPT="xlDrawings XML File Name" EXPOSURE="0" STATE="1" EDITORDER="10 " ATTDECLTYP="2" ATTVALUE="&apos;xl/printerSettings/printerSettings#.bin&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="xlRels XML File Name" EXPOSURE="1" STATE="1" EDITORDER="11 " ATTDECLTYP="2" ATTVALUE="&apos;xl/_rels/workbook.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="xlSharedStrings XML File Name" EXPOSURE="1" STATE="1" EDITORDER="12 " ATTDECLTYP="2" ATTVALUE="&apos;xl/sharedStrings.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="xlSheet XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="13 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/sheet#.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="xlSheetRels XML File Name Template" EXPOSURE="1" STATE="1" EDITORDER="14 " ATTDECLTYP="2" ATTVALUE="&apos;xl/worksheets/_rels/sheet#.xml.rels&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="xlStyles XML File Name" EXPOSURE="1" STATE="1" EDITORDER="15 " ATTDECLTYP="2" ATTVALUE="&apos;xl/styles.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="xlTheme XML File Name" EXPOSURE="1" STATE="1" EDITORDER="16 " ATTDECLTYP="2" ATTVALUE="&apos;xl/theme/theme1.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="C_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="xlWorkbook XML File Name" EXPOSURE="1" STATE="1" EDITORDER="17 " ATTDECLTYP="2" ATTVALUE="&apos;xl/workbook.xml&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="EXCEL" VERSION="1" LANGU="E" DESCRIPT="Excel creator" EXPOSURE="1" STATE="1" EDITORDER="18 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZCL_EXCEL" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="SHARED_STRINGS" VERSION="1" LANGU="E" DESCRIPT="Shared Strings" EXPOSURE="1" STATE="1" EDITORDER="19 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_SHARED_STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_COND_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="20 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_COND_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="STYLES_MAPPING" VERSION="1" LANGU="E" DESCRIPT="Styles mapping" EXPOSURE="1" STATE="1" EDITORDER="21 " ATTDECLTYP="0" ATTEXPVIRT="0" TYPTYPE="1" TYPE="ZEXCEL_T_STYLES_MAPPING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
  <interfaceMethod CLSNAME="ZCL_EXCEL_WRITER_2007" CPDNAME="ZIF_EXCEL_WRITER~WRITE_FILE">
   <source>method ZIF_EXCEL_WRITER~WRITE_FILE.
   me-&gt;excel = io_excel.
@@ -47,7 +47,7 @@ ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" VERSION="1" LANGU="E" DESCRIPT="Create Excel" EXPOSURE="1" STATE="1" EDITORDER="3 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE" SCONAME="EP_EXCEL" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>method CREATE.
+  <source>METHOD create.
 
 * Office 2007 file format is a cab of several xml files with extension .xlsx
 
@@ -58,17 +58,23 @@ ENDMETHOD.</source>
         lo_nested_iterator  TYPE REF TO cl_object_collection_iterator,
         lo_table            TYPE REF TO zcl_excel_table,
         lo_drawing          TYPE REF TO zcl_excel_drawing,
-        lo_drawings         TYPE REF TO zcl_excel_drawings.
+        lo_drawings         TYPE REF TO zcl_excel_drawings,
+        lo_comment          TYPE REF TO zcl_excel_comment,   &quot; (+) Issue #180
+        lo_comments         TYPE REF TO zcl_excel_comments.  &quot; (+) Issue #180
 
-  DATA: lv_content         TYPE xstring,
-        lv_active          TYPE flag,
-        lv_xl_sheet        TYPE string,
-        lv_xl_sheet_rels   TYPE string,
-        lv_xl_drawing      TYPE string,
-        lv_xl_drawing_rels TYPE string,
-        lv_syindex         TYPE string,
-        lv_value           TYPE string,
-        lv_drawing_index   TYPE i.
+  DATA: lv_content                TYPE xstring,
+        lv_active                 TYPE flag,
+        lv_xl_sheet               TYPE string,
+        lv_xl_sheet_rels          TYPE string,
+        lv_xl_drawing             TYPE string,
+        lv_xl_drawing_rels        TYPE string,
+        lv_xl_drawing_for_comment TYPE string,   &quot; (+) Issue #180
+        lv_xl_comment             TYPE string,   &quot; (+) Issue #180
+        lv_xl_comment_rels        TYPE string,   &quot; (+) Issue #180
+        lv_syindex                TYPE string,
+        lv_value                  TYPE string,
+        lv_drawing_index          TYPE i,
+        lv_comment_index          TYPE i.        &quot; (+) Issue #180
 
 **********************************************************************
 * Start of insertion # issue 139 - Dateretention of cellstyles
@@ -139,6 +145,7 @@ ENDMETHOD.</source>
   lo_iterator = me-&gt;excel-&gt;get_worksheets_iterator( ).
   lo_active_worksheet = me-&gt;excel-&gt;get_active_worksheet( ).
   lv_drawing_index = 1.
+  lv_comment_index = 1.  &quot; (+) Issue #180
 
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
     lo_worksheet ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
@@ -175,6 +182,32 @@ ENDMETHOD.</source>
       lo_zip-&gt;add( name = lv_value
                     content = lv_content ).
     ENDWHILE.
+
+* Begin - Add - Issue #180
+* Add comments **********************************
+    lo_comments = lo_worksheet-&gt;get_comments( ).
+    IF lo_comments-&gt;is_empty( ) = abap_false.
+      MOVE lv_comment_index TO lv_syindex.
+      SHIFT lv_syindex RIGHT DELETING TRAILING space.
+      SHIFT lv_syindex LEFT DELETING LEADING space.
+
+      &quot; Create comment itself
+      lv_content = me-&gt;create_xl_comments( lo_worksheet ).
+      lv_xl_comment = me-&gt;c_xl_comments.
+      REPLACE ALL OCCURRENCES OF &apos;#&apos; IN lv_xl_comment WITH lv_syindex.
+      lo_zip-&gt;add( name    = lv_xl_comment
+                   content = lv_content ).
+
+      &quot; Create vmlDrawing that will host the comment
+      lv_content = me-&gt;create_xl_drawing_for_comments( lo_worksheet ).
+      lv_xl_drawing_for_comment = me-&gt;cl_xl_drawing_for_comments.
+      REPLACE ALL OCCURRENCES OF &apos;#&apos; IN lv_xl_drawing_for_comment WITH lv_syindex.
+      lo_zip-&gt;add( name    = lv_xl_drawing_for_comment
+                   content = lv_content ).
+
+      ADD 1 TO lv_comment_index.
+    ENDIF.
+* End   - Add - Issue #180
 
 * Add drawings **********************************
     lo_drawings = lo_worksheet-&gt;get_drawings( ).
@@ -243,7 +276,7 @@ ENDMETHOD.</source>
 * Last step: Create the final zip
   ep_excel = lo_zip-&gt;save( ).
 
-  endmethod.</source>
+ENDMETHOD.</source>
  </method>
  <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;[Content_Types].xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="4 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_CONTENT_TYPES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -263,6 +296,7 @@ ENDMETHOD.</source>
         &quot; Node extension
         lc_xml_node_rels_ext      TYPE string VALUE &apos;rels&apos;,
         lc_xml_node_xml_ext       TYPE string VALUE &apos;xml&apos;,
+        lc_xml_node_xml_vml       TYPE string VALUE &apos;vml&apos;,   &quot; (+) Issue #180
         &quot; Node partnumber
         lc_xml_node_theme_pn      TYPE string VALUE &apos;/xl/theme/theme1.xml&apos;,
         lc_xml_node_styles_pn     TYPE string VALUE &apos;/xl/styles.xml&apos;,
@@ -277,12 +311,14 @@ ENDMETHOD.</source>
         lc_xml_node_styles_ct     TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml&apos;,
         lc_xml_node_workb_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml&apos;,
         lc_xml_node_rels_ct       TYPE string VALUE &apos;application/vnd.openxmlformats-package.relationships+xml&apos;,
+        lc_xml_node_vml_ct        TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.vmlDrawing&apos;,
         lc_xml_node_xml_ct        TYPE string VALUE &apos;application/xml&apos;,
         lc_xml_node_props_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.extended-properties+xml&apos;,
         lc_xml_node_worksheet_ct  TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml&apos;,
         lc_xml_node_strings_ct    TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml&apos;,
         lc_xml_node_core_ct       TYPE string VALUE &apos;application/vnd.openxmlformats-package.core-properties+xml&apos;,
         lc_xml_node_table_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml&apos;,
+        lc_xml_node_comments_ct   TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml&apos;,   &quot; (+) Issue #180
         lc_xml_node_drawings_ct   TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.drawing+xml&apos;,
         lc_xml_node_chart_ct      TYPE string VALUE &apos;application/vnd.openxmlformats-officedocument.drawingml.chart+xml&apos;.
 
@@ -305,6 +341,7 @@ ENDMETHOD.</source>
         lv_xml_size               TYPE i,
         lv_value                  TYPE string,
         lv_drawing_index          TYPE i VALUE 1,
+        lv_comment_index          TYPE i VALUE 1,  &quot; (+) Issue #180
         lv_index_str              TYPE string.
 
 **********************************************************************
@@ -346,6 +383,17 @@ ENDMETHOD.</source>
   lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_xml_ct ).
   lo_element_root-&gt;append_child( new_child = lo_element ).
+
+* Begin - Add - Issue #180
+  &quot; VML node (for comments)
+  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_default
+                                                   parent = lo_document ).
+  lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_extension
+                                value = lc_xml_node_xml_vml ).
+  lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
+                                value = lc_xml_node_vml_ct ).
+  lo_element_root-&gt;append_child( new_child = lo_element ).
+* End   - Add - Issue #180
 
   &quot; Theme node
   lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_override
@@ -420,6 +468,29 @@ ENDMETHOD.</source>
                                 value = lc_xml_node_table_ct ).
       lo_element_root-&gt;append_child( new_child = lo_element ).
     ENDWHILE.
+
+* Begin - Add - Issue #180
+    &quot; Comments
+    DATA: lo_comments TYPE REF TO zcl_excel_comments.
+
+    lo_comments = lo_worksheet-&gt;get_comments( ).
+    IF lo_comments-&gt;is_empty( ) = abap_false.
+      lv_index_str = lv_comment_index.
+      CONDENSE lv_index_str NO-GAPS.
+      CONCATENATE &apos;/&apos; me-&gt;c_xl_comments INTO lv_value.
+      REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
+
+      lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_override
+                                                       parent = lo_document ).
+      lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_partname
+                                    value = lv_value ).
+      lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_contenttype
+                                    value = lc_xml_node_comments_ct ).
+      lo_element_root-&gt;append_child( new_child = lo_element ).
+
+      ADD 1 TO lv_comment_index.
+    ENDIF.
+* End   - Add - Issue #180
 
     &quot; Drawings
     DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
@@ -2027,7 +2098,175 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_COMMENTS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/comments1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="10 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_COMMENTS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_COMMENTS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>METHOD create_xl_comments.
+** Constant node name
+  CONSTANTS:  lc_xml_node_comments    TYPE string VALUE &apos;comments&apos;,
+              lc_xml_node_ns          TYPE string VALUE &apos;http://schemas.openxmlformats.org/spreadsheetml/2006/main&apos;,
+              &quot; authors
+              lc_xml_node_author      TYPE string VALUE &apos;author&apos;,
+              lc_xml_node_authors     TYPE string VALUE &apos;authors&apos;,
+              &quot; comments
+              lc_xml_node_commentlist TYPE string VALUE &apos;commentList&apos;,
+              lc_xml_node_comment     TYPE string VALUE &apos;comment&apos;,
+              lc_xml_node_text        TYPE string VALUE &apos;text&apos;,
+              lc_xml_node_r           TYPE string VALUE &apos;r&apos;,
+              lc_xml_node_rpr         TYPE string VALUE &apos;rPr&apos;,
+              lc_xml_node_b           TYPE string VALUE &apos;b&apos;,
+              lc_xml_node_sz          TYPE string VALUE &apos;sz&apos;,
+              lc_xml_node_color       TYPE string VALUE &apos;color&apos;,
+              lc_xml_node_rfont       TYPE string VALUE &apos;rFont&apos;,
+*             lc_xml_node_charset     TYPE string VALUE &apos;charset&apos;,
+              lc_xml_node_family      TYPE string VALUE &apos;family&apos;,
+              lc_xml_node_t           TYPE string VALUE &apos;t&apos;,
+              &quot; comments attributes
+              lc_xml_attr_ref         TYPE string VALUE &apos;ref&apos;,
+              lc_xml_attr_authorid    TYPE string VALUE &apos;authorId&apos;,
+              lc_xml_attr_val         TYPE string VALUE &apos;val&apos;,
+              lc_xml_attr_indexed     TYPE string VALUE &apos;indexed&apos;,
+              lc_xml_attr_xmlspacing  TYPE string VALUE &apos;xml:space&apos;.
+
+
+  DATA: lo_ixml                TYPE REF TO if_ixml,
+        lo_document            TYPE REF TO if_ixml_document,
+        lo_element_root        TYPE REF TO if_ixml_element,
+        lo_element_authors     TYPE REF TO if_ixml_element,
+        lo_element_author      TYPE REF TO if_ixml_element,
+        lo_element_commentlist TYPE REF TO if_ixml_element,
+        lo_element_comment     TYPE REF TO if_ixml_element,
+        lo_element_text        TYPE REF TO if_ixml_element,
+        lo_element_r           TYPE REF TO if_ixml_element,
+        lo_element_rpr         TYPE REF TO if_ixml_element,
+        lo_element_b           TYPE REF TO if_ixml_element,
+        lo_element_sz          TYPE REF TO if_ixml_element,
+        lo_element_color       TYPE REF TO if_ixml_element,
+        lo_element_rfont       TYPE REF TO if_ixml_element,
+*       lo_element_charset     TYPE REF TO if_ixml_element,
+        lo_element_family      TYPE REF TO if_ixml_element,
+        lo_element_t           TYPE REF TO if_ixml_element,
+        lo_encoding            TYPE REF TO if_ixml_encoding,
+        lo_streamfactory       TYPE REF TO if_ixml_stream_factory,
+        lo_ostream             TYPE REF TO if_ixml_ostream,
+        lo_renderer            TYPE REF TO if_ixml_renderer,
+        lo_iterator            TYPE REF TO cl_object_collection_iterator,
+        lo_comments            TYPE REF TO zcl_excel_comments,
+        lo_comment             TYPE REF TO zcl_excel_comment.
+  DATA: lv_rel_id            TYPE i.
+
+  DEFINE add_1_val_child_node.
+*   &amp;1: parent element
+*   &amp;2: child element
+*   &amp;3: element name
+*   &amp;4: attribute name
+*   &amp;5: attribute value
+
+    &amp;2 = lo_document-&gt;create_simple_element( name   = &amp;3
+                                             parent = lo_document ).
+    IF &amp;4 IS NOT INITIAL.
+      &amp;2-&gt;set_attribute_ns( name  = &amp;4
+                            value = &amp;5 ).
+    ENDIF.
+    &amp;1-&gt;append_child( new_child = &amp;2 ).
+  END-OF-DEFINITION.
+
+
+**********************************************************************
+* STEP 1: Create [Content_Types].xml into the root of the ZIP
+  lo_ixml = cl_ixml=&gt;create( ).
+
+**********************************************************************
+* STEP 2: Set document attributes
+  lo_encoding = lo_ixml-&gt;create_encoding( byte_order = if_ixml_encoding=&gt;co_platform_endian
+                                          character_set = &apos;utf-8&apos; ).
+  lo_document = lo_ixml-&gt;create_document( ).
+  lo_document-&gt;set_encoding( lo_encoding ).
+  lo_document-&gt;set_standalone( abap_true ).
+
+***********************************************************************
+* STEP 3: Create main node relationships
+  lo_element_root = lo_document-&gt;create_simple_element( name   = lc_xml_node_comments
+                                                        parent = lo_document ).
+  lo_element_root-&gt;set_attribute_ns( name  = &apos;xmlns&apos;
+                                     value = lc_xml_node_ns ).
+
+**********************************************************************
+* STEP 4: Create authors
+* TO-DO: management of several authors
+  lo_element_authors = lo_document-&gt;create_simple_element( name   = lc_xml_node_authors
+                                                           parent = lo_document ).
+
+  lo_element_author  = lo_document-&gt;create_simple_element( name   = lc_xml_node_author
+                                                           parent = lo_document ).
+  lo_element_author-&gt;set_value( |{ sy-uname }| ).
+
+  lo_element_authors-&gt;append_child( new_child = lo_element_author ).
+  lo_element_root-&gt;append_child( new_child = lo_element_authors ).
+
+**********************************************************************
+* STEP 5: Create comments
+
+  lo_element_commentlist = lo_document-&gt;create_simple_element( name   = lc_xml_node_commentlist
+                                                               parent = lo_document ).
+
+  lo_comments = io_worksheet-&gt;get_comments( ).
+
+  lo_iterator = lo_comments-&gt;get_iterator( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_comment ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+
+    lo_element_comment = lo_document-&gt;create_simple_element( name   = lc_xml_node_comment
+                                                             parent = lo_document ).
+    lo_element_comment-&gt;set_attribute_ns( name  = lc_xml_attr_ref
+                                          value = lo_comment-&gt;get_ref( ) ).
+    lo_element_comment-&gt;set_attribute_ns( name  = lc_xml_attr_authorid
+                                          value = &apos;0&apos; ).  &quot; TO-DO
+
+    lo_element_text = lo_document-&gt;create_simple_element( name   = lc_xml_node_text
+                                                          parent = lo_document ).
+    lo_element_r    = lo_document-&gt;create_simple_element( name   = lc_xml_node_r
+                                                          parent = lo_document ).
+    lo_element_rpr  = lo_document-&gt;create_simple_element( name   = lc_xml_node_rpr
+                                                          parent = lo_document ).
+
+    lo_element_b    = lo_document-&gt;create_simple_element( name   = lc_xml_node_b
+                                                          parent = lo_document ).
+    lo_element_rpr-&gt;append_child( new_child = lo_element_b ).
+
+    add_1_val_child_node lo_element_rpr: lo_element_sz       lc_xml_node_sz       lc_xml_attr_val      &apos;9&apos;,
+                                         lo_element_color    lc_xml_node_color    lc_xml_attr_indexed  &apos;81&apos;,
+                                         lo_element_rfont    lc_xml_node_rfont    lc_xml_attr_val      &apos;Tahoma&apos;,
+                                         lo_element_family   lc_xml_node_family   lc_xml_attr_val      &apos;2&apos;
+*                                        lo_element_charset  lc_xml_node_charset  lc_xml_attr_val      &apos;1&apos;
+                                         .
+
+    lo_element_r-&gt;append_child( new_child = lo_element_rpr ).
+
+    lo_element_t    = lo_document-&gt;create_simple_element( name   = lc_xml_node_t
+                                                          parent = lo_document ).
+    lo_element_t-&gt;set_attribute_ns( name  = lc_xml_attr_xmlspacing
+                                    value = &apos;preserve&apos; ).
+    lo_element_t-&gt;set_value( lo_comment-&gt;get_text( ) ).
+    lo_element_r-&gt;append_child( new_child = lo_element_t ).
+
+    lo_element_text-&gt;append_child( new_child = lo_element_r ).
+    lo_element_comment-&gt;append_child( new_child = lo_element_text ).
+    lo_element_commentlist-&gt;append_child( new_child = lo_element_comment ).
+  ENDWHILE.
+
+  lo_element_root-&gt;append_child( new_child = lo_element_commentlist ).
+
+**********************************************************************
+* STEP 5: Create xstring stream
+  lo_streamfactory = lo_ixml-&gt;create_stream_factory( ).
+  lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
+  lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
+  lo_renderer-&gt;render( ).
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_DRAWINGS.
@@ -2107,7 +2346,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="11 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWINGS_RELS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_DRAWINGS_RELS.
@@ -2206,7 +2445,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="12 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/drawing1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" SCONAME="IO_DRAWING" VERSION="1" LANGU="E" DESCRIPT="Drawing" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_DRAWING"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_ANCHOR" SCONAME="IP_INDEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
@@ -2520,7 +2759,269 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/_rels/workbook.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="13 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_FOR_COMMENTS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/drawings/vmlDrawing1.vml&apos;" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_FOR_COMMENTS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
+  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_DRAWING_FOR_COMMENTS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+  <source>METHOD create_xl_drawing_for_comments.
+** Constant node name
+  CONSTANTS:  lc_xml_node_xml             TYPE string VALUE &apos;xml&apos;,
+              lc_xml_node_ns_v            TYPE string VALUE &apos;urn:schemas-microsoft-com:vml&apos;,
+              lc_xml_node_ns_o            TYPE string VALUE &apos;urn:schemas-microsoft-com:office:office&apos;,
+              lc_xml_node_ns_x            TYPE string VALUE &apos;urn:schemas-microsoft-com:office:excel&apos;,
+              &quot; shapelayout
+              lc_xml_node_shapelayout     TYPE string VALUE &apos;o:shapelayout&apos;,
+              lc_xml_node_idmap           TYPE string VALUE &apos;o:idmap&apos;,
+              &quot; shapetype
+              lc_xml_node_shapetype       TYPE string VALUE &apos;v:shapetype&apos;,
+              lc_xml_node_stroke          TYPE string VALUE &apos;v:stroke&apos;,
+              lc_xml_node_path            TYPE string VALUE &apos;v:path&apos;,
+              &quot; shape
+              lc_xml_node_shape           TYPE string VALUE &apos;v:shape&apos;,
+              lc_xml_node_fill            TYPE string VALUE &apos;v:fill&apos;,
+              lc_xml_node_shadow          TYPE string VALUE &apos;v:shadow&apos;,
+              lc_xml_node_textbox         TYPE string VALUE &apos;v:textbox&apos;,
+              lc_xml_node_div             TYPE string VALUE &apos;div&apos;,
+              lc_xml_node_clientdata      TYPE string VALUE &apos;x:ClientData&apos;,
+              lc_xml_node_movewithcells   TYPE string VALUE &apos;x:MoveWithCells&apos;,
+              lc_xml_node_sizewithcells   TYPE string VALUE &apos;x:SizeWithCells&apos;,
+              lc_xml_node_anchor          TYPE string VALUE &apos;x:Anchor&apos;,
+              lc_xml_node_autofill        TYPE string VALUE &apos;x:AutoFill&apos;,
+              lc_xml_node_row             TYPE string VALUE &apos;x:Row&apos;,
+              lc_xml_node_column          TYPE string VALUE &apos;x:Column&apos;,
+              &quot; attributes,
+              lc_xml_attr_vext            TYPE string VALUE &apos;v:ext&apos;,
+              lc_xml_attr_data            TYPE string VALUE &apos;data&apos;,
+              lc_xml_attr_id              TYPE string VALUE &apos;id&apos;,
+              lc_xml_attr_coordsize       TYPE string VALUE &apos;coordsize&apos;,
+              lc_xml_attr_ospt            TYPE string VALUE &apos;o:spt&apos;,
+              lc_xml_attr_joinstyle       TYPE string VALUE &apos;joinstyle&apos;,
+              lc_xml_attr_path            TYPE string VALUE &apos;path&apos;,
+              lc_xml_attr_gradientshapeok TYPE string VALUE &apos;gradientshapeok&apos;,
+              lc_xml_attr_oconnecttype    TYPE string VALUE &apos;o:connecttype&apos;,
+              lc_xml_attr_type            TYPE string VALUE &apos;type&apos;,
+              lc_xml_attr_style           TYPE string VALUE &apos;style&apos;,
+              lc_xml_attr_fillcolor       TYPE string VALUE &apos;fillcolor&apos;,
+              lc_xml_attr_oinsetmode      TYPE string VALUE &apos;o:insetmode&apos;,
+              lc_xml_attr_color           TYPE string VALUE &apos;color&apos;,
+              lc_xml_attr_color2          TYPE string VALUE &apos;color2&apos;,
+              lc_xml_attr_on              TYPE string VALUE &apos;on&apos;,
+              lc_xml_attr_obscured        TYPE string VALUE &apos;obscured&apos;,
+              lc_xml_attr_objecttype      TYPE string VALUE &apos;ObjectType&apos;,
+              &quot; attributes values
+              lc_xml_attr_val_edit        TYPE string VALUE &apos;edit&apos;,
+              lc_xml_attr_val_rect        TYPE string VALUE &apos;rect&apos;,
+              lc_xml_attr_val_t           TYPE string VALUE &apos;t&apos;,
+              lc_xml_attr_val_miter       TYPE string VALUE &apos;miter&apos;,
+              lc_xml_attr_val_auto        TYPE string VALUE &apos;auto&apos;,
+              lc_xml_attr_val_black       TYPE string VALUE &apos;black&apos;,
+              lc_xml_attr_val_none        TYPE string VALUE &apos;none&apos;,
+              lc_xml_attr_val_msodir      TYPE string VALUE &apos;mso-direction-alt:auto&apos;,
+              lc_xml_attr_val_note        TYPE string VALUE &apos;Note&apos;.
+
+
+  DATA: lo_ixml                  TYPE REF TO if_ixml,
+        lo_document              TYPE REF TO if_ixml_document,
+        lo_element_root          TYPE REF TO if_ixml_element,
+        &quot;shapelayout
+        lo_element_shapelayout   TYPE REF TO if_ixml_element,
+        lo_element_idmap         TYPE REF TO if_ixml_element,
+        &quot;shapetype
+        lo_element_shapetype     TYPE REF TO if_ixml_element,
+        lo_element_stroke        TYPE REF TO if_ixml_element,
+        lo_element_path          TYPE REF TO if_ixml_element,
+        &quot;shape
+        lo_element_shape         TYPE REF TO if_ixml_element,
+        lo_element_fill          TYPE REF TO if_ixml_element,
+        lo_element_shadow        TYPE REF TO if_ixml_element,
+        lo_element_textbox       TYPE REF TO if_ixml_element,
+        lo_element_div           TYPE REF TO if_ixml_element,
+        lo_element_clientdata    TYPE REF TO if_ixml_element,
+        lo_element_movewithcells TYPE REF TO if_ixml_element,
+        lo_element_sizewithcells TYPE REF TO if_ixml_element,
+        lo_element_anchor        TYPE REF TO if_ixml_element,
+        lo_element_autofill      TYPE REF TO if_ixml_element,
+        lo_element_row           TYPE REF TO if_ixml_element,
+        lo_element_column        TYPE REF TO if_ixml_element,
+        lo_encoding              TYPE REF TO if_ixml_encoding,
+        lo_streamfactory         TYPE REF TO if_ixml_stream_factory,
+        lo_ostream               TYPE REF TO if_ixml_ostream,
+        lo_renderer              TYPE REF TO if_ixml_renderer,
+        lo_iterator              TYPE REF TO cl_object_collection_iterator,
+        lo_comments              TYPE REF TO zcl_excel_comments,
+        lo_comment               TYPE REF TO zcl_excel_comment,
+        lv_row                   TYPE zexcel_cell_row,
+        lv_str_column            TYPE zexcel_cell_column_alpha,
+        lv_column                TYPE zexcel_cell_column,
+        lv_index                 TYPE i.
+  DATA: lv_rel_id            TYPE i.
+
+  DEFINE add_1_val_child_node.
+*   &amp;1: parent element
+*   &amp;2: child element
+*   &amp;3: element name
+*   &amp;4: attribute name
+*   &amp;5: attribute value
+
+    &amp;2 = lo_document-&gt;create_simple_element( name   = &amp;3
+                                             parent = lo_document ).
+    IF &amp;4 IS NOT INITIAL.
+      &amp;2-&gt;set_attribute_ns( name  = &amp;4
+                            value = &amp;5 ).
+    ENDIF.
+    &amp;1-&gt;append_child( new_child = &amp;2 ).
+  END-OF-DEFINITION.
+
+
+**********************************************************************
+* STEP 1: Create XML document
+  lo_ixml     = cl_ixml=&gt;create( ).
+  lo_document = lo_ixml-&gt;create_document( ).
+
+***********************************************************************
+* STEP 2: Create main node relationships
+  lo_element_root = lo_document-&gt;create_simple_element( name   = lc_xml_node_xml
+                                                        parent = lo_document ).
+  lo_element_root-&gt;set_attribute_ns( : name  = &apos;xmlns:v&apos;  value = lc_xml_node_ns_v ),
+                                       name  = &apos;xmlns:o&apos;  value = lc_xml_node_ns_o ),
+                                       name  = &apos;xmlns:x&apos;  value = lc_xml_node_ns_x ).
+
+**********************************************************************
+* STEP 3: Create o:shapeLayout
+* TO-DO: management of several authors
+  lo_element_shapelayout = lo_document-&gt;create_simple_element( name   = lc_xml_node_shapelayout
+                                                               parent = lo_document ).
+
+  lo_element_shapelayout-&gt;set_attribute_ns( name  = lc_xml_attr_vext
+                                            value = lc_xml_attr_val_edit ).
+
+  lo_element_idmap = lo_document-&gt;create_simple_element( name   = lc_xml_node_idmap
+                                                         parent = lo_document ).
+  lo_element_idmap-&gt;set_attribute_ns( : name  = lc_xml_attr_vext  value = lc_xml_attr_val_edit ),
+                                        name  = lc_xml_attr_data  value = &apos;1&apos; ).
+
+  lo_element_shapelayout-&gt;append_child( new_child = lo_element_idmap ).
+
+  lo_element_root-&gt;append_child( new_child = lo_element_shapelayout ).
+
+**********************************************************************
+* STEP 4: Create v:shapetype
+
+  lo_element_shapetype = lo_document-&gt;create_simple_element( name   = lc_xml_node_shapetype
+                                                             parent = lo_document ).
+
+  lo_element_shapetype-&gt;set_attribute_ns( : name  = lc_xml_attr_id         value = &apos;_x0000_t202&apos; ),
+                                            name  = lc_xml_attr_coordsize  value = &apos;21600,21600&apos; ),
+                                            name  = lc_xml_attr_ospt       value = &apos;202&apos; ),
+                                            name  = lc_xml_attr_path       value = &apos;m,l,21600r21600,l21600,xe&apos; ).
+
+  lo_element_stroke = lo_document-&gt;create_simple_element( name   = lc_xml_node_stroke
+                                                          parent = lo_document ).
+  lo_element_stroke-&gt;set_attribute_ns( name  = lc_xml_attr_joinstyle       value = lc_xml_attr_val_miter ).
+
+  lo_element_path   = lo_document-&gt;create_simple_element( name   = lc_xml_node_path
+                                                          parent = lo_document ).
+  lo_element_path-&gt;set_attribute_ns( : name  = lc_xml_attr_gradientshapeok value = lc_xml_attr_val_t ),
+                                       name  = lc_xml_attr_oconnecttype    value = lc_xml_attr_val_rect ).
+
+  lo_element_shapetype-&gt;append_child( : new_child = lo_element_stroke ),
+                                        new_child = lo_element_path ).
+
+  lo_element_root-&gt;append_child( new_child = lo_element_shapetype ).
+
+**********************************************************************
+* STEP 4: Create v:shapetype
+
+  lo_comments = io_worksheet-&gt;get_comments( ).
+
+  lo_iterator = lo_comments-&gt;get_iterator( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lv_index = sy-index.
+    lo_comment ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+
+    zcl_excel_common=&gt;convert_columnrow2column_a_row( EXPORTING i_columnrow = lo_comment-&gt;get_ref( )
+                                                      IMPORTING e_column = lv_str_column
+                                                                e_row    = lv_row ).
+    lv_column = zcl_excel_common=&gt;convert_column2int( lv_str_column ).
+
+    lo_element_shape = lo_document-&gt;create_simple_element( name   = lc_xml_node_shape
+                                                           parent = lo_document ).
+
+    lo_element_shape-&gt;set_attribute_ns( : name  = lc_xml_attr_id          value = |_x0000_s{ 1024 + lv_index }| ),
+                                          name  = lc_xml_attr_type        value = &apos;#_x0000_t202&apos; ),
+                                          name  = lc_xml_attr_style       value = &apos;position:absolute;margin-left:117pt;margin-top:172.5pt;width:108pt;height:59.25pt;z-index:1;  visibility:hidden&apos; ),
+                                          name  = lc_xml_attr_fillcolor   value = &apos;#ffffe1&apos; ),
+                                          name  = lc_xml_attr_oinsetmode  value = lc_xml_attr_val_auto ).
+
+    &quot; Fill
+    lo_element_fill = lo_document-&gt;create_simple_element( name   = lc_xml_node_fill
+                                                          parent = lo_document ).
+    lo_element_fill-&gt;set_attribute_ns( name = lc_xml_attr_color2  value = &apos;#ffffe1&apos; ).
+    lo_element_shape-&gt;append_child( new_child = lo_element_fill ).
+    &quot; Shadow
+    lo_element_shadow = lo_document-&gt;create_simple_element( name   = lc_xml_node_shadow
+                                                            parent = lo_document ).
+    lo_element_shadow-&gt;set_attribute_ns( : name = lc_xml_attr_on        value = lc_xml_attr_val_t ),
+                                           name = lc_xml_attr_color     value = lc_xml_attr_val_black ),
+                                           name = lc_xml_attr_obscured  value = lc_xml_attr_val_t ).
+    lo_element_shape-&gt;append_child( new_child = lo_element_shadow ).
+    &quot; Path
+    lo_element_path = lo_document-&gt;create_simple_element( name   = lc_xml_node_path
+                                                          parent = lo_document ).
+    lo_element_path-&gt;set_attribute_ns( name = lc_xml_attr_oconnecttype  value = lc_xml_attr_val_none ).
+    lo_element_shape-&gt;append_child( new_child = lo_element_path ).
+    &quot; Textbox
+    lo_element_textbox = lo_document-&gt;create_simple_element( name   = lc_xml_node_textbox
+                                                             parent = lo_document ).
+    lo_element_textbox-&gt;set_attribute_ns( name = lc_xml_attr_style  value = lc_xml_attr_val_msodir ).
+    lo_element_div = lo_document-&gt;create_simple_element( name   = lc_xml_node_div
+                                                         parent = lo_document ).
+    lo_element_div-&gt;set_attribute_ns( name = lc_xml_attr_style  value = &apos;text-align:left&apos; ).
+    lo_element_textbox-&gt;append_child( new_child = lo_element_div ).
+    lo_element_shape-&gt;append_child( new_child = lo_element_textbox ).
+    &quot; ClientData
+    lo_element_clientdata = lo_document-&gt;create_simple_element( name   = lc_xml_node_clientdata
+                                                                parent = lo_document ).
+    lo_element_clientdata-&gt;set_attribute_ns( name = lc_xml_attr_objecttype  value = lc_xml_attr_val_note ).
+    lo_element_movewithcells = lo_document-&gt;create_simple_element( name   = lc_xml_node_movewithcells
+                                                                   parent = lo_document ).
+    lo_element_clientdata-&gt;append_child( new_child = lo_element_movewithcells ).
+    lo_element_sizewithcells = lo_document-&gt;create_simple_element( name   = lc_xml_node_sizewithcells
+                                                                   parent = lo_document ).
+    lo_element_clientdata-&gt;append_child( new_child = lo_element_sizewithcells ).
+    lo_element_anchor = lo_document-&gt;create_simple_element( name   = lc_xml_node_anchor
+                                                            parent = lo_document ).
+    lo_element_anchor-&gt;set_value( &apos;2, 15, 11, 10, 4, 31, 15, 9&apos; ).
+    lo_element_clientdata-&gt;append_child( new_child = lo_element_anchor ).
+    lo_element_autofill = lo_document-&gt;create_simple_element( name   = lc_xml_node_autofill
+                                                              parent = lo_document ).
+    lo_element_autofill-&gt;set_value( &apos;False&apos; ).
+    lo_element_clientdata-&gt;append_child( new_child = lo_element_autofill ).
+    lo_element_row = lo_document-&gt;create_simple_element( name   = lc_xml_node_row
+                                                         parent = lo_document ).
+*    lo_element_row-&gt;set_value( &apos;12&apos; ).
+    lo_element_row-&gt;set_value( |{ lv_row - 1 }| ).
+    lo_element_clientdata-&gt;append_child( new_child = lo_element_row ).
+    lo_element_column = lo_document-&gt;create_simple_element( name   = lc_xml_node_column
+                                                              parent = lo_document ).
+*    lo_element_column-&gt;set_value( &apos;1&apos; ).
+    lo_element_column-&gt;set_value( |{ lv_column - 1 }| ).
+    lo_element_clientdata-&gt;append_child( new_child = lo_element_column ).
+
+    lo_element_shape-&gt;append_child( new_child = lo_element_clientdata ).
+
+    lo_element_root-&gt;append_child( new_child = lo_element_shape ).
+  ENDWHILE.
+
+**********************************************************************
+* STEP 6: Create xstring stream
+  lo_streamfactory = lo_ixml-&gt;create_stream_factory( ).
+  lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
+  lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
+  lo_renderer-&gt;render( ).
+
+ENDMETHOD.</source>
+ </method>
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/_rels/workbook.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_RELATIONSHIPS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_RELATIONSHIPS.
 
@@ -2668,7 +3169,7 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sharedStrings.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="14 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sharedStrings.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHAREDSTRINGS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_sharedstrings.
 
@@ -2793,7 +3294,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sheet.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="15 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/sheet.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="IV_ACTIVE" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG" PARVALUE="&apos;&apos;"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -2810,7 +3311,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #237   - Error writing column-style
-*              - Stefan Schmoecker,                          2012-11-01
+*              - Stefan SchmÃ¶cker,                          2012-11-01
 *--------------------------------------------------------------------*
 
   TYPES: BEGIN OF cfvo,
@@ -2848,11 +3349,11 @@ ENDMETHOD.</source>
         lc_xml_node_sheetformatpr      TYPE string VALUE &apos;sheetFormatPr&apos;,
         lc_xml_node_cols               TYPE string VALUE &apos;cols&apos;,
         lc_xml_node_col                TYPE string VALUE &apos;col&apos;,
-*        lc_xml_node_sheetdata          TYPE string VALUE &apos;sheetData&apos;,
-*        lc_xml_node_row                TYPE string VALUE &apos;row&apos;,
-*        lc_xml_node_c                  TYPE string VALUE &apos;c&apos;,
-*        lc_xml_node_v                  TYPE string VALUE &apos;v&apos;,
-*        lc_xml_node_f                  TYPE string VALUE &apos;f&apos;,
+        lc_xml_node_sheetdata          TYPE string VALUE &apos;sheetData&apos;,
+        lc_xml_node_row                TYPE string VALUE &apos;row&apos;,
+        lc_xml_node_c                  TYPE string VALUE &apos;c&apos;,
+        lc_xml_node_v                  TYPE string VALUE &apos;v&apos;,
+        lc_xml_node_f                  TYPE string VALUE &apos;f&apos;,
         lc_xml_node_sheetprotection    TYPE string VALUE &apos;sheetProtection&apos;,
         lc_xml_node_pagemargins        TYPE string VALUE &apos;pageMargins&apos;,
         lc_xml_node_pagesetup          TYPE string VALUE &apos;pageSetup&apos;,
@@ -2872,6 +3373,7 @@ ENDMETHOD.</source>
         lc_xml_node_mergecell          TYPE string VALUE &apos;mergeCell&apos;,
         lc_xml_node_mergecells         TYPE string VALUE &apos;mergeCells&apos;,
         lc_xml_node_drawing            TYPE string VALUE &apos;drawing&apos;,
+        lc_xml_node_drawing_for_cmt    TYPE string VALUE &apos;legacyDrawing&apos;,
         lc_xml_node_headerfooter       TYPE string VALUE &apos;headerFooter&apos;,
         lc_xml_node_oddheader          TYPE string VALUE &apos;oddHeader&apos;,
         lc_xml_node_oddfooter          TYPE string VALUE &apos;oddFooter&apos;,
@@ -2913,10 +3415,10 @@ ENDMETHOD.</source>
         lc_xml_attr_outlinelevelrow    TYPE string VALUE &apos;x14ac:outlineLevelRow&apos;,
         lc_xml_attr_outlinelevelcol    TYPE string VALUE &apos;x14ac:outlineLevelCol&apos;,
         lc_xml_attr_outlinelevel       TYPE string VALUE &apos;outlineLevel&apos;,
-*        lc_xml_attr_r                  TYPE string VALUE &apos;r&apos;,
-*        lc_xml_attr_s                  TYPE string VALUE &apos;s&apos;,
-*        lc_xml_attr_spans              TYPE string VALUE &apos;spans&apos;,
-*        lc_xml_attr_t                  TYPE string VALUE &apos;t&apos;,
+        lc_xml_attr_r                  TYPE string VALUE &apos;r&apos;,
+        lc_xml_attr_s                  TYPE string VALUE &apos;s&apos;,
+        lc_xml_attr_spans              TYPE string VALUE &apos;spans&apos;,
+        lc_xml_attr_t                  TYPE string VALUE &apos;t&apos;,
         lc_xml_attr_password           TYPE string VALUE &apos;password&apos;,
         lc_xml_attr_sheet              TYPE string VALUE &apos;sheet&apos;,
         lc_xml_attr_objects            TYPE string VALUE &apos;objects&apos;,
@@ -2950,7 +3452,6 @@ ENDMETHOD.</source>
         lc_xml_attr_allowblank         TYPE string VALUE &apos;allowBlank&apos;,
         lc_xml_attr_showinputmessage   TYPE string VALUE &apos;showInputMessage&apos;,
         lc_xml_attr_showerrormessage   TYPE string VALUE &apos;showErrorMessage&apos;,
-        lc_xml_attr_showdropdown       TYPE string VALUE &apos;showDropDown&apos;,
         lc_xml_attr_errortitle         TYPE string VALUE &apos;errorTitle&apos;,
         lc_xml_attr_error              TYPE string VALUE &apos;error&apos;,
         lc_xml_attr_prompttitle        TYPE string VALUE &apos;promptTitle&apos;,
@@ -3057,7 +3558,6 @@ ENDMETHOD.</source>
         ls_area                     TYPE zexcel_s_autofilter_area,
         lv_ref                      TYPE string,
         lv_style_index              TYPE i.                             &quot; issue #237
-
 
 
   FIELD-SYMBOLS: &lt;ls_sheet_content&gt; TYPE zexcel_s_cell_data,
@@ -3519,316 +4019,310 @@ ENDMETHOD.</source>
 
     lo_element_root-&gt;append_child( new_child = lo_element ). &quot; cols node
   ENDIF.
-
-*--------------------------------------------------------------------*
-* Sheet content - use own method to create this
-*--------------------------------------------------------------------*
-  lo_element = create_xl_sheet_sheet_data( io_worksheet         = io_worksheet
-                                           io_document          = lo_document
-                                           it_column_dimensions = column_dimensions )  .
-*  &quot; sheetData node
-*  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_sheetdata
-*                                                   parent = lo_document ).
-*  &quot; Get column count
-*  col_count      = io_worksheet-&gt;get_highest_column( ).
-*  &quot; Get autofilter
-**  lv_guid        = io_worksheet-&gt;get_guid( ) .
+  &quot; sheetData node
+  lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_sheetdata
+                                                   parent = lo_document ).
+  &quot; Get column count
+  col_count      = io_worksheet-&gt;get_highest_column( ).
+  &quot; Get autofilter
+*  lv_guid        = io_worksheet-&gt;get_guid( ) .
   lo_autofilters = excel-&gt;get_autofilters_reference( ).
   lo_autofilter  = lo_autofilters-&gt;get( io_worksheet = io_worksheet ) .
-*  IF lo_autofilter IS BOUND.
-*    lt_values           = lo_autofilter-&gt;get_values( ) .
-*    ls_area             = lo_autofilter-&gt;get_filter_area( ) .
-*    l_autofilter_hidden = abap_true. &quot; First defautl is not showing
-*  ENDIF.
-**--------------------------------------------------------------------*
-** issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - start
-**--------------------------------------------------------------------*
-** Build table to hold all table-areas attached to this sheet
-*  lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
-*  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
-*    lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-*    ls_table_area-left   = zcl_excel_common=&gt;convert_column2int( lo_table-&gt;settings-top_left_column ).
-*    ls_table_area-right  = lo_table-&gt;get_right_column_integer( ).
-*    ls_table_area-top    = lo_table-&gt;settings-top_left_row.
-*    ls_table_area-bottom = lo_table-&gt;get_bottom_row_integer( ).
-*    INSERT ls_table_area INTO TABLE lt_table_areas.
-*  ENDWHILE.
-**--------------------------------------------------------------------*
-** issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - end
-**--------------------------------------------------------------------*
-** We have problems when the first rows or trailing rows are not set but we have rowinformation
-** to solve this we add dummycontent into first and last line that will not be set
-** Set first line if necessary
-*  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = 1.
-*  IF sy-subrc &lt;&gt; 0.
-*    ls_sheet_content_empty-cell_row      = 1.
-*    ls_sheet_content_empty-cell_column   = 1.
-*    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
-*    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
-*  ENDIF.
-** Set last line if necessary
-** Last row with cell content
-*  lv_last_row = io_worksheet-&gt;get_highest_row( ).
-** Last line with row-information set directly ( like line height, hidden-status ... )
-*  lts_row_dimensions = io_worksheet-&gt;get_row_dimensions( ).
-*  SORT lts_row_dimensions BY row DESCENDING.
-*  READ TABLE lts_row_dimensions INDEX 1 ASSIGNING &lt;row_dimension&gt;.
-*  IF sy-subrc = 0 AND &lt;row_dimension&gt;-row &gt; lv_last_row.
-*    lv_last_row = &lt;row_dimension&gt;-row.
-*  ENDIF.
-** Last line with row-information set indirectly by row outline
-*  lts_row_outlines = io_worksheet-&gt;get_row_outlines( ).
-*  LOOP AT lts_row_outlines ASSIGNING &lt;ls_row_outline&gt;.
-*    IF &lt;ls_row_outline&gt;-collapsed = &apos;X&apos;.
-*      lv_current_row = &lt;ls_row_outline&gt;-row_to + 1.  &quot; collapsed-status may be set on following row
-*    ELSE.
-*      lv_current_row = &lt;ls_row_outline&gt;-row_to.  &quot; collapsed-status may be set on following row
-*    ENDIF.
-*    IF lv_current_row &gt; lv_last_row.
-*      lv_last_row = lv_current_row.
-*    ENDIF.
-*  ENDLOOP.
-*  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = lv_last_row.
-*  IF sy-subrc &lt;&gt; 0.
-*    ls_sheet_content_empty-cell_row      = lv_last_row.
-*    ls_sheet_content_empty-cell_column   = 1.
-*    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
-*    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
-*  ENDIF.
-*
-*  CLEAR ls_sheet_content.
-*  LOOP AT io_worksheet-&gt;sheet_content INTO ls_sheet_content.
-*    IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
-*      CLEAR l_autofilter_hidden.
-*    ELSE.
-*      READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-*      IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-*        CLEAR l_autofilter_hidden.
-*      ENDIF.
-*    ENDIF.
-*    CLEAR ls_style_mapping.
-** Create row element
-** issues #346,#154, #195  - problems when we have information in row_dimension but no cell content in that row
-** Get next line that may have to be added.  If we have empty lines this is the next line after previous cell content
-** Otherwise it is the line of the current cell content
-*    lv_current_row = ls_last_row-cell_row + 1.
-*    IF lv_current_row &gt; ls_sheet_content-cell_row.
-*      lv_current_row = ls_sheet_content-cell_row.
-*    ENDIF.
-** Fill in empty lines if necessary - assign an emtpy sheet content
-*    lv_next_row = lv_current_row.
-*    WHILE lv_next_row &lt;= ls_sheet_content-cell_row.
-*      lv_current_row = lv_next_row.
-*      lv_next_row = lv_current_row + 1.
-*      IF lv_current_row = ls_sheet_content-cell_row. &quot; cell value found in this row
-*        ASSIGN ls_sheet_content TO &lt;ls_sheet_content&gt;.
-*      ELSE.
-** Check if empty row is really necessary - this is basically the case when we have information in row_dimension
-*        lo_row_dim_empty = io_worksheet-&gt;get_row_dimension( lv_current_row ).
-*        CHECK lo_row_dim_empty-&gt;get_row_height( )                 &gt;= 0          OR
-*              lo_row_dim_empty-&gt;get_collapsed( io_worksheet )      = abap_true  OR
-*              lo_row_dim_empty-&gt;get_outline_level( io_worksheet )  &gt; 0          OR
-*              lo_row_dim_empty-&gt;get_xf_index( )                   &lt;&gt; 0.
-*        &quot; Dummyentry A1
-*        ls_sheet_content_empty-cell_row      = lv_current_row.
-*        ls_sheet_content_empty-cell_column   = 1.
-*        ASSIGN ls_sheet_content_empty TO &lt;ls_sheet_content&gt;.
-*      ENDIF.
-*
-*      IF ls_last_row-cell_row NE &lt;ls_sheet_content&gt;-cell_row.
-*        IF lo_autofilter IS BOUND.
-*          IF ls_area-row_start &gt;=  ls_last_row-cell_row OR &quot; One less for header
-*            ls_area-row_end   &lt; ls_last_row-cell_row .
-*            CLEAR l_autofilter_hidden.
-*          ENDIF.
-*        ELSE.
-*          CLEAR l_autofilter_hidden.
-*        ENDIF.
-*        IF ls_last_row-cell_row IS NOT INITIAL.
-*          &quot; Row visibility of previos row.
-*          IF row_dimension-&gt;get_visible( io_worksheet ) = abap_false OR
-*             l_autofilter_hidden = abap_true.
-*            lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
-*          ENDIF.
-*          lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; row node
-*        ENDIF.
-*        &quot; Add new row
-*        lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_row
-*                                                           parent = lo_document ).
-*        &quot; r
-*        lv_value = &lt;ls_sheet_content&gt;-cell_row.
-*        SHIFT lv_value RIGHT DELETING TRAILING space.
-*        SHIFT lv_value LEFT DELETING LEADING space.
-*
-*        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_r
-*                                        value = lv_value ).
-*        &quot; Spans
-*        lv_value = col_count.
-*        CONCATENATE &apos;1:&apos; lv_value INTO lv_value.
-*        SHIFT lv_value RIGHT DELETING TRAILING space.
-*        SHIFT lv_value LEFT DELETING LEADING space.
-*        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_spans
-*                                        value = lv_value ).
-*        row_dimension = io_worksheet-&gt;get_row_dimension( &lt;ls_sheet_content&gt;-cell_row ).
-*        &quot; Do we need the row dimension attributes?
-*        IF row_dimension-&gt;get_row_height( )   &gt;= 0 OR
-*           row_dimension-&gt;get_collapsed( io_worksheet )     = abap_true OR
-*           row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0 OR
-*           row_dimension-&gt;get_xf_index( )     &lt;&gt; 0 OR
-*           l_autofilter_hidden = abap_true.
-*          &quot; Row dimensions
-*          IF row_dimension-&gt;get_row_height( ) &gt;= 0.
-*            lo_element_2-&gt;set_attribute_ns( name  = &apos;customHeight&apos; value = &apos;1&apos;).
-*            lv_value = row_dimension-&gt;get_row_height( ).
-*            lo_element_2-&gt;set_attribute_ns( name  = &apos;ht&apos; value = lv_value ).
-*          ENDIF.
-*          &quot; Collapsed
-*          IF row_dimension-&gt;get_collapsed( io_worksheet ) = abap_true.
-*            lo_element_2-&gt;set_attribute_ns( name  = &apos;collapsed&apos; value = &apos;true&apos;).
-*          ENDIF.
-*          &quot; Outline level
-*          IF row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0.
-*            lv_value = row_dimension-&gt;get_outline_level( io_worksheet ).
-*            SHIFT lv_value RIGHT DELETING TRAILING space.
-*            SHIFT lv_value LEFT DELETING LEADING space.
-*            lo_element_2-&gt;set_attribute_ns( name  = &apos;outlineLevel&apos; value = lv_value ).
-*          ENDIF.
-*          &quot; Style
-*          IF row_dimension-&gt;get_xf_index( ) &lt;&gt; 0.
-*            lv_value = row_dimension-&gt;get_xf_index( ).
-*            lo_element_2-&gt;set_attribute_ns( name  = &apos;s&apos; value = lv_value ).
-*            lo_element_2-&gt;set_attribute_ns( name  = &apos;customFormat&apos;  value = &apos;1&apos;).
-*          ENDIF.
-*        ENDIF.
-*        IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
-*          CLEAR l_autofilter_hidden.
-*        ELSE.
-*          l_autofilter_hidden = abap_true. &quot; First default is not showing
-*        ENDIF.
-*      ELSE.
-*
-*      ENDIF.
-*    ENDWHILE.
-*
-*    lo_element_3 = lo_document-&gt;create_simple_element( name   = lc_xml_node_c
-*                                                       parent = lo_document ).
-*
-*    lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_r
-*                                    value = &lt;ls_sheet_content&gt;-cell_coords ).
-*
-** begin of change issue #157 - allow column cellstyle
-** if no cellstyle is set, look into column, then into sheet
+  IF lo_autofilter IS BOUND.
+    lt_values           = lo_autofilter-&gt;get_values( ) .
+    ls_area             = lo_autofilter-&gt;get_filter_area( ) .
+    l_autofilter_hidden = abap_true. &quot; First defautl is not showing
+  ENDIF.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - start
+*--------------------------------------------------------------------*
+* Build table to hold all table-areas attached to this sheet
+  lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
+  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
+    ls_table_area-left   = zcl_excel_common=&gt;convert_column2int( lo_table-&gt;settings-top_left_column ).
+    ls_table_area-right  = lo_table-&gt;get_right_column_integer( ).
+    ls_table_area-top    = lo_table-&gt;settings-top_left_row.
+    ls_table_area-bottom = lo_table-&gt;get_bottom_row_integer( ).
+    INSERT ls_table_area INTO TABLE lt_table_areas.
+  ENDWHILE.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - end
+*--------------------------------------------------------------------*
+* We have problems when the first rows or trailing rows are not set but we have rowinformation
+* to solve this we add dummycontent into first and last line that will not be set
+* Set first line if necessary
+  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = 1.
+  IF sy-subrc &lt;&gt; 0.
+    ls_sheet_content_empty-cell_row      = 1.
+    ls_sheet_content_empty-cell_column   = 1.
+    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
+    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
+  ENDIF.
+* Set last line if necessary
+* Last row with cell content
+  lv_last_row = io_worksheet-&gt;get_highest_row( ).
+* Last line with row-information set directly ( like line height, hidden-status ... )
+  lts_row_dimensions = io_worksheet-&gt;get_row_dimensions( ).
+  SORT lts_row_dimensions BY row DESCENDING.
+  READ TABLE lts_row_dimensions INDEX 1 ASSIGNING &lt;row_dimension&gt;.
+  IF sy-subrc = 0 AND &lt;row_dimension&gt;-row &gt; lv_last_row.
+    lv_last_row = &lt;row_dimension&gt;-row.
+  ENDIF.
+* Last line with row-information set indirectly by row outline
+  lts_row_outlines = io_worksheet-&gt;get_row_outlines( ).
+  LOOP AT lts_row_outlines ASSIGNING &lt;ls_row_outline&gt;.
+    IF &lt;ls_row_outline&gt;-collapsed = &apos;X&apos;.
+      lv_current_row = &lt;ls_row_outline&gt;-row_to + 1.  &quot; collapsed-status may be set on following row
+    ELSE.
+      lv_current_row = &lt;ls_row_outline&gt;-row_to.  &quot; collapsed-status may be set on following row
+    ENDIF.
+    IF lv_current_row &gt; lv_last_row.
+      lv_last_row = lv_current_row.
+    ENDIF.
+  ENDLOOP.
+  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = lv_last_row.
+  IF sy-subrc &lt;&gt; 0.
+    ls_sheet_content_empty-cell_row      = lv_last_row.
+    ls_sheet_content_empty-cell_column   = 1.
+    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
+    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
+  ENDIF.
+
+
+  CLEAR ls_sheet_content.
+  LOOP AT io_worksheet-&gt;sheet_content INTO ls_sheet_content.
+    IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
+      CLEAR l_autofilter_hidden.
+    ELSE.
+      READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
+      IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
+        CLEAR l_autofilter_hidden.
+      ENDIF.
+    ENDIF.
+    CLEAR ls_style_mapping.
+* Create row element
+* issues #346,#154, #195  - problems when we have information in row_dimension but no cell content in that row
+* Get next line that may have to be added.  If we have empty lines this is the next line after previous cell content
+* Otherwise it is the line of the current cell content
+    lv_current_row = ls_last_row-cell_row + 1.
+    IF lv_current_row &gt; ls_sheet_content-cell_row.
+      lv_current_row = ls_sheet_content-cell_row.
+    ENDIF.
+* Fill in empty lines if necessary - assign an emtpy sheet content
+    lv_next_row = lv_current_row.
+    WHILE lv_next_row &lt;= ls_sheet_content-cell_row.
+      lv_current_row = lv_next_row.
+      lv_next_row = lv_current_row + 1.
+      IF lv_current_row = ls_sheet_content-cell_row. &quot; cell value found in this row
+        ASSIGN ls_sheet_content TO &lt;ls_sheet_content&gt;.
+      ELSE.
+* Check if empty row is really necessary - this is basically the case when we have information in row_dimension
+        lo_row_dim_empty = io_worksheet-&gt;get_row_dimension( lv_current_row ).
+        CHECK lo_row_dim_empty-&gt;get_row_height( )                 &gt;= 0          OR
+              lo_row_dim_empty-&gt;get_collapsed( io_worksheet )      = abap_true  OR
+              lo_row_dim_empty-&gt;get_outline_level( io_worksheet )  &gt; 0          OR
+              lo_row_dim_empty-&gt;get_xf_index( )                   &lt;&gt; 0.
+        &quot; Dummyentry A1
+        ls_sheet_content_empty-cell_row      = lv_current_row.
+        ls_sheet_content_empty-cell_column   = 1.
+        ASSIGN ls_sheet_content_empty TO &lt;ls_sheet_content&gt;.
+      ENDIF.
+
+      IF ls_last_row-cell_row NE &lt;ls_sheet_content&gt;-cell_row.
+        IF lo_autofilter IS BOUND.
+          IF ls_area-row_start &gt;=  ls_last_row-cell_row OR &quot; One less for header
+            ls_area-row_end   &lt; ls_last_row-cell_row .
+            CLEAR l_autofilter_hidden.
+          ENDIF.
+        ELSE.
+          CLEAR l_autofilter_hidden.
+        ENDIF.
+        IF ls_last_row-cell_row IS NOT INITIAL.
+          &quot; Row visibility of previos row.
+          IF row_dimension-&gt;get_visible( io_worksheet ) = abap_false OR
+             l_autofilter_hidden = abap_true.
+            lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
+          ENDIF.
+          lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; row node
+        ENDIF.
+        &quot; Add new row
+        lo_element_2 = lo_document-&gt;create_simple_element( name   = lc_xml_node_row
+                                                           parent = lo_document ).
+        &quot; r
+        lv_value = &lt;ls_sheet_content&gt;-cell_row.
+        SHIFT lv_value RIGHT DELETING TRAILING space.
+        SHIFT lv_value LEFT DELETING LEADING space.
+
+        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_r
+                                        value = lv_value ).
+        &quot; Spans
+        lv_value = col_count.
+        CONCATENATE &apos;1:&apos; lv_value INTO lv_value.
+        SHIFT lv_value RIGHT DELETING TRAILING space.
+        SHIFT lv_value LEFT DELETING LEADING space.
+        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_spans
+                                        value = lv_value ).
+        row_dimension = io_worksheet-&gt;get_row_dimension( &lt;ls_sheet_content&gt;-cell_row ).
+        &quot; Do we need the row dimension attributes?
+        IF row_dimension-&gt;get_row_height( )   &gt;= 0 OR
+           row_dimension-&gt;get_collapsed( io_worksheet )     = abap_true OR
+           row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0 OR
+           row_dimension-&gt;get_xf_index( )     &lt;&gt; 0 OR
+           l_autofilter_hidden = abap_true.
+          &quot; Row dimensions
+          IF row_dimension-&gt;get_row_height( ) &gt;= 0.
+            lo_element_2-&gt;set_attribute_ns( name  = &apos;customHeight&apos; value = &apos;1&apos;).
+            lv_value = row_dimension-&gt;get_row_height( ).
+            lo_element_2-&gt;set_attribute_ns( name  = &apos;ht&apos; value = lv_value ).
+          ENDIF.
+          &quot; Collapsed
+          IF row_dimension-&gt;get_collapsed( io_worksheet ) = abap_true.
+            lo_element_2-&gt;set_attribute_ns( name  = &apos;collapsed&apos; value = &apos;true&apos;).
+          ENDIF.
+          &quot; Outline level
+          IF row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0.
+            lv_value = row_dimension-&gt;get_outline_level( io_worksheet ).
+            SHIFT lv_value RIGHT DELETING TRAILING space.
+            SHIFT lv_value LEFT DELETING LEADING space.
+            lo_element_2-&gt;set_attribute_ns( name  = &apos;outlineLevel&apos; value = lv_value ).
+          ENDIF.
+          &quot; Style
+          IF row_dimension-&gt;get_xf_index( ) &lt;&gt; 0.
+            lv_value = row_dimension-&gt;get_xf_index( ).
+            lo_element_2-&gt;set_attribute_ns( name  = &apos;s&apos; value = lv_value ).
+            lo_element_2-&gt;set_attribute_ns( name  = &apos;customFormat&apos;  value = &apos;1&apos;).
+          ENDIF.
+        ENDIF.
+        IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
+          CLEAR l_autofilter_hidden.
+        ELSE.
+          l_autofilter_hidden = abap_true. &quot; First default is not showing
+        ENDIF.
+      ELSE.
+
+      ENDIF.
+    ENDWHILE.
+
+    lo_element_3 = lo_document-&gt;create_simple_element( name   = lc_xml_node_c
+                                                       parent = lo_document ).
+
+    lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_r
+                                    value = &lt;ls_sheet_content&gt;-cell_coords ).
+
+* begin of change issue #157 - allow column cellstyle
+* if no cellstyle is set, look into column, then into sheet
+    IF &lt;ls_sheet_content&gt;-cell_style IS NOT INITIAL.
+      lv_style_guid = &lt;ls_sheet_content&gt;-cell_style.
+    ELSE.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - start
+*--------------------------------------------------------------------*
+* Check if cell in any of the table areas
+      LOOP AT lt_table_areas TRANSPORTING NO FIELDS WHERE top    &lt;= &lt;ls_sheet_content&gt;-cell_row
+                                                      AND bottom &gt;= &lt;ls_sheet_content&gt;-cell_row
+                                                      AND left   &lt;= &lt;ls_sheet_content&gt;-cell_column
+                                                      AND right  &gt;= &lt;ls_sheet_content&gt;-cell_column.
+        EXIT.
+      ENDLOOP.
+      IF sy-subrc = 0.
+        CLEAR lv_style_guid.     &quot; No style --&gt; EXCEL will use built-in-styles as declared in the tables-section
+      ELSE.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - end
+*--------------------------------------------------------------------*
+        lv_column_p = zcl_excel_common=&gt;convert_column2alpha( &lt;ls_sheet_content&gt;-cell_column ).
+        READ TABLE column_dimensions WITH KEY column = lv_column_p ASSIGNING &lt;column_dimension&gt;.
+        IF sy-subrc = 0.
+          lv_style_guid = &lt;column_dimension&gt;-column_dimension-&gt;get_column_style_guid( ).
+          IF lv_style_guid IS INITIAL.
+            lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
+          ENDIF.
+        ELSE.
+          lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
+        ENDIF.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - start
+*--------------------------------------------------------------------*
+      ENDIF.
+*--------------------------------------------------------------------*
+* issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - end
+*--------------------------------------------------------------------*
+    ENDIF.
 *    IF &lt;ls_sheet_content&gt;-cell_style IS NOT INITIAL.
-*      lv_style_guid = &lt;ls_sheet_content&gt;-cell_style.
-*    ELSE.
-**--------------------------------------------------------------------*
-** issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - start
-**--------------------------------------------------------------------*
-** Check if cell in any of the table areas
-*      LOOP AT lt_table_areas TRANSPORTING NO FIELDS WHERE top    &lt;= &lt;ls_sheet_content&gt;-cell_row
-*                                                      AND bottom &gt;= &lt;ls_sheet_content&gt;-cell_row
-*                                                      AND left   &lt;= &lt;ls_sheet_content&gt;-cell_column
-*                                                      AND right  &gt;= &lt;ls_sheet_content&gt;-cell_column.
-*        EXIT.
-*      ENDLOOP.
-*      IF sy-subrc = 0.
-*        CLEAR lv_style_guid.     &quot; No style --&gt; EXCEL will use built-in-styles as declared in the tables-section
-*      ELSE.
-**--------------------------------------------------------------------*
-** issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - end
-**--------------------------------------------------------------------*
-*        lv_column_p = zcl_excel_common=&gt;convert_column2alpha( &lt;ls_sheet_content&gt;-cell_column ).
-*        READ TABLE column_dimensions WITH KEY column = lv_column_p ASSIGNING &lt;column_dimension&gt;.
-*        IF sy-subrc = 0.
-*          lv_style_guid = &lt;column_dimension&gt;-column_dimension-&gt;get_column_style_guid( ).
-*          IF lv_style_guid IS INITIAL.
-*            lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
-*          ENDIF.
-*        ELSE.
-*          lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
-*        ENDIF.
-**--------------------------------------------------------------------*
-** issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - start
-**--------------------------------------------------------------------*
-*      ENDIF.
-**--------------------------------------------------------------------*
-** issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - end
-**--------------------------------------------------------------------*
-*    ENDIF.
-**    IF &lt;ls_sheet_content&gt;-cell_style IS NOT INITIAL.
-**      READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = &lt;ls_sheet_content&gt;-cell_style.
-*    IF lv_style_guid IS NOT INITIAL.
-*      READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
-** end of change issue #157 - allow column cellstyles
-*      lv_value = ls_style_mapping-style.
-*      SHIFT lv_value RIGHT DELETING TRAILING space.
-*      SHIFT lv_value LEFT DELETING LEADING space.
-*      lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_s
-*                                      value = lv_value ).
-*    ENDIF.
-*
-*    &quot; For cells with formula ignore the value - Excel will calculate it
-*    IF &lt;ls_sheet_content&gt;-cell_formula IS NOT INITIAL.
-*      &quot; fomula node
-*      lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_f
-*                                                         parent = lo_document ).
-*      lv_value = &lt;ls_sheet_content&gt;-cell_formula.
-*      CONDENSE lv_value.
-*      lo_element_4-&gt;set_value( value = lv_value ).
-*      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
-*    ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL           &quot;cell can have just style or formula
-*       AND &lt;ls_sheet_content&gt;-cell_value &lt;&gt; lc_dummy_cell_content.
-*      IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
-*        IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
-*          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
-*                                        value = &apos;s&apos; ).
-*        ELSE.
-*          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
-*                                        value = &lt;ls_sheet_content&gt;-data_type ).
-*        ENDIF.
-*      ENDIF.
-*
-*      &quot; value node
-*      lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_v
-*                                                       parent = lo_document ).
-*
-*      IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos; OR &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
-*        lv_value = me-&gt;get_shared_string_index( &lt;ls_sheet_content&gt;-cell_value ).
-*        CONDENSE lv_value.
-*        lo_element_4-&gt;set_value( value = lv_value ).
-*      ELSE.
-*        lv_value = &lt;ls_sheet_content&gt;-cell_value.
-*        CONDENSE lv_value.
-*        lo_element_4-&gt;set_value( value = lv_value ).
-*      ENDIF.
-*
-*      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; value node
-*    ENDIF.
-*
-*    lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; column node
-*    ls_last_row = &lt;ls_sheet_content&gt;.
-*  ENDLOOP.
-*  IF sy-subrc = 0.
-*    READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-*    IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-*      CLEAR l_autofilter_hidden.
-*    ENDIF.
-*    IF lo_autofilter IS BOUND.
-*      IF ls_area-row_start &gt;=  ls_last_row-cell_row OR &quot; One less for header
-*        ls_area-row_end   &lt; ls_last_row-cell_row .
-*        CLEAR l_autofilter_hidden.
-*      ENDIF.
-*    ELSE.
-*      CLEAR l_autofilter_hidden.
-*    ENDIF.
-*    &quot; Row visibility of previos row.
-*    IF row_dimension-&gt;get_visible( ) = abap_false OR
-*       l_autofilter_hidden = abap_true.
-*      lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
-*    ENDIF.
-*    lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; row node
-*  ENDIF.
-*  DELETE io_worksheet-&gt;sheet_content WHERE cell_value = lc_dummy_cell_content.  &quot; Get rid of dummyentries
+*      READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = &lt;ls_sheet_content&gt;-cell_style.
+    IF lv_style_guid IS NOT INITIAL.
+      READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
+* end of change issue #157 - allow column cellstyles
+      lv_value = ls_style_mapping-style.
+      SHIFT lv_value RIGHT DELETING TRAILING space.
+      SHIFT lv_value LEFT DELETING LEADING space.
+      lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_s
+                                      value = lv_value ).
+    ENDIF.
+
+    &quot; For cells with formula ignore the value - Excel will calculate it
+    IF &lt;ls_sheet_content&gt;-cell_formula IS NOT INITIAL.
+      &quot; fomula node
+      lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_f
+                                                         parent = lo_document ).
+      lv_value = &lt;ls_sheet_content&gt;-cell_formula.
+      CONDENSE lv_value.
+      lo_element_4-&gt;set_value( value = lv_value ).
+      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
+    ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL           &quot;cell can have just style or formula
+       AND &lt;ls_sheet_content&gt;-cell_value &lt;&gt; lc_dummy_cell_content.
+      IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
+        IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
+          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
+                                        value = &apos;s&apos; ).
+        ELSE.
+          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
+                                        value = &lt;ls_sheet_content&gt;-data_type ).
+        ENDIF.
+      ENDIF.
+
+      &quot; value node
+      lo_element_4 = lo_document-&gt;create_simple_element( name   = lc_xml_node_v
+                                                       parent = lo_document ).
+
+      IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos; OR &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
+        lv_value = me-&gt;get_shared_string_index( &lt;ls_sheet_content&gt;-cell_value ).
+        CONDENSE lv_value.
+        lo_element_4-&gt;set_value( value = lv_value ).
+      ELSE.
+        lv_value = &lt;ls_sheet_content&gt;-cell_value.
+        CONDENSE lv_value.
+        lo_element_4-&gt;set_value( value = lv_value ).
+      ENDIF.
+
+      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; value node
+    ENDIF.
+
+    lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; column node
+    ls_last_row = &lt;ls_sheet_content&gt;.
+  ENDLOOP.
+  IF sy-subrc = 0.
+    READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
+    IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
+      CLEAR l_autofilter_hidden.
+    ENDIF.
+    IF lo_autofilter IS BOUND.
+      IF ls_area-row_start &gt;=  ls_last_row-cell_row OR &quot; One less for header
+        ls_area-row_end   &lt; ls_last_row-cell_row .
+        CLEAR l_autofilter_hidden.
+      ENDIF.
+    ELSE.
+      CLEAR l_autofilter_hidden.
+    ENDIF.
+    &quot; Row visibility of previos row.
+    IF row_dimension-&gt;get_visible( ) = abap_false OR
+       l_autofilter_hidden = abap_true.
+      lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
+    ENDIF.
+    lo_element-&gt;append_child( new_child = lo_element_2 ). &quot; row node
+  ENDIF.
+  DELETE io_worksheet-&gt;sheet_content WHERE cell_value = lc_dummy_cell_content.  &quot; Get rid of dummyentries
 
   lo_element_root-&gt;append_child( new_child = lo_element ). &quot; sheetData node
 
@@ -4325,13 +4819,6 @@ ENDMETHOD.</source>
       ENDIF.
       lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_showerrormessage
                                       value = lv_value ).
-      IF lo_data_validation-&gt;showdropdown EQ abap_true.
-        lv_value = &apos;1&apos;.
-      ELSE.
-        lv_value = &apos;0&apos;.
-      ENDIF.
-      lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_showdropdown
-                                      value = lv_value ).
       IF NOT lo_data_validation-&gt;errortitle IS INITIAL.
         lv_value = lo_data_validation-&gt;errortitle.
         lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_errortitle
@@ -4683,6 +5170,26 @@ ENDMETHOD.</source>
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDIF.
 
+* Begin - Add - Issue #180
+  &quot; (Legacy) drawings for comments
+  DATA: lo_drawing_for_comments  TYPE REF TO zcl_excel_comments.
+
+  lo_drawing_for_comments = io_worksheet-&gt;get_comments( ).
+  IF lo_drawing_for_comments-&gt;is_empty( ) = abap_false.
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_drawing_for_cmt
+                                                     parent = lo_document ).
+    ADD 1 TO lv_relation_id.  &quot; +1 for comments
+    ADD 1 TO lv_relation_id.  &quot; +1 for legacyDrawings
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    lo_element-&gt;set_attribute( name = &apos;r:id&apos;
+                               value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
+* End   - Add - Issue #180
+
 * tables
   DATA lv_table_count TYPE i.
 
@@ -4724,12 +5231,9 @@ ENDMETHOD.</source>
   lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer-&gt;render( ).
 
-
-*  REPLACE FIRST OCCURRENCE OF me-&gt;mv_sheet_data_xstring_dummy IN ep_content WITH me-&gt;mv_sheet_data_xstring IN BYTE MODE.
-
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" VERSION="1" LANGU="E" DESCRIPT="Add pagebreaks if necessary" EXPOSURE="1" STATE="1" EDITORDER="16 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" VERSION="1" LANGU="E" DESCRIPT="Add pagebreaks if necessary" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" SCONAME="IO_PARENT" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_PAGEBREAKS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
@@ -4814,7 +5318,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="17 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="IV_DRAWING_INDEX" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_RELS" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
@@ -4822,20 +5326,22 @@ ENDMETHOD.</source>
 
 
 ** Constant node name
-  DATA: lc_xml_node_relationships  TYPE string VALUE &apos;Relationships&apos;,
-        lc_xml_node_relationship   TYPE string VALUE &apos;Relationship&apos;,
+  DATA: lc_xml_node_relationships      TYPE string VALUE &apos;Relationships&apos;,
+        lc_xml_node_relationship       TYPE string VALUE &apos;Relationship&apos;,
         &quot; Node attributes
-        lc_xml_attr_id             TYPE string VALUE &apos;Id&apos;,
-        lc_xml_attr_type           TYPE string VALUE &apos;Type&apos;,
-        lc_xml_attr_target         TYPE string VALUE &apos;Target&apos;,
-        lc_xml_attr_target_mode    TYPE string VALUE &apos;TargetMode&apos;,
-        lc_xml_val_external        TYPE string VALUE &apos;External&apos;,
+        lc_xml_attr_id                 TYPE string VALUE &apos;Id&apos;,
+        lc_xml_attr_type               TYPE string VALUE &apos;Type&apos;,
+        lc_xml_attr_target             TYPE string VALUE &apos;Target&apos;,
+        lc_xml_attr_target_mode        TYPE string VALUE &apos;TargetMode&apos;,
+        lc_xml_val_external            TYPE string VALUE &apos;External&apos;,
         &quot; Node namespace
-        lc_xml_node_rels_ns        TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
-        lc_xml_node_rid_table_tp   TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/table&apos;,
-        lc_xml_node_rid_printer_tp TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;,
-        lc_xml_node_rid_drawing_tp TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
-        lc_xml_node_rid_link_tp    TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;.
+        lc_xml_node_rels_ns            TYPE string VALUE &apos;http://schemas.openxmlformats.org/package/2006/relationships&apos;,
+        lc_xml_node_rid_table_tp       TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/table&apos;,
+        lc_xml_node_rid_printer_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings&apos;,
+        lc_xml_node_rid_drawing_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing&apos;,
+        lc_xml_node_rid_comment_tp     TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments&apos;,        &quot; (+) Issue #180
+        lc_xml_node_rid_drawing_cmt_tp TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing&apos;,      &quot; (+) Issue #180
+        lc_xml_node_rid_link_tp        TYPE string VALUE &apos;http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink&apos;.
 
   DATA: lo_ixml          TYPE REF TO if_ixml,
         lo_document      TYPE REF TO if_ixml_document,
@@ -4901,6 +5407,58 @@ ENDMETHOD.</source>
                                   value = lc_xml_val_external ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDWHILE.
+
+* Begin - Add - Issue #180
+  DATA: lo_comments  TYPE REF TO zcl_excel_comments.
+
+  lo_comments = io_worksheet-&gt;get_comments( ).
+  IF lo_comments-&gt;is_empty( ) = abap_false.
+    &quot; Comment
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_comment_tp ).
+
+    lv_index_str = iv_drawing_index.
+    CONDENSE lv_index_str NO-GAPS.
+    MOVE me-&gt;c_xl_comments TO lv_value.
+    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value.
+    REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
+                              value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+
+    &quot; Drawing for comment
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_drawing_cmt_tp ).
+
+    lv_index_str = iv_drawing_index.
+    CONDENSE lv_index_str NO-GAPS.
+    MOVE me-&gt;cl_xl_drawing_for_comments TO lv_value.
+    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value.
+    REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
+                                  value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
+* End   - Add - Issue #180
 
 * drawing
   DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
@@ -4985,412 +5543,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_SHEET_DATA" VERSION="1" LANGU="E" DESCRIPT="Create sheet-data node ( this is where the data is )" EXPOSURE="1" STATE="1" EDITORDER="1 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_SHEET_DATA" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="XML Document in DOM Representation" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_SHEET_DATA" SCONAME="IO_WORKSHEET" VERSION="1" LANGU="E" DESCRIPT="Worksheet" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_WORKSHEET"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_SHEET_DATA" SCONAME="IT_COLUMN_DIMENSIONS" VERSION="1" LANGU="E" DESCRIPT="Collection of column dimensions" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_T_WORKSHEET_COLUMNDIME"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_SHEET_SHEET_DATA" SCONAME="RV_IXML_SHEET_DATA_ROOT" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
-  <source>METHOD create_xl_sheet_sheet_data.
-
-  TYPES: BEGIN OF lty_table_area,
-           left   TYPE i,
-           right  TYPE i,
-           top    TYPE i,
-           bottom TYPE i,
-         END OF lty_table_area.
-
-  CONSTANTS: lc_dummy_cell_content       TYPE zexcel_s_cell_data-cell_value VALUE &apos;})~~~ This is a dummy value for ABAP2XLSX and you should never find this in a real excelsheet Ihope&apos;.
-
-  CONSTANTS: lc_xml_node_sheetdata TYPE string VALUE &apos;sheetData&apos;,   &quot; SheetData tag
-             lc_xml_node_row       TYPE string VALUE &apos;row&apos;,         &quot; Row tag
-             lc_xml_attr_r         TYPE string VALUE &apos;r&apos;,           &quot; Cell:  row-attribute
-             lc_xml_attr_spans     TYPE string VALUE &apos;spans&apos;,       &quot; Cell: spans-attribute
-             lc_xml_node_c         TYPE string VALUE &apos;c&apos;,           &quot; Cell tag
-             lc_xml_node_v         TYPE string VALUE &apos;v&apos;,           &quot; Cell: value
-             lc_xml_node_f         TYPE string VALUE &apos;f&apos;,           &quot; Cell: formula
-             lc_xml_attr_s         TYPE string VALUE &apos;s&apos;,           &quot; Cell: style
-             lc_xml_attr_t         TYPE string VALUE &apos;t&apos;.           &quot; Cell: type
-
-  DATA: col_count              TYPE int4,
-        lo_autofilters         TYPE REF TO zcl_excel_autofilters,
-        lo_autofilter          TYPE REF TO zcl_excel_autofilter,
-        l_autofilter_hidden    TYPE flag,
-        lt_values              TYPE zexcel_t_autofilter_values,
-        ls_values              TYPE zexcel_s_autofilter_values,
-        ls_area                TYPE zexcel_s_autofilter_area,
-
-        lo_iterator            TYPE REF TO cl_object_collection_iterator,
-        lo_table               TYPE REF TO zcl_excel_table,
-        lt_table_areas         TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
-        ls_table_area          LIKE LINE OF lt_table_areas,
-
-        ls_sheet_content       LIKE LINE OF io_worksheet-&gt;sheet_content,
-        ls_sheet_content_empty LIKE LINE OF io_worksheet-&gt;sheet_content,
-        lv_current_row         TYPE i,
-        lv_next_row            TYPE i,
-        lv_last_row            TYPE i,
-
-        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
-        lo_row_dim_empty       TYPE REF TO zcl_excel_worksheet_rowdimensi,
-        row_dimension          TYPE REF TO zcl_excel_worksheet_rowdimensi,
-        lts_row_outlines       TYPE zcl_excel_worksheet=&gt;mty_ts_outlines_row,
-
-        ls_last_row            TYPE zexcel_s_cell_data,
-        ls_style_mapping       TYPE zexcel_s_styles_mapping,
-
-        lo_element_2           TYPE REF TO if_ixml_element,
-        lo_element_3           TYPE REF TO if_ixml_element,
-        lo_element_4           TYPE REF TO if_ixml_element,
-
-        lv_value               TYPE string,
-        lv_style_guid          TYPE zexcel_cell_style,
-        lv_column_p            TYPE zexcel_cell_column_alpha,
-
-        xxx.
-
-  FIELD-SYMBOLS: &lt;ls_sheet_content&gt; TYPE zexcel_s_cell_data,
-                 &lt;column_dimension&gt; TYPE zexcel_s_worksheet_columndime,
-                 &lt;row_dimension&gt;    TYPE zexcel_s_worksheet_rowdimensio,
-                 &lt;ls_row_outline&gt;   LIKE LINE OF lts_row_outlines.
-
-
-  DATA: lv_xstring_partial TYPE xstring,
-        lv_xstring         TYPE xstring.
-
-  &quot; sheetData node
-  rv_ixml_sheet_data_root = io_document-&gt;create_simple_element( name   = lc_xml_node_sheetdata
-                                                                parent = io_document ).
-  me-&gt;mv_sheet_data_xstring_dummy = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
-
-  &quot; Get column count
-  col_count      = io_worksheet-&gt;get_highest_column( ).
-  &quot; Get autofilter
-*lv_guid        = io_worksheet-&gt;get_guid( ) .
-  lo_autofilters = excel-&gt;get_autofilters_reference( ).
-  lo_autofilter  = lo_autofilters-&gt;get( io_worksheet = io_worksheet ) .
-  IF lo_autofilter IS BOUND.
-    lt_values           = lo_autofilter-&gt;get_values( ) .
-    ls_area             = lo_autofilter-&gt;get_filter_area( ) .
-    l_autofilter_hidden = abap_true. &quot; First defautl is not showing
-  ENDIF.
-*--------------------------------------------------------------------*
-*issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - start
-*--------------------------------------------------------------------*
-*Build table to hold all table-areas attached to this sheet
-  lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
-  WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_table ?= lo_iterator-&gt;if_object_collection_iterator~get_next( ).
-    ls_table_area-left   = zcl_excel_common=&gt;convert_column2int( lo_table-&gt;settings-top_left_column ).
-    ls_table_area-right  = lo_table-&gt;get_right_column_integer( ).
-    ls_table_area-top    = lo_table-&gt;settings-top_left_row.
-    ls_table_area-bottom = lo_table-&gt;get_bottom_row_integer( ).
-    INSERT ls_table_area INTO TABLE lt_table_areas.
-  ENDWHILE.
-*--------------------------------------------------------------------*
-*issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 1 - end
-*--------------------------------------------------------------------*
-*We have problems when the first rows or trailing rows are not set but we have rowinformation
-*to solve this we add dummycontent into first and last line that will not be set
-*Set first line if necessary
-  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = 1.
-  IF sy-subrc &lt;&gt; 0.
-    ls_sheet_content_empty-cell_row      = 1.
-    ls_sheet_content_empty-cell_column   = 1.
-    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
-    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
-  ENDIF.
-*Set last line if necessary
-*Last row with cell content
-  lv_last_row = io_worksheet-&gt;get_highest_row( ).
-*Last line with row-information set directly ( like line height, hidden-status ... )
-  lts_row_dimensions = io_worksheet-&gt;get_row_dimensions( ).
-  SORT lts_row_dimensions BY row DESCENDING.
-  READ TABLE lts_row_dimensions INDEX 1 ASSIGNING &lt;row_dimension&gt;.
-  IF sy-subrc = 0 AND &lt;row_dimension&gt;-row &gt; lv_last_row.
-    lv_last_row = &lt;row_dimension&gt;-row.
-  ENDIF.
-*Last line with row-information set indirectly by row outline
-  lts_row_outlines = io_worksheet-&gt;get_row_outlines( ).
-  LOOP AT lts_row_outlines ASSIGNING &lt;ls_row_outline&gt;.
-    IF &lt;ls_row_outline&gt;-collapsed = &apos;X&apos;.
-      lv_current_row = &lt;ls_row_outline&gt;-row_to + 1.  &quot; collapsed-status may be set on following row
-    ELSE.
-      lv_current_row = &lt;ls_row_outline&gt;-row_to.  &quot; collapsed-status may be set on following row
-    ENDIF.
-    IF lv_current_row &gt; lv_last_row.
-      lv_last_row = lv_current_row.
-    ENDIF.
-  ENDLOOP.
-  READ TABLE io_worksheet-&gt;sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = lv_last_row.
-  IF sy-subrc &lt;&gt; 0.
-    ls_sheet_content_empty-cell_row      = lv_last_row.
-    ls_sheet_content_empty-cell_column   = 1.
-    ls_sheet_content_empty-cell_value    = lc_dummy_cell_content.
-    INSERT ls_sheet_content_empty INTO TABLE io_worksheet-&gt;sheet_content.
-  ENDIF.
-
-  CLEAR ls_sheet_content.
-  LOOP AT io_worksheet-&gt;sheet_content INTO ls_sheet_content.
-    IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
-      CLEAR l_autofilter_hidden.
-    ELSE.
-      READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-      IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-        CLEAR l_autofilter_hidden.
-      ENDIF.
-    ENDIF.
-    CLEAR ls_style_mapping.
-*Create row element
-*issues #346,#154, #195  - problems when we have information in row_dimension but no cell content in that row
-*Get next line that may have to be added.  If we have empty lines this is the next line after previous cell content
-*Otherwise it is the line of the current cell content
-    lv_current_row = ls_last_row-cell_row + 1.
-    IF lv_current_row &gt; ls_sheet_content-cell_row.
-      lv_current_row = ls_sheet_content-cell_row.
-    ENDIF.
-*Fill in empty lines if necessary - assign an emtpy sheet content
-    lv_next_row = lv_current_row.
-    WHILE lv_next_row &lt;= ls_sheet_content-cell_row.
-      lv_current_row = lv_next_row.
-      lv_next_row = lv_current_row + 1.
-      IF lv_current_row = ls_sheet_content-cell_row. &quot; cell value found in this row
-        ASSIGN ls_sheet_content TO &lt;ls_sheet_content&gt;.
-      ELSE.
-*Check if empty row is really necessary - this is basically the case when we have information in row_dimension
-        lo_row_dim_empty = io_worksheet-&gt;get_row_dimension( lv_current_row ).
-        CHECK lo_row_dim_empty-&gt;get_row_height( )                 &gt;= 0          OR
-              lo_row_dim_empty-&gt;get_collapsed( io_worksheet )      = abap_true  OR
-              lo_row_dim_empty-&gt;get_outline_level( io_worksheet )  &gt; 0          OR
-              lo_row_dim_empty-&gt;get_xf_index( )                   &lt;&gt; 0.
-        &quot; Dummyentry A1
-        ls_sheet_content_empty-cell_row      = lv_current_row.
-        ls_sheet_content_empty-cell_column   = 1.
-        ASSIGN ls_sheet_content_empty TO &lt;ls_sheet_content&gt;.
-      ENDIF.
-
-      IF ls_last_row-cell_row NE &lt;ls_sheet_content&gt;-cell_row.
-        IF lo_autofilter IS BOUND.
-          IF ls_area-row_start &gt;=  ls_last_row-cell_row OR &quot; One less for header
-            ls_area-row_end   &lt; ls_last_row-cell_row .
-            CLEAR l_autofilter_hidden.
-          ENDIF.
-        ELSE.
-          CLEAR l_autofilter_hidden.
-        ENDIF.
-        IF ls_last_row-cell_row IS NOT INITIAL.
-          &quot; Row visibility of previos row.
-          IF row_dimension-&gt;get_visible( io_worksheet ) = abap_false OR
-             l_autofilter_hidden = abap_true.
-            lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
-          ENDIF.
-*          lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-*          CONCATENATE lv_xstring lv_xstring_partial
-*              INTO lv_xstring IN BYTE MODE.
-          rv_ixml_sheet_data_root-&gt;append_child( new_child = lo_element_2 ). &quot; row node
-        ENDIF.
-        &quot; Add new row
-        lo_element_2 = io_document-&gt;create_simple_element( name   = lc_xml_node_row
-                                                           parent = io_document ).
-        &quot; r
-        lv_value = &lt;ls_sheet_content&gt;-cell_row.
-        SHIFT lv_value RIGHT DELETING TRAILING space.
-        SHIFT lv_value LEFT DELETING LEADING space.
-
-        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_r
-                                        value = lv_value ).
-        &quot; Spans
-        lv_value = col_count.
-        CONCATENATE &apos;1:&apos; lv_value INTO lv_value.
-        SHIFT lv_value RIGHT DELETING TRAILING space.
-        SHIFT lv_value LEFT DELETING LEADING space.
-        lo_element_2-&gt;set_attribute_ns( name  = lc_xml_attr_spans
-                                        value = lv_value ).
-        row_dimension = io_worksheet-&gt;get_row_dimension( &lt;ls_sheet_content&gt;-cell_row ).
-        &quot; Do we need the row dimension attributes?
-        IF row_dimension-&gt;get_row_height( )   &gt;= 0 OR
-           row_dimension-&gt;get_collapsed( io_worksheet )     = abap_true OR
-           row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0 OR
-           row_dimension-&gt;get_xf_index( )     &lt;&gt; 0 OR
-           l_autofilter_hidden = abap_true.
-          &quot; Row dimensions
-          IF row_dimension-&gt;get_row_height( ) &gt;= 0.
-            lo_element_2-&gt;set_attribute_ns( name  = &apos;customHeight&apos; value = &apos;1&apos;).
-            lv_value = row_dimension-&gt;get_row_height( ).
-            lo_element_2-&gt;set_attribute_ns( name  = &apos;ht&apos; value = lv_value ).
-          ENDIF.
-          &quot; Collapsed
-          IF row_dimension-&gt;get_collapsed( io_worksheet ) = abap_true.
-            lo_element_2-&gt;set_attribute_ns( name  = &apos;collapsed&apos; value = &apos;true&apos;).
-          ENDIF.
-          &quot; Outline level
-          IF row_dimension-&gt;get_outline_level( io_worksheet ) &gt; 0.
-            lv_value = row_dimension-&gt;get_outline_level( io_worksheet ).
-            SHIFT lv_value RIGHT DELETING TRAILING space.
-            SHIFT lv_value LEFT DELETING LEADING space.
-            lo_element_2-&gt;set_attribute_ns( name  = &apos;outlineLevel&apos; value = lv_value ).
-          ENDIF.
-          &quot; Style
-          IF row_dimension-&gt;get_xf_index( ) &lt;&gt; 0.
-            lv_value = row_dimension-&gt;get_xf_index( ).
-            lo_element_2-&gt;set_attribute_ns( name  = &apos;s&apos; value = lv_value ).
-            lo_element_2-&gt;set_attribute_ns( name  = &apos;customFormat&apos;  value = &apos;1&apos;).
-          ENDIF.
-        ENDIF.
-        IF lt_values IS INITIAL. &quot; no values attached to autofilter  &quot; issue #368 autofilter filtering too much
-          CLEAR l_autofilter_hidden.
-        ELSE.
-          l_autofilter_hidden = abap_true. &quot; First default is not showing
-        ENDIF.
-      ELSE.
-
-      ENDIF.
-    ENDWHILE.
-
-    lo_element_3 = io_document-&gt;create_simple_element( name   = lc_xml_node_c
-                                                       parent = io_document ).
-
-    lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_r
-                                    value = &lt;ls_sheet_content&gt;-cell_coords ).
-
-*begin of change issue #157 - allow column cellstyle
-*if no cellstyle is set, look into column, then into sheet
-    IF &lt;ls_sheet_content&gt;-cell_style IS NOT INITIAL.
-      lv_style_guid = &lt;ls_sheet_content&gt;-cell_style.
-    ELSE.
-*--------------------------------------------------------------------*
-*issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - start
-*--------------------------------------------------------------------*
-*Check if cell in any of the table areas
-      LOOP AT lt_table_areas TRANSPORTING NO FIELDS WHERE top    &lt;= &lt;ls_sheet_content&gt;-cell_row
-                                                      AND bottom &gt;= &lt;ls_sheet_content&gt;-cell_row
-                                                      AND left   &lt;= &lt;ls_sheet_content&gt;-cell_column
-                                                      AND right  &gt;= &lt;ls_sheet_content&gt;-cell_column.
-        EXIT.
-      ENDLOOP.
-      IF sy-subrc = 0.
-        CLEAR lv_style_guid.     &quot; No style --&gt; EXCEL will use built-in-styles as declared in the tables-section
-      ELSE.
-*--------------------------------------------------------------------*
-*issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 2 - end
-*--------------------------------------------------------------------*
-        lv_column_p = zcl_excel_common=&gt;convert_column2alpha( &lt;ls_sheet_content&gt;-cell_column ).
-        READ TABLE it_column_dimensions WITH KEY column = lv_column_p ASSIGNING &lt;column_dimension&gt;.
-        IF sy-subrc = 0.
-          lv_style_guid = &lt;column_dimension&gt;-column_dimension-&gt;get_column_style_guid( ).
-          IF lv_style_guid IS INITIAL.
-            lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
-          ENDIF.
-        ELSE.
-          lv_style_guid = io_worksheet-&gt;zif_excel_sheet_properties~get_style( ).
-        ENDIF.
-*--------------------------------------------------------------------*
-*issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - start
-*--------------------------------------------------------------------*
-      ENDIF.
-*--------------------------------------------------------------------*
-*issue #220 - If cell in tables-area don&apos;t use default from row or column or sheet - Coding 3 - end
-*--------------------------------------------------------------------*
-    ENDIF.
-*  IF &lt;ls_sheet_content&gt;-cell_style IS NOT INITIAL.
-*    READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = &lt;ls_sheet_content&gt;-cell_style.
-    IF lv_style_guid IS NOT INITIAL.
-      READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
-*end of change issue #157 - allow column cellstyles
-      lv_value = ls_style_mapping-style.
-      SHIFT lv_value RIGHT DELETING TRAILING space.
-      SHIFT lv_value LEFT DELETING LEADING space.
-      lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_s
-                                      value = lv_value ).
-    ENDIF.
-
-    &quot; For cells with formula ignore the value - Excel will calculate it
-    IF &lt;ls_sheet_content&gt;-cell_formula IS NOT INITIAL.
-      &quot; fomula node
-      lo_element_4 = io_document-&gt;create_simple_element( name   = lc_xml_node_f
-                                                         parent = io_document ).
-      lv_value = &lt;ls_sheet_content&gt;-cell_formula.
-      CONDENSE lv_value.
-      lo_element_4-&gt;set_value( value = lv_value ).
-      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; fomula node
-    ELSEIF &lt;ls_sheet_content&gt;-cell_value IS NOT INITIAL           &quot;cell can have just style or formula
-       AND &lt;ls_sheet_content&gt;-cell_value &lt;&gt; lc_dummy_cell_content.
-      IF &lt;ls_sheet_content&gt;-data_type IS NOT INITIAL.
-        IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
-          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
-                                          value = &apos;s&apos; ).
-        ELSE.
-          lo_element_3-&gt;set_attribute_ns( name  = lc_xml_attr_t
-                                          value = &lt;ls_sheet_content&gt;-data_type ).
-        ENDIF.
-      ENDIF.
-
-      &quot; value node
-      lo_element_4 = io_document-&gt;create_simple_element( name   = lc_xml_node_v
-                                                         parent = io_document ).
-
-      IF &lt;ls_sheet_content&gt;-data_type EQ &apos;s&apos; OR &lt;ls_sheet_content&gt;-data_type EQ &apos;s_leading_blanks&apos;.
-        lv_value = me-&gt;get_shared_string_index( &lt;ls_sheet_content&gt;-cell_value ).
-        CONDENSE lv_value.
-        lo_element_4-&gt;set_value( value = lv_value ).
-      ELSE.
-        lv_value = &lt;ls_sheet_content&gt;-cell_value.
-        CONDENSE lv_value.
-        lo_element_4-&gt;set_value( value = lv_value ).
-      ENDIF.
-
-      lo_element_3-&gt;append_child( new_child = lo_element_4 ). &quot; value node
-    ENDIF.
-
-    lo_element_2-&gt;append_child( new_child = lo_element_3 ). &quot; column node
-    ls_last_row = &lt;ls_sheet_content&gt;.
-  ENDLOOP.
-  IF sy-subrc = 0.
-    READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-    IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-      CLEAR l_autofilter_hidden.
-    ENDIF.
-    IF lo_autofilter IS BOUND.
-      IF ls_area-row_start &gt;=  ls_last_row-cell_row OR &quot; One less for header
-        ls_area-row_end   &lt; ls_last_row-cell_row .
-        CLEAR l_autofilter_hidden.
-      ENDIF.
-    ELSE.
-      CLEAR l_autofilter_hidden.
-    ENDIF.
-    &quot; Row visibility of previos row.
-    IF row_dimension-&gt;get_visible( ) = abap_false OR
-       l_autofilter_hidden = abap_true.
-      lo_element_2-&gt;set_attribute_ns( name  = &apos;hidden&apos; value = &apos;true&apos;).
-    ENDIF.
-*    lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-*    CONCATENATE lv_xstring lv_xstring_partial
-*        INTO lv_xstring IN BYTE MODE.
-    rv_ixml_sheet_data_root-&gt;append_child( new_child = lo_element_2 ). &quot; row node
-  ENDIF.
-  DELETE io_worksheet-&gt;sheet_content WHERE cell_value = lc_dummy_cell_content.  &quot; Get rid of dummyentries
-
-*
-*
-*  me-&gt;mv_sheet_data_xstring = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
-*
-*
-** Für den Dummystringersatz jetzt alles zurück auf Anfang
-*  rv_ixml_sheet_data_root = io_document-&gt;create_simple_element( name   = lc_xml_node_sheetdata
-*                                                                parent = io_document ).
-*  me-&gt;mv_sheet_data_xstring_dummy = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
-*
-*  DATA: lv_sheetdata_tag_start TYPE xstring,
-*        lv_sheetdata_tag_end   TYPE xstring.
-*
-*  lv_sheetdata_tag_start = cl_bcs_convert=&gt;string_to_xstring( &apos;&lt;sheetData&gt;&apos; ).
-*  lv_sheetdata_tag_end   = cl_bcs_convert=&gt;string_to_xstring( &apos;&lt;/sheetData&gt;&apos; ).
-*  CONCATENATE lv_sheetdata_tag_start lv_xstring lv_sheetdata_tag_end
-*      INTO lv_xstring IN BYTE MODE.
-*  me-&gt;mv_sheet_data_xstring = lv_xstring.
-
-ENDMETHOD.</source>
- </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="18 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_styles.
 *--------------------------------------------------------------------*
@@ -5555,16 +5708,6 @@ ENDMETHOD.</source>
         lv_index         TYPE i,
         lv_align_flag    TYPE c.
 
-  TYPES: BEGIN OF ts_built_in_format,
-           num_format TYPE zexcel_number_format,
-           id         TYPE sytabix,
-         END OF ts_built_in_format.
-
-  DATA: lt_built_in_num_formats TYPE HASHED TABLE OF ts_built_in_format WITH UNIQUE KEY num_format,
-        ls_built_in_num_format  LIKE LINE OF lt_built_in_num_formats.
-  FIELD-SYMBOLS: &lt;ls_built_in_format&gt; LIKE LINE OF lt_built_in_num_formats,
-                 &lt;ls_reader_built_in&gt; LIKE LINE OF zcl_excel_style_number_format=&gt;mt_built_in_num_formats.
-
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
   lo_ixml = cl_ixml=&gt;create( ).
@@ -5602,12 +5745,7 @@ ENDMETHOD.</source>
   lo_element_numfmts = lo_document-&gt;create_simple_element( name   = lc_xml_node_numfmts
                                                            parent = lo_document ).
 
-* Prepare built-in number formats.
-  LOOP AT zcl_excel_style_number_format=&gt;mt_built_in_num_formats ASSIGNING &lt;ls_reader_built_in&gt;.
-    ls_built_in_num_format-id         = &lt;ls_reader_built_in&gt;-id.
-    ls_built_in_num_format-num_format = &lt;ls_reader_built_in&gt;-format-&gt;format_code.
-    INSERT ls_built_in_num_format INTO TABLE lt_built_in_num_formats.
-  ENDLOOP.
+
 * Compress styles
   lo_iterator = excel-&gt;get_styles_iterator( ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
@@ -5683,22 +5821,15 @@ ENDMETHOD.</source>
     IF ls_numfmt-numfmt NE zcl_excel_style_number_format=&gt;c_format_date_std.&quot; and ls_numfmt-NUMFMT ne &apos;STD_NDEC&apos;. &quot; ALE Changes on going
       &quot;---
       IF ls_numfmt IS NOT INITIAL.
-* issue  #389 - Problem with built-in format ( those are not being taken account of )
-* There are some internal number formats built-in into EXCEL
-* Use these instead of duplicating the entries here, since they seem to be language-dependant and adjust to user settings in excel
-        READ TABLE lt_built_in_num_formats ASSIGNING &lt;ls_built_in_format&gt; WITH TABLE KEY num_format = ls_numfmt-numfmt.
-        IF sy-subrc = 0.
-          ls_cellxfs-numfmtid = &lt;ls_built_in_format&gt;-id.
+
+        READ TABLE lt_numfmts FROM ls_numfmt TRANSPORTING NO FIELDS.
+        IF sy-subrc EQ 0.
+          ls_cellxfs-numfmtid = sy-tabix.
         ELSE.
-          READ TABLE lt_numfmts FROM ls_numfmt TRANSPORTING NO FIELDS.
-          IF sy-subrc EQ 0.
-            ls_cellxfs-numfmtid = sy-tabix.
-          ELSE.
-            APPEND ls_numfmt TO lt_numfmts.
-            DESCRIBE TABLE lt_numfmts LINES ls_cellxfs-numfmtid.
-          ENDIF.
-          ADD zcl_excel_common=&gt;c_excel_numfmt_offset TO ls_cellxfs-numfmtid. &quot; Add OXML offset for custom styles
+          APPEND ls_numfmt TO lt_numfmts.
+          DESCRIBE TABLE lt_numfmts LINES ls_cellxfs-numfmtid.
         ENDIF.
+        ADD zcl_excel_common=&gt;c_excel_numfmt_offset TO ls_cellxfs-numfmtid. &quot; Add OXML offset for custom styles
         ls_cellxfs-applynumberformat    = 1.
       ELSE.
         ls_cellxfs-applynumberformat    = 0.
@@ -6392,7 +6523,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos; color node" EXPOSURE="1" STATE="1" EDITORDER="19 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/styles.xml&apos; color node" EXPOSURE="1" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_DOCUMENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IO_PARENT" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_ELEMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_STYLES_COLOR_NODE" SCONAME="IV_COLOR_ELEM_NAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PARVALUE="&apos;color&apos;"/>
@@ -6443,7 +6574,7 @@ ENDMETHOD.</source>
   io_parent-&gt;append_child( new_child = lo_sub_element ).
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="20 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/tables/____.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="IO_TABLE" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_TABLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_TABLE" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_table.
@@ -6622,7 +6753,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="21 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/theme/theme1.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_THEME" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>method CREATE_XL_THEME.
 
@@ -6711,18 +6842,18 @@ ENDMETHOD.</source>
 
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="22 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" VERSION="1" LANGU="E" DESCRIPT="Create &apos;xl/workbook.xml&apos;" EXPOSURE="1" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="CREATE_XL_WORKBOOK" SCONAME="EP_CONTENT" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
   <source>METHOD create_xl_workbook.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmoecker,      (done)              2012-11-07
+*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmoecker,                             2012-12-01
+*           - Stefan SchmÃ¶cker,                             2012-12-01
 * changes:  correction of pointer to localSheetId
 *--------------------------------------------------------------------*
 
@@ -7038,7 +7169,7 @@ ENDMETHOD.</source>
 
 ENDMETHOD.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" VERSION="1" LANGU="E" DESCRIPT="Convert a FLAG to BOOLEAN value" EXPOSURE="0" STATE="1" EDITORDER="25 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="IP_FLAG" VERSION="1" LANGU="E" DESCRIPT="General Flag" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="FLAG"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="FLAG2BOOL" SCONAME="EP_BOOLEAN" VERSION="1" LANGU="E" DESCRIPT="Boolean value" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="CHAR5"/>
   <source>method FLAG2BOOL.
@@ -7051,7 +7182,7 @@ ENDMETHOD.</source>
   ENDIF.
   endmethod.</source>
  </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="1" STATE="1" EDITORDER="23 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+ <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" VERSION="1" LANGU="E" DESCRIPT="Get shared string index" EXPOSURE="1" STATE="1" EDITORDER="24 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="IP_CELL_VALUE" VERSION="1" LANGU="E" DESCRIPT="Cell Value" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_VALUE"/>
   <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="GET_SHARED_STRING_INDEX" SCONAME="EP_INDEX" VERSION="1" LANGU="E" DESCRIPT="Natural Number" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="INT4"/>
   <source>METHOD get_shared_string_index.
@@ -7062,62 +7193,6 @@ ENDMETHOD.</source>
 *  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
   READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
   ep_index = ls_shared_string-string_no.
-
-ENDMETHOD.</source>
- </method>
- <method CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="RENDER_IXML_ELEMENT_NO_HEADER" VERSION="1" LANGU="E" DESCRIPT="Render ixml element - no header" EXPOSURE="1" STATE="1" EDITORDER="25 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="RENDER_IXML_ELEMENT_NO_HEADER" SCONAME="IV_IXML_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="Element of an XML Document" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_ELEMENT"/>
-  <parameter CLSNAME="ZCL_EXCEL_WRITER_2007" CMPNAME="RENDER_IXML_ELEMENT_NO_HEADER" SCONAME="RV_XSTRING" VERSION="1" LANGU="E" DESCRIPT="Rendered node" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
-  <source>METHOD render_ixml_element_no_header.
-
-*
-  DATA: lo_ixml          TYPE REF TO if_ixml,
-        lo_document      TYPE REF TO if_ixml_document,
-*      lo_element_root  type ref to if_ixml_element,
-*      lo_element       type ref to if_ixml_element,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
-        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-        lo_ostream       TYPE REF TO if_ixml_ostream,
-        lo_renderer      TYPE REF TO if_ixml_renderer.
-
-
-  DATA: lv_content TYPE string.
-  DATA: lv_contentx TYPE xstring.
-
-**********************************************************************
-* STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=&gt;create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml-&gt;create_encoding( byte_order = if_ixml_encoding=&gt;co_platform_endian
-                                          character_set = &apos;utf-8&apos; ).
-  lo_document = lo_ixml-&gt;create_document( ).
-  lo_document-&gt;set_encoding( lo_encoding ).
-  lo_document-&gt;set_standalone( abap_true ).
-  lo_document-&gt;set_declaration( abap_false ).  &quot;  NO header!!
-
-  lo_document-&gt;append_child( new_child = iv_ixml_element ).
-
-
-**********************************************************************
-* STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml-&gt;create_stream_factory( ).
-*  lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = ep_content ).
-  lo_ostream = lo_streamfactory-&gt;create_ostream_cstring( string = lv_content ).
-  lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer-&gt;render( ).
-
-*  write:/ lv_content.
-
-  lo_streamfactory = lo_ixml-&gt;create_stream_factory( ).
-  lo_ostream = lo_streamfactory-&gt;create_ostream_xstring( string = rv_xstring ).
-*  lo_ostream = lo_streamfactory-&gt;create_ostream_cstring( string = lv_content ).
-  lo_renderer = lo_ixml-&gt;create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer-&gt;render( ).
-
-
-*  rv_xstring = lv_contentx.
 
 ENDMETHOD.</source>
  </method>
