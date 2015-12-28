@@ -53,6 +53,25 @@ START-OF-SELECTION.
   lo_comment-&gt;set_text( ip_ref = &apos;F6&apos; ip_text = |A comment split{ cl_abap_char_utilities=&gt;cr_lf }on 2 lines?| ).
   lo_worksheet-&gt;add_comment( lo_comment ).
 
+  &quot; Second sheet
+  lo_worksheet = lo_excel-&gt;add_new_worksheet( ).
+  lo_worksheet-&gt;set_default_excel_date_format( zcl_excel_style_number_format=&gt;c_format_date_yyyymmdd ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Sheet2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 1 ip_value = &apos;Date Format set to YYYYMMDD&apos; ).
+  &quot; Insert current date
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 3 ip_value = &apos;Current Date:&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 4 ip_value = sy-datum ).
+
+  lo_hyperlink = zcl_excel_hyperlink=&gt;create_internal_link( iv_location = &apos;Sheet3!B2&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;A&apos; ip_row = 6 ip_value = &apos;This is link to the third sheet&apos; ip_hyperlink = lo_hyperlink ).
+
+  lo_comment = lo_excel-&gt;add_new_comment( ).
+*  lo_comment-&gt;set_text( ip_ref = &apos;A8&apos; ip_text = &apos;What about a comment on second sheet?&apos; ).
+  lo_comment-&gt;set_text( ip_column = &apos;A&apos; ip_row = 8 ip_text = &apos;What about a comment on second sheet?&apos; ).
+  lo_worksheet-&gt;add_comment( lo_comment ).
+
+  lo_excel-&gt;set_active_sheet_index_by_name( &apos;Sheet1&apos; ).
+
 *** Create output
   lcl_output=&gt;output( lo_excel ).</source>
 </PROG>
