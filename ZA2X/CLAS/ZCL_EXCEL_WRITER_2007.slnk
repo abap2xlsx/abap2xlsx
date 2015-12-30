@@ -5170,7 +5170,7 @@ ENDMETHOD.</source>
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDIF.
 
-* Begin - Add - GGAR
+* Begin - Add - Issue #180
   &quot; (Legacy) drawings for comments
   DATA: lo_drawing_for_comments  TYPE REF TO zcl_excel_comments.
 
@@ -5178,7 +5178,6 @@ ENDMETHOD.</source>
   IF lo_drawing_for_comments-&gt;is_empty( ) = abap_false.
     lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_drawing_for_cmt
                                                      parent = lo_document ).
-    ADD 1 TO lv_relation_id.  &quot; +1 for comments
     ADD 1 TO lv_relation_id.  &quot; +1 for legacyDrawings
 
     lv_value = lv_relation_id.
@@ -5187,8 +5186,10 @@ ENDMETHOD.</source>
     lo_element-&gt;set_attribute( name = &apos;r:id&apos;
                                value = lv_value ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
+
+    ADD 1 TO lv_relation_id.  &quot; +1 for comments (not referenced in XL sheet but let&apos;s reserve the rId)
   ENDIF.
-* End   - Add - GGAR
+* End   - Add - Issue #180
 
 * tables
   DATA lv_table_count TYPE i.
@@ -5409,58 +5410,6 @@ ENDMETHOD.</source>
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDWHILE.
 
-* Begin - Add - Issue #180
-  DATA: lo_comments  TYPE REF TO zcl_excel_comments.
-
-  lo_comments = io_worksheet-&gt;get_comments( ).
-  IF lo_comments-&gt;is_empty( ) = abap_false.
-    &quot; Comment
-    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
-                                                     parent = lo_document ).
-    ADD 1 TO lv_relation_id.
-
-    lv_value = lv_relation_id.
-    CONDENSE lv_value.
-    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
-                                  value = lv_value ).
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
-                                  value = lc_xml_node_rid_comment_tp ).
-
-    lv_index_str = iv_comment_index.
-    CONDENSE lv_index_str NO-GAPS.
-    MOVE me-&gt;c_xl_comments TO lv_value.
-    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value.
-    REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
-                              value = lv_value ).
-    lo_element_root-&gt;append_child( new_child = lo_element ).
-
-    &quot; Drawing for comment
-    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
-                                                     parent = lo_document ).
-
-    ADD 1 TO lv_relation_id.
-
-    lv_value = lv_relation_id.
-    CONDENSE lv_value.
-    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
-                                  value = lv_value ).
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
-                                  value = lc_xml_node_rid_drawing_cmt_tp ).
-
-    lv_index_str = iv_comment_index.
-    CONDENSE lv_index_str NO-GAPS.
-    MOVE me-&gt;cl_xl_drawing_for_comments TO lv_value.
-    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value.
-    REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
-    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
-                                  value = lv_value ).
-    lo_element_root-&gt;append_child( new_child = lo_element ).
-  ENDIF.
-* End   - Add - Issue #180
-
 * drawing
   DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
 
@@ -5487,6 +5436,58 @@ ENDMETHOD.</source>
                               value = lv_value ).
     lo_element_root-&gt;append_child( new_child = lo_element ).
   ENDIF.
+
+* Begin - Add - Issue #180
+  DATA: lo_comments  TYPE REF TO zcl_excel_comments.
+
+  lo_comments = io_worksheet-&gt;get_comments( ).
+  IF lo_comments-&gt;is_empty( ) = abap_false.
+    &quot; Drawing for comment
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_drawing_cmt_tp ).
+
+    lv_index_str = iv_comment_index.
+    CONDENSE lv_index_str NO-GAPS.
+    MOVE me-&gt;cl_xl_drawing_for_comments TO lv_value.
+    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value.
+    REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
+                                  value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+
+    &quot; Comment
+    lo_element = lo_document-&gt;create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE &apos;rId&apos; lv_value INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_comment_tp ).
+
+    lv_index_str = iv_comment_index.
+    CONDENSE lv_index_str NO-GAPS.
+    MOVE me-&gt;c_xl_comments TO lv_value.
+    REPLACE &apos;xl&apos; WITH &apos;..&apos; INTO lv_value.
+    REPLACE &apos;#&apos; WITH lv_index_str INTO lv_value.
+    lo_element-&gt;set_attribute_ns( name  = lc_xml_attr_target
+                              value = lv_value ).
+    lo_element_root-&gt;append_child( new_child = lo_element ).
+  ENDIF.
+* End   - Add - Issue #180
 
   lo_iterator = io_worksheet-&gt;get_tables_iterator( ).
   WHILE lo_iterator-&gt;if_object_collection_iterator~has_next( ) EQ abap_true.
