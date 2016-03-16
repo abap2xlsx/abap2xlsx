@@ -2948,7 +2948,7 @@ ENDMETHOD.</source>
 
     lo_element_shape-&gt;set_attribute_ns( : name  = lc_xml_attr_id          value = |_x0000_s{ 1024 + lv_index }| ),
                                           name  = lc_xml_attr_type        value = &apos;#_x0000_t202&apos; ),
-                                          name  = lc_xml_attr_style       value = &apos;position:absolute;margin-left:117pt;margin-top:172.5pt;width:108pt;height:59.25pt;z-index:1;  visibility:hidden&apos; ),
+                                          name  = lc_xml_attr_style       value = &apos;size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden&apos; ),
                                           name  = lc_xml_attr_fillcolor   value = &apos;#ffffe1&apos; ),
                                           name  = lc_xml_attr_oinsetmode  value = lc_xml_attr_val_auto ).
 
