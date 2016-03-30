@@ -1,3 +1,19 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @fidley
+ Unwatch 41
+  Star 63
+  Fork 38 ivanfemia/abap2xlsx
+ Code  Issues 31  Pull requests 2  Wiki  Pulse  Graphs
+Branch: master Find file Copy pathabap2xlsx/ZA2X/CLAS/ZCL_EXCEL_TABLE.slnk
+96d9451  on 22 Nov 2015
+@StefanSchmoecker StefanSchmoecker Contribution by Stefan Schnell: Added all built-in styles into class …
+3 contributors @ivanfemia @tmackowski @StefanSchmoecker
+RawBlameHistory     272 lines (239 sloc)  35.5 KB
 <?xml version="1.0" encoding="utf-8"?>
 <CLAS CLSNAME="ZCL_EXCEL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Represents Excel Table" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " ZSAPLINK_PLUGIN_MAJOR_VERSION="0 " ZSAPLINK_PLUGIN_MINOR_VERSION="1 " ZSAPLINK_PLUGIN_BUILD_VERSION="0 " ZSAPLINK_PLUGIN_INFO1="ZSAPLINK_CLASS is part of the main ZSAPLINK project --&gt; This plugin found there instead of ZSAPLINK_PLUGINS projects" ZSAPLINK_PLUGIN_INFO2="SAPLINK homepage: https://www.assembla.com/spaces/saplink/wiki" ZSAPLINK_PLUGIN_INFO3="Download from https://www.assembla.com/code/saplink/subversion/nodes" ZSAPLINK_PLUGIN_INFO4="and navigate to:  trunk -&gt; core -&gt; ZSAPLINK -&gt; CLAS -&gt; ZSAPLINK_CLASS.slnk">
  <localImplementation>*&quot;* local class implementation for public class
@@ -269,3 +285,5 @@ ENDMETHOD.</source>
   endmethod.</source>
  </method>
 </CLAS>
+Status API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Contact Help

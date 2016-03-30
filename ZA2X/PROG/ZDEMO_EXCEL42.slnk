@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PROG NAME="ZDEMO_EXCEL42" VARCL="X" SUBC="1" APPL="*" RSTAT="K" RMAND="001" RLOAD="E" FIXPT="X" UCCHECK="X">
+ <textPool>
+  <language SPRAS="E">
+   <textElement ID="R" ENTRY="Theme manipulation demo" LENGTH="23 "/>
+  </language>
+ </textPool>
+ <source>*&amp;---------------------------------------------------------------------*
+*&amp; Report  ZDEMO_EXCEL42
+*&amp;
+*&amp;---------------------------------------------------------------------*
+*&amp;
+*&amp;
+*&amp;---------------------------------------------------------------------*
+
+REPORT  ZDEMO_EXCEL42.
+type-POOLS: vrm.
+
+DATA: lo_excel                TYPE REF TO zcl_excel,
+      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+      lo_theme                TYPE REF TO zcl_excel_theme,
+      lo_style                type ref to zcl_excel_style,
+      lv_style_guid            type ZEXCEL_CELL_STYLE.
+DATA: gc_save_file_name TYPE string VALUE &apos;42 Theme Manipulation demo.&amp;&apos;.
+include zdemo_excel_outputopt_incl.
+
+initialization.
+
+
+START-OF-SELECTION.
+
+
+  &quot; Creates active sheet
+  CREATE OBJECT lo_excel.
+
+  &quot; Create a bold / italic style with usage of major font
+  lo_style               = lo_excel-&gt;add_new_style( ).
+  lo_style-&gt;font-&gt;bold   = abap_true.
+  lo_style-&gt;font-&gt;italic = abap_true.
+  lo_style-&gt;font-&gt;scheme = zcl_excel_style_font=&gt;c_scheme_major.
+  lo_style-&gt;font-&gt;color-rgb  = zcl_excel_style_color=&gt;c_red.
+  lv_style_guid          = lo_style-&gt;get_guid( ).
+
+  &quot; Get active sheet
+  lo_worksheet = lo_excel-&gt;get_active_worksheet( ).
+  lo_worksheet-&gt;set_title( ip_title = &apos;Styles&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;B&apos; ip_row = 2 ip_value = &apos;Hello world&apos; ).
+  lo_worksheet-&gt;set_cell( ip_column = &apos;C&apos; ip_row = 3 ip_value = &apos;Bold text&apos;  ip_style = lv_style_guid ).
+
+  &quot;create theme
+  create object lo_theme.
+  lo_theme-&gt;set_theme_name( iv_name = &apos;Theme Demo 42 A2X&apos; ).
+  lo_theme-&gt;set_color_scheme_name( iv_name = &apos;Demo 42 A2X&apos; ).
+
+  &quot;set theme colors
+  lo_theme-&gt;set_color(
+    exporting
+      iv_type         = zcl_excel_theme_color_scheme=&gt;c_dark1
+      iv_srgb         = &apos;5F9EA0&apos;
+*      iv_syscolorname =
+*      iv_syscolorlast =
+  ).
+    lo_theme-&gt;set_color(
+    exporting
+      iv_type         = zcl_excel_theme_color_scheme=&gt;c_dark2
+      iv_srgb         = &apos;FFA500&apos;
+*      iv_syscolorname =
+*      iv_syscolorlast =
+  ).
+     lo_theme-&gt;set_color(
+    exporting
+      iv_type         = zcl_excel_theme_color_scheme=&gt;c_light1
+      iv_srgb         = &apos;778899&apos;
+*      iv_syscolorname =
+*      iv_syscolorlast =
+  ).
+
+     lo_theme-&gt;set_color(
+    exporting
+      iv_type         = zcl_excel_theme_color_scheme=&gt;c_light1
+      iv_srgb         = &apos;9932CC&apos;
+*      iv_syscolorname =
+*      iv_syscolorlast =
+  ).
+  lo_theme-&gt;set_font_scheme_name( iv_name = &apos;Demo 42 A2X&apos; ).
+
+
+  &quot;set theme latin fonts - major and minor
+  lo_theme-&gt;set_latin_font(
+    exporting
+      iv_type        = zcl_excel_theme_font_scheme=&gt;c_major
+      iv_typeface    = &apos;Britannic Bold&apos;
+*      iv_panose      =
+*      iv_pitchfamily =
+*      iv_charset     =
+  ).
+   lo_theme-&gt;set_latin_font(
+    exporting
+      iv_type        = zcl_excel_theme_font_scheme=&gt;c_minor
+      iv_typeface    = &apos;Broadway&apos;
+*      iv_panose      =
+*      iv_pitchfamily =
+*      iv_charset     =
+  ).
+    &quot;push theme to file
+      lo_excel-&gt;set_theme( io_theme = lo_theme ).
+
+   &quot;output
+      lcl_output=&gt;output( cl_excel = lo_excel ).</source>
+</PROG>
