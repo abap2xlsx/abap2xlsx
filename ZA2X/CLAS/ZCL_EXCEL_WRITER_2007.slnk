@@ -2813,7 +2813,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #237   - Error writing column-style
-*              - Stefan SchmÃ¶cker,                          2012-11-01
+*              - Stefan Schmoecker,                          2012-11-01
 *--------------------------------------------------------------------*
 
   TYPES: BEGIN OF cfvo,
@@ -3536,8 +3536,8 @@ ENDMETHOD.</source>
 *  col_count      = io_worksheet-&gt;get_highest_column( ).
 *  &quot; Get autofilter
 **  lv_guid        = io_worksheet-&gt;get_guid( ) .
-*  lo_autofilters = excel-&gt;get_autofilters_reference( ).
-*  lo_autofilter  = lo_autofilters-&gt;get( io_worksheet = io_worksheet ) .
+  lo_autofilters = excel-&gt;get_autofilters_reference( ).
+  lo_autofilter  = lo_autofilters-&gt;get( io_worksheet = io_worksheet ) .
 *  IF lo_autofilter IS BOUND.
 *    lt_values           = lo_autofilter-&gt;get_values( ) .
 *    ls_area             = lo_autofilter-&gt;get_filter_area( ) .
@@ -6646,13 +6646,13 @@ endmethod.</source>
   <source>METHOD create_xl_workbook.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan SchmÃ¶cker,      (done)              2012-11-07
+*              - Stefan Schmoecker,      (done)              2012-11-07
 *              - ...
 * changes: aligning code
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan SchmÃ¶cker,                             2012-12-01
+*           - Stefan Schmoecker,                             2012-12-01
 * changes:  correction of pointer to localSheetId
 *--------------------------------------------------------------------*
 

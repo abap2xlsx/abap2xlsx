@@ -3124,7 +3124,8 @@ METHOD calculate_cell_width.
       FROM tfo01
       INTO TABLE lt_font_families
       UP TO 1 ROWS
-      WHERE tdtext = ld_font_name.
+      WHERE tdtext = ld_font_name
+      ORDER BY PRIMARY KEY.
 
     &quot; Check if a matching font family was found
     &quot; Fonts can be uploaded from TTF files using transaction SE73
@@ -3905,6 +3906,7 @@ ENDMETHOD.</source>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="EP_RC" VERSION="1" LANGU="E" DESCRIPT="Return Value of ABAP Statements" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="SYSUBRC"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="EP_STYLE" VERSION="1" LANGU="E" DESCRIPT="Style" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="3" TYPE="ZCL_EXCEL_STYLE"/>
   <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="EP_GUID" VERSION="1" LANGU="E" DESCRIPT="Style identifier" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_STYLE"/>
+  <parameter CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="EP_FORMULA" VERSION="1" LANGU="E" DESCRIPT="Cell Formula" CMPTYPE="1" MTDTYPE="0" EDITORDER="7 " DISPID="0 " PARDECLTYP="1" PARPASSTYP="1" TYPTYPE="1" TYPE="ZEXCEL_CELL_FORMULA"/>
   <exception CLSNAME="ZCL_EXCEL_WORKSHEET" CMPNAME="GET_CELL" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
   <source>method GET_CELL.
 
@@ -3919,10 +3921,11 @@ ENDMETHOD.</source>
                                                                 cell_column  = lv_column.
 
   ep_rc = sy-subrc.
-  ep_value = ls_sheet_content-cell_value.
-  ep_guid  = ls_sheet_content-cell_style.     &quot; issue 139 - added this to be used for columnwidth calculation
+  ep_value    = ls_sheet_content-cell_value.
+  ep_guid     = ls_sheet_content-cell_style.       &quot; issue 139 - added this to be used for columnwidth calculation
+  ep_formula  = ls_sheet_content-cell_formula.
 
-  &quot; Addition to solve issue #120, contribution by Stefan Schm#ÃâÃâÃâÃâÃâÃâ ÃâÃâÃâÃâÃâÃÆÃÆÃÂ¢ÃâÃâ¬ÃâÃÅ¡#cker
+  &quot; Addition to solve issue #120, contribution by Stefan Schmöcker
   DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
         style          TYPE REF TO zcl_excel_style.
   IF ep_style IS REQUESTED.

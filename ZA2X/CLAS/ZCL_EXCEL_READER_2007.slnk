@@ -498,7 +498,7 @@ ENDMETHOD.</source>
   <source>method fill_struct_from_attributes.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-07
+*              - Stefan Schmoecker,      (done)              2012-11-07
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -933,7 +933,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-11
+*              - Stefan Schmoecker,      (done)              2012-11-11
 *              - ...
 * changes: renaming variables to naming conventions
 *          renaming variables to indicate what they are used for
@@ -1049,7 +1049,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wip )              2012-11-25
+*              - Stefan Schmoecker,      (wip )              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -1287,7 +1287,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-25
+*              - Stefan Schmoecker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -1421,7 +1421,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-25
+*              - Stefan Schmoecker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -1589,7 +1589,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-25
+*              - Stefan Schmoecker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          aligning code
@@ -1721,7 +1721,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-25
+*              - Stefan Schmoecker,      (done)              2012-11-25
 *              - ...
 * changes: renaming variables and types to naming conventions
 *          adding comments to explain what we are trying to achieve
@@ -1793,7 +1793,7 @@ endmethod.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-10
+*              - Stefan Schmoecker,      (done)              2012-11-10
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code
@@ -1805,15 +1805,15 @@ endmethod.</source>
 *                                                             ip_excel renamed while being at it                --&gt; rename to io_excel
 *--------------------------------------------------------------------*
 * issue #232   - Read worksheetstate hidden/veryHidden
-*              - Stefan Schmöcker,                          2012-11-11
+*              - Stefan Schmoecker,                          2012-11-11
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmöcker,                             2012-12-02
+*           - Stefan Schmoecker,                             2012-12-02
 * changes:    correction in named ranges to correctly attach
 *             sheetlocal names/ranges to the correct sheet
 *--------------------------------------------------------------------*
 * issue#284 - Copied formulae ignored when reading excelfile
-*           - Stefan Schmöcker,                             2013-08-02
+*           - Stefan Schmoecker,                             2013-08-02
 * changes:    initialize area to hold referenced formulaedata
 *             after all worksheets have been read resolve formuae
 *--------------------------------------------------------------------*
@@ -2122,7 +2122,8 @@ endmethod.</source>
             zcl_excel_common=&gt;convert_range2column_a_row( EXPORTING i_range        = lv_range_value
                                                           IMPORTING e_column_start = lv_col_start_alpha
                                                                     e_column_end   = lv_col_end_alpha
-                                                                    e_row_start    = ls_area-row_start ).
+                                                                    e_row_start    = ls_area-row_start
+                                                                    e_row_end      = ls_area-row_end ).
             ls_area-col_start = zcl_excel_common=&gt;convert_column2int( lv_col_start_alpha ).
             ls_area-col_end   = zcl_excel_common=&gt;convert_column2int( lv_col_end_alpha ).
             lo_autofilter-&gt;set_filter_area( is_area = ls_area ).
@@ -2223,7 +2224,7 @@ endmethod.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,
+*              - Stefan Schmoecker,
 *              - ...
 * changes: renaming variables to naming conventions
 *          aligning code                                            (started)
@@ -3860,7 +3861,7 @@ ENDMETHOD.</source>
 
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-11
+*              - Stefan Schmoecker,      (done)              2012-11-11
 *              - ...
 * changes: replaced previous coding by regular expression
 *          adding comments to explain what we are trying to achieve
