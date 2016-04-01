@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CLAS CLSNAME="ZCL_EXCEL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Represents Excel Table" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 " ZSAPLINK_PLUGIN_MAJOR_VERSION="0 " ZSAPLINK_PLUGIN_MINOR_VERSION="1 " ZSAPLINK_PLUGIN_BUILD_VERSION="0 " ZSAPLINK_PLUGIN_INFO1="ZSAPLINK_CLASS is part of the main ZSAPLINK project --&gt; This plugin found there instead of ZSAPLINK_PLUGINS projects" ZSAPLINK_PLUGIN_INFO2="SAPLINK homepage: https://www.assembla.com/spaces/saplink/wiki" ZSAPLINK_PLUGIN_INFO3="Download from https://www.assembla.com/code/saplink/subversion/nodes" ZSAPLINK_PLUGIN_INFO4="and navigate to:  trunk -&gt; core -&gt; ZSAPLINK -&gt; CLAS -&gt; ZSAPLINK_CLASS.slnk">
+<CLAS CLSNAME="ZCL_EXCEL_TABLE" VERSION="1" LANGU="E" DESCRIPT="Represents Excel Table" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
  <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
