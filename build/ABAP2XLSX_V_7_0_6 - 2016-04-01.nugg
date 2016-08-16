@@ -4442,11 +4442,13 @@ endmethod.</source>
   endmethod.</source>
   </method>
   <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="OPEN_FILE" VERSION="1" LANGU="E" DESCRIPT="Open excel file" EXPOSURE="2" STATE="1" EDITORDER="7 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+   <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="OPEN_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
    <source>method OPEN_FILE.
   data: l_bytecount             type i,
         lt_file                 type solix_tab,
         l_dir                   type string,
-        l_sep                   type c.
+        l_sep                   type c,
+        lv_errormessage         type string.
 
   field-symbols: &lt;fs_data&gt; type any table.
 
@@ -4463,7 +4465,39 @@ endmethod.</source>
     cl_gui_frontend_services=&gt;gui_download( exporting bin_filesize = l_bytecount
                                                       filename     = l_dir
                                                       filetype     = &apos;BIN&apos;
-                                             changing data_tab     = lt_file ).
+                                             changing data_tab     = lt_file
+                                             exceptions file_write_error = 1
+                                                      no_batch                  = 2
+                                                      gui_refuse_filetransfer   = 3
+                                                      invalid_type              = 4
+                                                      no_authority              = 5
+                                                      unknown_error             = 6
+                                                      header_not_allowed        = 7
+                                                      separator_not_allowed     = 8
+                                                      filesize_not_allowed      = 9
+                                                      header_too_long           = 10
+                                                      dp_error_create           = 11
+                                                      dp_error_send             = 12
+                                                      dp_error_write            = 13
+                                                      unknown_dp_error          = 14
+                                                      access_denied             = 15
+                                                      dp_out_of_memory          = 16
+                                                      disk_full                 = 17
+                                                      dp_timeout                = 18
+                                                      file_not_found            = 19
+                                                      dataprovider_exception    = 20
+                                                      control_flush_error       = 21
+                                                      not_supported_by_gui      = 22
+                                                      error_no_gui              = 23
+                                                      others                    = 24 ).
+    if sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;A problem occurred when writing the file&apos;(004).
+      raise exception tpye zcx_excel
+        exporting
+          error = lv_errormessage.
+    endif.
+
+
     cl_gui_frontend_services=&gt;execute(
       exporting
         document               = l_dir
@@ -4600,10 +4634,12 @@ endmethod.</source>
   </method>
   <method CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" VERSION="1" LANGU="E" DESCRIPT="Write excel file" EXPOSURE="2" STATE="1" EDITORDER="9 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
    <parameter CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" SCONAME="I_PATH" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PAROPTIONL="X"/>
+   <exception CLSNAME="ZCL_EXCEL_CONVERTER" CMPNAME="WRITE_FILE" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
    <source>method WRITE_FILE.
   data: l_bytecount             type i,
       lt_file                 type solix_tab,
-      l_dir                   type string.
+      l_dir                   type string,
+      lv_errormessage         type string.
 
   field-symbols: &lt;fs_data&gt; type any table.
 
@@ -4622,7 +4658,37 @@ endmethod.</source>
     cl_gui_frontend_services=&gt;gui_download( exporting bin_filesize = l_bytecount
                                                       filename     = l_dir
                                                       filetype     = &apos;BIN&apos;
-                                             changing data_tab     = lt_file ).
+                                             changing data_tab     = lt_file
+                                             exceptions file_write_error = 1
+                                                      no_batch                  = 2
+                                                      gui_refuse_filetransfer   = 3
+                                                      invalid_type              = 4
+                                                      no_authority              = 5
+                                                      unknown_error             = 6
+                                                      header_not_allowed        = 7
+                                                      separator_not_allowed     = 8
+                                                      filesize_not_allowed      = 9
+                                                      header_too_long           = 10
+                                                      dp_error_create           = 11
+                                                      dp_error_send             = 12
+                                                      dp_error_write            = 13
+                                                      unknown_dp_error          = 14
+                                                      access_denied             = 15
+                                                      dp_out_of_memory          = 16
+                                                      disk_full                 = 17
+                                                      dp_timeout                = 18
+                                                      file_not_found            = 19
+                                                      dataprovider_exception    = 20
+                                                      control_flush_error       = 21
+                                                      not_supported_by_gui      = 22
+                                                      error_no_gui              = 23
+                                                      others                    = 24 ).
+    if sy-subrc &lt;&gt; 0.
+      lv_errormessage = &apos;A problem occurred when writing the file&apos;(004).
+      raise exception tpye zcx_excel
+        exporting
+          error = lv_errormessage.
+    endif.
   endif.
   endmethod.</source>
   </method>
@@ -11402,9 +11468,10 @@ endclass.</localTypes>
 *&quot;* in the implementation part of the class</localMacros>
   <textPool>
    <language SPRAS="E">
-    <textElement ID="I" KEY="001" ENTRY="A problem occured when reading the file" LENGTH="60 "/>
+    <textElement ID="I" KEY="001" ENTRY="A problem occurred when reading the file" LENGTH="60 "/>
     <textElement ID="I" KEY="002" ENTRY="ZIP parse error" LENGTH="60 "/>
     <textElement ID="I" KEY="003" ENTRY="File not found in zip-archive" LENGTH="60 "/>
+    <textElement ID="I" KEY="004" ENTRY="A problem occurred when writing the file" LENGTH="60 "/>
    </language>
   </textPool>
   <typeUsage CLSNAME="ZCL_EXCEL_READER_2007" TYPEGROUP="IXML" VERSION="1" TPUTYPE="0" EXPLICIT="X"/>
@@ -14896,6 +14963,7 @@ ENDMETHOD.</source>
   <method CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" VERSION="1" LANGU="E" DESCRIPT="Load excel data from appserver" EXPOSURE="0" STATE="1" EDITORDER="2 " DISPID="0 " MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
    <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="I_FILENAME" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE"/>
    <parameter CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="R_EXCEL_DATA" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="XSTRING"/>
+   <exception CLSNAME="ZCL_EXCEL_READER_2007" CMPNAME="READ_FROM_APPLSERVER" SCONAME="ZCX_EXCEL" VERSION="1" LANGU="E" DESCRIPT="Exceptions for ABAP2XLSX" MTDTYPE="0" EDITORDER="1 "/>
    <source>METHOD read_from_applserver.
 
     DATA: lv_filelength                   TYPE i,
@@ -14911,7 +14979,7 @@ ENDMETHOD.</source>
     DESCRIBE FIELD ls_binary_data LENGTH lv_max_length_line IN BYTE MODE.
     OPEN DATASET lv_filename FOR INPUT IN BINARY MODE.
     IF sy-subrc &lt;&gt; 0.
-      lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
+      lv_errormessage = &apos;A problem occurred when reading the file&apos;(001).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = lv_errormessage.
@@ -14978,7 +15046,7 @@ ENDMETHOD.</source>
                                             error_no_gui            = 18
                                             OTHERS                  = 19 ).
     IF sy-subrc &lt;&gt; 0.
-      lv_errormessage = &apos;A problem occured when reading the file&apos;(001).
+      lv_errormessage = &apos;A problem occurred when reading the file&apos;(001).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = lv_errormessage.
@@ -17335,7 +17403,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
    <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmöcker,                             2012-12-02
+*           - Stefan Schmoecker,                            2012-12-02
 *--------------------------------------------------------------------*
 
   DATA:     lv_col_from_int                 TYPE i,
@@ -17384,7 +17452,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
    <source>method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
-*           - Stefan Schmöcker,                             2012-12-02
+*           - Stefan Schmoecker,                             2012-12-02
 *--------------------------------------------------------------------*
 
   DATA:     lv_errormessage                 TYPE string.
@@ -19654,7 +19722,7 @@ ENDCLASS.                    &quot;lcl_gui_alv_grid DEFINITION</localTypes>
    <source>method BIND_TABLE.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (wi p)              2012-12-01
+*              - Stefan Schmoecker,      (wi p)              2012-12-01
 *              - ...
 *          aligning code
 *          message made to support multilinguality
@@ -20284,7 +20352,7 @@ ENDMETHOD.</source>
 *        ).
 *        &quot; For an easy start we just take the number of characters as the width
 *        width = strlen( cell_value ).
-*        &quot; Addition to solve issue #120, contribution by Stefan Schmöcker
+*        &quot; Addition to solve issue #120, contribution by Stefan Schmoecker
 *        &quot; Calculate width using Font Size and Font Type
 *        IF    cell_style IS BOUND
 *          AND cell_style-&gt;font IS BOUND.
@@ -20931,7 +20999,7 @@ ENDMETHOD.</source>
   ep_guid     = ls_sheet_content-cell_style.       &quot; issue 139 - added this to be used for columnwidth calculation
   ep_formula  = ls_sheet_content-cell_formula.
 
-  &quot; Addition to solve issue #120, contribution by Stefan Schmöcker
+  &quot; Addition to solve issue #120, contribution by Stefan Schmoecker
   DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
         style          TYPE REF TO zcl_excel_style.
   IF ep_style IS REQUESTED.
@@ -21537,7 +21605,7 @@ ENDMETHOD.</source>
 * Begin of change issue #152 - don&apos;t touch exisiting style if only value is passed
 *  lv_style_guid = ip_style.
   lv_column = zcl_excel_common=&gt;convert_column2int( ip_column ).
-  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH TABLE KEY cell_row    = ip_row      &quot; Changed to access via table key , Stefan Schmöcker, 2013-08-03
+  READ TABLE sheet_content ASSIGNING &lt;fs_sheet_content&gt; WITH TABLE KEY cell_row    = ip_row      &quot; Changed to access via table key , Stefan Schmoecker, 2013-08-03
                                                                        cell_column = lv_column.
   IF sy-subrc = 0.
     IF ip_style IS INITIAL.
