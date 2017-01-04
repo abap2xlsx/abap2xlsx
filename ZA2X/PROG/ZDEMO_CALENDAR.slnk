@@ -4,7 +4,7 @@
   <language SPRAS="D">
    <textElement ID="I" KEY="000" ENTRY="Ausrichtung" LENGTH="11 "/>
    <textElement ID="I" KEY="001" ENTRY="KW" LENGTH="4 "/>
-   <textElement ID="I" KEY="002" ENTRY="Erzeugt mit abap2xlsx. Weitere Informationen unter http://abap2xlsx.org." LENGTH="100 "/>
+   <textElement ID="I" KEY="002" ENTRY="Erzeugt mit abap2xlsx. Weitere Informationen unter https://ivanfemia.github.io/abap2xlsx/" LENGTH="100 "/>
    <textElement ID="R" ENTRY="abap2xlsx Demo: Erzeugen eines Kalenders mit Bildern" LENGTH="70 "/>
    <textElement ID="S" KEY="P_LANDS" ENTRY="        Querformat" LENGTH="18 "/>
    <textElement ID="S" KEY="P_PORTR" ENTRY="        Hochformat" LENGTH="18 "/>
@@ -15,7 +15,7 @@
   <language SPRAS="E">
    <textElement ID="I" KEY="000" ENTRY="Orientation" LENGTH="11 "/>
    <textElement ID="I" KEY="001" ENTRY="CW" LENGTH="4 "/>
-   <textElement ID="I" KEY="002" ENTRY="Created with abap2xlsx. Find more information at http://abap2xlsx.org." LENGTH="100 "/>
+   <textElement ID="I" KEY="002" ENTRY="Created with abap2xlsx. Find more information at https://ivanfemia.github.io/abap2xlsx/" LENGTH="100 "/>
    <textElement ID="R" ENTRY="abap2xlsx Demo: Create Calendar with Pictures" LENGTH="45 "/>
    <textElement ID="S" KEY="P_FROM" ENTRY="D       ." LENGTH="17 "/>
    <textElement ID="S" KEY="P_LANDS" ENTRY="        Landscape" LENGTH="17 "/>
