@@ -1673,7 +1673,8 @@ endmethod.</source>
   <source>method DATE_TO_EXCEL_STRING.
   DATA: lv_date_diff         TYPE i.
 
-  CHECK ip_value IS NOT INITIAL.
+  CHECK ip_value IS NOT INITIAL
+    AND ip_value &lt;&gt; space.
   &quot; Needed hack caused by the problem that:
   &quot; Excel 2000 incorrectly assumes that the year 1900 is a leap year
   &quot; http://support.microsoft.com/kb/214326/en-us
