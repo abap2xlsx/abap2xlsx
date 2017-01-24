@@ -1362,6 +1362,9 @@ ENDMETHOD.</source>
               lv_module                       TYPE int4,
               lv_column                       TYPE zexcel_cell_column.
 
+  STATICS:    sv_prev_in  LIKE lv_column,
+              sv_prev_out LIKE ep_column.
+
 * Propagate zcx_excel if error occurs           &quot; issue #155 - less restrictive typing for ip_column
   lv_column = convert_column2int( ip_column ).  &quot; issue #155 - less restrictive typing for ip_column
 
@@ -1373,6 +1376,17 @@ ENDMETHOD.</source>
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
         error = &apos;Index out of bounds&apos;.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* Look up for previous succesfull cached result
+*--------------------------------------------------------------------*
+  IF lv_column = sv_prev_in AND sv_prev_out IS NOT INITIAL.
+    ep_column = sv_prev_out.
+    RETURN.
+  ELSE.
+    CLEAR sv_prev_out.
+    sv_prev_in  = lv_column.
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -1389,6 +1403,11 @@ ENDMETHOD.</source>
     CONCATENATE lv_text ep_column INTO ep_column.
 
   ENDWHILE.
+
+*--------------------------------------------------------------------*
+* Save succesfull output into cache
+*--------------------------------------------------------------------*
+  sv_prev_out = ep_column.
 
 ENDMETHOD.</source>
  </method>
@@ -1423,6 +1442,8 @@ ENDMETHOD.</source>
               lv_errormessage                 TYPE string,                          &quot; Can&apos;t pass &apos;...&apos;(abc) to exception-class
               lv_modulo                       TYPE i.
 
+  STATICS:    sv_prev_in  LIKE lv_column_c,
+              sv_prev_out LIKE ep_column.
 *--------------------------------------------------------------------*
 * This module tries to identify which column a user wants to access
 * Numbers as input are just passed back, anything else will be converted
@@ -1445,6 +1466,17 @@ ENDMETHOD.</source>
     RAISE EXCEPTION TYPE zcx_excel
       EXPORTING
         syst_at_raise = syst.
+  ENDIF.
+
+*--------------------------------------------------------------------*
+* Look up for previous succesfull cached result
+*--------------------------------------------------------------------*
+  IF lv_column_c = sv_prev_in AND sv_prev_out IS NOT INITIAL.
+    ep_column = sv_prev_out.
+    RETURN.
+  ELSE.
+    CLEAR sv_prev_out.
+    sv_prev_in  = lv_column_c.
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -1484,59 +1516,61 @@ ENDMETHOD.</source>
         syst_at_raise = syst.
   ENDIF.
 
+  DO 1 TIMES. &quot;Because of using CHECK
 *--------------------------------------------------------------------*
 * Interpret input as number to base 26 with A=1, ... Z=26
 * Raise error if unexpected character turns up
 *--------------------------------------------------------------------*
 * 1st character
 *--------------------------------------------------------------------*
-  lv_column = lv_column_c.
-  lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+0(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
-  IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
+    lv_column = lv_column_c.
+    lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+0(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
+    IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
 *    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
 *    RAISE EXCEPTION TYPE zcx_excel
 *      EXPORTING
 *        error = lv_errormessage.
-    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        syst_at_raise = syst.
-  ENDIF.
-  ep_column = lv_modulo.                    &quot; Leftmost digit
+      MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          syst_at_raise = syst.
+    ENDIF.
+    ep_column = lv_modulo.                    &quot; Leftmost digit
 
 *--------------------------------------------------------------------*
 * 2nd character if present
 *--------------------------------------------------------------------*
-  CHECK lv_column+1(1) IS NOT INITIAL.      &quot; No need to continue if string ended
-  lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+1(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
-  IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
+    CHECK lv_column+1(1) IS NOT INITIAL.      &quot; No need to continue if string ended
+    lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+1(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
+    IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
 *    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
 *    RAISE EXCEPTION TYPE zcx_excel
 *      EXPORTING
 *        error = lv_errormessage.
-    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        syst_at_raise = syst.
-  ENDIF.
-  ep_column = 26 * ep_column + lv_modulo.   &quot; if second digit is present first digit is for 26^1
+      MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          syst_at_raise = syst.
+    ENDIF.
+    ep_column = 26 * ep_column + lv_modulo.   &quot; if second digit is present first digit is for 26^1
 
 *--------------------------------------------------------------------*
 * 3rd character if present
 *--------------------------------------------------------------------*
-  CHECK lv_column+2(1) IS NOT INITIAL.      &quot; No need to continue if string ended
-  lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+2(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
-  IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
+    CHECK lv_column+2(1) IS NOT INITIAL.      &quot; No need to continue if string ended
+    lv_modulo = cl_abap_conv_out_ce=&gt;uccpi( lv_column+2(1) ) MOD zcl_excel_common=&gt;c_excel_col_module.
+    IF lv_modulo &lt; 1 OR lv_modulo &gt; 26.
 *    lv_errormessage = &apos;Unable to interpret input as column&apos;(003).
 *    RAISE EXCEPTION TYPE zcx_excel
 *      EXPORTING
 *        error = lv_errormessage.
-    MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        syst_at_raise = syst.
-  ENDIF.
-  ep_column = 26 * ep_column + lv_modulo.   &quot; if third digit is present first digit is for 26^2 and second digit for 26^1
+      MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          syst_at_raise = syst.
+    ENDIF.
+    ep_column = 26 * ep_column + lv_modulo.   &quot; if third digit is present first digit is for 26^2 and second digit for 26^1
+  ENDDO.
 
 *--------------------------------------------------------------------*
 * Maximum column for EXCEL:  XFD = 16384    &quot; if anyone has a reference for this information - please add here instead of this comment
@@ -1548,6 +1582,10 @@ ENDMETHOD.</source>
         error = lv_errormessage.
   ENDIF.
 
+*--------------------------------------------------------------------*
+* Save succesfull output into cache
+*--------------------------------------------------------------------*
+  sv_prev_out = ep_column.
 
 ENDMETHOD.</source>
  </method>
