@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_PROG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <PROGDIR>
+    <NAME>ZDEMO_EXCEL37</NAME>
+    <STATE>A</STATE>
+    <VARCL>X</VARCL>
+    <SUBC>1</SUBC>
+    <RSTAT>T</RSTAT>
+    <RLOAD>E</RLOAD>
+    <FIXPT>X</FIXPT>
+    <UCCHECK>X</UCCHECK>
+   </PROGDIR>
+   <DYNPROS/>
+   <TPOOL>
+    <item>
+     <ID>I</ID>
+     <KEY>CLS</KEY>
+     <ENTRY>Choose reader- and writerclass to use</ENTRY>
+     <LENGTH>70</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>DUM</KEY>
+     <ENTRY>Dump on uncaught exception - you&apos;ll know when you need this</ENTRY>
+     <LENGTH>60</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>ERR</KEY>
+     <ENTRY>Special switches</ENTRY>
+     <LENGTH>60</LENGTH>
+    </item>
+    <item>
+     <ID>R</ID>
+     <ENTRY>Read xlsx-file and output = using templates</ENTRY>
+     <LENGTH>43</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>CB_DUMP</KEY>
+     <ENTRY>Dump for uncaught exceptions</ENTRY>
+     <LENGTH>36</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>CB_ERRL</KEY>
+     <ENTRY>Show position of exception</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>LB_READ</KEY>
+     <ENTRY>Reader-class</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>LB_WRITE</KEY>
+     <ENTRY>Writer-class</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_UPFILE</KEY>
+     <ENTRY>File to upload</ENTRY>
+     <LENGTH>22</LENGTH>
+    </item>
+   </TPOOL>
+   <I18N_TPOOL>
+    <item>
+     <LANGUAGE>D</LANGUAGE>
+     <TEXTPOOL>
+      <TEXTPOOL>
+       <ID>I</ID>
+       <KEY>CLS</KEY>
+       <ENTRY>Auswahl der Reader- und Writerklasse</ENTRY>
+       <LENGTH>70</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>I</ID>
+       <KEY>DUM</KEY>
+       <ENTRY>Dump bei unbeh. Exception.  Man weiß wenn man das braucht</ENTRY>
+       <LENGTH>60</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>I</ID>
+       <KEY>ERR</KEY>
+       <ENTRY>Besondere Schalter</ENTRY>
+       <LENGTH>60</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>R</ID>
+       <ENTRY>Xlsx-Datei lesen und dann wieder ausgeben = Arbeiten mit Templates</ENTRY>
+       <LENGTH>70</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>S</ID>
+       <KEY>CB_DUMP</KEY>
+       <ENTRY>        Dump bei unbeh. Exceptions</ENTRY>
+       <LENGTH>36</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>S</ID>
+       <KEY>CB_ERRL</KEY>
+       <ENTRY>        Exceptionposition anzeigen</ENTRY>
+       <LENGTH>34</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>S</ID>
+       <KEY>LB_READ</KEY>
+       <ENTRY>        Reader-Klasse</ENTRY>
+       <LENGTH>21</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>S</ID>
+       <KEY>LB_WRITE</KEY>
+       <ENTRY>        Writer-Klasse</ENTRY>
+       <LENGTH>21</LENGTH>
+      </TEXTPOOL>
+      <TEXTPOOL>
+       <ID>S</ID>
+       <KEY>P_UPFILE</KEY>
+       <ENTRY>        Hochzuladende Datei</ENTRY>
+       <LENGTH>27</LENGTH>
+      </TEXTPOOL>
+     </TEXTPOOL>
+    </item>
+   </I18N_TPOOL>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZABAP2XLSX</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>Messages for ABAP2XLSX</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>000</MSGNR>
+     <TEXT>&amp; &amp; &amp; &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>&amp;&amp;&amp;&amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>&amp; &amp; &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>&amp;&amp;&amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>&amp; &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>&amp;&amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>&amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>--- 000-009: Various  Generic messages</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>--- 010-049: Descriptions where to put messages</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>--- 050-</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>--- 200-   : Messages when reading an EXCEL-File</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>--- 400-   : Messages when creating an EXCEL-File</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>--- 600-   : Message when ????</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>--- 800-   : Other messages</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>800</MSGNR>
+     <TEXT>Unable to interpret input as column</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>

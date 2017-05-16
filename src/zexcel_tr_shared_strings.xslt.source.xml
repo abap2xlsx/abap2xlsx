@@ -1,0 +1,21 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates">
+
+  <tt:root name="ROOT"/>
+  <tt:root name="SHARED_STRINGS"/>
+
+  <tt:template>
+    <sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+      <tt:attribute name="count" value-ref="ROOT.COUNT"/>
+      <tt:attribute name="uniqueCount" value-ref="ROOT.UNIQUE_COUNT"/>
+      <tt:loop ref="SHARED_STRINGS">
+        <si>
+          <t>
+            <tt:value ref="STRING_VALUE"/>
+          </t>
+        </si>
+      </tt:loop>
+    </sst>
+  </tt:template>
+
+</tt:transform>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZEXCEL_TABLE_TOTALS_FUNCTION</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <SCRLEN1>10</SCRLEN1>
+    <DDTEXT>Totals function for table column (xml ST_TotalsRowFunction)</DDTEXT>
+    <SCRTEXT_S>Function</SCRTEXT_S>
+    <DTELMASTER>E</DTELMASTER>
+    <DATATYPE>STRG</DATATYPE>
+   </DD04V>
+   <TPARA/>
+  </asx:values>
+ </asx:abap>
+</abapGit>

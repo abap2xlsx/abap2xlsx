@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_EXCEL_WORKSHEET_PAGEBREAKS</CLSNAME>
+    <VERSION>1</VERSION>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Pagebreaks</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <TPOOL/>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_WORKSHEET_PAGEBREAKS</CLSNAME>
+     <CMPNAME>ADD_PAGEBREAK</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Add pagebreak</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_WORKSHEET_PAGEBREAKS</CLSNAME>
+     <CMPNAME>GET_ALL_PAGEBREAKS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get list of all pagebreaks</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_WORKSHEET_PAGEBREAKS</CLSNAME>
+     <CMPNAME>MT_PAGEBREAKS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>All pagebreaks</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_WORKSHEET_PAGEBREAKS</CLSNAME>
+     <CMPNAME>TS_PAGEBREAK_AT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Pagebreak below/right of this cell</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_WORKSHEET_PAGEBREAKS</CLSNAME>
+     <CMPNAME>TT_PAGEBREAK_AT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>All pagebreaks</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

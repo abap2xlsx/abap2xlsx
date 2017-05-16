@@ -1,0 +1,306 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates"
+              xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+
+  <tt:root name="WORKSHEET"/>
+  <tt:root name="CELLS"/>
+  <tt:root name="WRITER"/>
+  <tt:variable name="owriter" ref-type="ZCL_EXCEL_WRITER_HUGE_FILE"/>
+
+  <tt:template>
+    <tt:assign ref="WRITER" to-var="owriter"/>
+    <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+               xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"
+               mc:Ignorable="x14ac">
+      <tt:namespace name="r" />
+      <tt:namespace name="mc" />
+      <tt:namespace name="x14ac" />
+      <sheetPr>
+        <tt:cond check="not-initial(WORKSHEET.TABCOLOR)">
+          <tabColor>
+            <tt:attribute name="rgb" value-ref="WORKSHEET.TABCOLOR" />
+          </tabColor>
+        </tt:cond>
+        <outlinePr>
+          <tt:attribute name="summaryRight" value-ref="WORKSHEET.SUMMARYRIGHT" />
+          <tt:attribute name="summaryBelow" value-ref="WORKSHEET.SUMMARYBELOW" />
+        </outlinePr>
+      </sheetPr>
+      <tt:cond check="not-initial(WORKSHEET.FITTOPAGE)">
+        <pageSetupPr>
+          <tt:attribute name="fitToPage" value-ref="WORKSHEET.FITTOPAGE" />
+        </pageSetupPr>
+      </tt:cond>
+      <dimension>
+        <tt:attribute name="ref" value-ref="WORKSHEET.DIMENSION" />
+      </dimension>
+      <sheetViews>
+        <sheetView>
+          <tt:attribute name="showZeros"                 value-ref="WORKSHEET.SHOWZEROS"          />
+          <tt:attribute name="tabSelected"               value-ref="WORKSHEET.TABSELECTED"        />
+          <tt:attribute name="zoomScale"                 value-ref="WORKSHEET.ZOOMSCALE"          />
+          <tt:cond check="WORKSHEET.ZOOMSCALENORMAL != 0">
+            <tt:attribute name="zoomScaleNormal"         value-ref="WORKSHEET.ZOOMSCALENORMAL"    />
+          </tt:cond>
+          <tt:cond check="WORKSHEET.ZOOMSCALEPAGEVIEW != 0">
+            <tt:attribute name="zoomScalePageLayoutView" value-ref="WORKSHEET.ZOOMSCALEPAGEVIEW"  />
+          </tt:cond>
+          <tt:attribute name="zoomScaleSheetLayoutView"  value-ref="WORKSHEET.ZOOMSCALESHEETVIEW" />
+          <tt:attribute name="workbookViewId"            value-ref="WORKSHEET.WORKBOOKVIEWID"     />
+          <tt:attribute name="showGridLines"             value-ref="WORKSHEET.SHOWGRIDLINES"      />
+          <tt:attribute name="showRowColHeaders"         value-ref="WORKSHEET.SHOWROWCOLHEADERS"  />
+          <tt:cond check="WORKSHEET.YSPLIT != 0 or WORKSHEET.XSPLIT != 0">
+            <pane activePane="bottomRight" state="frozen">
+              <tt:cond check="WORKSHEET.YSPLIT != 0">
+                <tt:attribute name="ySplit"    value-ref="WORKSHEET.YSPLIT"      />
+              </tt:cond>
+              <tt:cond check="WORKSHEET.XSPLIT != 0">
+                <tt:attribute name="xSplit"    value-ref="WORKSHEET.XSPLIT"      />
+              </tt:cond>
+              <tt:attribute name="topLeftCell" value-ref="WORKSHEET.TOPLEFTCELL" />
+            </pane>
+          </tt:cond>
+          <selection>
+            <tt:attribute name="activeCell" value-ref="WORKSHEET.ACTIVECELL" />
+            <tt:attribute name="sqref"      value-ref="WORKSHEET.ACTIVECELL" />
+          </selection>
+        </sheetView>
+      </sheetViews>
+      <sheetFormatPr>
+        <tt:attribute name="defaultRowHeight"      value-ref="WORKSHEET.DEFAULTROWHEIGHT" />
+        <tt:cond check="WORKSHEET.DEFAULTCOLWIDTH != 0">
+          <tt:attribute name="defaultColWidth"     value-ref="WORKSHEET.DEFAULTCOLWIDTH"  />
+        </tt:cond>
+        <tt:attribute name="x14ac:outlineLevelRow" value-ref="WORKSHEET.OUTLINELEVELROW"  />
+        <tt:attribute name="x14ac:outlineLevelCol" value-ref="WORKSHEET.OUTLINELEVELCOL"  />
+      </sheetFormatPr>
+      <cols>
+        <tt:loop ref="WORKSHEET.COLS">
+          <col>
+            <tt:attribute name="min"            value-ref="MIN"          />
+            <tt:attribute name="max"            value-ref="MAX"          />
+            <tt:attribute name="width"          value-ref="WIDTH"        />
+            <tt:cond check="not-initial(HIDDEN)">
+              <tt:attribute name="hidden"       value-ref="HIDDEN"       />
+            </tt:cond>
+            <tt:cond check="not-initial(CUSTOMWIDTH)">
+              <tt:attribute name="customWidth"  value-ref="CUSTOMWIDTH"  />
+            </tt:cond>
+            <tt:cond check="not-initial(BESTFIT)">
+              <tt:attribute name="bestFit"      value-ref="BESTFIT"      />
+            </tt:cond>
+            <tt:cond check="not-initial(COLLAPSED)">
+              <tt:attribute name="collapsed"    value-ref="COLLAPSED"    />
+            </tt:cond>
+            <tt:cond check="OUTLINELEVEL != 0">
+              <tt:attribute name="outlineLevel" value-ref="OUTLINELEVEL" />
+            </tt:cond>
+            <tt:cond check="STYLE >= 0">
+              <tt:attribute name="style"        value-ref="STYLE"        />
+            </tt:cond>
+          </col>
+        </tt:loop>
+      </cols>
+      <sheetData>
+        <tt:loop ref="WORKSHEET.ROWS">
+          <row>
+            <tt:attribute name="r"              value-ref="ROW"          />
+            <tt:attribute name="spans"          value-ref="SPANS"        />
+            <tt:cond check="not-initial(HIDDEN)">
+              <tt:attribute name="hidden"       value-ref="HIDDEN"       />
+            </tt:cond>
+            <tt:cond check="not-initial(CUSTOMHEIGHT)">
+              <tt:attribute name="customHeight" value-ref="CUSTOMHIGHT"  />
+              <tt:attribute name="ht"           value-ref="HIGHT"        />
+            </tt:cond>
+            <tt:cond check="not-initial(COLLAPSED)">
+              <tt:attribute name="collapsed"    value-ref="COLLAPSED"    />
+            </tt:cond>
+            <tt:cond check="OUTLINELEVEL != 0">
+              <tt:attribute name="outlineLevel" value-ref="OUTLINELEVEL" />
+            </tt:cond>
+            <tt:cond check="STYLE != 0">
+              <tt:attribute name="customFormat" value-ref="CUSTOMFORMAT" />
+              <tt:attribute name="s"            value-ref="STYLE"        />
+            </tt:cond>
+            <!-- Aufruf get_cells -->
+            <tt:call-method s-name="GET_CELLS" var="owriter">
+              <tt:with-parameter name="I_ROW"   ref="ROW" />
+              <tt:with-parameter name="I_INDEX" ref="INDEX" />
+            </tt:call-method>
+            <tt:loop ref=".CELLS">
+              <c>
+                <tt:attribute name="r"   value-ref="NAME"    />
+                <tt:cond check="STYLE >= 0">
+                  <tt:attribute name="s" value-ref="STYLE"   />
+                </tt:cond>
+                <tt:cond check="not-initial(FORMULA)">
+                  <tt:attribute name="f" value-ref="FORMULA" />
+                </tt:cond>
+                <tt:cond check="not-initial(VALUE) and initial(FORMULA)">
+                  <tt:attribute name="t" value-ref="TYPE"    />
+                  <tt:cond check="TYPE = 'inlineStr'">
+                    <is>
+                      <t>
+                        <tt:value ref="VALUE" />
+                      </t>
+                    </is>
+                  </tt:cond>
+                  <tt:cond check="TYPE != 'inlineStr'">
+                    <v>
+                      <tt:value ref="VALUE" />
+                    </v>
+                  </tt:cond>
+                </tt:cond>
+              </c>
+            </tt:loop>
+          </row>
+        </tt:loop>
+      </sheetData>
+      <tt:cond check="WORKSHEET.MERGECELLS_COUNT != 0">
+        <mergeCells>
+          <tt:attribute name="count" value-ref="WORKSHEET.MERGECELLS_COUNT" />
+          <tt:loop ref="WORKSHEET.MERGECELLS">
+            <mergeCell>
+              <tt:attribute name="ref" value-ref="REF" />
+            </mergeCell>
+          </tt:loop>
+        </mergeCells>
+      </tt:cond>
+      <tt:cond check="WORKSHEET.HYPERLINKS_COUNT != 0">
+        <hyperlinks>
+          <tt:loop ref="WORKSHEET.HYPERLINKS">
+            <hyperlink>
+              <tt:attribute name="ref" value-ref="REF" />
+              <tt:cond check="not-initial(LOCATION)">
+                <tt:attribute name="location" value-ref="LOCATION" />
+              </tt:cond>
+              <tt:cond check="not-initial(R_ID)">
+                <tt:attribute name="r:id" value-ref="R_ID" />
+              </tt:cond>
+            </hyperlink>
+          </tt:loop>
+        </hyperlinks>
+      </tt:cond>
+      <tt:cond check="not-initial(WORKSHEET.PRINTOPTIONS)">
+        <printOptions>
+          <tt:ref name="WORKSHEET.PRINTOPTIONS">
+            <tt:cond check="not-initial(GRIDLINES)">
+              <tt:attribute name="gridLines" value-ref="GRIDLINES" />
+            </tt:cond>
+            <tt:cond check="not-initial(HORIZONTALCENTERED)">
+              <tt:attribute name="horizontalCentered" value-ref="HORIZONTALCENTERED" />
+            </tt:cond>
+            <tt:cond check="not-initial(VERTICALCENTERED)">
+              <tt:attribute name="verticalCentered" value-ref="VERTICALCENTERED" />
+            </tt:cond>
+          </tt:ref>
+        </printOptions>
+      </tt:cond>
+      <pageMargins>
+        <tt:ref name="WORKSHEET.PAGEMARGINS">
+          <tt:attribute name="left"   value-ref="LEFT"   />
+          <tt:attribute name="right"  value-ref="RIGHT"  />
+          <tt:attribute name="top"    value-ref="TOP"    />
+          <tt:attribute name="bottom" value-ref="BOTTOM" />
+          <tt:attribute name="header" value-ref="HEADER" />
+          <tt:attribute name="footer" value-ref="FOOTER" />
+        </tt:ref>
+      </pageMargins>
+      <pageSetup>
+        <tt:ref name="WORKSHEET.PAGESETUP">
+          <tt:cond check="not-initial(BLACKANDWHITE)">
+            <tt:attribute name="blackAndWhite"      value-ref="BLACKANDWHITE"      />
+          </tt:cond>
+          <tt:cond check="not-initial(CELLCOMMENTS)">
+            <tt:attribute name="cellComments"       value-ref="CELLCOMMENTS"       />
+          </tt:cond>
+          <tt:cond check="COPIES != 0">
+            <tt:attribute name="copies"             value-ref="COPIES"             />
+          </tt:cond>
+          <tt:cond check="not-initial(DRAFT)">
+            <tt:attribute name="draft"              value-ref="DRAFT"              />
+          </tt:cond>
+          <tt:cond check="not-initial(ERRORS)">
+            <tt:attribute name="errors"             value-ref="ERRORS"             />
+          </tt:cond>
+          <tt:cond check="FIRSTPAGENUMBER != 0">
+            <tt:attribute name="firstPageNumber"    value-ref="FIRSTPAGENUMBER"    />
+          </tt:cond>
+          <tt:cond check="not-initial(FITTOPAGE)">
+            <tt:attribute name="fitToHeight"        value-ref="FITTOHIGHT"         />
+            <tt:attribute name="fitToWidth"         value-ref="FITTOWIDTH"         />
+          </tt:cond>
+          <tt:cond check="HORIZONTALDPI != 0">
+            <tt:attribute name="horizontalDpi"      value-ref="HORIZONTALDPI"      />
+          </tt:cond>
+          <tt:cond check="not-initial(ORIENTATION)">
+            <tt:attribute name="orientation"        value-ref="ORIENTATION"        />
+          </tt:cond>
+          <tt:cond check="not-initial(PAGEORDER)">
+            <tt:attribute name="pageOrder"          value-ref="PAGEORDER"          />
+          </tt:cond>
+          <tt:cond check="not-initial(PAPERHEIGHT)">
+            <tt:attribute name="paperHeight"        value-ref="PAPERHEIGHT"        />
+          </tt:cond>
+          <tt:cond check="PAPERSIZE != 0">
+            <tt:attribute name="paperSize"          value-ref="PAPERSIZE"          />
+          </tt:cond>
+          <tt:cond check="not-initial(PAPERWIDTH)">
+            <tt:attribute name="paperWidth"         value-ref="PAPERWIDTH"         />
+          </tt:cond>
+          <tt:cond check="SCALE != 0">
+            <tt:attribute name="scale"              value-ref="SCALE"              />
+          </tt:cond>
+          <tt:cond check="not-initial(USEFIRSTPAGENUMBER)">
+            <tt:attribute name="useFirstPageNumber" value-ref="USEFIRSTPAGENUMBER" />
+          </tt:cond>
+          <tt:cond check="not-initial(USEPRINTERDEFAULTS)">
+            <tt:attribute name="usePrinterDefaults" value-ref="USEPRINTERDEFAULTS" />
+          </tt:cond>
+          <tt:cond check="VERTICALDPI != 0">
+            <tt:attribute name="verticalDpi"        value-ref="VERTICALDPI"        />
+          </tt:cond>
+        </tt:ref>
+      </pageSetup>
+      <tt:cond check="not-initial(WORKSHEET.HEADERFOOTER)">
+        <headerFooter>
+          <tt:ref name="WORKSHEET.HEADERFOOTER">
+            <tt:cond check="not-initial(WORKSHEET.HEADERFOOTER)">
+              <tt:attribute name="differentOddEven" value-ref="DIFFERENTODDEVEN" />
+            </tt:cond>
+            <oddHeader>
+              <tt:value ref="ODDHEADER"  />
+            </oddHeader>
+            <oddFooter>
+              <tt:value ref="ODDFOOTER"  />
+            </oddFooter>
+            <evenHeader>
+              <tt:value ref="EVENHEADER" />
+            </evenHeader>
+            <evenFooter>
+              <tt:value ref="EVENFOOTER" />
+            </evenFooter>
+          </tt:ref>
+        </headerFooter>
+      </tt:cond>
+      <tt:cond check="not-initial(WORKSHEET.DRAWINGS)">
+        <drawing>
+          <tt:attribute name="r:id" value-ref="WORKSHEET.DRAWINGS" />
+        </drawing>
+      </tt:cond>
+      <tt:cond check="WORKSHEET.TABLES_COUNT != 0">
+        <tableParts>
+          <tt:attribute name="count" value-ref="WORKSHEET.TABLES_COUNT" />
+          <tt:loop ref="WORKSHEET.TABLES">
+            <tablePart>
+              <tt:attribute name="r:id" value-ref="R_ID" />
+            </tablePart>
+          </tt:loop>
+        </tableParts>
+      </tt:cond>
+    </worksheet>
+  </tt:template>
+</tt:transform>
