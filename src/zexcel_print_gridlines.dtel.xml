@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZEXCEL_PRINT_GRIDLINES</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>FLAG</DOMNAME>
+    <HEADLEN>55</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Print Gridlines</DDTEXT>
+    <REPTEXT>Print Gridlines</REPTEXT>
+    <SCRTEXT_S>Print Grid</SCRTEXT_S>
+    <SCRTEXT_M>Print Gridlines</SCRTEXT_M>
+    <SCRTEXT_L>Print Gridlines</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <TPARA/>
+  </asx:values>
+ </asx:abap>
+</abapGit>

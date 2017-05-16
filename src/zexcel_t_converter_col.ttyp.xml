@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_TTYP" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD40V>
+    <TYPENAME>ZEXCEL_T_CONVERTER_COL</TYPENAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <ROWTYPE>ZEXCEL_S_CONVERTER_COL</ROWTYPE>
+    <ROWKIND>S</ROWKIND>
+    <DATATYPE>STRU</DATATYPE>
+    <ACCESSMODE>H</ACCESSMODE>
+    <KEYDEF>K</KEYDEF>
+    <KEYKIND>U</KEYKIND>
+    <KEYFDCOUNT>0002</KEYFDCOUNT>
+    <DDTEXT>Table type for color information of cells for converter</DDTEXT>
+   </DD40V>
+   <DD42V>
+    <DD42V>
+     <TYPENAME>ZEXCEL_T_CONVERTER_COL</TYPENAME>
+     <KEYFDPOS>0001</KEYFDPOS>
+     <ROWTYPEPOS>0001</ROWTYPEPOS>
+     <KEYFIELD>ROWNUMBER</KEYFIELD>
+    </DD42V>
+    <DD42V>
+     <TYPENAME>ZEXCEL_T_CONVERTER_COL</TYPENAME>
+     <KEYFDPOS>0002</KEYFDPOS>
+     <ROWTYPEPOS>0002</ROWTYPEPOS>
+     <KEYFIELD>COLUMNNAME</KEYFIELD>
+    </DD42V>
+   </DD42V>
+   <DD43V/>
+  </asx:values>
+ </asx:abap>
+</abapGit>

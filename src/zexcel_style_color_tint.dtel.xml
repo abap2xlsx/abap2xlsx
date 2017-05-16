@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZEXCEL_STYLE_COLOR_TINT</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <HEADLEN>22</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Tint</DDTEXT>
+    <REPTEXT>Tint</REPTEXT>
+    <SCRTEXT_S>Tint</SCRTEXT_S>
+    <SCRTEXT_M>Tint</SCRTEXT_M>
+    <SCRTEXT_L>Tint</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <DATATYPE>FLTP</DATATYPE>
+    <LENG>000016</LENG>
+    <DECIMALS>000016</DECIMALS>
+    <OUTPUTLEN>000022</OUTPUTLEN>
+   </DD04V>
+   <TPARA/>
+  </asx:values>
+ </asx:abap>
+</abapGit>
