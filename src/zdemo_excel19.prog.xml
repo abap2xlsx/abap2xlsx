@@ -37,18 +37,24 @@
     <item>
      <LANGUAGE>D</LANGUAGE>
      <TEXTPOOL>
-      <TEXTPOOL>
+      <item>
+       <ID>R</ID>
+       <ENTRY>abap2xlsx Demo: Set active sheet</ENTRY>
+       <LENGTH>70</LENGTH>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_NOOUT</KEY>
-       <ENTRY>        Hide output</ENTRY>
+       <ENTRY>Hide output</ENTRY>
        <LENGTH>19</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_PATH</KEY>
-       <ENTRY>D       .</ENTRY>
+       <ENTRY>.</ENTRY>
        <LENGTH>26</LENGTH>
-      </TEXTPOOL>
+       <SPLIT>D</SPLIT>
+      </item>
      </TEXTPOOL>
     </item>
    </I18N_TPOOL>
