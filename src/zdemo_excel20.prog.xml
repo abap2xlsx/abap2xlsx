@@ -13,6 +13,10 @@
    </PROGDIR>
    <DYNPROS/>
    <CUA>
+    <ADM>
+     <ACTCODE>000010</ACTCODE>
+     <PFKCODE>000010</PFKCODE>
+    </ADM>
     <STA>
      <RSMPE_STAT>
       <CODE>ALV_STATUS</CODE>
