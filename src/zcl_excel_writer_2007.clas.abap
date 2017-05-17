@@ -2828,8 +2828,8 @@ METHOD create_xl_sharedstrings.
   SHIFT lv_count_str RIGHT DELETING TRAILING space.
   SHIFT lv_count_str LEFT DELETING LEADING space.
 
-  SORT lt_cell_data BY cell_value.
-  DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value.
+  SORT lt_cell_data BY cell_value data_type.
+  DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value data_type.
 
   DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
   MOVE lv_uniquecount TO lv_uniquecount_str.
