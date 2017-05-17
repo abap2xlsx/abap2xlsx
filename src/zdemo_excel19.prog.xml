@@ -38,11 +38,6 @@
      <LANGUAGE>D</LANGUAGE>
      <TEXTPOOL>
       <item>
-       <ID>R</ID>
-       <ENTRY>abap2xlsx Demo: Set active sheet</ENTRY>
-       <LENGTH>70</LENGTH>
-      </item>
-      <item>
        <ID>S</ID>
        <KEY>P_NOOUT</KEY>
        <ENTRY>Hide output</ENTRY>
