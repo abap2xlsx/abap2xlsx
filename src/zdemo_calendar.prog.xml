@@ -75,59 +75,62 @@
     <item>
      <LANGUAGE>D</LANGUAGE>
      <TEXTPOOL>
-      <TEXTPOOL>
+      <item>
        <ID>I</ID>
        <KEY>000</KEY>
        <ENTRY>Ausrichtung</ENTRY>
        <LENGTH>11</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>I</ID>
        <KEY>001</KEY>
        <ENTRY>KW</ENTRY>
        <LENGTH>4</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>I</ID>
        <KEY>002</KEY>
        <ENTRY>Erzeugt mit abap2xlsx. Weitere Informationen unter https://ivanfemia.github.io/abap2xlsx/</ENTRY>
        <LENGTH>100</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>R</ID>
        <ENTRY>abap2xlsx Demo: Erzeugen eines Kalenders mit Bildern</ENTRY>
        <LENGTH>70</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_LANDS</KEY>
-       <ENTRY>        Querformat</ENTRY>
+       <ENTRY>Querformat</ENTRY>
        <LENGTH>18</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_PORTR</KEY>
-       <ENTRY>        Hochformat</ENTRY>
+       <ENTRY>Hochformat</ENTRY>
        <LENGTH>18</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_FROM</KEY>
-       <ENTRY>D       .</ENTRY>
+       <ENTRY>.</ENTRY>
        <LENGTH>17</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_PATH</KEY>
-       <ENTRY>D       .</ENTRY>
+       <ENTRY>.</ENTRY>
        <LENGTH>24</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_TO</KEY>
-       <ENTRY>D       .</ENTRY>
+       <ENTRY>.</ENTRY>
        <LENGTH>15</LENGTH>
-      </TEXTPOOL>
+       <SPLIT>D</SPLIT>
+      </item>
      </TEXTPOOL>
     </item>
    </I18N_TPOOL>

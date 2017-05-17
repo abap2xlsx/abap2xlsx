@@ -72,59 +72,59 @@
     <item>
      <LANGUAGE>D</LANGUAGE>
      <TEXTPOOL>
-      <TEXTPOOL>
+      <item>
        <ID>I</ID>
        <KEY>CLS</KEY>
        <ENTRY>Auswahl der Reader- und Writerklasse</ENTRY>
        <LENGTH>70</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>I</ID>
        <KEY>DUM</KEY>
        <ENTRY>Dump bei unbeh. Exception.  Man weiß wenn man das braucht</ENTRY>
        <LENGTH>60</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>I</ID>
        <KEY>ERR</KEY>
        <ENTRY>Besondere Schalter</ENTRY>
        <LENGTH>60</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>R</ID>
        <ENTRY>Xlsx-Datei lesen und dann wieder ausgeben = Arbeiten mit Templates</ENTRY>
        <LENGTH>70</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>CB_DUMP</KEY>
-       <ENTRY>        Dump bei unbeh. Exceptions</ENTRY>
+       <ENTRY>Dump bei unbeh. Exceptions</ENTRY>
        <LENGTH>36</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>CB_ERRL</KEY>
-       <ENTRY>        Exceptionposition anzeigen</ENTRY>
+       <ENTRY>Exceptionposition anzeigen</ENTRY>
        <LENGTH>34</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>LB_READ</KEY>
-       <ENTRY>        Reader-Klasse</ENTRY>
+       <ENTRY>Reader-Klasse</ENTRY>
        <LENGTH>21</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>LB_WRITE</KEY>
-       <ENTRY>        Writer-Klasse</ENTRY>
+       <ENTRY>Writer-Klasse</ENTRY>
        <LENGTH>21</LENGTH>
-      </TEXTPOOL>
-      <TEXTPOOL>
+      </item>
+      <item>
        <ID>S</ID>
        <KEY>P_UPFILE</KEY>
-       <ENTRY>        Hochzuladende Datei</ENTRY>
+       <ENTRY>Hochzuladende Datei</ENTRY>
        <LENGTH>27</LENGTH>
-      </TEXTPOOL>
+      </item>
      </TEXTPOOL>
     </item>
    </I18N_TPOOL>
