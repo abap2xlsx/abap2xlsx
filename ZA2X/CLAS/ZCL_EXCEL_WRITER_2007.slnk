@@ -2728,6 +2728,11 @@ ENDMETHOD.</source>
   SHIFT lv_count_str LEFT DELETING LEADING space.
 
   SORT lt_cell_data BY cell_value.
+* Remove all non-strings first to avoid deleting same cell values in a
+* non-string cell
+  DELETE lt_cell_data WHERE data_type &lt;&gt; &apos;s&apos;.
+
+* Safely remove duplicated string cells
   DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value.
 
   DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
