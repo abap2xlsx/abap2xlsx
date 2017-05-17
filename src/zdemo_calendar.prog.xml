@@ -15,60 +15,9 @@
    <DYNPROS/>
    <TPOOL>
     <item>
-     <ID>I</ID>
-     <KEY>000</KEY>
-     <ENTRY>Orientation</ENTRY>
-     <LENGTH>11</LENGTH>
-    </item>
-    <item>
-     <ID>I</ID>
-     <KEY>001</KEY>
-     <ENTRY>CW</ENTRY>
-     <LENGTH>4</LENGTH>
-    </item>
-    <item>
-     <ID>I</ID>
-     <KEY>002</KEY>
-     <ENTRY>Created with abap2xlsx. Find more information at https://ivanfemia.github.io/abap2xlsx/</ENTRY>
-     <LENGTH>100</LENGTH>
-    </item>
-    <item>
      <ID>R</ID>
      <ENTRY>abap2xlsx Demo: Create Calendar with Pictures</ENTRY>
      <LENGTH>45</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_FROM</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>17</LENGTH>
-     <SPLIT>D</SPLIT>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_LANDS</KEY>
-     <ENTRY>Landscape</ENTRY>
-     <LENGTH>17</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_PATH</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>24</LENGTH>
-     <SPLIT>D</SPLIT>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_PORTR</KEY>
-     <ENTRY>Portrait</ENTRY>
-     <LENGTH>16</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_TO</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>15</LENGTH>
-     <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
    <I18N_TPOOL>
