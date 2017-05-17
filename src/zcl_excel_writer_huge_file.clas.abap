@@ -91,8 +91,8 @@ METHOD create_xl_sharedstrings.
   ls_root-count = lines( lt_cell_data ).
   CONDENSE ls_root-count.
 
-  SORT lt_cell_data BY cell_value.
-  DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value.
+  SORT lt_cell_data BY cell_value data_type.
+  DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value data_type.
 
   ls_root-unique_count = lines( lt_cell_data ).
   CONDENSE ls_root-unique_count.
