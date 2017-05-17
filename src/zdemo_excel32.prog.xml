@@ -1938,13 +1938,6 @@
      <ENTRY>abap2xlsx Demo: Export ALV</ENTRY>
      <LENGTH>26</LENGTH>
     </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_PATH</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
-     <SPLIT>D</SPLIT>
-    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>

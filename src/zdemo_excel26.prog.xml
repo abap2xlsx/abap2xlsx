@@ -176,7 +176,7 @@
       <CODE>&amp;ILT</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME> ICON_FILTER</TEXT_NAME>
+      <TEXT_NAME>ICON_FILTER</TEXT_NAME>
       <ICON_ID>@4G@</ICON_ID>
       <FUN_TEXT>Set filter</FUN_TEXT>
      </RSMPE_FUNT>
@@ -987,19 +987,6 @@
      <ID>R</ID>
      <ENTRY>abap2xlsx Demo: Test Excel Reader (Now in ZDEMO_EXCEL15)</ENTRY>
      <LENGTH>56</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_PATH</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>24</LENGTH>
-     <SPLIT>D</SPLIT>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_READER</KEY>
-     <ENTRY>Write back after using Reader</ENTRY>
-     <LENGTH>37</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

@@ -37,8 +37,6 @@
        <COLUMN>001</COLUMN>
        <LENGTH>120</LENGTH>
        <HEIGHT>027</HEIGHT>
-       <C_LINE_MIN>001</C_LINE_MIN>
-       <C_COLN_MIN>001</C_COLN_MIN>
       </RPY_DYCATT>
      </CONTAINERS>
      <FIELDS>
@@ -1700,18 +1698,6 @@
     </DOC>
    </CUA>
    <TPOOL>
-    <item>
-     <ID>I</ID>
-     <KEY>BL1</KEY>
-     <ENTRY>Output options</ENTRY>
-     <LENGTH>60</LENGTH>
-    </item>
-    <item>
-     <ID>I</ID>
-     <KEY>BLI</KEY>
-     <ENTRY>Various examples for inheritance</ENTRY>
-     <LENGTH>60</LENGTH>
-    </item>
     <item>
      <ID>R</ID>
      <ENTRY>aasdf</ENTRY>
