@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<DTEL ROLLNAME="ZEXCEL_CELL_COORDS" DDLANGUAGE="E" ROUTPUTLEN="000000" HEADLEN="25" SCRLEN1="10" SCRLEN2="16" SCRLEN3="25" DDTEXT="Cell coordinates as Excel" REPTEXT="Cell coordinates as Excel" SCRTEXT_S="Cell coord" SCRTEXT_M="Cell coordinates" SCRTEXT_L="Cell coordinates as Excel" AUTHCLASS="00" DTELMASTER="E" DATATYPE="STRG" LENG="000000" DECIMALS="000000" OUTPUTLEN="000000">
- <tpara/>
-</DTEL>
