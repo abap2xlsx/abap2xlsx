@@ -499,10 +499,8 @@ method CONVERT.
     ws_option = is_option.
   ENDIF.
 
-  TRY.
-    execute_converter( EXPORTING io_object   = io_alv
-                                 it_table    = it_table ) .
-  ENDTRY.
+  execute_converter( EXPORTING io_object   = io_alv
+                               it_table    = it_table ) .
 
   IF io_worksheet IS SUPPLIED AND io_worksheet IS BOUND.
     wo_worksheet = io_worksheet.
@@ -946,8 +944,7 @@ method EXECUTE_CONVERTER.
     endif.
     if sy-subrc = 0.
       CREATE OBJECT lo_if type (ls_types-clsname).
-      try.
-        lo_if->create_fieldcatalog(
+      lo_if->create_fieldcatalog(
         exporting
           is_option       = ws_option
           io_object       = io_object
@@ -959,7 +956,6 @@ method EXECUTE_CONVERTER.
           et_colors       = wt_colors
           et_filter       = wt_filter
           ).
-      endtry.
 *  data lines of highest level.
       if ws_layout-max_subtotal_level > 0. add 1 to ws_layout-max_subtotal_level. endif.
     else.
