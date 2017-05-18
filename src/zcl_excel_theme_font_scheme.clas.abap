@@ -227,7 +227,6 @@ method build_xml.
             lo_font->set_attribute( name = c_typeface value = <font>-typeface ).
           endif.
         endloop.
-        clear: lo_latin, lo_ea, lo_cs, lo_font.
       endif.
 
 

@@ -289,7 +289,6 @@ METHOD is_row_hidden_single_values.
   READ TABLE is_filter-t_values TRANSPORTING NO FIELDS WITH TABLE KEY table_line =  lv_value.
   IF sy-subrc <> 0.
     rv_is_hidden = abap_true.
-    RETURN.
   ENDIF.
 
 ENDMETHOD.
@@ -323,7 +322,6 @@ METHOD is_row_hidden_text_pattern.
 *--------------------------------------------------------------------*
   IF lv_value NOT IN is_filter-tr_textfilter1.
     rv_is_hidden = abap_true.
-    RETURN.
   ENDIF.
 
 ENDMETHOD.

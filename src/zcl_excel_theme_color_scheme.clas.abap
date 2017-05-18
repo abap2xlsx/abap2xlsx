@@ -298,7 +298,6 @@ method build_xml.
           lo_syscolor->set_attribute( name = c_val value = folhlink-syscolor-val ).
           lo_syscolor->set_attribute( name = c_lastclr value = folhlink-syscolor-lastclr ).
         endif.
-        clear: lo_color, lo_srgb, lo_syscolor.
       endif.
 
 
