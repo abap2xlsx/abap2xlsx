@@ -45,8 +45,7 @@ method CREATE_WT_FCAT.
   DATA: lr_data             TYPE REF TO data,
         lo_structdescr      TYPE REF TO cl_abap_structdescr,
         lt_dfies            TYPE ddfields,
-        ls_dfies            TYPE dfies,
-        lv_sytabix          TYPE sytabix.
+        ls_dfies            TYPE dfies.
 
   DATA: ls_fcat         TYPE lvc_s_fcat.
 
@@ -79,8 +78,6 @@ method CREATE_WT_FCAT.
 method CREATE_WT_FILT.
 * No neeed for superclass.
 * Only for WD
-  DATA: lt_otab  TYPE abap_sortorder_tab,
-        ls_otab  TYPE abap_sortorder.
   DATA: lt_filters      TYPE salv_wd_t_filter_rule_ref,
         ls_filt         TYPE lvc_s_filt.
 

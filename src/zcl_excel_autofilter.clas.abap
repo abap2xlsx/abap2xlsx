@@ -134,8 +134,7 @@ METHOD get_filter_range.
   DATA: l_row_start_c TYPE string,
         l_row_end_c   TYPE string,
         l_col_start_c TYPE string,
-        l_col_end_c   TYPE string,
-        l_value       TYPE string.
+        l_col_end_c   TYPE string.
 
   validate_area( ).
 
@@ -203,8 +202,7 @@ METHOD is_row_hidden.
 
 
   DATA: lr_filter TYPE REF TO ts_filter,
-        lv_col    TYPE i,
-        ls_value  TYPE zexcel_s_autofilter_values.
+        lv_col    TYPE i.
 
   FIELD-SYMBOLS: <ls_filter> TYPE ts_filter.
 
@@ -365,8 +363,7 @@ ENDMETHOD.
 
 METHOD set_value.
 
-  DATA: lr_filter TYPE REF TO ts_filter,
-        ls_value  TYPE zexcel_s_autofilter_values.
+  DATA: lr_filter TYPE REF TO ts_filter.
 
   FIELD-SYMBOLS: <ls_filter> TYPE ts_filter.
 

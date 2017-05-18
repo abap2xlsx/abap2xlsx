@@ -211,9 +211,7 @@ method GET_REFERENCE.
 
 
 method GET_RIGHT_COLUMN_INTEGER.
-  DATA: lv_column         TYPE zexcel_cell_column,
-        lv_table_lines    TYPE i,
-        ls_field_catalog  TYPE zexcel_s_fieldcatalog.
+  DATA: ls_field_catalog  TYPE zexcel_s_fieldcatalog.
 
   IF settings-bottom_right_column IS NOT INITIAL.
     ev_column =  zcl_excel_common=>convert_column2int( settings-bottom_right_column ).

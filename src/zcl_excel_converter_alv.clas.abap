@@ -305,8 +305,6 @@ method GET_COLOR.
   FIELD-SYMBOLS: <fs_tab> TYPE STANDARD TABLE,
                  <fs_stab> TYPE ANY,
                  <fs>      TYPE ANY,
-                 <fs_tcol>  TYPE lvc_t_scol,
-                 <fs_scol>  TYPE lvc_s_scol,
                  <ft_slis> type standard table,
                  <fs_slis> type any.
 
@@ -493,7 +491,6 @@ ENDMETHOD.
 
 method UPDATE_CATALOG.
   DATA: ls_fieldcatalog   TYPE zexcel_s_converter_fcat,
-        ls_ref            TYPE salv_s_ddic_reference,
         ls_fcat           TYPE lvc_s_fcat,
         ls_sort           TYPE lvc_s_sort,
         l_decimals        TYPE lvc_decmls.

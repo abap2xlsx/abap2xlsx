@@ -356,7 +356,6 @@ method BIND_TABLE.
         ls_field_catalog  type zexcel_s_fieldcatalog,
         ls_fcat           type zexcel_s_converter_fcat,
         lo_col_dim        type ref to zcl_excel_worksheet_columndime,
-        lo_row_dim        type ref to zcl_excel_worksheet_rowdimensi,
         l_col_int         type zexcel_cell_column,
         l_col_alpha       type zexcel_cell_column_alpha,
         ls_settings       type zexcel_s_table_settings,
@@ -786,8 +785,7 @@ method CREATE_TABLE.
         lt_components_tab       TYPE cl_abap_structdescr=>component_table,
         ls_components           TYPE abap_componentdescr,
         lo_table                TYPE REF TO cl_abap_tabledescr,
-        lo_struc                TYPE REF TO cl_abap_structdescr,
-        lt_fieldcatalog         TYPE zexcel_t_converter_fcat.
+        lo_struc                TYPE REF TO cl_abap_structdescr.
 
   FIELD-SYMBOLS: <fs_scat>  TYPE zexcel_s_converter_fcat,
                  <fs_stab>  TYPE ANY,
@@ -871,7 +869,6 @@ ENDMETHOD.
 
 method CREATE_WORKSHEET.
   DATA: l_freeze_col TYPE i.
-  DATA: l_guid TYPE oltpguid16.
 
   IF wo_data IS BOUND AND wo_worksheet IS BOUND.
 
@@ -911,9 +908,7 @@ method CREATE_WORKSHEET.
 
 
 method EXECUTE_CONVERTER.
-  DATA: lt_fieldcatalog         TYPE zexcel_t_fieldcatalog,
-        ls_fieldcatalog         TYPE zexcel_s_converter_fcat,
-        lo_if                   TYPE REF TO zif_excel_converter,
+  DATA: lo_if                   TYPE REF TO zif_excel_converter,
         ls_types                TYPE ts_alv_types,
         lo_addit                TYPE REF TO cl_abap_classdescr,
         lo_addit_superclass     type ref to cl_abap_classdescr.
@@ -1027,8 +1022,7 @@ method GET_COLOR_STYLE.
 
 
 method GET_FILE.
-  data: lo_excel_writer         type ref to zif_excel_writer,
-        lo_excel                type ref to zcl_excel.
+  data: lo_excel_writer         type ref to zif_excel_writer.
 
   data: ls_seoclass type seoclass.
 
@@ -1158,19 +1152,13 @@ method INIT_OPTION.
 
 
 method LOOP_NORMAL.
-  DATA: lo_data           TYPE REF TO data,
-        l_row_header      TYPE zexcel_cell_row VALUE 2,
-        l_col_header      TYPE zexcel_cell_column_alpha VALUE 'B',
-        l_row_int_start   TYPE zexcel_cell_row,
-        l_row_int_end     TYPE zexcel_cell_row,
+  DATA: l_row_int_end     TYPE zexcel_cell_row,
         l_row_int         TYPE zexcel_cell_row,
         l_col_int         TYPE zexcel_cell_column,
         l_col_alpha       TYPE zexcel_cell_column_alpha,
-        l_col_alpha_start TYPE zexcel_cell_column_alpha,
         l_cell_value      TYPE zexcel_cell_value,
         l_s_color         TYPE abap_bool,
         lo_col_dim        TYPE REF TO zcl_excel_worksheet_columndime,
-        lo_row_dim        TYPE REF TO zcl_excel_worksheet_rowdimensi,
         l_formula         TYPE zexcel_cell_formula,
         l_style           TYPE zexcel_cell_style,
         l_cells           TYPE i,
@@ -1180,8 +1168,7 @@ method LOOP_NORMAL.
   FIELD-SYMBOLS: <fs_stab>        TYPE ANY,
                  <fs_tab>         TYPE STANDARD TABLE,
                  <fs_sfcat>       TYPE zexcel_s_converter_fcat,
-                 <fs_fldval>      TYPE ANY,
-                 <fs_cell_value>  TYPE zexcel_cell_value.
+                 <fs_fldval>      TYPE ANY.
 
   ASSIGN wo_data->* TO <fs_tab> .
 
@@ -1277,10 +1264,7 @@ method LOOP_NORMAL.
 
 method LOOP_SUBTOTAL.
 
-  DATA: lo_data           TYPE REF TO data,
-        l_row_header      TYPE zexcel_cell_row VALUE 2,
-        l_col_header      TYPE zexcel_cell_column_alpha VALUE 'B',
-        l_row_int_start   TYPE zexcel_cell_row,
+  DATA: l_row_int_start   TYPE zexcel_cell_row,
         l_row_int_end     TYPE zexcel_cell_row,
         l_row_int         TYPE zexcel_cell_row,
         l_col_int         TYPE zexcel_cell_column,
@@ -1292,15 +1276,12 @@ method LOOP_SUBTOTAL.
         lo_row_dim        TYPE REF TO zcl_excel_worksheet_rowdimensi,
         l_formula         TYPE zexcel_cell_formula,
         l_style           TYPE zexcel_cell_style,
-        l_subtotalled     TYPE flag,
         l_text            TYPE string,
         ls_sort_values    TYPE ts_sort_values,
         ls_subtotal_rows  TYPE ts_subtotal_rows,
         l_sort_level      TYPE int4,
         l_hidden          TYPE int4,
         l_line            TYPE i,
-        l_guid            TYPE guid_22,
-        l_tabix           TYPE sy-tabix,
         l_cells           TYPE i,
         l_count           TYPE i,
         l_table_row       TYPE i,
@@ -1311,8 +1292,7 @@ method LOOP_SUBTOTAL.
                  <fs_sfcat>       TYPE zexcel_s_converter_fcat,
                  <fs_fldval>      TYPE ANY,
                  <fs_sortval>     TYPE ANY,
-                 <fs_sortv>       TYPE ts_sort_values,
-                 <fs_cell_value>  TYPE zexcel_cell_value.
+                 <fs_sortv>       TYPE ts_sort_values.
 
   ASSIGN wo_data->* TO <fs_tab> .
 
@@ -1623,8 +1603,7 @@ method LOOP_SUBTOTAL.
 method OPEN_FILE.
   data: l_bytecount             type i,
         lt_file                 type solix_tab,
-        l_dir                   type string,
-        l_sep                   type c.
+        l_dir                   type string.
 
   field-symbols: <fs_data> type any table.
 
@@ -1729,8 +1708,7 @@ method SET_FIELDCATALOG.
   DATA: lr_data             TYPE REF TO data,
         lo_structdescr      TYPE REF TO cl_abap_structdescr,
         lt_dfies            TYPE ddfields,
-        ls_dfies            TYPE dfies,
-        ls_fieldcatalog     TYPE zexcel_s_fieldcatalog.
+        ls_dfies            TYPE dfies.
   DATA: ls_fcat             TYPE zexcel_s_converter_fcat.
 
   FIELD-SYMBOLS: <fs_tab>         TYPE ANY TABLE.
