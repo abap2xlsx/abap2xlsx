@@ -29,8 +29,6 @@ CLASS ZCL_EXCEL_THEME_FMT_SCHEME IMPLEMENTATION.
 method build_xml.
     data: lo_xml type ref to cl_xml_document.
     data: lo_node type ref to if_ixml_node.
-    data: default_fmt_scheme type string.
-    data: lo_scheme_element type ref to if_ixml_element.
     data: lo_elements type ref to if_ixml_element.
     check io_document is bound.
     lo_elements ?= io_document->find_from_name_ns( name = zcl_excel_theme=>c_theme_elements ).

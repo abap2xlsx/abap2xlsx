@@ -178,7 +178,6 @@ ENDMETHOD.
 
 
 method ADD_NEW_DRAWING.
-  DATA: lv_guid  TYPE guid_16.
 * Create default blank worksheet
   CREATE OBJECT eo_drawing
     EXPORTING
@@ -224,7 +223,6 @@ method ADD_NEW_STYLE.
 
 
 method ADD_NEW_WORKSHEET.
-  DATA: lv_guid  TYPE guid_16.
 
 * Create default blank worksheet
   CREATE OBJECT eo_worksheet
@@ -258,8 +256,7 @@ ENDMETHOD.
 
 
 method CONSTRUCTOR.
-  DATA: lo_worksheet  TYPE REF TO zcl_excel_worksheet,
-        lo_style      TYPE REF TO zcl_excel_style.
+  DATA: lo_style      TYPE REF TO zcl_excel_style.
 
 * Inizialize instance objects
   CREATE OBJECT security.

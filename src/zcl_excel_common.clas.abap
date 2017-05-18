@@ -745,7 +745,6 @@ endmethod.
 method DESCRIBE_STRUCTURE.
   DATA:   lt_components      TYPE abap_component_tab,
           lt_comps           TYPE abap_component_tab,
-          lo_struct          TYPE REF TO cl_abap_structdescr,
           ls_component       TYPE abap_componentdescr,
           lo_elemdescr       TYPE REF TO cl_abap_elemdescr,
           ls_dfies           TYPE dfies,
@@ -1111,12 +1110,10 @@ method RECURSIVE_CLASS_TO_STRUCT.
   DATA: descr           TYPE REF TO cl_abap_structdescr,
         wa_component    LIKE LINE OF descr->components,
         attribute_name  TYPE fieldname,
-        flag_class      TYPE flag,
-        o_border        TYPE REF TO zcl_excel_style_border.
+        flag_class      TYPE flag.
 
   FIELD-SYMBOLS: <field>      TYPE any,
                  <fieldx>     TYPE any,
-                 <class>      TYPE REF TO object,
                  <attribute>  TYPE any.
 
 
@@ -1172,9 +1169,7 @@ METHOD recursive_struct_to_class.
 
   FIELD-SYMBOLS: <field>        TYPE any,
                  <fieldx>       TYPE any,
-                 <class>        TYPE REF TO object,
-                 <attribute>    TYPE any,
-                 <attribute_s>  TYPE ANY TABLE.
+                 <attribute>    TYPE any.
 
 
   descr ?= cl_abap_structdescr=>describe_by_data( i_source ).
@@ -1256,8 +1251,6 @@ METHOD shift_formula.
               lv_absrow                       TYPE string,    " Absolute row symbol
 
               lv_errormessage                 TYPE string.
-
-  FIELD-SYMBOLS: <find_my_include> TYPE ANY.
 
 *--------------------------------------------------------------------*
 * When copying a cell in EXCEL to another cell any inherent formulas
@@ -1613,8 +1606,7 @@ method SPLIT_FILE.
 
   DATA: lf_ext(10)     TYPE c,
         lf_dot_ext(10) TYPE c.
-  DATA: lf_str TYPE text255,
-        lf_anz TYPE i,
+  DATA: lf_anz TYPE i,
         lf_len TYPE i.
 ** ---------------------------------------------------------------------
 

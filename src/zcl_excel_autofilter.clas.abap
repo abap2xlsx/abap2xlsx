@@ -134,8 +134,7 @@ METHOD get_filter_range.
   DATA: l_row_start_c TYPE string,
         l_row_end_c   TYPE string,
         l_col_start_c TYPE string,
-        l_col_end_c   TYPE string,
-        l_value       TYPE string.
+        l_col_end_c   TYPE string.
 
   validate_area( ).
 
@@ -203,8 +202,7 @@ METHOD is_row_hidden.
 
 
   DATA: lr_filter TYPE REF TO ts_filter,
-        lv_col    TYPE i,
-        ls_value  TYPE zexcel_s_autofilter_values.
+        lv_col    TYPE i.
 
   FIELD-SYMBOLS: <ls_filter> TYPE ts_filter.
 
@@ -289,7 +287,6 @@ METHOD is_row_hidden_single_values.
   READ TABLE is_filter-t_values TRANSPORTING NO FIELDS WITH TABLE KEY table_line =  lv_value.
   IF sy-subrc <> 0.
     rv_is_hidden = abap_true.
-    RETURN.
   ENDIF.
 
 ENDMETHOD.
@@ -323,7 +320,6 @@ METHOD is_row_hidden_text_pattern.
 *--------------------------------------------------------------------*
   IF lv_value NOT IN is_filter-tr_textfilter1.
     rv_is_hidden = abap_true.
-    RETURN.
   ENDIF.
 
 ENDMETHOD.
@@ -367,8 +363,7 @@ ENDMETHOD.
 
 METHOD set_value.
 
-  DATA: lr_filter TYPE REF TO ts_filter,
-        ls_value  TYPE zexcel_s_autofilter_values.
+  DATA: lr_filter TYPE REF TO ts_filter.
 
   FIELD-SYMBOLS: <ls_filter> TYPE ts_filter.
 

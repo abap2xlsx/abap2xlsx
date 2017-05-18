@@ -129,7 +129,6 @@ endform.                    " USER_COMMAND
 * This subroutine is principal demo session
 *--------------------------------------------------------------------*
 form export_to_excel.
-  data: lo_converter type ref to zcl_excel_converter.
 * create zcl_excel_worksheet object
 
   create object lo_excel.

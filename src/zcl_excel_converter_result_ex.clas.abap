@@ -45,9 +45,7 @@ METHOD zif_excel_converter~create_fieldcatalog.
 
   FIELD-SYMBOLS: <fs_table> TYPE STANDARD TABLE.
 
-  TRY.
-    zif_excel_converter~can_convert_object( io_object = io_object ).
-  ENDTRY.
+  zif_excel_converter~can_convert_object( io_object = io_object ).
 
   ws_option = is_option.
 

@@ -244,7 +244,6 @@ METHOD create_content_types.
         lc_xml_attr_partname    TYPE string VALUE 'PartName',
         lc_xml_attr_extension   TYPE string VALUE 'Extension',
         lc_xml_attr_contenttype TYPE string VALUE 'ContentType',
-        lc_xml_attr_codename    TYPE string VALUE 'codeName',
         lc_xml_node_workb_pn    TYPE string VALUE '/xl/workbook.xml',
         lc_xml_node_bin_ext     TYPE string VALUE 'bin',
         lc_xml_node_bin_ct      TYPE string VALUE 'application/vnd.ms-office.vbaProject'.
@@ -257,15 +256,12 @@ METHOD create_content_types.
         lo_element       TYPE REF TO if_ixml_element,
         lo_collection    TYPE REF TO if_ixml_node_collection,
         lo_iterator      TYPE REF TO if_ixml_node_iterator,
-        lo_node          TYPE REF TO if_ixml_node,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
         lo_streamfactory TYPE REF TO if_ixml_stream_factory,
         lo_ostream       TYPE REF TO if_ixml_ostream,
         lo_renderer      TYPE REF TO if_ixml_renderer.
 
   DATA: lv_subrc       TYPE sysubrc,
-        lv_contenttype TYPE string,
-        lv_syindex(2)  TYPE c.
+        lv_contenttype TYPE string.
 
 **********************************************************************
 * STEP 3: Create standard contentType
@@ -321,8 +317,7 @@ ENDMETHOD.
 METHOD create_xl_relationships.
 
 ** Constant node name
-  DATA: lc_xml_node_relationships TYPE string VALUE 'Relationships',
-        lc_xml_node_relationship  TYPE string VALUE 'Relationship',
+  DATA: lc_xml_node_relationship  TYPE string VALUE 'Relationship',
         " Node attributes
         lc_xml_attr_id            TYPE string VALUE 'Id',
         lc_xml_attr_type          TYPE string VALUE 'Type',
@@ -339,14 +334,11 @@ METHOD create_xl_relationships.
         lo_document_xml  TYPE REF TO cl_xml_document,
         lo_element_root  TYPE REF TO if_ixml_node,
         lo_element       TYPE REF TO if_ixml_element,
-        lo_node          TYPE REF TO if_ixml_node,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
         lo_streamfactory TYPE REF TO if_ixml_stream_factory,
         lo_ostream       TYPE REF TO if_ixml_ostream,
         lo_renderer      TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_xml_node_ridx_tg TYPE string,
-        lv_xml_node_ridx_id TYPE string,
+  DATA: lv_xml_node_ridx_id TYPE string,
         lv_size             TYPE i,
         lv_subrc            TYPE sysubrc,
         lv_syindex(2)       TYPE c.
@@ -408,14 +400,11 @@ METHOD create_xl_sheet.
         lo_element       TYPE REF TO if_ixml_element,
         lo_collection    TYPE REF TO if_ixml_node_collection,
         lo_iterator      TYPE REF TO if_ixml_node_iterator,
-        lo_node          TYPE REF TO if_ixml_node,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
         lo_streamfactory TYPE REF TO if_ixml_stream_factory,
         lo_ostream       TYPE REF TO if_ixml_ostream,
         lo_renderer      TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_subrc      TYPE sysubrc,
-        lv_syindex(2) TYPE c.
+  DATA: lv_subrc      TYPE sysubrc.
 
 **********************************************************************
 * STEP 3: Create standard relationship
@@ -463,14 +452,11 @@ METHOD create_xl_workbook.
         lo_element       TYPE REF TO if_ixml_element,
         lo_collection    TYPE REF TO if_ixml_node_collection,
         lo_iterator      TYPE REF TO if_ixml_node_iterator,
-        lo_node          TYPE REF TO if_ixml_node,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
         lo_streamfactory TYPE REF TO if_ixml_stream_factory,
         lo_ostream       TYPE REF TO if_ixml_ostream,
         lo_renderer      TYPE REF TO if_ixml_renderer.
 
-  DATA: lv_subrc      TYPE sysubrc,
-        lv_syindex(2) TYPE c.
+  DATA: lv_subrc      TYPE sysubrc.
 
 **********************************************************************
 * STEP 3: Create standard relationship

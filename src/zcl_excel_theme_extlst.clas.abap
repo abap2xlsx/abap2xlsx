@@ -23,7 +23,6 @@ CLASS ZCL_EXCEL_THEME_EXTLST IMPLEMENTATION.
 
 
 method build_xml.
-    data: lo_theme_element type ref to if_ixml_element.
     data: lo_theme type ref to if_ixml_element.
     data: lo_theme_objdef type ref to if_ixml_element.
     check io_document is bound.
