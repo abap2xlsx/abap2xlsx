@@ -10,7 +10,7 @@ REPORT  zdemo_excel12.
 
 DATA: lo_excel         TYPE REF TO zcl_excel,
       lo_worksheet     TYPE REF TO zcl_excel_worksheet,
-      column_dimension TYPE REF TO zcl_excel_worksheet_columndime,
+      lo_column        TYPE REF TO zcl_excel_column,
       row_dimension    TYPE REF TO zcl_excel_worksheet_rowdimensi.
 
 DATA: lv_file      TYPE xstring,
@@ -54,35 +54,27 @@ START-OF-SELECTION.
 
   " Column Settings
   " Auto size
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'B' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'I' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'B' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'I' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
   " Manual Width
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'C' ).
-  column_dimension->set_width( ip_width = 50 ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'D' ).
-  column_dimension->set_visible( ip_visible = abap_false ).
+  lo_column = lo_worksheet->get_column( ip_column = 'C' ).
+  lo_column->set_width( ip_width = 50 ).
+  lo_column = lo_worksheet->get_column( ip_column = 'D' ).
+  lo_column->set_visible( ip_visible = abap_false ).
   " Implementation in the Writer is not working yet ===== TODO =====
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'F' ).
-  column_dimension->set_outline_level( ip_outline_level = 0 ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'G' ).
-  column_dimension->set_outline_level( ip_outline_level = 1 ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'H' ).
-  column_dimension->set_outline_level( ip_outline_level = 2 ).
+  lo_column = lo_worksheet->get_column( ip_column = 'F' ).
+  lo_column->set_outline_level( ip_outline_level = 0 ).
+  lo_column = lo_worksheet->get_column( ip_column = 'G' ).
+  lo_column->set_outline_level( ip_outline_level = 1 ).
+  lo_column = lo_worksheet->get_column( ip_column = 'H' ).
+  lo_column->set_outline_level( ip_outline_level = 2 ).
 
   row_dimension = lo_worksheet->get_row_dimension( ip_row = 1 ).
   row_dimension->set_visible( ip_visible = abap_false ).
   row_dimension = lo_worksheet->get_row_dimension( ip_row = 5 ).
   row_dimension->set_row_height( ip_row_height = 20 ).
-* obsolete, not intuitive.  Use new method shown below
-*  " Implementation in the Writer is not working yet ===== TODO =====
-*  row_dimension = lo_worksheet->get_row_dimension( ip_row = 6 ).
-*  row_dimension->set_outline_level( ip_outline_level = 0 ).
-*  row_dimension = lo_worksheet->get_row_dimension( ip_row = 7 ).
-*  row_dimension->set_outline_level( ip_outline_level = 1 ).
-*  row_dimension = lo_worksheet->get_row_dimension( ip_row = 8 ).
-*  row_dimension->set_outline_level( ip_outline_level = 2 ).
 
 * Define an outline rows 10-16, collapsed on startup
   lo_worksheet->set_row_outline( iv_row_from = 10

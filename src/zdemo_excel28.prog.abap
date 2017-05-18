@@ -12,7 +12,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+      lo_column               TYPE REF TO zcl_excel_column.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
@@ -56,8 +56,8 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = sy-datum ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = sy-uzeit ).
 
-  column_dimension = lo_worksheet->get_column_dimension( 'B' ).
-  column_dimension->set_width( 11 ).
+  lo_column = lo_worksheet->get_column( 'B' ).
+  lo_column->set_width( 11 ).
 
   lo_worksheet = lo_excel->add_new_worksheet( ).
   lo_worksheet->set_title( ip_title = 'Sheet2' ).
@@ -93,7 +93,7 @@ START-OF-SELECTION.
                                            CHANGING data_tab     = lt_file_tab ).
 
 *  zcl_excel_writer_csv=>set_active_sheet_index( i_active_worksheet = 2 ).
-  zcl_excel_writer_csv=>set_active_sheet_index_by_name(  I_WORKSHEET_NAME = 'Sheet1' ).
+  zcl_excel_writer_csv=>set_active_sheet_index_by_name(  i_worksheet_name = 'Sheet1' ).
   lv_file = lo_excel_writer->write_file( lo_excel ).
   REPLACE FIRST OCCURRENCE OF '_Sheet2.csv'  IN lv_full_path WITH '_Sheet1.csv'.
 

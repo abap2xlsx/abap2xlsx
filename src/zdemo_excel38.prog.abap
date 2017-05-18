@@ -3,7 +3,7 @@ REPORT.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_column_dimension     TYPE REF TO zcl_excel_worksheet_columndime,
+      lo_column               TYPE REF TO zcl_excel_column,
       lo_drawing              TYPE REF TO zcl_excel_drawing.
 
 TYPES: BEGIN OF gty_icon,
@@ -36,10 +36,10 @@ START-OF-SELECTION.
   " Get active sheet
   lo_worksheet = lo_excel->get_active_worksheet( ).
   lo_worksheet->set_title( ip_title = 'Demo Icons' ).
-  lo_column_dimension = lo_worksheet->get_column_dimension( ip_column = 'A' ).
-  lo_column_dimension->set_auto_size( 'X' ).
-  lo_column_dimension = lo_worksheet->get_column_dimension( ip_column = 'B' ).
-  lo_column_dimension->set_auto_size( 'X' ).
+  lo_column = lo_worksheet->get_column( ip_column = 'A' ).
+  lo_column->set_auto_size( 'X' ).
+  lo_column = lo_worksheet->get_column( ip_column = 'B' ).
+  lo_column->set_auto_size( 'X' ).
 
 * Get all icons
   SELECT name

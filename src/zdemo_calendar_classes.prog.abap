@@ -216,7 +216,7 @@ CLASS zcl_helper IMPLEMENTATION.
           col_max TYPE i,
           from_col_int TYPE zexcel_cell_column,
           col     TYPE zexcel_cell_column_alpha,
-          lr_col_dim TYPE REF TO zcl_excel_worksheet_columndime,
+          lo_column TYPE REF TO zcl_excel_column,
           lr_row_dim TYPE REF TO zcl_excel_worksheet_rowdimensi.
     DATA: lv_date          TYPE datum,
           value            TYPE string,
@@ -325,8 +325,8 @@ CLASS zcl_helper IMPLEMENTATION.
       ELSE.
         width = '11.4'.
       ENDIF.
-      lr_col_dim = c_worksheet->get_column_dimension( col ).
-      lr_col_dim->set_width( width ).
+      lo_column = c_worksheet->get_column( col ).
+      lo_column->set_width( width ).
       col_int = col_int + 1.
     ENDWHILE.
     row = i_from_row + 1.
@@ -364,7 +364,7 @@ CLASS zcl_helper IMPLEMENTATION.
           from_col_int TYPE zexcel_cell_column,
           col_int TYPE zexcel_cell_column,
           col     TYPE zexcel_cell_column_alpha.
-    DATA: lo_col_dim TYPE REF TO zcl_excel_worksheet_columndime,
+    DATA: lo_column TYPE REF TO zcl_excel_column,
           lo_row_dim TYPE REF TO zcl_excel_worksheet_rowdimensi.
 
     FIELD-SYMBOLS: <day_name> LIKE LINE OF day_names.
@@ -410,8 +410,8 @@ CLASS zcl_helper IMPLEMENTATION.
           ip_style     = i_day_style    " Single-Character Indicator
       ).
       " width
-      lo_col_dim = c_worksheet->get_column_dimension( col ).
-      lo_col_dim->set_width( '3.6' ).
+      lo_column = c_worksheet->get_column( col ).
+      lo_column->set_width( '3.6' ).
 
 
       lv_date = lv_date + 1.
@@ -441,8 +441,8 @@ CLASS zcl_helper IMPLEMENTATION.
       col_int = from_col_int + day + 2.
       col = zcl_excel_common=>convert_column2alpha( col_int ).
       " width
-      lo_col_dim = c_worksheet->get_column_dimension( col ).
-      lo_col_dim->set_width( '3.6' ).
+      lo_column = c_worksheet->get_column( col ).
+      lo_column->set_width( '3.6' ).
     ENDWHILE.
   ENDMETHOD.                    "ADD_CALENDAR_LANDSCAPE
 

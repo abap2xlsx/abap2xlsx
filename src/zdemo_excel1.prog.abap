@@ -9,10 +9,10 @@
 REPORT  zdemo_excel1.
 
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+DATA: lo_excel      TYPE REF TO zcl_excel,
+      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
+      lo_hyperlink  TYPE REF TO zcl_excel_hyperlink,
+      lo_column     TYPE REF TO zcl_excel_column.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '01_HelloWorld.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -31,8 +31,8 @@ START-OF-SELECTION.
   lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = 'http://www.abap2xlsx.org' ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 4 ip_value = 'Click here to visit abap2xlsx homepage' ip_hyperlink = lo_hyperlink ).
 
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'B' ).
-  column_dimension->set_width( ip_width = 11 ).
+  lo_column = lo_worksheet->get_column( ip_column = 'B' ).
+  lo_column->set_width( ip_width = 11 ).
 
 
 

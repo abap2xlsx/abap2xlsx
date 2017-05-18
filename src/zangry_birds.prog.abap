@@ -22,7 +22,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_style_color7         TYPE REF TO zcl_excel_style,
       lo_style_credit         TYPE REF TO zcl_excel_style,
       lo_style_link           TYPE REF TO zcl_excel_style,
-      lo_column_dimension     TYPE REF TO zcl_excel_worksheet_columndime,
+      lo_column               TYPE REF TO zcl_excel_column,
       lo_row_dimension        TYPE REF TO zcl_excel_worksheet_rowdimensi,
       lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
 
@@ -712,8 +712,8 @@ START-OF-SELECTION.
                             ip_style  = ls_mapper ).
     lv_col = lv_col + 1.
 
-    lo_column_dimension = lo_worksheet->get_column_dimension( ip_column = lv_col_str ).
-    lo_column_dimension->set_width( ip_width = 2 ).
+    lo_column = lo_worksheet->get_column( ip_column = lv_col_str ).
+    lo_column->set_width( ip_width = 2 ).
   ENDLOOP.
 
   lo_worksheet->set_show_gridlines( i_show_gridlines = abap_false ).
@@ -730,8 +730,8 @@ START-OF-SELECTION.
                           ip_style     = lv_style_link_guid
                           ip_hyperlink = lo_hyperlink ).
 
-  lo_column_dimension = lo_worksheet->get_column_dimension( ip_column = 'AP' ).
-  lo_column_dimension->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'AP' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
   lo_worksheet->set_merge( ip_row = 15 ip_column_start = 'AP' ip_row_to = 22 ip_column_end = 'AR' ).
   lo_worksheet->set_merge( ip_row = 24 ip_column_start = 'AP' ip_row_to = 26 ip_column_end = 'AR' ).
 

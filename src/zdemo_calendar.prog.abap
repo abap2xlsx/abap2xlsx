@@ -48,7 +48,7 @@ START-OF-SELECTION.
   DATA: lo_excel                TYPE REF TO zcl_excel,
         lo_excel_writer         TYPE REF TO zif_excel_writer,
         lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-        lo_col_dim              TYPE REF TO zcl_excel_worksheet_columndime,
+        lo_column               TYPE REF TO zcl_excel_column,
         lo_row_dim              TYPE REF TO zcl_excel_worksheet_rowdimensi,
         hyperlink               TYPE REF TO zcl_excel_hyperlink,
         lo_drawing              TYPE REF TO zcl_excel_drawing.
@@ -215,10 +215,10 @@ START-OF-SELECTION.
     lo_worksheet->sheet_setup->paper_size = zcl_excel_sheet_setup=>c_papersize_a4.
     lo_worksheet->sheet_setup->horizontal_centered = abap_true.
     lo_worksheet->sheet_setup->vertical_centered   = abap_true.
-    lo_col_dim = lo_worksheet->get_column_dimension( 'A' ).
-    lo_col_dim->set_width( '1.0' ).
-    lo_col_dim = lo_worksheet->get_column_dimension( 'B' ).
-    lo_col_dim->set_width( '2.0' ).
+    lo_column = lo_worksheet->get_column( 'A' ).
+    lo_column->set_width( '1.0' ).
+    lo_column = lo_worksheet->get_column( 'B' ).
+    lo_column->set_width( '2.0' ).
     IF p_lands = abap_true.
       lo_worksheet->sheet_setup->orientation = zcl_excel_sheet_setup=>c_orientation_landscape.
       lv_height = c_height_landscape.
@@ -228,8 +228,8 @@ START-OF-SELECTION.
       lo_worksheet->sheet_setup->margin_right  = '0.10'.
       lo_worksheet->sheet_setup->margin_bottom = '0.10'.
     ELSE.
-      lo_col_dim = lo_worksheet->get_column_dimension( 'K' ).
-      lo_col_dim->set_width( '3.0' ).
+      lo_column = lo_worksheet->get_column( 'K' ).
+      lo_column->set_width( '3.0' ).
       lo_worksheet->sheet_setup->margin_top    = '0.80'.
       lo_worksheet->sheet_setup->margin_left   = '0.55'.
       lo_worksheet->sheet_setup->margin_right  = '0.05'.

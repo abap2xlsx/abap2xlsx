@@ -2255,7 +2255,7 @@ METHOD load_worksheet.
               lo_ixml_column_elem         TYPE REF TO if_ixml_element,
               ls_column                   TYPE lty_column,
               lv_column_alpha             TYPE zexcel_cell_column_alpha,
-              lo_column_dimension         TYPE REF TO zcl_excel_worksheet_columndime,
+              lo_column                   TYPE REF TO zcl_excel_column,
               lv_outline_level            TYPE int4,
 
               lo_ixml_tabcolor            TYPE REF TO if_ixml_element,
@@ -2557,27 +2557,27 @@ METHOD load_worksheet.
       WHILE lv_index <= ls_column-max AND lv_index <= lv_max_col.
 
         lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_index ).
-        lo_column_dimension =  io_worksheet->get_column_dimension( lv_column_alpha ).
+        lo_column =  io_worksheet->get_column( lv_column_alpha ).
 
         IF   ls_column-customwidth = lc_xml_attr_true
           OR ls_column-customwidth = lc_xml_attr_true_int
           OR ls_column-width       IS NOT INITIAL.          "+#234
-          lo_column_dimension->set_width( ls_column-width ).
+          lo_column->set_width( ls_column-width ).
         ENDIF.
 
         IF   ls_column-bestfit = lc_xml_attr_true
           OR ls_column-bestfit = lc_xml_attr_true_int.
-          lo_column_dimension->set_auto_size( abap_true ).
+          lo_column->set_auto_size( abap_true ).
         ENDIF.
 
         IF   ls_column-collapsed = lc_xml_attr_true
           OR ls_column-collapsed = lc_xml_attr_true_int.
-          lo_column_dimension->set_collapsed( abap_true ).
+          lo_column->set_collapsed( abap_true ).
         ENDIF.
 
         IF   ls_column-hidden = lc_xml_attr_true
           OR ls_column-hidden = lc_xml_attr_true_int.
-          lo_column_dimension->set_visible( abap_false ).
+          lo_column->set_visible( abap_false ).
         ENDIF.
 
         IF ls_column-outlinelevel > ''.
@@ -2585,7 +2585,7 @@ METHOD load_worksheet.
           CONDENSE ls_column-outlinelevel.
           lv_outline_level = ls_column-outlinelevel.
           IF lv_outline_level > 0.
-            lo_column_dimension->set_outline_level( lv_outline_level ).
+            lo_column->set_outline_level( lv_outline_level ).
           ENDIF.
         ENDIF.
 
@@ -2594,7 +2594,7 @@ METHOD load_worksheet.
           READ TABLE styles INTO lo_excel_style INDEX sy-index.
           DATA: dummy_zexcel_cell_style TYPE zexcel_cell_style.
           dummy_zexcel_cell_style = lo_excel_style->get_guid( ).
-          lo_column_dimension->set_column_style_by_guid( dummy_zexcel_cell_style ).
+          lo_column->set_column_style_by_guid( dummy_zexcel_cell_style ).
         ENDIF.
 
         ADD 1 TO lv_index.

@@ -20,7 +20,7 @@ DATA: lo_style_title           TYPE REF TO zcl_excel_style,
       lo_drawing               TYPE REF TO zcl_excel_drawing,
       lo_range                 TYPE REF TO zcl_excel_range,
       lo_data_validation       TYPE REF TO zcl_excel_data_validation,
-      lo_column_dimension      TYPE REF TO zcl_excel_worksheet_columndime,
+      lo_column      TYPE REF TO zcl_excel_column,
       lv_style_title_guid      TYPE zexcel_cell_style,
       ls_key                   TYPE wwwdatatab.
 
@@ -133,10 +133,10 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'C' ip_value = 'Select a value' ).
 
   " add autosize (column width)
-  lo_column_dimension = lo_worksheet->get_column_dimension( ip_column = 'B' ).
-  lo_column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  lo_column_dimension = lo_worksheet->get_column_dimension( ip_column = 'C' ).
-  lo_column_dimension->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'B' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'C' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
 
   " Create xlsx stream
   CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.

@@ -11,7 +11,7 @@ REPORT  zdemo_excel10.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_style_conditional2   TYPE REF TO zcl_excel_style_conditional,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+      lo_column               TYPE REF TO zcl_excel_column.
 
 DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
       ls_table_settings       TYPE zexcel_s_table_settings,
@@ -87,8 +87,8 @@ START-OF-SELECTION.
                             is_table_settings = ls_table_settings
                             it_field_catalog  = lt_field_catalog ).
 
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'D' ). "make date field a bit wider
-  column_dimension->set_width( ip_width = 13 ).
+  lo_column = lo_worksheet->get_column( ip_column = 'D' ). "make date field a bit wider
+  lo_column->set_width( ip_width = 13 ).
 
 
 *** Create output
