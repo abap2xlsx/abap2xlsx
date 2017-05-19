@@ -49,11 +49,9 @@ ENDCLASS.
 CLASS ZCL_EXCEL_STYLES IMPLEMENTATION.
 
 
-method ADD.
-
-
+METHOD add.
   styles->add( ip_style ).
-  endmethod.
+ENDMETHOD.
 
 
 method CLEAR.
@@ -70,11 +68,9 @@ method CONSTRUCTOR.
   endmethod.
 
 
-method GET.
-
-
+METHOD get.
   eo_style ?= styles->if_object_collection~get( ip_index ).
-  endmethod.
+ENDMETHOD.
 
 
 method GET_ITERATOR.
@@ -91,12 +87,10 @@ method IS_EMPTY.
   endmethod.
 
 
-method REGISTER_NEW_STYLE.
-
-
+METHOD register_new_style.
   me->add( io_style ).
   ep_style_code = me->size( ) - 1. "style count starts from 0
-  endmethod.
+ENDMETHOD.
 
 
 method REMOVE.

@@ -14,12 +14,6 @@ public section.
   data SECURITY type ref to ZCL_EXCEL_SECURITY .
   data USE_TEMPLATE type XFELD .
 
-  methods SET_THEME
-    importing
-      !IO_THEME type ref to ZCL_EXCEL_THEME .
-  methods GET_THEME
-    exporting
-      !EO_THEME type ref to ZCL_EXCEL_THEME .
   methods ADD_NEW_AUTOFILTER
     importing
       !IO_SHEET type ref to ZCL_EXCEL_WORKSHEET
@@ -55,12 +49,12 @@ public section.
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
     raising
       ZCX_EXCEL .
-  methods DELETE_WORKSHEET_BY_NAME
-    importing
-      !IV_TITLE type CLIKE .
   methods DELETE_WORKSHEET_BY_INDEX
     importing
       !IV_INDEX type NUMERIC .
+  methods DELETE_WORKSHEET_BY_NAME
+    importing
+      !IV_TITLE type CLIKE .
   methods GET_ACTIVE_SHEET_INDEX
     returning
       value(R_ACTIVE_WORKSHEET) type ZEXCEL_ACTIVE_WORKSHEET .
@@ -107,6 +101,9 @@ public section.
       value(EP_STYLEMAPPING) type ZEXCEL_S_STYLEMAPPING
     raising
       ZCX_EXCEL .
+  methods GET_THEME
+    exporting
+      !EO_THEME type ref to ZCL_EXCEL_THEME .
   methods GET_WORKSHEETS_ITERATOR
     returning
       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
@@ -116,14 +113,14 @@ public section.
   methods GET_WORKSHEETS_SIZE
     returning
       value(EP_SIZE) type I .
-  methods GET_WORKSHEET_BY_NAME
-    importing
-      !IP_SHEET_NAME type ZEXCEL_SHEET_TITLE
-    returning
-      value(EO_WORKSHEET) type ref to ZCL_EXCEL_WORKSHEET .
   methods GET_WORKSHEET_BY_INDEX
     importing
       !IV_INDEX type NUMERIC
+    returning
+      value(EO_WORKSHEET) type ref to ZCL_EXCEL_WORKSHEET .
+  methods GET_WORKSHEET_BY_NAME
+    importing
+      !IP_SHEET_NAME type ZEXCEL_SHEET_TITLE
     returning
       value(EO_WORKSHEET) type ref to ZCL_EXCEL_WORKSHEET .
   methods SET_ACTIVE_SHEET_INDEX
@@ -139,6 +136,9 @@ public section.
       !IP_STYLE type ZEXCEL_CELL_STYLE
     raising
       ZCX_EXCEL .
+  methods SET_THEME
+    importing
+      !IO_THEME type ref to ZCL_EXCEL_THEME .
 *"* protected components of class ZCL_EXCEL
 *"* do not include other source files here!!!
 protected section.
@@ -159,6 +159,11 @@ private section.
   data T_STYLEMAPPING2 type ZEXCEL_T_STYLEMAPPING2 .
   data THEME type ref to ZCL_EXCEL_THEME .
 
+  methods GET_STYLE_FROM_GUID
+    importing
+      !IP_GUID type ZEXCEL_CELL_STYLE
+    returning
+      value(EO_STYLE) type ref to ZCL_EXCEL_STYLE .
   methods STYLEMAPPING_DYNAMIC_STYLE
     importing
       !IP_STYLE type ref to ZCL_EXCEL_STYLE
@@ -436,6 +441,23 @@ method GET_STYLES_ITERATOR.
   endmethod.
 
 
+METHOD get_style_from_guid.
+
+  DATA: lo_style    TYPE REF TO zcl_excel_style,
+        lo_iterator TYPE REF TO cl_object_collection_iterator.
+
+  lo_iterator = styles->get_iterator( ).
+  WHILE lo_iterator->has_next( ) = abap_true.
+    lo_style ?= lo_iterator->get_next( ).
+    IF lo_style->get_guid( ) = ip_guid.
+      eo_style = lo_style.
+      RETURN.
+    ENDIF.
+  ENDWHILE.
+
+ENDMETHOD.
+
+
 method GET_STYLE_INDEX_IN_STYLES.
   DATA: index TYPE syindex.
   DATA: lo_iterator TYPE REF TO cl_object_collection_iterator,
@@ -464,9 +486,9 @@ method GET_STYLE_INDEX_IN_STYLES.
   endmethod.
 
 
-method GET_STYLE_TO_GUID.
+METHOD get_style_to_guid.
+  DATA: lo_style TYPE REF TO zcl_excel_style.
   " # issue 139
-
   READ TABLE me->t_stylemapping2 INTO ep_stylemapping WITH TABLE KEY guid = ip_guid.
   IF sy-subrc <> 0.
     RAISE EXCEPTION TYPE zcx_excel
@@ -475,13 +497,12 @@ method GET_STYLE_TO_GUID.
   ENDIF.
 
   IF ep_stylemapping-dynamic_style_guid IS NOT INITIAL.
-    zcl_excel_common=>recursive_class_to_struct( EXPORTING i_source = ep_stylemapping-cl_style
+    lo_style = me->get_style_from_guid( ip_guid ).
+    zcl_excel_common=>recursive_class_to_struct( EXPORTING i_source = lo_style
                                                  CHANGING  e_target =  ep_stylemapping-complete_style
                                                            e_targetx = ep_stylemapping-complete_stylex ).
   ENDIF.
-
-
-  endmethod.
+ENDMETHOD.
 
 
 method GET_THEME.
@@ -598,7 +619,6 @@ method STYLEMAPPING_DYNAMIC_STYLE.
   eo_style2-dynamic_style_guid  = ip_style->get_guid( ).
   eo_style2-guid                = eo_style2-dynamic_style_guid.
   eo_style2-added_to_iterator   = abap_true.
-  eo_style2-cl_style            = ip_style.
 
 * don't care about attributes here, since this data may change
 * dynamically
