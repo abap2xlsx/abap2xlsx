@@ -192,7 +192,7 @@ START-OF-SELECTION.
         lo_style_body           TYPE REF TO zcl_excel_style,
         lo_border_dark          TYPE REF TO zcl_excel_style_border,
         lo_column               TYPE REF TO zcl_excel_column,
-        row_dimension           TYPE REF TO zcl_excel_worksheet_rowdimensi.
+        lo_row                  TYPE REF TO zcl_excel_row.
 
   DATA: lv_style_body_even_guid   TYPE zexcel_cell_style,
         lv_style_body_green       TYPE zexcel_cell_style.
@@ -358,8 +358,8 @@ START-OF-SELECTION.
                             ip_style  = lv_style_body_even_guid ).
   ENDLOOP.
   " Hide first row
-  row_dimension = lo_worksheet->get_row_dimension( 1 ).
-  row_dimension->set_visible( abap_false ).
+  lo_row = lo_worksheet->get_row( 1 ).
+  lo_row->set_visible( abap_false ).
 
   DATA: highest_column TYPE zexcel_cell_column,
         count TYPE int4,

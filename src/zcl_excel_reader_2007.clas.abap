@@ -304,9 +304,7 @@ METHOD fill_row_outlines.
          END OF lts_row_data,
          ltt_row_data TYPE SORTED TABLE OF lts_row_data WITH UNIQUE KEY row.
 
-  DATA: lt_row_dimensions       TYPE zexcel_t_worksheet_rowdimensio,
-
-        lt_row_data             TYPE ltt_row_data,
+  DATA: lt_row_data             TYPE ltt_row_data,
         ls_row_data             LIKE LINE OF lt_row_data,
         lt_collapse_rows        TYPE HASHED TABLE OF i WITH UNIQUE KEY table_line,
 
@@ -316,30 +314,29 @@ METHOD fill_row_outlines.
         lv_next_consecutive_row TYPE i,
         lt_outline_rows         TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
         ls_outline_row          LIKE LINE OF lt_outline_rows,
-
+        lo_row                  TYPE REF TO zcl_excel_row,
+        lo_row_iterator         TYPE REF TO cl_object_collection_iterator,
         lv_row_offset           TYPE i,
         lv_row_collapse_flag    TYPE i.
 
 
-  FIELD-SYMBOLS: <ls_row_dimension> LIKE LINE OF lt_row_dimensions,
-                 <ls_row_data>      LIKE LINE OF lt_row_data.
+  FIELD-SYMBOLS: <ls_row_data>      LIKE LINE OF lt_row_data.
 
 * First collect information about outlines ( outline leven and collapsed state )
-  lt_row_dimensions = io_worksheet->get_row_dimensions( ).
-  LOOP AT lt_row_dimensions ASSIGNING <ls_row_dimension>.
-
-    ls_row_data-row           = <ls_row_dimension>-row.
-    ls_row_data-outline_level = <ls_row_dimension>-row_dimension->get_outline_level( ).
+  lo_row_iterator = io_worksheet->get_rows_iterator( ).
+  WHILE lo_row_iterator->has_next( ) = abap_true.
+    lo_row ?= lo_row_iterator->get_next( ).
+    ls_row_data-row           = lo_row->get_row_index( ).
+    ls_row_data-outline_level = lo_row->get_outline_level( ).
     IF ls_row_data-outline_level IS NOT INITIAL.
       INSERT ls_row_data INTO TABLE lt_row_data.
     ENDIF.
 
-    lv_collapsed = <ls_row_dimension>-row_dimension->get_collapsed( ).
+    lv_collapsed = lo_row->get_collapsed( ).
     IF lv_collapsed = abap_true.
-      INSERT <ls_row_dimension>-row INTO TABLE lt_collapse_rows.
+      INSERT lo_row->get_row_index( ) INTO TABLE lt_collapse_rows.
     ENDIF.
-
-  ENDLOOP.
+  ENDWHILE.
 
 * Now parse this information - we need consecutive rows - any gap will create a new outline
   DO 7 TIMES.  " max number of outlines allowed
@@ -387,12 +384,14 @@ METHOD fill_row_outlines.
   ENDLOOP.
 
 * Finally purge outline information ( collapsed state, outline leve)  from row_dimensions, since we want to keep these in the outline-table
-  LOOP AT lt_row_dimensions ASSIGNING <ls_row_dimension>.
+  lo_row_iterator = io_worksheet->get_rows_iterator( ).
+  WHILE lo_row_iterator->has_next( ) = abap_true.
+    lo_row ?= lo_row_iterator->get_next( ).
 
-    <ls_row_dimension>-row_dimension->set_outline_level( 0 ).
-    <ls_row_dimension>-row_dimension->set_collapsed( abap_false ).
+    lo_row->set_outline_level( 0 ).
+    lo_row->set_collapsed( abap_false ).
 
-  ENDLOOP.
+  ENDWHILE.
 
 ENDMETHOD.
 
@@ -2268,7 +2267,7 @@ METHOD load_worksheet.
 *              lv_min_col                     TYPE i,     "for use with SPANS element                    " not in use currently
               lv_max_col_s                TYPE char10,     "for use with SPANS element
               lv_min_col_s                TYPE char10,     "for use with SPANS element
-              lo_row_dimension            TYPE REF TO zcl_excel_worksheet_rowdimensi,
+              lo_row                      TYPE REF TO zcl_excel_row,
 *---    End of current code aligning -------------------------------------------------------------------
 
               lv_path                     TYPE string,
@@ -2392,19 +2391,19 @@ METHOD load_worksheet.
       OR ls_row-hidden        = lc_xml_attr_true
       OR ls_row-hidden        = lc_xml_attr_true_int
       OR ls_row-outlinelevel  > '0'.
-      lo_row_dimension = io_worksheet->get_row_dimension( lv_cell_row ).
+      lo_row = io_worksheet->get_row( lv_cell_row ).
       IF ls_row-customheight = '1'.
-        lo_row_dimension->set_row_height( ls_row-ht ).
+        lo_row->set_row_height( ls_row-ht ).
       ENDIF.
 
       IF   ls_row-collapsed = lc_xml_attr_true
         OR ls_row-collapsed = lc_xml_attr_true_int.
-        lo_row_dimension->set_collapsed( abap_true ).
+        lo_row->set_collapsed( abap_true ).
       ENDIF.
 
       IF   ls_row-hidden = lc_xml_attr_true
         OR ls_row-hidden = lc_xml_attr_true_int.
-        lo_row_dimension->set_visible( abap_false ).
+        lo_row->set_visible( abap_false ).
       ENDIF.
 
       IF ls_row-outlinelevel > ''.
@@ -2412,7 +2411,7 @@ METHOD load_worksheet.
         CONDENSE  ls_row-outlinelevel.
         lv_outline_level = ls_row-outlinelevel.
         IF lv_outline_level > 0.
-          lo_row_dimension->set_outline_level( lv_outline_level ).
+          lo_row->set_outline_level( lv_outline_level ).
         ENDIF.
       ENDIF.
     ENDIF.
@@ -2662,8 +2661,8 @@ METHOD load_worksheet.
     fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_sheetformatpr_elem CHANGING cp_structure = ls_sheetformatpr ).
     IF ls_sheetformatpr-customheight = '1'.
       lv_height = ls_sheetformatpr-defaultrowheight.
-      lo_row_dimension = io_worksheet->get_default_row_dimension( ).
-      lo_row_dimension->set_row_height( lv_height ).
+      lo_row = io_worksheet->get_default_row( ).
+      lo_row->set_row_height( lv_height ).
     ENDIF.
 
     " TODO...  column

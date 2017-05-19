@@ -356,7 +356,7 @@ METHOD bind_table.
         ls_field_catalog  TYPE zexcel_s_fieldcatalog,
         ls_fcat           TYPE zexcel_s_converter_fcat,
         lo_column         TYPE REF TO zcl_excel_column,
-        lo_row_dim        TYPE REF TO zcl_excel_worksheet_rowdimensi,
+        lo_row            TYPE REF TO zcl_excel_row,
         lv_col_int        TYPE zexcel_cell_column,
         lv_col_alpha      TYPE zexcel_cell_column_alpha,
         ls_settings       TYPE zexcel_s_table_settings,
@@ -1174,7 +1174,7 @@ method LOOP_NORMAL.
         l_cell_value      TYPE zexcel_cell_value,
         l_s_color         TYPE abap_bool,
         lo_column         TYPE REF TO zcl_excel_column,
-        lo_row_dim        TYPE REF TO zcl_excel_worksheet_rowdimensi,
+        lo_row            TYPE REF TO zcl_excel_row,
         l_formula         TYPE zexcel_cell_formula,
         l_style           TYPE zexcel_cell_style,
         l_cells           TYPE i,
@@ -1293,7 +1293,7 @@ method LOOP_SUBTOTAL.
         l_cell_value      TYPE zexcel_cell_value,
         l_s_color         TYPE abap_bool,
         lo_column         TYPE REF TO zcl_excel_column,
-        lo_row_dim        TYPE REF TO zcl_excel_worksheet_rowdimensi,
+        lo_row            TYPE REF TO zcl_excel_row,
         l_formula         TYPE zexcel_cell_formula,
         l_style           TYPE zexcel_cell_style,
         l_subtotalled     TYPE flag,
@@ -1385,13 +1385,13 @@ method LOOP_SUBTOTAL.
                                     ip_value     = l_cell_value
                                     ip_abap_type = cl_abap_typedescr=>typekind_string
                                     ip_style     = <fs_sfcat>-style_subtotal  ).
-            lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-            lo_row_dim->set_outline_level( ip_outline_level = <fs_sfcat>-sort_level ) .
+            lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+            lo_row->set_outline_level( ip_outline_level = <fs_sfcat>-sort_level ) .
             IF <fs_sfcat>-is_collapsed = abap_true.
               IF <fs_sfcat>-sort_level >  l_hidden.
-                lo_row_dim->set_visible( ip_visible =  abap_false ) .
+                lo_row->set_visible( ip_visible =  abap_false ) .
               ENDIF.
-              lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
+              lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
             ENDIF.
 * Now let's change the key
             ADD 1 TO l_row_int.
@@ -1429,21 +1429,21 @@ method LOOP_SUBTOTAL.
                               ip_style     = <fs_sfcat>-style_subtotal ).
 
       l_sort_level = <fs_sfcat>-sort_level.
-      lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-      lo_row_dim->set_outline_level( ip_outline_level = l_sort_level ) .
+      lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+      lo_row->set_outline_level( ip_outline_level = l_sort_level ) .
       IF <fs_sfcat>-is_collapsed = abap_true.
         IF <fs_sfcat>-sort_level >  l_hidden.
-          lo_row_dim->set_visible( ip_visible =  abap_false ) .
+          lo_row->set_visible( ip_visible =  abap_false ) .
         ENDIF.
-        lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
+        lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
       ENDIF.
       ADD 1 TO l_row_int.
     ENDIF.
   ENDLOOP.
 * Let's write the Grand total
   l_sort_level = 0.
-  lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-  lo_row_dim->set_outline_level( ip_outline_level = l_sort_level ) .
+  lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+  lo_row->set_outline_level( ip_outline_level = l_sort_level ) .
 *  lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) . Not on grand total
 
   l_text    = create_text_subtotal( i_value = 'Grand'(002)
@@ -1500,10 +1500,10 @@ method LOOP_SUBTOTAL.
                                         ip_formula   = l_formula
                                         ip_style     = <fs_sfcat>-style_subtotal ).
                 IF <fs_sfcat>-is_collapsed = abap_true.
-                  lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-                  lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
+                  lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+                  lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
                   IF <fs_sfcat>-sort_level >  l_hidden.
-                    lo_row_dim->set_visible( ip_visible =  abap_false ) .
+                    lo_row->set_visible( ip_visible =  abap_false ) .
                   ENDIF.
                 ENDIF.
                 ADD 1 TO l_row_int.
@@ -1519,11 +1519,11 @@ method LOOP_SUBTOTAL.
         ENDIF.
       ENDDO.
 * Let's set the row dimension values
-      lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-      lo_row_dim->set_outline_level( ip_outline_level = ws_layout-max_subtotal_level ) .
+      lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+      lo_row->set_outline_level( ip_outline_level = ws_layout-max_subtotal_level ) .
       IF <fs_sfcat>-is_collapsed  = abap_true.
-        lo_row_dim->set_visible( ip_visible =  abap_false ) .
-        lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
+        lo_row->set_visible( ip_visible =  abap_false ) .
+        lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
       ENDIF.
 * Now let's write the cell values
       IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
@@ -1579,8 +1579,8 @@ method LOOP_SUBTOTAL.
                                       ip_formula   = l_formula
                                       ip_style     = <fs_sfcat>-style_subtotal ).
               IF <fs_sfcat>-is_collapsed = abap_true.
-                lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-                lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
+                lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+                lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
               ENDIF.
               ADD 1 TO l_row_int.
             ELSE.

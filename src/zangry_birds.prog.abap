@@ -23,7 +23,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_style_credit         TYPE REF TO zcl_excel_style,
       lo_style_link           TYPE REF TO zcl_excel_style,
       lo_column               TYPE REF TO zcl_excel_column,
-      lo_row_dimension        TYPE REF TO zcl_excel_worksheet_rowdimensi,
+      lo_row                  TYPE REF TO zcl_excel_row,
       lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
 
 DATA: lv_style_color0_guid    TYPE zexcel_cell_style,
@@ -700,8 +700,8 @@ START-OF-SELECTION.
   LOOP AT lt_mapper INTO ls_mapper.
     lv_col_str = zcl_excel_common=>convert_column2alpha( lv_col ).
     IF ls_mapper IS INITIAL.
-      lo_row_dimension = lo_worksheet->get_row_dimension( ip_row = lv_row ).
-      lo_row_dimension->set_row_height( ip_row_height = 8 ).
+      lo_row = lo_worksheet->get_row( ip_row = lv_row ).
+      lo_row->set_row_height( ip_row_height = 8 ).
       lv_col = 1.
       lv_row = lv_row + 1.
       CONTINUE.
@@ -723,10 +723,10 @@ START-OF-SELECTION.
                           ip_value  = 'Created with abap2xlsx'
                           ip_style  = lv_style_credit_guid ).
 
-  lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = 'http://www.abap2xlsx.org' ).
+  lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = 'http://www.plinky.it/abap/abap2xlsx.php' ).
   lo_worksheet->set_cell( ip_column    = 'AP'
                           ip_row       = 24
-                          ip_value     = 'http://www.abap2xlsx.org'
+                          ip_value     = 'http://www.plinky.it/abap/abap2xlsx.php'
                           ip_style     = lv_style_link_guid
                           ip_hyperlink = lo_hyperlink ).
 

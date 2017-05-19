@@ -11,7 +11,7 @@ REPORT  zdemo_excel12.
 DATA: lo_excel         TYPE REF TO zcl_excel,
       lo_worksheet     TYPE REF TO zcl_excel_worksheet,
       lo_column        TYPE REF TO zcl_excel_column,
-      row_dimension    TYPE REF TO zcl_excel_worksheet_rowdimensi.
+      lo_row           TYPE REF TO zcl_excel_row.
 
 DATA: lv_file      TYPE xstring,
       lv_bytecount TYPE i,
@@ -71,10 +71,10 @@ START-OF-SELECTION.
   lo_column = lo_worksheet->get_column( ip_column = 'H' ).
   lo_column->set_outline_level( ip_outline_level = 2 ).
 
-  row_dimension = lo_worksheet->get_row_dimension( ip_row = 1 ).
-  row_dimension->set_visible( ip_visible = abap_false ).
-  row_dimension = lo_worksheet->get_row_dimension( ip_row = 5 ).
-  row_dimension->set_row_height( ip_row_height = 20 ).
+  lo_row = lo_worksheet->get_row( ip_row = 1 ).
+  lo_row->set_visible( ip_visible = abap_false ).
+  lo_row = lo_worksheet->get_row( ip_row = 5 ).
+  lo_row->set_row_height( ip_row_height = 20 ).
 
 * Define an outline rows 10-16, collapsed on startup
   lo_worksheet->set_row_outline( iv_row_from = 10

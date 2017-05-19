@@ -25,17 +25,22 @@ public section.
   constants C_BREAK_NONE type ZEXCEL_BREAK value 0. "#EC NOTEXT
   constants C_BREAK_ROW type ZEXCEL_BREAK value 1. "#EC NOTEXT
   data EXCEL type ref to ZCL_EXCEL read-only .
-  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data SHEET_CONTENT type ZEXCEL_T_CELL_DATA .
   data SHEET_SETUP type ref to ZCL_EXCEL_SHEET_SETUP .
-  data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
-  data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data STYLES type ZEXCEL_T_SHEET_STYLE .
   data TABCOLOR type ZEXCEL_S_TABCOLOR read-only .
 
   methods ADD_DRAWING
     importing
       !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
+  methods ADD_NEW_ROW
+    importing
+      !IP_ROW type SIMPLE
+    returning
+      value(EO_ROW) type ref to ZCL_EXCEL_ROW .
   methods ADD_NEW_COLUMN
     importing
       !IP_COLUMN type SIMPLE
@@ -257,6 +262,9 @@ public section.
   methods GET_COLUMNS
     returning
       value(EO_COLUMNS) type ref to ZCL_EXCEL_COLUMNS .
+  methods GET_ROWS_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
   methods GET_COLUMNS_ITERATOR
     returning
       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
@@ -278,9 +286,9 @@ public section.
   methods GET_DEFAULT_EXCEL_TIME_FORMAT
     returning
       value(EP_DEFAULT_EXCEL_TIME_FORMAT) type ZEXCEL_NUMBER_FORMAT .
-  methods GET_DEFAULT_ROW_DIMENSION
+  methods GET_DEFAULT_ROW
     returning
-      value(R_ROW_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
+      value(EO_ROW) type ref to ZCL_EXCEL_ROW .
   methods GET_DIMENSION_RANGE
     returning
       value(EP_DIMENSION_RANGE) type STRING
@@ -332,14 +340,14 @@ public section.
   methods GET_RANGES_ITERATOR
     returning
       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_ROW_DIMENSION
+  methods GET_ROW
     importing
       !IP_ROW type INT4
     returning
-      value(R_ROW_DIMENSION) type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
-  methods GET_ROW_DIMENSIONS
+      value(EO_ROW) type ref to ZCL_EXCEL_ROW .
+  methods GET_ROWS
     returning
-      value(R_ROW_DIMENSION) type ZEXCEL_T_WORKSHEET_ROWDIMENSIO .
+      value(EO_ROWS) type ref to ZCL_EXCEL_ROWS .
   methods GET_ROW_OUTLINES
     returning
       value(RT_ROW_OUTLINES) type MTY_TS_OUTLINES_ROW .
@@ -479,8 +487,8 @@ private section.
     mty_th_font_cache
            TYPE HASHED TABLE OF mty_s_font_cache
            WITH UNIQUE KEY font_name font_height flag_bold flag_italic .
-  types:
-    mty_ts_row_dimension TYPE SORTED TABLE OF zexcel_s_worksheet_rowdimensio WITH UNIQUE KEY row .
+*  types:
+*    mty_ts_row_dimension TYPE SORTED TABLE OF zexcel_s_worksheet_rowdimensio WITH UNIQUE KEY row .
   types:
     BEGIN OF mty_merge,
       row_from TYPE i,
@@ -496,12 +504,12 @@ private section.
   data ACTIVE_CELL type ZEXCEL_S_CELL_DATA .
   data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
   data COLUMNS type ref to ZCL_EXCEL_COLUMNS .
+  data ROW_DEFAULT type ref to ZCL_EXCEL_ROW .
+  data COLUMN_DEFAULT type ref to ZCL_EXCEL_COLUMN .
   data CONDITIONAL_STYLES type ref to ZCL_EXCEL_STYLES_CONDITIONAL .
   data DATA_VALIDATIONS type ref to ZCL_EXCEL_DATA_VALIDATIONS .
-  data COLUMN_DEFAULT type ref to ZCL_EXCEL_COLUMN .
   data DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT .
   data DEFAULT_EXCEL_TIME_FORMAT type ZEXCEL_NUMBER_FORMAT .
-  data DEFAULT_ROW_DIMENSION type ref to ZCL_EXCEL_WORKSHEET_ROWDIMENSI .
   data DRAWINGS type ref to ZCL_EXCEL_DRAWINGS .
   data FREEZE_PANE_CELL_COLUMN type ZEXCEL_CELL_COLUMN .
   data FREEZE_PANE_CELL_ROW type ZEXCEL_CELL_ROW .
@@ -517,9 +525,9 @@ private section.
   data PRINT_TITLE_ROW_FROM type ZEXCEL_CELL_ROW .
   data PRINT_TITLE_ROW_TO type ZEXCEL_CELL_ROW .
   data RANGES type ref to ZCL_EXCEL_RANGES .
-  data ROW_DIMENSIONS type MTY_TS_ROW_DIMENSION .
+  data ROWS type ref to ZCL_EXCEL_ROWS .
   data TABLES type ref to CL_OBJECT_COLLECTION .
-  data TITLE type ZEXCEL_SHEET_TITLE value 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data TITLE type ZEXCEL_SHEET_TITLE value 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data UPPER_CELL type ZEXCEL_S_CELL_DATA .
 
   methods CALCULATE_CELL_WIDTH
@@ -591,6 +599,14 @@ METHOD add_new_range.
 * Create default blank range
   CREATE OBJECT eo_range.
   ranges->add( eo_range ).
+ENDMETHOD.
+
+
+METHOD add_new_row.
+  CREATE OBJECT eo_row
+    EXPORTING
+      ip_index     = ip_row.
+  rows->add( eo_row ).
 ENDMETHOD.
 
 
@@ -3650,6 +3666,7 @@ METHOD constructor.
   CREATE OBJECT data_validations.
   CREATE OBJECT tables.
   CREATE OBJECT columns.
+  CREATE OBJECT rows.
   CREATE OBJECT ranges. " issue #163
   CREATE OBJECT mo_pagebreaks.
   CREATE OBJECT drawings
@@ -3949,13 +3966,13 @@ method GET_DEFAULT_EXCEL_TIME_FORMAT.
   endmethod.
 
 
-method GET_DEFAULT_ROW_DIMENSION.
-  IF me->default_row_dimension IS NOT BOUND.
-    CREATE OBJECT me->default_row_dimension.
+METHOD get_default_row.
+  IF me->row_default IS NOT BOUND.
+    CREATE OBJECT me->row_default.
   ENDIF.
 
-  r_row_dimension = me->default_row_dimension.
-  endmethod.
+  eo_row = me->row_default.
+ENDMETHOD.
 
 
 method GET_DIMENSION_RANGE.
@@ -4089,32 +4106,35 @@ method GET_RANGES_ITERATOR.
   endmethod.
 
 
-METHOD GET_ROW_DIMENSION.
+METHOD get_row.
 
-  FIELD-SYMBOLS: <ls_row_dimension> LIKE LINE OF me->row_dimensions.
+  DATA: lo_row_iterator TYPE REF TO cl_object_collection_iterator,
+        lo_row          TYPE REF TO zcl_excel_row.
 
-  DATA:           ls_row_dimension LIKE LINE OF me->row_dimensions.
+  lo_row_iterator = me->get_rows_iterator( ).
+  WHILE lo_row_iterator->has_next( ) = abap_true.
+    lo_row ?= lo_row_iterator->get_next( ).
+    IF lo_row->get_row_index( ) = ip_row.
+      eo_row = lo_row.
+      EXIT.
+    ENDIF.
+  ENDWHILE.
 
-  READ TABLE me->row_dimensions ASSIGNING <ls_row_dimension>
-    WITH TABLE KEY row = ip_row.
-
-  IF NOT <ls_row_dimension> IS ASSIGNED.
-    CREATE OBJECT r_row_dimension
-      EXPORTING
-        ip_index = ip_row.
-    ls_row_dimension-row            = ip_row.
-    ls_row_dimension-row_dimension  = r_row_dimension.
-    INSERT ls_row_dimension INTO TABLE me->row_dimensions.
-  ELSE.
-    r_row_dimension = <ls_row_dimension>-row_dimension.
+  IF eo_row IS NOT BOUND.
+    eo_row = me->add_new_row( ip_row ).
   ENDIF.
 
 ENDMETHOD.
 
 
-METHOD get_row_dimensions.
+METHOD GET_ROWS.
+  eo_rows = me->rows.
+ENDMETHOD.
 
-  r_row_dimension[] = me->row_dimensions[].
+
+METHOD get_rows_iterator.
+
+  eo_iterator = me->rows->get_iterator( ).
 
 ENDMETHOD.
 
@@ -4724,11 +4744,11 @@ method SET_PRINT_GRIDLINES.
   endmethod.
 
 
-method SET_ROW_HEIGHT.
-  DATA: row_dimension     TYPE REF TO zcl_excel_worksheet_rowdimensi.
-  DATA: height            TYPE float.
+METHOD set_row_height.
+  DATA: lo_row  TYPE REF TO zcl_excel_row.
+  DATA: height  TYPE float.
 
-  row_dimension = me->get_row_dimension( ip_row ).
+  lo_row = me->get_row( ip_row ).
 
 * if a fix size is supplied use this
   TRY.
@@ -4738,7 +4758,7 @@ method SET_ROW_HEIGHT.
           EXPORTING
             error = 'Please supply a positive number as row-height'.
       ENDIF.
-      row_dimension->set_row_height( height ).
+      lo_row->set_row_height( height ).
       EXIT.
     CATCH cx_sy_conversion_no_number.
 * Strange stuff passed --> raise error
@@ -4747,9 +4767,7 @@ method SET_ROW_HEIGHT.
           error = 'Unable to interpret supplied input as number'.
   ENDTRY.
 
-
-
-  endmethod.
+ENDMETHOD.
 
 
 METHOD set_row_outline.

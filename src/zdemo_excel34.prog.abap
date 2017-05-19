@@ -20,7 +20,7 @@ DATA:      current_row      TYPE i,
            color            TYPE zexcel_style_color_argb,
 
            lo_column        TYPE REF TO zcl_excel_column,
-           row_dimension    TYPE REF TO zcl_excel_worksheet_rowdimensi,
+           lo_row           TYPE REF TO zcl_excel_row,
 
            writing1         TYPE string,
            writing2         TYPE string.
@@ -69,8 +69,8 @@ START-OF-SELECTION.
     lo_column->set_width( width ).
 
 * Set size of row
-    row_dimension = lo_worksheet->get_row_dimension( row ).
-    row_dimension->set_row_height( height ).
+    lo_row = lo_worksheet->get_row( row ).
+    lo_row->set_row_height( height ).
 
 * Set writing on chessboard
     lo_worksheet->set_cell( ip_row = row

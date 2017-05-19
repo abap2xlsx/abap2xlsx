@@ -47,7 +47,7 @@ DATA: lv_file                 TYPE xstring,
 DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
-DATA: lo_row_dim TYPE REF TO zcl_excel_worksheet_rowdimensi.
+DATA: lo_row TYPE REF TO zcl_excel_row.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '02_Styles.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -262,47 +262,47 @@ START-OF-SELECTION.
 
 
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 10  ip_style = lv_style_gr_cornerlb_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_cornerlb ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 10 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 10 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 11  ip_style = lv_style_gr_cornerlt_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_cornerlt ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 11 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 11 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 12  ip_style = lv_style_gr_cornerrb_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_cornerrb ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 12 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 12 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 13  ip_style = lv_style_gr_cornerrt_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_cornerrt ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 13 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 13 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 14  ip_style = lv_style_gr_horizontal90_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_horizontal90 ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 14 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 14 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 15  ip_style = lv_style_gr_horizontal270_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_horizontal270 ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 15 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 15 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 16  ip_style = lv_style_gr_horizontalb_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_horizontalb ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 16 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 16 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 17  ip_style = lv_style_gr_vertical_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_vertical ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 17 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 17 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 18  ip_style = lv_style_gr_vertical2_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_vertical ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 18 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 18 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 19  ip_style = lv_style_gr_fromcenter_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_fromcenter ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 19 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 19 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 20  ip_style = lv_style_gr_diagonal45_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_diagonal45 ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 20 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 20 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 21  ip_style = lv_style_gr_diagonal45b_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_diagonal45b ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 21 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 21 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 22  ip_style = lv_style_gr_diagonal135_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_diagonal135 ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 22 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 22 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 23  ip_style = lv_style_gr_diagonal135b_guid ip_value = zcl_excel_style_fill=>c_fill_gradient_diagonal135b ).
-  lo_row_dim = lo_worksheet->get_row_dimension( ip_row = 23 ).
-  lo_row_dim->set_row_height( ip_row_height = 30 ).
+  lo_row = lo_worksheet->get_row( ip_row = 23 ).
+  lo_row->set_row_height( ip_row_height = 30 ).
 
 
 

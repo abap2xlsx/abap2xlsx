@@ -3092,10 +3092,8 @@ METHOD create_xl_sheet.
         lo_style_conditional  TYPE REF TO zcl_excel_style_conditional,
         lo_data_validation    TYPE REF TO zcl_excel_data_validation,
         lo_table              TYPE REF TO zcl_excel_table,
-        row_dimension         TYPE REF TO zcl_excel_worksheet_rowdimensi,
-        lo_row_dim_empty      TYPE REF TO zcl_excel_worksheet_rowdimensi,
         lo_column_default     TYPE REF TO zcl_excel_column,
-        default_row_dimension TYPE REF TO zcl_excel_worksheet_rowdimensi.
+        lo_row_default        TYPE REF TO zcl_excel_row.
 
   DATA: lv_value                    TYPE string,
         lt_range_merge              TYPE string_table,
@@ -3124,7 +3122,8 @@ METHOD create_xl_sheet.
         lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
         lo_column_iterator          TYPE REF TO cl_object_collection_iterator,
         lo_column                   TYPE REF TO zcl_excel_column,
-        row_dimensions              TYPE zexcel_t_worksheet_rowdimensio,
+        lo_row_iterator             TYPE REF TO cl_object_collection_iterator,
+        lo_row                      TYPE REF TO zcl_excel_row,
         ls_style_cond_mapping       TYPE zexcel_s_styles_cond_mapping,
         lv_relation_id              TYPE i VALUE 0,
         outline_level_row           TYPE i VALUE 0,
@@ -3134,7 +3133,6 @@ METHOD create_xl_sheet.
         ls_sheet_content            LIKE LINE OF io_worksheet->sheet_content,
         ls_sheet_content_empty      LIKE LINE OF io_worksheet->sheet_content,
         lv_last_row                 TYPE i,
-        lts_row_dimensions          TYPE zexcel_t_worksheet_rowdimensio,
         lts_row_outlines            TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
         col_count                   TYPE int4,
         merge_count                 TYPE int4,
@@ -3152,7 +3150,6 @@ METHOD create_xl_sheet.
 
   FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data,
                  <fs_range_merge>   LIKE LINE OF lt_range_merge,
-                 <row_dimension>    TYPE zexcel_s_worksheet_rowdimensio,
                  <ls_row_outline>   LIKE LINE OF lts_row_outlines.
 
 *--------------------------------------------------------------------*
@@ -3379,22 +3376,23 @@ METHOD create_xl_sheet.
 
 
   lo_column_iterator = io_worksheet->get_columns_iterator( ).
+  lo_row_iterator = io_worksheet->get_rows_iterator( ).
   " Calculate col
   IF NOT lo_column_iterator IS BOUND.
     io_worksheet->calculate_column_widths( ).
     lo_column_iterator = io_worksheet->get_columns_iterator( ).
   ENDIF.
-  row_dimensions[]    = io_worksheet->get_row_dimensions( ).
+
   " sheetFormatPr node
   lo_element = lo_document->create_simple_element( name   = lc_xml_node_sheetformatpr
                                                    parent = lo_document ).
   " defaultRowHeight
-  default_row_dimension = io_worksheet->get_default_row_dimension( ).
-  IF default_row_dimension IS BOUND.
-    IF default_row_dimension->get_row_height( ) >= 0.
+  lo_row_default = io_worksheet->get_default_row( ).
+  IF lo_row_default IS BOUND.
+    IF lo_row_default->get_row_height( ) >= 0.
       lo_element->set_attribute_ns( name  = lc_xml_attr_customheight
                                     value = lc_xml_attr_true ).
-      lv_value = default_row_dimension->get_row_height( ).
+      lv_value = lo_row_default->get_row_height( ).
     ELSE.
       lv_value = '12.75'.
     ENDIF.
@@ -4785,9 +4783,10 @@ METHOD create_xl_sheet_sheet_data.
         lv_next_row            TYPE i,
         lv_last_row            TYPE i,
 
-        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
-        lo_row_dim_empty       TYPE REF TO zcl_excel_worksheet_rowdimensi,
-        row_dimension          TYPE REF TO zcl_excel_worksheet_rowdimensi,
+*        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
+        lo_row_iterator        TYPE REF TO cl_object_collection_iterator,
+        lo_row                 TYPE REF TO zcl_excel_row,
+        lo_row_empty           TYPE REF TO zcl_excel_row,
         lts_row_outlines       TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
 
         ls_last_row            TYPE zexcel_s_cell_data,
@@ -4801,7 +4800,6 @@ METHOD create_xl_sheet_sheet_data.
         lv_style_guid          TYPE zexcel_cell_style.
 
   FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data,
-                 <row_dimension>    TYPE zexcel_s_worksheet_rowdimensio,
                  <ls_row_outline>   LIKE LINE OF lts_row_outlines.
 
 
@@ -4854,12 +4852,15 @@ METHOD create_xl_sheet_sheet_data.
 *Last row with cell content
   lv_last_row = io_worksheet->get_highest_row( ).
 *Last line with row-information set directly ( like line height, hidden-status ... )
-  lts_row_dimensions = io_worksheet->get_row_dimensions( ).
-  SORT lts_row_dimensions BY row DESCENDING.
-  READ TABLE lts_row_dimensions INDEX 1 ASSIGNING <row_dimension>.
-  IF sy-subrc = 0 AND <row_dimension>-row > lv_last_row.
-    lv_last_row = <row_dimension>-row.
-  ENDIF.
+
+  lo_row_iterator = io_worksheet->get_rows_iterator( ).
+  WHILE lo_row_iterator->has_next( ) = abap_true.
+    lo_row ?= lo_row_iterator->get_next( ).
+    IF lo_row->get_row_index( ) > lv_last_row.
+      lv_last_row = lo_row->get_row_index( ).
+    ENDIF.
+  ENDWHILE.
+
 *Last line with row-information set indirectly by row outline
   lts_row_outlines = io_worksheet->get_row_outlines( ).
   LOOP AT lts_row_outlines ASSIGNING <ls_row_outline>.
@@ -4908,11 +4909,11 @@ METHOD create_xl_sheet_sheet_data.
         ASSIGN ls_sheet_content TO <ls_sheet_content>.
       ELSE.
 *Check if empty row is really necessary - this is basically the case when we have information in row_dimension
-        lo_row_dim_empty = io_worksheet->get_row_dimension( lv_current_row ).
-        CHECK lo_row_dim_empty->get_row_height( )                 >= 0          OR
-              lo_row_dim_empty->get_collapsed( io_worksheet )      = abap_true  OR
-              lo_row_dim_empty->get_outline_level( io_worksheet )  > 0          OR
-              lo_row_dim_empty->get_xf_index( )                   <> 0.
+        lo_row_empty = io_worksheet->get_row( lv_current_row ).
+        CHECK lo_row_empty->get_row_height( )                 >= 0          OR
+              lo_row_empty->get_collapsed( io_worksheet )      = abap_true  OR
+              lo_row_empty->get_outline_level( io_worksheet )  > 0          OR
+              lo_row_empty->get_xf_index( )                   <> 0.
         " Dummyentry A1
         ls_sheet_content_empty-cell_row      = lv_current_row.
         ls_sheet_content_empty-cell_column   = 1.
@@ -4930,7 +4931,7 @@ METHOD create_xl_sheet_sheet_data.
         ENDIF.
         IF ls_last_row-cell_row IS NOT INITIAL.
           " Row visibility of previos row.
-          IF row_dimension->get_visible( io_worksheet ) = abap_false OR
+          IF lo_row->get_visible( io_worksheet ) = abap_false OR
              l_autofilter_hidden = abap_true.
             lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
           ENDIF.
@@ -4956,33 +4957,33 @@ METHOD create_xl_sheet_sheet_data.
         SHIFT lv_value LEFT DELETING LEADING space.
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_spans
                                         value = lv_value ).
-        row_dimension = io_worksheet->get_row_dimension( <ls_sheet_content>-cell_row ).
+        lo_row = io_worksheet->get_row( <ls_sheet_content>-cell_row ).
         " Do we need the row dimension attributes?
-        IF row_dimension->get_row_height( )   >= 0 OR
-           row_dimension->get_collapsed( io_worksheet )     = abap_true OR
-           row_dimension->get_outline_level( io_worksheet ) > 0 OR
-           row_dimension->get_xf_index( )     <> 0 OR
+        IF lo_row->get_row_height( )   >= 0 OR
+           lo_row->get_collapsed( io_worksheet )     = abap_true OR
+           lo_row->get_outline_level( io_worksheet ) > 0 OR
+           lo_row->get_xf_index( )     <> 0 OR
            l_autofilter_hidden = abap_true.
           " Row dimensions
-          IF row_dimension->get_row_height( ) >= 0.
+          IF lo_row->get_row_height( ) >= 0.
             lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1').
-            lv_value = row_dimension->get_row_height( ).
+            lv_value = lo_row->get_row_height( ).
             lo_element_2->set_attribute_ns( name  = 'ht' value = lv_value ).
           ENDIF.
           " Collapsed
-          IF row_dimension->get_collapsed( io_worksheet ) = abap_true.
+          IF lo_row->get_collapsed( io_worksheet ) = abap_true.
             lo_element_2->set_attribute_ns( name  = 'collapsed' value = 'true').
           ENDIF.
           " Outline level
-          IF row_dimension->get_outline_level( io_worksheet ) > 0.
-            lv_value = row_dimension->get_outline_level( io_worksheet ).
+          IF lo_row->get_outline_level( io_worksheet ) > 0.
+            lv_value = lo_row->get_outline_level( io_worksheet ).
             SHIFT lv_value RIGHT DELETING TRAILING space.
             SHIFT lv_value LEFT DELETING LEADING space.
             lo_element_2->set_attribute_ns( name  = 'outlineLevel' value = lv_value ).
           ENDIF.
           " Style
-          IF row_dimension->get_xf_index( ) <> 0.
-            lv_value = row_dimension->get_xf_index( ).
+          IF lo_row->get_xf_index( ) <> 0.
+            lv_value = lo_row->get_xf_index( ).
             lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
             lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1').
           ENDIF.
@@ -5108,7 +5109,7 @@ METHOD create_xl_sheet_sheet_data.
       CLEAR l_autofilter_hidden.
     ENDIF.
     " Row visibility of previos row.
-    IF row_dimension->get_visible( ) = abap_false OR
+    IF lo_row->get_visible( ) = abap_false OR
        l_autofilter_hidden = abap_true.
       lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
     ENDIF.
