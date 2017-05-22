@@ -40,9 +40,7 @@ endmethod.
 METHOD zif_excel_converter~create_fieldcatalog.
   DATA: lo_alv TYPE REF TO cl_gui_alv_grid.
 
-  TRY.
-    zif_excel_converter~can_convert_object( io_object = io_object ).
-  ENDTRY.
+  zif_excel_converter~can_convert_object( io_object = io_object ).
 
   ws_option = is_option.
 

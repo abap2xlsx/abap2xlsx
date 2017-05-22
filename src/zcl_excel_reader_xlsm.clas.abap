@@ -58,8 +58,6 @@ method LOAD_WORKBOOK.
         fileversion         TYPE t_fileversion,
         workbookpr          TYPE t_workbookpr.
 
-  FIELD-SYMBOLS: <worksheet> TYPE t_relationship.
-
   CALL FUNCTION 'TRINT_SPLIT_FILE_AND_PATH'
     EXPORTING
       full_name     = iv_workbook_full_filename
@@ -119,8 +117,7 @@ METHOD load_worksheet.
   super->load_worksheet( EXPORTING ip_path      = ip_path
                                    io_worksheet = io_worksheet ).
 
-  DATA: path      TYPE string,
-        node      TYPE REF TO if_ixml_element,
+  DATA: node      TYPE REF TO if_ixml_element,
         worksheet TYPE REF TO if_ixml_document,
         sheetpr   TYPE t_sheetpr.
 

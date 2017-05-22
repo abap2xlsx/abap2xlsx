@@ -36,7 +36,7 @@ method build_xml.
     data: lo_theme_element type ref to if_ixml_element.
     data: lo_theme type ref to if_ixml_element.
     check io_document is bound.
-    lo_theme ?= io_document->get_root_element( )..
+    lo_theme ?= io_document->get_root_element( ).
     if lo_theme is bound.
       lo_theme_element ?= io_document->create_simple_element_ns( prefix = zcl_excel_theme=>c_theme_prefix
                                                                  name   = c_theme_elements

@@ -315,7 +315,6 @@ METHOD create_xl_sheet.
   FIELD-SYMBOLS:
     <sheet_content>             TYPE zexcel_s_cell_data,
     <range_merge>               LIKE LINE OF lt_range_merge,
-    <row_dimension>             TYPE zexcel_s_worksheet_rowdimensio,
     <col>                       TYPE lty_column,
     <row>                       TYPE lty_row,
     <hyperlink>                 TYPE lty_hyperlink,

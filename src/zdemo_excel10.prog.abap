@@ -10,7 +10,7 @@ REPORT  zdemo_excel10.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style_conditional2   TYPE REF TO zcl_excel_style_conditional,
+      lo_style_cond           TYPE REF TO zcl_excel_style_cond,
       lo_column               TYPE REF TO zcl_excel_column.
 
 DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
@@ -32,24 +32,24 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel->get_active_worksheet( ).
   lo_worksheet->set_title( 'Internal table' ).
 
-  ls_iconset-iconset                  = zcl_excel_style_conditional=>c_iconset_5arrows.
-  ls_iconset-cfvo1_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-iconset                  = zcl_excel_style_cond=>c_iconset_5arrows.
+  ls_iconset-cfvo1_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo1_value              = '0'.
-  ls_iconset-cfvo2_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo2_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo2_value              = '20'.
-  ls_iconset-cfvo3_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo3_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo3_value              = '40'.
-  ls_iconset-cfvo4_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo4_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo4_value              = '60'.
-  ls_iconset-cfvo5_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo5_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo5_value              = '80'.
-  ls_iconset-showvalue                = zcl_excel_style_conditional=>c_showvalue_true.
+  ls_iconset-showvalue                = zcl_excel_style_cond=>c_showvalue_true.
 
-  "Conditional style
-  lo_style_conditional2 = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional2->rule         = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional2->mode_iconset = ls_iconset.
-  lo_style_conditional2->priority     = 1.
+  "cond style
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule         = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->mode_iconset = ls_iconset.
+  lo_style_cond->priority     = 1.
 
   DATA lt_test TYPE TABLE OF sflight.
   SELECT * FROM sflight INTO TABLE lt_test. "#EC CI_NOWHERE
@@ -75,7 +75,7 @@ START-OF-SELECTION.
         <fs_field_catalog>-position   = 1.
         <fs_field_catalog>-dynpfld    = abap_true.
         <fs_field_catalog>-totals_function = zcl_excel_table=>totals_function_sum.
-        <fs_field_catalog>-cond_style = lo_style_conditional2.
+        <fs_field_catalog>-style_cond = lo_style_cond->get_guid( ).
       WHEN OTHERS.
         <fs_field_catalog>-dynpfld = abap_false.
     ENDCASE.

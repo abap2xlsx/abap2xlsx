@@ -35,9 +35,9 @@ public section.
       value(R_SIZE) type I .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_AUTOFILTERS
+*"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   types:
@@ -88,8 +88,6 @@ ENDMETHOD.
 
 METHOD get.
 
-  DATA: ls_autofilter LIKE LINE OF me->mt_autofilters.
-
   FIELD-SYMBOLS: <ls_autofilter> LIKE LINE OF me->mt_autofilters.
 
   READ TABLE me->mt_autofilters ASSIGNING <ls_autofilter> WITH TABLE KEY worksheet = io_worksheet.
@@ -112,8 +110,6 @@ ENDMETHOD.
 METHOD remove.
 
   DATA: lo_worksheet  TYPE REF TO zcl_excel_worksheet.
-
-  FIELD-SYMBOLS: <ls_autofilter> LIKE LINE OF me->mt_autofilters.
 
   DELETE TABLE me->mt_autofilters WITH TABLE KEY worksheet = lo_worksheet.
 

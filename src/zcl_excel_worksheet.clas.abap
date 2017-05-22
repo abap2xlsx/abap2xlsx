@@ -25,36 +25,36 @@ public section.
   constants C_BREAK_NONE type ZEXCEL_BREAK value 0. "#EC NOTEXT
   constants C_BREAK_ROW type ZEXCEL_BREAK value 1. "#EC NOTEXT
   data EXCEL type ref to ZCL_EXCEL read-only .
-  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. "#EC NOTEXT . " .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
   data SHEET_CONTENT type ZEXCEL_T_CELL_DATA .
   data SHEET_SETUP type ref to ZCL_EXCEL_SHEET_SETUP .
-  data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
-  data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+  data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT . " .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
   data STYLES type ZEXCEL_T_SHEET_STYLE .
   data TABCOLOR type ZEXCEL_S_TABCOLOR read-only .
 
   methods ADD_DRAWING
     importing
       !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
-  methods ADD_NEW_ROW
-    importing
-      !IP_ROW type SIMPLE
-    returning
-      value(EO_ROW) type ref to ZCL_EXCEL_ROW .
   methods ADD_NEW_COLUMN
     importing
       !IP_COLUMN type SIMPLE
     returning
       value(EO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-  methods ADD_NEW_CONDITIONAL_STYLE
+  methods ADD_NEW_STYLE_COND
     returning
-      value(EO_CONDITIONAL_STYLE) type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      value(EO_STYLE_COND) type ref to ZCL_EXCEL_STYLE_COND .
   methods ADD_NEW_DATA_VALIDATION
     returning
       value(EO_DATA_VALIDATION) type ref to ZCL_EXCEL_DATA_VALIDATION .
   methods ADD_NEW_RANGE
     returning
       value(EO_RANGE) type ref to ZCL_EXCEL_RANGE .
+  methods ADD_NEW_ROW
+    importing
+      !IP_ROW type SIMPLE
+    returning
+      value(EO_ROW) type ref to ZCL_EXCEL_ROW .
   methods BIND_ALV
     importing
       !IO_ALV type ref to OBJECT
@@ -262,13 +262,10 @@ public section.
   methods GET_COLUMNS
     returning
       value(EO_COLUMNS) type ref to ZCL_EXCEL_COLUMNS .
-  methods GET_ROWS_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
   methods GET_COLUMNS_ITERATOR
     returning
       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods GET_COND_STYLES_ITERATOR
+  methods GET_STYLE_COND_ITERATOR
     returning
       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
   methods GET_DATA_VALIDATIONS_ITERATOR
@@ -348,9 +345,17 @@ public section.
   methods GET_ROWS
     returning
       value(EO_ROWS) type ref to ZCL_EXCEL_ROWS .
+  methods GET_ROWS_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
   methods GET_ROW_OUTLINES
     returning
       value(RT_ROW_OUTLINES) type MTY_TS_OUTLINES_ROW .
+  methods GET_STYLE_COND
+    importing
+      !IP_GUID type ZEXCEL_CELL_STYLE
+    returning
+      value(EO_STYLE_COND) type ref to ZCL_EXCEL_STYLE_COND .
   methods GET_TABCOLOR
     returning
       value(EV_TABCOLOR) type ZEXCEL_S_TABCOLOR .
@@ -487,9 +492,9 @@ private section.
     mty_th_font_cache
            TYPE HASHED TABLE OF mty_s_font_cache
            WITH UNIQUE KEY font_name font_height flag_bold flag_italic .
+  types:
 *  types:
 *    mty_ts_row_dimension TYPE SORTED TABLE OF zexcel_s_worksheet_rowdimensio WITH UNIQUE KEY row .
-  types:
     BEGIN OF mty_merge,
       row_from TYPE i,
       row_to   TYPE i,
@@ -506,7 +511,7 @@ private section.
   data COLUMNS type ref to ZCL_EXCEL_COLUMNS .
   data ROW_DEFAULT type ref to ZCL_EXCEL_ROW .
   data COLUMN_DEFAULT type ref to ZCL_EXCEL_COLUMN .
-  data CONDITIONAL_STYLES type ref to ZCL_EXCEL_STYLES_CONDITIONAL .
+  data STYLES_COND type ref to ZCL_EXCEL_STYLES_COND .
   data DATA_VALIDATIONS type ref to ZCL_EXCEL_DATA_VALIDATIONS .
   data DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT .
   data DEFAULT_EXCEL_TIME_FORMAT type ZEXCEL_NUMBER_FORMAT .
@@ -527,7 +532,7 @@ private section.
   data RANGES type ref to ZCL_EXCEL_RANGES .
   data ROWS type ref to ZCL_EXCEL_ROWS .
   data TABLES type ref to CL_OBJECT_COLLECTION .
-  data TITLE type ZEXCEL_SHEET_TITLE value 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data TITLE type ZEXCEL_SHEET_TITLE value 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data UPPER_CELL type ZEXCEL_S_CELL_DATA .
 
   methods CALCULATE_CELL_WIDTH
@@ -582,12 +587,6 @@ METHOD add_new_column.
 ENDMETHOD.
 
 
-METHOD add_new_conditional_style.
-  CREATE OBJECT eo_conditional_style.
-  conditional_styles->add( eo_conditional_style ).
-ENDMETHOD.
-
-
 method ADD_NEW_DATA_VALIDATION.
 
   CREATE OBJECT eo_data_validation.
@@ -607,6 +606,12 @@ METHOD add_new_row.
     EXPORTING
       ip_index     = ip_row.
   rows->add( eo_row ).
+ENDMETHOD.
+
+
+METHOD add_new_style_cond.
+  CREATE OBJECT eo_style_cond.
+  styles_cond->add( eo_style_cond ).
 ENDMETHOD.
 
 
@@ -2703,7 +2708,7 @@ method BIND_ALV_OLE2.
   endmethod.
 
 
-method BIND_TABLE.
+METHOD bind_table.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan Schmöcker,      (wi p)              2012-12-01
@@ -2743,13 +2748,14 @@ method BIND_TABLE.
               lv_maxcol                       TYPE i,
               lv_maxrow                       TYPE i,
               lo_iterator                     TYPE REF TO cl_object_collection_iterator,
+              lo_style_cond                   TYPE REF TO zcl_excel_style_cond,
               lo_curtable                     TYPE REF TO zcl_excel_table.
 
   FIELD-SYMBOLS:
               <ls_field_catalog>              TYPE zexcel_s_fieldcatalog,
               <ls_field_catalog_custom>       TYPE zexcel_s_fieldcatalog,
-              <fs_table_line>                 TYPE ANY,
-              <fs_fldval>                     TYPE ANY.
+              <fs_table_line>                 TYPE any,
+              <fs_fldval>                     TYPE any.
 
   ls_settings = is_table_settings.
 
@@ -2838,43 +2844,43 @@ method BIND_TABLE.
     " Check if a column with the same name exists, if exists add a counter
     " If no medium description is provided we try to use small or long
 *    lv_value = <ls_field_catalog>-scrtext_m.
-      field-symbols: <scrtxt1> type any,
-                     <scrtxt2> type any,
-                     <scrtxt3> type any.
+    FIELD-SYMBOLS: <scrtxt1> TYPE any,
+                   <scrtxt2> TYPE any,
+                   <scrtxt3> TYPE any.
 
-      case iv_default_descr.
-        when 'M'.
-          assign <ls_field_catalog>-scrtext_m to <scrtxt1>.
-          assign <ls_field_catalog>-scrtext_s to <scrtxt2>.
-          assign <ls_field_catalog>-scrtext_l to <scrtxt3>.
-        when 'S'.
-          assign <ls_field_catalog>-scrtext_s to <scrtxt1>.
-          assign <ls_field_catalog>-scrtext_m to <scrtxt2>.
-          assign <ls_field_catalog>-scrtext_l to <scrtxt3>.
-        when 'L'.
-          assign <ls_field_catalog>-scrtext_l to <scrtxt1>.
-          assign <ls_field_catalog>-scrtext_m to <scrtxt2>.
-          assign <ls_field_catalog>-scrtext_s to <scrtxt3>.
-        when others.
-          assign <ls_field_catalog>-scrtext_m to <scrtxt1>.
-          assign <ls_field_catalog>-scrtext_s to <scrtxt2>.
-          assign <ls_field_catalog>-scrtext_l to <scrtxt3>.
-      endcase.
+    CASE iv_default_descr.
+      WHEN 'M'.
+        ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+        ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+        ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+      WHEN 'S'.
+        ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
+        ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+        ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+      WHEN 'L'.
+        ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
+        ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+        ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
+      WHEN OTHERS.
+        ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+        ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+        ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+    ENDCASE.
 
 
-      if <scrtxt1> is not initial.
-        lv_value = <scrtxt1>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      elseif <scrtxt2> is not initial.
-        lv_value = <scrtxt2>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      elseif <scrtxt3> is not initial.
-        lv_value = <scrtxt3>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      else.
-        lv_value = 'Column'.  " default value as Excel does
-        <ls_field_catalog>-scrtext_l = lv_value.
-      endif.
+    IF <scrtxt1> IS NOT INITIAL.
+      lv_value = <scrtxt1>.
+      <ls_field_catalog>-scrtext_l = lv_value.
+    ELSEIF <scrtxt2> IS NOT INITIAL.
+      lv_value = <scrtxt2>.
+      <ls_field_catalog>-scrtext_l = lv_value.
+    ELSEIF <scrtxt3> IS NOT INITIAL.
+      lv_value = <scrtxt3>.
+      <ls_field_catalog>-scrtext_l = lv_value.
+    ELSE.
+      lv_value = 'Column'.  " default value as Excel does
+      <ls_field_catalog>-scrtext_l = lv_value.
+    ENDIF.
     WHILE 1 = 1.
       lv_value_lowercase = lv_value.
       TRANSLATE lv_value_lowercase TO LOWER CASE.
@@ -2908,7 +2914,7 @@ method BIND_TABLE.
       " issue #290 Add formula support in table
       IF <ls_field_catalog>-formula EQ abap_true.
         IF <ls_field_catalog>-style IS NOT INITIAL.
-		  IF <ls_field_catalog>-abap_type IS NOT INITIAL.
+          IF <ls_field_catalog>-abap_type IS NOT INITIAL.
             me->set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
                         ip_formula  = <fs_fldval>
@@ -2993,13 +2999,14 @@ method BIND_TABLE.
 *--------------------------------------------------------------------*
     " conditional formatting
 *--------------------------------------------------------------------*
-    IF <ls_field_catalog>-cond_style IS NOT INITIAL.
+    IF <ls_field_catalog>-style_cond IS NOT INITIAL.
       lv_first_row    = ls_settings-top_left_row + 1. " +1 to exclude header
       lv_last_row     = ls_settings-top_left_row + lv_rows.
-      <ls_field_catalog>-cond_style->set_range( ip_start_column  = lv_column_alpha
-                                                ip_start_row     = lv_first_row
-                                                ip_stop_column   = lv_column_alpha
-                                                ip_stop_row      = lv_last_row ).
+      lo_style_cond = me->get_style_cond( <ls_field_catalog>-style_cond ).
+      lo_style_cond->set_range( ip_start_column  = lv_column_alpha
+                                ip_start_row     = lv_first_row
+                                ip_stop_column   = lv_column_alpha
+                                ip_stop_row      = lv_last_row ).
     ENDIF.
 
   ENDLOOP.
@@ -3019,7 +3026,7 @@ method BIND_TABLE.
   ENDIF.
   " << Issue #291
 
-  endmethod.
+ENDMETHOD.
 
 
 METHOD calculate_cell_width.
@@ -3662,7 +3669,7 @@ METHOD constructor.
   me->set_title( ip_title = lv_title ).
 
   CREATE OBJECT sheet_setup.
-  CREATE OBJECT conditional_styles.
+  CREATE OBJECT styles_cond.
   CREATE OBJECT data_validations.
   CREATE OBJECT tables.
   CREATE OBJECT columns.
@@ -3869,17 +3876,11 @@ METHOD get_columns.
 ENDMETHOD.
 
 
-METHOD get_columns_iterator.
+METHOD GET_COLUMNS_ITERATOR.
 
   eo_iterator = me->columns->get_iterator( ).
 
 ENDMETHOD.
-
-
-method GET_COND_STYLES_ITERATOR.
-
-  eo_iterator = me->conditional_styles->get_iterator( ).
-  endmethod.
 
 
 method GET_DATA_VALIDATIONS_ITERATOR.
@@ -4143,6 +4144,29 @@ METHOD get_row_outlines.
 
   rt_row_outlines = me->mt_row_outlines.
 
+ENDMETHOD.
+
+
+METHOD get_style_cond.
+
+  DATA: lo_style_iterator TYPE REF TO cl_object_collection_iterator,
+        lo_style_cond     TYPE REF TO zcl_excel_style_cond.
+
+  lo_style_iterator = me->get_style_cond_iterator( ).
+  WHILE lo_style_iterator->has_next( ) = abap_true.
+    lo_style_cond ?= lo_style_iterator->get_next( ).
+    IF lo_style_cond->get_guid( ) = ip_guid.
+      eo_style_cond = lo_style_cond.
+      EXIT.
+    ENDIF.
+  ENDWHILE.
+
+ENDMETHOD.
+
+
+METHOD get_style_cond_iterator.
+
+  eo_iterator = styles_cond->get_iterator( ).
 ENDMETHOD.
 
 

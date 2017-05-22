@@ -246,42 +246,29 @@ ENDCLASS.
 CLASS ZCL_EXCEL_CONVERTER IMPLEMENTATION.
 
 
-method ASK_OPTION.
+METHOD ask_option.
   DATA: ls_sval TYPE sval,
         lt_sval TYPE STANDARD TABLE OF sval,
         l_returncode TYPE string,
         lt_fields    TYPE ddfields,
         ls_fields    TYPE dfies.
 
-  FIELD-SYMBOLS: <fs> TYPE ANY.
+  FIELD-SYMBOLS: <fs> TYPE any.
 
   rs_option = ws_option.
 
   CALL FUNCTION 'DDIF_FIELDINFO_GET'
     EXPORTING
-      tabname              = 'ZEXCEL_S_CONVERTER_OPTION'
-*   FIELDNAME            = ' '
-*   LANGU                = sy-langu
-*   LFIELDNAME           = ' '
-*   ALL_TYPES            = ' '
-*   GROUP_NAMES          = ' '
-*   UCLEN                =
-* IMPORTING
-*   X030L_WA             =
-*   DDOBJTYPE            =
-*   DFIES_WA             =
-*   LINES_DESCR          =
+      tabname        = 'ZEXCEL_S_CONVERTER_OPTION'
     TABLES
-      dfies_tab            = lt_fields
-*   FIXED_VALUES         =
-  EXCEPTIONS
-    not_found            = 1
-    internal_error       = 2
-    OTHERS               = 3
-            .
+      dfies_tab      = lt_fields
+    EXCEPTIONS
+      not_found      = 1
+      internal_error = 2
+      OTHERS         = 3.
   IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
   ENDIF.
 
   LOOP AT lt_fields INTO ls_fields.
@@ -304,21 +291,17 @@ method ASK_OPTION.
 
   CALL FUNCTION 'POPUP_GET_VALUES'
     EXPORTING
-*     NO_VALUE_CHECK        = space
-      popup_title           = 'Excel creation options'(008)
-*     START_COLUMN          = '5'
-*     START_ROW             = '5'
+      popup_title     = 'Excel creation options'(008)
     IMPORTING
-      returncode            = l_returncode
+      returncode      = l_returncode
     TABLES
-      fields                = lt_sval
+      fields          = lt_sval
     EXCEPTIONS
-      error_in_fields       = 1
-      OTHERS                = 2
-            .
+      error_in_fields = 1
+      OTHERS          = 2.
   IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
   ELSE.
     IF l_returncode = 'A'.
       RAISE EXCEPTION TYPE zcx_excel.
@@ -333,7 +316,7 @@ method ASK_OPTION.
       rs_option = ws_option.
     ENDIF.
   ENDIF.
-  endmethod.
+ENDMETHOD.
 
 
 method BIND_CELLS.
@@ -499,10 +482,8 @@ method CONVERT.
     ws_option = is_option.
   ENDIF.
 
-  TRY.
-    execute_converter( EXPORTING io_object   = io_alv
-                                 it_table    = it_table ) .
-  ENDTRY.
+  execute_converter( EXPORTING io_object   = io_alv
+                               it_table    = it_table ) .
 
   IF io_worksheet IS SUPPLIED AND io_worksheet IS BOUND.
     wo_worksheet = io_worksheet.
@@ -788,8 +769,7 @@ method CREATE_TABLE.
         lt_components_tab       TYPE cl_abap_structdescr=>component_table,
         ls_components           TYPE abap_componentdescr,
         lo_table                TYPE REF TO cl_abap_tabledescr,
-        lo_struc                TYPE REF TO cl_abap_structdescr,
-        lt_fieldcatalog         TYPE zexcel_t_converter_fcat.
+        lo_struc                TYPE REF TO cl_abap_structdescr.
 
   FIELD-SYMBOLS: <fs_scat>  TYPE zexcel_s_converter_fcat,
                  <fs_stab>  TYPE ANY,
@@ -873,7 +853,6 @@ ENDMETHOD.
 
 method CREATE_WORKSHEET.
   DATA: l_freeze_col TYPE i.
-  DATA: l_guid TYPE oltpguid16.
 
   IF wo_data IS BOUND AND wo_worksheet IS BOUND.
 
@@ -913,9 +892,7 @@ method CREATE_WORKSHEET.
 
 
 method EXECUTE_CONVERTER.
-  DATA: lt_fieldcatalog         TYPE zexcel_t_fieldcatalog,
-        ls_fieldcatalog         TYPE zexcel_s_converter_fcat,
-        lo_if                   TYPE REF TO zif_excel_converter,
+  DATA: lo_if                   TYPE REF TO zif_excel_converter,
         ls_types                TYPE ts_alv_types,
         lo_addit                TYPE REF TO cl_abap_classdescr,
         lo_addit_superclass     type ref to cl_abap_classdescr.
@@ -946,8 +923,7 @@ method EXECUTE_CONVERTER.
     endif.
     if sy-subrc = 0.
       CREATE OBJECT lo_if type (ls_types-clsname).
-      try.
-        lo_if->create_fieldcatalog(
+      lo_if->create_fieldcatalog(
         exporting
           is_option       = ws_option
           io_object       = io_object
@@ -959,7 +935,6 @@ method EXECUTE_CONVERTER.
           et_colors       = wt_colors
           et_filter       = wt_filter
           ).
-      endtry.
 *  data lines of highest level.
       if ws_layout-max_subtotal_level > 0. add 1 to ws_layout-max_subtotal_level. endif.
     else.
@@ -1031,8 +1006,7 @@ method GET_COLOR_STYLE.
 
 
 method GET_FILE.
-  data: lo_excel_writer         type ref to zif_excel_writer,
-        lo_excel                type ref to zcl_excel.
+  data: lo_excel_writer         type ref to zif_excel_writer.
 
   data: ls_seoclass type seoclass.
 
@@ -1627,8 +1601,7 @@ method LOOP_SUBTOTAL.
 method OPEN_FILE.
   data: l_bytecount             type i,
         lt_file                 type solix_tab,
-        l_dir                   type string,
-        l_sep                   type c.
+        l_dir                   type string.
 
   field-symbols: <fs_data> type any table.
 
@@ -1733,8 +1706,7 @@ method SET_FIELDCATALOG.
   DATA: lr_data             TYPE REF TO data,
         lo_structdescr      TYPE REF TO cl_abap_structdescr,
         lt_dfies            TYPE ddfields,
-        ls_dfies            TYPE dfies,
-        ls_fieldcatalog     TYPE zexcel_s_fieldcatalog.
+        ls_dfies            TYPE dfies.
   DATA: ls_fcat             TYPE zexcel_s_converter_fcat.
 
   FIELD-SYMBOLS: <fs_tab>         TYPE ANY TABLE.

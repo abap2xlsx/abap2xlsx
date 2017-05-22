@@ -188,31 +188,31 @@ protected section.
   methods LOAD_WORKSHEET_COND_FORMAT_AA
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_CONDITIONAL type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND.
   methods LOAD_WORKSHEET_COND_FORMAT_CI
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_CONDITIONAL type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
   methods LOAD_WORKSHEET_COND_FORMAT_CS
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_CONDITIONAL type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
   methods LOAD_WORKSHEET_COND_FORMAT_EX
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_CONDITIONAL type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
   methods LOAD_WORKSHEET_COND_FORMAT_IS
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_CONDITIONAL type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
   methods LOAD_WORKSHEET_COND_FORMAT_DB
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_CONDITIONAL type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
   methods LOAD_WORKSHEET_COND_FORMAT_T10
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_CONDITIONAL type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
   methods LOAD_WORKSHEET_DRAWING
     importing
       !IP_PATH type STRING
@@ -2857,8 +2857,8 @@ METHOD load_worksheet_cond_format.
         lo_ixml_rules         TYPE REF TO if_ixml_node_collection,
         lo_ixml_rule          TYPE REF TO if_ixml_element,
         lo_ixml_iterator2     TYPE REF TO if_ixml_node_iterator,
-        lo_style_conditional  TYPE REF TO zcl_excel_style_conditional,
-        lo_style_conditional2 TYPE REF TO zcl_excel_style_conditional.
+        lo_style_cond  TYPE REF TO zcl_excel_style_cond,
+        lo_style_cond2 TYPE REF TO zcl_excel_style_cond.
 
 
   DATA: lv_area           TYPE string,
@@ -2880,7 +2880,7 @@ METHOD load_worksheet_cond_format.
 
     CLEAR: lv_area,
            lo_ixml_rule,
-           lo_style_conditional.
+           lo_style_cond.
 
 
 *--------------------------------------------------------------------*
@@ -2889,63 +2889,56 @@ METHOD load_worksheet_cond_format.
     lo_ixml_rules       =  io_ixml_worksheet->get_elements_by_tag_name( name = 'cfRule' ).
     lo_ixml_iterator2   =  lo_ixml_rules->create_iterator( ).
     lo_ixml_rule        ?= lo_ixml_iterator2->get_next( ).
-*    IF lo_ixml_rule IS BOUND.
+
     WHILE lo_ixml_rule IS BOUND.
       lv_rule = lo_ixml_rule->get_attribute_ns( 'type' ).
-      CLEAR lo_style_conditional.
+      CLEAR lo_style_cond.
 
 *--------------------------------------------------------------------*
 * Depending on ruletype get additional information
 *--------------------------------------------------------------------*
       CASE lv_rule.
 
-        WHEN zcl_excel_style_conditional=>c_rule_cellis.
-          lo_style_conditional = io_worksheet->add_new_conditional_style( ).
-          load_worksheet_cond_format_ci( io_ixml_rule         = lo_ixml_rule
-                                         io_style_conditional = lo_style_conditional ).
+        WHEN zcl_excel_style_cond=>c_rule_cellis.
+          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          load_worksheet_cond_format_ci( io_ixml_rule  = lo_ixml_rule
+                                         io_style_cond = lo_style_cond ).
 
-*      WHEN zcl_excel_style_conditional=>c_rule_containstext.
-*
-        WHEN zcl_excel_style_conditional=>c_rule_databar.
-          lo_style_conditional = io_worksheet->add_new_conditional_style( ).
-          load_worksheet_cond_format_db( io_ixml_rule         = lo_ixml_rule
-                                         io_style_conditional = lo_style_conditional ).
+        WHEN zcl_excel_style_cond=>c_rule_databar.
+          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          load_worksheet_cond_format_db( io_ixml_rule  = lo_ixml_rule
+                                         io_style_cond = lo_style_cond ).
 
-        WHEN zcl_excel_style_conditional=>c_rule_expression.
-          lo_style_conditional = io_worksheet->add_new_conditional_style( ).
-          load_worksheet_cond_format_ex( io_ixml_rule         = lo_ixml_rule
-                                         io_style_conditional = lo_style_conditional ).
+        WHEN zcl_excel_style_cond=>c_rule_expression.
+          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          load_worksheet_cond_format_ex( io_ixml_rule  = lo_ixml_rule
+                                         io_style_cond = lo_style_cond ).
 
-        WHEN zcl_excel_style_conditional=>c_rule_iconset.
-          lo_style_conditional = io_worksheet->add_new_conditional_style( ).
-          load_worksheet_cond_format_is( io_ixml_rule         = lo_ixml_rule
-                                         io_style_conditional = lo_style_conditional ).
+        WHEN zcl_excel_style_cond=>c_rule_iconset.
+          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          load_worksheet_cond_format_is( io_ixml_rule  = lo_ixml_rule
+                                         io_style_cond = lo_style_cond ).
 
-        WHEN zcl_excel_style_conditional=>c_rule_colorscale.
-          lo_style_conditional = io_worksheet->add_new_conditional_style( ).
-          load_worksheet_cond_format_cs( io_ixml_rule         = lo_ixml_rule
-                                         io_style_conditional = lo_style_conditional ).
+        WHEN zcl_excel_style_cond=>c_rule_colorscale.
+          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          load_worksheet_cond_format_cs( io_ixml_rule  = lo_ixml_rule
+                                         io_style_cond = lo_style_cond ).
 
-        WHEN zcl_excel_style_conditional=>c_rule_top10.
-          lo_style_conditional = io_worksheet->add_new_conditional_style( ).
-          load_worksheet_cond_format_t10( io_ixml_rule         = lo_ixml_rule
-                                          io_style_conditional = lo_style_conditional ).
+        WHEN zcl_excel_style_cond=>c_rule_top10.
+          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          load_worksheet_cond_format_t10( io_ixml_rule  = lo_ixml_rule
+                                         io_style_cond = lo_style_cond ).
 
-        WHEN zcl_excel_style_conditional=>c_rule_above_average.
-          lo_style_conditional = io_worksheet->add_new_conditional_style( ).
-          load_worksheet_cond_format_aa(  io_ixml_rule         = lo_ixml_rule
-                                          io_style_conditional = lo_style_conditional ).
-
-*      WHEN zcl_excel_style_conditional=>c_rule_none.
-*
-
+        WHEN zcl_excel_style_cond=>c_rule_above_average.
+          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          load_worksheet_cond_format_aa(  io_ixml_rule  = lo_ixml_rule
+                                         io_style_cond = lo_style_cond ).
         WHEN OTHERS.
       ENDCASE.
-*    ENDIF.
 
-      IF     lo_style_conditional IS BOUND.
-        lo_style_conditional->rule      = lv_rule.
-        lo_style_conditional->priority  = lo_ixml_rule->get_attribute_ns( 'priority' ).
+      IF lo_style_cond IS BOUND.
+        lo_style_cond->rule      = lv_rule.
+        lo_style_cond->priority  = lo_ixml_rule->get_attribute_ns( 'priority' ).
 *--------------------------------------------------------------------*
 * Set area to which conditional formatting belongs
 *--------------------------------------------------------------------*
@@ -2953,36 +2946,16 @@ METHOD load_worksheet_cond_format.
         SPLIT lv_area AT space INTO TABLE lt_areas.
         DELETE lt_areas WHERE table_line IS INITIAL.
         LOOP AT lt_areas INTO lv_area.
-*          IF sy-tabix = 1.  " Add futher style for next area
-*            lo_style_conditional2 = lo_style_conditional.
-*          ELSE.
-*            lo_style_conditional2 = io_worksheet->add_new_conditional_style( ).
-*            lo_style_conditional2->mode_cellis          = lo_style_conditional->mode_cellis       .
-*            lo_style_conditional2->mode_colorscale      = lo_style_conditional->mode_colorscale   .
-*            lo_style_conditional2->mode_databar         = lo_style_conditional->mode_databar      .
-*            lo_style_conditional2->mode_expression      = lo_style_conditional->mode_expression   .
-*            lo_style_conditional2->mode_iconset         = lo_style_conditional->mode_iconset      .
-*            lo_style_conditional2->mode_top10           = lo_style_conditional->mode_top10        .
-*            lo_style_conditional2->mode_above_average   = lo_style_conditional->mode_above_average.
-*            lo_style_conditional2->priority             = lo_style_conditional->priority          .
-*            lo_style_conditional2->rule                 = lo_style_conditional->rule              .
-*          ENDIF.
 
-          zcl_excel_common=>convert_range2column_a_row( EXPORTING
-                                                          i_range        = lv_area
-                                                        IMPORTING
-                                                          e_column_start = lv_area_start_col
-                                                          e_column_end   = lv_area_end_col
-                                                          e_row_start    = lv_area_start_row
-                                                          e_row_end      = lv_area_end_row   ).
-*          lo_style_conditional2->set_range( ip_start_column = lv_area_start_col
-*                                            ip_stop_column  = lv_area_end_col
-*                                            ip_start_row    = lv_area_start_row
-*                                            ip_stop_row     = lv_area_end_row   ).
-          lo_style_conditional->add_range( ip_start_column = lv_area_start_col
-                                           ip_stop_column  = lv_area_end_col
-                                           ip_start_row    = lv_area_start_row
-                                           ip_stop_row     = lv_area_end_row   ).
+          zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range        = lv_area
+                                                        IMPORTING e_column_start = lv_area_start_col
+                                                                  e_column_end   = lv_area_end_col
+                                                                  e_row_start    = lv_area_start_row
+                                                                  e_row_end      = lv_area_end_row   ).
+          lo_style_cond->add_range( ip_start_column = lv_area_start_col
+                                    ip_stop_column  = lv_area_end_col
+                                    ip_start_row    = lv_area_start_row
+                                    ip_stop_row     = lv_area_end_row   ).
         ENDLOOP.
 
       ENDIF.
@@ -3008,9 +2981,9 @@ METHOD load_worksheet_cond_format_aa.
 *--------------------------------------------------------------------*
   val  = io_ixml_rule->get_attribute_ns( 'aboveAverage' ).
   IF val = '0'.  " 0 = below average
-    io_style_conditional->mode_above_average-above_average = space.
+    io_style_cond->mode_above_average-above_average = space.
   ELSE.
-    io_style_conditional->mode_above_average-above_average = 'X'. " Not present or <> 0 --> we use above average
+    io_style_cond->mode_above_average-above_average = 'X'. " Not present or <> 0 --> we use above average
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -3019,9 +2992,9 @@ METHOD load_worksheet_cond_format_aa.
   CLEAR val.
   val  = io_ixml_rule->get_attribute_ns( 'equalAverage' ).
   IF val = '1'.  " 0 = below average
-    io_style_conditional->mode_above_average-equal_average = 'X'.
+    io_style_cond->mode_above_average-equal_average = 'X'.
   ELSE.
-    io_style_conditional->mode_above_average-equal_average = ' '. " Not present or <> 1 --> we use not equal average
+    io_style_cond->mode_above_average-equal_average = ' '. " Not present or <> 1 --> we use not equal average
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -3033,7 +3006,7 @@ METHOD load_worksheet_cond_format_aa.
     WHEN 1
       OR 2
       OR 3.  " These seem to be supported by excel - don't try anything more
-      io_style_conditional->mode_above_average-standard_deviation = val.
+      io_style_cond->mode_above_average-standard_deviation = val.
   ENDCASE.
 
 *--------------------------------------------------------------------*
@@ -3042,7 +3015,7 @@ METHOD load_worksheet_cond_format_aa.
   lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
   READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
   IF sy-subrc = 0.
-    io_style_conditional->mode_above_average-cell_style = <ls_dxf_style>-guid.
+    io_style_cond->mode_above_average-cell_style = <ls_dxf_style>-guid.
   ENDIF.
 
 ENDMETHOD.
@@ -3057,11 +3030,11 @@ METHOD load_worksheet_cond_format_ci.
 
   FIELD-SYMBOLS: <ls_dxf_style> LIKE LINE OF me->mt_dxf_styles.
 
-  io_style_conditional->mode_cellis-operator  = io_ixml_rule->get_attribute_ns( 'operator' ).
+  io_style_cond->mode_cellis-operator  = io_ixml_rule->get_attribute_ns( 'operator' ).
   lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
   READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
   IF sy-subrc = 0.
-    io_style_conditional->mode_cellis-cell_style = <ls_dxf_style>-guid.
+    io_style_cond->mode_cellis-cell_style = <ls_dxf_style>-guid.
   ENDIF.
 
   lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'formula' ).
@@ -3071,10 +3044,10 @@ METHOD load_worksheet_cond_format_ci.
 
     CASE sy-index.
       WHEN 1.
-        io_style_conditional->mode_cellis-formula  = lo_ixml->get_value( ).
+        io_style_cond->mode_cellis-formula  = lo_ixml->get_value( ).
 
       WHEN 2.
-        io_style_conditional->mode_cellis-formula2 = lo_ixml->get_value( ).
+        io_style_cond->mode_cellis-formula2 = lo_ixml->get_value( ).
 
       WHEN OTHERS.
         EXIT.
@@ -3100,16 +3073,16 @@ METHOD load_worksheet_cond_format_cs.
 
     CASE sy-index.
       WHEN 1.
-        io_style_conditional->mode_colorscale-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_colorscale-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_colorscale-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_colorscale-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN 2.
-        io_style_conditional->mode_colorscale-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_colorscale-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN 3.
-        io_style_conditional->mode_colorscale-cfvo3_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_colorscale-cfvo3_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN OTHERS.
         EXIT.
@@ -3125,13 +3098,13 @@ METHOD load_worksheet_cond_format_cs.
 
     CASE sy-index.
       WHEN 1.
-        io_style_conditional->mode_colorscale-colorrgb1  = lo_ixml->get_attribute_ns( 'rgb' ).
+        io_style_cond->mode_colorscale-colorrgb1  = lo_ixml->get_attribute_ns( 'rgb' ).
 
       WHEN 2.
-        io_style_conditional->mode_colorscale-colorrgb2  = lo_ixml->get_attribute_ns( 'rgb' ).
+        io_style_cond->mode_colorscale-colorrgb2  = lo_ixml->get_attribute_ns( 'rgb' ).
 
       WHEN 3.
-        io_style_conditional->mode_colorscale-colorrgb3  = lo_ixml->get_attribute_ns( 'rgb' ).
+        io_style_cond->mode_colorscale-colorrgb3  = lo_ixml->get_attribute_ns( 'rgb' ).
 
       WHEN OTHERS.
         EXIT.
@@ -3150,7 +3123,7 @@ METHOD load_worksheet_cond_format_db.
 
   lo_ixml ?= io_ixml_rule->find_from_name( 'color' ).
   IF lo_ixml IS BOUND.
-    io_style_conditional->mode_databar-colorrgb = lo_ixml->get_attribute_ns( 'rgb' ).
+    io_style_cond->mode_databar-colorrgb = lo_ixml->get_attribute_ns( 'rgb' ).
   ENDIF.
 
   lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'cfvo' ).
@@ -3160,12 +3133,12 @@ METHOD load_worksheet_cond_format_db.
 
     CASE sy-index.
       WHEN 1.
-        io_style_conditional->mode_databar-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_databar-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_databar-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_databar-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN 2.
-        io_style_conditional->mode_databar-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_databar-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_databar-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_databar-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN OTHERS.
         EXIT.
@@ -3190,7 +3163,7 @@ METHOD load_worksheet_cond_format_ex.
   lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
   READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
   IF sy-subrc = 0.
-    io_style_conditional->mode_expression-cell_style = <ls_dxf_style>-guid.
+    io_style_cond->mode_expression-cell_style = <ls_dxf_style>-guid.
   ENDIF.
 
   lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'formula' ).
@@ -3200,7 +3173,7 @@ METHOD load_worksheet_cond_format_ex.
 
     CASE sy-index.
       WHEN 1.
-        io_style_conditional->mode_expression-formula  = lo_ixml->get_value( ).
+        io_style_cond->mode_expression-formula  = lo_ixml->get_value( ).
 
 
       WHEN OTHERS.
@@ -3221,8 +3194,8 @@ METHOD load_worksheet_cond_format_is.
         lo_ixml_rule_iconset TYPE REF TO if_ixml_element.
 
   lo_ixml_rule_iconset ?= io_ixml_rule->get_first_child( ).
-  io_style_conditional->mode_iconset-iconset   = lo_ixml_rule_iconset->get_attribute_ns( 'iconSet' ).
-  io_style_conditional->mode_iconset-showvalue = lo_ixml_rule_iconset->get_attribute_ns( 'showValue' ).
+  io_style_cond->mode_iconset-iconset   = lo_ixml_rule_iconset->get_attribute_ns( 'iconSet' ).
+  io_style_cond->mode_iconset-showvalue = lo_ixml_rule_iconset->get_attribute_ns( 'showValue' ).
   lo_ixml_nodes ?= lo_ixml_rule_iconset->get_elements_by_tag_name( 'cfvo' ).
   lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
   lo_ixml ?= lo_ixml_iterator->get_next( ).
@@ -3230,24 +3203,24 @@ METHOD load_worksheet_cond_format_is.
 
     CASE sy-index.
       WHEN 1.
-        io_style_conditional->mode_iconset-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_iconset-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_iconset-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_iconset-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN 2.
-        io_style_conditional->mode_iconset-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_iconset-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_iconset-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_iconset-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN 3.
-        io_style_conditional->mode_iconset-cfvo3_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_iconset-cfvo3_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_iconset-cfvo3_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_iconset-cfvo3_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN 4.
-        io_style_conditional->mode_iconset-cfvo4_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_iconset-cfvo4_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_iconset-cfvo4_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_iconset-cfvo4_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN 5.
-        io_style_conditional->mode_iconset-cfvo5_type  = lo_ixml->get_attribute_ns( 'type' ).
-        io_style_conditional->mode_iconset-cfvo5_value = lo_ixml->get_attribute_ns( 'val' ).
+        io_style_cond->mode_iconset-cfvo5_type  = lo_ixml->get_attribute_ns( 'type' ).
+        io_style_cond->mode_iconset-cfvo5_value = lo_ixml->get_attribute_ns( 'val' ).
 
       WHEN OTHERS.
         EXIT.
@@ -3264,28 +3237,28 @@ METHOD load_worksheet_cond_format_t10.
 
   FIELD-SYMBOLS: <ls_dxf_style> LIKE LINE OF me->mt_dxf_styles.
 
-  io_style_conditional->mode_top10-topxx_count  = io_ixml_rule->get_attribute_ns( 'rank' ).        " Top10, Top20, Top 50...
+  io_style_cond->mode_top10-topxx_count  = io_ixml_rule->get_attribute_ns( 'rank' ).        " Top10, Top20, Top 50...
 
-  io_style_conditional->mode_top10-percent      = io_ixml_rule->get_attribute_ns( 'percent' ).     " Top10 percent instead of Top10 values
-  if io_style_conditional->mode_top10-percent = '1'.
-    io_style_conditional->mode_top10-percent = 'X'.
-  else.
-    io_style_conditional->mode_top10-percent = ' '.
-  endif.
+  io_style_cond->mode_top10-percent      = io_ixml_rule->get_attribute_ns( 'percent' ).     " Top10 percent instead of Top10 values
+  IF io_style_cond->mode_top10-percent = '1'.
+    io_style_cond->mode_top10-percent = 'X'.
+  ELSE.
+    io_style_cond->mode_top10-percent = ' '.
+  ENDIF.
 
-  io_style_conditional->mode_top10-bottom       = io_ixml_rule->get_attribute_ns( 'bottom' ).      " Bottom10 instead of Top10
-  if io_style_conditional->mode_top10-bottom = '1'.
-    io_style_conditional->mode_top10-bottom = 'X'.
-  else.
-    io_style_conditional->mode_top10-bottom = ' '.
-  endif.
+  io_style_cond->mode_top10-bottom       = io_ixml_rule->get_attribute_ns( 'bottom' ).      " Bottom10 instead of Top10
+  IF io_style_cond->mode_top10-bottom = '1'.
+    io_style_cond->mode_top10-bottom = 'X'.
+  ELSE.
+    io_style_cond->mode_top10-bottom = ' '.
+  ENDIF.
 *--------------------------------------------------------------------*
 * Cell formatting for top10
 *--------------------------------------------------------------------*
   lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
   READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
   IF sy-subrc = 0.
-    io_style_conditional->mode_top10-cell_style = <ls_dxf_style>-guid.
+    io_style_cond->mode_top10-cell_style = <ls_dxf_style>-guid.
   ENDIF.
 
 ENDMETHOD.
@@ -3485,7 +3458,7 @@ METHOD load_worksheet_pagebreaks.
         lo_ixml_iterator     TYPE REF TO if_ixml_node_iterator,
         lo_ixml_rowbreak     TYPE REF TO if_ixml_element,
         lo_ixml_colbreak     TYPE REF TO if_ixml_element,
-        lo_style_conditional TYPE REF TO zcl_excel_style_conditional,
+        lo_style_cond TYPE REF TO zcl_excel_style_cond,
         lv_count             TYPE i.
 
 

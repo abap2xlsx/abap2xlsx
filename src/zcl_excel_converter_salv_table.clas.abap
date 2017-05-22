@@ -14,9 +14,9 @@ public section.
     redefinition .
 *"* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
+*"* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   methods LOAD_DATA
@@ -36,14 +36,10 @@ method LOAD_DATA.
         lo_sorts          TYPE REF TO cl_salv_sorts,
         lo_filters        TYPE REF TO cl_salv_filters,
         lo_functional     TYPE REF TO cl_salv_functional_settings,
-        lo_display        TYPE REF TO cl_salv_display_settings,
-        lo_selections     TYPE REF TO cl_salv_selections.
+        lo_display        TYPE REF TO cl_salv_display_settings.
 
   DATA: ls_vari   TYPE disvariant,
         lo_layout TYPE REF TO cl_salv_layout.
-
-  DATA: lr_form_tol TYPE REF TO cl_salv_form,
-        lr_form_eol TYPE REF TO cl_salv_form.
 
   DATA lt_kkblo_fieldcat TYPE kkblo_t_fieldcat.
   DATA ls_kkblo_layout   TYPE kkblo_layout.

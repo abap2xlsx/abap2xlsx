@@ -45,18 +45,11 @@ METHOD constructor.
   CREATE OBJECT number_format.
   CREATE OBJECT protection.
 
-* Start of insertion # issue 139 - Dateretention of cellstyles
   IF ip_guid IS NOT INITIAL.
     me->guid = ip_guid.
   ELSE.
-* End of insertion # issue 139 - Dateretention of cellstyles
-*    CALL FUNCTION 'GUID_CREATE'                                  " del issue #379 - function is outdated in newer releases
-*      IMPORTING
-*        ev_guid_16 = me->guid.
-    me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).      " ins issue #379 - replacement for outdated function call
-* Start of insertion # issue 139 - Dateretention of cellstyles
+    me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).
   ENDIF.
-* End of insertion # issue 139 - Dateretention of cellstyles
 
 ENDMETHOD.
 

@@ -20,7 +20,7 @@ DATA: lo_style_title           TYPE REF TO zcl_excel_style,
       lo_drawing               TYPE REF TO zcl_excel_drawing,
       lo_range                 TYPE REF TO zcl_excel_range,
       lo_data_validation       TYPE REF TO zcl_excel_data_validation,
-      lo_column      TYPE REF TO zcl_excel_column,
+      lo_column                TYPE REF TO zcl_excel_column,
       lv_style_title_guid      TYPE zexcel_cell_style,
       ls_key                   TYPE wwwdatatab.
 

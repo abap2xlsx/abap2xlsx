@@ -14,7 +14,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_range                TYPE REF TO zcl_excel_range,
       lo_data_validation      TYPE REF TO zcl_excel_data_validation,
-      lo_style_conditional    TYPE REF TO zcl_excel_style_conditional,
+      lo_style_cond           TYPE REF TO zcl_excel_style_cond,
       lo_style_1              TYPE REF TO zcl_excel_style,
       lo_style_2              TYPE REF TO zcl_excel_style,
       lv_style_1_guid         TYPE zexcel_cell_style,
@@ -36,7 +36,7 @@ START-OF-SELECTION.
 
   lo_style_1                        = lo_excel->add_new_style( ).
   lo_style_1->fill->filltype        = zcl_excel_style_fill=>c_fill_solid.
-  lo_style_1->fill->bgcolor-rgb   = zcl_excel_style_color=>c_green.
+  lo_style_1->fill->bgcolor-rgb     = zcl_excel_style_color=>c_green.
   lv_style_1_guid                   = lo_style_1->get_guid( ).
 
   lo_style_2                        = lo_excel->add_new_style( ).
@@ -73,31 +73,29 @@ START-OF-SELECTION.
   lo_data_validation->cell_column = 'C'.
   lo_worksheet->set_cell( ip_row = 2 ip_column = 'C' ip_value = 'Select a value' ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule      = zcl_excel_style_conditional=>c_rule_cellis.
-  ls_cellis-formula     = '"Anchovy"'.
-  ls_cellis-operator    = zcl_excel_style_conditional=>c_operator_equal.
-  ls_cellis-cell_style  = lv_style_1_guid.
-  lo_style_conditional->mode_cellis = ls_cellis.
-  lo_style_conditional->priority  = 1.
-  lo_style_conditional->set_range( ip_start_column  = 'C'
-                                   ip_start_row     = 2
-                                   ip_stop_column   = 'C'
-                                   ip_stop_row      = 2 ).
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule         = zcl_excel_style_cond=>c_rule_cellis.
+  ls_cellis-formula           = '"Anchovy"'.
+  ls_cellis-operator          = zcl_excel_style_cond=>c_operator_equal.
+  ls_cellis-cell_style        = lv_style_1_guid.
+  lo_style_cond->mode_cellis  = ls_cellis.
+  lo_style_cond->priority     = 1.
+  lo_style_cond->set_range( ip_start_column  = 'C'
+                            ip_start_row     = 2
+                            ip_stop_column   = 'C'
+                            ip_stop_row      = 2 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule        = zcl_excel_style_conditional=>c_rule_cellis.
-  ls_cellis-formula     = '"Carp"'.
-  ls_cellis-operator    = zcl_excel_style_conditional=>c_operator_equal.
-  ls_cellis-cell_style  = lv_style_2_guid.
-  lo_style_conditional->mode_cellis = ls_cellis.
-  lo_style_conditional->priority    = 2.
-  lo_style_conditional->set_range( ip_start_column  = 'C'
-                                   ip_start_row     = 2
-                                   ip_stop_column   = 'C'
-                                   ip_stop_row      = 2 ).
-
-
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule         = zcl_excel_style_cond=>c_rule_cellis.
+  ls_cellis-formula           = '"Carp"'.
+  ls_cellis-operator          = zcl_excel_style_cond=>c_operator_equal.
+  ls_cellis-cell_style        = lv_style_2_guid.
+  lo_style_cond->mode_cellis  = ls_cellis.
+  lo_style_cond->priority     = 2.
+  lo_style_cond->set_range( ip_start_column  = 'C'
+                            ip_start_row     = 2
+                            ip_stop_column   = 'C'
+                            ip_stop_row      = 2 ).
 
 *** Create output
   lcl_output=>output( lo_excel ).

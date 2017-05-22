@@ -118,6 +118,8 @@ public section.
       value(IP_CHART) type ref to IF_IXML_DOCUMENT .
 *"* protected components of class ZCL_EXCEL_DRAWING
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_DRAWING
+*"* do not include other source files here!!!
 protected section.
 private section.
 
@@ -332,11 +334,6 @@ method LOAD_CHART_ATTRIBUTES.
   DATA: node2               TYPE REF TO if_ixml_element.
   DATA: node3               TYPE REF TO if_ixml_element.
   DATA: node4               TYPE REF TO if_ixml_element.
-  DATA: iterator            TYPE REF TO if_ixml_node_iterator.
-
-  DATA: chartspace          TYPE REF TO if_ixml_node_collection.
-  DATA: coll_length         TYPE i.
-  DATA: chartelem           TYPE REF TO if_ixml_element.
 
   DATA lo_barchart TYPE REF TO zcl_excel_graph_bars.
   DATA lo_piechart TYPE REF TO zcl_excel_graph_pie.

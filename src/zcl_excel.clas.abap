@@ -139,8 +139,6 @@ public section.
   methods SET_THEME
     importing
       !IO_THEME type ref to ZCL_EXCEL_THEME .
-*"* protected components of class ZCL_EXCEL
-*"* do not include other source files here!!!
 protected section.
 
   data WORKSHEETS type ref to ZCL_EXCEL_WORKSHEETS .

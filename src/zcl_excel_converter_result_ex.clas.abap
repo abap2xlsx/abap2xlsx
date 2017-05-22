@@ -14,6 +14,8 @@ public section.
     redefinition .
 *"* protected components of class ZCL_EXCEL_CONVERTER_RESULT_EX
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_CONVERTER_RESULT_EX
+*"* do not include other source files here!!!
 protected section.
 *"* private components of class ZCL_EXCEL_CONVERTER_EX_RESULT
 *"* do not include other source files here!!!
@@ -45,9 +47,7 @@ METHOD zif_excel_converter~create_fieldcatalog.
 
   FIELD-SYMBOLS: <fs_table> TYPE STANDARD TABLE.
 
-  TRY.
-    zif_excel_converter~can_convert_object( io_object = io_object ).
-  ENDTRY.
+  zif_excel_converter~can_convert_object( io_object = io_object ).
 
   ws_option = is_option.
 

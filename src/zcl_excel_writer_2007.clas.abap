@@ -3089,7 +3089,7 @@ METHOD create_xl_sheet.
         lo_ostream            TYPE REF TO if_ixml_ostream,
         lo_renderer           TYPE REF TO if_ixml_renderer,
         lo_iterator           TYPE REF TO cl_object_collection_iterator,
-        lo_style_conditional  TYPE REF TO zcl_excel_style_conditional,
+        lo_style_cond         TYPE REF TO zcl_excel_style_cond,
         lo_data_validation    TYPE REF TO zcl_excel_data_validation,
         lo_table              TYPE REF TO zcl_excel_table,
         lo_column_default     TYPE REF TO zcl_excel_column,
@@ -3745,35 +3745,35 @@ METHOD create_xl_sheet.
   ENDIF.
 
   " Conditional formatting node
-  lo_iterator = io_worksheet->get_cond_styles_iterator( ).
+  lo_iterator = io_worksheet->get_style_cond_iterator( ).
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_style_conditional ?= lo_iterator->if_object_collection_iterator~get_next( ).
-    IF lo_style_conditional->rule IS INITIAL.
+    lo_style_cond ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    IF lo_style_cond->rule IS INITIAL.
       CONTINUE.
     ENDIF.
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_condformatting
                                                      parent = lo_document ).
-    lv_value = lo_style_conditional->get_dimension_range( ) .
+    lv_value = lo_style_cond->get_dimension_range( ) .
     lo_element->set_attribute_ns( name  = lc_xml_attr_sqref
                                   value = lv_value ).
 
     " cfRule node
     lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_cfrule
                                                      parent = lo_document ).
-    lv_value = lo_style_conditional->rule.
+    lv_value = lo_style_cond->rule.
     lo_element_2->set_attribute_ns( name  = lc_xml_attr_type
                                     value = lv_value ).
-    lv_value = lo_style_conditional->priority.
+    lv_value = lo_style_cond->priority.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_2->set_attribute_ns( name  = lc_xml_attr_priority
                                     value = lv_value ).
 
-    CASE lo_style_conditional->rule.
+    CASE lo_style_cond->rule.
         " Start >> Databar by Albert Lladanosa
-      WHEN zcl_excel_style_conditional=>c_rule_databar.
+      WHEN zcl_excel_style_cond=>c_rule_databar.
 
-        ls_databar = lo_style_conditional->mode_databar.
+        ls_databar = lo_style_cond->mode_databar.
 
         CLEAR lt_cfvo.
         lo_element_3 = lo_document->create_simple_element( name = lc_xml_node_databar
@@ -3811,9 +3811,9 @@ METHOD create_xl_sheet.
         lo_element_2->append_child( new_child = lo_element_3 ). " databar node
         " End << Databar by Albert Lladanosa
 
-      WHEN zcl_excel_style_conditional=>c_rule_colorscale.
+      WHEN zcl_excel_style_cond=>c_rule_colorscale.
 
-        ls_colorscale = lo_style_conditional->mode_colorscale.
+        ls_colorscale = lo_style_cond->mode_colorscale.
 
         CLEAR: lt_cfvo, lt_colors.
         lo_element_3 = lo_document->create_simple_element( name = lc_xml_node_colorscale
@@ -3869,15 +3869,15 @@ METHOD create_xl_sheet.
 
         lo_element_2->append_child( new_child = lo_element_3 ). " databar node
 
-      WHEN zcl_excel_style_conditional=>c_rule_iconset.
+      WHEN zcl_excel_style_cond=>c_rule_iconset.
 
-        ls_iconset = lo_style_conditional->mode_iconset.
+        ls_iconset = lo_style_cond->mode_iconset.
 
         CLEAR lt_cfvo.
         " iconset node
         lo_element_3 = lo_document->create_simple_element( name   = lc_xml_node_iconset
                                                            parent = lo_document ).
-        IF ls_iconset-iconset NE zcl_excel_style_conditional=>c_iconset_3trafficlights.
+        IF ls_iconset-iconset NE zcl_excel_style_cond=>c_iconset_3trafficlights.
           lv_value = ls_iconset-iconset.
           lo_element_3->set_attribute_ns( name  = lc_xml_attr_iconset
                                           value = lv_value ).
@@ -3889,15 +3889,15 @@ METHOD create_xl_sheet.
                                         value = lv_value ).
 
         CASE ls_iconset-iconset.
-          WHEN zcl_excel_style_conditional=>c_iconset_3trafficlights2 OR
-               zcl_excel_style_conditional=>c_iconset_3arrows OR
-               zcl_excel_style_conditional=>c_iconset_3arrowsgray OR
-               zcl_excel_style_conditional=>c_iconset_3flags OR
-               zcl_excel_style_conditional=>c_iconset_3signs OR
-               zcl_excel_style_conditional=>c_iconset_3symbols OR
-               zcl_excel_style_conditional=>c_iconset_3symbols2 OR
-               zcl_excel_style_conditional=>c_iconset_3trafficlights OR
-               zcl_excel_style_conditional=>c_iconset_3trafficlights2.
+          WHEN zcl_excel_style_cond=>c_iconset_3trafficlights2 OR
+               zcl_excel_style_cond=>c_iconset_3arrows OR
+               zcl_excel_style_cond=>c_iconset_3arrowsgray OR
+               zcl_excel_style_cond=>c_iconset_3flags OR
+               zcl_excel_style_cond=>c_iconset_3signs OR
+               zcl_excel_style_cond=>c_iconset_3symbols OR
+               zcl_excel_style_cond=>c_iconset_3symbols2 OR
+               zcl_excel_style_cond=>c_iconset_3trafficlights OR
+               zcl_excel_style_cond=>c_iconset_3trafficlights2.
             MOVE ls_iconset-cfvo1_value TO ls_cfvo-value.
             MOVE ls_iconset-cfvo1_type  TO ls_cfvo-type.
             APPEND ls_cfvo TO lt_cfvo.
@@ -3907,11 +3907,11 @@ METHOD create_xl_sheet.
             MOVE ls_iconset-cfvo3_value TO ls_cfvo-value.
             MOVE ls_iconset-cfvo3_type  TO ls_cfvo-type.
             APPEND ls_cfvo TO lt_cfvo.
-          WHEN zcl_excel_style_conditional=>c_iconset_4arrows OR
-               zcl_excel_style_conditional=>c_iconset_4arrowsgray OR
-               zcl_excel_style_conditional=>c_iconset_4rating OR
-               zcl_excel_style_conditional=>c_iconset_4redtoblack OR
-               zcl_excel_style_conditional=>c_iconset_4trafficlights.
+          WHEN zcl_excel_style_cond=>c_iconset_4arrows OR
+               zcl_excel_style_cond=>c_iconset_4arrowsgray OR
+               zcl_excel_style_cond=>c_iconset_4rating OR
+               zcl_excel_style_cond=>c_iconset_4redtoblack OR
+               zcl_excel_style_cond=>c_iconset_4trafficlights.
             MOVE ls_iconset-cfvo1_value TO ls_cfvo-value.
             MOVE ls_iconset-cfvo1_type  TO ls_cfvo-type.
             APPEND ls_cfvo TO lt_cfvo.
@@ -3924,10 +3924,10 @@ METHOD create_xl_sheet.
             MOVE ls_iconset-cfvo4_value TO ls_cfvo-value.
             MOVE ls_iconset-cfvo4_type  TO ls_cfvo-type.
             APPEND ls_cfvo TO lt_cfvo.
-          WHEN zcl_excel_style_conditional=>c_iconset_5arrows OR
-               zcl_excel_style_conditional=>c_iconset_5arrowsgray OR
-               zcl_excel_style_conditional=>c_iconset_5quarters OR
-               zcl_excel_style_conditional=>c_iconset_5rating.
+          WHEN zcl_excel_style_cond=>c_iconset_5arrows OR
+               zcl_excel_style_cond=>c_iconset_5arrowsgray OR
+               zcl_excel_style_cond=>c_iconset_5quarters OR
+               zcl_excel_style_cond=>c_iconset_5rating.
             MOVE ls_iconset-cfvo1_value TO ls_cfvo-value.
             MOVE ls_iconset-cfvo1_type  TO ls_cfvo-type.
             APPEND ls_cfvo TO lt_cfvo.
@@ -3963,8 +3963,8 @@ METHOD create_xl_sheet.
 
         lo_element_2->append_child( new_child = lo_element_3 ). " iconset node
 
-      WHEN zcl_excel_style_conditional=>c_rule_cellis.
-        ls_cellis = lo_style_conditional->mode_cellis.
+      WHEN zcl_excel_style_cond=>c_rule_cellis.
+        ls_cellis = lo_style_cond->mode_cellis.
         READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_cellis-cell_style.
         lv_value = ls_style_cond_mapping-dxf.
         CONDENSE lv_value.
@@ -3987,8 +3987,8 @@ METHOD create_xl_sheet.
           lo_element_2->append_child( new_child = lo_element_3 ). " 2nd formula node
         ENDIF.
 
-      WHEN zcl_excel_style_conditional=>c_rule_expression.
-        ls_expression = lo_style_conditional->mode_expression.
+      WHEN zcl_excel_style_cond=>c_rule_expression.
+        ls_expression = lo_style_cond->mode_expression.
         READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_expression-cell_style.
         lv_value = ls_style_cond_mapping-dxf.
         CONDENSE lv_value.
@@ -4002,8 +4002,8 @@ METHOD create_xl_sheet.
         lo_element_2->append_child( new_child = lo_element_3 ). " formula node
 
 * begin of ins issue #366 - missing conditional rules: top10
-      WHEN zcl_excel_style_conditional=>c_rule_top10.
-        ls_conditional_top10 = lo_style_conditional->mode_top10.
+      WHEN zcl_excel_style_cond=>c_rule_top10.
+        ls_conditional_top10 = lo_style_cond->mode_top10.
         READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_conditional_top10-cell_style.
         lv_value = ls_style_cond_mapping-dxf.
         CONDENSE lv_value.
@@ -4022,8 +4022,8 @@ METHOD create_xl_sheet.
                                           value ='1' ).
         ENDIF.
 
-      WHEN zcl_excel_style_conditional=>c_rule_above_average.
-        ls_conditional_above_avg = lo_style_conditional->mode_above_average.
+      WHEN zcl_excel_style_cond=>c_rule_above_average.
+        ls_conditional_above_avg = lo_style_cond->mode_above_average.
         READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_conditional_above_avg-cell_style.
         lv_value = ls_style_cond_mapping-dxf.
         CONDENSE lv_value.
@@ -5269,7 +5269,7 @@ METHOD create_xl_styles.
         lo_iterator          TYPE REF TO cl_object_collection_iterator,
         lo_iterator2         TYPE REF TO cl_object_collection_iterator,
         lo_worksheet         TYPE REF TO zcl_excel_worksheet,
-        lo_style_conditional TYPE REF TO zcl_excel_style_conditional,
+        lo_style_cond        TYPE REF TO zcl_excel_style_cond,
         lo_style             TYPE REF TO zcl_excel_style.
 
 
@@ -6037,14 +6037,14 @@ METHOD create_xl_styles.
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
     lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
     " Conditional formatting styles into exch sheet
-    lo_iterator2 = lo_worksheet->get_cond_styles_iterator( ).
+    lo_iterator2 = lo_worksheet->get_style_cond_iterator( ).
     WHILE lo_iterator2->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_style_conditional ?= lo_iterator2->if_object_collection_iterator~get_next( ).
-      CASE lo_style_conditional->rule.
+      lo_style_cond ?= lo_iterator2->if_object_collection_iterator~get_next( ).
+      CASE lo_style_cond->rule.
 * begin of change issue #366 - missing conditional rules: top10, move dfx-styles to own method
-        WHEN zcl_excel_style_conditional=>c_rule_cellis.
+        WHEN zcl_excel_style_cond=>c_rule_cellis.
           me->create_dxf_style( EXPORTING
-                                  iv_cell_style    = lo_style_conditional->mode_cellis-cell_style
+                                  iv_cell_style    = lo_style_cond->mode_cellis-cell_style
                                   io_dxf_element   = lo_element
                                   io_ixml_document = lo_document
                                   it_cellxfs       = lt_cellxfs
@@ -6053,9 +6053,9 @@ METHOD create_xl_styles.
                                 CHANGING
                                   cv_dfx_count     = lv_dfx_count ).
 
-        WHEN zcl_excel_style_conditional=>c_rule_expression.
+        WHEN zcl_excel_style_cond=>c_rule_expression.
           me->create_dxf_style( EXPORTING
-                        iv_cell_style    = lo_style_conditional->mode_expression-cell_style
+                        iv_cell_style    = lo_style_cond->mode_expression-cell_style
                         io_dxf_element   = lo_element
                         io_ixml_document = lo_document
                         it_cellxfs       = lt_cellxfs
@@ -6066,9 +6066,9 @@ METHOD create_xl_styles.
 
 
 
-        WHEN zcl_excel_style_conditional=>c_rule_top10.
+        WHEN zcl_excel_style_cond=>c_rule_top10.
           me->create_dxf_style( EXPORTING
-                                  iv_cell_style    = lo_style_conditional->mode_top10-cell_style
+                                  iv_cell_style    = lo_style_cond->mode_top10-cell_style
                                   io_dxf_element   = lo_element
                                   io_ixml_document = lo_document
                                   it_cellxfs       = lt_cellxfs
@@ -6077,9 +6077,9 @@ METHOD create_xl_styles.
                                 CHANGING
                                   cv_dfx_count     = lv_dfx_count ).
 
-        WHEN zcl_excel_style_conditional=>c_rule_above_average.
+        WHEN zcl_excel_style_cond=>c_rule_above_average.
           me->create_dxf_style( EXPORTING
-                                  iv_cell_style    = lo_style_conditional->mode_above_average-cell_style
+                                  iv_cell_style    = lo_style_cond->mode_above_average-cell_style
                                   io_dxf_element   = lo_element
                                   io_ixml_document = lo_document
                                   it_cellxfs       = lt_cellxfs

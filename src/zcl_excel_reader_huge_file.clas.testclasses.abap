@@ -116,9 +116,7 @@ class lcl_test implementation.
 
 * There is no need to store an empty cell in the ABAP worksheet structure
 
-    data: lo_reader type ref to if_sxml_reader,
-          lo_ex type ref to lcx_not_found,
-          lv_text type string.
+    data: lo_reader type ref to if_sxml_reader.
     append `` to out->shared_strings.
     append `t` to out->shared_strings.
     lo_reader = get_reader(

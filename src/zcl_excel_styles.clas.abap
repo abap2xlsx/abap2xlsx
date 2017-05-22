@@ -36,9 +36,9 @@ public section.
       value(EP_STYLE_CODE) type I .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_STYLES
+*"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   data STYLES type ref to CL_OBJECT_COLLECTION .
@@ -49,9 +49,11 @@ ENDCLASS.
 CLASS ZCL_EXCEL_STYLES IMPLEMENTATION.
 
 
-METHOD add.
+method ADD.
+
+
   styles->add( ip_style ).
-ENDMETHOD.
+  endmethod.
 
 
 method CLEAR.
@@ -68,9 +70,11 @@ method CONSTRUCTOR.
   endmethod.
 
 
-METHOD get.
+method GET.
+
+
   eo_style ?= styles->if_object_collection~get( ip_index ).
-ENDMETHOD.
+  endmethod.
 
 
 method GET_ITERATOR.
@@ -87,10 +91,12 @@ method IS_EMPTY.
   endmethod.
 
 
-METHOD register_new_style.
+method REGISTER_NEW_STYLE.
+
+
   me->add( io_style ).
   ep_style_code = me->size( ) - 1. "style count starts from 0
-ENDMETHOD.
+  endmethod.
 
 
 method REMOVE.
