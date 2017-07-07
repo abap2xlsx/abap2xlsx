@@ -11,7 +11,6 @@
     <DECIMALS>000002</DECIMALS>
     <DDTEXT>Decimal number 8.2</DDTEXT>
    </DD01V>
-   <DD07V_TAB/>
   </asx:values>
  </asx:abap>
 </abapGit>

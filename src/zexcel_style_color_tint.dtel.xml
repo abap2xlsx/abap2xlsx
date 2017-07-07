@@ -20,7 +20,6 @@
     <DECIMALS>000016</DECIMALS>
     <OUTPUTLEN>000022</OUTPUTLEN>
    </DD04V>
-   <TPARA/>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -13,8 +13,6 @@
     <KEYKIND>N</KEYKIND>
     <DDTEXT>Table type for zexcel_s_converter_layo</DDTEXT>
    </DD40V>
-   <DD42V/>
-   <DD43V/>
   </asx:values>
  </asx:abap>
 </abapGit>

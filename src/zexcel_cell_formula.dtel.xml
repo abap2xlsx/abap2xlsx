@@ -17,7 +17,6 @@
     <DTELMASTER>E</DTELMASTER>
     <DATATYPE>STRG</DATATYPE>
    </DD04V>
-   <TPARA/>
   </asx:values>
  </asx:abap>
 </abapGit>
