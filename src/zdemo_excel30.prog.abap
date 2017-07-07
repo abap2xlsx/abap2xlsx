@@ -11,7 +11,7 @@ REPORT  zdemo_excel30.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+      lo_column               TYPE REF TO zcl_excel_column.
 
 
 DATA: lv_value  TYPE string,
@@ -81,16 +81,16 @@ START-OF-SELECTION.
     lv_count  = lv_count + 1.
   ENDWHILE.
 
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'A' ).
-  column_dimension->set_auto_size( abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'B' ).
-  column_dimension->set_auto_size( abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'C' ).
-  column_dimension->set_auto_size( abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'D' ).
-  column_dimension->set_auto_size( abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'E' ).
-  column_dimension->set_auto_size( abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'A' ).
+  lo_column->set_auto_size( abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'B' ).
+  lo_column->set_auto_size( abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'C' ).
+  lo_column->set_auto_size( abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'D' ).
+  lo_column->set_auto_size( abap_true ).
+  lo_column = lo_worksheet->get_column( ip_column = 'E' ).
+  lo_column->set_auto_size( abap_true ).
 
 
 

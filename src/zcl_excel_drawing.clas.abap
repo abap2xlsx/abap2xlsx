@@ -118,6 +118,8 @@ public section.
       value(IP_CHART) type ref to IF_IXML_DOCUMENT .
 *"* protected components of class ZCL_EXCEL_DRAWING
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_DRAWING
+*"* do not include other source files here!!!
 protected section.
 private section.
 

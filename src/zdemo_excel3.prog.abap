@@ -12,7 +12,7 @@ TYPE-POOLS: abap.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+      lo_column               TYPE REF TO zcl_excel_column.
 
 DATA: ls_table_settings       TYPE zexcel_s_table_settings.
 
@@ -55,8 +55,8 @@ START-OF-SELECTION.
 
   lo_worksheet->freeze_panes( ip_num_rows = 3 ). "freeze column headers when scrolling
 
-  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'E' ). "make date field a bit wider
-  column_dimension->set_width( ip_width = 11 ).
+  lo_column = lo_worksheet->get_column( ip_column = 'E' ). "make date field a bit wider
+  lo_column->set_width( ip_width = 11 ).
   " Add another table for data validations
   lo_worksheet = lo_excel->add_new_worksheet( ).
   lv_title = 'Data Validation'.

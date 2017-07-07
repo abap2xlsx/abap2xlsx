@@ -36,9 +36,9 @@ public section.
       value(EP_STYLE_CODE) type I .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_STYLES
+*"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   data STYLES type ref to CL_OBJECT_COLLECTION .

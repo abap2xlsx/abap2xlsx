@@ -37,7 +37,7 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lv_style_shrink_guid    TYPE zexcel_cell_style,
       lv_style_indent_guid    TYPE zexcel_cell_style.
 
-DATA: lo_row_dimension        TYPE REF TO zcl_excel_worksheet_rowdimensi.
+DATA: lo_row        TYPE REF TO zcl_excel_row.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '14_Alignment.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -117,8 +117,8 @@ START-OF-SELECTION.
 
   " Set row size for first 7 rows to 40
   DO 7 TIMES.
-    lo_row_dimension = lo_worksheet->get_row_dimension( sy-index ).
-    lo_row_dimension->set_row_height( 40 ).
+    lo_row = lo_worksheet->get_row( sy-index ).
+    lo_row->set_row_height( 40 ).
   ENDDO.
 
   "Horizontal alignment

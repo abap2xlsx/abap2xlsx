@@ -14,9 +14,9 @@ public section.
     redefinition .
 *"* protected components of class ZCL_EXCEL_CONVERTER_RESULT_WD
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_CONVERTER_RESULT_WD
+*"* protected components of class ZCL_EXCEL_CONVERTER_RESULT_WD
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   data WO_CONFIG type ref to CL_SALV_WD_CONFIG_TABLE .

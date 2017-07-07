@@ -112,9 +112,9 @@ public section.
       ZCX_EXCEL .
 *"* protected components of class ZCL_EXCEL_TABLE
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_TABLE
+*"* protected components of class ZCL_EXCEL_TABLE
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   data ID type I .

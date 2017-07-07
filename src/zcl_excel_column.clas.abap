@@ -1,9 +1,9 @@
-class ZCL_EXCEL_WORKSHEET_COLUMNDIME definition
+class ZCL_EXCEL_COLUMN definition
   public
   final
   create public .
 
-*"* public components of class ZCL_EXCEL_WORKSHEET_COLUMNDIME
+*"* public components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
 public section.
   type-pools ABAP .
@@ -38,17 +38,17 @@ public section.
     importing
       !IP_AUTO_SIZE type ABAP_BOOL
     returning
-      value(R_WORKSHEET_COLUMNDIME) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
   methods SET_COLLAPSED
     importing
       !IP_COLLAPSED type ABAP_BOOL
     returning
-      value(R_WORKSHEET_COLUMNDIME) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
   methods SET_COLUMN_INDEX
     importing
       !IP_INDEX type ZEXCEL_CELL_COLUMN_ALPHA
     returning
-      value(R_WORKSHEET_COLUMNDIME) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
   methods SET_OUTLINE_LEVEL
     importing
       !IP_OUTLINE_LEVEL type INT4 .
@@ -56,19 +56,19 @@ public section.
     importing
       !IP_VISIBLE type ABAP_BOOL
     returning
-      value(R_WORKSHEET_COLUMNDIME) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
   methods SET_WIDTH
     importing
       !IP_WIDTH type SIMPLE
     returning
-      value(R_WORKSHEET_COLUMNDIME) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME
+      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN
     raising
       ZCX_EXCEL .
   methods SET_XF_INDEX
     importing
       !IP_XF_INDEX type INT4
     returning
-      value(R_WORKSHEET_COLUMNDIME) type ref to ZCL_EXCEL_WORKSHEET_COLUMNDIME .
+      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
   methods SET_COLUMN_STYLE_BY_GUID
     importing
       !IP_STYLE_GUID type ZEXCEL_CELL_STYLE
@@ -79,10 +79,10 @@ public section.
       value(EP_STYLE_GUID) type ZEXCEL_CELL_STYLE
     raising
       ZCX_EXCEL .
-*"* protected components of class ZCL_EXCEL_WORKSHEET_COLUMNDIME
+*"* protected components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
 protected section.
-*"* private components of class ZCL_EXCEL_WORKSHEET_COLUMNDIME
+*"* private components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
 private section.
 
@@ -100,7 +100,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEET_COLUMNDIME IMPLEMENTATION.
+CLASS ZCL_EXCEL_COLUMN IMPLEMENTATION.
 
 
 method CONSTRUCTOR.
@@ -163,22 +163,22 @@ method GET_XF_INDEX.
   endmethod.
 
 
-method SET_AUTO_SIZE.
+METHOD set_auto_size.
   me->auto_size = ip_auto_size.
-  r_worksheet_columndime = me.
-  endmethod.
+  io_column = me.
+ENDMETHOD.
 
 
-method SET_COLLAPSED.
-  me->Collapsed = ip_Collapsed.
-  r_worksheet_columndime = me.
-  endmethod.
+METHOD set_collapsed.
+  me->collapsed = ip_collapsed.
+  io_column = me.
+ENDMETHOD.
 
 
-method SET_COLUMN_INDEX.
+METHOD set_column_index.
   me->column_index = zcl_excel_common=>convert_column2int( ip_index ).
-  r_worksheet_columndime = me.
-  endmethod.
+  io_column = me.
+ENDMETHOD.
 
 
 method SET_COLUMN_STYLE_BY_GUID.
@@ -205,26 +205,26 @@ method SET_OUTLINE_LEVEL.
   endmethod.
 
 
-method SET_VISIBLE.
-  me->Visible = ip_Visible.
-  r_worksheet_columndime = me.
-  endmethod.
+METHOD set_visible.
+  me->visible = ip_visible.
+  io_column = me.
+ENDMETHOD.
 
 
-method SET_WIDTH.
+METHOD set_width.
   TRY.
       me->width = ip_width.
-      r_worksheet_columndime = me.
+      io_column = me.
     CATCH cx_sy_conversion_no_number.
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = 'Unable to interpret width as number'.
   ENDTRY.
-  endmethod.
+ENDMETHOD.
 
 
-method SET_XF_INDEX.
-  me->XF_INDEX = ip_XF_INDEX.
-  r_worksheet_columndime = me.
-  endmethod.
+METHOD set_xf_index.
+  me->xf_index = ip_xf_index.
+  io_column = me.
+ENDMETHOD.
 ENDCLASS.

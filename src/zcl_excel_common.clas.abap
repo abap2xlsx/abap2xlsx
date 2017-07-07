@@ -198,9 +198,9 @@ public section.
       ZCX_EXCEL .
 *"* protected components of class ZCL_EXCEL_COMMON
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_COMMON
+*"* protected components of class ZCL_EXCEL_COMMON
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   class-data C_EXCEL_COL_MODULE type INT2 value 64. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .

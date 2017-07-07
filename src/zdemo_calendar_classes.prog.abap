@@ -209,15 +209,15 @@ CLASS zcl_helper IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.                    "load_image
   METHOD add_calendar.
-    DATA: day_names TYPE TABLE OF t246.
-    DATA: row     TYPE zexcel_cell_row,
-          row_max TYPE i,
-          col_int TYPE zexcel_cell_column,
-          col_max TYPE i,
-          from_col_int TYPE zexcel_cell_column,
-          col     TYPE zexcel_cell_column_alpha,
-          lr_col_dim TYPE REF TO zcl_excel_worksheet_columndime,
-          lr_row_dim TYPE REF TO zcl_excel_worksheet_rowdimensi.
+    DATA: day_names     TYPE TABLE OF t246.
+    DATA: row           TYPE zexcel_cell_row,
+          row_max       TYPE i,
+          col_int       TYPE zexcel_cell_column,
+          col_max       TYPE i,
+          from_col_int  TYPE zexcel_cell_column,
+          col           TYPE zexcel_cell_column_alpha,
+          lo_column     TYPE REF TO zcl_excel_column,
+          lo_row        TYPE REF TO zcl_excel_row.
     DATA: lv_date          TYPE datum,
           value            TYPE string,
           weekday          TYPE wotnr,
@@ -325,16 +325,16 @@ CLASS zcl_helper IMPLEMENTATION.
       ELSE.
         width = '11.4'.
       ENDIF.
-      lr_col_dim = c_worksheet->get_column_dimension( col ).
-      lr_col_dim->set_width( width ).
+      lo_column = c_worksheet->get_column( col ).
+      lo_column->set_width( width ).
       col_int = col_int + 1.
     ENDWHILE.
     row = i_from_row + 1.
     row_max = i_from_row + 6.
     WHILE row <= row_max.
       height = 50.
-      lr_row_dim = c_worksheet->get_row_dimension( row ).
-      lr_row_dim->set_row_height( height ).
+      lo_row = c_worksheet->get_row( row ).
+      lo_row->set_row_height( height ).
       row = row + 1.
     ENDWHILE.
   ENDMETHOD.                    "add_calendar
@@ -342,8 +342,8 @@ CLASS zcl_helper IMPLEMENTATION.
     DATA: value TYPE string,
           hyperlink TYPE REF TO zcl_excel_hyperlink.
 
-    value = 'Created with abap2xlsx. Find more information at http://abap2xlsx.org.'(002).
-    hyperlink = zcl_excel_hyperlink=>create_external_link( 'http://abap2xlsx.org' ). "#EC NOTEXT
+    value = 'Created with abap2xlsx. Find more information at http://www.plinky.it/abap/abap2xlsx.php.'(002).
+    hyperlink = zcl_excel_hyperlink=>create_external_link( 'http://www.plinky.it/abap/abap2xlsx.php' ). "#EC NOTEXT
     c_worksheet->set_cell(
       EXPORTING
         ip_column    = i_from_col    " Cell Column
@@ -360,12 +360,12 @@ CLASS zcl_helper IMPLEMENTATION.
           day              TYPE i,
           value            TYPE string,
           weekday          TYPE wotnr.
-    DATA: row     TYPE zexcel_cell_row,
-          from_col_int TYPE zexcel_cell_column,
-          col_int TYPE zexcel_cell_column,
-          col     TYPE zexcel_cell_column_alpha.
-    DATA: lo_col_dim TYPE REF TO zcl_excel_worksheet_columndime,
-          lo_row_dim TYPE REF TO zcl_excel_worksheet_rowdimensi.
+    DATA: row               TYPE zexcel_cell_row,
+          from_col_int      TYPE zexcel_cell_column,
+          col_int           TYPE zexcel_cell_column,
+          col               TYPE zexcel_cell_column_alpha.
+    DATA: lo_column         TYPE REF TO zcl_excel_column,
+          lo_row            TYPE REF TO zcl_excel_row.
 
     FIELD-SYMBOLS: <day_name> LIKE LINE OF day_names.
 
@@ -410,8 +410,8 @@ CLASS zcl_helper IMPLEMENTATION.
           ip_style     = i_day_style    " Single-Character Indicator
       ).
       " width
-      lo_col_dim = c_worksheet->get_column_dimension( col ).
-      lo_col_dim->set_width( '3.6' ).
+      lo_column = c_worksheet->get_column( col ).
+      lo_column->set_width( '3.6' ).
 
 
       lv_date = lv_date + 1.
@@ -424,8 +424,8 @@ CLASS zcl_helper IMPLEMENTATION.
         ip_row       = row    " Cell Row
         ip_value     = ' '    " Cell Value
     ).
-    lo_row_dim = c_worksheet->get_row_dimension( row ).
-    lo_row_dim->set_row_height( '5.0' ).
+    lo_row = c_worksheet->get_row( row ).
+    lo_row->set_row_height( '5.0' ).
     row = i_from_row + 3.
     zcl_helper=>add_a2x_footer(
       EXPORTING
@@ -441,8 +441,8 @@ CLASS zcl_helper IMPLEMENTATION.
       col_int = from_col_int + day + 2.
       col = zcl_excel_common=>convert_column2alpha( col_int ).
       " width
-      lo_col_dim = c_worksheet->get_column_dimension( col ).
-      lo_col_dim->set_width( '3.6' ).
+      lo_column = c_worksheet->get_column( col ).
+      lo_column->set_width( '3.6' ).
     ENDWHILE.
   ENDMETHOD.                    "ADD_CALENDAR_LANDSCAPE
 

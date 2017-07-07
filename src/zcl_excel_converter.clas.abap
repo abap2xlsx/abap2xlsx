@@ -246,42 +246,29 @@ ENDCLASS.
 CLASS ZCL_EXCEL_CONVERTER IMPLEMENTATION.
 
 
-method ASK_OPTION.
+METHOD ask_option.
   DATA: ls_sval TYPE sval,
         lt_sval TYPE STANDARD TABLE OF sval,
         l_returncode TYPE string,
         lt_fields    TYPE ddfields,
         ls_fields    TYPE dfies.
 
-  FIELD-SYMBOLS: <fs> TYPE ANY.
+  FIELD-SYMBOLS: <fs> TYPE any.
 
   rs_option = ws_option.
 
   CALL FUNCTION 'DDIF_FIELDINFO_GET'
     EXPORTING
-      tabname              = 'ZEXCEL_S_CONVERTER_OPTION'
-*   FIELDNAME            = ' '
-*   LANGU                = sy-langu
-*   LFIELDNAME           = ' '
-*   ALL_TYPES            = ' '
-*   GROUP_NAMES          = ' '
-*   UCLEN                =
-* IMPORTING
-*   X030L_WA             =
-*   DDOBJTYPE            =
-*   DFIES_WA             =
-*   LINES_DESCR          =
+      tabname        = 'ZEXCEL_S_CONVERTER_OPTION'
     TABLES
-      dfies_tab            = lt_fields
-*   FIXED_VALUES         =
-  EXCEPTIONS
-    not_found            = 1
-    internal_error       = 2
-    OTHERS               = 3
-            .
+      dfies_tab      = lt_fields
+    EXCEPTIONS
+      not_found      = 1
+      internal_error = 2
+      OTHERS         = 3.
   IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
   ENDIF.
 
   LOOP AT lt_fields INTO ls_fields.
@@ -304,21 +291,17 @@ method ASK_OPTION.
 
   CALL FUNCTION 'POPUP_GET_VALUES'
     EXPORTING
-*     NO_VALUE_CHECK        = space
-      popup_title           = 'Excel creation options'(008)
-*     START_COLUMN          = '5'
-*     START_ROW             = '5'
+      popup_title     = 'Excel creation options'(008)
     IMPORTING
-      returncode            = l_returncode
+      returncode      = l_returncode
     TABLES
-      fields                = lt_sval
+      fields          = lt_sval
     EXCEPTIONS
-      error_in_fields       = 1
-      OTHERS                = 2
-            .
+      error_in_fields = 1
+      OTHERS          = 2.
   IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
   ELSE.
     IF l_returncode = 'A'.
       RAISE EXCEPTION TYPE zcx_excel.
@@ -333,7 +316,7 @@ method ASK_OPTION.
       rs_option = ws_option.
     ENDIF.
   ENDIF.
-  endmethod.
+ENDMETHOD.
 
 
 method BIND_CELLS.
@@ -351,66 +334,67 @@ method BIND_CELLS.
   endmethod.
 
 
-method BIND_TABLE.
-  data: lt_field_catalog  type zexcel_t_fieldcatalog,
-        ls_field_catalog  type zexcel_s_fieldcatalog,
-        ls_fcat           type zexcel_s_converter_fcat,
-        lo_col_dim        type ref to zcl_excel_worksheet_columndime,
-        l_col_int         type zexcel_cell_column,
-        l_col_alpha       type zexcel_cell_column_alpha,
-        ls_settings       type zexcel_s_table_settings,
-        l_line            type i.
+METHOD bind_table.
+  DATA: lt_field_catalog  TYPE zexcel_t_fieldcatalog,
+        ls_field_catalog  TYPE zexcel_s_fieldcatalog,
+        ls_fcat           TYPE zexcel_s_converter_fcat,
+        lo_column         TYPE REF TO zcl_excel_column,
+        lo_row            TYPE REF TO zcl_excel_row,
+        lv_col_int        TYPE zexcel_cell_column,
+        lv_col_alpha      TYPE zexcel_cell_column_alpha,
+        ls_settings       TYPE zexcel_s_table_settings,
+        lv_line           TYPE i.
 
-  field-symbols: <fs_tab>         type any table.
+  FIELD-SYMBOLS: <fs_tab>         TYPE ANY TABLE.
 
-  assign wo_data->* to <fs_tab> .
+  ASSIGN wo_data->* TO <fs_tab> .
 
   ls_settings-table_style      = i_style_table.
   ls_settings-top_left_column  = zcl_excel_common=>convert_column2alpha( ip_column = w_col_int ).
   ls_settings-top_left_row     = w_row_int.
   ls_settings-show_row_stripes = ws_layout-is_stripped.
 
-  describe table  wt_fieldcatalog  lines l_line.
-  l_line = l_line + 1 + w_col_int.
-  ls_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( ip_column = l_line ).
+  DESCRIBE TABLE  wt_fieldcatalog  LINES lv_line.
+  lv_line = lv_line + 1 + w_col_int.
+  ls_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( ip_column = lv_line ).
 
-  describe table <fs_tab> lines l_line.
-  ls_settings-bottom_right_row = l_line + 1 + w_row_int.
-  sort wt_fieldcatalog by position.
-  loop at wt_fieldcatalog into ls_fcat.
-    move-corresponding ls_fcat to ls_field_catalog.
+  DESCRIBE TABLE <fs_tab> LINES lv_line.
+  ls_settings-bottom_right_row = lv_line + 1 + w_row_int.
+  SORT wt_fieldcatalog BY position.
+  LOOP AT wt_fieldcatalog INTO ls_fcat.
+    MOVE-CORRESPONDING ls_fcat TO ls_field_catalog.
     ls_field_catalog-dynpfld = abap_true.
-    insert ls_field_catalog into table lt_field_catalog.
-  endloop.
+    INSERT ls_field_catalog INTO TABLE lt_field_catalog.
+  ENDLOOP.
 
   wo_worksheet->bind_table(
-    exporting
+    EXPORTING
       ip_table          = <fs_tab>
       it_field_catalog  = lt_field_catalog
       is_table_settings = ls_settings
-    importing
+    IMPORTING
       es_table_settings = ls_settings
          ).
-  loop at wt_fieldcatalog into ls_fcat.
-    l_col_int = w_col_int + ls_fcat-position - 1.
-    l_col_alpha = zcl_excel_common=>convert_column2alpha( l_col_int ).
+  LOOP AT wt_fieldcatalog INTO ls_fcat.
+    lv_col_int = w_col_int + ls_fcat-position - 1.
+    lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_col_int ).
 * Freeze panes
-    if ls_fcat-fix_column = abap_true.
-      add 1 to r_freeze_col.
-    endif.
+    IF ls_fcat-fix_column = abap_true.
+      ADD 1 TO r_freeze_col.
+    ENDIF.
 * Now let's check for optimized
-    if ls_fcat-is_optimized = abap_true.
-      lo_col_dim = wo_worksheet->get_column_dimension( ip_column = l_col_alpha ).
-      lo_col_dim->set_auto_size( ip_auto_size = abap_true ) .
-    endif.
+    IF ls_fcat-is_optimized = abap_true.
+      lo_column = wo_worksheet->get_column( ip_column = lv_col_alpha ).
+      lo_column->set_auto_size( ip_auto_size = abap_true ) .
+    ENDIF.
 * Now let's check for visible
-    if ls_fcat-is_hidden = abap_true.
-      lo_col_dim = wo_worksheet->get_column_dimension( ip_column = l_col_alpha ).
-      lo_col_dim->set_visible( ip_visible = abap_false ) .
-    endif.
-  endloop.
+    IF ls_fcat-is_hidden = abap_true.
+      lo_column = wo_worksheet->get_column( ip_column = lv_col_alpha ).
+      lo_column->set_visible( ip_visible = abap_false ) .
+    ENDIF.
+  ENDLOOP.
 
-  endmethod.
+ENDMETHOD.
 
 
 method CLASS_CONSTRUCTOR.
@@ -1158,7 +1142,8 @@ method LOOP_NORMAL.
         l_col_alpha       TYPE zexcel_cell_column_alpha,
         l_cell_value      TYPE zexcel_cell_value,
         l_s_color         TYPE abap_bool,
-        lo_col_dim        TYPE REF TO zcl_excel_worksheet_columndime,
+        lo_column         TYPE REF TO zcl_excel_column,
+        lo_row            TYPE REF TO zcl_excel_row,
         l_formula         TYPE zexcel_cell_formula,
         l_style           TYPE zexcel_cell_style,
         l_cells           TYPE i,
@@ -1238,13 +1223,13 @@ method LOOP_NORMAL.
     ENDLOOP.
 * Now let's check for optimized
     IF <fs_sfcat>-is_optimized = abap_true .
-      lo_col_dim = wo_worksheet->get_column_dimension( ip_column = l_col_alpha ).
-      lo_col_dim->set_auto_size( ip_auto_size = abap_true ) .
+      lo_column = wo_worksheet->get_column( ip_column = l_col_alpha ).
+      lo_column->set_auto_size( ip_auto_size = abap_true ) .
     ENDIF.
 * Now let's check for visible
     IF <fs_sfcat>-is_hidden = abap_true.
-      lo_col_dim = wo_worksheet->get_column_dimension( ip_column = l_col_alpha ).
-      lo_col_dim->set_visible( ip_visible = abap_false ) .
+      lo_column = wo_worksheet->get_column( ip_column = l_col_alpha ).
+      lo_column->set_visible( ip_visible = abap_false ) .
     ENDIF.
 * Now let's check for total versus subtotal.
     IF <fs_sfcat>-totals_function IS NOT INITIAL.
@@ -1272,8 +1257,8 @@ method LOOP_SUBTOTAL.
         l_col_alpha_start TYPE zexcel_cell_column_alpha,
         l_cell_value      TYPE zexcel_cell_value,
         l_s_color         TYPE abap_bool,
-        lo_col_dim        TYPE REF TO zcl_excel_worksheet_columndime,
-        lo_row_dim        TYPE REF TO zcl_excel_worksheet_rowdimensi,
+        lo_column         TYPE REF TO zcl_excel_column,
+        lo_row            TYPE REF TO zcl_excel_row,
         l_formula         TYPE zexcel_cell_formula,
         l_style           TYPE zexcel_cell_style,
         l_text            TYPE string,
@@ -1361,13 +1346,13 @@ method LOOP_SUBTOTAL.
                                     ip_value     = l_cell_value
                                     ip_abap_type = cl_abap_typedescr=>typekind_string
                                     ip_style     = <fs_sfcat>-style_subtotal  ).
-            lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-            lo_row_dim->set_outline_level( ip_outline_level = <fs_sfcat>-sort_level ) .
+            lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+            lo_row->set_outline_level( ip_outline_level = <fs_sfcat>-sort_level ) .
             IF <fs_sfcat>-is_collapsed = abap_true.
               IF <fs_sfcat>-sort_level >  l_hidden.
-                lo_row_dim->set_visible( ip_visible =  abap_false ) .
+                lo_row->set_visible( ip_visible =  abap_false ) .
               ENDIF.
-              lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
+              lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
             ENDIF.
 * Now let's change the key
             ADD 1 TO l_row_int.
@@ -1405,21 +1390,21 @@ method LOOP_SUBTOTAL.
                               ip_style     = <fs_sfcat>-style_subtotal ).
 
       l_sort_level = <fs_sfcat>-sort_level.
-      lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-      lo_row_dim->set_outline_level( ip_outline_level = l_sort_level ) .
+      lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+      lo_row->set_outline_level( ip_outline_level = l_sort_level ) .
       IF <fs_sfcat>-is_collapsed = abap_true.
         IF <fs_sfcat>-sort_level >  l_hidden.
-          lo_row_dim->set_visible( ip_visible =  abap_false ) .
+          lo_row->set_visible( ip_visible =  abap_false ) .
         ENDIF.
-        lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
+        lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
       ENDIF.
       ADD 1 TO l_row_int.
     ENDIF.
   ENDLOOP.
 * Let's write the Grand total
   l_sort_level = 0.
-  lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-  lo_row_dim->set_outline_level( ip_outline_level = l_sort_level ) .
+  lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+  lo_row->set_outline_level( ip_outline_level = l_sort_level ) .
 *  lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) . Not on grand total
 
   l_text    = create_text_subtotal( i_value = 'Grand'(002)
@@ -1476,10 +1461,10 @@ method LOOP_SUBTOTAL.
                                         ip_formula   = l_formula
                                         ip_style     = <fs_sfcat>-style_subtotal ).
                 IF <fs_sfcat>-is_collapsed = abap_true.
-                  lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-                  lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
+                  lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+                  lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
                   IF <fs_sfcat>-sort_level >  l_hidden.
-                    lo_row_dim->set_visible( ip_visible =  abap_false ) .
+                    lo_row->set_visible( ip_visible =  abap_false ) .
                   ENDIF.
                 ENDIF.
                 ADD 1 TO l_row_int.
@@ -1495,11 +1480,11 @@ method LOOP_SUBTOTAL.
         ENDIF.
       ENDDO.
 * Let's set the row dimension values
-      lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-      lo_row_dim->set_outline_level( ip_outline_level = ws_layout-max_subtotal_level ) .
+      lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+      lo_row->set_outline_level( ip_outline_level = ws_layout-max_subtotal_level ) .
       IF <fs_sfcat>-is_collapsed  = abap_true.
-        lo_row_dim->set_visible( ip_visible =  abap_false ) .
-        lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
+        lo_row->set_visible( ip_visible =  abap_false ) .
+        lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ) .
       ENDIF.
 * Now let's write the cell values
       IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
@@ -1555,8 +1540,8 @@ method LOOP_SUBTOTAL.
                                       ip_formula   = l_formula
                                       ip_style     = <fs_sfcat>-style_subtotal ).
               IF <fs_sfcat>-is_collapsed = abap_true.
-                lo_row_dim = wo_worksheet->get_row_dimension( ip_row = l_row_int ).
-                lo_row_dim->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
+                lo_row = wo_worksheet->get_row( ip_row = l_row_int ).
+                lo_row->set_collapsed( ip_collapsed =  <fs_sfcat>-is_collapsed ).
               ENDIF.
               ADD 1 TO l_row_int.
             ELSE.
@@ -1587,13 +1572,13 @@ method LOOP_SUBTOTAL.
     ENDIF.
 * Now let's check for optimized
     IF <fs_sfcat>-is_optimized = abap_true.
-      lo_col_dim = wo_worksheet->get_column_dimension( ip_column = l_col_alpha ).
-      lo_col_dim->set_auto_size( ip_auto_size = abap_true ) .
+      lo_column = wo_worksheet->get_column( ip_column = l_col_alpha ).
+      lo_column->set_auto_size( ip_auto_size = abap_true ) .
     ENDIF.
 * Now let's check for visible
     IF <fs_sfcat>-is_hidden = abap_true.
-      lo_col_dim = wo_worksheet->get_column_dimension( ip_column = l_col_alpha ).
-      lo_col_dim->set_visible( ip_visible = abap_false ) .
+      lo_column = wo_worksheet->get_column( ip_column = l_col_alpha ).
+      lo_column->set_visible( ip_visible = abap_false ) .
     ENDIF.
   ENDLOOP.
 

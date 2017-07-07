@@ -191,8 +191,8 @@ START-OF-SELECTION.
         lo_worksheet            TYPE REF TO zcl_excel_worksheet,
         lo_style_body           TYPE REF TO zcl_excel_style,
         lo_border_dark          TYPE REF TO zcl_excel_style_border,
-        column_dimension        TYPE REF TO zcl_excel_worksheet_columndime,
-        row_dimension           TYPE REF TO zcl_excel_worksheet_rowdimensi.
+        lo_column               TYPE REF TO zcl_excel_column,
+        lo_row                  TYPE REF TO zcl_excel_row.
 
   DATA: lv_style_body_even_guid   TYPE zexcel_cell_style,
         lv_style_body_green       TYPE zexcel_cell_style.
@@ -358,8 +358,8 @@ START-OF-SELECTION.
                             ip_style  = lv_style_body_even_guid ).
   ENDLOOP.
   " Hide first row
-  row_dimension = lo_worksheet->get_row_dimension( 1 ).
-  row_dimension->set_visible( abap_false ).
+  lo_row = lo_worksheet->get_row( 1 ).
+  lo_row->set_visible( abap_false ).
 
   DATA: highest_column TYPE zexcel_cell_column,
         count TYPE int4,
@@ -369,46 +369,10 @@ START-OF-SELECTION.
   count = 1.
   WHILE count <= highest_column.
     col_alpha = zcl_excel_common=>convert_column2alpha( ip_column = count ).
-    column_dimension = lo_worksheet->get_column_dimension( ip_column = col_alpha ).
-    column_dimension->set_auto_size( ip_auto_size = abap_true ).
+    lo_column = lo_worksheet->get_column( ip_column = col_alpha ).
+    lo_column->set_auto_size( ip_auto_size = abap_true ).
     count = count + 1.
   ENDWHILE.
-*  " Set Column width manuall
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'A' ).
-*  column_dimension->set_width( ip_width = 11 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'B' ).
-*  column_dimension->set_width( ip_width = 11 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'C' ).
-*  column_dimension->set_width( ip_width = 35 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'E' ).
-*  column_dimension->set_width( ip_width = 18 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'F' ).
-*  column_dimension->set_width( ip_width =  5 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'G' ).
-*  column_dimension->set_width( ip_width =  6 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'H' ).
-*  column_dimension->set_width( ip_width = 12 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'I' ).
-*  column_dimension->set_width( ip_width =  3 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'J' ).
-*  column_dimension->set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'K' ).
-*  column_dimension->set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'L' ).
-*  column_dimension->set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'M' ).
-*  column_dimension->set_width( ip_width = 13 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'N' ).
-*  column_dimension->set_width( ip_width = 12 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'O' ).
-*  column_dimension->set_width( ip_width =  9 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'P' ).
-*  column_dimension->set_width( ip_width = 12 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'Q' ).
-*  column_dimension->set_width( ip_width =  9 ).
-*  column_dimension = lo_worksheet->get_column_dimension( ip_column = 'R' ).
-*  column_dimension->set_width( ip_width = 40 ).
-
 
 *** Create output
   lcl_output=>output( lo_excel ).

@@ -35,9 +35,9 @@ public section.
       value(R_SIZE) type I .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_AUTOFILTERS
+*"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   types:

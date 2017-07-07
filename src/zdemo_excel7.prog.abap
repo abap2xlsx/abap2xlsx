@@ -10,7 +10,7 @@ REPORT  zdemo_excel7.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style_conditional    TYPE REF TO zcl_excel_style_conditional.
+      lo_style_cond           TYPE REF TO zcl_excel_style_cond.
 
 DATA: ls_iconset3             TYPE zexcel_conditional_iconset,
       ls_iconset4             TYPE zexcel_conditional_iconset,
@@ -27,54 +27,54 @@ START-OF-SELECTION.
 
   CREATE OBJECT lo_excel.
 
-  ls_iconset3-cfvo1_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset3-cfvo1_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset3-cfvo1_value              = '0'.
-  ls_iconset3-cfvo2_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset3-cfvo2_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset3-cfvo2_value              = '33'.
-  ls_iconset3-cfvo3_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset3-cfvo3_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset3-cfvo3_value              = '66'.
-  ls_iconset3-showvalue                = zcl_excel_style_conditional=>c_showvalue_true.
+  ls_iconset3-showvalue                = zcl_excel_style_cond=>c_showvalue_true.
 
-  ls_iconset4-cfvo1_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset4-cfvo1_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset4-cfvo1_value              = '0'.
-  ls_iconset4-cfvo2_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset4-cfvo2_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset4-cfvo2_value              = '25'.
-  ls_iconset4-cfvo3_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset4-cfvo3_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset4-cfvo3_value              = '50'.
-  ls_iconset4-cfvo4_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset4-cfvo4_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset4-cfvo4_value              = '75'.
-  ls_iconset4-showvalue                = zcl_excel_style_conditional=>c_showvalue_true.
+  ls_iconset4-showvalue                = zcl_excel_style_cond=>c_showvalue_true.
 
-  ls_iconset5-cfvo1_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset5-cfvo1_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset5-cfvo1_value              = '0'.
-  ls_iconset5-cfvo2_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset5-cfvo2_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset5-cfvo2_value              = '20'.
-  ls_iconset5-cfvo3_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset5-cfvo3_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset5-cfvo3_value              = '40'.
-  ls_iconset5-cfvo4_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset5-cfvo4_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset5-cfvo4_value              = '60'.
-  ls_iconset5-cfvo5_type               = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset5-cfvo5_type               = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset5-cfvo5_value              = '80'.
-  ls_iconset5-showvalue                = zcl_excel_style_conditional=>c_showvalue_true.
+  ls_iconset5-showvalue                = zcl_excel_style_cond=>c_showvalue_true.
 
-  ls_databar-cfvo1_type               = zcl_excel_style_conditional=>c_cfvo_type_min.
+  ls_databar-cfvo1_type               = zcl_excel_style_cond=>c_cfvo_type_min.
   ls_databar-cfvo1_value              = '0'.
-  ls_databar-cfvo2_type               = zcl_excel_style_conditional=>c_cfvo_type_max.
+  ls_databar-cfvo2_type               = zcl_excel_style_cond=>c_cfvo_type_max.
   ls_databar-cfvo2_value              = '0'.
   ls_databar-colorrgb                 = 'FF638EC6'.
 
-  ls_colorscale2-cfvo1_type               = zcl_excel_style_conditional=>c_cfvo_type_min.
+  ls_colorscale2-cfvo1_type               = zcl_excel_style_cond=>c_cfvo_type_min.
   ls_colorscale2-cfvo1_value              = '0'.
-  ls_colorscale2-cfvo2_type               = zcl_excel_style_conditional=>c_cfvo_type_percentile.
+  ls_colorscale2-cfvo2_type               = zcl_excel_style_cond=>c_cfvo_type_percentile.
   ls_colorscale2-cfvo2_value              = '50'.
   ls_colorscale2-colorrgb1                = 'FFF8696B'.
   ls_colorscale2-colorrgb2                = 'FF63BE7B'.
 
-  ls_colorscale3-cfvo1_type               = zcl_excel_style_conditional=>c_cfvo_type_min.
+  ls_colorscale3-cfvo1_type               = zcl_excel_style_cond=>c_cfvo_type_min.
   ls_colorscale3-cfvo1_value              = '0'.
-  ls_colorscale3-cfvo2_type               = zcl_excel_style_conditional=>c_cfvo_type_percentile.
+  ls_colorscale3-cfvo2_type               = zcl_excel_style_cond=>c_cfvo_type_percentile.
   ls_colorscale3-cfvo2_value              = '50'.
-  ls_colorscale3-cfvo3_type               = zcl_excel_style_conditional=>c_cfvo_type_max.
+  ls_colorscale3-cfvo3_type               = zcl_excel_style_cond=>c_cfvo_type_max.
   ls_colorscale3-cfvo3_value              = '0'.
   ls_colorscale3-colorrgb1                = 'FFF8696B'.
   ls_colorscale3-colorrgb2                = 'FFFFEB84'.
@@ -85,14 +85,14 @@ START-OF-SELECTION.
 
 * ICONSET
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
 
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3arrows.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3arrows.
 
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'B'
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'B'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'B'
                                    ip_stop_row      = 9 ).
@@ -104,12 +104,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'B' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'B' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3arrowsgray.
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'C'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3arrowsgray.
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'C'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'C'
                                    ip_stop_row      = 9 ).
@@ -120,12 +120,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 7 ip_column = 'C' ip_value = 30 ).
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'C' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'C' ip_value = 50 ).
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3flags.
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'D'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3flags.
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'D'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'D'
                                    ip_stop_row      = 9 ).
@@ -137,12 +137,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'D' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'D' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3trafficlights.
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'E'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3trafficlights.
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'E'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'E'
                                    ip_stop_row      = 9 ).
@@ -154,12 +154,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'E' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'E' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3trafficlights2.
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'F'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3trafficlights2.
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'F'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'F'
                                    ip_stop_row      = 9 ).
@@ -171,12 +171,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'F' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'F' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3signs.
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'G'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3signs.
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'G'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'G'
                                    ip_stop_row      = 9 ).
@@ -188,12 +188,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'G' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'G' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3symbols.
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'H'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3symbols.
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'H'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'H'
                                    ip_stop_row      = 9 ).
@@ -205,12 +205,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'H' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'H' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset3-iconset                  = zcl_excel_style_conditional=>c_iconset_3symbols2.
-  lo_style_conditional->mode_iconset  = ls_iconset3.
-  lo_style_conditional->set_range( ip_start_column  = 'I'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset3-iconset                  = zcl_excel_style_cond=>c_iconset_3symbols2.
+  lo_style_cond->mode_iconset  = ls_iconset3.
+  lo_style_cond->set_range( ip_start_column  = 'I'
                                    ip_start_row     = 5
                                    ip_stop_column   = 'I'
                                    ip_stop_row      = 9 ).
@@ -222,12 +222,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'I' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 9 ip_column = 'I' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset4-iconset                  = zcl_excel_style_conditional=>c_iconset_4arrows.
-  lo_style_conditional->mode_iconset  = ls_iconset4.
-  lo_style_conditional->set_range( ip_start_column  = 'B'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset4-iconset                  = zcl_excel_style_cond=>c_iconset_4arrows.
+  lo_style_cond->mode_iconset  = ls_iconset4.
+  lo_style_cond->set_range( ip_start_column  = 'B'
                                    ip_start_row     = 12
                                    ip_stop_column   = 'B'
                                    ip_stop_row      = 16 ).
@@ -239,12 +239,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 15 ip_column = 'B' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 16 ip_column = 'B' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset4-iconset                  = zcl_excel_style_conditional=>c_iconset_4arrowsgray.
-  lo_style_conditional->mode_iconset  = ls_iconset4.
-  lo_style_conditional->set_range( ip_start_column  = 'C'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset4-iconset                  = zcl_excel_style_cond=>c_iconset_4arrowsgray.
+  lo_style_cond->mode_iconset  = ls_iconset4.
+  lo_style_cond->set_range( ip_start_column  = 'C'
                                    ip_start_row     = 12
                                    ip_stop_column   = 'C'
                                    ip_stop_row      = 16 ).
@@ -256,12 +256,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 15 ip_column = 'C' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 16 ip_column = 'C' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset4-iconset                  = zcl_excel_style_conditional=>c_iconset_4redtoblack.
-  lo_style_conditional->mode_iconset  = ls_iconset4.
-  lo_style_conditional->set_range( ip_start_column  = 'D'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset4-iconset                  = zcl_excel_style_cond=>c_iconset_4redtoblack.
+  lo_style_cond->mode_iconset  = ls_iconset4.
+  lo_style_cond->set_range( ip_start_column  = 'D'
                                    ip_start_row     = 12
                                    ip_stop_column   = 'D'
                                    ip_stop_row      = 16 ).
@@ -273,12 +273,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 15 ip_column = 'D' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 16 ip_column = 'D' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset4-iconset                  = zcl_excel_style_conditional=>c_iconset_4rating.
-  lo_style_conditional->mode_iconset  = ls_iconset4.
-  lo_style_conditional->set_range( ip_start_column  = 'E'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset4-iconset                  = zcl_excel_style_cond=>c_iconset_4rating.
+  lo_style_cond->mode_iconset  = ls_iconset4.
+  lo_style_cond->set_range( ip_start_column  = 'E'
                                    ip_start_row     = 12
                                    ip_stop_column   = 'E'
                                    ip_stop_row      = 16 ).
@@ -290,12 +290,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 15 ip_column = 'E' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 16 ip_column = 'E' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset4-iconset                  = zcl_excel_style_conditional=>c_iconset_4trafficlights.
-  lo_style_conditional->mode_iconset  = ls_iconset4.
-  lo_style_conditional->set_range( ip_start_column  = 'F'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset4-iconset                  = zcl_excel_style_cond=>c_iconset_4trafficlights.
+  lo_style_cond->mode_iconset  = ls_iconset4.
+  lo_style_cond->set_range( ip_start_column  = 'F'
                                    ip_start_row     = 12
                                    ip_stop_column   = 'F'
                                    ip_stop_row      = 16 ).
@@ -307,12 +307,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 15 ip_column = 'F' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 16 ip_column = 'F' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset5-iconset                  = zcl_excel_style_conditional=>c_iconset_5arrows.
-  lo_style_conditional->mode_iconset  = ls_iconset5.
-  lo_style_conditional->set_range( ip_start_column  = 'B'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset5-iconset                  = zcl_excel_style_cond=>c_iconset_5arrows.
+  lo_style_cond->mode_iconset  = ls_iconset5.
+  lo_style_cond->set_range( ip_start_column  = 'B'
                                    ip_start_row     = 19
                                    ip_stop_column   = 'B'
                                    ip_stop_row      = 23 ).
@@ -324,12 +324,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 22 ip_column = 'B' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 23 ip_column = 'B' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset5-iconset                  = zcl_excel_style_conditional=>c_iconset_5arrowsgray.
-  lo_style_conditional->mode_iconset  = ls_iconset5.
-  lo_style_conditional->set_range( ip_start_column  = 'C'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset5-iconset                  = zcl_excel_style_cond=>c_iconset_5arrowsgray.
+  lo_style_cond->mode_iconset  = ls_iconset5.
+  lo_style_cond->set_range( ip_start_column  = 'C'
                                    ip_start_row     = 19
                                    ip_stop_column   = 'C'
                                    ip_stop_row      = 23 ).
@@ -341,12 +341,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 22 ip_column = 'C' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 23 ip_column = 'C' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset5-iconset                  = zcl_excel_style_conditional=>c_iconset_5rating.
-  lo_style_conditional->mode_iconset  = ls_iconset5.
-  lo_style_conditional->set_range( ip_start_column  = 'D'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset5-iconset                  = zcl_excel_style_cond=>c_iconset_5rating.
+  lo_style_cond->mode_iconset  = ls_iconset5.
+  lo_style_cond->set_range( ip_start_column  = 'D'
                                    ip_start_row     = 19
                                    ip_stop_column   = 'D'
                                    ip_stop_row      = 23 ).
@@ -358,12 +358,12 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 22 ip_column = 'D' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 23 ip_column = 'D' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule          = zcl_excel_style_conditional=>c_rule_iconset.
-  lo_style_conditional->priority      = 1.
-  ls_iconset5-iconset                  = zcl_excel_style_conditional=>c_iconset_5quarters.
-  lo_style_conditional->mode_iconset  = ls_iconset5.
-  lo_style_conditional->set_range( ip_start_column  = 'E'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule          = zcl_excel_style_cond=>c_rule_iconset.
+  lo_style_cond->priority      = 1.
+  ls_iconset5-iconset                  = zcl_excel_style_cond=>c_iconset_5quarters.
+  lo_style_cond->mode_iconset  = ls_iconset5.
+  lo_style_cond->set_range( ip_start_column  = 'E'
                                    ip_start_row     = 19
                                    ip_stop_column   = 'E'
                                    ip_stop_row      = 23 ).
@@ -377,11 +377,11 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 29 ip_column = 'B' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 30 ip_column = 'B' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule            = zcl_excel_style_conditional=>c_rule_databar.
-  lo_style_conditional->priority        = 1.
-  lo_style_conditional->mode_databar = ls_databar.
-  lo_style_conditional->set_range( ip_start_column  = 'B'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule            = zcl_excel_style_cond=>c_rule_databar.
+  lo_style_cond->priority        = 1.
+  lo_style_cond->mode_databar = ls_databar.
+  lo_style_cond->set_range( ip_start_column  = 'B'
                                    ip_start_row     = 26
                                    ip_stop_column   = 'B'
                                    ip_stop_row      = 30 ).
@@ -395,11 +395,11 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 29 ip_column = 'C' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 30 ip_column = 'C' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule            = zcl_excel_style_conditional=>c_rule_colorscale.
-  lo_style_conditional->priority        = 1.
-  lo_style_conditional->mode_colorscale = ls_colorscale2.
-  lo_style_conditional->set_range( ip_start_column  = 'C'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule            = zcl_excel_style_cond=>c_rule_colorscale.
+  lo_style_cond->priority        = 1.
+  lo_style_cond->mode_colorscale = ls_colorscale2.
+  lo_style_cond->set_range( ip_start_column  = 'C'
                                    ip_start_row     = 26
                                    ip_stop_column   = 'C'
                                    ip_stop_row      = 30 ).
@@ -412,11 +412,11 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 29 ip_column = 'D' ip_value = 40 ).
   lo_worksheet->set_cell( ip_row = 30 ip_column = 'D' ip_value = 50 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule            = zcl_excel_style_conditional=>c_rule_colorscale.
-  lo_style_conditional->priority        = 1.
-  lo_style_conditional->mode_colorscale = ls_colorscale3.
-  lo_style_conditional->set_range( ip_start_column  = 'D'
+  lo_style_cond = lo_worksheet->add_new_style_cond( ).
+  lo_style_cond->rule            = zcl_excel_style_cond=>c_rule_colorscale.
+  lo_style_cond->priority        = 1.
+  lo_style_cond->mode_colorscale = ls_colorscale3.
+  lo_style_cond->set_range( ip_start_column  = 'D'
                                    ip_start_row     = 26
                                    ip_stop_column   = 'D'
                                    ip_stop_row      = 30 ).

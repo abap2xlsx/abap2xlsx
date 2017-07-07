@@ -14,9 +14,9 @@ public section.
     redefinition .
 *"* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *"* do not include other source files here!!!
-protected section.
-*"* private components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
+*"* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *"* do not include other source files here!!!
+protected section.
 private section.
 
   methods LOAD_DATA

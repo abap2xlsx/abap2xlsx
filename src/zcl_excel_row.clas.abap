@@ -1,9 +1,9 @@
-class ZCL_EXCEL_WORKSHEET_ROWDIMENSI definition
+class ZCL_EXCEL_ROW definition
   public
   final
   create public .
 
-*"* public components of class ZCL_EXCEL_WORKSHEET_ROWDIMENSI
+*"* public components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
 public section.
   type-pools ABAP .
@@ -57,10 +57,10 @@ public section.
   methods SET_XF_INDEX
     importing
       !IP_XF_INDEX type INT4 .
-*"* protected components of class ZCL_EXCEL_WORKSHEET_ROWDIMENSI
+*"* protected components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
 protected section.
-*"* private components of class ZCL_EXCEL_WORKSHEET_ROWDIMENSI
+*"* private components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
 private section.
 
@@ -74,7 +74,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEET_ROWDIMENSI IMPLEMENTATION.
+CLASS ZCL_EXCEL_ROW IMPLEMENTATION.
 
 
 method CONSTRUCTOR.
@@ -90,7 +90,7 @@ method CONSTRUCTOR.
   endmethod.
 
 
-METHOD get_collapsed.
+METHOD GET_COLLAPSED.
 
   DATA: lt_row_outlines  TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
         lv_previous_row  TYPE i,
@@ -121,7 +121,7 @@ METHOD get_collapsed.
 ENDMETHOD.
 
 
-METHOD get_outline_level.
+METHOD GET_OUTLINE_LEVEL.
 
   DATA: lt_row_outlines TYPE zcl_excel_worksheet=>mty_ts_outlines_row.
   FIELD-SYMBOLS: <ls_row_outline> LIKE LINE OF lt_row_outlines.
@@ -155,7 +155,7 @@ method GET_ROW_INDEX.
   endmethod.
 
 
-METHOD get_visible.
+METHOD GET_VISIBLE.
 
   DATA: lt_row_outlines TYPE zcl_excel_worksheet=>mty_ts_outlines_row.
   FIELD-SYMBOLS: <ls_row_outline> LIKE LINE OF lt_row_outlines.

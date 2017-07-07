@@ -281,9 +281,8 @@ METHOD create_xl_sheet.
   DATA:
     lo_iterator                 TYPE REF TO cl_object_collection_iterator,
     lo_table                    TYPE REF TO zcl_excel_table,
-    row_dimension               TYPE REF TO zcl_excel_worksheet_rowdimensi,
-    default_col_dimension       TYPE REF TO zcl_excel_worksheet_columndime,
-    default_row_dimension       TYPE REF TO zcl_excel_worksheet_rowdimensi,
+    lo_column_default           TYPE REF TO zcl_excel_column,
+    lo_row_default              TYPE REF TO zcl_excel_row,
     lv_value                    TYPE string,
     lv_index                    TYPE i,
     lv_spans                    TYPE string,
@@ -294,8 +293,10 @@ METHOD create_xl_sheet.
     lv_freeze_cell_row          TYPE zexcel_cell_row,
     lv_freeze_cell_column       TYPE zexcel_cell_column,
     lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
-    column_dimensions           TYPE zexcel_t_worksheet_columndime,
-    row_dimensions              TYPE zexcel_t_worksheet_rowdimensio,
+    lo_column_iterator          TYPE REF TO cl_object_collection_iterator,
+    lo_column                   TYPE REF TO zcl_excel_column,
+    lo_row_iterator             TYPE REF TO cl_object_collection_iterator,
+    lo_row                      TYPE REF TO zcl_excel_row,
     lv_relation_id              TYPE i VALUE 0,
     outline_level_row           TYPE i VALUE 0,
     outline_level_col           TYPE i VALUE 0,
@@ -314,8 +315,6 @@ METHOD create_xl_sheet.
   FIELD-SYMBOLS:
     <sheet_content>             TYPE zexcel_s_cell_data,
     <range_merge>               LIKE LINE OF lt_range_merge,
-    <column_dimension>          TYPE zexcel_s_worksheet_columndime,
-    <row_dimension>             TYPE zexcel_s_worksheet_rowdimensio,
     <col>                       TYPE lty_column,
     <row>                       TYPE lty_row,
     <hyperlink>                 TYPE lty_hyperlink,
@@ -427,19 +426,24 @@ METHOD create_xl_sheet.
 *
 * Row and column info
 *
-  column_dimensions[] = io_worksheet->get_column_dimensions( ).
-  row_dimensions[]    = io_worksheet->get_row_dimensions( ).
-
-  IF NOT column_dimensions IS INITIAL.
+  lo_column_iterator = io_worksheet->get_columns_iterator( ).
+  IF NOT lo_column_iterator IS BOUND.
     io_worksheet->calculate_column_widths( ).
-    column_dimensions[] = io_worksheet->get_column_dimensions( ).
+    lo_column_iterator = io_worksheet->get_columns_iterator( ).
   ENDIF.
 
-  default_row_dimension = io_worksheet->get_default_row_dimension( ).
-  IF default_row_dimension IS BOUND.
-    IF default_row_dimension->get_row_height( ) >= 0.
+  lo_column_default = io_worksheet->get_default_column( ).
+  IF lo_column_default IS BOUND.
+    IF lo_column_default->get_width( ) >= 0.
+      l_worksheet-defaultcolwidth = lo_column_default->get_width( ).
+    ENDIF.
+  ENDIF.
+
+  lo_row_default = io_worksheet->get_default_row( ).
+  IF lo_row_default IS BOUND.
+    IF lo_row_default->get_row_height( ) >= 0.
       l_worksheet-customheight = lc_true.
-      lv_value = default_row_dimension->get_row_height( ).
+      lv_value = lo_row_default->get_row_height( ).
     ELSE.
       lv_value = '12.75'.
     ENDIF.
@@ -449,67 +453,57 @@ METHOD create_xl_sheet.
   CONDENSE lv_value.
   l_worksheet-defaultrowheight = lv_value.
 
-  default_col_dimension = io_worksheet->get_default_column_dimension( ).
-  IF default_col_dimension IS BOUND.
-    IF default_col_dimension->get_width( ) >= 0.
-      l_worksheet-defaultcolwidth = default_col_dimension->get_width( ).
+  lo_row_iterator = io_worksheet->get_rows_iterator( ).
+  WHILE lo_row_iterator->has_next( ) = abap_true.
+    lo_row ?= lo_row_iterator->get_next( ).
+    IF lo_row->get_outline_level( ) > outline_level_row.
+      l_worksheet-outlinelevelrow = lo_row->get_outline_level( ).
     ENDIF.
-  ENDIF.
+  ENDWHILE.
 
-  LOOP AT row_dimensions ASSIGNING <row_dimension>.
-    IF <row_dimension>-row_dimension->get_outline_level( ) > outline_level_row.
-      l_worksheet-outlinelevelrow = <row_dimension>-row_dimension->get_outline_level( ).
-    ENDIF.
-  ENDLOOP.
-
-  LOOP AT column_dimensions ASSIGNING <column_dimension>.
-    IF <column_dimension>-column_dimension->get_outline_level( ) > outline_level_col.
-      l_worksheet-outlinelevelcol = <column_dimension>-column_dimension->get_outline_level( ).
-    ENDIF.
-  ENDLOOP.
-
-*
 * Set column information (width, style, ...)
-*
-  LOOP AT column_dimensions ASSIGNING <column_dimension>.
-    APPEND INITIAL LINE TO l_worksheet-cols ASSIGNING <col>.
-    <col>-min = <col>-max = <column_dimension>-column_dimension->get_column_index( ).
-    <col>-width = <column_dimension>-column_dimension->get_width( ).
-    IF <col>-width < 0.
-      <col>-width = lc_default_col_width.
-    ENDIF.
-    IF <column_dimension>-column_dimension->get_visible( ) = abap_false.
-      <col>-hidden = lc_true.
-    ENDIF.
-    IF <column_dimension>-column_dimension->get_auto_size( ) = abap_true.
-      <col>-bestfit = lc_true.
-    ENDIF.
-    IF default_col_dimension IS BOUND.
-      IF <column_dimension>-column_dimension->get_width( )
-         <> default_col_dimension->get_width( ).
+*  IF lo_column_iterator->has_next( ) = abap_true.
+    WHILE lo_column_iterator->has_next( ) = abap_true.
+      lo_column ?= lo_column_iterator->get_next( ).
+      IF lo_column->get_outline_level( ) > outline_level_col.
+        l_worksheet-outlinelevelcol = lo_column->get_outline_level( ).
+      ENDIF.
+      APPEND INITIAL LINE TO l_worksheet-cols ASSIGNING <col>.
+      <col>-min = <col>-max = lo_column->get_column_index( ).
+      <col>-width = lo_column->get_width( ).
+      IF <col>-width < 0.
+        <col>-width = lc_default_col_width.
+      ENDIF.
+      IF lo_column->get_visible( ) = abap_false.
+        <col>-hidden = lc_true.
+      ENDIF.
+      IF lo_column->get_auto_size( ) = abap_true.
+        <col>-bestfit = lc_true.
+      ENDIF.
+      IF lo_column_default IS BOUND.
+        IF lo_column->get_width( ) <> lo_column_default->get_width( ).
+          <col>-customwidth = lc_true.
+        ENDIF.
+      ELSE.
         <col>-customwidth = lc_true.
       ENDIF.
-    ELSE.
-      <col>-customwidth = lc_true.
-    ENDIF.
-    IF <column_dimension>-column_dimension->get_collapsed( ) = abap_true.
-      <col>-collapsed = lc_true.
-    ENDIF.
-    <col>-outlinelevel = <column_dimension>-column_dimension->get_outline_level( ).
-    lv_style_guid = <column_dimension>-column_dimension->get_column_style_guid( ).
-    <col>-style = me->excel->get_style_index_in_styles( lv_style_guid ) - 1.
-  ENDLOOP.
-
+      IF lo_column->get_collapsed( ) = abap_true.
+        <col>-collapsed = lc_true.
+      ENDIF.
+      <col>-outlinelevel = lo_column->get_outline_level( ).
+      lv_style_guid = lo_column->get_column_style_guid( ).
+      <col>-style = me->excel->get_style_index_in_styles( lv_style_guid ) - 1.
 *
 * Missing columns
 *
 * First collect columns that were already handled before.
 * The rest has to be inserted now.
 *
-  LOOP AT column_dimensions ASSIGNING <column_dimension>.
-    lv_column = zcl_excel_common=>convert_column2int( <column_dimension>-column ).
-    INSERT lv_column INTO TABLE lts_sorted_columns.
-  ENDLOOP.
+
+      lv_column = zcl_excel_common=>convert_column2int( lo_column->get_column_index( ) ).
+      INSERT lv_column INTO TABLE lts_sorted_columns.
+    ENDWHILE.
+*  ENDIF.
 
 *
 * Now find all columns that were missing so far
@@ -534,8 +528,8 @@ METHOD create_xl_sheet.
     APPEND INITIAL LINE TO l_worksheet-cols ASSIGNING <col>.
     <col>-min = missing_column-first_column.
     <col>-max = missing_column-last_column.
-    IF default_col_dimension IS BOUND AND default_col_dimension->get_width( ) >= 0.
-      <col>-width = default_col_dimension->get_width( ).
+    IF lo_column_default IS BOUND AND lo_column_default->get_width( ) >= 0.
+      <col>-width = lo_column_default->get_width( ).
     ELSE.
       <col>-width = lc_default_col_width.
     ENDIF.
@@ -582,32 +576,32 @@ METHOD create_xl_sheet.
 *
 *     Row dimension attributes
 *
-      row_dimension = io_worksheet->get_row_dimension( <sheet_content>-cell_row ).
-      IF row_dimension->get_visible( ) = abap_false.
+      lo_row = io_worksheet->get_row( <sheet_content>-cell_row ).
+      IF lo_row->get_visible( ) = abap_false.
         <row>-hidden = lc_true.
       ENDIF.
 
-      IF row_dimension->get_row_height( ) >= 0.
+      IF lo_row->get_row_height( ) >= 0.
         <row>-customheight = lc_one.
-        <row>-height       = row_dimension->get_row_height( ).
+        <row>-height       = lo_row->get_row_height( ).
       ENDIF.
 
 *
 *     Collapsed
 *
-      IF row_dimension->get_collapsed( ) = abap_true.
+      IF lo_row->get_collapsed( ) = abap_true.
         <row>-collapsed = lc_true.
       ENDIF.
 
 *
 *     Outline level
 *
-      <row>-outlinelevel = row_dimension->get_outline_level( ).
+      <row>-outlinelevel = lo_row->get_outline_level( ).
 
 *
 *     Style
 *
-      <row>-style = row_dimension->get_xf_index( ).
+      <row>-style = lo_row->get_xf_index( ).
       IF <row>-style <> 0.
         <row>-customformat = lc_one.
       ENDIF.

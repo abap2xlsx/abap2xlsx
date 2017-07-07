@@ -1,11 +1,12 @@
-class ZCL_EXCEL_STYLE_CONDITIONAL definition
+class ZCL_EXCEL_STYLE_COND definition
   public
   final
   create public .
 
 public section.
+  class ZCL_EXCEL_STYLE_CONDITIONAL definition load .
 
-*"* public components of class ZCL_EXCEL_STYLE_CONDITIONAL
+*"* public components of class ZCL_EXCEL_STYLE_COND
 *"* do not include other source files here!!!
   constants C_CFVO_TYPE_FORMULA type ZEXCEL_CONDITIONAL_TYPE value 'formula'. "#EC NOTEXT
   constants C_CFVO_TYPE_MAX type ZEXCEL_CONDITIONAL_TYPE value 'max'. "#EC NOTEXT
@@ -60,10 +61,12 @@ public section.
   data MODE_ICONSET type ZEXCEL_CONDITIONAL_ICONSET .
   data MODE_TOP10 type ZEXCEL_CONDITIONAL_TOP10 .
   data MODE_ABOVE_AVERAGE type ZEXCEL_CONDITIONAL_ABOVE_AVG .
-  data PRIORITY type ZEXCEL_STYLE_PRIORITY value 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data PRIORITY type ZEXCEL_STYLE_PRIORITY value 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data RULE type ZEXCEL_CONDITION_RULE .
 
-  methods CONSTRUCTOR .
+  methods CONSTRUCTOR
+    importing
+      !IP_GUID type ZEXCEL_CELL_STYLE optional .
   methods GET_DIMENSION_RANGE
     returning
       value(EP_DIMENSION_RANGE) type STRING .
@@ -79,7 +82,6 @@ public section.
       !IP_START_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
       !IP_STOP_ROW type ZEXCEL_CELL_ROW
       !IP_STOP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA .
-  class ZCL_EXCEL_STYLE_CONDITIONAL definition load .
   class-methods FACTORY_COND_STYLE_ICONSET
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
@@ -94,23 +96,27 @@ public section.
       !IV_CFVO4_VALUE type ZEXCEL_CONDITIONAL_VALUE optional
       !IV_CFVO5_TYPE type ZEXCEL_CONDITIONAL_TYPE default C_CFVO_TYPE_PERCENT
       !IV_CFVO5_VALUE type ZEXCEL_CONDITIONAL_VALUE optional
-      !IV_SHOWVALUE type ZEXCEL_CONDITIONAL_SHOW_VALUE default ZCL_EXCEL_STYLE_CONDITIONAL=>C_SHOWVALUE_TRUE
+      !IV_SHOWVALUE type ZEXCEL_CONDITIONAL_SHOW_VALUE default ZCL_EXCEL_STYLE_COND=>C_SHOWVALUE_TRUE
     returning
-      value(RV_STYLE_CONDITIONAL) type ref to ZCL_EXCEL_STYLE_CONDITIONAL .
+      value(EO_STYLE_COND) type ref to ZCL_EXCEL_STYLE_COND .
+  methods GET_GUID
+    returning
+      value(EP_GUID) type ZEXCEL_CELL_STYLE .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
 protected section.
 private section.
 
   data MV_RULE_RANGE type STRING .
+  data GUID type ZEXCEL_CELL_STYLE .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_STYLE_CONDITIONAL IMPLEMENTATION.
+CLASS ZCL_EXCEL_STYLE_COND IMPLEMENTATION.
 
 
-METHOD add_range.
+METHOD ADD_RANGE.
   DATA: lv_column    TYPE zexcel_cell_column,
         lv_row_alpha TYPE string,
         lv_col_alpha TYPE string,
@@ -160,30 +166,37 @@ ENDMETHOD.
 METHOD constructor.
 
   DATA: ls_iconset TYPE zexcel_conditional_iconset.
-  ls_iconset-iconset     = zcl_excel_style_conditional=>c_iconset_3trafficlights.
-  ls_iconset-cfvo1_type  = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-iconset     = zcl_excel_style_cond=>c_iconset_3trafficlights.
+  ls_iconset-cfvo1_type  = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo1_value = '0'.
-  ls_iconset-cfvo2_type  = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo2_type  = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo2_value = '20'.
-  ls_iconset-cfvo3_type  = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo3_type  = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo3_value = '40'.
-  ls_iconset-cfvo4_type  = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo4_type  = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo4_value = '60'.
-  ls_iconset-cfvo5_type  = zcl_excel_style_conditional=>c_cfvo_type_percent.
+  ls_iconset-cfvo5_type  = zcl_excel_style_cond=>c_cfvo_type_percent.
   ls_iconset-cfvo5_value = '80'.
 
 
-  me->rule          = zcl_excel_style_conditional=>c_rule_none.
+  me->rule          = zcl_excel_style_cond=>c_rule_none.
 *  me->iconset->operator    = zcl_excel_style_conditional=>c_operator_none.
   me->mode_iconset  = ls_iconset.
   me->priority      = 1.
 
 * inizialize dimension range
-  me->MV_RULE_RANGE     = 'A1'.
+  me->mv_rule_range     = 'A1'.
+
+  IF ip_guid IS NOT INITIAL.
+    me->guid = ip_guid.
+  ELSE.
+    me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).
+  ENDIF.
+
 ENDMETHOD.
 
 
-METHOD factory_cond_style_iconset.
+METHOD FACTORY_COND_STYLE_ICONSET.
 
 *--------------------------------------------------------------------*
 * Work in progress
@@ -223,14 +236,19 @@ METHOD factory_cond_style_iconset.
 ENDMETHOD.
 
 
-METHOD get_dimension_range.
+METHOD GET_DIMENSION_RANGE.
 
   ep_dimension_range = me->mv_rule_range.
 
 ENDMETHOD.
 
 
-METHOD set_range.
+METHOD GET_GUID.
+  ep_guid = me->guid.
+ENDMETHOD.
+
+
+METHOD SET_RANGE.
 
   CLEAR: me->mv_rule_range.
 

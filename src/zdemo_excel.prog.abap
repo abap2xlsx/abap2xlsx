@@ -81,4 +81,4 @@ START-OF-SELECTION.
   " Reader/Writer Demo must always run at the end
   " to make sure all documents where created
   "
-  SUBMIT zdemo_excel15 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path = p_path AND RETURN. "#EC CI_SUBMIT Read Excel and write it back
+  SUBMIT zdemo_excel15 WITH  p_path = p_path AND RETURN. "#EC CI_SUBMIT Read Excel and write it back

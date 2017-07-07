@@ -11,7 +11,7 @@ REPORT  zdemo_excel31.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime.
+      lo_column               TYPE REF TO zcl_excel_column.
 
 
 DATA: fieldval            TYPE text80,
@@ -55,12 +55,12 @@ START-OF-SELECTION.
     lo_worksheet->set_cell( ip_column = 'C' ip_row = row ip_value = fieldval ip_style = style_column_c_guid ).
   ENDDO.
 
-  column_dimension = lo_worksheet->get_column_dimension( 'A' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( 'B' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( 'C' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'A' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'B' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'C' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
 
   " Add sheet
   lo_worksheet = lo_excel->add_new_worksheet( ).
@@ -91,12 +91,12 @@ START-OF-SELECTION.
     lo_worksheet->set_cell( ip_column = 'C' ip_row = row ip_value = fieldval ip_style = style_column_c_guid ).
   ENDDO.
 
-  column_dimension = lo_worksheet->get_column_dimension( 'A' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( 'B' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( 'C' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'A' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'B' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'C' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
 
   " Add sheet
   lo_worksheet = lo_excel->add_new_worksheet( ).
@@ -127,12 +127,12 @@ START-OF-SELECTION.
     lo_worksheet->set_cell( ip_column = 'C' ip_row = row ip_value = fieldval ip_style = style_column_c_guid ).
   ENDDO.
 
-  column_dimension = lo_worksheet->get_column_dimension( 'A' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( 'B' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( 'C' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'A' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'B' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'C' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
 
   " Add sheet for merged cells
   lo_worksheet = lo_excel->add_new_worksheet( ).
@@ -148,8 +148,8 @@ START-OF-SELECTION.
       ip_column_end   = 'C'
       ip_row          = 1 ).
 
-  column_dimension = lo_worksheet->get_column_dimension( 'A' ).
-  column_dimension->set_auto_size( ip_auto_size = abap_true ).
+  lo_column = lo_worksheet->get_column( 'A' ).
+  lo_column->set_auto_size( ip_auto_size = abap_true ).
 
   lo_excel->set_active_sheet_index( i_active_worksheet = 1 ).
 

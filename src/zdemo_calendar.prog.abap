@@ -48,9 +48,9 @@ START-OF-SELECTION.
   DATA: lo_excel                TYPE REF TO zcl_excel,
         lo_excel_writer         TYPE REF TO zif_excel_writer,
         lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-        lo_col_dim              TYPE REF TO zcl_excel_worksheet_columndime,
-        lo_row_dim              TYPE REF TO zcl_excel_worksheet_rowdimensi,
-        hyperlink               TYPE REF TO zcl_excel_hyperlink,
+        lo_column               TYPE REF TO zcl_excel_column,
+        lo_row                  TYPE REF TO zcl_excel_row,
+        lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
         lo_drawing              TYPE REF TO zcl_excel_drawing.
 
   DATA: lo_style_month          TYPE REF TO zcl_excel_style,
@@ -215,10 +215,10 @@ START-OF-SELECTION.
     lo_worksheet->sheet_setup->paper_size = zcl_excel_sheet_setup=>c_papersize_a4.
     lo_worksheet->sheet_setup->horizontal_centered = abap_true.
     lo_worksheet->sheet_setup->vertical_centered   = abap_true.
-    lo_col_dim = lo_worksheet->get_column_dimension( 'A' ).
-    lo_col_dim->set_width( '1.0' ).
-    lo_col_dim = lo_worksheet->get_column_dimension( 'B' ).
-    lo_col_dim->set_width( '2.0' ).
+    lo_column = lo_worksheet->get_column( 'A' ).
+    lo_column->set_width( '1.0' ).
+    lo_column = lo_worksheet->get_column( 'B' ).
+    lo_column->set_width( '2.0' ).
     IF p_lands = abap_true.
       lo_worksheet->sheet_setup->orientation = zcl_excel_sheet_setup=>c_orientation_landscape.
       lv_height = c_height_landscape.
@@ -228,8 +228,8 @@ START-OF-SELECTION.
       lo_worksheet->sheet_setup->margin_right  = '0.10'.
       lo_worksheet->sheet_setup->margin_bottom = '0.10'.
     ELSE.
-      lo_col_dim = lo_worksheet->get_column_dimension( 'K' ).
-      lo_col_dim->set_width( '3.0' ).
+      lo_column = lo_worksheet->get_column( 'K' ).
+      lo_column->set_width( '3.0' ).
       lo_worksheet->sheet_setup->margin_top    = '0.80'.
       lo_worksheet->sheet_setup->margin_left   = '0.55'.
       lo_worksheet->sheet_setup->margin_right  = '0.05'.
@@ -291,13 +291,13 @@ START-OF-SELECTION.
         row = lv_from_row - 2.
       ENDIF.
       IF NOT <img_descr>-url IS INITIAL.
-        hyperlink = zcl_excel_hyperlink=>create_external_link( <img_descr>-url ).
+        lo_hyperlink = zcl_excel_hyperlink=>create_external_link( <img_descr>-url ).
         lo_worksheet->set_cell(
           EXPORTING
             ip_column    = from_col " Cell Column
             ip_row       = row      " Cell Row
             ip_value     = value    " Cell Value
-            ip_hyperlink = hyperlink
+            ip_hyperlink = lo_hyperlink
         ).
       ELSE.
         lo_worksheet->set_cell(
@@ -307,8 +307,8 @@ START-OF-SELECTION.
             ip_value     = value    " Cell Value
         ).
       ENDIF.
-      lo_row_dim = lo_worksheet->get_row_dimension( row ).
-      lo_row_dim->set_row_height( '22.0' ).
+      lo_row = lo_worksheet->get_row( row ).
+      lo_row->set_row_height( '22.0' ).
 
       " In Landscape mode the row between the description and the
       " dates should be not so high
@@ -320,11 +320,11 @@ START-OF-SELECTION.
             ip_row       = row      " Cell Row
             ip_value     = ' '      " Cell Value
         ).
-        lo_row_dim = lo_worksheet->get_row_dimension( row ).
-        lo_row_dim->set_row_height( '7.0' ).
+        lo_row = lo_worksheet->get_row( row ).
+        lo_row->set_row_height( '7.0' ).
         row = lv_from_row - 1.
-        lo_row_dim = lo_worksheet->get_row_dimension( row ).
-        lo_row_dim->set_row_height( '5.0' ).
+        lo_row = lo_worksheet->get_row( row ).
+        lo_row->set_row_height( '5.0' ).
       ENDIF.
 
       CONCATENATE p_path lv_file_separator <img_descr>-filename INTO image_path.

@@ -4,7 +4,7 @@ REPORT  zdemo_excel36.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      column_dimension        TYPE REF TO zcl_excel_worksheet_columndime,
+      lo_column               TYPE REF TO zcl_excel_column,
       col                     TYPE i.
 
 DATA: lo_style_arial20      TYPE REF TO zcl_excel_style,
@@ -69,12 +69,12 @@ START-OF-SELECTION.
 * 3rd sheet - defaultstyle for columns  ( set to Times New Roman 11 )
   lo_worksheet = lo_excel->add_new_worksheet( ).
   lo_worksheet->set_title( 'Style for 3 columns' ).
-  column_dimension = lo_worksheet->get_column_dimension( 'B' ).
-  column_dimension->set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
-  column_dimension = lo_worksheet->get_column_dimension( 'C' ).
-  column_dimension->set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
-  column_dimension = lo_worksheet->get_column_dimension( 'F' ).
-  column_dimension->set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
+  lo_column = lo_worksheet->get_column( 'B' ).
+  lo_column->set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
+  lo_column = lo_worksheet->get_column( 'C' ).
+  lo_column->set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
+  lo_column = lo_worksheet->get_column( 'F' ).
+  lo_column->set_column_style_by_guid( ip_style_guid = lv_style_times11_guid ).
 
   lo_worksheet->set_cell( ip_column = 2 ip_row = 4  ip_value = 'The columns B,C and F are set to Times New Roman' ).
   lo_worksheet->set_cell( ip_column = 2 ip_row = 10 ip_value = 'All other cells in this sheet are set to font Arial, fontsize 20' ).

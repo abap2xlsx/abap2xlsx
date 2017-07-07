@@ -19,8 +19,8 @@ DATA:      current_row      TYPE i,
            colorflag        TYPE i,
            color            TYPE zexcel_style_color_argb,
 
-           column_dimension TYPE REF TO zcl_excel_worksheet_columndime,
-           row_dimension    TYPE REF TO zcl_excel_worksheet_rowdimensi,
+           lo_column        TYPE REF TO zcl_excel_column,
+           lo_row           TYPE REF TO zcl_excel_row,
 
            writing1         TYPE string,
            writing2         TYPE string.
@@ -65,12 +65,12 @@ START-OF-SELECTION.
     col_alpha = zcl_excel_common=>convert_column2alpha( col ).
 
 * Set size of column
-    column_dimension = lo_worksheet->get_column_dimension( col_alpha ).
-    column_dimension->set_width( width ).
+    lo_column = lo_worksheet->get_column( col_alpha ).
+    lo_column->set_width( width ).
 
 * Set size of row
-    row_dimension = lo_worksheet->get_row_dimension( row ).
-    row_dimension->set_row_height( height ).
+    lo_row = lo_worksheet->get_row( row ).
+    lo_row->set_row_height( height ).
 
 * Set writing on chessboard
     lo_worksheet->set_cell( ip_row = row
@@ -100,10 +100,10 @@ START-OF-SELECTION.
                                       ip_row                  = row
                                       ip_alignment_horizontal = zcl_excel_style_alignment=>c_horizontal_center ).
   ENDDO.
-  column_dimension = lo_worksheet->get_column_dimension( 'A' ).
-  column_dimension->set_auto_size( abap_true ).
-  column_dimension = lo_worksheet->get_column_dimension( 'J' ).
-  column_dimension->set_auto_size( abap_true ).
+  lo_column = lo_worksheet->get_column( 'A' ).
+  lo_column->set_auto_size( abap_true ).
+  lo_column = lo_worksheet->get_column( 'J' ).
+  lo_column->set_auto_size( abap_true ).
 
 * Set win-position
   CONSTANTS: c_pawn   TYPE string VALUE 'Pawn'.
