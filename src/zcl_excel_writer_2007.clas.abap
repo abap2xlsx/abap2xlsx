@@ -424,7 +424,6 @@ method CREATE_CONTENT_TYPES.
   DATA: lv_worksheets_num         TYPE i,
         lv_worksheets_numc        TYPE numc3,
         lv_xml_node_worksheet_pn  TYPE string,
-        lv_xml_size               TYPE i,
         lv_value                  TYPE string,
         lv_drawing_index          TYPE i VALUE 1,
         lv_index_str              TYPE string.
@@ -1011,8 +1010,7 @@ METHOD create_dxf_style.
              lc_xml_node_patternfill TYPE string VALUE 'patternFill',
              lc_xml_attr_patterntype TYPE string VALUE 'patternType',
              lc_xml_node_fgcolor     TYPE string VALUE 'fgColor',
-             lc_xml_node_bgcolor     TYPE string VALUE 'bgColor',
-             y                       TYPE i VALUE 0.
+             lc_xml_node_bgcolor     TYPE string VALUE 'bgColor'.
 
   DATA: ls_styles_mapping     TYPE zexcel_s_styles_mapping,
         ls_cellxfs            TYPE zexcel_s_cellxfs,
@@ -1024,8 +1022,7 @@ METHOD create_dxf_style.
         lo_element_font       TYPE REF TO if_ixml_element,
         lv_value              TYPE string,
         ls_fill               TYPE zexcel_s_style_fill,
-        lo_element_fill       TYPE REF TO if_ixml_element,
-        x.
+        lo_element_fill       TYPE REF TO if_ixml_element.
 
   CHECK iv_cell_style IS NOT INITIAL.
 
@@ -1337,12 +1334,10 @@ method CREATE_XL_CHARTS.
   DATA: lo_ixml                                 TYPE REF TO if_ixml,
         lo_document                             TYPE REF TO if_ixml_document,
         lo_element_root                         TYPE REF TO if_ixml_element,
-        lo_element_cellanchor                   TYPE REF TO if_ixml_element,
         lo_encoding                             TYPE REF TO if_ixml_encoding,
         lo_streamfactory                        TYPE REF TO if_ixml_stream_factory,
         lo_ostream                              TYPE REF TO if_ixml_ostream,
         lo_renderer                             TYPE REF TO if_ixml_renderer.
-  DATA: lv_rel_id                               TYPE i.
 
   DATA lo_element                               TYPE REF TO if_ixml_element.
   DATA lo_element2                              TYPE REF TO if_ixml_element.
@@ -2146,9 +2141,6 @@ method CREATE_XL_DRAWINGS.
               lc_xml_node_ns_xdr  TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
               lc_xml_node_ns_a    TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main'.
 
-  CONSTANTS: lc_on  TYPE string VALUE '1',
-             lc_off TYPE string VALUE '0'.
-
   DATA: lo_ixml             TYPE REF TO if_ixml,
         lo_document         TYPE REF TO if_ixml_document,
         lo_element_root     TYPE REF TO if_ixml_element,
@@ -2356,10 +2348,6 @@ method CREATE_XL_DRAWING_ANCHOR.
               lc_xml_node_astretch TYPE string VALUE 'a:stretch',
               lc_xml_node_ns_r     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'.
 
-
-  CONSTANTS: lc_on  TYPE string VALUE '1',
-             lc_off TYPE string VALUE '0'.
-
   DATA: lo_element_graphicframe TYPE REF TO if_ixml_element,
         lo_element          TYPE REF TO if_ixml_element,
         lo_element2         TYPE REF TO if_ixml_element,
@@ -2369,9 +2357,7 @@ method CREATE_XL_DRAWING_ANCHOR.
         lo_element_ext      TYPE REF TO if_ixml_element,
         lo_element_pic      TYPE REF TO if_ixml_element,
         lo_element_clientdata TYPE REF TO if_ixml_element,
-
         ls_position         TYPE zexcel_drawing_position,
-
         lv_col              TYPE string, " zexcel_cell_column,
         lv_row              TYPE string, " zexcel_cell_row.
         lv_col_offset       TYPE string,
@@ -2800,7 +2786,6 @@ METHOD create_xl_sharedstrings.
 
   DATA: lt_cell_data       TYPE zexcel_t_cell_data_unsorted,
         ls_shared_string   TYPE zexcel_s_shared_string,
-        lv_value           TYPE string,
         lv_count_str       TYPE string,
         lv_uniquecount_str TYPE string,
         lv_sytabix         TYPE sytabix,
@@ -2929,10 +2914,6 @@ METHOD create_xl_sheet.
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 1 - end
 *--------------------------------------------------------------------*
-** Constants
-  CONSTANTS:
-        lc_dummy_cell_content       TYPE zexcel_s_cell_data-cell_value VALUE '})~~~ This is a dummy value for ABAP2XLSX and you should never find this in a real excelsheet Ihope'.
-
 
 ** Constant node name
   DATA: lc_xml_node_worksheet          TYPE string VALUE 'worksheet',
@@ -3069,7 +3050,6 @@ METHOD create_xl_sheet.
         lc_xml_attr_colid              TYPE string VALUE 'colId',
         lc_xml_attr_filtermode         TYPE string VALUE 'filterMode',
         lc_xml_attr_tabcolor_rgb       TYPE string VALUE 'rgb',
-        lc_xml_attr_tabcolor_theme     TYPE string VALUE 'theme',
         " Node namespace
         lc_xml_node_ns                 TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
         lc_xml_node_r_ns               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
@@ -3097,10 +3077,7 @@ METHOD create_xl_sheet.
 
   DATA: lv_value                    TYPE string,
         lt_range_merge              TYPE string_table,
-        lv_merge                    TYPE string,
-        lv_column_p                 TYPE zexcel_cell_column_alpha,
         lv_column                   TYPE zexcel_cell_column,
-        lv_cell_value               TYPE zexcel_cell_value,
         lv_style_guid               TYPE zexcel_cell_style,
         lv_flag                     TYPE c,
         ls_databar                  TYPE zexcel_conditional_databar,      " Databar by Albert Lladanosa
@@ -3115,7 +3092,6 @@ METHOD create_xl_sheet.
         lt_colors                   TYPE TABLE OF colors,
         ls_colors                   TYPE colors,
         lv_cell_row_s               TYPE string,
-        ls_last_row                 TYPE zexcel_s_cell_data,
         ls_style_mapping            TYPE zexcel_s_styles_mapping,
         lv_freeze_cell_row          TYPE zexcel_cell_row,
         lv_freeze_cell_column       TYPE zexcel_cell_column,
@@ -4803,9 +4779,6 @@ METHOD create_xl_sheet_sheet_data.
                  <ls_row_outline>   LIKE LINE OF lts_row_outlines.
 
 
-  DATA: lv_xstring_partial TYPE xstring,
-        lv_xstring         TYPE xstring.
-
   " sheetData node
   rv_ixml_sheet_data_root = io_document->create_simple_element( name   = lc_xml_node_sheetdata
                                                                 parent = io_document ).
@@ -5191,7 +5164,6 @@ METHOD create_xl_styles.
               lc_xml_node_cellstyles        TYPE string VALUE 'cellStyles',
               lc_xml_node_cellstyle         TYPE string VALUE 'cellStyle',
               lc_xml_node_dxfs              TYPE string VALUE 'dxfs',
-              lc_xml_node_dxf               TYPE string VALUE 'dxf',
               lc_xml_node_tablestyles       TYPE string VALUE 'tableStyles',
               " Colors
               lc_xml_node_colors            TYPE string VALUE 'colors',
@@ -6412,7 +6384,6 @@ METHOD create_xl_workbook.
               lc_xml_attr_lastedited         TYPE string VALUE 'lastEdited',
               lc_xml_attr_lowestedited       TYPE string VALUE 'lowestEdited',
               lc_xml_attr_rupbuild           TYPE string VALUE 'rupBuild',
-              lc_xml_attr_themeversion       TYPE string VALUE 'defaultThemeVersion',
               lc_xml_attr_xwindow            TYPE string VALUE 'xWindow',
               lc_xml_attr_ywindow            TYPE string VALUE 'yWindow',
               lc_xml_attr_windowwidth        TYPE string VALUE 'windowWidth',
@@ -6745,7 +6716,6 @@ METHOD render_ixml_element_no_header.
 
 
   DATA: lv_content TYPE string.
-  DATA: lv_contentx TYPE xstring.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP

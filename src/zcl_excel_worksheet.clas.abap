@@ -666,7 +666,6 @@ method BIND_ALV_OLE2.
 
   data: l_has_activex,
         l_doctype_excel_sheet(11) type c.
-  data: wa_DOC_HANDLE Type  CNTL_HANDLE.
 
 * LVC
   data: lt_fieldcat_lvc       type LVC_T_FCAT.
@@ -813,8 +812,6 @@ method BIND_ALV_OLE2.
 * Data for session 4: write to excel
 * ------------------------------------------
 
-  data: data_starting_at  type  i value 1.
-  data: data_ending_at    type  i value -1.
   data: sema_type         type  c.
 
   data l_error           type ref to c_oi_proxy_error.
@@ -1602,7 +1599,6 @@ method BIND_ALV_OLE2.
   endselect.
 
   data: comma_elim(4) type c.
-  data: help6 type i.
   field-symbols <g> type any.
   data search_item(4) value '   #'.
 
@@ -1947,7 +1943,6 @@ method BIND_ALV_OLE2.
   curritem-number = 1.
   curritem-input = -1.
 
-  data: conv_exit(10) type c.
   data: const type i.
 
 *   Change for Correction request
@@ -2363,7 +2358,6 @@ method BIND_ALV_OLE2.
 
   help = rowmax + realmit. " table + header lines
 
-  data: item          type colxxl_t.
   data: lt_format     type soi_format_table.
   data: wa_format     like line of lt_format.
   data: wa_format_temp like line of lt_format.
@@ -3740,8 +3734,6 @@ ENDMETHOD.
 
 
 method FREEZE_PANES.
-  data: lv_xsplit type i,
-        lv_ysplit type i.
 
   IF ip_num_columns IS NOT SUPPLIED AND ip_num_rows IS NOT SUPPLIED.
     RAISE EXCEPTION TYPE zcx_excel
@@ -3768,8 +3760,7 @@ method FREEZE_PANES.
 
 method GENERATE_TITLE.
   DATA: lo_worksheets_iterator  TYPE REF TO cl_object_collection_iterator,
-        lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-        errormessage            TYPE string.
+        lo_worksheet            TYPE REF TO zcl_excel_worksheet.
 
   DATA: t_titles                TYPE HASHED TABLE OF zexcel_sheet_title WITH UNIQUE KEY table_line,
         title                   TYPE zexcel_sheet_title,
@@ -3818,8 +3809,6 @@ METHOD get_cell.
 
   DATA: lv_column         TYPE zexcel_cell_column,
         ls_sheet_content  TYPE zexcel_s_cell_data.
-
-  FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
   lv_column = zcl_excel_common=>convert_column2int( ip_column ).
 
@@ -4387,7 +4376,6 @@ method SET_CELL.
         lv_value                  TYPE zexcel_cell_value,
         lv_data_type              TYPE zexcel_cell_data_type,
         lv_value_type             TYPE abap_typekind,
-        lo_style                  TYPE REF TO zcl_excel_style,
         lv_style_guid             TYPE zexcel_cell_style,
         lo_addit                  TYPE REF TO cl_abap_elemdescr,
         lo_value                  TYPE REF TO data,
@@ -4638,9 +4626,6 @@ method SET_CELL_FORMULA.
 METHOD set_cell_style.
 
   DATA: lv_column                 TYPE zexcel_cell_column,
-        ls_sheet_content          TYPE zexcel_s_cell_data,
-        lv_row_alpha              TYPE string,
-        lo_style                  TYPE REF TO zcl_excel_style,
         lv_style_guid             TYPE zexcel_cell_style.
 
   FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
@@ -4709,8 +4694,6 @@ METHOD set_merge.
 
   DATA: ls_merge        TYPE mty_merge,
         lv_errormessage TYPE string.
-
-  FIELD-SYMBOLS: <ls_merge> LIKE LINE OF me->mt_merged_cells.
 
 *--------------------------------------------------------------------*
 * Build new range area to insert into range table
@@ -4851,11 +4834,8 @@ method SET_TABLE.
 
   DATA: lo_tabdescr     TYPE REF TO cl_abap_structdescr,
         lr_data         TYPE REF TO data,
-        ls_newline      TYPE REF TO data,
         ls_header       TYPE x030l,
         lt_dfies        TYPE ddfields,
-        lv_row_header   TYPE zexcel_cell_row VALUE 2,
-        lv_col_header   TYPE zexcel_cell_column_alpha VALUE 'B',
         lv_row_int      TYPE zexcel_cell_row,
         lv_column_int   TYPE zexcel_cell_column,
         lv_column_alpha TYPE zexcel_cell_column_alpha,
@@ -4864,8 +4844,7 @@ method SET_TABLE.
 
   FIELD-SYMBOLS: <fs_table_line>  TYPE ANY,
                  <fs_fldval>      TYPE ANY,
-                 <fs_dfies>       TYPE dfies,
-                 <fs_cell_value>  TYPE zexcel_cell_value.
+                 <fs_dfies>       TYPE dfies.
 
   lv_column_int = zcl_excel_common=>convert_column2int( ip_top_left_column ).
   lv_row_int    = ip_top_left_row.
@@ -5123,9 +5102,6 @@ method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS.
             lv_col_to_int                   TYPE i,
             lv_errormessage                 TYPE string.
 
-  DATA:     lo_range_iterator               TYPE REF TO cl_object_collection_iterator,
-            lo_range                        TYPE REF TO zcl_excel_range.
-
 
   lv_col_from_int = zcl_excel_common=>convert_column2int( iv_columns_from ).
   lv_col_to_int   = zcl_excel_common=>convert_column2int( iv_columns_to ).
@@ -5169,10 +5145,6 @@ method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS.
 *--------------------------------------------------------------------*
 
   DATA:     lv_errormessage                 TYPE string.
-
-  DATA:     lo_range_iterator               TYPE REF TO cl_object_collection_iterator,
-            lo_range                        TYPE REF TO zcl_excel_range.
-
 
 
 *--------------------------------------------------------------------*

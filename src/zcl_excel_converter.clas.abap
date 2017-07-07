@@ -1136,15 +1136,10 @@ method INIT_OPTION.
 
 
 method LOOP_NORMAL.
-  DATA: lo_data           TYPE REF TO data,
-        l_row_header      TYPE zexcel_cell_row VALUE 2,
-        l_col_header      TYPE zexcel_cell_column_alpha VALUE 'B',
-        l_row_int_start   TYPE zexcel_cell_row,
-        l_row_int_end     TYPE zexcel_cell_row,
+  DATA: l_row_int_end     TYPE zexcel_cell_row,
         l_row_int         TYPE zexcel_cell_row,
         l_col_int         TYPE zexcel_cell_column,
         l_col_alpha       TYPE zexcel_cell_column_alpha,
-        l_col_alpha_start TYPE zexcel_cell_column_alpha,
         l_cell_value      TYPE zexcel_cell_value,
         l_s_color         TYPE abap_bool,
         lo_column         TYPE REF TO zcl_excel_column,
@@ -1158,8 +1153,7 @@ method LOOP_NORMAL.
   FIELD-SYMBOLS: <fs_stab>        TYPE ANY,
                  <fs_tab>         TYPE STANDARD TABLE,
                  <fs_sfcat>       TYPE zexcel_s_converter_fcat,
-                 <fs_fldval>      TYPE ANY,
-                 <fs_cell_value>  TYPE zexcel_cell_value.
+                 <fs_fldval>      TYPE ANY.
 
   ASSIGN wo_data->* TO <fs_tab> .
 
@@ -1255,10 +1249,7 @@ method LOOP_NORMAL.
 
 method LOOP_SUBTOTAL.
 
-  DATA: lo_data           TYPE REF TO data,
-        l_row_header      TYPE zexcel_cell_row VALUE 2,
-        l_col_header      TYPE zexcel_cell_column_alpha VALUE 'B',
-        l_row_int_start   TYPE zexcel_cell_row,
+  DATA: l_row_int_start   TYPE zexcel_cell_row,
         l_row_int_end     TYPE zexcel_cell_row,
         l_row_int         TYPE zexcel_cell_row,
         l_col_int         TYPE zexcel_cell_column,
@@ -1270,15 +1261,12 @@ method LOOP_SUBTOTAL.
         lo_row            TYPE REF TO zcl_excel_row,
         l_formula         TYPE zexcel_cell_formula,
         l_style           TYPE zexcel_cell_style,
-        l_subtotalled     TYPE flag,
         l_text            TYPE string,
         ls_sort_values    TYPE ts_sort_values,
         ls_subtotal_rows  TYPE ts_subtotal_rows,
         l_sort_level      TYPE int4,
         l_hidden          TYPE int4,
         l_line            TYPE i,
-        l_guid            TYPE guid_22,
-        l_tabix           TYPE sy-tabix,
         l_cells           TYPE i,
         l_count           TYPE i,
         l_table_row       TYPE i,
@@ -1289,8 +1277,7 @@ method LOOP_SUBTOTAL.
                  <fs_sfcat>       TYPE zexcel_s_converter_fcat,
                  <fs_fldval>      TYPE ANY,
                  <fs_sortval>     TYPE ANY,
-                 <fs_sortv>       TYPE ts_sort_values,
-                 <fs_cell_value>  TYPE zexcel_cell_value.
+                 <fs_sortv>       TYPE ts_sort_values.
 
   ASSIGN wo_data->* TO <fs_tab> .
 
