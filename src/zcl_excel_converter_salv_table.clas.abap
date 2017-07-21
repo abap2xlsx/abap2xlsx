@@ -125,7 +125,7 @@ method LOAD_DATA.
         i_tabname                   = '1'
 *       I_TABNAME_SLAVE             =
         i_dialog                    = ' '
-*       I_USER_SPECIFIC             = ' '
+        I_USER_SPECIFIC             = 'X'
 *       I_DEFAULT                   = 'X'
 *       I_NO_REPTEXT_OPTIMIZE       =
 *       I_VIA_GRID                  =
