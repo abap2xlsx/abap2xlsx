@@ -39,12 +39,6 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
-   <DD05M_TABLE/>
-   <DD08V_TABLE/>
-   <DD12V/>
-   <DD17V/>
-   <DD35V_TALE/>
-   <DD36M/>
   </asx:values>
  </asx:abap>
 </abapGit>
