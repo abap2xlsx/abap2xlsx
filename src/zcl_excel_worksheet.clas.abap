@@ -3287,8 +3287,6 @@ METHOD calculate_column_widths.
 
   DATA: auto_size   TYPE flag.
   DATA: auto_sizes  TYPE tt_auto_size.
-  DATA: cell_value  TYPE zexcel_cell_value.
-  DATA: cell_style  TYPE REF TO zcl_excel_style.
   DATA: count       TYPE int4.
   DATA: highest_row TYPE int4.
   DATA: width       TYPE float.

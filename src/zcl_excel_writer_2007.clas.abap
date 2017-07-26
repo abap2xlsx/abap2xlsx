@@ -3079,7 +3079,6 @@ METHOD create_xl_sheet.
         lt_range_merge              TYPE string_table,
         lv_column                   TYPE zexcel_cell_column,
         lv_style_guid               TYPE zexcel_cell_style,
-        lv_flag                     TYPE c,
         ls_databar                  TYPE zexcel_conditional_databar,      " Databar by Albert Lladanosa
         ls_colorscale               TYPE zexcel_conditional_colorscale,
         ls_iconset                  TYPE zexcel_conditional_iconset,
@@ -3099,30 +3098,16 @@ METHOD create_xl_sheet.
         lo_column_iterator          TYPE REF TO cl_object_collection_iterator,
         lo_column                   TYPE REF TO zcl_excel_column,
         lo_row_iterator             TYPE REF TO cl_object_collection_iterator,
-        lo_row                      TYPE REF TO zcl_excel_row,
         ls_style_cond_mapping       TYPE zexcel_s_styles_cond_mapping,
         lv_relation_id              TYPE i VALUE 0,
-        outline_level_row           TYPE i VALUE 0,
         outline_level_col           TYPE i VALUE 0,
-        lv_current_row              TYPE i,
-        lv_next_row                 TYPE i,
-        ls_sheet_content            LIKE LINE OF io_worksheet->sheet_content,
-        ls_sheet_content_empty      LIKE LINE OF io_worksheet->sheet_content,
-        lv_last_row                 TYPE i,
         lts_row_outlines            TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
-        col_count                   TYPE int4,
         merge_count                 TYPE int4,
-        write_current_row           TYPE boolean,
         lt_values                   TYPE zexcel_t_autofilter_values,
         ls_values                   TYPE zexcel_s_autofilter_values,
         lo_autofilters              TYPE REF TO zcl_excel_autofilters,
         lo_autofilter               TYPE REF TO zcl_excel_autofilter,
-        l_autofilter_hidden         TYPE flag,
-        ls_area                     TYPE zexcel_s_autofilter_area,
-        lv_ref                      TYPE string,
-        lv_style_index              TYPE i.                             " issue #237
-
-
+        lv_ref                      TYPE string.
 
   FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data,
                  <fs_range_merge>   LIKE LINE OF lt_range_merge,
@@ -3131,8 +3116,8 @@ METHOD create_xl_sheet.
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 2 - start
 *--------------------------------------------------------------------*
-  DATA: lt_table_areas TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
-        ls_table_area  LIKE LINE OF lt_table_areas.
+  DATA: lt_table_areas TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom.
+
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 2 - end
 *--------------------------------------------------------------------*
@@ -5260,11 +5245,6 @@ METHOD create_xl_styles.
         lt_cellxfs            TYPE zexcel_t_cellxfs,
         ls_cellxfs            TYPE zexcel_s_cellxfs,
         ls_styles_mapping     TYPE zexcel_s_styles_mapping,
-        ls_style_cond_mapping TYPE zexcel_s_styles_cond_mapping,
-        ls_cellis             TYPE zexcel_conditional_cellis,
-        ls_expression         TYPE zexcel_conditional_expression,
-        ls_conditional_top10  TYPE zexcel_conditional_top10,
-
         lt_colors             TYPE zexcel_t_style_color_argb,
         ls_color              LIKE LINE OF lt_colors.
 
@@ -5273,9 +5253,7 @@ METHOD create_xl_styles.
         lv_fonts_count   TYPE i,
         lv_fills_count   TYPE i,
         lv_borders_count TYPE i,
-        lv_cellxfs_count TYPE i,
-        lv_index         TYPE i,
-        lv_align_flag    TYPE c.
+        lv_cellxfs_count TYPE i.
 
   TYPES: BEGIN OF ts_built_in_format,
            num_format TYPE zexcel_number_format,
@@ -6190,10 +6168,8 @@ METHOD create_xl_table.
         lv_table_name         TYPE string,
         lv_id                 TYPE i,
         lv_match              TYPE i,
-        lv_syindex            TYPE char3,
         lv_ref                TYPE string,
         lv_value              TYPE string,
-        lo_iterator           TYPE REF TO cl_object_collection_iterator,
         lv_num_columns        TYPE i,
         ls_fieldcat           TYPE zexcel_s_fieldcatalog.
 
