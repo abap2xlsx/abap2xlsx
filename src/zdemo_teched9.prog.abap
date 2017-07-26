@@ -24,7 +24,7 @@ DATA: lo_style_title           TYPE REF TO zcl_excel_style,
       lo_range                 TYPE REF TO zcl_excel_range,
       lo_data_validation       TYPE REF TO zcl_excel_data_validation,
       lo_column                TYPE REF TO zcl_excel_column,
-      lo_style_conditional     TYPE REF TO zcl_excel_style_conditional,
+      lo_style_conditional     TYPE REF TO zcl_excel_style_cond,
       lv_style_title_guid      TYPE zexcel_cell_style,
       lv_style_green_guid      TYPE zexcel_cell_style,
       lv_style_yellow_guid     TYPE zexcel_cell_style,
@@ -74,7 +74,7 @@ CONSTANTS: lv_default_file_name TYPE string VALUE 'TechEd01.xlsx'.
                             ip_from_col = 'B' ).
 
   ls_key-relid = 'MI'.
-  ls_key-objid = 'WBLOGO'.
+  ls_key-objid = 'SIWB_KW_LOGO'.
   lo_drawing->set_media_www( ip_key = ls_key
                              ip_width = 140
                              ip_height = 64 ).
@@ -144,10 +144,10 @@ CONSTANTS: lv_default_file_name TYPE string VALUE 'TechEd01.xlsx'.
   lv_style_red_guid                   = lo_style_red->get_guid( ).
 
   " add conditional formatting
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule        = zcl_excel_style_conditional=>c_rule_cellis.
+  lo_style_conditional = lo_worksheet->add_new_style_cond( ).
+  lo_style_conditional->rule        = zcl_excel_style_cond=>c_rule_cellis.
   ls_cellis-formula                 = '5'.
-  ls_cellis-operator                = zcl_excel_style_conditional=>c_operator_greaterthan.
+  ls_cellis-operator                = zcl_excel_style_cond=>c_operator_greaterthan.
   ls_cellis-cell_style              = lv_style_green_guid.
   lo_style_conditional->mode_cellis = ls_cellis.
   lo_style_conditional->priority    = 1.
@@ -156,10 +156,10 @@ CONSTANTS: lv_default_file_name TYPE string VALUE 'TechEd01.xlsx'.
                                    ip_stop_column   = 'C'
                                    ip_stop_row      = 10 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule        = zcl_excel_style_conditional=>c_rule_cellis.
+  lo_style_conditional = lo_worksheet->add_new_style_cond( ).
+  lo_style_conditional->rule        = zcl_excel_style_cond=>c_rule_cellis.
   ls_cellis-formula                 = '5'.
-  ls_cellis-operator                = zcl_excel_style_conditional=>c_operator_equal.
+  ls_cellis-operator                = zcl_excel_style_cond=>c_operator_equal.
   ls_cellis-cell_style              = lv_style_yellow_guid.
   lo_style_conditional->mode_cellis = ls_cellis.
   lo_style_conditional->priority    = 2.
@@ -168,10 +168,10 @@ CONSTANTS: lv_default_file_name TYPE string VALUE 'TechEd01.xlsx'.
                                    ip_stop_column   = 'C'
                                    ip_stop_row      = 10 ).
 
-  lo_style_conditional = lo_worksheet->add_new_conditional_style( ).
-  lo_style_conditional->rule        = zcl_excel_style_conditional=>c_rule_cellis.
+  lo_style_conditional = lo_worksheet->add_new_style_cond( ).
+  lo_style_conditional->rule        = zcl_excel_style_cond=>c_rule_cellis.
   ls_cellis-formula                 = '0'.
-  ls_cellis-operator                = zcl_excel_style_conditional=>c_operator_greaterthan.
+  ls_cellis-operator                = zcl_excel_style_cond=>c_operator_greaterthan.
   ls_cellis-cell_style              = lv_style_red_guid.
   lo_style_conditional->mode_cellis = ls_cellis.
   lo_style_conditional->priority    = 3.
