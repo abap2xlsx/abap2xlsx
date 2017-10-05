@@ -20,6 +20,8 @@ public section.
       value(EP_PROTECTION) type ZEXCEL_S_STYLE_PROTECTION .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
+*"* protected components of class ZABAP_EXCEL_STYLE_FONT
+*"* do not include other source files here!!!
 protected section.
 *"* private components of class ZCL_EXCEL_STYLE_PROTECTION
 *"* do not include other source files here!!!

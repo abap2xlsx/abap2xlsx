@@ -19,6 +19,8 @@ public section.
       value(EP_SECURITY_ENABLED) type FLAG .
 *"* protected components of class ZABAP_EXCEL_SECURITY
 *"* do not include other source files here!!!
+*"* protected components of class ZABAP_EXCEL_SECURITY
+*"* do not include other source files here!!!
 protected section.
 *"* private components of class ZABAP_EXCEL_SECURITY
 *"* do not include other source files here!!!

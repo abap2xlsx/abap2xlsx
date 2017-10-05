@@ -24,6 +24,8 @@ public section.
     redefinition .
 *"* protected components of class ZCX_EXCEL
 *"* do not include other source files here!!!
+*"* protected components of class ZCX_EXCEL
+*"* do not include other source files here!!!
 protected section.
 *"* private components of class ZCX_EXCEL
 *"* do not include other source files here!!!

@@ -18,6 +18,8 @@ protected section.
       value(RO_DATA) type ref to DATA .
 *"* private components of class ZCL_EXCEL_CONVERTER_RESULT
 *"* do not include other source files here!!!
+*"* private components of class ZCL_EXCEL_CONVERTER_RESULT
+*"* do not include other source files here!!!
 private section.
 ENDCLASS.
 

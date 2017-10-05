@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DEVC" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DEVC>
+    <CTEXT>Spreadsheet libraries</CTEXT>
+    <PDEVCLASS>ZTIR</PDEVCLASS>
+    <TRANSLATION_DEPTH>NOT_CLASSIFIED</TRANSLATION_DEPTH>
+    <TRANSLATION_DEPTH_TEXT>Not Classified</TRANSLATION_DEPTH_TEXT>
+   </DEVC>
+   <PERMISSION>
+    <SCOMPPDTLN>
+     <INTF_NAME>_ABA_DEFAULT</INTF_NAME>
+     <ERR_SEVER>NONE</ERR_SEVER>
+    </SCOMPPDTLN>
+    <SCOMPPDTLN>
+     <INTF_NAME>_ABA_VIRTUAL_DEFAULT</INTF_NAME>
+     <ERR_SEVER>NONE</ERR_SEVER>
+    </SCOMPPDTLN>
+    <SCOMPPDTLN>
+     <INTF_NAME>_BASIS_DEFAULT</INTF_NAME>
+     <ERR_SEVER>NONE</ERR_SEVER>
+    </SCOMPPDTLN>
+    <SCOMPPDTLN>
+     <INTF_NAME>_BASIS_VIRTUAL_DEFAULT</INTF_NAME>
+     <ERR_SEVER>NONE</ERR_SEVER>
+    </SCOMPPDTLN>
+   </PERMISSION>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -104,6 +104,8 @@ public section.
       value(EP_GUID) type ZEXCEL_CELL_STYLE .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
+*"* protected components of class ZABAP_EXCEL_STYLE_FONT
+*"* do not include other source files here!!!
 protected section.
 private section.
 

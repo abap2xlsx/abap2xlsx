@@ -86,6 +86,8 @@ public section.
       value(EP_NUMBER_FORMAT) type ZEXCEL_S_STYLE_NUMFMT .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
+*"* protected components of class ZABAP_EXCEL_STYLE_FONT
+*"* do not include other source files here!!!
 protected section.
 private section.
 *"* private components of class ZCL_EXCEL_STYLE_NUMBER_FORMAT

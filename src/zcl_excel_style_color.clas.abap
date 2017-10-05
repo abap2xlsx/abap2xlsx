@@ -50,6 +50,8 @@ public section.
       value(RV_COLOR_ARGB) type ZEXCEL_STYLE_COLOR_ARGB .
 *"* protected components of class ZCL_EXCEL_STYLE_COLOR
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_STYLE_COLOR
+*"* do not include other source files here!!!
 protected section.
 private section.
 

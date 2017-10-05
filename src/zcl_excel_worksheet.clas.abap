@@ -468,6 +468,8 @@ public section.
       ZCX_EXCEL .
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_WORKSHEET
+*"* do not include other source files here!!!
 protected section.
 private section.
 

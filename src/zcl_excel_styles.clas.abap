@@ -38,6 +38,8 @@ public section.
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
+*"* protected components of class ZABAP_EXCEL_WORKSHEETS
+*"* do not include other source files here!!!
 protected section.
 private section.
 

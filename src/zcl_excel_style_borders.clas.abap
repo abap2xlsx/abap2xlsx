@@ -24,6 +24,8 @@ public section.
       value(ES_FILL) type ZEXCEL_S_STYLE_BORDER .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
+*"* protected components of class ZABAP_EXCEL_STYLE_FONT
+*"* do not include other source files here!!!
 protected section.
 *"* private components of class ZCL_EXCEL_STYLE_BORDERS
 *"* do not include other source files here!!!

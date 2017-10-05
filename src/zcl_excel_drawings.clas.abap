@@ -41,6 +41,8 @@ public section.
       value(RP_TYPE) type ZEXCEL_DRAWING_TYPE .
 *"* protected components of class ZCL_EXCEL_DRAWINGS
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_DRAWINGS
+*"* do not include other source files here!!!
 protected section.
 private section.
 

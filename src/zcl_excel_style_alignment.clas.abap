@@ -31,6 +31,8 @@ public section.
       value(ES_ALIGNMENT) type ZEXCEL_S_STYLE_ALIGNMENT .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
+*"* protected components of class ZABAP_EXCEL_STYLE_FONT
+*"* do not include other source files here!!!
 protected section.
 *"* private components of class ZCL_EXCEL_STYLE_ALIGNMENT
 *"* do not include other source files here!!!

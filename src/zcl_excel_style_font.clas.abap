@@ -48,6 +48,8 @@ public section.
       value(R_WIDTH) type I .
 *"* protected components of class ZCL_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_STYLE_FONT
+*"* do not include other source files here!!!
 protected section.
 private section.
 *"* private components of class ZCL_EXCEL_STYLE_FONT

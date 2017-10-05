@@ -48,6 +48,8 @@ public section.
   methods CONSTRUCTOR .
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_DATA_VALIDATION
+*"* do not include other source files here!!!
 protected section.
 private section.
 *"* private components of class ZCL_EXCEL_DATA_VALIDATION

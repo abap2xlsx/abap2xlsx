@@ -9,7 +9,6 @@
     <STARTUP_PLUG>DEFAULT</STARTUP_PLUG>
     <DISPLAY_NAME>ZDEMO_EXCEL_WDA01</DISPLAY_NAME>
    </APP>
-   <PROPERTIES/>
   </asx:values>
  </asx:abap>
 </abapGit>
