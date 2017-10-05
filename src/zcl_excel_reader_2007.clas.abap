@@ -533,14 +533,15 @@ METHOD get_dxf_style_guid.
               ls_cstylex-fill-filltype      = 'X'.
               ls_cstylex-fill-bgcolor-rgb   = 'X'.
             ENDIF.
-          ENDIF.
-          CLEAR lv_val.
-          lv_val  = lo_ixml_element2->get_attribute_ns( 'theme' ).
-          IF lv_val IS NOT INITIAL.
-            ls_cstyle-fill-filltype         = zcl_excel_style_fill=>c_fill_solid.
-            ls_cstyle-fill-bgcolor-theme    = lv_val.
-            ls_cstylex-fill-filltype        = 'X'.
-            ls_cstylex-fill-bgcolor-theme   = 'X'.
+            CLEAR lv_val.
+            lv_val  = lo_ixml_element2->get_attribute_ns( 'theme' ).
+            IF lv_val IS NOT INITIAL.
+              ls_cstyle-fill-filltype         = zcl_excel_style_fill=>c_fill_solid.
+              ls_cstyle-fill-bgcolor-theme    = lv_val.
+              ls_cstylex-fill-filltype        = 'X'.
+              ls_cstylex-fill-bgcolor-theme   = 'X'.
+            ENDIF.
+            CLEAR lv_val.
           ENDIF.
         ENDIF.
 
