@@ -466,6 +466,15 @@ public section.
       !IP_TITLE type ZEXCEL_SHEET_TITLE
     raising
       ZCX_EXCEL .
+  METHODS get_table
+    IMPORTING
+      iv_skipped_rows TYPE int4  DEFAULT 0
+      iv_skipped_cols TYPE int4  DEFAULT 0
+    EXPORTING
+      et_table        TYPE STANDARD TABLE
+    RAISING
+      zcx_excel.
+      
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
@@ -5242,4 +5251,146 @@ method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME.
 method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR.
   me->zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
   endmethod.
+  
+   METHOD get_table.
+*--------------------------------------------------------------------*
+* Comment D. Rauchenstein
+* With this method, we get a fully functional Excel Upload, which solves
+* a few issues of the other excel upload tools
+* ZBCABA_ALSM_EXCEL_UPLOAD_EXT: Reads only up to 50 signs per Cell, Limit
+* in row-Numbers. Other have Limitations of Lines, or you are not able
+* to ignore filters or choosing the right tab.
+*
+* To get a fully functional XLSX Upload, you can use it e.g. with method
+* CL_EXCEL_READER_2007->ZIF_EXCEL_READER~LOAD_FILE()
+*--------------------------------------------------------------------*
+
+    FIELD-SYMBOLS: <ls_line> TYPE data.
+    FIELD-SYMBOLS: <lv_value> TYPE data.
+
+    DATA lv_actual_row TYPE int4.
+    DATA lv_actual_col TYPE int4.
+    DATA lv_errormessage TYPE string.
+
+
+
+*try
+    DATA(lv_max_col) =  me->get_highest_column( ).
+    DATA(lv_max_row) =  me->get_highest_row( ).
+
+*--------------------------------------------------------------------*
+* The row counter begins with 1 and should be corrected with the skips
+*--------------------------------------------------------------------*
+    lv_actual_row =  iv_skipped_rows + 1.
+    lv_actual_col =  iv_skipped_cols + 1.
+
+
+    TRY.
+*--------------------------------------------------------------------*
+* Check if we the basic features are possible with given "any table"
+*--------------------------------------------------------------------*
+        APPEND INITIAL LINE TO et_table ASSIGNING <ls_line>.
+        IF sy-subrc <> 0 OR <ls_line> IS NOT ASSIGNED.
+
+          lv_errormessage = 'Error at inserting new Line to internal Table'(002).
+          RAISE EXCEPTION TYPE zcx_excel
+            EXPORTING
+              error = lv_errormessage.
+
+        ELSE.
+
+          ASSIGN COMPONENT ( lv_max_col - iv_skipped_cols ) OF STRUCTURE <ls_line> TO <lv_value>.
+          IF sy-subrc <> 0 OR <lv_value> IS NOT ASSIGNED.
+            lv_errormessage = 'Internal table has less columns than excel'(003).
+            RAISE EXCEPTION TYPE zcx_excel
+              EXPORTING
+                error = lv_errormessage.
+
+          ELSE.
+*--------------------------------------------------------------------*
+*now we are ready for handle the table data
+*--------------------------------------------------------------------*
+
+            REFRESH et_table.
+*--------------------------------------------------------------------*
+* Handle each Row until end on right side
+*--------------------------------------------------------------------*
+            WHILE lv_actual_row <= lv_max_row .
+
+*--------------------------------------------------------------------*
+* Handle each Column until end on bottom
+* First step is to step back on first column
+*--------------------------------------------------------------------*
+              lv_actual_col =  iv_skipped_cols + 1.
+
+              UNASSIGN <ls_line>.
+              APPEND INITIAL LINE TO et_table ASSIGNING <ls_line>.
+              IF sy-subrc <> 0 OR <ls_line> IS NOT ASSIGNED.
+                lv_errormessage = 'Error at inserting new Line to internal Table'(002).
+                RAISE EXCEPTION TYPE zcx_excel
+                  EXPORTING
+                    error = lv_errormessage.
+              ENDIF.
+              WHILE lv_actual_col <= lv_max_col.
+
+
+                ASSIGN COMPONENT ( lv_actual_col - iv_skipped_cols ) OF STRUCTURE <ls_line> TO <lv_value>.
+                IF sy-subrc <> 0.
+                  lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+                  RAISE EXCEPTION TYPE zcx_excel
+                    EXPORTING
+                      error = lv_errormessage.
+                ENDIF.
+
+                me->get_cell(
+                  EXPORTING
+                    ip_column  = lv_actual_col    " Cell Column
+                    ip_row     = lv_actual_row    " Cell Row
+                  IMPORTING
+                    ep_value   = DATA(lv_value)    " Cell Value
+                    ep_rc      = DATA(lv_rc)    " Return Value of ABAP Statements
+                ).
+                IF lv_rc <> 0
+                  and lv_rc <> 4.                                                   "No found error means, zero/no value in cell
+                  lv_errormessage = |{ 'Error at reading field value (Col:'(007) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+                  RAISE EXCEPTION TYPE zcx_excel
+                    EXPORTING
+                      error = lv_errormessage.
+                ENDIF.
+
+                <lv_value> = lv_value.
+*  CATCH zcx_excel.    "
+                ADD 1 TO lv_actual_col.
+              ENDWHILE.
+              ADD 1 TO lv_actual_row.
+            ENDWHILE.
+          ENDIF.
+
+
+        ENDIF.
+
+      CATCH cx_sy_assign_cast_illegal_cast.
+        lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+      CATCH cx_sy_assign_cast_unknown_type.
+        lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+      CATCH cx_sy_assign_out_of_range.
+        lv_errormessage = 'Internal table has less columns than excel'(003).
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+      CATCH cx_sy_conversion_error.
+        lv_errormessage = |{ 'Error at converting field value (Col:'(006) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = lv_errormessage.
+
+    ENDTRY.
+  ENDMETHOD.
+  
 ENDCLASS.
