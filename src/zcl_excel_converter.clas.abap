@@ -302,19 +302,17 @@ METHOD ask_option.
   IF sy-subrc <> 0.
     MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
             WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
-  ELSE.
-    IF l_returncode = 'A'.
+  ELSEIF l_returncode = 'A'.
       RAISE EXCEPTION TYPE zcx_excel.
-    ELSE.
-      LOOP AT lt_sval INTO ls_sval.
-        ASSIGN COMPONENT ls_sval-fieldname OF STRUCTURE ws_option TO <fs>.
-        IF sy-subrc = 0.
-          <fs> = ls_sval-value.
-        ENDIF.
-      ENDLOOP.
-      set_option( is_option = ws_option ) .
-      rs_option = ws_option.
-    ENDIF.
+  ELSE.
+    LOOP AT lt_sval INTO ls_sval.
+      ASSIGN COMPONENT ls_sval-fieldname OF STRUCTURE ws_option TO <fs>.
+      IF sy-subrc = 0.
+        <fs> = ls_sval-value.
+      ENDIF.
+    ENDLOOP.
+    set_option( is_option = ws_option ) .
+    rs_option = ws_option.
   ENDIF.
 ENDMETHOD.
 
@@ -865,16 +863,13 @@ method CREATE_WORKSHEET.
 
     IF i_table = abap_true.
       l_freeze_col = bind_table( i_style_table = i_style_table ) .
-    ELSE.
+    ELSEIF wt_filter IS NOT INITIAL.
 * Let's check for filter.
-      IF wt_filter IS NOT INITIAL.
-        wo_autofilter = wo_excel->add_new_autofilter( io_sheet = wo_worksheet ).
-        l_freeze_col = bind_cells( ) .
-        set_autofilter_area( ) .
-      ELSE.
-        l_freeze_col = bind_cells( ) .
-      ENDIF.
-
+      wo_autofilter = wo_excel->add_new_autofilter( io_sheet = wo_worksheet ).
+      l_freeze_col = bind_cells( ) .
+      set_autofilter_area( ) .
+    ELSE.
+      l_freeze_col = bind_cells( ) .
     ENDIF.
 
 * Check for freeze panes

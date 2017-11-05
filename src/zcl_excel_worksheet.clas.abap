@@ -2922,18 +2922,15 @@ METHOD bind_table.
                           ip_formula  = <fs_fldval>
                           ip_style    = <ls_field_catalog>-style ).
           ENDIF.
-        ELSE.
-          IF <ls_field_catalog>-abap_type IS NOT INITIAL.
-            me->set_cell( ip_column   = lv_column_alpha
+        ELSEIF <ls_field_catalog>-abap_type IS NOT INITIAL.
+          me->set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
-
                         ip_formula  = <fs_fldval>
                         ip_abap_type = <ls_field_catalog>-abap_type ).
-          ELSE.
-            me->set_cell( ip_column   = lv_column_alpha
-                          ip_row      = lv_row_int
-                          ip_formula  = <fs_fldval> ).
-          ENDIF.
+        ELSE.
+          me->set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = <fs_fldval> ).
         ENDIF.
       ELSE.
         IF <ls_field_catalog>-style IS NOT INITIAL.

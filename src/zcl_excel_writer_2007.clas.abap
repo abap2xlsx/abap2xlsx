@@ -3366,14 +3366,12 @@ METHOD create_xl_sheet.
                                 value = lv_value ).
   " defaultColWidth
   lo_column_default = io_worksheet->get_default_column( ).
-  IF lo_column_default IS BOUND.
-    IF lo_column_default->get_width( ) >= 0.
-      lv_value = lo_column_default->get_width( ).
-      SHIFT lv_value RIGHT DELETING TRAILING space.
-      SHIFT lv_value LEFT DELETING LEADING space.
-      lo_element->set_attribute_ns( name  = lc_xml_attr_defaultcolwidth
-                                    value = lv_value ).
-    ENDIF.
+  IF lo_column_default IS BOUND AND lo_column_default->get_width( ) >= 0.
+    lv_value = lo_column_default->get_width( ).
+    SHIFT lv_value RIGHT DELETING TRAILING space.
+    SHIFT lv_value LEFT DELETING LEADING space.
+    lo_element->set_attribute_ns( name  = lc_xml_attr_defaultcolwidth
+                                  value = lv_value ).
   ENDIF.
 
   " outlineLevelCol

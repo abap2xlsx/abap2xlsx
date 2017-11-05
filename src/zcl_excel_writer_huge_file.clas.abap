@@ -433,10 +433,8 @@ METHOD create_xl_sheet.
   ENDIF.
 
   lo_column_default = io_worksheet->get_default_column( ).
-  IF lo_column_default IS BOUND.
-    IF lo_column_default->get_width( ) >= 0.
-      l_worksheet-defaultcolwidth = lo_column_default->get_width( ).
-    ENDIF.
+  IF lo_column_default IS BOUND AND lo_column_default->get_width( ) >= 0.
+    l_worksheet-defaultcolwidth = lo_column_default->get_width( ).
   ENDIF.
 
   lo_row_default = io_worksheet->get_default_row( ).
