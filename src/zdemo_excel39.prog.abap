@@ -113,6 +113,7 @@ START-OF-SELECTION.
 
   " Set style
   lo_bar1->set_style( zcl_excel_graph=>c_style_default ).
+  lo_bar1->set_title( ip_value = 'TITLE!' ).
 
   " Set label to none
   lo_bar1->set_print_lbl( zcl_excel_graph_bars=>c_show_false ).

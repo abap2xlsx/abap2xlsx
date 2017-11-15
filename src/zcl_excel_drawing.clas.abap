@@ -331,7 +331,7 @@ method GET_WIDTH_EMU_STR.
   endmethod.
 
 
-method LOAD_CHART_ATTRIBUTES.
+METHOD load_chart_attributes.
   DATA: node                TYPE REF TO if_ixml_element.
   DATA: node2               TYPE REF TO if_ixml_element.
   DATA: node3               TYPE REF TO if_ixml_element.
@@ -424,6 +424,15 @@ method LOAD_CHART_ATTRIBUTES.
   zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
   me->graph->ns_styleval = ls_prop-val.
   "---------------------------Read graph properties
+  "ADDED
+  CLEAR node2.
+  node2 ?= node->find_from_name( name = 'title' namespace = 'c' ).
+  IF node2 IS BOUND AND node2 IS NOT INITIAL.
+    node3 ?= node2->find_from_name( name = 't' namespace = 'a' ).
+    me->graph->title = node3->get_value( ).
+  ENDIF.
+  "END
+
   node2 ?= node->find_from_name( name = 'autoTitleDeleted' namespace = 'c' ).
   zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
   me->graph->ns_autotitledeletedval = ls_prop-val.
@@ -781,13 +790,13 @@ method LOAD_CHART_ATTRIBUTES.
         ENDIF.
         CALL METHOD lo_linechart->create_serie
           EXPORTING
-            ip_idx              = lv_idx
-            ip_order            = lv_order
-            ip_symbol           = lv_symbol
-            ip_smooth           = lv_smooth
-            ip_lbl              = lv_label
-            ip_ref              = lv_value
-            ip_sername          = lv_sername.
+            ip_idx     = lv_idx
+            ip_order   = lv_order
+            ip_symbol  = lv_symbol
+            ip_smooth  = lv_smooth
+            ip_lbl     = lv_label
+            ip_ref     = lv_value
+            ip_sername = lv_sername.
         lo_node = lo_iterator->get_next( ).
         IF lo_node IS BOUND.
           node2 ?= lo_node->query_interface( ixml_iid_element ).
@@ -814,12 +823,12 @@ method LOAD_CHART_ATTRIBUTES.
       lo_linechart->ns_showbubblesizeval = ls_prop-val.
 
       node ?= node->find_from_name( name = 'lineChart' namespace = 'c' ).
-      node2 ?= node->find_from_name( name = 'marker' namespace = 'c' DEPTH = '1' ).
+      node2 ?= node->find_from_name( name = 'marker' namespace = 'c' depth = '1' ).
       zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-      lo_linechart->NS_MARKERVAL = ls_prop-val.
-      node2 ?= node->find_from_name( name = 'smooth' namespace = 'c' DEPTH = '1' ).
+      lo_linechart->ns_markerval = ls_prop-val.
+      node2 ?= node->find_from_name( name = 'smooth' namespace = 'c' depth = '1' ).
       zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-      lo_linechart->NS_SMOOTHVAL = ls_prop-val.
+      lo_linechart->ns_smoothval = ls_prop-val.
       node ?= ip_chart->if_ixml_node~get_first_child( ).
       CHECK node IS NOT INITIAL.
 
@@ -1008,7 +1017,7 @@ method LOAD_CHART_ATTRIBUTES.
   me->graph->pagemargins = ls_pagemargins.
 
 
-  endmethod.
+ENDMETHOD.
 
 
 method PIXEL2EMU.

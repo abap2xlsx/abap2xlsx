@@ -34,18 +34,19 @@ public section.
                   footer TYPE string,
           END OF s_pagemargins .
 
-  data NS_1904VAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data NS_LANGVAL type STRING value 'it-IT'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data NS_ROUNDEDCORNERSVAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+  data NS_1904VAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data NS_LANGVAL type STRING value 'it-IT'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data NS_ROUNDEDCORNERSVAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data PAGEMARGINS type S_PAGEMARGINS .
-  data NS_AUTOTITLEDELETEDVAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data NS_PLOTVISONLYVAL type STRING value '1'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data NS_DISPBLANKSASVAL type STRING value 'gap'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data NS_SHOWDLBLSOVERMAXVAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+  data NS_AUTOTITLEDELETEDVAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data NS_PLOTVISONLYVAL type STRING value '1'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data NS_DISPBLANKSASVAL type STRING value 'gap'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data NS_SHOWDLBLSOVERMAXVAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data TITLE type STRING .               .  . " .
   data SERIES type T_SERIES .
-  data NS_C14STYLEVAL type STRING value '102'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data PRINT_LABEL type C value 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data NS_STYLEVAL type STRING value '2'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+  data NS_C14STYLEVAL type STRING value '102'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data PRINT_LABEL type C value 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data NS_STYLEVAL type STRING value '2'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   constants:
     BEGIN OF c_style_default,
               c14style type i value 102,
@@ -317,6 +318,9 @@ public section.
   methods SET_PRINT_LBL
     importing
       !IP_VALUE type C .
+  methods SET_TITLE
+    importing
+      value(IP_VALUE) type STRING .
 protected section.
 *"* protected components of class ZCL_EXCEL_GRAPH
 *"* do not include other source files here!!!
@@ -398,4 +402,9 @@ method SET_STYLE.
   me->ns_styleval = ip_style-cstyle.
   CONDENSE me->ns_styleval NO-GAPS.
   endmethod.
+
+
+method SET_TITLE.
+  me->title = ip_value.
+endmethod.
 ENDCLASS.

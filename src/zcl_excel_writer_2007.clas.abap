@@ -1225,7 +1225,7 @@ method CREATE_RELATIONSHIPS.
   endmethod.
 
 
-method CREATE_XL_CHARTS.
+METHOD create_xl_charts.
 
 
 ** Constant node name
@@ -1444,6 +1444,35 @@ method CREATE_XL_CHARTS.
   "---------------------------CHART
   lo_element = lo_document->create_simple_element( name = lc_xml_node_chart
                                                        parent = lo_element_root ).
+  "Added
+  IF lo_chart->title IS NOT INITIAL.
+    lo_element2 = lo_document->create_simple_element( name = 'c:title'
+                                                         parent = lo_element ).
+    lo_element3 = lo_document->create_simple_element( name = 'c:tx'
+                                                         parent = lo_element2 ).
+    lo_element4 = lo_document->create_simple_element( name = 'c:rich'
+                                                         parent = lo_element3 ).
+    lo_element5 = lo_document->create_simple_element( name = 'a:bodyPr'
+                                                         parent = lo_element4 ).
+    lo_element5 = lo_document->create_simple_element( name = 'a:lstStyle'
+                                                         parent = lo_element4 ).
+    lo_element5 = lo_document->create_simple_element( name = 'a:p'
+                                                         parent = lo_element4 ).
+    lo_element6 = lo_document->create_simple_element( name = 'a:pPr'
+                                                         parent = lo_element5 ).
+    lo_element7 = lo_document->create_simple_element( name = 'a:defRPr'
+                                                         parent = lo_element6 ).
+    lo_element6 = lo_document->create_simple_element( name = 'a:r'
+                                                         parent = lo_element5 ).
+    lo_element7 = lo_document->create_simple_element( name = 'a:rPr'
+                                                         parent = lo_element6 ).
+    lo_element7->set_attribute_ns( name  = 'lang'
+                                      value = 'en-US' ).
+    lo_element7 = lo_document->create_simple_element( name = 'a:t'
+                                                         parent = lo_element6 ).
+    lo_element7->set_value( value = lo_chart->title ).
+  ENDIF.
+  "End
   lo_element2 = lo_document->create_simple_element( name = lc_xml_node_autotitledeleted
                                                        parent = lo_element ).
   lo_element2->set_attribute_ns( name  = 'val'
@@ -1883,11 +1912,11 @@ method CREATE_XL_CHARTS.
       lo_element4 = lo_document->create_simple_element( name = lc_xml_node_marker
                                                    parent = lo_element3 ).
       lo_element4->set_attribute_ns( name  = 'val'
-                                value = lo_chartl->NS_MARKERVAL ).
+                                value = lo_chartl->ns_markerval ).
       lo_element4 = lo_document->create_simple_element( name = lc_xml_node_smooth
                                                    parent = lo_element3 ).
       lo_element4->set_attribute_ns( name  = 'val'
-                                value = lo_chartl->NS_SMOOTHVAL ).
+                                value = lo_chartl->ns_smoothval ).
 
       "axes
       lo_el_rootchart = lo_element3.
@@ -2130,7 +2159,7 @@ method CREATE_XL_CHARTS.
   lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
   lo_renderer->render( ).
 
-  endmethod.
+ENDMETHOD.
 
 
 method CREATE_XL_DRAWINGS.
