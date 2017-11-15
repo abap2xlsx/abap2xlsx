@@ -2176,10 +2176,8 @@ method BIND_ALV_OLE2.
                 clear: wa_subtot_indexs.
                 read table lt_subtot_indexs into wa_subtot_indexs
                 with key index = l_save_index.
-                IF sy-subrc = 0.
-                  if <item> = '0'.
-                    clear: contentsitem-value.
-                  endif.
+                IF sy-subrc = 0 AND <item> = '0'.
+                  clear: contentsitem-value.
                 ENDIF.
               endif.
             endif.
@@ -2422,17 +2420,15 @@ method BIND_ALV_OLE2.
       read table currcells index counter into curritem2.
       if curritem-left eq curritem2-left.
         length = curritem-top + curritem-rows.
-        if length eq curritem2-top.
-          if curritem-decimals eq curritem2-decimals.
-            move curritem to curritem3.
-            curritem3-rows = curritem3-rows + curritem2-rows.
-            curritem-left = -1.
-            modify currcells index sy-index from curritem.
-            curritem2-left = -1.
-            modify currcells index counter from curritem2.
-            append curritem3 to currcells.
-            found = 'X'.
-          endif.
+        if length eq curritem2-top and curritem-decimals eq curritem2-decimals.
+          move curritem to curritem3.
+          curritem3-rows = curritem3-rows + curritem2-rows.
+          curritem-left = -1.
+          modify currcells index sy-index from curritem.
+          curritem2-left = -1.
+          modify currcells index counter from curritem2.
+          append curritem3 to currcells.
+          found = 'X'.
         endif.
       endif.
     enddo.
@@ -2460,17 +2456,15 @@ method BIND_ALV_OLE2.
       if curritem-top eq curritem2-top and curritem-rows eq
       curritem2-rows.
         length = curritem-left + curritem-columns.
-        if length eq curritem2-left.
-          if curritem-decimals eq curritem2-decimals.
-            move curritem to curritem3.
-            curritem3-columns = curritem3-columns + curritem2-columns.
-            curritem-left = -1.
-            modify currcells index sy-index from curritem.
-            curritem2-left = -1.
-            modify currcells index counter from curritem2.
-            append curritem3 to currcells.
-            found = 'X'.
-          endif.
+        if length eq curritem2-left and curritem-decimals eq curritem2-decimals.
+          move curritem to curritem3.
+          curritem3-columns = curritem3-columns + curritem2-columns.
+          curritem-left = -1.
+          modify currcells index sy-index from curritem.
+          curritem2-left = -1.
+          modify currcells index counter from curritem2.
+          append curritem3 to currcells.
+          found = 'X'.
         endif.
       endif.
     enddo.
@@ -2922,18 +2916,15 @@ METHOD bind_table.
                           ip_formula  = <fs_fldval>
                           ip_style    = <ls_field_catalog>-style ).
           ENDIF.
-        ELSE.
-          IF <ls_field_catalog>-abap_type IS NOT INITIAL.
-            me->set_cell( ip_column   = lv_column_alpha
+        ELSEIF <ls_field_catalog>-abap_type IS NOT INITIAL.
+          me->set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
-
                         ip_formula  = <fs_fldval>
                         ip_abap_type = <ls_field_catalog>-abap_type ).
-          ELSE.
-            me->set_cell( ip_column   = lv_column_alpha
-                          ip_row      = lv_row_int
-                          ip_formula  = <fs_fldval> ).
-          ENDIF.
+        ELSE.
+          me->set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = <fs_fldval> ).
         ENDIF.
       ELSE.
         IF <ls_field_catalog>-style IS NOT INITIAL.

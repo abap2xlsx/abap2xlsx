@@ -1029,10 +1029,9 @@ METHOD get_fieldcatalog.
     <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
 
     <fcat>-dynpfld   = 'X'.  " What in the world would we exclude here?
-    IF <fcat>-position = 1.  " except for the MANDT-field of most tables ( 1st column that is )
-      IF lo_salv_column_table->get_ddic_datatype( ) = 'CLNT'.
-        CLEAR <fcat>-dynpfld.
-      ENDIF.
+    " except for the MANDT-field of most tables ( 1st column that is )
+    IF <fcat>-position = 1 AND lo_salv_column_table->get_ddic_datatype( ) = 'CLNT'.
+      CLEAR <fcat>-dynpfld.
     ENDIF.
 
 * For fields that don't a description (  i.e. defined by  "field type i," )

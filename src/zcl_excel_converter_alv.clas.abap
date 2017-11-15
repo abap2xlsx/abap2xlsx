@@ -323,20 +323,18 @@ method GET_COLOR.
       l_line = sy-tabix.
       IF ws_layo-info_fname IS NOT INITIAL.
         ASSIGN COMPONENT ws_layo-info_fname OF STRUCTURE <fs_stab> TO <fs>.
-        IF sy-subrc = 0.
-          IF <fs> IS NOT INITIAL.
-            l_color = <fs>.
-            IF l_color(1) = 'C'.
-              READ TABLE wt_colors INTO ls_color WITH TABLE KEY col = l_color+1(1)
-                                                                int = l_color+2(1)
-                                                                inv = l_color+3(1).
-              IF sy-subrc = 0.
-                ls_con_col-rownumber  = l_line.
-                ls_con_col-columnname = space.
-                ls_con_col-fontcolor  = ls_color-fontcolor.
-                ls_con_col-fillcolor  = ls_color-fillcolor.
-                INSERT ls_con_col INTO TABLE et_colors.
-              ENDIF.
+        IF sy-subrc = 0 AND <fs> IS NOT INITIAL.
+          l_color = <fs>.
+          IF l_color(1) = 'C'.
+            READ TABLE wt_colors INTO ls_color WITH TABLE KEY col = l_color+1(1)
+                                                              int = l_color+2(1)
+                                                              inv = l_color+3(1).
+            IF sy-subrc = 0.
+              ls_con_col-rownumber  = l_line.
+              ls_con_col-columnname = space.
+              ls_con_col-fontcolor  = ls_color-fontcolor.
+              ls_con_col-fillcolor  = ls_color-fillcolor.
+              INSERT ls_con_col INTO TABLE et_colors.
             ENDIF.
           ENDIF.
         ENDIF.
