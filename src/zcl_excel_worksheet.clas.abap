@@ -3694,8 +3694,7 @@ ENDMETHOD.
 
 
 METHOD delete_merge.
-
-  FIELD-SYMBOLS: <ls_merged_cell> LIKE LINE OF me->mt_merged_cells.
+  
   DATA: lv_column TYPE i.
 *--------------------------------------------------------------------*
 * If cell information is passed delete merge including this cell,
