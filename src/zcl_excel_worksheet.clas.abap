@@ -3694,9 +3694,8 @@ ENDMETHOD.
 
 
 METHOD delete_merge.
-
-  FIELD-SYMBOLS: <ls_merged_cell> LIKE LINE OF me->mt_merged_cells.
-  DATA: is_merged TYPE abap_bool.
+  
+  DATA: lv_column TYPE i.
 *--------------------------------------------------------------------*
 * If cell information is passed delete merge including this cell,
 * otherwise delete all merges
@@ -3705,15 +3704,16 @@ METHOD delete_merge.
     OR ip_cell_row    IS INITIAL.
     CLEAR me->mt_merged_cells.
   ELSE.
-    LOOP AT me->mt_merged_cells ASSIGNING <ls_merged_cell>.
+    lv_column = zcl_excel_common=>convert_column2int( ip_cell_column ).
+    
+    LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS 
+    WHERE 
+        ( row_from <= ip_cell_row and row_to >= ip_cell_row )
+    AND 
+        ( col_from <= lv_column and col_to >= lv_column ).
 
-      is_merged = me->is_cell_merged( ip_column = ip_cell_column
-                                      ip_row    = ip_cell_row ).
-      IF is_merged = abap_true.
-        DELETE me->mt_merged_cells.  " Delete this merge, that includes this cell
-        EXIT.
-      ENDIF.
-
+      DELETE me->mt_merged_cells.
+      EXIT.
     ENDLOOP.
   ENDIF.
 
