@@ -34,7 +34,7 @@ private section.
   data EXCEL type ref to ZCL_EXCEL .
   class-data DELIMITER type CHAR01 value ';'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
   class-data ENCLOSURE type CHAR01 value '"'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-  class-data EOL type CHAR01 value CL_ABAP_CHAR_UTILITIES=>CR_LF. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+  class-data EOL type CHAR02 value CL_ABAP_CHAR_UTILITIES=>CR_LF. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
   class-data WORKSHEET_NAME type ZEXCEL_WORKSHEETS_NAME .
   class-data WORKSHEET_INDEX type ZEXCEL_ACTIVE_WORKSHEET .
 
