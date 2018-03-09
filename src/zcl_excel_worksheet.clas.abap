@@ -5,7 +5,13 @@ class ZCL_EXCEL_WORKSHEET definition
 public section.
 *"* public components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_WORKSHEET
+*"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_WORKSHEET
+*"* do not include other source files here!!!
   type-pools ABAP .
+  type-pools SLIS .
+  type-pools SOI .
 
   interfaces ZIF_EXCEL_SHEET_PRINTSETTINGS .
   interfaces ZIF_EXCEL_SHEET_PROPERTIES .
@@ -25,11 +31,11 @@ public section.
   constants C_BREAK_NONE type ZEXCEL_BREAK value 0. "#EC NOTEXT
   constants C_BREAK_ROW type ZEXCEL_BREAK value 1. "#EC NOTEXT
   data EXCEL type ref to ZCL_EXCEL read-only .
-  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. "#EC NOTEXT . " .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. "#EC NOTEXT
   data SHEET_CONTENT type ZEXCEL_T_CELL_DATA .
   data SHEET_SETUP type ref to ZCL_EXCEL_SHEET_SETUP .
-  data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-  data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT . " .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+  data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT
+  data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT
   data STYLES type ZEXCEL_T_SHEET_STYLE .
   data TABCOLOR type ZEXCEL_S_TABCOLOR read-only .
 
@@ -65,8 +71,6 @@ public section.
       !I_TABLE type ABAP_BOOL default ABAP_TRUE
     raising
       ZCX_EXCEL .
-  type-pools SLIS .
-  type-pools SOI .
   methods BIND_ALV_OLE2
     importing
       !I_DOCUMENT_URL type CHAR255 default SPACE
@@ -104,8 +108,11 @@ public section.
       ZCX_EXCEL .
   methods CHANGE_CELL_STYLE
     importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_CELL type ZEXCEL_CELL_REFERENCE optional
+      !IP_COLUMN type SIMPLE optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
+      !IP_COLUMN_TO type SIMPLE optional
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
       !IP_COMPLETE type ZEXCEL_S_CSTYLE_COMPLETE optional
       !IP_XCOMPLETE type ZEXCEL_S_CSTYLEX_COMPLETE optional
       !IP_FONT type ZEXCEL_S_CSTYLE_FONT optional
@@ -380,11 +387,15 @@ public section.
       ZCX_EXCEL .
   methods SET_CELL
     importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_CELL type ZEXCEL_CELL_REFERENCE optional
+      !IP_COLUMN type SIMPLE optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
+      !IP_COLUMN_TO type SIMPLE optional
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
       !IP_VALUE type SIMPLE optional
       !IP_FORMULA type ZEXCEL_CELL_FORMULA optional
       !IP_STYLE type ZEXCEL_CELL_STYLE optional
+      !IO_STYLE type ref to ZCL_EXCEL_STYLE optional
       !IP_HYPERLINK type ref to ZCL_EXCEL_HYPERLINK optional
       !IP_DATA_TYPE type ZEXCEL_CELL_DATA_TYPE optional
       !IP_ABAP_TYPE type ABAP_TYPEKIND optional
@@ -466,19 +477,14 @@ public section.
       !IP_TITLE type ZEXCEL_SHEET_TITLE
     raising
       ZCX_EXCEL .
-  METHODS get_table
-    IMPORTING
-      iv_skipped_rows TYPE int4  DEFAULT 0
-      iv_skipped_cols TYPE int4  DEFAULT 0
-    EXPORTING
-      et_table        TYPE STANDARD TABLE
-    RAISING
-      zcx_excel.
-
-*"* protected components of class ZCL_EXCEL_WORKSHEET
-*"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_WORKSHEET
-*"* do not include other source files here!!!
+  methods GET_TABLE
+    importing
+      !IV_SKIPPED_ROWS type INT4 default 0
+      !IV_SKIPPED_COLS type INT4 default 0
+    exporting
+      !ET_TABLE type STANDARD TABLE
+    raising
+      ZCX_EXCEL .
 protected section.
 private section.
 
@@ -543,7 +549,7 @@ private section.
   data RANGES type ref to ZCL_EXCEL_RANGES .
   data ROWS type ref to ZCL_EXCEL_ROWS .
   data TABLES type ref to CL_OBJECT_COLLECTION .
-  data TITLE type ZEXCEL_SHEET_TITLE value 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+  data TITLE type ZEXCEL_SHEET_TITLE value 'Worksheet'. "#EC NOTEXT
   data UPPER_CELL type ZEXCEL_S_CELL_DATA .
 
   methods CALCULATE_CELL_WIDTH
@@ -3342,6 +3348,17 @@ METHOD change_cell_style.
         borderx         TYPE zexcel_s_cstylex_border,
         l_guid          TYPE zexcel_cell_style.   "issue # 177
 
+  DATA:
+    lv_column                 TYPE zexcel_cell_column_alpha,
+    lv_column_int             TYPE zexcel_cell_column,
+    lv_row                    TYPE zexcel_cell_row,
+    lv_column_start           TYPE zexcel_cell_column_alpha,
+    lv_column_end             TYPE zexcel_cell_column_alpha,
+    lv_column_int_start       TYPE zexcel_cell_column,
+    lv_column_int_end         TYPE zexcel_cell_column,
+    lv_row_start              TYPE zexcel_cell_row,
+    lv_row_end                TYPE zexcel_cell_row.
+
 * We have a lot of parameters.  Use some macros to make the coding more structured
 
   DEFINE clear_initial_colorxfields.
@@ -3376,159 +3393,6 @@ METHOD change_cell_style.
     endif.
   END-OF-DEFINITION.
 
-* First get current stylsettings
-  TRY.
-      me->get_cell( EXPORTING ip_column = ip_column  " Cell Column
-                              ip_row    = ip_row      " Cell Row
-                    IMPORTING ep_guid   = l_guid )." Cell Value ).  "issue # 177
-
-
-      stylemapping = me->excel->get_style_to_guid( l_guid ).        "issue # 177
-      complete_style  = stylemapping-complete_style.
-      complete_stylex = stylemapping-complete_stylex.
-    CATCH zcx_excel.
-* Error --> use submitted style
-  ENDTRY.
-
-*  move_supplied_multistyles: complete.
-  IF ip_complete IS SUPPLIED.
-    IF ip_xcomplete IS NOT SUPPLIED.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'Complete styleinfo has to be supplied with corresponding X-field'.
-    ENDIF.
-    MOVE-CORRESPONDING ip_complete  TO complete_style.
-    MOVE-CORRESPONDING ip_xcomplete TO complete_stylex.
-  ENDIF.
-
-
-
-  IF ip_font IS SUPPLIED.
-    DATA: fontx LIKE ip_xfont.
-    IF ip_xfont IS SUPPLIED.
-      fontx = ip_xfont.
-    ELSE.
-* Only supplied values should be used - exception: Flags bold and italic strikethrough underline
-      MOVE 'X' TO: fontx-bold,
-                   fontx-italic,
-                   fontx-strikethrough,
-                   fontx-underline_mode.
-      CLEAR fontx-color WITH 'X'.
-      clear_initial_colorxfields ip_font-color fontx-color.
-      IF ip_font-family IS NOT INITIAL.
-        fontx-family = 'X'.
-      ENDIF.
-      IF ip_font-name IS NOT INITIAL.
-        fontx-name = 'X'.
-      ENDIF.
-      IF ip_font-scheme IS NOT INITIAL.
-        fontx-scheme = 'X'.
-      ENDIF.
-      IF ip_font-size IS NOT INITIAL.
-        fontx-size = 'X'.
-      ENDIF.
-      IF ip_font-underline_mode IS NOT INITIAL.
-        fontx-underline_mode = 'X'.
-      ENDIF.
-    ENDIF.
-    MOVE-CORRESPONDING ip_font  TO complete_style-font.
-    MOVE-CORRESPONDING fontx    TO complete_stylex-font.
-* Correction for undeline mode
-  ENDIF.
-
-  IF ip_fill IS SUPPLIED.
-    DATA: fillx LIKE ip_xfill.
-    IF ip_xfill IS SUPPLIED.
-      fillx = ip_xfill.
-    ELSE.
-      CLEAR fillx WITH 'X'.
-      IF ip_fill-filltype IS INITIAL.
-        CLEAR fillx-filltype.
-      ENDIF.
-      clear_initial_colorxfields ip_fill-fgcolor fillx-fgcolor.
-      clear_initial_colorxfields ip_fill-bgcolor fillx-bgcolor.
-
-    ENDIF.
-    MOVE-CORRESPONDING ip_fill  TO complete_style-fill.
-    MOVE-CORRESPONDING fillx    TO complete_stylex-fill.
-  ENDIF.
-
-
-  IF ip_borders IS SUPPLIED.
-    DATA: bordersx LIKE ip_xborders.
-    IF ip_xborders IS SUPPLIED.
-      bordersx = ip_xborders.
-    ELSE.
-      CLEAR bordersx WITH 'X'.
-      IF ip_borders-allborders-border_style IS INITIAL.
-        CLEAR bordersx-allborders-border_style.
-      ENDIF.
-      IF ip_borders-diagonal-border_style IS INITIAL.
-        CLEAR bordersx-diagonal-border_style.
-      ENDIF.
-      IF ip_borders-down-border_style IS INITIAL.
-        CLEAR bordersx-down-border_style.
-      ENDIF.
-      IF ip_borders-left-border_style IS INITIAL.
-        CLEAR bordersx-left-border_style.
-      ENDIF.
-      IF ip_borders-right-border_style IS INITIAL.
-        CLEAR bordersx-right-border_style.
-      ENDIF.
-      IF ip_borders-top-border_style IS INITIAL.
-        CLEAR bordersx-top-border_style.
-      ENDIF.
-      clear_initial_colorxfields ip_borders-allborders-border_color bordersx-allborders-border_color.
-      clear_initial_colorxfields ip_borders-diagonal-border_color   bordersx-diagonal-border_color.
-      clear_initial_colorxfields ip_borders-down-border_color       bordersx-down-border_color.
-      clear_initial_colorxfields ip_borders-left-border_color       bordersx-left-border_color.
-      clear_initial_colorxfields ip_borders-right-border_color      bordersx-right-border_color.
-      clear_initial_colorxfields ip_borders-top-border_color        bordersx-top-border_color.
-
-    ENDIF.
-    MOVE-CORRESPONDING ip_borders  TO complete_style-borders.
-    MOVE-CORRESPONDING bordersx    TO complete_stylex-borders.
-  ENDIF.
-
-  IF ip_alignment IS SUPPLIED.
-    DATA: alignmentx LIKE ip_xalignment.
-    IF ip_xalignment IS SUPPLIED.
-      alignmentx = ip_xalignment.
-    ELSE.
-      CLEAR alignmentx WITH 'X'.
-      IF ip_alignment-horizontal IS INITIAL.
-        CLEAR alignmentx-horizontal.
-      ENDIF.
-      IF ip_alignment-vertical IS INITIAL.
-        CLEAR alignmentx-vertical.
-      ENDIF.
-    ENDIF.
-    MOVE-CORRESPONDING ip_alignment  TO complete_style-alignment.
-    MOVE-CORRESPONDING alignmentx    TO complete_stylex-alignment.
-  ENDIF.
-
-  IF ip_protection IS SUPPLIED.
-    MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
-    IF ip_xprotection IS SUPPLIED.
-      MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
-    ELSE.
-      IF ip_protection-hidden IS NOT INITIAL.
-        complete_stylex-protection-hidden = 'X'.
-      ENDIF.
-      IF ip_protection-locked IS NOT INITIAL.
-        complete_stylex-protection-locked = 'X'.
-      ENDIF.
-    ENDIF.
-  ENDIF.
-
-
-  move_supplied_borders    : borders_allborders borders-allborders,
-                             borders_diagonal   borders-diagonal  ,
-                             borders_down       borders-down      ,
-                             borders_left       borders-left      ,
-                             borders_right      borders-right     ,
-                             borders_top        borders-top       .
-
   DEFINE move_supplied_singlestyles.
     if ip_&1 is supplied.
       complete_style-&2 = ip_&1.
@@ -3536,109 +3400,317 @@ METHOD change_cell_style.
     endif.
   END-OF-DEFINITION.
 
-  move_supplied_singlestyles: number_format_format_code  number_format-format_code,
-                              font_bold                     font-bold,
-                              font_color                    font-color,
-                              font_color_rgb                font-color-rgb,
-                              font_color_indexed            font-color-indexed,
-                              font_color_theme              font-color-theme,
-                              font_color_tint               font-color-tint,
+  IF NOT ( ( ip_column IS SUPPLIED AND ip_row IS SUPPLIED ) OR ip_cell IS SUPPLIED ).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = 'Please provide either row and column, or cell/range reference'.
+  ENDIF.
 
-                              font_family                   font-family,
-                              font_italic                   font-italic,
-                              font_name                     font-name,
-                              font_scheme                   font-scheme,
-                              font_size                     font-size,
-                              font_strikethrough            font-strikethrough,
-                              font_underline                font-underline,
-                              font_underline_mode           font-underline_mode,
-                              fill_filltype                 fill-filltype,
-                              fill_rotation                 fill-rotation,
-                              fill_fgcolor                  fill-fgcolor,
-                              fill_fgcolor_rgb              fill-fgcolor-rgb,
-                              fill_fgcolor_indexed          fill-fgcolor-indexed,
-                              fill_fgcolor_theme            fill-fgcolor-theme,
-                              fill_fgcolor_tint             fill-fgcolor-tint,
+  IF ip_cell IS NOT INITIAL.
+    zcl_excel_common=>convert_range2column_a_row(
+      EXPORTING
+        i_range = ip_cell
+      IMPORTING
+        e_column_start = lv_column_start
+        e_column_end   = lv_column_end
+        e_row_start    = lv_row_start
+        e_row_end      = lv_row_end  ).
+  ELSE.
+    lv_column_start = ip_column.
+    lv_row_start    = ip_row.
+    lv_column_end   = ip_column_to.
+    lv_row_end      = ip_row_to.
+  ENDIF.
 
-                              fill_bgcolor                  fill-bgcolor,
-                              fill_bgcolor_rgb              fill-bgcolor-rgb,
-                              fill_bgcolor_indexed          fill-bgcolor-indexed,
-                              fill_bgcolor_theme            fill-bgcolor-theme,
-                              fill_bgcolor_tint             fill-bgcolor-tint,
+  IF lv_column_end IS INITIAL.
+    lv_column_end = lv_column_start.
+  ENDIF.
 
-                              fill_gradtype_type            fill-gradtype-TYPE,
-                              fill_gradtype_degree          fill-gradtype-DEGREE,
-                              fill_gradtype_bottom          fill-gradtype-BOTTOM,
-                              fill_gradtype_left            fill-gradtype-LEFT,
-                              fill_gradtype_top             fill-gradtype-TOP,
-                              fill_gradtype_right           fill-gradtype-RIGHT,
-                              fill_gradtype_position1       fill-gradtype-POSITION1,
-                              fill_gradtype_position2       fill-gradtype-POSITION2,
-                              fill_gradtype_position3       fill-gradtype-POSITION3,
+  IF lv_row_end IS INITIAL.
+    lv_row_end = lv_row_start.
+  ENDIF.
 
+  lv_column_int_start = zcl_excel_common=>convert_column2int( lv_column_start ).
+  lv_column_int_end   = zcl_excel_common=>convert_column2int( lv_column_end ).
 
+  lv_column_int = lv_column_int_start.
+  lv_row        = lv_row_start.
 
-                              borders_diagonal_mode         borders-diagonal_mode,
-                              alignment_horizontal          alignment-horizontal,
-                              alignment_vertical            alignment-vertical,
-                              alignment_textrotation        alignment-textrotation,
-                              alignment_wraptext            alignment-wraptext,
-                              alignment_shrinktofit         alignment-shrinktofit,
-                              alignment_indent              alignment-indent,
-                              protection_hidden             protection-hidden,
-                              protection_locked             protection-locked,
+  DO. " loop over each cell in range
+    " lv_column, lv_column_int, lv_row contain cell address
+    lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
-                              borders_allborders_style      borders-allborders-border_style,
-                              borders_allborders_color      borders-allborders-border_color,
-                              borders_allbo_color_rgb       borders-allborders-border_color-rgb,
-                              borders_allbo_color_indexed   borders-allborders-border_color-indexed,
-                              borders_allbo_color_theme     borders-allborders-border_color-theme,
-                              borders_allbo_color_tint      borders-allborders-border_color-tint,
+    CLEAR: stylemapping, complete_style, complete_stylex, borderx, l_guid.
 
-                              borders_diagonal_style        borders-diagonal-border_style,
-                              borders_diagonal_color        borders-diagonal-border_color,
-                              borders_diagonal_color_rgb    borders-diagonal-border_color-rgb,
-                              borders_diagonal_color_inde   borders-diagonal-border_color-indexed,
-                              borders_diagonal_color_them   borders-diagonal-border_color-theme,
-                              borders_diagonal_color_tint   borders-diagonal-border_color-tint,
-
-                              borders_down_style            borders-down-border_style,
-                              borders_down_color            borders-down-border_color,
-                              borders_down_color_rgb        borders-down-border_color-rgb,
-                              borders_down_color_indexed    borders-down-border_color-indexed,
-                              borders_down_color_theme      borders-down-border_color-theme,
-                              borders_down_color_tint       borders-down-border_color-tint,
-
-                              borders_left_style            borders-left-border_style,
-                              borders_left_color            borders-left-border_color,
-                              borders_left_color_rgb        borders-left-border_color-rgb,
-                              borders_left_color_indexed    borders-left-border_color-indexed,
-                              borders_left_color_theme      borders-left-border_color-theme,
-                              borders_left_color_tint       borders-left-border_color-tint,
-
-                              borders_right_style           borders-right-border_style,
-                              borders_right_color           borders-right-border_color,
-                              borders_right_color_rgb       borders-right-border_color-rgb,
-                              borders_right_color_indexed   borders-right-border_color-indexed,
-                              borders_right_color_theme     borders-right-border_color-theme,
-                              borders_right_color_tint      borders-right-border_color-tint,
-
-                              borders_top_style             borders-top-border_style,
-                              borders_top_color             borders-top-border_color,
-                              borders_top_color_rgb         borders-top-border_color-rgb,
-                              borders_top_color_indexed     borders-top-border_color-indexed,
-                              borders_top_color_theme       borders-top-border_color-theme,
-                              borders_top_color_tint        borders-top-border_color-tint.
+*   First get current stylsettings
+    TRY.
+        me->get_cell( EXPORTING ip_column = lv_column  " Cell Column
+                                ip_row    = lv_row      " Cell Row
+                      IMPORTING ep_guid   = l_guid )." Cell Value ).  "issue # 177
 
 
-* Now we have a completly filled styles.
-* This can be used to get the guid
-* Return guid if requested.  Might be used if copy&paste of styles is requested
-  ep_guid = me->excel->get_static_cellstyle_guid( ip_cstyle_complete  = complete_style
-                                                  ip_cstylex_complete = complete_stylex  ).
-  me->set_cell_style( ip_column = ip_column
-                      ip_row    = ip_row
-                      ip_style  = ep_guid ).
+        stylemapping = me->excel->get_style_to_guid( l_guid ).        "issue # 177
+        complete_style  = stylemapping-complete_style.
+        complete_stylex = stylemapping-complete_stylex.
+      CATCH zcx_excel.
+*   Error --> use submitted style
+    ENDTRY.
+
+*    move_supplied_multistyles: complete.
+    IF ip_complete IS SUPPLIED.
+      IF ip_xcomplete IS NOT SUPPLIED.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = 'Complete styleinfo has to be supplied with corresponding X-field'.
+      ENDIF.
+      MOVE-CORRESPONDING ip_complete  TO complete_style.
+      MOVE-CORRESPONDING ip_xcomplete TO complete_stylex.
+    ENDIF.
+
+
+
+    IF ip_font IS SUPPLIED.
+      DATA: fontx LIKE ip_xfont.
+      IF ip_xfont IS SUPPLIED.
+        fontx = ip_xfont.
+      ELSE.
+*   Only supplied values should be used - exception: Flags bold and italic strikethrough underline
+        MOVE 'X' TO: fontx-bold,
+                     fontx-italic,
+                     fontx-strikethrough,
+                     fontx-underline_mode.
+        CLEAR fontx-color WITH 'X'.
+        clear_initial_colorxfields ip_font-color fontx-color.
+        IF ip_font-family IS NOT INITIAL.
+          fontx-family = 'X'.
+        ENDIF.
+        IF ip_font-name IS NOT INITIAL.
+          fontx-name = 'X'.
+        ENDIF.
+        IF ip_font-scheme IS NOT INITIAL.
+          fontx-scheme = 'X'.
+        ENDIF.
+        IF ip_font-size IS NOT INITIAL.
+          fontx-size = 'X'.
+        ENDIF.
+        IF ip_font-underline_mode IS NOT INITIAL.
+          fontx-underline_mode = 'X'.
+        ENDIF.
+      ENDIF.
+      MOVE-CORRESPONDING ip_font  TO complete_style-font.
+      MOVE-CORRESPONDING fontx    TO complete_stylex-font.
+*   Correction for undeline mode
+    ENDIF.
+
+    IF ip_fill IS SUPPLIED.
+      DATA: fillx LIKE ip_xfill.
+      IF ip_xfill IS SUPPLIED.
+        fillx = ip_xfill.
+      ELSE.
+        CLEAR fillx WITH 'X'.
+        IF ip_fill-filltype IS INITIAL.
+          CLEAR fillx-filltype.
+        ENDIF.
+        clear_initial_colorxfields ip_fill-fgcolor fillx-fgcolor.
+        clear_initial_colorxfields ip_fill-bgcolor fillx-bgcolor.
+
+      ENDIF.
+      MOVE-CORRESPONDING ip_fill  TO complete_style-fill.
+      MOVE-CORRESPONDING fillx    TO complete_stylex-fill.
+    ENDIF.
+
+
+    IF ip_borders IS SUPPLIED.
+      DATA: bordersx LIKE ip_xborders.
+      IF ip_xborders IS SUPPLIED.
+        bordersx = ip_xborders.
+      ELSE.
+        CLEAR bordersx WITH 'X'.
+        IF ip_borders-allborders-border_style IS INITIAL.
+          CLEAR bordersx-allborders-border_style.
+        ENDIF.
+        IF ip_borders-diagonal-border_style IS INITIAL.
+          CLEAR bordersx-diagonal-border_style.
+        ENDIF.
+        IF ip_borders-down-border_style IS INITIAL.
+          CLEAR bordersx-down-border_style.
+        ENDIF.
+        IF ip_borders-left-border_style IS INITIAL.
+          CLEAR bordersx-left-border_style.
+        ENDIF.
+        IF ip_borders-right-border_style IS INITIAL.
+          CLEAR bordersx-right-border_style.
+        ENDIF.
+        IF ip_borders-top-border_style IS INITIAL.
+          CLEAR bordersx-top-border_style.
+        ENDIF.
+        clear_initial_colorxfields ip_borders-allborders-border_color bordersx-allborders-border_color.
+        clear_initial_colorxfields ip_borders-diagonal-border_color   bordersx-diagonal-border_color.
+        clear_initial_colorxfields ip_borders-down-border_color       bordersx-down-border_color.
+        clear_initial_colorxfields ip_borders-left-border_color       bordersx-left-border_color.
+        clear_initial_colorxfields ip_borders-right-border_color      bordersx-right-border_color.
+        clear_initial_colorxfields ip_borders-top-border_color        bordersx-top-border_color.
+
+      ENDIF.
+      MOVE-CORRESPONDING ip_borders  TO complete_style-borders.
+      MOVE-CORRESPONDING bordersx    TO complete_stylex-borders.
+    ENDIF.
+
+    IF ip_alignment IS SUPPLIED.
+      DATA: alignmentx LIKE ip_xalignment.
+      IF ip_xalignment IS SUPPLIED.
+        alignmentx = ip_xalignment.
+      ELSE.
+        CLEAR alignmentx WITH 'X'.
+        IF ip_alignment-horizontal IS INITIAL.
+          CLEAR alignmentx-horizontal.
+        ENDIF.
+        IF ip_alignment-vertical IS INITIAL.
+          CLEAR alignmentx-vertical.
+        ENDIF.
+      ENDIF.
+      MOVE-CORRESPONDING ip_alignment  TO complete_style-alignment.
+      MOVE-CORRESPONDING alignmentx    TO complete_stylex-alignment.
+    ENDIF.
+
+    IF ip_protection IS SUPPLIED.
+      MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
+      IF ip_xprotection IS SUPPLIED.
+        MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
+      ELSE.
+        IF ip_protection-hidden IS NOT INITIAL.
+          complete_stylex-protection-hidden = 'X'.
+        ENDIF.
+        IF ip_protection-locked IS NOT INITIAL.
+          complete_stylex-protection-locked = 'X'.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+
+
+    move_supplied_borders    : borders_allborders borders-allborders,
+                               borders_diagonal   borders-diagonal  ,
+                               borders_down       borders-down      ,
+                               borders_left       borders-left      ,
+                               borders_right      borders-right     ,
+                               borders_top        borders-top       .
+
+    move_supplied_singlestyles: number_format_format_code     number_format-format_code,
+                                font_bold                     font-bold,
+                                font_color                    font-color,
+                                font_color_rgb                font-color-rgb,
+                                font_color_indexed            font-color-indexed,
+                                font_color_theme              font-color-theme,
+                                font_color_tint               font-color-tint,
+
+                                font_family                   font-family,
+                                font_italic                   font-italic,
+                                font_name                     font-name,
+                                font_scheme                   font-scheme,
+                                font_size                     font-size,
+                                font_strikethrough            font-strikethrough,
+                                font_underline                font-underline,
+                                font_underline_mode           font-underline_mode,
+                                fill_filltype                 fill-filltype,
+                                fill_rotation                 fill-rotation,
+                                fill_fgcolor                  fill-fgcolor,
+                                fill_fgcolor_rgb              fill-fgcolor-rgb,
+                                fill_fgcolor_indexed          fill-fgcolor-indexed,
+                                fill_fgcolor_theme            fill-fgcolor-theme,
+                                fill_fgcolor_tint             fill-fgcolor-tint,
+
+                                fill_bgcolor                  fill-bgcolor,
+                                fill_bgcolor_rgb              fill-bgcolor-rgb,
+                                fill_bgcolor_indexed          fill-bgcolor-indexed,
+                                fill_bgcolor_theme            fill-bgcolor-theme,
+                                fill_bgcolor_tint             fill-bgcolor-tint,
+
+                                fill_gradtype_type            fill-gradtype-TYPE,
+                                fill_gradtype_degree          fill-gradtype-DEGREE,
+                                fill_gradtype_bottom          fill-gradtype-BOTTOM,
+                                fill_gradtype_left            fill-gradtype-LEFT,
+                                fill_gradtype_top             fill-gradtype-TOP,
+                                fill_gradtype_right           fill-gradtype-RIGHT,
+                                fill_gradtype_position1       fill-gradtype-POSITION1,
+                                fill_gradtype_position2       fill-gradtype-POSITION2,
+                                fill_gradtype_position3       fill-gradtype-POSITION3,
+
+
+
+                                borders_diagonal_mode         borders-diagonal_mode,
+                                alignment_horizontal          alignment-horizontal,
+                                alignment_vertical            alignment-vertical,
+                                alignment_textrotation        alignment-textrotation,
+                                alignment_wraptext            alignment-wraptext,
+                                alignment_shrinktofit         alignment-shrinktofit,
+                                alignment_indent              alignment-indent,
+                                protection_hidden             protection-hidden,
+                                protection_locked             protection-locked,
+
+                                borders_allborders_style      borders-allborders-border_style,
+                                borders_allborders_color      borders-allborders-border_color,
+                                borders_allbo_color_rgb       borders-allborders-border_color-rgb,
+                                borders_allbo_color_indexed   borders-allborders-border_color-indexed,
+                                borders_allbo_color_theme     borders-allborders-border_color-theme,
+                                borders_allbo_color_tint      borders-allborders-border_color-tint,
+
+                                borders_diagonal_style        borders-diagonal-border_style,
+                                borders_diagonal_color        borders-diagonal-border_color,
+                                borders_diagonal_color_rgb    borders-diagonal-border_color-rgb,
+                                borders_diagonal_color_inde   borders-diagonal-border_color-indexed,
+                                borders_diagonal_color_them   borders-diagonal-border_color-theme,
+                                borders_diagonal_color_tint   borders-diagonal-border_color-tint,
+
+                                borders_down_style            borders-down-border_style,
+                                borders_down_color            borders-down-border_color,
+                                borders_down_color_rgb        borders-down-border_color-rgb,
+                                borders_down_color_indexed    borders-down-border_color-indexed,
+                                borders_down_color_theme      borders-down-border_color-theme,
+                                borders_down_color_tint       borders-down-border_color-tint,
+
+                                borders_left_style            borders-left-border_style,
+                                borders_left_color            borders-left-border_color,
+                                borders_left_color_rgb        borders-left-border_color-rgb,
+                                borders_left_color_indexed    borders-left-border_color-indexed,
+                                borders_left_color_theme      borders-left-border_color-theme,
+                                borders_left_color_tint       borders-left-border_color-tint,
+
+                                borders_right_style           borders-right-border_style,
+                                borders_right_color           borders-right-border_color,
+                                borders_right_color_rgb       borders-right-border_color-rgb,
+                                borders_right_color_indexed   borders-right-border_color-indexed,
+                                borders_right_color_theme     borders-right-border_color-theme,
+                                borders_right_color_tint      borders-right-border_color-tint,
+
+                                borders_top_style             borders-top-border_style,
+                                borders_top_color             borders-top-border_color,
+                                borders_top_color_rgb         borders-top-border_color-rgb,
+                                borders_top_color_indexed     borders-top-border_color-indexed,
+                                borders_top_color_theme       borders-top-border_color-theme,
+                                borders_top_color_tint        borders-top-border_color-tint.
+
+
+*   Now we have a completly filled styles.
+*   This can be used to get the guid
+*   Return guid if requested.  Might be used if copy&paste of styles is requested
+    ep_guid = me->excel->get_static_cellstyle_guid( ip_cstyle_complete  = complete_style
+                                                    ip_cstylex_complete = complete_stylex  ).
+    me->set_cell_style( ip_column = lv_column
+                        ip_row    = lv_row
+                        ip_style  = ep_guid ).
+
+    " move to next column
+    lv_column_int = lv_column_int + 1.
+    " move to new row if column is out of range
+    IF lv_column_int > lv_column_int_end.
+      lv_column_int = lv_column_int_start.
+      lv_row = lv_row + 1.
+    ENDIF.
+    " exit if row is out of range
+    IF lv_row > lv_row_end.
+      EXIT. " DO
+    ENDIF.
+  ENDDO.
 
 ENDMETHOD.
 
@@ -3694,7 +3766,7 @@ ENDMETHOD.
 
 
 METHOD delete_merge.
-  
+
   DATA: lv_column TYPE i.
 *--------------------------------------------------------------------*
 * If cell information is passed delete merge including this cell,
@@ -3705,11 +3777,11 @@ METHOD delete_merge.
     CLEAR me->mt_merged_cells.
   ELSE.
     lv_column = zcl_excel_common=>convert_column2int( ip_cell_column ).
-    
-    LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS 
-    WHERE 
+
+    LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS
+    WHERE
         ( row_from <= ip_cell_row and row_to >= ip_cell_row )
-    AND 
+    AND
         ( col_from <= lv_column and col_to >= lv_column ).
 
       DELETE me->mt_merged_cells.
@@ -4512,10 +4584,7 @@ method PRINT_TITLE_SET_RANGE.
 
 method SET_CELL.
 
-  DATA: lv_column                 TYPE zexcel_cell_column,
-        ls_sheet_content          TYPE zexcel_s_cell_data,
-        lv_row_alpha              TYPE string,
-        lv_col_alpha              TYPE zexcel_cell_column_alpha,
+  DATA: ls_sheet_content          TYPE zexcel_s_cell_data,
         lv_value                  TYPE zexcel_cell_value,
         lv_data_type              TYPE zexcel_cell_data_type,
         lv_value_type             TYPE abap_typekind,
@@ -4523,6 +4592,18 @@ method SET_CELL.
         lo_addit                  TYPE REF TO cl_abap_elemdescr,
         lo_value                  TYPE REF TO data,
         lo_value_new              TYPE REF TO data.
+
+  DATA: lv_provided_style_guid    TYPE zexcel_cell_style,
+        lv_first_cell             TYPE abap_bool,
+        lv_column                 TYPE zexcel_cell_column_alpha,
+        lv_column_int             TYPE zexcel_cell_column,
+        lv_row                    TYPE zexcel_cell_row,
+        lv_column_start           TYPE zexcel_cell_column_alpha,
+        lv_column_end             TYPE zexcel_cell_column_alpha,
+        lv_column_int_start       TYPE zexcel_cell_column,
+        lv_column_int_end         TYPE zexcel_cell_column,
+        lv_row_start              TYPE zexcel_cell_row,
+        lv_row_end                TYPE zexcel_cell_row.
 
   FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data,
                  <fs_numeric>       TYPE numeric,
@@ -4536,204 +4617,282 @@ method SET_CELL.
         error = 'Please provide the value or formula'.
   ENDIF.
 
-* Begin of change issue #152 - don't touch exisiting style if only value is passed
-*  lv_style_guid = ip_style.
-  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
-  READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = ip_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
-                                                                       cell_column = lv_column.
-  IF sy-subrc = 0.
-    IF ip_style IS INITIAL.
-      " If no style is provided as method-parameter and cell is found use cell's current style
-      lv_style_guid = <fs_sheet_content>-cell_style.
-    ELSE.
-      " Style provided as method-parameter --> use this
-      lv_style_guid = ip_style.
-    ENDIF.
+  IF io_style IS NOT INITIAL.
+    lv_provided_style_guid = io_style->get_guid( ).
   ELSE.
-    " No cell found --> use supplied style even if empty
-    lv_style_guid = ip_style.
+    lv_provided_style_guid = ip_style.
   ENDIF.
-* End of change issue #152 - don't touch exisiting style if only value is passed
 
-  IF ip_value IS SUPPLIED.
-    "if data type is passed just write the value. Otherwise map abap type to excel and perform conversion
-    "IP_DATA_TYPE is passed by excel reader so source types are preserved
-*First we get reference into local var.
-    CREATE DATA lo_value LIKE ip_value.
-    ASSIGN lo_value->* TO <fs_value>.
-    <fs_value> = ip_value.
-    IF ip_data_type IS SUPPLIED.
-      IF ip_abap_type IS NOT SUPPLIED.
-        get_value_type( EXPORTING ip_value      = ip_value
-                        IMPORTING ep_value      = <fs_value> ) .
-      ENDIF.
-      lv_value = <fs_value>.
-      lv_data_type = ip_data_type.
-    ELSE.
-      IF ip_abap_type IS SUPPLIED.
-        lv_value_type = ip_abap_type.
+  IF NOT ( ( ip_column IS SUPPLIED AND ip_row IS SUPPLIED ) OR ip_cell IS SUPPLIED ).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = 'Please provide either row and column, or cell/range reference'.
+  ENDIF.
+
+  IF ip_cell IS NOT INITIAL.
+    zcl_excel_common=>convert_range2column_a_row(
+      EXPORTING
+        i_range = ip_cell
+      IMPORTING
+        e_column_start = lv_column_start
+        e_column_end   = lv_column_end
+        e_row_start    = lv_row_start
+        e_row_end      = lv_row_end  ).
+  ELSE.
+    lv_column_start = ip_column.
+    lv_row_start    = ip_row.
+    lv_column_end   = ip_column_to.
+    lv_row_end      = ip_row_to.
+  ENDIF.
+
+  IF lv_column_end IS INITIAL.
+    lv_column_end = lv_column_start.
+  ENDIF.
+
+  IF lv_row_end IS INITIAL.
+    lv_row_end = lv_row_start.
+  ENDIF.
+
+  lv_column_int_start = zcl_excel_common=>convert_column2int( lv_column_start ).
+  lv_column_int_end   = zcl_excel_common=>convert_column2int( lv_column_end ).
+
+  lv_column_int = lv_column_int_start.
+  lv_row        = lv_row_start.
+  lv_first_cell = ABAP_TRUE.
+
+  " loop over each cell in range
+  " lv_column, lv_column_int, lv_row contain cell address
+  " only assign value/formula to first (top left) cell
+  " set style to all cells
+  DO.
+    lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+
+*     Begin of change issue #152 - don't touch exisiting style if only value is passed
+*      lv_style_guid = ip_style.
+    UNASSIGN <fs_sheet_content>.
+    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = lv_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
+                                                                         cell_column = lv_column_int.
+    IF sy-subrc = 0.
+      IF lv_provided_style_guid IS INITIAL.
+        " If no style is provided as method-parameter and cell is found use cell's current style
+        lv_style_guid = <fs_sheet_content>-cell_style.
       ELSE.
-        get_value_type( EXPORTING ip_value      = ip_value
-                        IMPORTING ep_value      = <fs_value>
-                                  ep_value_type = lv_value_type ).
+        " Style provided as method-parameter --> use this
+        lv_style_guid = lv_provided_style_guid.
       ENDIF.
+    ELSE.
+      " No cell found --> use supplied style even if empty
+      lv_style_guid = lv_provided_style_guid.
+    ENDIF.
+*   End of change issue #152 - don't touch exisiting style if only value is passed
+
+    IF ip_value IS SUPPLIED AND lv_first_cell = ABAP_TRUE.
+      "if data type is passed just write the value. Otherwise map abap type to excel and perform conversion
+      "IP_DATA_TYPE is passed by excel reader so source types are preserved
+*  First we get reference into local var.
+      CREATE DATA lo_value LIKE ip_value.
+      ASSIGN lo_value->* TO <fs_value>.
+      <fs_value> = ip_value.
+      IF ip_data_type IS SUPPLIED.
+        IF ip_abap_type IS NOT SUPPLIED.
+          get_value_type( EXPORTING ip_value      = ip_value
+                          IMPORTING ep_value      = <fs_value> ) .
+        ENDIF.
+        lv_value = <fs_value>.
+        lv_data_type = ip_data_type.
+      ELSE.
+        IF ip_abap_type IS SUPPLIED.
+          lv_value_type = ip_abap_type.
+        ELSE.
+          get_value_type( EXPORTING ip_value      = ip_value
+                          IMPORTING ep_value      = <fs_value>
+                                    ep_value_type = lv_value_type ).
+        ENDIF.
+        CASE lv_value_type.
+          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2.
+            lo_addit = cl_abap_elemdescr=>get_i( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_numeric>.
+            IF sy-subrc = 0.
+              <fs_numeric> = <fs_value>.
+              lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+            ENDIF.
+
+          WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed.
+            lo_addit = cl_abap_elemdescr=>get_f( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_numeric>.
+            IF sy-subrc = 0.
+              <fs_numeric> = <fs_value>.
+              lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+            ENDIF.
+
+          WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR
+               cl_abap_typedescr=>typekind_hex.
+            lv_value = <fs_value>.
+            lv_data_type = 's'.
+
+          WHEN cl_abap_typedescr=>typekind_date.
+            lo_addit = cl_abap_elemdescr=>get_d( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_date>.
+            IF sy-subrc = 0.
+              <fs_date> = <fs_value>.
+              lv_value = zcl_excel_common=>date_to_excel_string( ip_value = <fs_date> ) .
+            ENDIF.
+*   Begin of change issue #152 - don't touch exisiting style if only value is passed
+*   Moved to end of routine - apply date-format even if other styleinformation is passed
+*            IF ip_style IS NOT SUPPLIED. "get default date format in case parameter is initial
+*              lo_style = excel->add_new_style( ).
+*              lo_style->number_format->format_code = get_default_excel_date_format( ).
+*              lv_style_guid = lo_style->get_guid( ).
+*            ENDIF.
+*   End of change issue #152 - don't touch exisiting style if only value is passed
+
+          WHEN cl_abap_typedescr=>typekind_time.
+            lo_addit = cl_abap_elemdescr=>get_t( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_time>.
+            IF sy-subrc = 0.
+              <fs_time> = <fs_value>.
+              lv_value = zcl_excel_common=>time_to_excel_string( ip_value = <fs_time> ).
+            ENDIF.
+*   Begin of change issue #152 - don't touch exisiting style if only value is passed
+*   Moved to end of routine - apply time-format even if other styleinformation is passed
+*            IF ip_style IS NOT SUPPLIED. "get default time format for user in case parameter is initial
+*              lo_style = excel->add_new_style( ).
+*              lo_style->number_format->format_code = zcl_excel_style_number_format=>c_format_date_time6.
+*              lv_style_guid = lo_style->get_guid( ).
+*            ENDIF.
+*   End of change issue #152 - don't touch exisiting style if only value is passed
+
+          WHEN OTHERS.
+            RAISE EXCEPTION TYPE zcx_excel
+              EXPORTING
+                error = 'Invalid data type of input value'.
+        ENDCASE.
+      ENDIF.
+
+    ENDIF.
+
+    IF ip_hyperlink IS BOUND AND lv_first_cell = ABAP_TRUE.
+      ip_hyperlink->set_cell_reference( ip_column = lv_column
+                                        ip_row = lv_row ).
+      me->hyperlinks->add( ip_hyperlink ).
+    ENDIF.
+
+*   Begin of change issue #152 - don't touch exisiting style if only value is passed
+*   Read table moved up, so that current style may be evaluated
+*    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+
+*    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
+*                                                                   cell_column = lv_column.
+*
+*    IF sy-subrc EQ 0.
+    IF <fs_sheet_content> IS ASSIGNED.
+*   End of change issue #152 - don't touch exisiting style if only value is passed
+      IF lv_first_cell = ABAP_TRUE.
+        <fs_sheet_content>-cell_value   = lv_value.
+        <fs_sheet_content>-cell_formula = ip_formula.
+      ELSE.
+        CLEAR: <fs_sheet_content>-cell_value.
+        CLEAR: <fs_sheet_content>-cell_formula.
+      ENDIF.
+      <fs_sheet_content>-data_type    = lv_data_type.
+      <fs_sheet_content>-cell_style   = lv_style_guid.
+    ELSE.
+      CLEAR: ls_sheet_content.
+      ls_sheet_content-cell_row     = lv_row.
+      ls_sheet_content-cell_column  = lv_column_int.
+      IF lv_first_cell = ABAP_TRUE.
+        ls_sheet_content-cell_value   = lv_value.
+        ls_sheet_content-cell_formula = ip_formula.
+      ENDIF.
+      ls_sheet_content-data_type   = lv_data_type.
+      ls_sheet_content-cell_style  = lv_style_guid.
+      ls_sheet_content-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( ip_column = lv_column ip_row = lv_row ).
+      INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
+*      APPEND ls_sheet_content TO sheet_content.
+*      SORT sheet_content BY cell_row cell_column.
+      " me->update_dimension_range( ).
+
+    ENDIF.
+
+    IF lv_first_cell = ABAP_TRUE.
+*     Begin of change issue #152 - don't touch exisiting style if only value is passed
+*     For Date- or Timefields change the formatcode if nothing is set yet
+*     Enhancement option:  Check if existing formatcode is a date/ or timeformat
+*                          If not, use default
+      DATA: lo_format_code_datetime TYPE zexcel_number_format.
+      DATA: stylemapping    TYPE zexcel_s_stylemapping.
       CASE lv_value_type.
-        WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2.
-          lo_addit = cl_abap_elemdescr=>get_i( ).
-          CREATE DATA lo_value_new TYPE HANDLE lo_addit.
-          ASSIGN lo_value_new->* TO <fs_numeric>.
-          IF sy-subrc = 0.
-            <fs_numeric> = <fs_value>.
-            lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
-          ENDIF.
-
-        WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed.
-          lo_addit = cl_abap_elemdescr=>get_f( ).
-          CREATE DATA lo_value_new TYPE HANDLE lo_addit.
-          ASSIGN lo_value_new->* TO <fs_numeric>.
-          IF sy-subrc = 0.
-            <fs_numeric> = <fs_value>.
-            lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
-          ENDIF.
-
-        WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR
-             cl_abap_typedescr=>typekind_hex.
-          lv_value = <fs_value>.
-          lv_data_type = 's'.
-
         WHEN cl_abap_typedescr=>typekind_date.
-          lo_addit = cl_abap_elemdescr=>get_d( ).
-          CREATE DATA lo_value_new TYPE HANDLE lo_addit.
-          ASSIGN lo_value_new->* TO <fs_date>.
-          IF sy-subrc = 0.
-            <fs_date> = <fs_value>.
-            lv_value = zcl_excel_common=>date_to_excel_string( ip_value = <fs_date> ) .
+          TRY.
+              stylemapping = me->excel->get_style_to_guid( <fs_sheet_content>-cell_style ).
+            CATCH zcx_excel .
+          ENDTRY.
+          IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
+             stylemapping-complete_style-number_format-format_code IS INITIAL.
+            lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_std.
+          ELSE.
+            lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
           ENDIF.
-* Begin of change issue #152 - don't touch exisiting style if only value is passed
-* Moved to end of routine - apply date-format even if other styleinformation is passed
-*          IF ip_style IS NOT SUPPLIED. "get default date format in case parameter is initial
-*            lo_style = excel->add_new_style( ).
-*            lo_style->number_format->format_code = get_default_excel_date_format( ).
-*            lv_style_guid = lo_style->get_guid( ).
-*          ENDIF.
-* End of change issue #152 - don't touch exisiting style if only value is passed
+          me->change_cell_style( ip_column                      = lv_column
+                                 ip_row                         = lv_row
+                                 ip_number_format_format_code   = lo_format_code_datetime ).
 
         WHEN cl_abap_typedescr=>typekind_time.
-          lo_addit = cl_abap_elemdescr=>get_t( ).
-          CREATE DATA lo_value_new TYPE HANDLE lo_addit.
-          ASSIGN lo_value_new->* TO <fs_time>.
-          IF sy-subrc = 0.
-            <fs_time> = <fs_value>.
-            lv_value = zcl_excel_common=>time_to_excel_string( ip_value = <fs_time> ).
+          TRY.
+              stylemapping = me->excel->get_style_to_guid( <fs_sheet_content>-cell_style ).
+            CATCH zcx_excel .
+          ENDTRY.
+          IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
+             stylemapping-complete_style-number_format-format_code IS INITIAL.
+            lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_time6.
+          ELSE.
+            lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
           ENDIF.
-* Begin of change issue #152 - don't touch exisiting style if only value is passed
-* Moved to end of routine - apply time-format even if other styleinformation is passed
-*          IF ip_style IS NOT SUPPLIED. "get default time format for user in case parameter is initial
-*            lo_style = excel->add_new_style( ).
-*            lo_style->number_format->format_code = zcl_excel_style_number_format=>c_format_date_time6.
-*            lv_style_guid = lo_style->get_guid( ).
-*          ENDIF.
-* End of change issue #152 - don't touch exisiting style if only value is passed
+          me->change_cell_style( ip_column                      = lv_column
+                                 ip_row                         = lv_row
+                                 ip_number_format_format_code   = lo_format_code_datetime ).
 
-        WHEN OTHERS.
-          RAISE EXCEPTION TYPE zcx_excel
-            EXPORTING
-              error = 'Invalid data type of input value'.
       ENDCASE.
+*     End of change issue #152 - don't touch exisiting style if only value is passed
+
+*     Fix issue #162
+      lv_value = ip_value.
+      IF lv_value CS cl_abap_char_utilities=>cr_lf.
+        me->change_cell_style( ip_column               = lv_column
+                               ip_row                  = lv_row
+                               ip_alignment_wraptext   = abap_true ).
+      ENDIF.
+*     End of Fix issue #162
+
     ENDIF.
 
+    " move to next column
+    lv_column_int = lv_column_int + 1.
+    " move to new row if column is out of range
+    IF lv_column_int > lv_column_int_end.
+      lv_column_int = lv_column_int_start.
+      lv_row = lv_row + 1.
+    ENDIF.
+    " exit if row is out of range
+    IF lv_row > lv_row_end.
+      EXIT. " DO
+    ENDIF.
+    CLEAR: lv_first_cell.
+  ENDDO.
+
+  IF NOT ( lv_column_end = lv_column_start AND lv_row_end = lv_row_start ).
+    set_merge(
+        ip_column_start = lv_column_start
+        ip_column_end   = lv_column_end
+        ip_row          = lv_row_start
+        ip_row_to       = lv_row_end ).
   ENDIF.
 
-  IF ip_hyperlink IS BOUND.
-    ip_hyperlink->set_cell_reference( ip_column = ip_column
-                                      ip_row = ip_row ).
-    me->hyperlinks->add( ip_hyperlink ).
-  ENDIF.
-
-* Begin of change issue #152 - don't touch exisiting style if only value is passed
-* Read table moved up, so that current style may be evaluated
-*  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
-
-*  READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
-*                                                                 cell_column = lv_column.
-*
-*  IF sy-subrc EQ 0.
-  IF <fs_sheet_content> IS ASSIGNED.
-* End of change issue #152 - don't touch exisiting style if only value is passed
-    <fs_sheet_content>-cell_value   = lv_value.
-    <fs_sheet_content>-cell_formula = ip_formula.
-    <fs_sheet_content>-cell_style   = lv_style_guid.
-    <fs_sheet_content>-data_type    = lv_data_type.
-  ELSE.
-    ls_sheet_content-cell_row     = ip_row.
-    ls_sheet_content-cell_column  = lv_column.
-    ls_sheet_content-cell_value   = lv_value.
-    ls_sheet_content-cell_formula = ip_formula.
-    ls_sheet_content-cell_style   = lv_style_guid.
-    ls_sheet_content-data_type    = lv_data_type.
-    lv_row_alpha = ip_row.
-*    SHIFT lv_row_alpha RIGHT DELETING TRAILING space."del #152 - replaced with condense - should be faster
-*    SHIFT lv_row_alpha LEFT DELETING LEADING space.  "del #152 - replaced with condense - should be faster
-    CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
-    lv_col_alpha = zcl_excel_common=>convert_column2alpha( ip_column ).       " issue #155 - less restrictive typing for ip_column
-    CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
-    INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
-*    APPEND ls_sheet_content TO sheet_content.
-*    SORT sheet_content BY cell_row cell_column.
-    " me->update_dimension_range( ).
-
-  ENDIF.
-
-* Begin of change issue #152 - don't touch exisiting style if only value is passed
-* For Date- or Timefields change the formatcode if nothing is set yet
-* Enhancement option:  Check if existing formatcode is a date/ or timeformat
-*                      If not, use default
-  DATA: lo_format_code_datetime TYPE zexcel_number_format.
-  DATA: stylemapping    TYPE zexcel_s_stylemapping.
-  CASE lv_value_type.
-    WHEN cl_abap_typedescr=>typekind_date.
-      TRY.
-          stylemapping = me->excel->get_style_to_guid( <fs_sheet_content>-cell_style ).
-        CATCH zcx_excel .
-      ENDTRY.
-      IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
-         stylemapping-complete_style-number_format-format_code IS INITIAL.
-        lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_std.
-      ELSE.
-        lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
-      ENDIF.
-      me->change_cell_style( ip_column                      = ip_column
-                             ip_row                         = ip_row
-                             ip_number_format_format_code   = lo_format_code_datetime ).
-
-    WHEN cl_abap_typedescr=>typekind_time.
-      TRY.
-          stylemapping = me->excel->get_style_to_guid( <fs_sheet_content>-cell_style ).
-        CATCH zcx_excel .
-      ENDTRY.
-      IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
-         stylemapping-complete_style-number_format-format_code IS INITIAL.
-        lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_time6.
-      ELSE.
-        lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
-      ENDIF.
-      me->change_cell_style( ip_column                      = ip_column
-                             ip_row                         = ip_row
-                             ip_number_format_format_code   = lo_format_code_datetime ).
-
-  ENDCASE.
-* End of change issue #152 - don't touch exisiting style if only value is passed
-
-* Fix issue #162
-  lv_value = ip_value.
-  IF lv_value CS cl_abap_char_utilities=>cr_lf.
-    me->change_cell_style( ip_column               = ip_column
-                           ip_row                  = ip_row
-                           ip_alignment_wraptext   = abap_true ).
-  ENDIF.
-* End of Fix issue #162
-
-  endmethod.
+endmethod.
 
 
 method SET_CELL_FORMULA.
