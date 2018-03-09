@@ -33,6 +33,7 @@ public section.
   methods ADD_NEW_STYLE
     importing
       !IP_GUID type ZEXCEL_CELL_STYLE optional
+      !IO_CLONE_OF type ref to ZCL_EXCEL_STYLE optional
     returning
       value(EO_STYLE) type ref to ZCL_EXCEL_STYLE .
   methods ADD_NEW_WORKSHEET
@@ -212,7 +213,8 @@ method ADD_NEW_STYLE.
 * Create default style
   CREATE OBJECT eo_style
     EXPORTING
-      ip_guid = ip_guid.
+      ip_guid     = ip_guid
+      io_clone_of = io_clone_of.
   styles->add( eo_style ).
 
   DATA: style2 TYPE zexcel_s_stylemapping.
@@ -248,7 +250,7 @@ METHOD add_static_styles.
     READ TABLE me->t_stylemapping2 ASSIGNING <style2> WITH TABLE KEY guid = <style1>-guid.
     CHECK sy-subrc = 0.  " Should always be true since these tables are being filled parallel
 
-    style = me->add_new_style( <style1>-guid ).
+    style = me->add_new_style( ip_guid = <style1>-guid ).
 
     zcl_excel_common=>recursive_struct_to_class( EXPORTING i_source  = <style1>-complete_style
                                                            i_sourcex = <style1>-complete_stylex
