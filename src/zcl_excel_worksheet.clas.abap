@@ -251,8 +251,9 @@ public section.
       ZCX_EXCEL .
   methods GET_CELL
     importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_CELL type ZEXCEL_CELL_REFERENCE optional
+      !IP_COLUMN type SIMPLE optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
     exporting
       !EP_VALUE type ZEXCEL_CELL_VALUE
       !EP_RC type SYSUBRC
@@ -394,11 +395,11 @@ public section.
       !IP_ROW_TO type ZEXCEL_CELL_ROW optional
       !IP_VALUE type SIMPLE optional
       !IP_FORMULA type ZEXCEL_CELL_FORMULA optional
-      !IP_STYLE type ZEXCEL_CELL_STYLE optional
-      !IO_STYLE type ref to ZCL_EXCEL_STYLE optional
+      !IP_STYLE type ANY optional
       !IP_HYPERLINK type ref to ZCL_EXCEL_HYPERLINK optional
       !IP_DATA_TYPE type ZEXCEL_CELL_DATA_TYPE optional
       !IP_ABAP_TYPE type ABAP_TYPEKIND optional
+      !IT_RTF type ZEXCEL_T_RTF optional
     raising
       ZCX_EXCEL .
   methods SET_CELL_FORMULA
@@ -3880,11 +3881,32 @@ method GET_ACTIVE_CELL.
 METHOD get_cell.
 
   DATA: lv_column         TYPE zexcel_cell_column,
+        lv_column_alpha   TYPE zexcel_cell_column_alpha,
+        lv_row            TYPE zexcel_cell_row,
         ls_sheet_content  TYPE zexcel_s_cell_data.
 
-  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+  IF NOT ( ( ip_column IS SUPPLIED AND ip_row IS SUPPLIED ) OR ip_cell IS SUPPLIED ).
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = 'Please provide either row and column, or cell reference'.
+  ENDIF.
 
-  READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = ip_row
+  IF ip_cell IS NOT INITIAL.
+    zcl_excel_common=>convert_range2column_a_row(
+      EXPORTING
+        i_range = ip_cell
+      IMPORTING
+        e_column_start = lv_column_alpha
+        e_row_start    = lv_row ).
+
+  ELSE.
+    lv_column_alpha = ip_column.
+    lv_row          = ip_row.
+  ENDIF.
+
+  lv_column = zcl_excel_common=>convert_column2int( lv_column_alpha ).
+
+  READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = lv_row
                                                                 cell_column  = lv_column.
 
   ep_rc = sy-subrc.
@@ -4617,9 +4639,20 @@ method SET_CELL.
         error = 'Please provide the value or formula'.
   ENDIF.
 
-  IF io_style IS NOT INITIAL.
-    lv_provided_style_guid = io_style->get_guid( ).
-  ELSE.
+  DATA: lo_style_type type ref to cl_abap_typedescr.
+  FIELD-SYMBOLS:
+    <style> TYPE REF TO ZCL_EXCEL_STYLE.
+
+  lo_style_type = cl_abap_typedescr=>describe_by_data( ip_style ).
+  IF lo_style_type->TYPE_KIND = lo_style_type->TYPEKIND_OREF.
+    lo_style_type = cl_abap_typedescr=>describe_by_object_ref( ip_style ).
+    IF lo_style_type->absolute_name = '\CLASS=ZCL_EXCEL_STYLE'.
+      ASSIGN ip_style TO <style>.
+      lv_provided_style_guid = <style>->get_guid( ).
+    ENDIF.
+  ELSEIF lo_style_type->absolute_name = '\TYPE=ZEXCEL_CELL_STYLE'.
+    lv_provided_style_guid = ip_style.
+  ELSEIF lo_style_type->TYPE_KIND = lo_style_type->TYPEKIND_HEX.
     lv_provided_style_guid = ip_style.
   ENDIF.
 
@@ -4660,10 +4693,10 @@ method SET_CELL.
   lv_row        = lv_row_start.
   lv_first_cell = ABAP_TRUE.
 
-  " loop over each cell in range
-  " lv_column, lv_column_int, lv_row contain cell address
+  " Loop over each cell in range
+  " lv_column, lv_column_int, lv_row contain current loop cell address
   " only assign value/formula to first (top left) cell
-  " set style to all cells
+  " set style to all cells in range
   DO.
     lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
@@ -4794,6 +4827,10 @@ method SET_CELL.
       IF lv_first_cell = ABAP_TRUE.
         <fs_sheet_content>-cell_value   = lv_value.
         <fs_sheet_content>-cell_formula = ip_formula.
+        IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf[] IS NOT INITIAL.
+          CREATE DATA <fs_sheet_content>-RTF_TAB.
+          <fs_sheet_content>-RTF_TAB->* = it_rtf[].
+        ENDIF.
       ELSE.
         CLEAR: <fs_sheet_content>-cell_value.
         CLEAR: <fs_sheet_content>-cell_formula.
@@ -4807,6 +4844,10 @@ method SET_CELL.
       IF lv_first_cell = ABAP_TRUE.
         ls_sheet_content-cell_value   = lv_value.
         ls_sheet_content-cell_formula = ip_formula.
+        IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf[] IS NOT INITIAL.
+          CREATE DATA ls_sheet_content-RTF_TAB.
+          ls_sheet_content-RTF_TAB->* = it_rtf[].
+        ENDIF.
       ENDIF.
       ls_sheet_content-data_type   = lv_data_type.
       ls_sheet_content-cell_style  = lv_style_guid.

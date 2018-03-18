@@ -66,6 +66,13 @@ protected section.
   types:
     t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY .
   types:
+    BEGIN OF t_shared_string,
+      value     TYPE string,
+      rtf       TYPE ZEXCEL_T_RTF,
+    END OF t_shared_string .
+  types:
+    t_shared_strings TYPE STANDARD TABLE OF t_shared_string WITH EMPTY KEY .
+  types:
     BEGIN OF t_color,
       indexed TYPE string,
       rgb     TYPE string,
@@ -100,7 +107,7 @@ protected section.
   types:
     tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column .
 
-  data SHARED_STRINGS type STRINGTAB .
+  data SHARED_STRINGS type T_SHARED_STRINGS .
   data STYLES type T_STYLE_REFS .
   data MT_REF_FORMULAE type TYT_REF_FORMULAE .
   data MT_DXF_STYLES type ZEXCEL_T_STYLES_COND_MAPPING .
@@ -188,7 +195,7 @@ protected section.
   methods LOAD_WORKSHEET_COND_FORMAT_AA
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND.
+      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
   methods LOAD_WORKSHEET_COND_FORMAT_CI
     importing
       !IO_IXML_RULE type ref to IF_IXML_ELEMENT
@@ -278,6 +285,11 @@ private section.
       value(R_EXCEL_DATA) type XSTRING
     raising
       ZCX_EXCEL .
+  methods LOAD_FONT
+    importing
+      !IO_XML_ELEMENT type ref to IF_IXML_ELEMENT
+    returning
+      value(RO_FONT) type ref to ZCL_EXCEL_STYLE_FONT .
 ENDCLASS.
 
 
@@ -809,6 +821,104 @@ METHOD load_dxf_styles.
 ENDMETHOD.
 
 
+  method LOAD_FONT.
+
+* #486 - 2018-03-15 sigitas-stumbras
+* method created after refactoring load_style_fonts into 2 methods for font
+* loading reuse for RTF cell value loading
+
+    DATA: lo_node2  TYPE REF TO if_ixml_element.
+    DATA: ls_color  TYPE t_color.
+
+    CREATE OBJECT ro_font.
+
+*--------------------------------------------------------------------*
+*   Bold
+*--------------------------------------------------------------------*
+    IF io_xml_element->find_from_name( 'b' ) IS BOUND.
+      ro_font->bold = abap_true.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   Italic
+*--------------------------------------------------------------------*
+    IF io_xml_element->find_from_name( 'i' ) IS BOUND.
+      ro_font->italic = abap_true.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   Underline
+*--------------------------------------------------------------------*
+    lo_node2 = io_xml_element->find_from_name( 'u' ).
+    IF lo_node2 IS BOUND.
+      ro_font->underline      = abap_true.
+      ro_font->underline_mode = lo_node2->get_attribute( 'val' ).
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   StrikeThrough
+*--------------------------------------------------------------------*
+    IF io_xml_element->find_from_name( 'strike' ) IS BOUND.
+      ro_font->strikethrough = abap_true.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   Fontsize
+*--------------------------------------------------------------------*
+    lo_node2 = io_xml_element->find_from_name( 'sz' ).
+    IF lo_node2 IS BOUND.
+      ro_font->size = lo_node2->get_attribute( 'val' ).
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   Fontname
+*--------------------------------------------------------------------*
+    lo_node2 = io_xml_element->find_from_name( 'name' ).
+    IF lo_node2 IS BOUND.
+      ro_font->name = lo_node2->get_attribute( 'val' ).
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   Fontfamily
+*--------------------------------------------------------------------*
+    lo_node2 = io_xml_element->find_from_name( 'family' ).
+    IF lo_node2 IS BOUND.
+      ro_font->family = lo_node2->get_attribute( 'val' ).
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   Fontscheme
+*--------------------------------------------------------------------*
+    lo_node2 = io_xml_element->find_from_name( 'scheme' ).
+    IF lo_node2 IS BOUND.
+      ro_font->scheme = lo_node2->get_attribute( 'val' ).
+    ELSE.
+      CLEAR ro_font->scheme.
+    ENDIF.
+
+*--------------------------------------------------------------------*
+*   Fontcolor
+*--------------------------------------------------------------------*
+    lo_node2 = io_xml_element->find_from_name( 'color' ).
+    IF lo_node2 IS BOUND.
+      fill_struct_from_attributes( EXPORTING
+                                     ip_element   =  lo_node2
+                                   CHANGING
+                                     cp_structure = ls_color ).
+      ro_font->color-rgb = ls_color-rgb.
+      IF ls_color-indexed IS NOT INITIAL.
+        ro_font->color-indexed = ls_color-indexed.
+      ENDIF.
+
+      IF ls_color-theme IS NOT INITIAL.
+        ro_font->color-theme = ls_color-theme.
+      ENDIF.
+      ro_font->color-tint = ls_color-tint.
+    ENDIF.
+
+  endmethod.
+
+
 method LOAD_SHARED_STRINGS.
 *--------------------------------------------------------------------*
 * ToDos:
@@ -833,10 +943,14 @@ method LOAD_SHARED_STRINGS.
               lo_node_si                      TYPE REF TO if_ixml_element,
               lo_node_si_child                TYPE REF TO if_ixml_element,
               lo_node_r_child_t               TYPE REF TO if_ixml_element,
+              lo_node_r_child_rPr             TYPE REF TO if_ixml_element,
+              lo_font                         TYPE REF TO zcl_excel_style_font,
+              lv_current_offset               TYPE int2,
               lv_tag_name                     TYPE string,
+              ls_rtf                          TYPE zexcel_s_rtf,
               lv_node_value                   TYPE string.
 
-  FIELD-SYMBOLS: <lv_shared_string>           LIKE LINE OF me->shared_strings.
+  FIELD-SYMBOLS: <shared_string>           LIKE LINE OF me->shared_strings.
 
 *--------------------------------------------------------------------*
 
@@ -889,7 +1003,7 @@ method LOAD_SHARED_STRINGS.
   lo_node_si ?= lo_shared_strings_xml->find_from_name( 'si' ).
   WHILE lo_node_si IS BOUND.
 
-    APPEND INITIAL LINE TO me->shared_strings ASSIGNING <lv_shared_string>.            " Each <si>-entry in the xml-file must lead to an entry in our stringtable
+    APPEND INITIAL LINE TO me->shared_strings ASSIGNING <shared_string>.            " Each <si>-entry in the xml-file must lead to an entry in our stringtable
     lo_node_si_child ?= lo_node_si->get_first_child( ).
     IF lo_node_si_child IS BOUND.
       lv_tag_name = lo_node_si_child->get_name( ).
@@ -898,7 +1012,7 @@ method LOAD_SHARED_STRINGS.
 *   §1.1 - "simple" strings
 *                Example:  see above
 *--------------------------------------------------------------------*
-        <lv_shared_string> = lo_node_si_child->get_value( ).
+        <shared_string>-value = lo_node_si_child->get_value( ).
       ELSE.
 *--------------------------------------------------------------------*
 *   §1.2 - rich text formatted strings
@@ -906,15 +1020,27 @@ method LOAD_SHARED_STRINGS.
 *       as long as rich text formatting is not supported (2do§1) ignore all info about formatting
 *                Example:  see above
 *--------------------------------------------------------------------*
+        CLEAR: lv_current_offset.
         WHILE lo_node_si_child IS BOUND.                                             " actually these children of <si> are <r>-tags
+          CLEAR: ls_rtf.
+
+          lo_node_r_child_rPr ?= lo_node_si_child->find_from_name( 'rPr' ).          " extracting rich text formating data
+          IF lo_node_r_child_rPr IS BOUND.
+            lo_font = load_font( lo_node_r_child_rPr ).
+            ls_rtf-font = lo_font->get_structure( ).
+          ENDIF.
+          ls_rtf-offset = lv_current_offset.
 
           lo_node_r_child_t ?= lo_node_si_child->find_from_name( 't' ).              " extract the <t>...</t> part of each <r>-tag
           IF lo_node_r_child_t IS BOUND.
             lv_node_value = lo_node_r_child_t->get_value( ).
-            CONCATENATE <lv_shared_string> lv_node_value INTO <lv_shared_string> RESPECTING BLANKS.
+            ls_rtf-length = strlen( lv_node_value ).
+            CONCATENATE <shared_string>-value lv_node_value INTO <shared_string>-value RESPECTING BLANKS.
           ENDIF.
 
           lo_node_si_child ?= lo_node_si_child->get_next( ).
+          lv_current_offset = strlen( <shared_string>-value ).
+          APPEND ls_rtf TO <shared_string>-rtf.
 
         ENDWHILE.
       ENDIF.
@@ -1471,10 +1597,12 @@ METHOD load_style_fonts.
 *          removing unused variables
 *          adding comments to explain what we are trying to achieve
 *--------------------------------------------------------------------*
+* #486 2018-03-15 sigitas-stumbras
+* method refactored into additonal method "load_font" for font loading reuse
+* in RTF cell value loading
+
   DATA:       lo_node_font TYPE REF TO if_ixml_element,
-              lo_node2     TYPE REF TO if_ixml_element,
-              lo_font      TYPE REF TO zcl_excel_style_font,
-              ls_color     TYPE t_color.
+              lo_font      TYPE REF TO zcl_excel_style_font.
 
 *--------------------------------------------------------------------*
 * We need a table of used fonts to build up our styles
@@ -1488,93 +1616,11 @@ METHOD load_style_fonts.
 *              <scheme val="minor"/>
 *          </font>
 *--------------------------------------------------------------------*
+
   lo_node_font ?= ip_xml->find_from_name( 'font' ).
   WHILE lo_node_font IS BOUND.
 
-    CREATE OBJECT lo_font.
-*--------------------------------------------------------------------*
-*   Bold
-*--------------------------------------------------------------------*
-    IF lo_node_font->find_from_name( 'b' ) IS BOUND.
-      lo_font->bold = abap_true.
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   Italic
-*--------------------------------------------------------------------*
-    IF lo_node_font->find_from_name( 'i' ) IS BOUND.
-      lo_font->italic = abap_true.
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   Underline
-*--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'u' ).
-    IF lo_node2 IS BOUND.
-      lo_font->underline      = abap_true.
-      lo_font->underline_mode = lo_node2->get_attribute( 'val' ).
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   StrikeThrough
-*--------------------------------------------------------------------*
-    IF lo_node_font->find_from_name( 'strike' ) IS BOUND.
-      lo_font->strikethrough = abap_true.
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   Fontsize
-*--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'sz' ).
-    IF lo_node2 IS BOUND.
-      lo_font->size = lo_node2->get_attribute( 'val' ).
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   Fontname
-*--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'name' ).
-    IF lo_node2 IS BOUND.
-      lo_font->name = lo_node2->get_attribute( 'val' ).
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   Fontfamily
-*--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'family' ).
-    IF lo_node2 IS BOUND.
-      lo_font->family = lo_node2->get_attribute( 'val' ).
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   Fontscheme
-*--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'scheme' ).
-    IF lo_node2 IS BOUND.
-      lo_font->scheme = lo_node2->get_attribute( 'val' ).
-    ELSE.
-      CLEAR lo_font->scheme.
-    ENDIF.
-
-*--------------------------------------------------------------------*
-*   Fontcolor
-*--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'color' ).
-    IF lo_node2 IS BOUND.
-      fill_struct_from_attributes( EXPORTING
-                                     ip_element   =  lo_node2
-                                   CHANGING
-                                     cp_structure = ls_color ).
-      lo_font->color-rgb = ls_color-rgb.
-      IF ls_color-indexed IS NOT INITIAL.
-        lo_font->color-indexed = ls_color-indexed.
-      ENDIF.
-
-      IF ls_color-theme IS NOT INITIAL.
-        lo_font->color-theme = ls_color-theme.
-      ENDIF.
-      lo_font->color-tint = ls_color-tint.
-    ENDIF.
+    lo_font = load_font( lo_node_font ).
 
     INSERT lo_font INTO TABLE ep_fonts.
 
@@ -2212,6 +2258,7 @@ METHOD load_worksheet.
               lv_cell_formula             TYPE zexcel_cell_formula,
               lv_cell_column              TYPE zexcel_cell_column_alpha,
               lv_cell_row                 TYPE zexcel_cell_row,
+              lt_rtf                      TYPE ZEXCEL_T_RTF,
               lo_excel_style              TYPE REF TO zcl_excel_style,
               lv_style_guid               TYPE zexcel_cell_style,
 
@@ -2288,6 +2335,8 @@ METHOD load_worksheet.
               lo_data_validation          TYPE REF TO zcl_excel_data_validation,
               lv_datavalidation_range     TYPE string,
               lt_datavalidation_range     TYPE TABLE OF string.
+
+  FIELD-SYMBOLS: <shared_string>           LIKE LINE OF me->shared_strings.
 
 *--------------------------------------------------------------------*
 * §2  We need to read the the file "\\_rels\.rels" because it tells
@@ -2423,7 +2472,8 @@ METHOD load_worksheet.
     WHILE lo_ixml_cell_elem IS BOUND.
       CLEAR: lv_cell_value,
              lv_cell_formula,
-             lv_style_guid.
+             lv_style_guid,
+             lt_rtf[].
 
       fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_cell_elem CHANGING cp_structure = ls_cell ).
 
@@ -2432,7 +2482,11 @@ METHOD load_worksheet.
       CASE ls_cell-t.
         WHEN 's'. " String values are stored as index in shared string table
           lv_index = lo_ixml_value_elem->get_value( ) + 1.
-          READ TABLE shared_strings INTO lv_cell_value INDEX lv_index.
+          READ TABLE shared_strings ASSIGNING <shared_string> INDEX lv_index.
+          IF sy-subrc = 0.
+            lv_cell_value = <shared_string>-value.
+            lt_rtf[] = <shared_string>-rtf[].
+          ENDIF.
         WHEN 'inlineStr'. " inlineStr values are kept in special node
           lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name( name = 'is' ).
           IF lo_ixml_value_elem IS BOUND.
@@ -2506,7 +2560,8 @@ METHOD load_worksheet.
                                 ip_value      = lv_cell_value   " cell_elem Value
                                 ip_formula    = lv_cell_formula
                                 ip_data_type  = ls_cell-t
-                                ip_style      = lv_style_guid ).
+                                ip_style      = lv_style_guid
+                                it_rtf        = lt_rtf[] ).
       ENDIF.
       lo_ixml_cell_elem ?= lo_ixml_iterator2->get_next( ).
     ENDWHILE.

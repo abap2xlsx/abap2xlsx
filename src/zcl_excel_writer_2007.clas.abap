@@ -118,6 +118,11 @@ protected section.
   methods CREATE_XL_STYLES
     returning
       value(EP_CONTENT) type XSTRING .
+  methods CREATE_XL_FONT_NODE
+    importing
+      !IO_DOCUMENT type ref to IF_IXML_DOCUMENT
+      !IO_PARENT type ref to IF_IXML_ELEMENT
+      !IS_FONT type ZEXCEL_S_STYLE_FONT .
   methods CREATE_XL_STYLES_COLOR_NODE
     importing
       !IO_DOCUMENT type ref to IF_IXML_DOCUMENT
@@ -138,6 +143,7 @@ protected section.
   methods GET_SHARED_STRING_INDEX
     importing
       !IP_CELL_VALUE type ZEXCEL_CELL_VALUE
+      !IR_RTF type ref to ZEXCEL_T_RTF optional
     returning
       value(EP_INDEX) type INT4 .
   methods RENDER_IXML_ELEMENT_NO_HEADER
@@ -2638,6 +2644,92 @@ method CREATE_XL_DRAWING_ANCHOR.
   endmethod.
 
 
+METHOD CREATE_XL_FONT_NODE.
+
+  CONSTANTS:
+    lc_xml_node_fonts             TYPE string VALUE 'fonts',
+    lc_xml_node_font              TYPE string VALUE 'font',
+    lc_xml_node_b                 TYPE string VALUE 'b',            "bold
+    lc_xml_node_i                 TYPE string VALUE 'i',            "italic
+    lc_xml_node_u                 TYPE string VALUE 'u',            "underline
+    lc_xml_node_strike            TYPE string VALUE 'strike',       "strikethrough
+    lc_xml_node_sz                TYPE string VALUE 'sz',
+    lc_xml_node_color             TYPE string VALUE 'color',
+    lc_xml_node_name              TYPE string VALUE 'name',
+    lc_xml_node_family            TYPE string VALUE 'family',
+    lc_xml_node_scheme            TYPE string VALUE 'scheme',
+    lc_xml_attr_val               TYPE string VALUE 'val'.
+
+  DATA:
+    lv_value             TYPE string,
+    lo_sub_element       TYPE REF TO if_ixml_element.
+
+  IF is_font-bold EQ abap_true.
+    lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_b
+                                                         parent = io_document ).
+    io_parent->append_child( new_child = lo_sub_element ).
+  ENDIF.
+  IF is_font-italic EQ abap_true.
+    lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_i
+                                                         parent = io_document ).
+    io_parent->append_child( new_child = lo_sub_element ).
+  ENDIF.
+  IF is_font-underline EQ abap_true.
+    lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_u
+                                                         parent = io_document ).
+    lv_value = is_font-underline_mode.
+    lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                      value = lv_value ).
+    io_parent->append_child( new_child = lo_sub_element ).
+  ENDIF.
+  IF is_font-strikethrough EQ abap_true.
+    lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_strike
+                                                         parent = io_document ).
+    io_parent->append_child( new_child = lo_sub_element ).
+  ENDIF.
+  "size
+  lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_sz
+                                                       parent = io_document ).
+  lv_value = is_font-size.
+  CONDENSE lv_value.
+  lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                    value = lv_value ).
+  io_parent->append_child( new_child = lo_sub_element ).
+  "color
+  create_xl_styles_color_node(
+      io_document        = io_document
+      io_parent          = io_parent
+      is_color           = is_font-color ).
+
+  "name
+  lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_name
+                                                       parent = io_document ).
+  lv_value = is_font-name.
+  lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                    value = lv_value ).
+  io_parent->append_child( new_child = lo_sub_element ).
+  "family
+  lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_family
+                                                       parent = io_document ).
+  lv_value = is_font-family.
+  SHIFT lv_value RIGHT DELETING TRAILING space.
+  SHIFT lv_value LEFT DELETING LEADING space.
+  lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                    value = lv_value ).
+  io_parent->append_child( new_child = lo_sub_element ).
+  "scheme
+  IF is_font-scheme IS NOT INITIAL.
+    lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_scheme
+                                                         parent = io_document ).
+    lv_value = is_font-scheme.
+    lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                      value = lv_value ).
+    io_parent->append_child( new_child = lo_sub_element ).
+  ENDIF.
+
+ENDMETHOD.
+
+
 method CREATE_XL_RELATIONSHIPS.
 
 
@@ -2795,6 +2887,8 @@ METHOD create_xl_sharedstrings.
   DATA: lc_xml_node_sst         TYPE string VALUE 'sst',
         lc_xml_node_si          TYPE string VALUE 'si',
         lc_xml_node_t           TYPE string VALUE 't',
+        lc_xml_node_r           TYPE string VALUE 'r',
+        lc_xml_node_rpr         TYPE string VALUE 'rPr',
         " Node attributes
         lc_xml_attr_count       TYPE string VALUE 'count',
         lc_xml_attr_uniquecount TYPE string VALUE 'uniqueCount',
@@ -2806,6 +2900,8 @@ METHOD create_xl_sharedstrings.
         lo_element_root  TYPE REF TO if_ixml_element,
         lo_element       TYPE REF TO if_ixml_element,
         lo_sub_element   TYPE REF TO if_ixml_element,
+        lo_sub2_element  TYPE REF TO if_ixml_element,
+        lo_font_element  TYPE REF TO if_ixml_element,
         lo_encoding      TYPE REF TO if_ixml_encoding,
         lo_streamfactory TYPE REF TO if_ixml_stream_factory,
         lo_ostream       TYPE REF TO if_ixml_ostream,
@@ -2814,7 +2910,9 @@ METHOD create_xl_sharedstrings.
         lo_worksheet     TYPE REF TO zcl_excel_worksheet.
 
   DATA: lt_cell_data       TYPE zexcel_t_cell_data_unsorted,
+        lt_cell_data_rtf   TYPE zexcel_t_cell_data_unsorted,
         ls_shared_string   TYPE zexcel_s_shared_string,
+        lv_value           TYPE string,
         lv_count_str       TYPE string,
         lv_uniquecount_str TYPE string,
         lv_sytabix         TYPE sytabix,
@@ -2822,7 +2920,8 @@ METHOD create_xl_sharedstrings.
         lv_uniquecount     TYPE i.
 
   FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data,
-                 <fs_sheet_string>  TYPE zexcel_s_shared_string.
+                 <fs_sheet_string>  TYPE zexcel_s_shared_string,
+                 <fs_rtf>           TYPE zexcel_s_rtf.
 
 **********************************************************************
 * STEP 1: Collect strings from each worksheet
@@ -2833,34 +2932,39 @@ METHOD create_xl_sharedstrings.
     APPEND LINES OF lo_worksheet->sheet_content TO lt_cell_data.
   ENDWHILE.
 
-  DELETE lt_cell_data WHERE cell_formula IS NOT INITIAL. " delete formula content
+  DELETE lt_cell_data WHERE cell_formula IS NOT INITIAL " delete formula content
+    OR data_type <> 's'. " delete non strings
 
   DESCRIBE TABLE lt_cell_data LINES lv_count.
-  MOVE lv_count TO lv_count_str.
+  lv_count_str = lv_count.
 
-  SHIFT lv_count_str RIGHT DELETING TRAILING space.
-  SHIFT lv_count_str LEFT DELETING LEADING space.
+  APPEND LINES OF lt_cell_data TO lt_cell_data_rtf. "separating plain and rich text format stings
+  DELETE lt_cell_data WHERE RTF_TAB IS BOUND.
+  DELETE lt_cell_data_rtf WHERE RTF_TAB IS NOT BOUND.
 
-  SORT lt_cell_data BY cell_value data_type.
-  DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value data_type.
+  SORT lt_cell_data BY cell_value. " leave unique plain strings
+  DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value.
+  SORT lt_cell_data_rtf BY cell_value rtf_tab->*. " leave unique rich text format strings
+  DELETE ADJACENT DUPLICATES FROM lt_cell_data_rtf COMPARING cell_value rtf_tab->*.
+  APPEND LINES OF lt_cell_data_rtf TO lt_cell_data. " merge into single list
+  FREE lt_cell_data_rtf.
+  SORT lt_cell_data BY cell_value rtf_tab.
 
   DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
-  MOVE lv_uniquecount TO lv_uniquecount_str.
+  lv_uniquecount_str = lv_uniquecount.
 
-  SHIFT lv_uniquecount_str RIGHT DELETING TRAILING space.
-  SHIFT lv_uniquecount_str LEFT DELETING LEADING space.
-
-  clear lv_count.
-  LOOP AT lt_cell_data ASSIGNING <fs_sheet_content> where data_type = 's'.
-*    lv_sytabix = sy-tabix - 1.
-    lv_sytabix = lv_count.
-    MOVE lv_sytabix                    TO ls_shared_string-string_no.
-    MOVE <fs_sheet_content>-cell_value TO ls_shared_string-string_value.
-    MOVE <fs_sheet_content>-data_type TO ls_shared_string-string_type.
+  CLEAR lv_count.
+  LOOP AT lt_cell_data ASSIGNING <fs_sheet_content>.
+    CLEAR: ls_shared_string.
+    ls_shared_string-string_no    = sy-tabix - 1.
+    ls_shared_string-string_value = <fs_sheet_content>-cell_value.
+    ls_shared_string-string_type  = <fs_sheet_content>-data_type.
+    IF <fs_sheet_content>-rtf_tab IS BOUND.
+      CREATE DATA ls_shared_string-rtf_tab.
+      ls_shared_string-rtf_tab->* = <fs_sheet_content>-rtf_tab->*.
+    ENDIF.
     APPEND ls_shared_string TO shared_strings.
-    add 1 to lv_count.
   ENDLOOP.
-
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -2889,16 +2993,44 @@ METHOD create_xl_sharedstrings.
 * STEP 4: Create subnode
   LOOP AT shared_strings ASSIGNING <fs_sheet_string>.
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_si
-                                                     parent = lo_document ).
-    lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
-                                                         parent = lo_document ).
-*    if <fs_sheet_string>-string_type EQ 's_leading_blanks'.
-    IF <fs_sheet_string>-string_value IS NOT INITIAL AND <fs_sheet_string>-string_value(1) EQ ` `.
-      lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+                                                     parent = lo_element_root ).
+    IF <fs_sheet_string>-RTF_TAB IS NOT BOUND.
+      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
+                                                           parent = lo_element ).
+*      if <fs_sheet_string>-string_type EQ 's_leading_blanks'.
+      IF <fs_sheet_string>-string_value IS NOT INITIAL AND <fs_sheet_string>-string_value(1) EQ ` `.
+        lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+      ENDIF.
+      lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
+
+    ELSE.
+      LOOP AT <fs_sheet_string>-rtf_tab->* ASSIGNING <fs_rtf>.
+        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
+                                                             parent = lo_element ).
+        TRY.
+          lv_value = substring( val = <fs_sheet_string>-string_value
+                                off = <fs_rtf>-offset
+                                len = <fs_rtf>-length ).
+        CATCH CX_SY_RANGE_OUT_OF_BOUNDS.
+          EXIT.
+        ENDTRY.
+        IF <fs_rtf>-font IS NOT INITIAL.
+          lo_font_element = lo_document->create_simple_element( name   = lc_xml_node_rpr
+                                                                parent = lo_sub_element ).
+          create_xl_font_node( io_document = lo_document
+                               io_parent   = lo_font_element
+                               is_font     = <fs_rtf>-font ).
+        ENDIF.
+        lo_sub2_element = lo_document->create_simple_element( name   = lc_xml_node_t
+                                                            parent = lo_sub_element ).
+        IF lv_value IS NOT INITIAL AND lv_value(1) EQ ` `.
+          lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+        ENDIF.
+        lo_sub2_element->set_value( lv_value ).
+      ENDLOOP.
+
     ENDIF.
-    lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
-    lo_element->append_child( new_child = lo_sub_element ).
-    lo_element_root->append_child( new_child = lo_element ).
+
   ENDLOOP.
 
 **********************************************************************
@@ -5065,7 +5197,8 @@ METHOD create_xl_sheet_sheet_data.
                                                          parent = io_document ).
 
       IF <ls_sheet_content>-data_type EQ 's' OR <ls_sheet_content>-data_type EQ 's_leading_blanks'.
-        lv_value = me->get_shared_string_index( <ls_sheet_content>-cell_value ).
+        lv_value = me->get_shared_string_index( ip_cell_value = <ls_sheet_content>-cell_value
+                                                ir_rtf        = <ls_sheet_content>-rtf_tab ).
         CONDENSE lv_value.
         lo_element_4->set_value( value = lv_value ).
       ELSE.
@@ -5141,15 +5274,7 @@ METHOD create_xl_styles.
               " font
               lc_xml_node_fonts             TYPE string VALUE 'fonts',
               lc_xml_node_font              TYPE string VALUE 'font',
-              lc_xml_node_b                 TYPE string VALUE 'b',            "bold
-              lc_xml_node_i                 TYPE string VALUE 'i',            "italic
-              lc_xml_node_u                 TYPE string VALUE 'u',            "underline
-              lc_xml_node_strike            TYPE string VALUE 'strike',       "strikethrough
-              lc_xml_node_sz                TYPE string VALUE 'sz',
               lc_xml_node_color             TYPE string VALUE 'color',
-              lc_xml_node_name              TYPE string VALUE 'name',
-              lc_xml_node_family            TYPE string VALUE 'family',
-              lc_xml_node_scheme            TYPE string VALUE 'scheme',
               " fill
               lc_xml_node_fills             TYPE string VALUE 'fills',
               lc_xml_node_fill              TYPE string VALUE 'fill',
@@ -5188,7 +5313,6 @@ METHOD create_xl_styles.
               lc_xml_node_protection        TYPE string VALUE 'protection',
               " Node attributes
               lc_xml_attr_count             TYPE string VALUE 'count',
-              lc_xml_attr_val               TYPE string VALUE 'val',
               lc_xml_attr_theme             TYPE string VALUE 'theme',
               lc_xml_attr_rgb               TYPE string VALUE 'rgb',
               lc_xml_attr_indexed           TYPE string VALUE 'indexed',
@@ -5494,69 +5618,13 @@ METHOD create_xl_styles.
   LOOP AT lt_fonts INTO ls_font.
     lo_element_font = lo_document->create_simple_element( name   = lc_xml_node_font
                                                           parent = lo_document ).
-    IF ls_font-bold EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_b
-                                                           parent = lo_document ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-    ENDIF.
-    IF ls_font-italic EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_i
-                                                           parent = lo_document ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-    ENDIF.
-    IF ls_font-underline EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_u
-                                                           parent = lo_document ).
-      lv_value = ls_font-underline_mode.
-      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                        value = lv_value ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-    ENDIF.
-    IF ls_font-strikethrough EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_strike
-                                                           parent = lo_document ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-    ENDIF.
-    "size
-    lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_sz
-                                                         parent = lo_document ).
-    lv_value = ls_font-size.
-    SHIFT lv_value RIGHT DELETING TRAILING space.
-    SHIFT lv_value LEFT DELETING LEADING space.
-    lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                      value = lv_value ).
-    lo_element_font->append_child( new_child = lo_sub_element ).
-    "color
-    create_xl_styles_color_node(
-        io_document        = lo_document
-        io_parent          = lo_element_font
-        is_color           = ls_font-color ).
 
-    "name
-    lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_name
-                                                         parent = lo_document ).
-    lv_value = ls_font-name.
-    lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                      value = lv_value ).
-    lo_element_font->append_child( new_child = lo_sub_element ).
-    "family
-    lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_family
-                                                         parent = lo_document ).
-    lv_value = ls_font-family.
-    SHIFT lv_value RIGHT DELETING TRAILING space.
-    SHIFT lv_value LEFT DELETING LEADING space.
-    lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                      value = lv_value ).
-    lo_element_font->append_child( new_child = lo_sub_element ).
-    "scheme
-    IF ls_font-scheme IS NOT INITIAL.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_scheme
-                                                           parent = lo_document ).
-      lv_value = ls_font-scheme.
-      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                        value = lv_value ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-    ENDIF.
+    create_xl_font_node(
+      io_document = lo_document
+      io_parent   = lo_element_font
+      is_font     = ls_font
+    ).
+
     lo_element_fonts->append_child( new_child = lo_element_font ).
   ENDLOOP.
 
@@ -6695,12 +6763,21 @@ method FLAG2BOOL.
 
 METHOD get_shared_string_index.
 
-
   DATA ls_shared_string TYPE zexcel_s_shared_string.
 
-*  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
-  READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
-  ep_index = ls_shared_string-string_no.
+  IF ir_rtf IS NOT BOUND.
+*    READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
+    READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
+    ep_index = ls_shared_string-string_no.
+  ELSE.
+    LOOP AT shared_strings INTO ls_shared_string WHERE string_value = ip_cell_value
+                                                   AND rtf_tab IS BOUND
+                                                   AND rtf_tab->* = ir_rtf->*.
+
+      ep_index = ls_shared_string-string_no.
+      EXIT.
+    ENDLOOP.
+  ENDIF.
 
 ENDMETHOD.
 

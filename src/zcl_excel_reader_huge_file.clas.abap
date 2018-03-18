@@ -30,7 +30,6 @@ private section.
           include type t_cell_content as content.
   types: end of t_cell .
 
-  interface IF_SXML_NODE load .
   constants C_END_OF_STREAM type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_FINAL. "#EC NOTEXT
   constants C_ELEMENT_OPEN type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_ELEMENT_OPEN. "#EC NOTEXT
   constants C_ELEMENT_CLOSE type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_ELEMENT_CLOSE. "#EC NOTEXT
@@ -59,7 +58,7 @@ private section.
     importing
       !IO_READER type ref to IF_SXML_READER
     returning
-      value(ET_SHARED_STRINGS) type STRINGTAB .
+      value(ET_SHARED_STRINGS) type T_SHARED_STRINGS .
   methods GET_CELL_COORD
     importing
       !IV_COORD type STRING
@@ -141,13 +140,16 @@ endmethod.
 method GET_SHARED_STRING.
   data: lv_tabix type i,
         lv_error type string.
+  FIELD-SYMBOLS: <shared_string> LIKE LINE OF shared_strings.
   lv_tabix = iv_index + 1.
-  read table shared_strings into ev_value index lv_tabix.
+  read table shared_strings ASSIGNING <shared_string> index lv_tabix.
   if sy-subrc ne 0.
     concatenate 'Entry ' iv_index ' not found in Shared String Table' into lv_error.
     raise exception type lcx_not_found
       exporting
         error = lv_error.
+  else.
+    ev_value = <shared_string>-value.
   endif.
 endmethod.
 
@@ -227,18 +229,18 @@ endmethod.
 
 method read_shared_strings.
 
-  data lv_value type string.
+  data ls_shared_string type t_shared_string.
 
   while io_reader->node_type ne c_end_of_stream.
     io_reader->next_node( ).
     if io_reader->name eq `t`.
       case io_reader->node_type .
         when c_element_open .
-          clear lv_value .
+          clear ls_shared_string-value .
         when c_node_value .
-          lv_value = lv_value && io_reader->value .
+          ls_shared_string-value = ls_shared_string-value && io_reader->value .
         when c_element_close .
-          append lv_value to et_shared_strings.
+          append ls_shared_string to et_shared_strings.
       endcase .
     endif.
   endwhile.

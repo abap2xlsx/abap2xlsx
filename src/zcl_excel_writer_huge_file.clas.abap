@@ -804,7 +804,8 @@ METHOD get_cells.
     <cell>-formula = <content>-cell_formula.
     <cell>-type    = <content>-data_type.
     IF <cell>-type = 's'.
-      <cell>-value = me->get_shared_string_index( <content>-cell_value ).
+      <cell>-value = me->get_shared_string_index( ip_cell_value = <content>-cell_value
+                                                  ir_rtf        = <content>-rtf_tab ).
     ELSE.
       <cell>-value = <content>-cell_value.
     ENDIF.
