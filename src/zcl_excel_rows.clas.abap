@@ -15,7 +15,7 @@ CLASS ZCL_EXCEL_ROWS DEFINITION
 *"* do not include other source files here!!!
   PUBLIC SECTION.
     TYPES:
-      BEGIN OF T_ROWS,
+      BEGIN OF T_ROWS, " performance improvement #527
         ROW_INDEX TYPE INT4,
         ROW       TYPE REF TO ZCL_EXCEL_ROW,
       END OF T_ROWS.
@@ -64,17 +64,12 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 * | [--->] IO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD ADD.
-*    IF SY-UNAME = 'BILEN'.
+
     DATA:
           LS_ROW TYPE T_ROWS.
     LS_ROW-ROW_INDEX = IO_ROW->GET_ROW_INDEX( ).
     LS_ROW-ROW = IO_ROW.
     INSERT LS_ROW INTO TABLE DT_ROWS.
-*
-*    ELSE.
-*      ROWS->ADD( IO_ROW ).
-*
-*    ENDIF.
 
   ENDMETHOD.                    "ADD
 
@@ -84,7 +79,6 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 * +-------------------------------------------------------------------------------------------------+
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD CLEAR.
-*    ROWS->CLEAR( ).
     CLEAR DT_ROWS[].
 
   ENDMETHOD.                    "CLEAR
@@ -108,15 +102,10 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 * | [<-()] EO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD GET.
-*    IF SY-UNAME = 'BILEN'.
     READ TABLE DT_ROWS ASSIGNING FIELD-SYMBOL(<LS_ROW>) WITH TABLE KEY ROW_INDEX = IP_INDEX.
     IF SY-SUBRC = 0.
       EO_ROW ?= <LS_ROW>-ROW.
     ENDIF.
-*    ELSE.
-*      EO_ROW ?= ROWS->IF_OBJECT_COLLECTION~GET( IP_INDEX ).
-*
-*    ENDIF.
   ENDMETHOD.                    "GET
 
 
@@ -143,7 +132,6 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
     ELSE.
       IS_EMPTY = ' '.
     ENDIF.
-*    IS_EMPTY = ROWS->IF_OBJECT_COLLECTION~IS_EMPTY( ).
   ENDMETHOD.                    "IS_EMPTY
 
 
@@ -153,7 +141,6 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 * | [--->] IO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD REMOVE.
-*    ROWS->REMOVE( IO_ROW ).
     DELETE DT_ROWS WHERE ROW_INDEX = IO_ROW->GET_ROW_INDEX( ).
   ENDMETHOD.                    "REMOVE
 
@@ -164,12 +151,6 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 * | [<-()] EP_SIZE                        TYPE        I
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD SIZE.
-*    IF sy-uname = 'BILEN'.
     EP_SIZE = LINES( DT_ROWS )..
-*
-*    else.
-*    EP_SIZE = ROWS->IF_OBJECT_COLLECTION~SIZE( ).
-*
-*    ENDIF.
   ENDMETHOD.                    "SIZE
 ENDCLASS.
