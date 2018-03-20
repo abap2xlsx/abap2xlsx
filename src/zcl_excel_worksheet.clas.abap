@@ -251,7 +251,7 @@ public section.
       ZCX_EXCEL .
   methods GET_CELL
     importing
-      !IP_CELL type ZEXCEL_CELL_REFERENCE optional
+      !IP_CELL type CSEQUENCE optional
       !IP_COLUMN type SIMPLE optional
       !IP_ROW type ZEXCEL_CELL_ROW optional
     exporting
@@ -260,6 +260,7 @@ public section.
       !EP_STYLE type ref to ZCL_EXCEL_STYLE
       !EP_GUID type ZEXCEL_CELL_STYLE
       !EP_FORMULA type ZEXCEL_CELL_FORMULA
+      !ET_RTF type ZEXCEL_T_RTF
     raising
       ZCX_EXCEL .
   methods GET_COLUMN
@@ -388,7 +389,7 @@ public section.
       ZCX_EXCEL .
   methods SET_CELL
     importing
-      !IP_CELL type ZEXCEL_CELL_REFERENCE optional
+      !IP_CELL type CSEQUENCE optional
       !IP_COLUMN type SIMPLE optional
       !IP_ROW type ZEXCEL_CELL_ROW optional
       !IP_COLUMN_TO type SIMPLE optional
@@ -404,16 +405,18 @@ public section.
       ZCX_EXCEL .
   methods SET_CELL_FORMULA
     importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_CELL type CSEQUENCE optional
+      !IP_COLUMN type SIMPLE optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
       !IP_FORMULA type ZEXCEL_CELL_FORMULA
     raising
       ZCX_EXCEL .
   methods SET_CELL_STYLE
     importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
-      !IP_STYLE type ZEXCEL_CELL_STYLE
+      !IP_CELL type CSEQUENCE optional
+      !IP_COLUMN type SIMPLE optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
+      !IP_STYLE type ANY
     raising
       ZCX_EXCEL .
   methods SET_COLUMN_WIDTH
@@ -430,6 +433,7 @@ public section.
       ZCX_EXCEL .
   methods SET_MERGE
     importing
+      !IP_CELL type CSEQUENCE optional
       !IP_COLUMN_START type SIMPLE default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_COL
       !IP_COLUMN_END type SIMPLE default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_COL
       !IP_ROW type ZEXCEL_CELL_ROW default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_ROW
@@ -574,6 +578,24 @@ private section.
   methods UPDATE_DIMENSION_RANGE
     raising
       ZCX_EXCEL .
+  methods DETERMINE_RANGE
+    importing
+      !IP_CELL type CSEQUENCE optional
+      !IP_COLUMN type SIMPLE optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
+      !IP_COLUMN_TO type SIMPLE optional
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+    exporting
+      !EV_COLUMN_I_START type ZEXCEL_CELL_COLUMN
+      !EV_COLUMN_A_START type ZEXCEL_CELL_COLUMN_ALPHA
+      !EV_ROW_START type ZEXCEL_CELL_ROW
+      !EV_COLUMN_I_END type ZEXCEL_CELL_COLUMN
+      !EV_COLUMN_A_END type ZEXCEL_CELL_COLUMN_ALPHA
+      !EV_ROW_END type ZEXCEL_CELL_ROW .
+  methods CHECK_RTF
+    importing
+      !IP_VALUE type SIMPLE
+      !IT_RTF type ZEXCEL_T_RTF .
 ENDCLASS.
 
 
@@ -3353,8 +3375,6 @@ METHOD change_cell_style.
     lv_column                 TYPE zexcel_cell_column_alpha,
     lv_column_int             TYPE zexcel_cell_column,
     lv_row                    TYPE zexcel_cell_row,
-    lv_column_start           TYPE zexcel_cell_column_alpha,
-    lv_column_end             TYPE zexcel_cell_column_alpha,
     lv_column_int_start       TYPE zexcel_cell_column,
     lv_column_int_end         TYPE zexcel_cell_column,
     lv_row_start              TYPE zexcel_cell_row,
@@ -3401,38 +3421,17 @@ METHOD change_cell_style.
     endif.
   END-OF-DEFINITION.
 
-  IF NOT ( ( ip_column IS SUPPLIED AND ip_row IS SUPPLIED ) OR ip_cell IS SUPPLIED ).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Please provide either row and column, or cell/range reference'.
-  ENDIF.
-
-  IF ip_cell IS NOT INITIAL.
-    zcl_excel_common=>convert_range2column_a_row(
-      EXPORTING
-        i_range = ip_cell
-      IMPORTING
-        e_column_start = lv_column_start
-        e_column_end   = lv_column_end
-        e_row_start    = lv_row_start
-        e_row_end      = lv_row_end  ).
-  ELSE.
-    lv_column_start = ip_column.
-    lv_row_start    = ip_row.
-    lv_column_end   = ip_column_to.
-    lv_row_end      = ip_row_to.
-  ENDIF.
-
-  IF lv_column_end IS INITIAL.
-    lv_column_end = lv_column_start.
-  ENDIF.
-
-  IF lv_row_end IS INITIAL.
-    lv_row_end = lv_row_start.
-  ENDIF.
-
-  lv_column_int_start = zcl_excel_common=>convert_column2int( lv_column_start ).
-  lv_column_int_end   = zcl_excel_common=>convert_column2int( lv_column_end ).
+  " #524 accept Excel-style cell reference parameter IP_CELL
+  determine_range(
+    EXPORTING ip_cell           = ip_cell
+              ip_column         = ip_column
+              ip_row            = ip_row
+              ip_column_to      = ip_column_to
+              ip_row_to         = ip_row_to
+    IMPORTING ev_column_i_start = lv_column_int_start
+              ev_row_start      = lv_row_start
+              ev_column_i_end   = lv_column_int_end
+              ev_row_end        = lv_row_end ).
 
   lv_column_int = lv_column_int_start.
   lv_row        = lv_row_start.
@@ -3716,6 +3715,36 @@ METHOD change_cell_style.
 ENDMETHOD.
 
 
+  method CHECK_RTF.
+
+    DATA: lv_rtf_length TYPE I.
+    DATA: lv_value      TYPE STRING.
+    DATA: lv_val_length TYPE I.
+    FIELD-SYMBOLS: <rtf> LIKE LINE OF IT_RTF.
+
+    CHECK it_rtf[] IS NOT INITIAL.
+
+    CLEAR: lv_rtf_length.
+    LOOP AT IT_RTF ASSIGNING <rtf>.
+      IF lv_rtf_length <> <rtf>-offset.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = 'Gaps or overlaps in RTF data offset/length specs'.
+      ENDIF.
+      lv_rtf_length = <rtf>-offset + <rtf>-length.
+    ENDLOOP.
+
+    lv_value = ip_value.
+    lv_val_length = strlen( lv_value ).
+    IF lv_val_length <> lv_rtf_length.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'RTF specs length is not equal to value length'.
+    ENDIF.
+
+  endmethod.
+
+
 METHOD constructor.
   DATA: lv_title TYPE zexcel_sheet_title.
 
@@ -3806,6 +3835,56 @@ METHOD delete_row_outline.
 ENDMETHOD.
 
 
+  method DETERMINE_RANGE.
+
+    IF NOT ( ( ip_column IS INITIAL AND ip_row IS INITIAL ) OR ip_cell IS INITIAL ).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Please provide either row and column, or cell/range reference'.
+    ENDIF.
+
+    IF ip_cell IS NOT INITIAL.
+      zcl_excel_common=>convert_range2column_a_row(
+        EXPORTING
+          i_range = ip_cell
+        IMPORTING
+          e_column_start = ev_column_a_start
+          e_column_end   = ev_column_a_end
+          e_row_start    = ev_row_start
+          e_row_end      = ev_row_end  ).
+    ELSE.
+      ev_column_a_start = ip_column.
+      ev_row_start      = ip_row.
+      ev_column_a_end   = ip_column_to.
+      ev_row_end        = ip_row_to.
+    ENDIF.
+
+    IF ev_column_a_end IS INITIAL.
+      ev_column_a_end = ev_column_a_start.
+    ENDIF.
+
+    IF ev_row_end IS INITIAL.
+      ev_row_end = ev_row_start.
+    ENDIF.
+
+    ev_column_i_start = zcl_excel_common=>convert_column2int( ev_column_a_start ).
+    ev_column_i_end   = zcl_excel_common=>convert_column2int( ev_column_a_end ).
+
+    IF ev_column_i_start > ev_column_i_end.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Start column may not be greater than end column'.
+    ENDIF.
+
+    IF ev_row_start > ev_row_end.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Start row may not be greater than end row'.
+    ENDIF.
+
+  endmethod.
+
+
 method FREEZE_PANES.
 
   IF ip_num_columns IS NOT SUPPLIED AND ip_num_rows IS NOT SUPPLIED.
@@ -3885,26 +3964,14 @@ METHOD get_cell.
         lv_row            TYPE zexcel_cell_row,
         ls_sheet_content  TYPE zexcel_s_cell_data.
 
-  IF NOT ( ( ip_column IS SUPPLIED AND ip_row IS SUPPLIED ) OR ip_cell IS SUPPLIED ).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Please provide either row and column, or cell reference'.
-  ENDIF.
-
-  IF ip_cell IS NOT INITIAL.
-    zcl_excel_common=>convert_range2column_a_row(
-      EXPORTING
-        i_range = ip_cell
-      IMPORTING
-        e_column_start = lv_column_alpha
-        e_row_start    = lv_row ).
-
-  ELSE.
-    lv_column_alpha = ip_column.
-    lv_row          = ip_row.
-  ENDIF.
-
-  lv_column = zcl_excel_common=>convert_column2int( lv_column_alpha ).
+" #524 accept Excel-style cell reference parameter IP_CELL
+  determine_range(
+    EXPORTING ip_cell           = ip_cell
+              ip_column         = ip_column
+              ip_row            = ip_row
+    IMPORTING ev_column_i_start = lv_column
+              ev_column_a_start = lv_column_alpha
+              ev_row_start      = lv_row ).
 
   READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = lv_row
                                                                 cell_column  = lv_column.
@@ -3913,6 +3980,9 @@ METHOD get_cell.
   ep_value    = ls_sheet_content-cell_value.
   ep_guid     = ls_sheet_content-cell_style.       " issue 139 - added this to be used for columnwidth calculation
   ep_formula  = ls_sheet_content-cell_formula.
+  IF et_rtf IS SUPPLIED AND ls_sheet_content-rtf_tab IS BOUND. " #486 - rich text formating data
+    et_rtf = ls_sheet_content-rtf_tab->*.
+  ENDIF.
 
   " Addition to solve issue #120, contribution by Stefan Schmöcker
   DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
@@ -4639,55 +4709,22 @@ method SET_CELL.
         error = 'Please provide the value or formula'.
   ENDIF.
 
-  DATA: lo_style_type type ref to cl_abap_typedescr.
-  FIELD-SYMBOLS:
-    <style> TYPE REF TO ZCL_EXCEL_STYLE.
+  " #524 accept dynamic IP_STYLE paramter
+  lv_provided_style_guid = zcl_excel_common=>get_guid_of( ip_style ).
 
-  lo_style_type = cl_abap_typedescr=>describe_by_data( ip_style ).
-  IF lo_style_type->TYPE_KIND = lo_style_type->TYPEKIND_OREF.
-    lo_style_type = cl_abap_typedescr=>describe_by_object_ref( ip_style ).
-    IF lo_style_type->absolute_name = '\CLASS=ZCL_EXCEL_STYLE'.
-      ASSIGN ip_style TO <style>.
-      lv_provided_style_guid = <style>->get_guid( ).
-    ENDIF.
-  ELSEIF lo_style_type->absolute_name = '\TYPE=ZEXCEL_CELL_STYLE'.
-    lv_provided_style_guid = ip_style.
-  ELSEIF lo_style_type->TYPE_KIND = lo_style_type->TYPEKIND_HEX.
-    lv_provided_style_guid = ip_style.
-  ENDIF.
-
-  IF NOT ( ( ip_column IS SUPPLIED AND ip_row IS SUPPLIED ) OR ip_cell IS SUPPLIED ).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Please provide either row and column, or cell/range reference'.
-  ENDIF.
-
-  IF ip_cell IS NOT INITIAL.
-    zcl_excel_common=>convert_range2column_a_row(
-      EXPORTING
-        i_range = ip_cell
-      IMPORTING
-        e_column_start = lv_column_start
-        e_column_end   = lv_column_end
-        e_row_start    = lv_row_start
-        e_row_end      = lv_row_end  ).
-  ELSE.
-    lv_column_start = ip_column.
-    lv_row_start    = ip_row.
-    lv_column_end   = ip_column_to.
-    lv_row_end      = ip_row_to.
-  ENDIF.
-
-  IF lv_column_end IS INITIAL.
-    lv_column_end = lv_column_start.
-  ENDIF.
-
-  IF lv_row_end IS INITIAL.
-    lv_row_end = lv_row_start.
-  ENDIF.
-
-  lv_column_int_start = zcl_excel_common=>convert_column2int( lv_column_start ).
-  lv_column_int_end   = zcl_excel_common=>convert_column2int( lv_column_end ).
+  " #524 accept Excel-style cell reference parameter IP_CELL
+  determine_range(
+    EXPORTING ip_cell           = ip_cell
+              ip_column         = ip_column
+              ip_row            = ip_row
+              ip_column_to      = ip_column_to
+              ip_row_to         = ip_row_to
+    IMPORTING ev_column_i_start = lv_column_int_start
+              ev_column_a_start = lv_column_start
+              ev_row_start      = lv_row_start
+              ev_column_i_end   = lv_column_int_end
+              ev_column_a_end   = lv_column_end
+              ev_row_end        = lv_row_end ).
 
   lv_column_int = lv_column_int_start.
   lv_row        = lv_row_start.
@@ -4822,42 +4859,56 @@ method SET_CELL.
 *                                                                   cell_column = lv_column.
 *
 *    IF sy-subrc EQ 0.
-    IF <fs_sheet_content> IS ASSIGNED.
-*   End of change issue #152 - don't touch exisiting style if only value is passed
-      IF lv_first_cell = ABAP_TRUE.
-        <fs_sheet_content>-cell_value   = lv_value.
-        <fs_sheet_content>-cell_formula = ip_formula.
-        IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf[] IS NOT INITIAL.
-          CREATE DATA <fs_sheet_content>-RTF_TAB.
-          <fs_sheet_content>-RTF_TAB->* = it_rtf[].
-        ENDIF.
-      ELSE.
-        CLEAR: <fs_sheet_content>-cell_value.
-        CLEAR: <fs_sheet_content>-cell_formula.
-      ENDIF.
-      <fs_sheet_content>-data_type    = lv_data_type.
-      <fs_sheet_content>-cell_style   = lv_style_guid.
-    ELSE.
+*    IF <fs_sheet_content> IS ASSIGNED.
+* End of change issue #152 - don't touch exisiting style if only value is passed
+
+    IF <fs_sheet_content> IS NOT ASSIGNED.
       CLEAR: ls_sheet_content.
-      ls_sheet_content-cell_row     = lv_row.
-      ls_sheet_content-cell_column  = lv_column_int.
-      IF lv_first_cell = ABAP_TRUE.
-        ls_sheet_content-cell_value   = lv_value.
-        ls_sheet_content-cell_formula = ip_formula.
-        IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf[] IS NOT INITIAL.
-          CREATE DATA ls_sheet_content-RTF_TAB.
-          ls_sheet_content-RTF_TAB->* = it_rtf[].
-        ENDIF.
-      ENDIF.
-      ls_sheet_content-data_type   = lv_data_type.
-      ls_sheet_content-cell_style  = lv_style_guid.
+      ls_sheet_content-cell_row    = lv_row.
+      ls_sheet_content-cell_column = lv_column_int.
       ls_sheet_content-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( ip_column = lv_column ip_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
-*      APPEND ls_sheet_content TO sheet_content.
-*      SORT sheet_content BY cell_row cell_column.
-      " me->update_dimension_range( ).
-
     ENDIF.
+
+    IF lv_first_cell = ABAP_TRUE.
+      <fs_sheet_content>-cell_value   = lv_value.
+      <fs_sheet_content>-cell_formula = ip_formula.
+      IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf[] IS NOT INITIAL.
+        check_rtf( ip_value = lv_value
+                   it_rtf   = it_rtf[] ).
+        CREATE DATA <fs_sheet_content>-RTF_TAB.
+        <fs_sheet_content>-RTF_TAB->* = it_rtf[].
+      ENDIF.
+    ELSE.
+      CLEAR <fs_sheet_content>-cell_value.
+      CLEAR <fs_sheet_content>-cell_formula.
+      CLEAR <fs_sheet_content>-rtf_tab.
+    ENDIF.
+    <fs_sheet_content>-data_type    = lv_data_type.
+    <fs_sheet_content>-cell_style   = lv_style_guid.
+
+*    " Deduplicating code by inserting new table line and assiging a field symbol to it
+*    ELSE.
+*      CLEAR: ls_sheet_content.
+*      ls_sheet_content-cell_row     = lv_row.
+*      ls_sheet_content-cell_column  = lv_column_int.
+*      IF lv_first_cell = ABAP_TRUE.
+*        ls_sheet_content-cell_value   = lv_value.
+*        ls_sheet_content-cell_formula = ip_formula.
+*        IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf[] IS NOT INITIAL.
+*          CREATE DATA ls_sheet_content-RTF_TAB.
+*          ls_sheet_content-RTF_TAB->* = it_rtf[].
+*        ENDIF.
+*      ENDIF.
+*      ls_sheet_content-data_type   = lv_data_type.
+*      ls_sheet_content-cell_style  = lv_style_guid.
+*      ls_sheet_content-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( ip_column = lv_column ip_row = lv_row ).
+*      INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
+**      APPEND ls_sheet_content TO sheet_content.
+**      SORT sheet_content BY cell_row cell_column.
+*      " me->update_dimension_range( ).
+*
+*    ENDIF.
 
     IF lv_first_cell = ABAP_TRUE.
 *     Begin of change issue #152 - don't touch exisiting style if only value is passed
@@ -4939,20 +4990,27 @@ endmethod.
 method SET_CELL_FORMULA.
   DATA:
               lv_column                       TYPE zexcel_cell_column,
+              lv_row                          TYPE zexcel_cell_row,
               ls_sheet_content                LIKE LINE OF me->sheet_content.
 
   FIELD-SYMBOLS:
               <sheet_content>                 LIKE LINE OF me->sheet_content.
 
+  determine_range(
+    EXPORTING ip_cell           = ip_cell
+              ip_column         = ip_column
+              ip_row            = ip_row
+    IMPORTING ev_column_i_start = lv_column
+              ev_row_start      = lv_row ).
+
 *--------------------------------------------------------------------*
 * Get cell to set formula into
 *--------------------------------------------------------------------*
-  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
-  READ TABLE me->sheet_content ASSIGNING <sheet_content> WITH TABLE KEY cell_row    = ip_row
+  READ TABLE me->sheet_content ASSIGNING <sheet_content> WITH TABLE KEY cell_row    = lv_row
                                                                         cell_column = lv_column.
   IF sy-subrc <> 0.                                                                           " Create new entry in sheet_content if necessary
     CHECK ip_formula IS INITIAL.                                                              " no need to create new entry in sheet_content when no formula is passed
-    ls_sheet_content-cell_row    = ip_row.
+    ls_sheet_content-cell_row    = lv_row.
     ls_sheet_content-cell_column = lv_column.
     INSERT ls_sheet_content INTO TABLE me->sheet_content ASSIGNING <sheet_content>.
   ENDIF.
@@ -4969,21 +5027,27 @@ method SET_CELL_FORMULA.
 METHOD set_cell_style.
 
   DATA: lv_column                 TYPE zexcel_cell_column,
+        lv_row                    TYPE zexcel_cell_row,
         lv_style_guid             TYPE zexcel_cell_style.
 
   FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
-  lv_style_guid = ip_style.
+  determine_range(
+    EXPORTING ip_cell           = ip_cell
+              ip_column         = ip_column
+              ip_row            = ip_row
+    IMPORTING ev_column_i_start = lv_column
+              ev_row_start      = lv_row ).
 
-  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+  lv_style_guid = zcl_excel_common=>get_guid_of( ip_style ).
 
-  READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
+  READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = lv_row
                                                                  cell_column = lv_column.
 
   IF sy-subrc EQ 0.
     <fs_sheet_content>-cell_style   = lv_style_guid.
   ELSE.
-    set_cell( ip_column = ip_column ip_row = ip_row ip_value = '' ip_style = ip_style ).
+    set_cell( ip_column = lv_column ip_row = lv_row ip_value = '' ip_style = lv_style_guid ).
   ENDIF.
 
 ENDMETHOD.
@@ -5038,14 +5102,31 @@ METHOD set_merge.
   DATA: ls_merge        TYPE mty_merge,
         lv_errormessage TYPE string.
 
+  DATA: lv_column_start	TYPE zexcel_cell_column_alpha,
+        lv_column_end	  TYPE zexcel_cell_column_alpha,
+        lv_row         	TYPE zexcel_cell_row,
+        lv_row_to	      TYPE zexcel_cell_row.
+
+  " #524 accept Excel-style cell reference parameter IP_CELL
+  determine_range(
+    EXPORTING ip_cell           = ip_cell
+              ip_column         = ip_column_start
+              ip_row            = ip_row
+              ip_column_to      = ip_column_end
+              ip_row_to         = ip_row_to
+    IMPORTING ev_column_a_start = lv_column_start
+              ev_row_start      = lv_row
+              ev_column_a_end   = lv_column_end
+              ev_row_end        = lv_row_to ).
+
 *--------------------------------------------------------------------*
 * Build new range area to insert into range table
 *--------------------------------------------------------------------*
-  ls_merge-row_from = ip_row.
-  IF ip_row IS SUPPLIED AND ip_row IS NOT INITIAL AND ip_row_to IS NOT SUPPLIED.
+  ls_merge-row_from = lv_row.
+  IF lv_row IS NOT INITIAL AND lv_row_to IS INITIAL.
     ls_merge-row_to   = ls_merge-row_from.
   ELSE.
-    ls_merge-row_to   = ip_row_to.
+    ls_merge-row_to   = lv_row_to.
   ENDIF.
   IF ls_merge-row_from > ls_merge-row_to.
     lv_errormessage = 'Merge: First row larger then last row'(405).
@@ -5054,11 +5135,11 @@ METHOD set_merge.
         error = lv_errormessage.
   ENDIF.
 
-  ls_merge-col_from = zcl_excel_common=>convert_column2int( ip_column_start ).
-  IF ip_column_start IS SUPPLIED AND ip_column_start IS NOT INITIAL AND ip_column_end IS NOT SUPPLIED.
+  ls_merge-col_from = zcl_excel_common=>convert_column2int( lv_column_start ).
+  IF lv_column_start IS NOT INITIAL AND lv_column_end IS INITIAL.
     ls_merge-col_to   = ls_merge-col_from.
   ELSE.
-    ls_merge-col_to   = zcl_excel_common=>convert_column2int( ip_column_end ).
+    ls_merge-col_to   = zcl_excel_common=>convert_column2int( lv_column_end ).
   ENDIF.
   IF ls_merge-col_from > ls_merge-col_to.
     lv_errormessage = 'Merge: First column larger then last column'(406).

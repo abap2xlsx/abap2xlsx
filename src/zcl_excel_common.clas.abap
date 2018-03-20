@@ -207,6 +207,11 @@ public section.
       value(RP_IN_RANGE) type ABAP_BOOL
     raising
       ZCX_EXCEL .
+  class-methods GET_GUID_OF
+    importing
+      !IP_GUID type ANY
+    returning
+      value(RV_GUID) type ZEXCEL_CELL_STYLE .
 protected section.
 private section.
 
@@ -1079,6 +1084,33 @@ METHOD get_fieldcatalog.
   ENDLOOP.
 
 ENDMETHOD.
+
+
+  method GET_GUID_OF.
+
+    DATA: lo_style_type type ref to cl_abap_typedescr.
+    FIELD-SYMBOLS:
+      <style> TYPE REF TO ZCL_EXCEL_STYLE.
+
+    CHECK ip_guid IS NOT INITIAL.
+
+    lo_style_type = cl_abap_typedescr=>describe_by_data( ip_guid ).
+    IF lo_style_type->type_kind = lo_style_type->typekind_oref.
+      lo_style_type = cl_abap_typedescr=>describe_by_object_ref( ip_guid ).
+      IF lo_style_type->absolute_name = '\CLASS=ZCL_EXCEL_STYLE'.
+        ASSIGN ip_guid TO <style>.
+        rv_guid = <style>->get_guid( ).
+      ENDIF.
+
+    ELSEIF lo_style_type->absolute_name = '\TYPE=ZEXCEL_CELL_STYLE'.
+      rv_guid = ip_guid.
+
+    ELSEIF lo_style_type->type_kind = lo_style_type->typekind_hex.
+      rv_guid = ip_guid.
+
+    ENDIF.
+
+  endmethod.
 
 
 method IS_CELL_IN_RANGE.
