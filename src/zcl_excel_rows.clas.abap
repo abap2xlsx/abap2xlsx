@@ -21,7 +21,7 @@ CLASS ZCL_EXCEL_ROWS DEFINITION
       END OF T_ROWS.
 
     DATA:
-          DT_ROWS TYPE HASHED TABLE OF T_ROWS WITH UNIQUE KEY ROW_INDEX.
+          DT_ROWS TYPE HASHED TABLE OF T_ROWS WITH UNIQUE KEY ROW_INDEX READ-ONLY.
 
     METHODS ADD
       IMPORTING
@@ -33,9 +33,6 @@ CLASS ZCL_EXCEL_ROWS DEFINITION
         !IP_INDEX     TYPE I
       RETURNING
         VALUE(EO_ROW) TYPE REF TO ZCL_EXCEL_ROW .
-    METHODS GET_ITERATOR
-      RETURNING
-        VALUE(EO_ITERATOR) TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR .
     METHODS IS_EMPTY
       RETURNING
         VALUE(IS_EMPTY) TYPE FLAG .
@@ -107,16 +104,6 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
       EO_ROW ?= <LS_ROW>-ROW.
     ENDIF.
   ENDMETHOD.                    "GET
-
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->GET_ITERATOR
-* +-------------------------------------------------------------------------------------------------+
-* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD GET_ITERATOR.
-    EO_ITERATOR ?= ROWS->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
-  ENDMETHOD.                    "GET_ITERATOR
 
 
 * <SIGNATURE>---------------------------------------------------------------------------------------+
