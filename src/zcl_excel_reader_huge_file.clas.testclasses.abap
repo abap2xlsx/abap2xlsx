@@ -183,49 +183,58 @@ class lcl_test implementation.
 
 *
   method test_read_shared_strings.
-*    data: lo_c2x type ref to cl_abap_conv_out_ce,
-*          lv_xstring type xstring,
-*          lo_reader type ref to if_sxml_reader,
-*          lt_act type t_shared_strings,
-*          lt_exp type t_shared_strings.
-*
-*    lo_c2x = cl_abap_conv_out_ce=>create( ).
-*    lo_c2x->convert( exporting data   = `<sst><si><t/></si><si><t>Alpha</t></si><si><t>Bravo</t></si></sst>`
-*                     importing buffer = lv_xstring ).
-*    lo_reader = cl_sxml_string_reader=>create( lv_xstring ).
-*    append :
-*     `` to lt_exp,
-*     `Alpha` to lt_exp,
-*     `Bravo` to lt_exp.
-*
-*    lt_act = out->read_shared_strings( lo_reader ).
-*
-*    assert_equals( act = lt_act
-*                   exp = lt_exp ).
+    data: lo_c2x type ref to cl_abap_conv_out_ce,
+          lv_xstring type xstring,
+          lo_reader type ref to if_sxml_reader,
+          lt_act type zcl_excel_reader_huge_file=>t_shared_strings,
+          lt_exp type zcl_excel_reader_huge_file=>t_shared_strings,
+          ls_exp LIKE LINE OF lt_exp.
+
+    lo_c2x = cl_abap_conv_out_ce=>create( ).
+    lo_c2x->convert( exporting data   = `<sst><si><t/></si><si><t>Alpha</t></si><si><t>Bravo</t></si></sst>`
+                     importing buffer = lv_xstring ).
+    lo_reader = cl_sxml_string_reader=>create( lv_xstring ).
+
+    ls_exp-value = ``.
+    append ls_exp TO lt_exp.
+    ls_exp-value = `Alpha`.
+    append ls_exp TO lt_exp.
+    ls_exp-value = `Bravo`.
+    append ls_exp TO lt_exp.
+
+    lt_act = out->read_shared_strings( lo_reader ).
+
+    assert_equals( act = lt_act
+                   exp = lt_exp ).
 
   endmethod.
 
 
   method test_shared_string_some_empty.
-*    data: lo_reader type ref to if_sxml_reader,
-*          lt_act type stringtab,
-*          lt_exp type stringtab.
-*    lo_reader = cl_sxml_string_reader=>create( cl_abap_codepage=>convert_to(
-*      `<sst><si><t/></si>` &
-*      `<si><t>Alpha</t></si>` &
-*      `<si><t/></si>` &
-*      `<si><t>Bravo</t></si></sst>`
-*      ) ).
-*    append :
-*     `` to lt_exp,
-*     `Alpha` to lt_exp,
-*     ``      to lt_exp,
-*     `Bravo` to lt_exp.
-*
-*    lt_act = out->read_shared_strings( lo_reader ).
-*
-*    assert_equals( act = lt_act
-*                   exp = lt_exp ).
+    data: lo_reader type ref to if_sxml_reader,
+          lt_act type zcl_excel_reader_huge_file=>t_shared_strings,
+          lt_exp type zcl_excel_reader_huge_file=>t_shared_strings,
+          ls_exp LIKE LINE OF lt_exp.
+    lo_reader = cl_sxml_string_reader=>create( cl_abap_codepage=>convert_to(
+      `<sst><si><t/></si>` &
+      `<si><t>Alpha</t></si>` &
+      `<si><t/></si>` &
+      `<si><t>Bravo</t></si></sst>`
+      ) ).
+
+    ls_exp-value = ``.
+    append ls_exp TO lt_exp.
+    ls_exp-value = `Alpha`.
+    append ls_exp TO lt_exp.
+    ls_exp-value = ``.
+    append ls_exp TO lt_exp.
+    ls_exp-value = `Bravo`.
+    append ls_exp TO lt_exp.
+
+    lt_act = out->read_shared_strings( lo_reader ).
+
+    assert_equals( act = lt_act
+                   exp = lt_exp ).
 
   endmethod.
 
