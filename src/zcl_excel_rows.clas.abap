@@ -128,9 +128,9 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
     DATA(LV_LINES) = LINES( DT_ROWS ).
 
     IF LV_LINES = 0.
-      IS_EMPTY = 'X'.
+      IS_EMPTY = abap_true.
     ELSE.
-      IS_EMPTY = ' '.
+      IS_EMPTY = abap_false.
     ENDIF.
   ENDMETHOD.                    "IS_EMPTY
 
