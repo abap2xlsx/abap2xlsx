@@ -3,51 +3,45 @@
 *----------------------------------------------------------------------*
 *
 *----------------------------------------------------------------------*
-CLASS ZCL_EXCEL_ROWS DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
-
+class ZCL_EXCEL_ROWS definition
+  public
+  final
+  create public .
 
 *"* public components of class ZCL_EXCEL_ROWS
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-  PUBLIC SECTION.
-    TYPES:
-      BEGIN OF T_ROWS, " performance improvement #527
-        ROW_INDEX TYPE INT4,
-        ROW       TYPE REF TO ZCL_EXCEL_ROW,
-      END OF T_ROWS.
+public section.
 
-    DATA:
-          DT_ROWS TYPE HASHED TABLE OF T_ROWS WITH UNIQUE KEY ROW_INDEX READ-ONLY.
-
-    METHODS ADD
-      IMPORTING
-        !IO_ROW TYPE REF TO ZCL_EXCEL_ROW .
-    METHODS CLEAR .
-    METHODS CONSTRUCTOR .
-    METHODS GET
-      IMPORTING
-        !IP_INDEX     TYPE I
-      RETURNING
-        VALUE(EO_ROW) TYPE REF TO ZCL_EXCEL_ROW .
-    METHODS IS_EMPTY
-      RETURNING
-        VALUE(IS_EMPTY) TYPE FLAG .
-    METHODS REMOVE
-      IMPORTING
-        !IO_ROW TYPE REF TO ZCL_EXCEL_ROW .
-    METHODS SIZE
-      RETURNING
-        VALUE(EP_SIZE) TYPE I .
+  methods ADD
+    importing
+      !IO_ROW type ref to ZCL_EXCEL_ROW .
+  methods CLEAR .
+  methods CONSTRUCTOR .
+  methods GET
+    importing
+      !IP_INDEX type I
+    returning
+      value(EO_ROW) type ref to ZCL_EXCEL_ROW .
+  methods GET_ITERATOR
+    returning
+      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
+  methods IS_EMPTY
+    returning
+      value(IS_EMPTY) type FLAG .
+  methods REMOVE
+    importing
+      !IO_ROW type ref to ZCL_EXCEL_ROW .
+  methods SIZE
+    returning
+      value(EP_SIZE) type I .
   PROTECTED SECTION.
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
   PRIVATE SECTION.
 
-    DATA ROWS TYPE REF TO CL_OBJECT_COLLECTION .
+    DATA rows TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
@@ -55,89 +49,44 @@ ENDCLASS.
 CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->ADD
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] IO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD ADD.
-
-    DATA:
-          LS_ROW TYPE T_ROWS.
-    LS_ROW-ROW_INDEX = IO_ROW->GET_ROW_INDEX( ).
-    LS_ROW-ROW = IO_ROW.
-    INSERT LS_ROW INTO TABLE DT_ROWS.
-
+  METHOD add.
+    rows->add( io_row ).
   ENDMETHOD.                    "ADD
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->CLEAR
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD CLEAR.
-    CLEAR DT_ROWS[].
-
+  METHOD clear.
+    rows->clear( ).
   ENDMETHOD.                    "CLEAR
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->CONSTRUCTOR
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD CONSTRUCTOR.
+  METHOD constructor.
 
-    CREATE OBJECT ROWS.
+    CREATE OBJECT rows.
 
   ENDMETHOD.                    "CONSTRUCTOR
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->GET
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] IP_INDEX                       TYPE        I
-* | [<-()] EO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD GET.
-    READ TABLE DT_ROWS ASSIGNING FIELD-SYMBOL(<LS_ROW>) WITH TABLE KEY ROW_INDEX = IP_INDEX.
-    IF SY-SUBRC = 0.
-      EO_ROW ?= <LS_ROW>-ROW.
-    ENDIF.
+  METHOD get.
+    eo_row ?= rows->if_object_collection~get( ip_index ).
   ENDMETHOD.                    "GET
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->IS_EMPTY
-* +-------------------------------------------------------------------------------------------------+
-* | [<-()] IS_EMPTY                       TYPE        FLAG
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD IS_EMPTY.
-    DATA(LV_LINES) = LINES( DT_ROWS ).
+  METHOD get_iterator.
+    eo_iterator ?= rows->if_object_collection~get_iterator( ).
+  ENDMETHOD.                    "GET_ITERATOR
 
-    IF LV_LINES = 0.
-      IS_EMPTY = abap_true.
-    ELSE.
-      IS_EMPTY = abap_false.
-    ENDIF.
+
+  METHOD is_empty.
+    is_empty = rows->if_object_collection~is_empty( ).
   ENDMETHOD.                    "IS_EMPTY
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->REMOVE
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] IO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD REMOVE.
-    DELETE DT_ROWS WHERE ROW_INDEX = IO_ROW->GET_ROW_INDEX( ).
+  METHOD remove.
+    rows->remove( io_row ).
   ENDMETHOD.                    "REMOVE
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_EXCEL_ROWS->SIZE
-* +-------------------------------------------------------------------------------------------------+
-* | [<-()] EP_SIZE                        TYPE        I
-* +--------------------------------------------------------------------------------------</SIGNATURE>
-  METHOD SIZE.
-    EP_SIZE = LINES( DT_ROWS )..
+  METHOD size.
+    ep_size = rows->if_object_collection~size( ).
   ENDMETHOD.                    "SIZE
 ENDCLASS.
