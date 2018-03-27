@@ -4098,14 +4098,20 @@ method GET_RANGES_ITERATOR.
 
 METHOD get_row.
 
-* performance improvement for issue #527
-  READ TABLE ROWS->DT_ROWS ASSIGNING FIELD-SYMBOL(<LS_ROW>) WITH TABLE KEY ROW_INDEX = IP_ROW.
-  IF SY-SUBRC = 0.
-    EO_ROW = <LS_ROW>-ROW.
-  ENDIF.
+  DATA: lo_row_iterator TYPE REF TO cl_object_collection_iterator,
+        lo_row          TYPE REF TO zcl_excel_row.
 
-  IF EO_ROW IS NOT BOUND.
-    EO_ROW = ME->ADD_NEW_ROW( IP_ROW ).
+  lo_row_iterator = me->get_rows_iterator( ).
+  WHILE lo_row_iterator->has_next( ) = abap_true.
+    lo_row ?= lo_row_iterator->get_next( ).
+    IF lo_row->get_row_index( ) = ip_row.
+      eo_row = lo_row.
+      EXIT.
+    ENDIF.
+  ENDWHILE.
+
+  IF eo_row IS NOT BOUND.
+    eo_row = me->add_new_row( ip_row ).
   ENDIF.
 
 ENDMETHOD.
