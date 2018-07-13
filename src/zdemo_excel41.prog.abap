@@ -8,7 +8,8 @@ CONSTANTS: gc_save_file_name TYPE string VALUE 'ABAP2XLSX Inheritance.xlsx'.
 *--------------------------------------------------------------------*
 CLASS lcl_my_zcl_excel1 DEFINITION INHERITING FROM zcl_excel.
   PUBLIC SECTION.
-    METHODS: constructor IMPORTING iv_sheetcount TYPE i DEFAULT 5.
+    METHODS: constructor IMPORTING iv_sheetcount TYPE i DEFAULT 5
+      RAISING zcx_excel.
 ENDCLASS.
 
 CLASS lcl_my_zcl_excel1 IMPLEMENTATION.
@@ -34,7 +35,7 @@ ENDCLASS.
 *--------------------------------------------------------------------*
 CLASS lcl_my_zcl_excel2 DEFINITION INHERITING FROM zcl_excel.
   PUBLIC SECTION.
-    METHODS: constructor.
+    METHODS: constructor RAISING zcx_excel.
 ENDCLASS.
 
 CLASS lcl_my_zcl_excel_worksheet DEFINITION INHERITING FROM zcl_excel_worksheet.
