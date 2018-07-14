@@ -12,36 +12,44 @@ class ZCL_EXCEL_ROWS definition
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-public section.
+  public section.
+    types:
+      begin of MTY_S_HASHED_ROW,
+        ROW_INDEX type INT4,
+        ROW       type ref to ZCL_EXCEL_ROW,
+      end of MTY_S_HASHED_ROW ,
+      MTY_TS_HASEHD_ROW type hashed table of MTY_S_HASHED_ROW with unique key ROW_INDEX.
 
-  methods ADD
-    importing
-      !IO_ROW type ref to ZCL_EXCEL_ROW .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET
-    importing
-      !IP_INDEX type I
-    returning
-      value(EO_ROW) type ref to ZCL_EXCEL_ROW .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IO_ROW type ref to ZCL_EXCEL_ROW .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
-  PROTECTED SECTION.
+    methods ADD
+      importing
+        !IO_ROW type ref to ZCL_EXCEL_ROW .
+    methods CLEAR .
+    methods CONSTRUCTOR .
+    methods GET
+      importing
+        !IP_INDEX     type I
+      returning
+        value(EO_ROW) type ref to ZCL_EXCEL_ROW .
+    methods GET_ITERATOR
+      returning
+        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
+    methods IS_EMPTY
+      returning
+        value(IS_EMPTY) type FLAG .
+    methods REMOVE
+      importing
+        !IO_ROW type ref to ZCL_EXCEL_ROW .
+    methods SIZE
+      returning
+        value(EP_SIZE) type I .
+  protected section.
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
-  PRIVATE SECTION.
+  private section.
 
-    DATA rows TYPE REF TO cl_object_collection .
+    data ROWS type ref to CL_OBJECT_COLLECTION .
+    data ROWS_HASEHD type MTY_TS_HASEHD_ROW .
+
 ENDCLASS.
 
 
@@ -49,44 +57,58 @@ ENDCLASS.
 CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 
 
-  METHOD add.
-    rows->add( io_row ).
-  ENDMETHOD.                    "ADD
+  method ADD.
+    data: LS_HASHED_ROW type MTY_S_HASHED_ROW.
+
+    LS_HASHED_ROW-ROW_INDEX = IO_ROW->GET_ROW_INDEX( ).
+    LS_HASHED_ROW-ROW = IO_ROW.
+
+    modify table ROWS_HASEHD from LS_HASHED_ROW .
+
+    ROWS->ADD( IO_ROW ).
+  endmethod.                    "ADD
 
 
-  METHOD clear.
-    rows->clear( ).
-  ENDMETHOD.                    "CLEAR
+  method CLEAR.
+    clear ROWS_HASEHD.
+    ROWS->CLEAR( ).
+  endmethod.                    "CLEAR
 
 
-  METHOD constructor.
+  method CONSTRUCTOR.
 
-    CREATE OBJECT rows.
+    create object ROWS.
 
-  ENDMETHOD.                    "CONSTRUCTOR
-
-
-  METHOD get.
-    eo_row ?= rows->if_object_collection~get( ip_index ).
-  ENDMETHOD.                    "GET
+  endmethod.                    "CONSTRUCTOR
 
 
-  METHOD get_iterator.
-    eo_iterator ?= rows->if_object_collection~get_iterator( ).
-  ENDMETHOD.                    "GET_ITERATOR
+  method GET.
+    field-symbols: <LS_HASHED_ROW> type MTY_S_HASHED_ROW.
+
+    read table ROWS_HASEHD with key ROW_INDEX = IP_INDEX assigning <LS_HASHED_ROW>.
+    if SY-SUBRC = 0.
+      EO_ROW = <LS_HASHED_ROW>-ROW.
+    endif.
+  endmethod.                    "GET
 
 
-  METHOD is_empty.
-    is_empty = rows->if_object_collection~is_empty( ).
-  ENDMETHOD.                    "IS_EMPTY
+  method GET_ITERATOR.
+    EO_ITERATOR ?= ROWS->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
+  endmethod.                    "GET_ITERATOR
 
 
-  METHOD remove.
-    rows->remove( io_row ).
-  ENDMETHOD.                    "REMOVE
+  method IS_EMPTY.
+    IS_EMPTY = ROWS->IF_OBJECT_COLLECTION~IS_EMPTY( ).
+  endmethod.                    "IS_EMPTY
 
 
-  METHOD size.
-    ep_size = rows->if_object_collection~size( ).
-  ENDMETHOD.                    "SIZE
+  method REMOVE.
+    delete table ROWS_HASEHD with table key ROW_INDEX = IO_ROW->GET_ROW_INDEX( ) .
+    ROWS->REMOVE( IO_ROW ).
+  endmethod.                    "REMOVE
+
+
+  method SIZE.
+    EP_SIZE = ROWS->IF_OBJECT_COLLECTION~SIZE( ).
+  endmethod.                    "SIZE
 ENDCLASS.
