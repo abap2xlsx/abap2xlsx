@@ -63,7 +63,7 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
     LS_HASHED_ROW-ROW_INDEX = IO_ROW->GET_ROW_INDEX( ).
     LS_HASHED_ROW-ROW = IO_ROW.
 
-    modify table ROWS_HASEHD from LS_HASHED_ROW .
+    insert LS_HASHED_ROW into table ROWS_HASEHD.
 
     ROWS->ADD( IO_ROW ).
   endmethod.                    "ADD
