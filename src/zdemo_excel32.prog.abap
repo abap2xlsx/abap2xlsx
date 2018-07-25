@@ -136,7 +136,7 @@ ENDFORM.                    " USER_COMMAND
 *--------------------------------------------------------------------*
 * This subroutine is principal demo session
 *--------------------------------------------------------------------*
-FORM export_to_excel_conv.
+FORM export_to_excel_conv RAISING zcx_excel.
   DATA: lo_converter TYPE REF TO zcl_excel_converter.
 
   CREATE OBJECT lo_converter.
@@ -164,7 +164,7 @@ ENDFORM.                    "EXPORT_TO_EXCEL_CONV
 *--------------------------------------------------------------------*
 * This subroutine is principal demo session
 *--------------------------------------------------------------------*
-FORM export_to_excel_bind.
+FORM export_to_excel_bind RAISING zcx_excel.
 * create zcl_excel_worksheet object
   CREATE OBJECT lo_excel.
   lo_worksheet = lo_excel->get_active_worksheet( ).

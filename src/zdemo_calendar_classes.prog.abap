@@ -122,7 +122,9 @@ CLASS zcl_helper DEFINITION.
         i_day_style TYPE zexcel_cell_style
         i_cw_style  TYPE zexcel_cell_style
       CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet,
+        c_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel,
     add_calendar_landscape
       IMPORTING
         i_date_from TYPE datum
@@ -132,13 +134,17 @@ CLASS zcl_helper DEFINITION.
         i_day_style TYPE zexcel_cell_style
         i_cw_style  TYPE zexcel_cell_style
       CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet,
+        c_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel,
     add_a2x_footer
       IMPORTING
         i_from_row  TYPE zexcel_cell_row
         i_from_col  TYPE zexcel_cell_column_alpha
       CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet,
+        c_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel,
     add_calender_week
       IMPORTING
         i_date  TYPE datum
@@ -146,7 +152,9 @@ CLASS zcl_helper DEFINITION.
         i_col   TYPE zexcel_cell_column_alpha
         i_style TYPE zexcel_cell_style
       CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet.
+        c_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel.
 ENDCLASS.                    "zcl_helper DEFINITION
 
 *----------------------------------------------------------------------*

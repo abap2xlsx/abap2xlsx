@@ -128,7 +128,7 @@ endform.                    " USER_COMMAND
 *--------------------------------------------------------------------*
 * This subroutine is principal demo session
 *--------------------------------------------------------------------*
-form export_to_excel.
+form export_to_excel raising zcx_excel.
 * create zcl_excel_worksheet object
 
   create object lo_excel.

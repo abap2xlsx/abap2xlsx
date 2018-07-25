@@ -5,38 +5,45 @@ class ZCL_EXCEL_COLUMNS definition
 
 *"* public components of class ZCL_EXCEL_COLUMNS
 *"* do not include other source files here!!!
-public section.
+  public section.
+    types:
+      begin of MTY_S_HASHED_COLUMN,
+        COLUMN_INDEX type INT4,
+        COLUMN       type ref to ZCL_EXCEL_COLUMN,
+      end of MTY_S_HASHED_COLUMN ,
+      MTY_TS_HASEHD_COLUMN type hashed table of MTY_S_HASHED_COLUMN with unique key COLUMN_INDEX.
 
-  methods ADD
-    importing
-      !IO_COLUMN type ref to ZCL_EXCEL_COLUMN .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET
-    importing
-      !IP_INDEX type I
-    returning
-      value(EO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IO_COLUMN type ref to ZCL_EXCEL_COLUMN .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
+    methods ADD
+      importing
+        !IO_COLUMN type ref to ZCL_EXCEL_COLUMN .
+    methods CLEAR .
+    methods CONSTRUCTOR .
+    methods GET
+      importing
+        !IP_INDEX        type I
+      returning
+        value(EO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
+    methods GET_ITERATOR
+      returning
+        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
+    methods IS_EMPTY
+      returning
+        value(IS_EMPTY) type FLAG .
+    methods REMOVE
+      importing
+        !IO_COLUMN type ref to ZCL_EXCEL_COLUMN .
+    methods SIZE
+      returning
+        value(EP_SIZE) type I .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
+  protected section.
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
-private section.
+  private section.
 
-  data COLUMNS type ref to CL_OBJECT_COLLECTION .
+    data COLUMNS type ref to CL_OBJECT_COLLECTION .
+    data COLUMNS_HASEHD type MTY_TS_HASEHD_COLUMN .
 ENDCLASS.
 
 
@@ -44,44 +51,58 @@ ENDCLASS.
 CLASS ZCL_EXCEL_COLUMNS IMPLEMENTATION.
 
 
-METHOD add.
-  columns->add( io_column ).
-ENDMETHOD.
+  method ADD.
+    data: LS_HASHED_COLUMN type MTY_S_HASHED_COLUMN.
+
+    LS_HASHED_COLUMN-COLUMN_INDEX = IO_COLUMN->GET_COLUMN_INDEX( ).
+    LS_HASHED_COLUMN-COLUMN = IO_COLUMN.
+
+    insert LS_HASHED_COLUMN into table COLUMNS_HASEHD .
+
+	COLUMNS->ADD( IO_COLUMN ).
+  endmethod.
 
 
-METHOD clear.
-  columns->clear( ).
-ENDMETHOD.
+  method CLEAR.
+    clear COLUMNS_HASEHD.
+    COLUMNS->CLEAR( ).
+  endmethod.
 
 
-METHOD constructor.
+  method CONSTRUCTOR.
 
-  CREATE OBJECT columns.
+    create object COLUMNS.
 
-ENDMETHOD.
-
-
-METHOD get.
-  eo_column ?= columns->if_object_collection~get( ip_index ).
-ENDMETHOD.
+  endmethod.
 
 
-METHOD get_iterator.
-  eo_iterator ?= columns->if_object_collection~get_iterator( ).
-ENDMETHOD.
+  method GET.
+    field-symbols: <LS_HASHED_COLUMN> type MTY_S_HASHED_COLUMN.
+
+    read table COLUMNS_HASEHD with key COLUMN_INDEX = IP_INDEX assigning <LS_HASHED_COLUMN>.
+    if SY-SUBRC = 0.
+      EO_COLUMN = <LS_HASHED_COLUMN>-COLUMN.
+    endif.
+  endmethod.
 
 
-METHOD is_empty.
-  is_empty = columns->if_object_collection~is_empty( ).
-ENDMETHOD.
+  method GET_ITERATOR.
+    EO_ITERATOR ?= COLUMNS->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
+  endmethod.
 
 
-METHOD remove.
-  columns->remove( io_column ).
-ENDMETHOD.
+  method IS_EMPTY.
+    IS_EMPTY = COLUMNS->IF_OBJECT_COLLECTION~IS_EMPTY( ).
+  endmethod.
 
 
-METHOD size.
-  ep_size = columns->if_object_collection~size( ).
-ENDMETHOD.
+  method REMOVE.
+    delete table COLUMNS_HASEHD with table key COLUMN_INDEX = IO_COLUMN->GET_COLUMN_INDEX( ) .
+    COLUMNS->REMOVE( IO_COLUMN ).
+  endmethod.
+
+
+  method SIZE.
+    EP_SIZE = COLUMNS->IF_OBJECT_COLLECTION~SIZE( ).
+  endmethod.
 ENDCLASS.
