@@ -201,7 +201,7 @@ START-OF-SELECTION.
       " Get active sheet
       lo_worksheet = lo_excel->get_active_worksheet( ).
     ELSE.
-      lo_worksheet = lo_excel->add_new_worksheet(  ).
+      lo_worksheet = lo_excel->add_new_worksheet( ).
     ENDIF.
 
     lo_worksheet->zif_excel_sheet_properties~selected = zif_excel_sheet_properties=>c_selected.
