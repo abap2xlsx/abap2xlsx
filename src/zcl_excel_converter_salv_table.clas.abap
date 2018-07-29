@@ -223,9 +223,7 @@ ENDMETHOD.
 METHOD zif_excel_converter~create_fieldcatalog.
   DATA: lo_salv TYPE REF TO cl_salv_table.
 
-  TRY.
-    zif_excel_converter~can_convert_object( io_object = io_object ).
-  ENDTRY.
+  zif_excel_converter~can_convert_object( io_object = io_object ).
 
   ws_option = is_option.
 
