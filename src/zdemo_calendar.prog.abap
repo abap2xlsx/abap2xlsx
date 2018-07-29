@@ -46,7 +46,6 @@ INITIALIZATION.
 START-OF-SELECTION.
 
   DATA: lo_excel                TYPE REF TO zcl_excel,
-        lo_excel_writer         TYPE REF TO zif_excel_writer,
         lo_worksheet            TYPE REF TO zcl_excel_worksheet,
         lo_column               TYPE REF TO zcl_excel_column,
         lo_row                  TYPE REF TO zcl_excel_row,
@@ -60,10 +59,6 @@ START-OF-SELECTION.
         lv_style_border_guid    TYPE zexcel_cell_style.
   DATA: lo_style_center         TYPE REF TO zcl_excel_style,
         lv_style_center_guid    TYPE zexcel_cell_style.
-
-  DATA: lv_file                 TYPE xstring,
-        lv_bytecount            TYPE i,
-        lt_file_tab             TYPE solix_tab.
 
   DATA: lv_full_path      TYPE string,
         image_descr_path  TYPE string,

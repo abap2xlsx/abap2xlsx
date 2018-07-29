@@ -199,10 +199,6 @@ START-OF-SELECTION.
 
   DATA: row TYPE zexcel_cell_row.
 
-  DATA: lv_file                 TYPE xstring,
-        lv_bytecount            TYPE i,
-        lt_file_tab             TYPE solix_tab.
-
   DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
         ls_table_settings       TYPE zexcel_s_table_settings.
 
