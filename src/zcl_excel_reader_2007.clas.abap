@@ -758,6 +758,7 @@ METHOD load_drawing_anchor.
       ip_width = ls_size-width
       ip_height = ls_size-height ).
 
+
   IF drawing_type = zcl_excel_drawing=>type_chart.
     "-------------Added by Alessandro Iannacci - Should load chart attributes
     lo_drawing->load_chart_attributes( rel_drawing-content_xml ).
@@ -1971,15 +1972,24 @@ method LOAD_WORKBOOK.
                                        cp_structure = ls_range ).
     lv_range_value = lo_node->get_value( ).
 
-    IF ls_range-localsheetid IS NOT INITIAL.                                                              " issue #163+
+    IF ls_range-localsheetid IS NOT INITIAL.                                                                " issue #163+
 *      READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY id = ls_range-localsheetid.                "del issue #235 - repeat rows/cols " issue #163+
 *        lo_range = <worksheet>-worksheet->add_new_range( ).                                              "del issue #235 - repeat rows/cols " issue #163+
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns - begin
 *--------------------------------------------------------------------*
       lv_tabix = ls_range-localsheetid + 1.
-      READ TABLE lt_worksheets ASSIGNING <worksheet> INDEX lv_tabix.
-      IF sy-subrc = 0.
+*      READ TABLE lt_worksheets ASSIGNING <worksheet> INDEX lv_tabix.
+*      IF sy-subrc = 0.
+
+        LOOP AT lt_worksheets ASSIGNING FIELD-SYMBOL(<ls_line>).
+          DATA lv_range_sheet TYPE string.
+         lv_range_sheet =  'rId' && lv_tabix.
+          IF   <ls_line>-id = lv_range_sheet.
+            MOVE <ls_line> TO <worksheet>.
+          ENDIF.
+        ENDLOOP.
+      IF <worksheet> IS ASSIGNED.
         CASE ls_range-name.
 
 *--------------------------------------------------------------------*
@@ -2196,7 +2206,9 @@ METHOD load_worksheet.
               lc_xml_attr_true_int TYPE string VALUE '1',
               lc_rel_drawing       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
               lc_rel_hyperlink     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
-              lc_rel_printer       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings'.
+              lc_rel_printer       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
+              lc_rel_comments      TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',
+              lc_rel_vmldrawings   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing'.
 
   DATA:       lo_ixml_worksheet           TYPE REF TO if_ixml_document,
               lo_ixml_cells               TYPE REF TO if_ixml_node_collection,
@@ -2348,6 +2360,37 @@ METHOD load_worksheet.
         MOVE-CORRESPONDING ls_relationship TO ls_external_hyperlink.
         INSERT ls_external_hyperlink INTO TABLE lt_external_hyperlinks.
 
+      WHEN lc_rel_vmldrawings.
+          MOVE-CORRESPONDING ls_relationship TO ls_external_hyperlink.
+          DATA lv_target_drawing_rel TYPE string.
+          lv_target_drawing_rel = ls_external_hyperlink-target .
+          REPLACE ALL OCCURRENCES OF '../' IN ls_external_hyperlink-target WITH 'xl/'.
+          data lo_tmp_xml_vmlDrawing type ref to IF_IXML_DOCUMENT.
+          lo_tmp_xml_vmlDrawing = me->get_ixml_from_zip_archive( ls_external_hyperlink-target ).
+          DATA lv_xstring_vmlDrawing type xstring.
+          lv_xstring_vmlDrawing =  me->get_from_zip_archive(  ls_external_hyperlink-target ).
+          DATA lo_vmldrawing  TYPE REF TO zcl_excel_vmldrawing.
+          CREATE OBJECT lo_vmldrawing.
+          lo_vmldrawing->set_content( lv_xstring_vmlDrawing ) .
+          lo_vmldrawing->set_filename(  ls_external_hyperlink-target  ) .
+          lo_vmldrawing->set_ref( lv_target_drawing_rel ) .
+          io_worksheet->add_vmldrawing( ip_vmldrawing =   lo_vmldrawing ).
+
+      WHEN lc_rel_comments.
+          MOVE-CORRESPONDING ls_relationship TO ls_external_hyperlink.
+          DATA lv_target_rel TYPE string.
+          lv_target_rel = ls_external_hyperlink-target .
+          REPLACE ALL OCCURRENCES OF '../' IN ls_external_hyperlink-target WITH 'xl/'.
+          DATA lv_xstring_comment type xstring.
+          DATA lo_tmp_xml_comment type ref to IF_IXML_DOCUMENT.
+          lo_tmp_xml_comment = me->get_ixml_from_zip_archive( ls_external_hyperlink-target ).
+          lv_xstring_comment =  me->get_from_zip_archive(  ls_external_hyperlink-target ).
+          DATA lo_comment TYPE REF TO zcl_excel_comment.
+          CREATE OBJECT lo_comment.
+          lo_comment->set_content( lv_xstring_comment ) .
+          lo_comment->set_filename(  ls_external_hyperlink-target  ) .
+          lo_comment->set_ref( lv_target_rel ) .
+          io_worksheet->add_comment( ip_comment =   lo_comment ).
       WHEN OTHERS.
     ENDCASE.
 

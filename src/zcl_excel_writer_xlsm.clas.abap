@@ -196,6 +196,26 @@ method CREATE.
                    content = lv_content ).
       ADD 1 TO lv_drawing_index.
     ENDIF.
+
+* Add Comments **********************************
+      data(lo_iterator_comments) = lo_worksheet->get_comments_iterator( ).
+      WHILE lo_iterator_comments->if_object_collection_iterator~has_next( ) EQ abap_true.
+          data lo_comment type ref to zcl_excel_comment.
+          lo_comment ?= lo_iterator_comments->if_object_collection_iterator~get_next( ).
+         lo_zip->add( name    = lo_comment->get_filename( )
+                   content = lo_comment->get_content( ) ).
+     ENDWHILE.
+* Add Drawings **********************************
+      data(lo_iterator_vmldrawings) = lo_worksheet->get_vmldrawing_iterator( ).
+      WHILE lo_iterator_vmldrawings->if_object_collection_iterator~has_next( ) EQ abap_true.
+          data lo_vmldrawing type ref to zcl_excel_vmldrawing.
+          lo_vmldrawing ?= lo_iterator_vmldrawings->if_object_collection_iterator~get_next( ).
+         lo_zip->add( name    = lo_vmldrawing->get_filename( )
+                   content = lo_vmldrawing->get_content( ) ).
+     ENDWHILE.
+
+
+
   ENDWHILE.
 
 **********************************************************************
@@ -246,7 +266,10 @@ METHOD create_content_types.
         lc_xml_attr_contenttype TYPE string VALUE 'ContentType',
         lc_xml_node_workb_pn    TYPE string VALUE '/xl/workbook.xml',
         lc_xml_node_bin_ext     TYPE string VALUE 'bin',
-        lc_xml_node_bin_ct      TYPE string VALUE 'application/vnd.ms-office.vbaProject'.
+        lc_xml_node_bin_ct      TYPE string VALUE 'application/vnd.ms-office.vbaProject',
+        lc_xml_node_vml_ext     TYPE string VALUE 'vml',
+        lc_xml_node_vml_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.vmlDrawing'.
+
 
 
   DATA: lo_ixml          TYPE REF TO if_ixml,
@@ -283,6 +306,14 @@ METHOD create_content_types.
                                 value = lc_xml_node_bin_ext ).
   lo_element->set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_bin_ct ).
+  lo_element_root->append_child( new_child = lo_element ).
+
+  lo_element = lo_document->create_simple_element( name   = lc_xml_node_default
+                                                   parent = lo_document ).
+  lo_element->set_attribute_ns( name  = lc_xml_attr_extension
+                                value = lc_xml_node_vml_ext ).
+  lo_element->set_attribute_ns( name  = lc_xml_attr_contenttype
+                                value = lc_xml_node_vml_ct ).
   lo_element_root->append_child( new_child = lo_element ).
 
 **********************************************************************

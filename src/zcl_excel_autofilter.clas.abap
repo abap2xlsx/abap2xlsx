@@ -421,7 +421,8 @@ METHOD validate_area.
     filter_area-col_end = l_col.
   ENDIF.
   IF filter_area-row_start >= filter_area-row_end.
-    filter_area-row_start = filter_area-row_end - 1.
+* ´Bugfix rot_da autofilter is not in the first row
+*    filter_area-row_start = filter_area-row_end - 1.
     IF filter_area-row_start < 1.
       filter_area-row_start = 1.
       filter_area-row_end = 2.

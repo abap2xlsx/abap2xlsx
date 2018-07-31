@@ -11,6 +11,7 @@ public section.
   constants C_GRAPH_PIE type ZEXCEL_GRAPH_TYPE value 1. "#EC NOTEXT
   constants C_GRAPH_LINE type ZEXCEL_GRAPH_TYPE value 2. "#EC NOTEXT
   constants C_GRAPH_BARS type ZEXCEL_GRAPH_TYPE value 0. "#EC NOTEXT
+
   data GRAPH_TYPE type ZEXCEL_GRAPH_TYPE .
   data TITLE type STRING value 'image1.jpg'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  . " .
   data X_REFERENCES type CHAR1 .
@@ -441,6 +442,7 @@ METHOD load_chart_attributes.
   CASE me->graph_type.
     WHEN c_graph_bars.
       node2 ?= node->find_from_name( name = 'barDir' namespace = 'c' ).
+
       zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
       lo_barchart->ns_bardirval = ls_prop-val.
       node2 ?= node->find_from_name( name = 'grouping' namespace = 'c' ).

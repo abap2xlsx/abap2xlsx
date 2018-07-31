@@ -406,7 +406,9 @@ method CREATE_CONTENT_TYPES.
         lc_xml_node_core_ct       TYPE string VALUE 'application/vnd.openxmlformats-package.core-properties+xml',
         lc_xml_node_table_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml',
         lc_xml_node_drawings_ct   TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawing+xml',
-        lc_xml_node_chart_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawingml.chart+xml'.
+        lc_xml_node_chart_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawingml.chart+xml',
+        lc_xml_node_comments_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml'.
+
 
   DATA: lo_ixml           TYPE REF TO if_ixml,
         lo_document       TYPE REF TO if_ixml_document,
@@ -562,6 +564,21 @@ method CREATE_CONTENT_TYPES.
 
       ADD 1 TO lv_drawing_index.
     ENDIF.
+*    Comments
+    DATA: lo_comments TYPE REF TO zcl_excel_comments.
+    data(lo_iterator_comments) = lo_worksheet->get_comments_iterator( ).
+    lo_comments = lo_worksheet->get_comments( ).
+    WHILE lo_iterator_comments->if_object_collection_iterator~has_next( ) EQ abap_true.
+          data lo_comment type ref to zcl_excel_comment.
+          lo_comment ?= lo_iterator_comments->if_object_collection_iterator~get_next( ).
+          lo_element = lo_document->create_simple_element( name   = lc_xml_node_override
+                                                   parent = lo_document ).
+          lo_element->set_attribute_ns( name  = lc_xml_attr_partname
+                                value = '/' && lo_comment->get_filename( ) ).
+          lo_element->set_attribute_ns( name  = lc_xml_attr_contenttype
+                                value = lc_xml_node_comments_ct ).
+          lo_element_root->append_child( new_child = lo_element ).
+     ENDWHILE.
   ENDWHILE.
 
   " media mimes
@@ -4422,7 +4439,6 @@ METHOD create_xl_sheet.
     CATCH zcx_excel. " Ignore Hyperlink reading errors - pass everything we were able to identify
   ENDTRY.
 
-* drawing
   DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
 
   lo_drawings = io_worksheet->get_drawings( ).
@@ -4437,6 +4453,29 @@ METHOD create_xl_sheet.
     lo_element->set_attribute( name = 'r:id'
                                value = lv_value ).
     lo_element_root->append_child( new_child = lo_element ).
+  ENDIF.
+
+  data lo_vmldrawings type ref to zcl_excel_vmldrawings.
+  lo_vmldrawings = io_worksheet->get_vmldrawings( ).
+  IF   lo_vmldrawings->size( )  > 0  .
+
+      lo_iterator = io_worksheet->get_vmldrawing_iterator( ).
+     WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+          data lo_vmldrawing type ref to zcl_excel_vmldrawing.
+           ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+.
+          lo_vmldrawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+              lo_vmldrawing->set_refid( lv_value ) .
+          lo_element = lo_document->create_simple_element( name   = 'legacyDrawing'
+                                                       parent = lo_document ).
+          lo_element->set_attribute_ns( name  = 'r:id'
+                                    value = lv_value ).
+          lo_element_root->append_child( new_child = lo_element ).
+    ENDWHILE.
   ENDIF.
 
 * tables
@@ -4579,7 +4618,9 @@ METHOD create_xl_sheet_rels.
         lc_xml_node_rid_table_tp   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/table',
         lc_xml_node_rid_printer_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
         lc_xml_node_rid_drawing_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
-        lc_xml_node_rid_link_tp    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink'.
+        lc_xml_node_rid_link_tp    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+        lc_xml_node_rid_link_comment    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',
+        lc_xml_node_rid_link_vmldraw    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing'.
 
   DATA: lo_ixml          TYPE REF TO if_ixml,
         lo_document      TYPE REF TO if_ixml_document,
@@ -4672,6 +4713,46 @@ METHOD create_xl_sheet_rels.
                               value = lv_value ).
     lo_element_root->append_child( new_child = lo_element ).
   ENDIF.
+
+   lo_iterator = io_worksheet->get_vmldrawing_iterator( ).
+   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+          data lo_vmldrawing type ref to zcl_excel_vmldrawing.
+          lo_vmldrawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+          ADD 1 TO lv_relation_id.
+          lv_value = lv_relation_id.
+          CONDENSE lv_value.
+          CONCATENATE 'rId' lv_value INTO lv_value.
+          lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+
+          lo_element->set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+          lo_element->set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_link_vmldraw ).
+          lo_element->set_attribute_ns( name  = lc_xml_attr_target
+                                  value = lo_vmldrawing->get_ref( ) ).
+          lo_element_root->append_child( new_child = lo_element ).
+   ENDWHILE.
+
+* Comments
+    lo_iterator = io_worksheet->get_comments_iterator( ).
+    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+            data lo_comment type ref to zcl_excel_comment.
+            lo_comment ?= lo_iterator->if_object_collection_iterator~get_next( ).
+            ADD 1 TO lv_relation_id.
+            lv_value = lv_relation_id.
+            CONDENSE lv_value.
+            CONCATENATE 'rId' lv_value INTO lv_value.
+            lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+            lo_element->set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+            lo_element->set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_link_comment ).
+            lo_element->set_attribute_ns( name  = lc_xml_attr_target
+                                  value = lo_comment->get_ref( ) ).
+            lo_element_root->append_child( new_child = lo_element ).
+    ENDWHILE.
 
   lo_iterator = io_worksheet->get_tables_iterator( ).
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
