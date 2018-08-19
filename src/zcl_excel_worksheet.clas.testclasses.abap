@@ -35,6 +35,7 @@ CLASS LCL_EXCEL_WORKSHEET_TEST DEFINITION FOR TESTING
     METHODS: TEARDOWN.
     METHODS: SET_MERGE FOR TESTING.
     METHODS: DELETE_MERGE FOR TESTING.
+    METHODS: GET_DIMENSION_RANGE FOR TESTING.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
 
 
@@ -391,5 +392,33 @@ CLASS LCL_EXCEL_WORKSHEET_TEST IMPLEMENTATION.
     ).
 
   ENDMETHOD.       "delete_Merge
+
+  METHOD GET_DIMENSION_RANGE.
+    ZCL_EXCEL_COMMON=>ASSERT_EQUALS(
+      ACT   = F_CUT->GET_DIMENSION_RANGE( )
+      EXP   = 'A1'
+      MSG   = 'get_dimension_range inital value'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
+    ).
+
+    F_CUT->SET_CELL(
+      IP_ROW       = 2
+      IP_COLUMN    = 3
+      IP_VALUE     = 'Dummy'
+    ).
+
+    F_CUT->SET_CELL(
+      IP_ROW       = 5
+      IP_COLUMN    = 6
+      IP_VALUE     = 'Dummy'
+    ).
+
+    ZCL_EXCEL_COMMON=>ASSERT_EQUALS(
+      ACT   = F_CUT->GET_DIMENSION_RANGE( )
+      EXP   = 'C2:F5'
+      MSG   = 'get_dimension_range'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
+    ).
+  ENDMETHOD.
 
 ENDCLASS.       "lcl_Excel_Worksheet_Test
