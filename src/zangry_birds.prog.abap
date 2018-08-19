@@ -35,8 +35,7 @@ DATA: lv_style_color0_guid    TYPE zexcel_cell_style,
       lv_style_color6_guid    TYPE zexcel_cell_style,
       lv_style_color7_guid    TYPE zexcel_cell_style,
       lv_style_credit_guid    TYPE zexcel_cell_style,
-      lv_style_link_guid      TYPE zexcel_cell_style,
-      lv_style                TYPE zexcel_cell_style.
+      lv_style_link_guid      TYPE zexcel_cell_style.
 
 DATA: lv_col_str        TYPE zexcel_cell_column_alpha,
       lv_row            TYPE i,

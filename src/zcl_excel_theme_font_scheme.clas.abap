@@ -250,7 +250,7 @@ method load.
     data: lo_minor_iterator type ref to if_ixml_node_iterator.
     data: lo_minor_element type ref to if_ixml_element.
     data: ls_font type t_font.
-    check  io_font_scheme   is not initial.
+    check io_font_scheme is not initial.
     clear font_scheme.
     font_scheme-name =  io_font_scheme->get_attribute( name = c_name ).
     lo_scheme_children = io_font_scheme->get_children( ).
