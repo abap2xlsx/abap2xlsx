@@ -103,7 +103,9 @@ public section.
     importing
       !IP_INCLUDE_TOTALS_ROW type ABAP_BOOL default ABAP_TRUE
     returning
-      value(OV_REFERENCE) type STRING .
+      value(OV_REFERENCE) type STRING
+    raising
+      ZCX_EXCEL .
   methods GET_BOTTOM_ROW_INTEGER
     returning
       value(EV_ROW) type I .
