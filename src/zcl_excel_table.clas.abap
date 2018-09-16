@@ -81,7 +81,9 @@ public section.
       !IP_COLUMN type CLIKE
       !IP_FUNCTION type ZEXCEL_TABLE_TOTALS_FUNCTION
     returning
-      value(EP_FORMULA) type STRING .
+      value(EP_FORMULA) type STRING
+    raising
+      ZCX_EXCEL .
   methods HAS_TOTALS
     returning
       value(EP_RESULT) type ABAP_BOOL .
