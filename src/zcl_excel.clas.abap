@@ -284,8 +284,8 @@ method CONSTRUCTOR.
   
   try.
       me->add_new_worksheet( ).
-    catch zcx_excel.
-      assert 1 = 2. " suppress syntax check error
+    catch zcx_excel. " suppress syntax check error
+      assert 1 = 2.  " some error processing anyway
   endtry.
   
   me->add_new_style( ). " Standard style
