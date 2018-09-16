@@ -201,12 +201,20 @@ endmethod.
 method LOAD_WORKSHEET.
 
   data: lo_reader type ref to if_sxml_reader.
+  data: lx_not_found type ref to lcx_not_found.
 
   lo_reader = get_sxml_reader( ip_path ).
 
-  read_worksheet_data( io_reader    = lo_reader
-                       io_worksheet = io_worksheet ).
+  try.
 
+      read_worksheet_data( io_reader    = lo_reader
+                           io_worksheet = io_worksheet ).
+
+    catch lcx_not_found into lx_not_found.
+      raise exception type zcx_excel
+        exporting
+          error = lx_not_found->error.
+  endtry.
 endmethod.
 
 
