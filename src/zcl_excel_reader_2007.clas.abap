@@ -761,6 +761,23 @@ METHOD load_drawing_anchor.
       ip_height = ls_size-height ).
 
   IF drawing_type = zcl_excel_drawing=>type_chart.
+*    ROTDA
+    DATA: lo_tmp_node_2                TYPE REF TO if_ixml_element.
+    lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'pieChart' namespace = 'c' ).
+    if lo_tmp_node_2 is not initial.
+        lo_drawing->graph_type = zcl_excel_drawing=>c_graph_pie.
+    else.
+        lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'barChart' namespace = 'c' ).
+          if lo_tmp_node_2 is not initial.
+                lo_drawing->graph_type = zcl_excel_drawing=>c_graph_bars.
+          else.
+              lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'lineChart' namespace = 'c' ).
+              if lo_tmp_node_2 is not initial.
+                   lo_drawing->graph_type = zcl_excel_drawing=>c_graph_line.
+              endif.
+          endif.
+    endif.
+* End of Change
     "-------------Added by Alessandro Iannacci - Should load chart attributes
     lo_drawing->load_chart_attributes( rel_drawing-content_xml ).
   ENDIF.
