@@ -43,7 +43,7 @@ public section.
     raising
       ZCX_EXCEL .
   methods ADD_STATIC_STYLES .
-  methods CONSTRUCTOR.    
+  methods CONSTRUCTOR .
   methods DELETE_WORKSHEET
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
