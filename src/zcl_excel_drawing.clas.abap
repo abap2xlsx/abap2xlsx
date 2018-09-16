@@ -98,7 +98,9 @@ public section.
       !IP_FROM_ROW type ZEXCEL_CELL_ROW
       !IP_FROM_COL type ZEXCEL_CELL_COLUMN_ALPHA
       !IP_ROWOFF type INT4 optional
-      !IP_COLOFF type INT4 optional .
+      !IP_COLOFF type INT4 optional 
+    raising
+      ZCX_EXCEL .
   methods SET_POSITION2
     importing
       !IP_FROM type ZEXCEL_DRAWING_LOCATION
