@@ -22,7 +22,9 @@ private section.
   methods LOAD_VBAPROJECT
     importing
       !IP_PATH type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL .
+      !IP_EXCEL type ref to ZCL_EXCEL
+    raising
+      ZCX_EXCEL .
 ENDCLASS.
 
 
