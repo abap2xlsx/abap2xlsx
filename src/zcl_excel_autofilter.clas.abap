@@ -36,10 +36,14 @@ public section.
       value(RS_AREA) type ZEXCEL_S_AUTOFILTER_AREA .
   methods GET_FILTER_RANGE
     returning
-      value(R_RANGE) type ZEXCEL_CELL_VALUE .
+      value(R_RANGE) type ZEXCEL_CELL_VALUE
+    raising
+      ZCX_EXCEL.
   methods GET_FILTER_REFERENCE
     returning
-      value(R_REF) type ZEXCEL_RANGE_VALUE .
+      value(R_REF) type ZEXCEL_RANGE_VALUE
+    raising
+      ZCX_EXCEL .
   methods GET_VALUES
     returning
       value(RT_FILTER) type ZEXCEL_T_AUTOFILTER_VALUES .
@@ -95,7 +99,9 @@ private section.
   data WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
   data MT_FILTERS type TT_FILTERS .
 
-  methods VALIDATE_AREA .
+  methods VALIDATE_AREA 
+    raising
+      ZCX_EXCEL .
 ENDCLASS.
 
 
