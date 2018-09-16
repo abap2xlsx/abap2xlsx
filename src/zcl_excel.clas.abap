@@ -43,7 +43,9 @@ public section.
     raising
       ZCX_EXCEL .
   methods ADD_STATIC_STYLES .
-  methods CONSTRUCTOR .
+  methods CONSTRUCTOR 
+    raising
+      ZCX_EXCEL.
   methods DELETE_WORKSHEET
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
@@ -51,10 +53,14 @@ public section.
       ZCX_EXCEL .
   methods DELETE_WORKSHEET_BY_INDEX
     importing
-      !IV_INDEX type NUMERIC .
+      !IV_INDEX type NUMERIC
+    raising
+      ZCX_EXCEL .
   methods DELETE_WORKSHEET_BY_NAME
     importing
-      !IV_TITLE type CLIKE .
+      !IV_TITLE type CLIKE 
+    raising
+      ZCX_EXCEL .
   methods GET_ACTIVE_SHEET_INDEX
     returning
       value(R_ACTIVE_WORKSHEET) type ZEXCEL_ACTIVE_WORKSHEET .
