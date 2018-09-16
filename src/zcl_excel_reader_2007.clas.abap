@@ -761,7 +761,7 @@ METHOD load_drawing_anchor.
       ip_height = ls_size-height ).
 
   IF drawing_type = zcl_excel_drawing=>type_chart.
-*    ROTDA
+*  Begin fix for Issue #551
     DATA: lo_tmp_node_2                TYPE REF TO if_ixml_element.
     lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'pieChart' namespace = 'c' ).
     if lo_tmp_node_2 is not initial.
@@ -777,7 +777,7 @@ METHOD load_drawing_anchor.
               endif.
           endif.
     endif.
-* End of Change
+* End fix for issue #551
     "-------------Added by Alessandro Iannacci - Should load chart attributes
     lo_drawing->load_chart_attributes( rel_drawing-content_xml ).
   ENDIF.
