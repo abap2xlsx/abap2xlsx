@@ -224,7 +224,9 @@ class ZCL_EXCEL_WORKSHEET definition
     methods DELETE_MERGE
       importing
         !IP_CELL_COLUMN type SIMPLE optional
-        !IP_CELL_ROW    type ZEXCEL_CELL_ROW optional .
+        !IP_CELL_ROW    type ZEXCEL_CELL_ROW optional 
+      raising
+        ZCX_EXCEL .
     methods DELETE_ROW_OUTLINE
       importing
         !IV_ROW_FROM type I

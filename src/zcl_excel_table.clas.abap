@@ -81,7 +81,9 @@ public section.
       !IP_COLUMN type CLIKE
       !IP_FUNCTION type ZEXCEL_TABLE_TOTALS_FUNCTION
     returning
-      value(EP_FORMULA) type STRING .
+      value(EP_FORMULA) type STRING
+    raising
+      ZCX_EXCEL .
   methods HAS_TOTALS
     returning
       value(EP_RESULT) type ABAP_BOOL .
@@ -101,7 +103,9 @@ public section.
     importing
       !IP_INCLUDE_TOTALS_ROW type ABAP_BOOL default ABAP_TRUE
     returning
-      value(OV_REFERENCE) type STRING .
+      value(OV_REFERENCE) type STRING
+    raising
+      ZCX_EXCEL .
   methods GET_BOTTOM_ROW_INTEGER
     returning
       value(EV_ROW) type I .
