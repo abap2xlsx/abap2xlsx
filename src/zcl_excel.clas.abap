@@ -43,9 +43,7 @@ public section.
     raising
       ZCX_EXCEL .
   methods ADD_STATIC_STYLES .
-  methods CONSTRUCTOR 
-    raising
-      ZCX_EXCEL.
+  methods CONSTRUCTOR.    
   methods DELETE_WORKSHEET
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
@@ -283,8 +281,13 @@ method CONSTRUCTOR.
 
   me->zif_excel_book_protection~initialize( ).
   me->zif_excel_book_properties~initialize( ).
-
-  me->add_new_worksheet( ).
+  
+  try.
+      me->add_new_worksheet( ).
+    catch zcx_excel.
+      assert 1 = 2. " suppress syntax check error
+  endtry.
+  
   me->add_new_style( ). " Standard style
   lo_style = me->add_new_style( ). " Standard style with fill gray125
   lo_style->fill->filltype = zcl_excel_style_fill=>c_fill_pattern_gray125.
