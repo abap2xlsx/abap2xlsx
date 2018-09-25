@@ -2675,7 +2675,7 @@ method CREATE_XL_RELATIONSHIPS.
   DATA: lv_xml_node_ridx_tg       TYPE string,
         lv_xml_node_ridx_id       TYPE string,
         lv_size                   TYPE i,
-        lv_syindex(3)             TYPE c.
+        lv_syindex                TYPE string.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
