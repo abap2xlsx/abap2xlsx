@@ -24,7 +24,7 @@ public section.
   methods SET_COLOR
     importing
       !IP_INDEX type I
-      !IP_COLOR type ZEXCEL_STYLE_COLOR_ARGB 
+      !IP_COLOR type ZEXCEL_STYLE_COLOR_ARGB
     raising
       ZCX_EXCEL .
 protected section.

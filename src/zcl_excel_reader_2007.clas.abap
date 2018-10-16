@@ -270,7 +270,7 @@ private section.
     importing
       !I_FILENAME type CSEQUENCE
     returning
-      value(R_EXCEL_DATA) type XSTRING 
+      value(R_EXCEL_DATA) type XSTRING
     raising
       ZCX_EXCEL.
   methods READ_FROM_LOCAL_FILE

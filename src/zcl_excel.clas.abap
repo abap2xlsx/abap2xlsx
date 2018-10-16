@@ -56,7 +56,7 @@ public section.
       ZCX_EXCEL .
   methods DELETE_WORKSHEET_BY_NAME
     importing
-      !IV_TITLE type CLIKE 
+      !IV_TITLE type CLIKE
     raising
       ZCX_EXCEL .
   methods GET_ACTIVE_SHEET_INDEX
@@ -281,13 +281,13 @@ method CONSTRUCTOR.
 
   me->zif_excel_book_protection~initialize( ).
   me->zif_excel_book_properties~initialize( ).
-  
+
   try.
       me->add_new_worksheet( ).
     catch zcx_excel. " suppress syntax check error
       assert 1 = 2.  " some error processing anyway
   endtry.
-  
+
   me->add_new_style( ). " Standard style
   lo_style = me->add_new_style( ). " Standard style with fill gray125
   lo_style->fill->filltype = zcl_excel_style_fill=>c_fill_pattern_gray125.
