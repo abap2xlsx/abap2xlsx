@@ -405,9 +405,7 @@ METHOD convert_column2alpha.
 *--------------------------------------------------------------------*
   IF   lv_column > 16384
     OR lv_column < 1.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Index out of bounds'.
+    zcx_excel=>raise_text( 'Index out of bounds' ).
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -488,13 +486,8 @@ METHOD convert_column2int.
   CONDENSE lv_column_c NO-GAPS.
   IF lv_column_c EQ ''.
 *    lv_errormessage = 'Unable to interpret input as column'(003).
-*    RAISE EXCEPTION TYPE zcx_excel
-*      EXPORTING
-*        error = lv_errormessage.
     MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        syst_at_raise = syst.
+    zcx_excel=>raise_symsg( ).
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -520,9 +513,7 @@ METHOD convert_column2int.
 *--------------------------------------------------------------------*
         IF ep_column > 16384 OR ep_column < 1.
           lv_errormessage = 'Index out of bounds'(004).
-          RAISE EXCEPTION TYPE zcx_excel
-            EXPORTING
-              error = lv_errormessage.
+          zcx_excel=>raise_text( lv_errormessage ).
         ENDIF.
         EXIT.
       ENDIF.
@@ -536,13 +527,8 @@ METHOD convert_column2int.
   lv_column_s = lv_column_c.
   IF lv_column_s CN sy-abcde.
 *    lv_errormessage = 'Unable to interpret input as column'(003).
-*    RAISE EXCEPTION TYPE zcx_excel
-*      EXPORTING
-*        error = lv_errormessage.
     MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        syst_at_raise = syst.
+    zcx_excel=>raise_symsg( ).
   ENDIF.
 
   DO 1 TIMES. "Because of using CHECK
@@ -556,13 +542,8 @@ METHOD convert_column2int.
     lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+0(1) ) MOD zcl_excel_common=>c_excel_col_module.
     IF lv_modulo < 1 OR lv_modulo > 26.
 *    lv_errormessage = 'Unable to interpret input as column'(003).
-*    RAISE EXCEPTION TYPE zcx_excel
-*      EXPORTING
-*        error = lv_errormessage.
       MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          syst_at_raise = syst.
+      zcx_excel=>raise_symsg( ).
     ENDIF.
     ep_column = lv_modulo.                    " Leftmost digit
 
@@ -573,13 +554,8 @@ METHOD convert_column2int.
     lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+1(1) ) MOD zcl_excel_common=>c_excel_col_module.
     IF lv_modulo < 1 OR lv_modulo > 26.
 *    lv_errormessage = 'Unable to interpret input as column'(003).
-*    RAISE EXCEPTION TYPE zcx_excel
-*      EXPORTING
-*        error = lv_errormessage.
       MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          syst_at_raise = syst.
+      zcx_excel=>raise_symsg( ).
     ENDIF.
     ep_column = 26 * ep_column + lv_modulo.   " if second digit is present first digit is for 26^1
 
@@ -590,13 +566,8 @@ METHOD convert_column2int.
     lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+2(1) ) MOD zcl_excel_common=>c_excel_col_module.
     IF lv_modulo < 1 OR lv_modulo > 26.
 *    lv_errormessage = 'Unable to interpret input as column'(003).
-*    RAISE EXCEPTION TYPE zcx_excel
-*      EXPORTING
-*        error = lv_errormessage.
       MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          syst_at_raise = syst.
+      zcx_excel=>raise_symsg( ).
     ENDIF.
     ep_column = 26 * ep_column + lv_modulo.   " if third digit is present first digit is for 26^2 and second digit for 26^1
   ENDDO.
@@ -606,9 +577,7 @@ METHOD convert_column2int.
 *--------------------------------------------------------------------*
   IF ep_column > 16384 OR ep_column < 1.
     lv_errormessage = 'Index out of bounds'(004).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = lv_errormessage.
+    zcx_excel=>raise_text( lv_errormessage ).
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -695,9 +664,7 @@ method CONVERT_RANGE2COLUMN_A_ROW.
       SHIFT lv_range LEFT BY sy-fdpos PLACES.
     ELSE.
       lv_errormessage = 'Invalid range'(001).
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error    = lv_errormessage.
+      zcx_excel=>raise_text( lv_errormessage ).
     ENDIF.
 
   ELSEIF i_range CS '!'.                                " c) sheetname existing - does not start with '
@@ -917,9 +884,7 @@ method EXCEL_STRING_TO_DATE.
         ep_value = ep_value + 1.
       ENDIF.
     CATCH cx_sy_conversion_error.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'Index out of bounds'.
+      zcx_excel=>raise_text( 'Index out of bounds' ).
   ENDTRY.
 endmethod.
 
@@ -947,9 +912,7 @@ method EXCEL_STRING_TO_TIME.
       ep_value = lv_seconds_in_day.
 
     CATCH cx_sy_conversion_error.
-      RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Unable to interpret time'.
+      zcx_excel=>raise_text( 'Unable to interpret time' ).
   ENDTRY.
 endmethod.
 
@@ -1381,9 +1344,7 @@ METHOD shift_formula.
             MOVE: iv_reference_formula+lv_offset1(lv_tlen) TO lv_ref_cell_addr. "Ref cell address
           CATCH cx_root.
             lv_errormessage = 'Internal error in Class ZCL_EXCEL_COMMON Method SHIFT_FORMULA Spot 1 '.  " Change to messageclass if possible
-            RAISE EXCEPTION TYPE zcx_excel
-              EXPORTING
-                error    = lv_errormessage.
+            zcx_excel=>raise_text( lv_errormessage ).
         ENDTRY.
 
 *--------------------------------------------------------------------*
@@ -1720,9 +1681,7 @@ method UNESCAPE_STRING.
   REPLACE REGEX `^'(.*)'$` IN ev_unescaped_string WITH '$1'.
   IF sy-subrc <> 0.
     lv_errormessage = 'Input not properly escaped - &'(002).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error    = lv_errormessage.
+    zcx_excel=>raise_text( lv_errormessage ).
   ENDIF.
 
 *--------------------------------------------------------------------*
@@ -1731,9 +1690,7 @@ method UNESCAPE_STRING.
   FIND REGEX lcv_regex IN ev_unescaped_string.
   IF sy-subrc = 0.
     lv_errormessage = 'Input not properly escaped - &'(002).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error    = lv_errormessage.
+    zcx_excel=>raise_text( lv_errormessage ).
   ENDIF.
 
 *--------------------------------------------------------------------*

@@ -99,7 +99,7 @@ private section.
   data WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
   data MT_FILTERS type TT_FILTERS .
 
-  methods VALIDATE_AREA 
+  methods VALIDATE_AREA
     raising
       ZCX_EXCEL .
 ENDCLASS.
