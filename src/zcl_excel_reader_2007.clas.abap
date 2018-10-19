@@ -270,7 +270,7 @@ private section.
     importing
       !I_FILENAME type CSEQUENCE
     returning
-      value(R_EXCEL_DATA) type XSTRING 
+      value(R_EXCEL_DATA) type XSTRING
     raising
       ZCX_EXCEL.
   methods READ_FROM_LOCAL_FILE
@@ -3567,9 +3567,7 @@ METHOD read_from_applserver.
     OPEN DATASET lv_filename FOR INPUT IN BINARY MODE.
     IF sy-subrc <> 0.
       lv_errormessage = 'A problem occured when reading the file'(001).
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = lv_errormessage.
+      zcx_excel=>raise_text( lv_errormessage ).
     ENDIF.
     WHILE sy-subrc = 0.
 
@@ -3631,9 +3629,7 @@ METHOD read_from_local_file.
                                             OTHERS                  = 19 ).
     IF sy-subrc <> 0.
       lv_errormessage = 'A problem occured when reading the file'(001).
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = lv_errormessage.
+      zcx_excel=>raise_text( lv_errormessage ).
     ENDIF.
 
 *--------------------------------------------------------------------*

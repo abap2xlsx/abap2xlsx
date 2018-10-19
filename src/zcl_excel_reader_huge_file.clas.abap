@@ -211,9 +211,7 @@ method LOAD_WORKSHEET.
                            io_worksheet = io_worksheet ).
 
     catch lcx_not_found into lx_not_found.
-      raise exception type zcx_excel
-        exporting
-          error = lx_not_found->error.
+      zcx_excel=>raise_text( lx_not_found->error ).
   endtry.
 endmethod.
 

@@ -5,9 +5,13 @@ class ZCX_EXCEL definition
 
 *"* public components of class ZCX_EXCEL
 *"* do not include other source files here!!!
+*"* protected components of class ZCX_EXCEL
+*"* do not include other source files here!!!
+*"* protected components of class ZCX_EXCEL
+*"* do not include other source files here!!!
 public section.
 
-  constants ZCX_EXCEL type SOTR_CONC value '028C0ED2B5601ED78EB6F3368B1E4F9B'. "#EC NOTEXT
+  constants ZCX_EXCEL type SOTR_CONC value '028C0ED2B5601ED78EB6F3368B1E4F9B' ##NO_TEXT.
   data ERROR type STRING .
   data SYST_AT_RAISE type SYST .
 
@@ -17,15 +21,19 @@ public section.
       !PREVIOUS like PREVIOUS optional
       !ERROR type STRING optional
       !SYST_AT_RAISE type SYST optional .
+  class-methods RAISE_TEXT
+    importing
+      !IV_TEXT type CLIKE
+    raising
+      ZCX_EXCEL .
+  class-methods RAISE_SYMSG
+    raising
+      ZCX_EXCEL .
 
   methods IF_MESSAGE~GET_LONGTEXT
     redefinition .
   methods IF_MESSAGE~GET_TEXT
     redefinition .
-*"* protected components of class ZCX_EXCEL
-*"* do not include other source files here!!!
-*"* protected components of class ZCX_EXCEL
-*"* do not include other source files here!!!
 protected section.
 *"* private components of class ZCX_EXCEL
 *"* do not include other source files here!!!
@@ -37,7 +45,7 @@ ENDCLASS.
 CLASS ZCX_EXCEL IMPLEMENTATION.
 
 
-method CONSTRUCTOR.
+  method CONSTRUCTOR.
 CALL METHOD SUPER->CONSTRUCTOR
 EXPORTING
 TEXTID = TEXTID
@@ -48,7 +56,7 @@ PREVIOUS = PREVIOUS
  ENDIF.
 me->ERROR = ERROR .
 me->SYST_AT_RAISE = SYST_AT_RAISE .
-endmethod.
+  endmethod.
 
 
 method IF_MESSAGE~GET_LONGTEXT.
@@ -93,5 +101,19 @@ method IF_MESSAGE~GET_TEXT.
       RECEIVING
         result = result.
   ENDIF.
+  endmethod.
+
+
+  method RAISE_SYMSG.
+    raise exception type zcx_excel
+      exporting
+        syst_at_raise = syst.
+  endmethod.
+
+
+  method RAISE_TEXT.
+    raise exception type zcx_excel
+      exporting
+        error = iv_text.
   endmethod.
 ENDCLASS.

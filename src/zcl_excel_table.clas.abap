@@ -261,9 +261,7 @@ method GET_TOTALS_FORMULA.
       RETURN.
 
     WHEN OTHERS.
-      RAISE EXCEPTION TYPE zcx_excel
-    EXPORTING
-      error = 'Invalid totals formula. See ZCL_ for possible values'.
+      zcx_excel=>raise_text( 'Invalid totals formula. See ZCL_ for possible values' ).
   ENDCASE.
 
   CONCATENATE 'SUBTOTAL(' lv_function_id ',[' ip_column '])' INTO ep_formula.
