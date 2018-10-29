@@ -126,33 +126,6 @@ public section.
     returning
       value(EP_VALUE) type ZEXCEL_CELL_VALUE .
   type-pools ABAP .
-  class-methods ASSERT_EQUALS
-    importing
-      !EXP type ANY
-      !ACT type ANY
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=>CRITICAL
-      !TOL type F optional
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=>METHOD
-      !IGNORE_HASH_SEQUENCE type ABAP_BOOL default ABAP_FALSE
-    returning
-      value(ASSERTION_FAILED) type ABAP_BOOL .
-  class-methods FAIL
-    importing
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=>CRITICAL
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=>METHOD
-      !DETAIL type CSEQUENCE optional .
-  class-methods ASSERT_DIFFERS
-    importing
-      !EXP type SIMPLE
-      !ACT type SIMPLE
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=>CRITICAL
-      !TOL type F optional
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=>METHOD
-    returning
-      value(ASSERTION_FAILED) type ABAP_BOOL .
   class-methods SPLIT_FILE
     importing
       !IP_FILE type TEXT255
@@ -235,95 +208,6 @@ ENDCLASS.
 
 
 CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
-
-
-method ASSERT_DIFFERS.
-  DATA: ls_seoclass TYPE seoclass.
-
-" Let see >=7.02
-  SELECT SINGLE * INTO ls_seoclass
-    FROM seoclass
-    WHERE clsname = 'CL_ABAP_UNIT_ASSERT'.
-
-  IF sy-subrc = 0.
-    CALL METHOD (ls_seoclass-clsname)=>assert_differs
-      EXPORTING
-        exp              = exp
-        act              = act
-        msg              = msg
-        level            = level
-        tol              = tol
-        quit             = quit
-      RECEIVING
-        assertion_failed = assertion_failed.
-  ELSE.
-" Let see >=7.00 or even lower
-    SELECT SINGLE * INTO ls_seoclass
-      FROM seoclass
-      WHERE clsname = 'CL_AUNIT_ASSERT'.
-
-    IF sy-subrc = 0.
-      CALL METHOD (ls_seoclass-clsname)=>assert_differs
-        EXPORTING
-          exp              = exp
-          act              = act
-          msg              = msg
-          level            = level
-          tol              = tol
-          quit             = quit
-        RECEIVING
-          assertion_failed = assertion_failed.
-    ELSE.
-* We do nothing for now not supported
-    ENDIF.
-  ENDIF.
-endmethod.
-
-
-METHOD assert_equals.
-  DATA: ls_seoclass TYPE seoclass.
-
-  " Let see >=7.02
-  SELECT SINGLE * INTO ls_seoclass
-    FROM seoclass
-    WHERE clsname = 'CL_ABAP_UNIT_ASSERT'.
-
-  IF sy-subrc = 0.
-    CALL METHOD (ls_seoclass-clsname)=>assert_equals
-      EXPORTING
-        exp                  = exp
-        act                  = act
-        msg                  = msg
-        level                = level
-        tol                  = tol
-        quit                 = quit
-        ignore_hash_sequence = ignore_hash_sequence
-      RECEIVING
-        assertion_failed     = assertion_failed.
-  ELSE.
-    " Let see >=7.00 or even lower
-    SELECT SINGLE * INTO ls_seoclass
-      FROM seoclass
-      WHERE clsname = 'CL_AUNIT_ASSERT'.
-
-    IF sy-subrc = 0.
-      CALL METHOD (ls_seoclass-clsname)=>assert_equals
-        EXPORTING
-          exp                  = exp
-          act                  = act
-          msg                  = msg
-          level                = level
-          tol                  = tol
-          quit                 = quit
-          ignore_hash_sequence = ignore_hash_sequence
-        RECEIVING
-          assertion_failed     = assertion_failed.
-    ELSE.
-* We do nothing for now not supported
-    ENDIF.
-  ENDIF.
-ENDMETHOD.
-
 
 METHOD calculate_cell_distance.
 
@@ -915,43 +799,6 @@ method EXCEL_STRING_TO_TIME.
       zcx_excel=>raise_text( 'Unable to interpret time' ).
   ENDTRY.
 endmethod.
-
-
-method FAIL.
-  DATA: ls_seoclass TYPE seoclass.
-
-  " Let see >=7.02
-  SELECT SINGLE * INTO ls_seoclass
-    FROM seoclass
-    WHERE clsname = 'CL_ABAP_UNIT_ASSERT'.
-
-  IF sy-subrc = 0.
-    CALL METHOD (ls_seoclass-clsname)=>fail
-      EXPORTING
-        msg    = msg
-        level  = level
-        quit   = quit
-        detail = detail.
-  ELSE.
-    " Let see >=7.00 or even lower
-    SELECT SINGLE * INTO ls_seoclass
-      FROM seoclass
-      WHERE clsname = 'CL_AUNIT_ASSERT'.
-
-    IF sy-subrc = 0.
-      CALL METHOD (ls_seoclass-clsname)=>fail
-        EXPORTING
-          msg    = msg
-          level  = level
-          quit   = quit
-          detail = detail.
-    ELSE.
-* We do nothing for now not supported
-    ENDIF.
-  ENDIF.
-
-endmethod.
-
 
 METHOD get_fieldcatalog.
   DATA: lr_dref_tab           TYPE REF TO data,
