@@ -190,9 +190,7 @@ method SET_OUTLINE_LEVEL.
   IF   ip_outline_level < 0
     OR ip_outline_level > 7.
 
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Outline level must range between 0 and 7.'.
+    zcx_excel=>raise_text( 'Outline level must range between 0 and 7.' ).
 
   ENDIF.
   me->outline_level = ip_outline_level.
@@ -203,9 +201,7 @@ method SET_ROW_HEIGHT.
   TRY.
       me->row_height = ip_row_height.
     CATCH cx_sy_conversion_no_number.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'Unable to interpret ip_row_height as number'.
+      zcx_excel=>raise_text( 'Unable to interpret ip_row_height as number' ).
   ENDTRY.
   endmethod.
 

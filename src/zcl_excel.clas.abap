@@ -306,9 +306,7 @@ METHOD delete_worksheet.
     lo_worksheet = me->get_worksheet_by_index( 1 ).
     IF lo_worksheet = io_worksheet.
       lv_errormessage = 'Deleting last remaining worksheet is not allowed'(002).
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = lv_errormessage.
+      zcx_excel=>raise_text( lv_errormessage ).
     ENDIF.
   ENDIF.
 
@@ -325,9 +323,7 @@ METHOD delete_worksheet_by_index.
   lo_worksheet = me->get_worksheet_by_index( iv_index ).
   IF lo_worksheet IS NOT BOUND.
     lv_errormessage = 'Worksheet not existing'(001).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = lv_errormessage.
+    zcx_excel=>raise_text( lv_errormessage ).
   ENDIF.
   me->delete_worksheet( lo_worksheet ).
 
@@ -342,9 +338,7 @@ METHOD delete_worksheet_by_name.
   lo_worksheet = me->get_worksheet_by_name( iv_title ).
   IF lo_worksheet IS NOT BOUND.
     lv_errormessage = 'Worksheet not existing'(001).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = lv_errormessage.
+    zcx_excel=>raise_text( lv_errormessage ).
   ENDIF.
   me->delete_worksheet( lo_worksheet ).
 
@@ -481,9 +475,7 @@ method GET_STYLE_INDEX_IN_STYLES.
   ENDWHILE.
 
   IF ep_index IS INITIAL.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Index not found'.
+    zcx_excel=>raise_text( 'Index not found' ).
   else.
     SUBTRACT 1 from ep_index.  " In excel list starts with "0"
   ENDIF.
@@ -495,9 +487,7 @@ METHOD get_style_to_guid.
   " # issue 139
   READ TABLE me->t_stylemapping2 INTO ep_stylemapping WITH TABLE KEY guid = ip_guid.
   IF sy-subrc <> 0.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'GUID not found'.
+    zcx_excel=>raise_text( 'GUID not found' ).
   ENDIF.
 
   IF ep_stylemapping-dynamic_style_guid IS NOT INITIAL.
@@ -576,9 +566,7 @@ METHOD set_active_sheet_index.
   lo_worksheet = me->get_worksheet_by_index( i_active_worksheet ).
   IF lo_worksheet IS NOT BOUND.
     lv_errormessage = 'Worksheet not existing'(001).
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = lv_errormessage.
+    zcx_excel=>raise_text( lv_errormessage ).
   ENDIF.
 
   me->worksheets->active_worksheet = i_active_worksheet.

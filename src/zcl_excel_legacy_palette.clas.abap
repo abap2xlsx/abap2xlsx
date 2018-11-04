@@ -127,9 +127,7 @@ method GET_COLOR.
   lv_index = ip_index + 1.
   READ TABLE colors INTO ep_color INDEX lv_index.
   IF sy-subrc <> 0.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Invalid color index'.
+    zcx_excel=>raise_text( 'Invalid color index' ).
   ENDIF.
   endmethod.
 
@@ -152,9 +150,7 @@ method SET_COLOR.
   lv_index = ip_index + 1.
   READ TABLE colors ASSIGNING <lv_color> INDEX lv_index.
   IF sy-subrc <> 0.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Invalid color index'.
+    zcx_excel=>raise_text( 'Invalid color index' ).
   ENDIF.
 
   IF <lv_color> <> ip_color.

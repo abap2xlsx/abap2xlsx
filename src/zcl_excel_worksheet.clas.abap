@@ -2817,9 +2817,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                (  LV_MAXCOL     ge ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LO_CURTABLE->SETTINGS-TOP_LEFT_COLUMN ) and LV_MAXCOL     le ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LO_CURTABLE->SETTINGS-BOTTOM_RIGHT_COLUMN ) )
           ).
         LV_ERRORMESSAGE = 'Table overlaps with previously bound table and will not be added to worksheet.'(400).
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = LV_ERRORMESSAGE.
+        zcx_excel=>raise_text( lv_errormessage ).
       endif.
 
     endwhile.
@@ -3395,9 +3393,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 *  move_supplied_multistyles: complete.
     if IP_COMPLETE is supplied.
       if IP_XCOMPLETE is not supplied.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = 'Complete styleinfo has to be supplied with corresponding X-field'.
+        zcx_excel=>raise_text( 'Complete styleinfo has to be supplied with corresponding X-field' ).
       endif.
       move-corresponding IP_COMPLETE  to COMPLETE_STYLE.
       move-corresponding IP_XCOMPLETE to COMPLETE_STYLEX.
@@ -3727,9 +3723,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     delete ME->MT_ROW_OUTLINES where ROW_FROM = IV_ROW_FROM
                                  and ROW_TO   = IV_ROW_TO.
     if SY-SUBRC <> 0.  " didn't find outline that was to be deleted
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = 'Row outline to be deleted does not exist'.
+      zcx_excel=>raise_text( 'Row outline to be deleted does not exist' ).
     endif.
 
   endmethod.
@@ -3738,21 +3732,15 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   method FREEZE_PANES.
 
     if IP_NUM_COLUMNS is not supplied and IP_NUM_ROWS is not supplied.
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = 'Pleas provide number of rows and/or columns to freeze'.
+      zcx_excel=>raise_text( 'Pleas provide number of rows and/or columns to freeze' ).
     endif.
 
     if IP_NUM_COLUMNS is supplied and IP_NUM_COLUMNS <= 0.
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = 'Number of columns to freeze should be positive'.
+      zcx_excel=>raise_text( 'Number of columns to freeze should be positive' ).
     endif.
 
     if IP_NUM_ROWS is supplied and IP_NUM_ROWS <= 0.
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = 'Number of rows to freeze should be positive'.
+      zcx_excel=>raise_text( 'Number of rows to freeze should be positive' ).
     endif.
 
     FREEZE_PANE_CELL_COLUMN = IP_NUM_COLUMNS + 1.
@@ -4189,18 +4177,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
         if SY-SUBRC <> 0 or <LS_LINE> is not assigned.
 
           LV_ERRORMESSAGE = 'Error at inserting new Line to internal Table'(002).
-          raise exception type ZCX_EXCEL
-            exporting
-              ERROR = LV_ERRORMESSAGE.
+          zcx_excel=>raise_text( lv_errormessage ).
 
         else.
           LV_DELTA_COL = LV_MAX_COL - IV_SKIPPED_COLS.
           assign component LV_DELTA_COL of structure <LS_LINE> to <LV_VALUE>.
           if SY-SUBRC <> 0 or <LV_VALUE> is not assigned.
             LV_ERRORMESSAGE = 'Internal table has less columns than excel'(003).
-            raise exception type ZCX_EXCEL
-              exporting
-                ERROR = LV_ERRORMESSAGE.
+            zcx_excel=>raise_text( lv_errormessage ).
           else.
 *--------------------------------------------------------------------*
 *now we are ready for handle the table data
@@ -4221,9 +4205,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
               append initial line to ET_TABLE assigning <LS_LINE>.
               if SY-SUBRC <> 0 or <LS_LINE> is not assigned.
                 LV_ERRORMESSAGE = 'Error at inserting new Line to internal Table'(002).
-                raise exception type ZCX_EXCEL
-                  exporting
-                    ERROR = LV_ERRORMESSAGE.
+                zcx_excel=>raise_text( lv_errormessage ).
               endif.
               while LV_ACTUAL_COL <= LV_MAX_COL.
 
@@ -4231,9 +4213,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                 assign component LV_DELTA_COL of structure <LS_LINE> to <LV_VALUE>.
                 if SY-SUBRC <> 0.
                   LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
-                  raise exception type ZCX_EXCEL
-                    exporting
-                      ERROR = LV_ERRORMESSAGE.
+                  zcx_excel=>raise_text( lv_errormessage ).
                 endif.
 
                 ME->GET_CELL(
@@ -4247,9 +4227,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                 if LV_RC <> 0
                   and LV_RC <> 4.                                                   "No found error means, zero/no value in cell
                   LV_ERRORMESSAGE = |{ 'Error at reading field value (Col:'(007) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
-                  raise exception type ZCX_EXCEL
-                    exporting
-                      ERROR = LV_ERRORMESSAGE.
+                  zcx_excel=>raise_text( lv_errormessage ).
                 endif.
 
                 <LV_VALUE> = LV_VALUE.
@@ -4265,24 +4243,16 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
       catch CX_SY_ASSIGN_CAST_ILLEGAL_CAST.
         LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = LV_ERRORMESSAGE.
+        zcx_excel=>raise_text( lv_errormessage ).
       catch CX_SY_ASSIGN_CAST_UNKNOWN_TYPE.
         LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = LV_ERRORMESSAGE.
+        zcx_excel=>raise_text( lv_errormessage ).
       catch CX_SY_ASSIGN_OUT_OF_RANGE.
         LV_ERRORMESSAGE = 'Internal table has less columns than excel'(003).
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = LV_ERRORMESSAGE.
+        zcx_excel=>raise_text( lv_errormessage ).
       catch CX_SY_CONVERSION_ERROR.
         LV_ERRORMESSAGE = |{ 'Error at converting field value (Col:'(006) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = LV_ERRORMESSAGE.
+        zcx_excel=>raise_text( lv_errormessage ).
 
     endtry.
   endmethod.
@@ -4512,9 +4482,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                    <FS_VALUE>         type SIMPLE.
 
     if IP_VALUE  is not supplied and IP_FORMULA is not supplied.
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = 'Please provide the value or formula'.
+      zcx_excel=>raise_text( 'Please provide the value or formula' ).
     endif.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
@@ -4617,9 +4585,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
           when others.
-            raise exception type ZCX_EXCEL
-              exporting
-                ERROR = 'Invalid data type of input value'.
+            zcx_excel=>raise_text( 'Invalid data type of input value' ).
         endcase.
       endif.
 
@@ -4781,17 +4747,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       try.
           WIDTH = IP_WIDTH_FIX.
           if WIDTH <= 0.
-            raise exception type ZCX_EXCEL
-              exporting
-                ERROR = 'Please supply a positive number as column-width'.
+            zcx_excel=>raise_text( 'Please supply a positive number as column-width' ).
           endif.
           LO_COLUMN->SET_WIDTH( WIDTH ).
           exit.
         catch CX_SY_CONVERSION_NO_NUMBER.
 * Strange stuff passed --> raise error
-          raise exception type ZCX_EXCEL
-            exporting
-              ERROR = 'Unable to interpret supplied input as number'.
+          zcx_excel=>raise_text( 'Unable to interpret supplied input as number' ).
       endtry.
     endif.
 
@@ -4805,9 +4767,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   method SET_DEFAULT_EXCEL_DATE_FORMAT.
 
     if IP_DEFAULT_EXCEL_DATE_FORMAT is initial.
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = 'Default date format cannot be blank'.
+      zcx_excel=>raise_text( 'Default date format cannot be blank' ).
     endif.
 
     DEFAULT_EXCEL_DATE_FORMAT = IP_DEFAULT_EXCEL_DATE_FORMAT.
@@ -4830,9 +4790,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     endif.
     if LS_MERGE-ROW_FROM > LS_MERGE-ROW_TO.
       LV_ERRORMESSAGE = 'Merge: First row larger then last row'(405).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
     LS_MERGE-COL_FROM = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN_START ).
@@ -4843,9 +4801,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     endif.
     if LS_MERGE-COL_FROM > LS_MERGE-COL_TO.
       LV_ERRORMESSAGE = 'Merge: First column larger then last column'(406).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
 *--------------------------------------------------------------------*
@@ -4856,9 +4812,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                                                                    or COL_FROM > LS_MERGE-COL_TO
                                                                    or COL_TO   < LS_MERGE-COL_FROM ).
       LV_ERRORMESSAGE = 'Overlapping merges'(404).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
 
     endloop.
 
@@ -4885,17 +4839,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     try.
         HEIGHT = IP_HEIGHT_FIX.
         if HEIGHT <= 0.
-          raise exception type ZCX_EXCEL
-            exporting
-              ERROR = 'Please supply a positive number as row-height'.
+          zcx_excel=>raise_text( 'Please supply a positive number as row-height' ).
         endif.
         LO_ROW->SET_ROW_HEIGHT( HEIGHT ).
         exit.
       catch CX_SY_CONVERSION_NO_NUMBER.
 * Strange stuff passed --> raise error
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = 'Unable to interpret supplied input as number'.
+        zcx_excel=>raise_text( 'Unable to interpret supplied input as number' ).
     endtry.
 
   endmethod.
@@ -4910,14 +4860,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                                                                              ROW_TO   = IV_ROW_TO.
     if SY-SUBRC <> 0.
       if IV_ROW_FROM <= 0.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = 'First row of outline must be a positive number'.
+        zcx_excel=>raise_text( 'First row of outline must be a positive number' ).
       endif.
       if IV_ROW_TO < IV_ROW_FROM.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = 'Last row of outline may not be less than first line of outline'.
+        zcx_excel=>raise_text( 'Last row of outline may not be less than first line of outline' ).
       endif.
       LS_ROW_OUTLINE-ROW_FROM = IV_ROW_FROM.
       LS_ROW_OUTLINE-ROW_TO   = IV_ROW_TO.
@@ -4931,9 +4877,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
         <LS_ROW_OUTLINE>-COLLAPSED = IV_COLLAPSED.
 
       when others.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = 'Unknown collapse state'.
+        zcx_excel=>raise_text( 'Unknown collapse state' ).
 
     endcase.
   endmethod.
@@ -5062,17 +5006,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 *--------------------------------------------------------------------*
     if IP_TITLE ca '/\[]*?:'.
       LV_ERRORMESSAGE = 'Found illegal character in sheetname. List of forbidden characters: /\[]*?:'(402).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
     if IP_TITLE is not initial and IP_TITLE(1) = `'`.
       LV_ERRORMESSAGE = 'Sheetname may not start with &'(403).   " & used instead of ' to allow fallbacklanguage
       replace '&' in LV_ERRORMESSAGE with `'`.
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
 
@@ -5087,9 +5027,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       if IP_TITLE = LO_WORKSHEET->GET_TITLE( ).  " Not unique --> raise exception
         ERRORMESSAGE = 'Duplicate sheetname &'.
         replace '&' in ERRORMESSAGE with IP_TITLE.
-        raise exception type ZCX_EXCEL
-          exporting
-            ERROR = ERRORMESSAGE.
+        zcx_excel=>raise_text( errormessage ).
       endif.
 
     endwhile.
@@ -5237,16 +5175,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 *--------------------------------------------------------------------*
     if LV_COL_FROM_INT < 1.
       LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable columns'(401).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
     if  LV_COL_FROM_INT > LV_COL_TO_INT.
       LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable columns'(401).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
 *--------------------------------------------------------------------*
@@ -5278,16 +5212,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 *--------------------------------------------------------------------*
     if IV_ROWS_FROM < 1.
       LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable rowumns'(401).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
     if  IV_ROWS_FROM > IV_ROWS_TO.
       LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable rowumns'(401).
-      raise exception type ZCX_EXCEL
-        exporting
-          ERROR = LV_ERRORMESSAGE.
+      zcx_excel=>raise_text( lv_errormessage ).
     endif.
 
 *--------------------------------------------------------------------*
