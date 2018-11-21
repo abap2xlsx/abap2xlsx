@@ -33,7 +33,7 @@ START-OF-SELECTION.
 
   " Get active sheet
   lo_worksheet = lo_excel->get_active_worksheet( ).
-  lo_worksheet->set_title( ip_title = 'Internal table').
+  lo_worksheet->set_title( ip_title = 'Internal table' ).
 
   SELECT * UP TO 2 ROWS FROM t005t INTO TABLE lt_test.  "#EC CI_NOWHERE
 
