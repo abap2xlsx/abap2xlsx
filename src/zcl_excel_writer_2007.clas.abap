@@ -4918,7 +4918,7 @@ METHOD create_xl_sheet_sheet_data.
           " Row visibility of previos row.
           IF lo_row->get_visible( io_worksheet ) = abap_false OR
              l_autofilter_hidden = abap_true.
-            lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
+            lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
           ENDIF.
 *          lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
 *          CONCATENATE lv_xstring lv_xstring_partial
@@ -4951,13 +4951,13 @@ METHOD create_xl_sheet_sheet_data.
            l_autofilter_hidden = abap_true.
           " Row dimensions
           IF lo_row->get_row_height( ) >= 0.
-            lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1').
+            lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1' ).
             lv_value = lo_row->get_row_height( ).
             lo_element_2->set_attribute_ns( name  = 'ht' value = lv_value ).
           ENDIF.
           " Collapsed
           IF lo_row->get_collapsed( io_worksheet ) = abap_true.
-            lo_element_2->set_attribute_ns( name  = 'collapsed' value = 'true').
+            lo_element_2->set_attribute_ns( name  = 'collapsed' value = 'true' ).
           ENDIF.
           " Outline level
           IF lo_row->get_outline_level( io_worksheet ) > 0.
@@ -4970,7 +4970,7 @@ METHOD create_xl_sheet_sheet_data.
           IF lo_row->get_xf_index( ) <> 0.
             lv_value = lo_row->get_xf_index( ).
             lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
-            lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1').
+            lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
           ENDIF.
         ENDIF.
         IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
@@ -5096,7 +5096,7 @@ METHOD create_xl_sheet_sheet_data.
     " Row visibility of previos row.
     IF lo_row->get_visible( ) = abap_false OR
        l_autofilter_hidden = abap_true.
-      lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
+      lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
     ENDIF.
 *    lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
 *    CONCATENATE lv_xstring lv_xstring_partial

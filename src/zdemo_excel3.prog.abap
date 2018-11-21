@@ -38,7 +38,7 @@ START-OF-SELECTION.
 
   " Get active sheet
   lo_worksheet = lo_excel->get_active_worksheet( ).
-  lo_worksheet->set_title( ip_title = 'Internal table').
+  lo_worksheet->set_title( ip_title = 'Internal table' ).
 
   DATA lt_test TYPE TABLE OF sflight.
 
