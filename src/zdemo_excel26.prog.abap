@@ -4,7 +4,7 @@
 * export data from ALV (CL_GUI_ALV_GRID) object or cl_salv_table object
 * to Excel.
 *--------------------------------------------------------------------*
-report  zdemo_excel26.
+report zdemo_excel26.
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_handle_events DEFINITION

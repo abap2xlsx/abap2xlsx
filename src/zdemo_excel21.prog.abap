@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel21.
+REPORT zdemo_excel21.
 
 TYPES:
   BEGIN OF t_color_style,

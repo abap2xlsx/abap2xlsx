@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel9.
+REPORT zdemo_excel9.
 
 CONSTANTS: c_fruits     TYPE string VALUE 'Fruits',
            c_vegetables TYPE string VALUE 'Vegetables',

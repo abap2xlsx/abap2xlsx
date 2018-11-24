@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel.
+REPORT zdemo_excel.
 
 DATA: lv_workdir TYPE string,
       lv_upfile  TYPE string.

@@ -8,7 +8,7 @@
 *& Added the functionality to have multiple input and output files
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel15.
+REPORT zdemo_excel15.
 
 TYPE-POOLS: abap.
 

@@ -20,7 +20,7 @@
 *& smaller or change to a server export using OPEN DATASET.
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_calendar.
+REPORT zdemo_calendar.
 
 TYPE-POOLS: abap.
 CONSTANTS: gc_save_file_name TYPE string VALUE 'Calendar.xlsx'.
