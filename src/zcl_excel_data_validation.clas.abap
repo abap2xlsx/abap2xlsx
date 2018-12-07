@@ -70,8 +70,8 @@ method CONSTRUCTOR.
   operator          = ''.
   allowblank        = abap_false.
   showdropdown      = abap_false.
-  showinputmessage 	= abap_true.
-  showerrormessage 	= abap_true.
+  showinputmessage  = abap_true.
+  showerrormessage  = abap_true.
   errortitle        = ''.
   error             = ''.
   prompttitle       = ''.

@@ -666,9 +666,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   METHOD split_file.
 * ============================
 
-    DATA: ep_file	TYPE text255,
+    DATA: ep_file TYPE text255,
     ep_extension  TYPE char10,
-    ep_dotextension	TYPE char10.
+    ep_dotextension TYPE char10.
 
 
 * Test 1. Basic conversion
