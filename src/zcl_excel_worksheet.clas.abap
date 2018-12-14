@@ -424,6 +424,9 @@ class ZCL_EXCEL_WORKSHEET definition
         !IP_COLUMN_END   type SIMPLE default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_COL
         !IP_ROW          type ZEXCEL_CELL_ROW default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_ROW
         !IP_ROW_TO       type ZEXCEL_CELL_ROW default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_ROW
+        !IP_STYLE type ZEXCEL_CELL_STYLE optional "added parameter
+        !IP_VALUE type SIMPLE optional "added parameter
+        !IP_FORMULA type ZEXCEL_CELL_FORMULA optional "added parameter
       raising
         ZCX_EXCEL .
     methods SET_PRINT_GRIDLINES
@@ -476,6 +479,50 @@ class ZCL_EXCEL_WORKSHEET definition
         ET_TABLE        type standard table
       raising
         ZCX_EXCEL.
+
+methods SET_MERGE_STYLE
+    importing
+      !IP_COLUMN_START type simple optional
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_STYLE type ZEXCEL_CELL_STYLE optional .
+
+methods SET_AREA_FORMULA
+    importing
+      !IP_COLUMN_START type simple
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_FORMULA type ZEXCEL_CELL_FORMULA
+      !IP_MERGE type ABAP_BOOL optional
+    raising
+      ZCX_EXCEL .
+
+methods SET_AREA_STYLE
+    importing
+      !IP_COLUMN_START type simple
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_STYLE type ZEXCEL_CELL_STYLE
+      !IP_MERGE type ABAP_BOOL optional .
+
+ methods SET_AREA
+    importing
+      !IP_COLUMN_START type simple
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_VALUE type SIMPLE optional
+      !IP_FORMULA type ZEXCEL_CELL_FORMULA optional
+      !IP_STYLE type ZEXCEL_CELL_STYLE optional
+      !IP_HYPERLINK type ref to ZCL_EXCEL_HYPERLINK optional
+      !IP_DATA_TYPE type ZEXCEL_CELL_DATA_TYPE optional
+      !IP_ABAP_TYPE type ABAP_TYPEKIND optional
+      !IP_MERGE type ABAP_BOOL optional
+    raising
+      ZCX_EXCEL .
 
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
@@ -576,6 +623,11 @@ ENDCLASS.
 CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ADD_DRAWING
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_DRAWING                     TYPE REF TO ZCL_EXCEL_DRAWING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ADD_DRAWING.
     case IP_DRAWING->GET_TYPE( ).
       when ZCL_EXCEL_DRAWING=>TYPE_IMAGE.
@@ -586,6 +638,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ADD_NEW_COLUMN
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [<-()] EO_COLUMN                      TYPE REF TO ZCL_EXCEL_COLUMN
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ADD_NEW_COLUMN.
     data: LV_COLUMN_ALPHA type ZEXCEL_CELL_COLUMN_ALPHA.
 
@@ -600,6 +658,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ADD_NEW_DATA_VALIDATION
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_DATA_VALIDATION             TYPE REF TO ZCL_EXCEL_DATA_VALIDATION
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ADD_NEW_DATA_VALIDATION.
 
     create object EO_DATA_VALIDATION.
@@ -607,6 +670,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ADD_NEW_RANGE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_RANGE                       TYPE REF TO ZCL_EXCEL_RANGE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ADD_NEW_RANGE.
 * Create default blank range
     create object EO_RANGE.
@@ -614,6 +682,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ADD_NEW_ROW
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_ROW                         TYPE        SIMPLE
+* | [<-()] EO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ADD_NEW_ROW.
     create object EO_ROW
       exporting
@@ -622,12 +696,28 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ADD_NEW_STYLE_COND
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_STYLE_COND                  TYPE REF TO ZCL_EXCEL_STYLE_COND
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ADD_NEW_STYLE_COND.
     create object EO_STYLE_COND.
     STYLES_COND->ADD( EO_STYLE_COND ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->BIND_ALV
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IO_ALV                         TYPE REF TO OBJECT
+* | [--->] IT_TABLE                       TYPE        STANDARD TABLE
+* | [--->] I_TOP                          TYPE        I (default =1)
+* | [--->] I_LEFT                         TYPE        I (default =1)
+* | [--->] TABLE_STYLE                    TYPE        ZEXCEL_TABLE_STYLE(optional)
+* | [--->] I_TABLE                        TYPE        ABAP_BOOL (default =ABAP_TRUE)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method BIND_ALV.
     data: LO_CONVERTER type ref to ZCL_EXCEL_CONVERTER.
 
@@ -651,6 +741,29 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->BIND_ALV_OLE2
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_DOCUMENT_URL                 TYPE        CHAR255 (default =SPACE)
+* | [--->] I_XLS                          TYPE        C (default =SPACE)
+* | [--->] I_SAVE_PATH                    TYPE        STRING
+* | [--->] IO_ALV                         TYPE REF TO CL_GUI_ALV_GRID
+* | [--->] IT_LISTHEADER                  TYPE        SLIS_T_LISTHEADER(optional)
+* | [--->] I_TOP                          TYPE        I (default =1)
+* | [--->] I_LEFT                         TYPE        I (default =1)
+* | [--->] I_COLUMNS_HEADER               TYPE        C (default ='X')
+* | [--->] I_COLUMNS_AUTOFIT              TYPE        C (default ='X')
+* | [--->] I_FORMAT_COL_HEADER            TYPE        SOI_FORMAT_ITEM(optional)
+* | [--->] I_FORMAT_SUBTOTAL              TYPE        SOI_FORMAT_ITEM(optional)
+* | [--->] I_FORMAT_TOTAL                 TYPE        SOI_FORMAT_ITEM(optional)
+* | [EXC!] MISS_GUIDE
+* | [EXC!] EX_TRANSFER_KKBLO_ERROR
+* | [EXC!] FATAL_ERROR
+* | [EXC!] INV_DATA_RANGE
+* | [EXC!] DIM_MISMATCH_VKEY
+* | [EXC!] DIM_MISMATCH_SEMA
+* | [EXC!] ERROR_IN_SEMA
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method BIND_ALV_OLE2.
 *--------------------------------------------------------------------*
 * Method description:
@@ -2709,6 +2822,16 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->BIND_TABLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_TABLE                       TYPE        STANDARD TABLE
+* | [--->] IT_FIELD_CATALOG               TYPE        ZEXCEL_T_FIELDCATALOG(optional)
+* | [--->] IS_TABLE_SETTINGS              TYPE        ZEXCEL_S_TABLE_SETTINGS(optional)
+* | [--->] IV_DEFAULT_DESCR               TYPE        C(optional)
+* | [<---] ES_TABLE_SETTINGS              TYPE        ZEXCEL_S_TABLE_SETTINGS
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method BIND_TABLE.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
@@ -3025,6 +3148,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_EXCEL_WORKSHEET->CALCULATE_CELL_WIDTH
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [<-()] EP_WIDTH                       TYPE        FLOAT
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method CALCULATE_CELL_WIDTH.
 *--------------------------------------------------------------------*
 * issue #293   - Roberto Bianco
@@ -3276,6 +3407,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->CALCULATE_COLUMN_WIDTHS
+* +-------------------------------------------------------------------------------------------------+
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method CALCULATE_COLUMN_WIDTHS.
     types:
       begin of T_AUTO_SIZE,
@@ -3332,6 +3468,119 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->CHANGE_CELL_STYLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [--->] IP_COMPLETE                    TYPE        ZEXCEL_S_CSTYLE_COMPLETE(optional)
+* | [--->] IP_XCOMPLETE                   TYPE        ZEXCEL_S_CSTYLEX_COMPLETE(optional)
+* | [--->] IP_FONT                        TYPE        ZEXCEL_S_CSTYLE_FONT(optional)
+* | [--->] IP_XFONT                       TYPE        ZEXCEL_S_CSTYLEX_FONT(optional)
+* | [--->] IP_FILL                        TYPE        ZEXCEL_S_CSTYLE_FILL(optional)
+* | [--->] IP_XFILL                       TYPE        ZEXCEL_S_CSTYLEX_FILL(optional)
+* | [--->] IP_BORDERS                     TYPE        ZEXCEL_S_CSTYLE_BORDERS(optional)
+* | [--->] IP_XBORDERS                    TYPE        ZEXCEL_S_CSTYLEX_BORDERS(optional)
+* | [--->] IP_ALIGNMENT                   TYPE        ZEXCEL_S_CSTYLE_ALIGNMENT(optional)
+* | [--->] IP_XALIGNMENT                  TYPE        ZEXCEL_S_CSTYLEX_ALIGNMENT(optional)
+* | [--->] IP_NUMBER_FORMAT_FORMAT_CODE   TYPE        ZEXCEL_NUMBER_FORMAT(optional)
+* | [--->] IP_PROTECTION                  TYPE        ZEXCEL_S_CSTYLE_PROTECTION(optional)
+* | [--->] IP_XPROTECTION                 TYPE        ZEXCEL_S_CSTYLEX_PROTECTION(optional)
+* | [--->] IP_FONT_BOLD                   TYPE        FLAG(optional)
+* | [--->] IP_FONT_COLOR                  TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_FONT_COLOR_RGB              TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_FONT_COLOR_INDEXED          TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_FONT_COLOR_THEME            TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_FONT_COLOR_TINT             TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_FONT_FAMILY                 TYPE        ZEXCEL_STYLE_FONT_FAMILY(optional)
+* | [--->] IP_FONT_ITALIC                 TYPE        FLAG(optional)
+* | [--->] IP_FONT_NAME                   TYPE        ZEXCEL_STYLE_FONT_NAME(optional)
+* | [--->] IP_FONT_SCHEME                 TYPE        ZEXCEL_STYLE_FONT_SCHEME(optional)
+* | [--->] IP_FONT_SIZE                   TYPE        ZEXCEL_STYLE_FONT_SIZE(optional)
+* | [--->] IP_FONT_STRIKETHROUGH          TYPE        FLAG(optional)
+* | [--->] IP_FONT_UNDERLINE              TYPE        FLAG(optional)
+* | [--->] IP_FONT_UNDERLINE_MODE         TYPE        ZEXCEL_STYLE_FONT_UNDERLINE(optional)
+* | [--->] IP_FILL_FILLTYPE               TYPE        ZEXCEL_FILL_TYPE(optional)
+* | [--->] IP_FILL_ROTATION               TYPE        ZEXCEL_ROTATION(optional)
+* | [--->] IP_FILL_FGCOLOR                TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_FILL_FGCOLOR_RGB            TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_FILL_FGCOLOR_INDEXED        TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_FILL_FGCOLOR_THEME          TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_FILL_FGCOLOR_TINT           TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_FILL_BGCOLOR                TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_FILL_BGCOLOR_RGB            TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_FILL_BGCOLOR_INDEXED        TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_FILL_BGCOLOR_THEME          TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_FILL_BGCOLOR_TINT           TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_BORDERS_ALLBORDERS          TYPE        ZEXCEL_S_CSTYLE_BORDER(optional)
+* | [--->] IP_FILL_GRADTYPE_TYPE          TYPE        ZEXCEL_S_GRADIENT_TYPE-TYPE(optional)
+* | [--->] IP_FILL_GRADTYPE_DEGREE        TYPE        ZEXCEL_S_GRADIENT_TYPE-DEGREE(optional)
+* | [--->] IP_XBORDERS_ALLBORDERS         TYPE        ZEXCEL_S_CSTYLEX_BORDER(optional)
+* | [--->] IP_BORDERS_DIAGONAL            TYPE        ZEXCEL_S_CSTYLE_BORDER(optional)
+* | [--->] IP_FILL_GRADTYPE_BOTTOM        TYPE        ZEXCEL_S_GRADIENT_TYPE-BOTTOM(optional)
+* | [--->] IP_FILL_GRADTYPE_TOP           TYPE        ZEXCEL_S_GRADIENT_TYPE-TOP(optional)
+* | [--->] IP_XBORDERS_DIAGONAL           TYPE        ZEXCEL_S_CSTYLEX_BORDER(optional)
+* | [--->] IP_BORDERS_DIAGONAL_MODE       TYPE        ZEXCEL_DIAGONAL(optional)
+* | [--->] IP_FILL_GRADTYPE_RIGHT         TYPE        ZEXCEL_S_GRADIENT_TYPE-RIGHT(optional)
+* | [--->] IP_BORDERS_DOWN                TYPE        ZEXCEL_S_CSTYLE_BORDER(optional)
+* | [--->] IP_FILL_GRADTYPE_LEFT          TYPE        ZEXCEL_S_GRADIENT_TYPE-LEFT(optional)
+* | [--->] IP_FILL_GRADTYPE_POSITION1     TYPE        ZEXCEL_S_GRADIENT_TYPE-POSITION1(optional)
+* | [--->] IP_XBORDERS_DOWN               TYPE        ZEXCEL_S_CSTYLEX_BORDER(optional)
+* | [--->] IP_BORDERS_LEFT                TYPE        ZEXCEL_S_CSTYLE_BORDER(optional)
+* | [--->] IP_FILL_GRADTYPE_POSITION2     TYPE        ZEXCEL_S_GRADIENT_TYPE-POSITION2(optional)
+* | [--->] IP_FILL_GRADTYPE_POSITION3     TYPE        ZEXCEL_S_GRADIENT_TYPE-POSITION3(optional)
+* | [--->] IP_XBORDERS_LEFT               TYPE        ZEXCEL_S_CSTYLEX_BORDER(optional)
+* | [--->] IP_BORDERS_RIGHT               TYPE        ZEXCEL_S_CSTYLE_BORDER(optional)
+* | [--->] IP_XBORDERS_RIGHT              TYPE        ZEXCEL_S_CSTYLEX_BORDER(optional)
+* | [--->] IP_BORDERS_TOP                 TYPE        ZEXCEL_S_CSTYLE_BORDER(optional)
+* | [--->] IP_XBORDERS_TOP                TYPE        ZEXCEL_S_CSTYLEX_BORDER(optional)
+* | [--->] IP_ALIGNMENT_HORIZONTAL        TYPE        ZEXCEL_ALIGNMENT(optional)
+* | [--->] IP_ALIGNMENT_VERTICAL          TYPE        ZEXCEL_ALIGNMENT(optional)
+* | [--->] IP_ALIGNMENT_TEXTROTATION      TYPE        ZEXCEL_TEXT_ROTATION(optional)
+* | [--->] IP_ALIGNMENT_WRAPTEXT          TYPE        FLAG(optional)
+* | [--->] IP_ALIGNMENT_SHRINKTOFIT       TYPE        FLAG(optional)
+* | [--->] IP_ALIGNMENT_INDENT            TYPE        ZEXCEL_INDENT(optional)
+* | [--->] IP_PROTECTION_HIDDEN           TYPE        ZEXCEL_CELL_PROTECTION(optional)
+* | [--->] IP_PROTECTION_LOCKED           TYPE        ZEXCEL_CELL_PROTECTION(optional)
+* | [--->] IP_BORDERS_ALLBORDERS_STYLE    TYPE        ZEXCEL_BORDER(optional)
+* | [--->] IP_BORDERS_ALLBORDERS_COLOR    TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_BORDERS_ALLBO_COLOR_RGB     TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_BORDERS_ALLBO_COLOR_INDEXED TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_BORDERS_ALLBO_COLOR_THEME   TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_BORDERS_ALLBO_COLOR_TINT    TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_BORDERS_DIAGONAL_STYLE      TYPE        ZEXCEL_BORDER(optional)
+* | [--->] IP_BORDERS_DIAGONAL_COLOR      TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_BORDERS_DIAGONAL_COLOR_RGB  TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_BORDERS_DIAGONAL_COLOR_INDE TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_BORDERS_DIAGONAL_COLOR_THEM TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_BORDERS_DIAGONAL_COLOR_TINT TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_BORDERS_DOWN_STYLE          TYPE        ZEXCEL_BORDER(optional)
+* | [--->] IP_BORDERS_DOWN_COLOR          TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_BORDERS_DOWN_COLOR_RGB      TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_BORDERS_DOWN_COLOR_INDEXED  TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_BORDERS_DOWN_COLOR_THEME    TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_BORDERS_DOWN_COLOR_TINT     TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_BORDERS_LEFT_STYLE          TYPE        ZEXCEL_BORDER(optional)
+* | [--->] IP_BORDERS_LEFT_COLOR          TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_BORDERS_LEFT_COLOR_RGB      TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_BORDERS_LEFT_COLOR_INDEXED  TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_BORDERS_LEFT_COLOR_THEME    TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_BORDERS_LEFT_COLOR_TINT     TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_BORDERS_RIGHT_STYLE         TYPE        ZEXCEL_BORDER(optional)
+* | [--->] IP_BORDERS_RIGHT_COLOR         TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_BORDERS_RIGHT_COLOR_RGB     TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_BORDERS_RIGHT_COLOR_INDEXED TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_BORDERS_RIGHT_COLOR_THEME   TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_BORDERS_RIGHT_COLOR_TINT    TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [--->] IP_BORDERS_TOP_STYLE           TYPE        ZEXCEL_BORDER(optional)
+* | [--->] IP_BORDERS_TOP_COLOR           TYPE        ZEXCEL_S_STYLE_COLOR(optional)
+* | [--->] IP_BORDERS_TOP_COLOR_RGB       TYPE        ZEXCEL_STYLE_COLOR_ARGB(optional)
+* | [--->] IP_BORDERS_TOP_COLOR_INDEXED   TYPE        ZEXCEL_STYLE_COLOR_INDEXED(optional)
+* | [--->] IP_BORDERS_TOP_COLOR_THEME     TYPE        ZEXCEL_STYLE_COLOR_THEME(optional)
+* | [--->] IP_BORDERS_TOP_COLOR_TINT      TYPE        ZEXCEL_STYLE_COLOR_TINT(optional)
+* | [<-()] EP_GUID                        TYPE        ZEXCEL_CELL_STYLE
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method CHANGE_CELL_STYLE.
     " issue # 139
     data: STYLEMAPPING    type ZEXCEL_S_STYLEMAPPING,
@@ -3641,6 +3890,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->CONSTRUCTOR
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_EXCEL                       TYPE REF TO ZCL_EXCEL
+* | [--->] IP_TITLE                       TYPE        ZEXCEL_SHEET_TITLE(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method CONSTRUCTOR.
     data: LV_TITLE type ZEXCEL_SHEET_TITLE.
 
@@ -3691,6 +3947,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->DELETE_MERGE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_CELL_COLUMN                 TYPE        SIMPLE(optional)
+* | [--->] IP_CELL_ROW                    TYPE        ZEXCEL_CELL_ROW(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method DELETE_MERGE.
 
     data: LV_COLUMN type I.
@@ -3718,6 +3981,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->DELETE_ROW_OUTLINE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_ROW_FROM                    TYPE        I
+* | [--->] IV_ROW_TO                      TYPE        I
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method DELETE_ROW_OUTLINE.
 
     delete ME->MT_ROW_OUTLINES where ROW_FROM = IV_ROW_FROM
@@ -3729,6 +3999,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->FREEZE_PANES
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_NUM_COLUMNS                 TYPE        I(optional)
+* | [--->] IP_NUM_ROWS                    TYPE        I(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method FREEZE_PANES.
 
     if IP_NUM_COLUMNS is not supplied and IP_NUM_ROWS is not supplied.
@@ -3748,6 +4025,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_EXCEL_WORKSHEET->GENERATE_TITLE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_TITLE                       TYPE        ZEXCEL_SHEET_TITLE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GENERATE_TITLE.
     data: LO_WORKSHEETS_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR,
           LO_WORKSHEET           type ref to ZCL_EXCEL_WORKSHEET.
@@ -3781,6 +4063,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_ACTIVE_CELL
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_ACTIVE_CELL                 TYPE        STRING
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_ACTIVE_CELL.
 
     data: LV_ACTIVE_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA,
@@ -3795,6 +4083,18 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_CELL
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [<---] EP_VALUE                       TYPE        ZEXCEL_CELL_VALUE
+* | [<---] EP_RC                          TYPE        SYSUBRC
+* | [<---] EP_STYLE                       TYPE REF TO ZCL_EXCEL_STYLE
+* | [<---] EP_GUID                        TYPE        ZEXCEL_CELL_STYLE
+* | [<---] EP_FORMULA                     TYPE        ZEXCEL_CELL_FORMULA
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_CELL.
 
     data: LV_COLUMN        type ZEXCEL_CELL_COLUMN,
@@ -3826,6 +4126,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_COLUMN
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [<-()] EO_COLUMN                      TYPE REF TO ZCL_EXCEL_COLUMN
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_COLUMN.
 
     data: LV_COLUMN type ZEXCEL_CELL_COLUMN.
@@ -3841,11 +4147,21 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_COLUMNS
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_COLUMNS                     TYPE REF TO ZCL_EXCEL_COLUMNS
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_COLUMNS.
     EO_COLUMNS = ME->COLUMNS.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_COLUMNS_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_COLUMNS_ITERATOR.
 
     EO_ITERATOR = ME->COLUMNS->GET_ITERATOR( ).
@@ -3853,17 +4169,32 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DATA_VALIDATIONS_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DATA_VALIDATIONS_ITERATOR.
 
     EO_ITERATOR = ME->DATA_VALIDATIONS->GET_ITERATOR( ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DATA_VALIDATIONS_SIZE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_SIZE                        TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DATA_VALIDATIONS_SIZE.
     EP_SIZE = ME->DATA_VALIDATIONS->SIZE( ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DEFAULT_COLUMN
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_COLUMN                      TYPE REF TO ZCL_EXCEL_COLUMN
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DEFAULT_COLUMN.
     if ME->COLUMN_DEFAULT is not bound.
       create object ME->COLUMN_DEFAULT
@@ -3877,6 +4208,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DEFAULT_EXCEL_DATE_FORMAT
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_DEFAULT_EXCEL_DATE_FORMAT   TYPE        ZEXCEL_NUMBER_FORMAT
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DEFAULT_EXCEL_DATE_FORMAT.
     constants: C_LANG_E type LANG value 'E'.
 
@@ -3902,6 +4238,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DEFAULT_EXCEL_TIME_FORMAT
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_DEFAULT_EXCEL_TIME_FORMAT   TYPE        ZEXCEL_NUMBER_FORMAT
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DEFAULT_EXCEL_TIME_FORMAT.
     data: L_TIMEFM type XUTIMEFM.
 
@@ -3937,6 +4278,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DEFAULT_ROW
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DEFAULT_ROW.
     if ME->ROW_DEFAULT is not bound.
       create object ME->ROW_DEFAULT.
@@ -3946,6 +4292,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DIMENSION_RANGE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_DIMENSION_RANGE             TYPE        STRING
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DIMENSION_RANGE.
 
     ME->UPDATE_DIMENSION_RANGE( ).
@@ -3964,6 +4316,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DRAWINGS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_TYPE                        TYPE        ZEXCEL_DRAWING_TYPE(optional)
+* | [<-()] R_DRAWINGS                     TYPE REF TO ZCL_EXCEL_DRAWINGS
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DRAWINGS.
 
     data: LO_DRAWING  type ref to ZCL_EXCEL_DRAWING,
@@ -3994,6 +4352,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_DRAWINGS_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_TYPE                        TYPE        ZEXCEL_DRAWING_TYPE
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_DRAWINGS_ITERATOR.
     case IP_TYPE.
       when ZCL_EXCEL_DRAWING=>TYPE_IMAGE.
@@ -4004,12 +4368,23 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_FREEZE_CELL
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] EP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [<---] EP_COLUMN                      TYPE        ZEXCEL_CELL_COLUMN
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_FREEZE_CELL.
     EP_ROW = ME->FREEZE_PANE_CELL_ROW.
     EP_COLUMN = ME->FREEZE_PANE_CELL_COLUMN.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_GUID
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_GUID                        TYPE        UUID
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_GUID.
 
     EP_GUID = ME->GUID.
@@ -4017,28 +4392,56 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_HIGHEST_COLUMN
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] R_HIGHEST_COLUMN               TYPE        ZEXCEL_CELL_COLUMN
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_HIGHEST_COLUMN.
     ME->UPDATE_DIMENSION_RANGE( ).
     R_HIGHEST_COLUMN = ME->LOWER_CELL-CELL_COLUMN.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_HIGHEST_ROW
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] R_HIGHEST_ROW                  TYPE        INT4
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_HIGHEST_ROW.
     ME->UPDATE_DIMENSION_RANGE( ).
     R_HIGHEST_ROW = ME->LOWER_CELL-CELL_ROW.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_HYPERLINKS_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_HYPERLINKS_ITERATOR.
     EO_ITERATOR = HYPERLINKS->GET_ITERATOR( ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_HYPERLINKS_SIZE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_SIZE                        TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_HYPERLINKS_SIZE.
     EP_SIZE = HYPERLINKS->SIZE( ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_MERGE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] MERGE_RANGE                    TYPE        STRING_TABLE
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_MERGE.
 
     field-symbols: <LS_MERGED_CELL> like line of ME->MT_MERGED_CELLS.
@@ -4065,11 +4468,22 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_PAGEBREAKS
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] RO_PAGEBREAKS                  TYPE REF TO ZCL_EXCEL_WORKSHEET_PAGEBREAKS
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_PAGEBREAKS.
     RO_PAGEBREAKS = MO_PAGEBREAKS.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_RANGES_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_RANGES_ITERATOR.
 
     EO_ITERATOR = ME->RANGES->GET_ITERATOR( ).
@@ -4077,6 +4491,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_ROW
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_ROW                         TYPE        INT4
+* | [<-()] EO_ROW                         TYPE REF TO ZCL_EXCEL_ROW
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_ROW.
     EO_ROW = ME->ROWS->GET( IP_INDEX = IP_ROW ).
 
@@ -4086,11 +4506,21 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_ROWS
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ROWS                        TYPE REF TO ZCL_EXCEL_ROWS
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_ROWS.
     EO_ROWS = ME->ROWS.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_ROWS_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_ROWS_ITERATOR.
 
     EO_ITERATOR = ME->ROWS->GET_ITERATOR( ).
@@ -4098,6 +4528,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_ROW_OUTLINES
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] RT_ROW_OUTLINES                TYPE        MTY_TS_OUTLINES_ROW
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_ROW_OUTLINES.
 
     RT_ROW_OUTLINES = ME->MT_ROW_OUTLINES.
@@ -4105,6 +4540,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_STYLE_COND
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_GUID                        TYPE        ZEXCEL_CELL_STYLE
+* | [<-()] EO_STYLE_COND                  TYPE REF TO ZCL_EXCEL_STYLE_COND
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_STYLE_COND.
 
     data: LO_STYLE_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR,
@@ -4122,17 +4563,35 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_STYLE_COND_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_STYLE_COND_ITERATOR.
 
     EO_ITERATOR = STYLES_COND->GET_ITERATOR( ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_TABCOLOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EV_TABCOLOR                    TYPE        ZEXCEL_S_TABCOLOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_TABCOLOR.
     EV_TABCOLOR = ME->TABCOLOR.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_TABLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_SKIPPED_ROWS                TYPE        INT4 (default =0)
+* | [--->] IV_SKIPPED_COLS                TYPE        INT4 (default =0)
+* | [<---] ET_TABLE                       TYPE        STANDARD TABLE
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_TABLE.
 *--------------------------------------------------------------------*
 * Comment D. Rauchenstein
@@ -4258,16 +4717,32 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_TABLES_ITERATOR
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EO_ITERATOR                    TYPE REF TO CL_OBJECT_COLLECTION_ITERATOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_TABLES_ITERATOR.
     EO_ITERATOR = TABLES->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_TABLES_SIZE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_SIZE                        TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_TABLES_SIZE.
     EP_SIZE = TABLES->IF_OBJECT_COLLECTION~SIZE( ).
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->GET_TITLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_ESCAPED                     TYPE        FLAG (default ='')
+* | [<-()] EP_TITLE                       TYPE        ZEXCEL_SHEET_TITLE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_TITLE.
     data LV_VALUE type STRING.
     if IP_ESCAPED eq ABAP_TRUE.
@@ -4279,6 +4754,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_EXCEL_WORKSHEET->GET_VALUE_TYPE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_VALUE                       TYPE        SIMPLE
+* | [<---] EP_VALUE                       TYPE        SIMPLE
+* | [<---] EP_VALUE_TYPE                  TYPE        ABAP_TYPEKIND
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_VALUE_TYPE.
     data: LO_ADDIT    type ref to CL_ABAP_ELEMDESCR,
           LS_DFIES    type DFIES,
@@ -4337,6 +4819,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->IS_CELL_MERGED
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [<-()] RP_IS_MERGED                   TYPE        ABAP_BOOL
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method IS_CELL_MERGED.
 
     data: LV_COLUMN type I.
@@ -4362,6 +4852,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_EXCEL_WORKSHEET->PRINT_TITLE_SET_RANGE
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method PRINT_TITLE_SET_RANGE.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
@@ -4461,6 +4955,210 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_AREA
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN_START                TYPE        SIMPLE
+* | [--->] IP_COLUMN_END                  TYPE        SIMPLE(optional)
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [--->] IP_ROW_TO                      TYPE        ZEXCEL_CELL_ROW(optional)
+* | [--->] IP_VALUE                       TYPE        SIMPLE(optional)
+* | [--->] IP_FORMULA                     TYPE        ZEXCEL_CELL_FORMULA(optional)
+* | [--->] IP_STYLE                       TYPE        ZEXCEL_CELL_STYLE(optional)
+* | [--->] IP_HYPERLINK                   TYPE REF TO ZCL_EXCEL_HYPERLINK(optional)
+* | [--->] IP_DATA_TYPE                   TYPE        ZEXCEL_CELL_DATA_TYPE(optional)
+* | [--->] IP_ABAP_TYPE                   TYPE        ABAP_TYPEKIND(optional)
+* | [--->] IP_MERGE                       TYPE        ABAP_BOOL(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+METHOD set_area.
+
+  DATA: lv_row              TYPE zexcel_cell_row,
+        lv_row_end          TYPE zexcel_cell_row,
+        lv_column_start     TYPE zexcel_cell_column_alpha,
+        lv_column_end       TYPE zexcel_cell_column_alpha,
+        lv_column_start_int TYPE zexcel_cell_column_alpha,
+        lv_column_end_int   TYPE zexcel_cell_column_alpha.
+
+  MOVE: ip_row_to TO lv_row_end,
+        ip_row    TO lv_row.
+
+  IF lv_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+    lv_row_end = lv_row.
+  ENDIF.
+
+  MOVE: ip_column_start TO lv_column_start,
+        ip_column_end   TO lv_column_end.
+
+  IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+    lv_column_end = lv_column_start.
+  ENDIF.
+
+  lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
+  lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
+
+  IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_end.
+
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = 'Wrong Merging Parameters'.
+
+  ENDIF.
+
+  IF ip_data_type IS SUPPLIED OR
+     ip_abap_type IS SUPPLIED.
+
+    me->set_cell( ip_column    = lv_column_start
+                  ip_row       = lv_row
+                  ip_value     = ip_value
+                  ip_formula   = ip_formula
+                  ip_style     = ip_style
+                  ip_hyperlink = ip_hyperlink
+                  ip_data_type = ip_data_type
+                  ip_abap_type = ip_abap_type ).
+
+  ELSE.
+
+    me->set_cell( ip_column    = lv_column_start
+                  ip_row       = lv_row
+                  ip_value     = ip_value
+                  ip_formula   = ip_formula
+                  ip_style     = ip_style
+                  ip_hyperlink = ip_hyperlink ).
+
+  ENDIF.
+
+  IF ip_style IS SUPPLIED.
+
+    me->set_area_style( ip_column_start = lv_column_start
+                        ip_column_end   = lv_column_end
+                        ip_row          = lv_row
+                        ip_row_to       = lv_row_end
+                        ip_style        = ip_style ).
+  ENDIF.
+
+  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+
+    me->set_merge( ip_column_start = lv_column_start
+                   ip_column_end   = lv_column_end
+                   ip_row          = lv_row
+                   ip_row_to       = lv_row_end ).
+
+  ENDIF.
+
+ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_AREA_FORMULA
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN_START                TYPE        SIMPLE
+* | [--->] IP_COLUMN_END                  TYPE        SIMPLE(optional)
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [--->] IP_ROW_TO                      TYPE        ZEXCEL_CELL_ROW(optional)
+* | [--->] IP_FORMULA                     TYPE        ZEXCEL_CELL_FORMULA
+* | [--->] IP_MERGE                       TYPE        ABAP_BOOL(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+METHOD set_area_formula.
+  DATA: ld_row TYPE zexcel_cell_row,
+        ld_row_end TYPE zexcel_cell_row,
+        ld_column TYPE zexcel_cell_column_alpha,
+        ld_column_end TYPE zexcel_cell_column_alpha,
+        ld_column_int TYPE zexcel_cell_column_alpha,
+        ld_column_end_int TYPE zexcel_cell_column_alpha.
+
+  MOVE: ip_row_to TO ld_row_end,
+        ip_row    TO ld_row.
+  IF ld_row_end IS INITIAL or ip_row_to is not supplied.
+    ld_row_end = ld_row.
+  ENDIF.
+
+  MOVE: ip_column_start TO ld_column,
+        ip_column_end   TO ld_column_end.
+
+  if ld_column_end is initial or ip_column_end is not supplied.
+    ld_column_end = ld_column.
+  endif.
+
+  ld_column_int      = zcl_excel_common=>convert_column2int( ld_column ).
+  ld_column_end_int  = zcl_excel_common=>convert_column2int( ld_column_end ).
+
+  if ld_column_int > ld_column_end_int or ld_row > ld_row_end.
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = 'Wrong Merging Parameters'.
+  endif.
+
+  me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                        ip_formula = ip_formula ).
+
+  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+    me->set_merge( ip_column_start = ld_column ip_row = ld_row
+                   ip_column_end   = ld_column_end   ip_row_to = ld_row_end ).
+  ENDIF.
+ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_AREA_STYLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN_START                TYPE        SIMPLE
+* | [--->] IP_COLUMN_END                  TYPE        SIMPLE(optional)
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [--->] IP_ROW_TO                      TYPE        ZEXCEL_CELL_ROW(optional)
+* | [--->] IP_STYLE                       TYPE        ZEXCEL_CELL_STYLE
+* | [--->] IP_MERGE                       TYPE        ABAP_BOOL(optional)
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+METHOD SET_AREA_STYLE.
+  DATA: ld_row_start TYPE zexcel_cell_row,
+      ld_row_end TYPE zexcel_cell_row,
+      ld_column_start_int TYPE zexcel_cell_column,
+      ld_column_end_int TYPE zexcel_cell_column,
+      ld_current_column TYPE zexcel_cell_column_alpha,
+      ld_current_row TYPE zexcel_cell_row.
+
+  MOVE: ip_row_to TO ld_row_end,
+        ip_row    TO ld_row_start.
+  IF ld_row_end IS INITIAL or ip_row_to is not supplied.
+    ld_row_end = ld_row_start.
+  ENDIF.
+  ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
+  ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
+  IF ld_column_end_int IS INITIAL or ip_column_end is not supplied.
+    ld_column_end_int = ld_column_start_int.
+  ENDIF.
+
+  WHILE ld_column_start_int <= ld_column_end_int.
+    ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
+    ld_current_row = ld_row_start.
+    WHILE ld_current_row <= ld_row_end.
+      me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
+                          ip_style = ip_style ).
+      ADD 1 TO ld_current_row.
+    ENDWHILE.
+    ADD 1 TO ld_column_start_int.
+  ENDWHILE.
+  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+    me->set_merge( ip_column_start = ip_column_start ip_row = ld_row_start
+                   ip_column_end   = ld_current_column    ip_row_to = ld_row_end ).
+  ENDIF.
+ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_CELL
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [--->] IP_VALUE                       TYPE        SIMPLE(optional)
+* | [--->] IP_FORMULA                     TYPE        ZEXCEL_CELL_FORMULA(optional)
+* | [--->] IP_STYLE                       TYPE        ZEXCEL_CELL_STYLE(optional)
+* | [--->] IP_HYPERLINK                   TYPE REF TO ZCL_EXCEL_HYPERLINK(optional)
+* | [--->] IP_DATA_TYPE                   TYPE        ZEXCEL_CELL_DATA_TYPE(optional)
+* | [--->] IP_ABAP_TYPE                   TYPE        ABAP_TYPEKIND(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_CELL.
 
     data: LV_COLUMN        type ZEXCEL_CELL_COLUMN,
@@ -4683,6 +5381,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_CELL_FORMULA
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [--->] IP_FORMULA                     TYPE        ZEXCEL_CELL_FORMULA
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_CELL_FORMULA.
     data:
       LV_COLUMN        type ZEXCEL_CELL_COLUMN,
@@ -4713,6 +5419,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_CELL_STYLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW
+* | [--->] IP_STYLE                       TYPE        ZEXCEL_CELL_STYLE
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_CELL_STYLE.
 
     data: LV_COLUMN     type ZEXCEL_CELL_COLUMN,
@@ -4736,6 +5450,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_COLUMN_WIDTH
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN                      TYPE        SIMPLE
+* | [--->] IP_WIDTH_FIX                   TYPE        SIMPLE (default =0)
+* | [--->] IP_WIDTH_AUTOSIZE              TYPE        FLAG (default ='X')
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_COLUMN_WIDTH.
     data: LO_COLUMN  type ref to ZCL_EXCEL_COLUMN.
     data: WIDTH             type FLOAT.
@@ -4764,6 +5486,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_DEFAULT_EXCEL_DATE_FORMAT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_DEFAULT_EXCEL_DATE_FORMAT   TYPE        ZEXCEL_NUMBER_FORMAT
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_DEFAULT_EXCEL_DATE_FORMAT.
 
     if IP_DEFAULT_EXCEL_DATE_FORMAT is initial.
@@ -4774,11 +5502,44 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_MERGE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN_START                TYPE        SIMPLE (default =ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_COL)
+* | [--->] IP_COLUMN_END                  TYPE        SIMPLE (default =ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_COL)
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW (default =ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_ROW)
+* | [--->] IP_ROW_TO                      TYPE        ZEXCEL_CELL_ROW (default =ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_ROW)
+* | [--->] IP_STYLE                       TYPE        ZEXCEL_CELL_STYLE(optional)
+* | [--->] IP_VALUE                       TYPE        SIMPLE(optional)
+* | [--->] IP_FORMULA                     TYPE        ZEXCEL_CELL_FORMULA(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_MERGE.
 
     data: LS_MERGE        type MTY_MERGE,
           LV_ERRORMESSAGE type STRING.
 
+...
+"just after variables definition
+if ip_value is supplied or ip_formula is supplied.
+" if there is a value or formula set the value to the top-left cell
+"maybe it is necessary to support other paramters for set_cell
+    if ip_value is supplied.
+      me->set_cell( ip_row = ip_row ip_column = ip_column_start
+                    ip_value = ip_value ).
+    endif.
+    if ip_formula is supplied.
+      me->set_cell( ip_row = ip_row ip_column = ip_column_start
+                    ip_value = ip_formula ).
+    endif.
+  endif.
+"call to set_merge_style to apply the style to all cells at the matrix
+  IF ip_style IS SUPPLIED.
+    me->set_merge_style( ip_row = ip_row ip_column_start = ip_column_start
+                         ip_row_to = ip_row_to ip_column_end = ip_column_end
+                         ip_style = ip_style ).
+  ENDIF.
+...
 *--------------------------------------------------------------------*
 * Build new range area to insert into range table
 *--------------------------------------------------------------------*
@@ -4824,11 +5585,64 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_MERGE_STYLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_COLUMN_START                TYPE        SIMPLE(optional)
+* | [--->] IP_COLUMN_END                  TYPE        SIMPLE(optional)
+* | [--->] IP_ROW                         TYPE        ZEXCEL_CELL_ROW(optional)
+* | [--->] IP_ROW_TO                      TYPE        ZEXCEL_CELL_ROW(optional)
+* | [--->] IP_STYLE                       TYPE        ZEXCEL_CELL_STYLE(optional)
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+METHOD set_merge_style.
+  DATA: ld_row_start TYPE zexcel_cell_row,
+        ld_row_end TYPE zexcel_cell_row,
+        ld_column_start TYPE zexcel_cell_column,
+        ld_column_end TYPE zexcel_cell_column,
+        ld_current_column TYPE zexcel_cell_column_alpha,
+        ld_current_row type zexcel_cell_row.
+
+  MOVE: ip_row_to TO ld_row_end,
+        ip_row    TO ld_row_start.
+  IF ld_row_end IS INITIAL.
+    ld_row_end = ld_row_start.
+  ENDIF.
+  ld_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
+  ld_column_end   = zcl_excel_common=>convert_column2int( ip_column_end ).
+  IF ld_column_end IS INITIAL.
+    ld_column_end = ld_column_start.
+  ENDIF.
+  "set the style cell by cell
+  WHILE ld_column_start <= ld_column_end.
+    ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start ).
+    ld_current_row = ld_row_start.
+    WHILE ld_current_row <= ld_row_end.
+      me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
+                          ip_style = ip_style ).
+      add 1 to ld_current_row.
+    ENDWHILE.
+    ADD 1 TO ld_column_start.
+  ENDWHILE.
+ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_PRINT_GRIDLINES
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_PRINT_GRIDLINES              TYPE        ZEXCEL_PRINT_GRIDLINES
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_PRINT_GRIDLINES.
     ME->PRINT_GRIDLINES = I_PRINT_GRIDLINES.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_ROW_HEIGHT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_ROW                         TYPE        SIMPLE
+* | [--->] IP_HEIGHT_FIX                  TYPE        SIMPLE
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_ROW_HEIGHT.
     data: LO_ROW  type ref to ZCL_EXCEL_ROW.
     data: HEIGHT  type FLOAT.
@@ -4851,6 +5665,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_ROW_OUTLINE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_ROW_FROM                    TYPE        I
+* | [--->] IV_ROW_TO                      TYPE        I
+* | [--->] IV_COLLAPSED                   TYPE        ABAP_BOOL
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_ROW_OUTLINE.
 
     data: LS_ROW_OUTLINE like line of ME->MT_ROW_OUTLINES.
@@ -4883,21 +5705,49 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_SHOW_GRIDLINES
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_SHOW_GRIDLINES               TYPE        ZEXCEL_SHOW_GRIDLINES
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_SHOW_GRIDLINES.
     ME->SHOW_GRIDLINES = I_SHOW_GRIDLINES.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_SHOW_ROWCOLHEADERS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_SHOW_ROWCOLHEADERS           TYPE        ZEXCEL_SHOW_ROWCOLHEADER
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_SHOW_ROWCOLHEADERS.
     ME->SHOW_ROWCOLHEADERS = I_SHOW_ROWCOLHEADERS.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_TABCOLOR
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_TABCOLOR                    TYPE        ZEXCEL_S_TABCOLOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_TABCOLOR.
     ME->TABCOLOR = IV_TABCOLOR.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_TABLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_TABLE                       TYPE        STANDARD TABLE
+* | [--->] IP_HDR_STYLE                   TYPE        ZEXCEL_CELL_STYLE(optional)
+* | [--->] IP_BODY_STYLE                  TYPE        ZEXCEL_CELL_STYLE(optional)
+* | [--->] IP_TABLE_TITLE                 TYPE        STRING
+* | [--->] IP_TOP_LEFT_COLUMN             TYPE        ZEXCEL_CELL_COLUMN_ALPHA (default ='B')
+* | [--->] IP_TOP_LEFT_ROW                TYPE        ZEXCEL_CELL_ROW (default =3)
+* | [--->] IP_TRANSPOSE                   TYPE        XFELD(optional)
+* | [--->] IP_NO_HEADER                   TYPE        XFELD(optional)
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_TABLE.
 
     data: LO_TABDESCR     type ref to CL_ABAP_STRUCTDESCR,
@@ -4969,6 +5819,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->SET_TITLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_TITLE                       TYPE        ZEXCEL_SHEET_TITLE
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_TITLE.
 *--------------------------------------------------------------------*
 * ToDos:
@@ -5064,6 +5920,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_EXCEL_WORKSHEET->UPDATE_DIMENSION_RANGE
+* +-------------------------------------------------------------------------------------------------+
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method UPDATE_DIMENSION_RANGE.
 
     data: LS_SHEET_CONTENT type ZEXCEL_S_CELL_DATA,
@@ -5108,6 +5969,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS.
 
 *--------------------------------------------------------------------*
@@ -5126,6 +5991,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS.
 
 *--------------------------------------------------------------------*
@@ -5144,18 +6013,37 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] EV_COLUMNS_FROM                TYPE        ZEXCEL_CELL_COLUMN_ALPHA
+* | [<---] EV_COLUMNS_TO                  TYPE        ZEXCEL_CELL_COLUMN_ALPHA
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS.
     EV_COLUMNS_FROM = ME->PRINT_TITLE_COL_FROM.
     EV_COLUMNS_TO   = ME->PRINT_TITLE_COL_TO.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] EV_ROWS_FROM                   TYPE        ZEXCEL_CELL_ROW
+* | [<---] EV_ROWS_TO                     TYPE        ZEXCEL_CELL_ROW
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS.
     EV_ROWS_FROM = ME->PRINT_TITLE_ROW_FROM.
     EV_ROWS_TO   = ME->PRINT_TITLE_ROW_TO.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_COLUMNS_FROM                TYPE        ZEXCEL_CELL_COLUMN_ALPHA
+* | [--->] IV_COLUMNS_TO                  TYPE        ZEXCEL_CELL_COLUMN_ALPHA
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
@@ -5198,6 +6086,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_ROWS_FROM                   TYPE        ZEXCEL_CELL_ROW
+* | [--->] IV_ROWS_TO                     TYPE        ZEXCEL_CELL_ROW
+* | [!CX!] ZCX_EXCEL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
@@ -5236,6 +6131,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE
+* +-------------------------------------------------------------------------------------------------+
+* | [<-()] EP_STYLE                       TYPE        ZEXCEL_CELL_STYLE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE.
     if ZIF_EXCEL_SHEET_PROPERTIES~STYLE is not initial.
       EP_STYLE = ZIF_EXCEL_SHEET_PROPERTIES~STYLE.
@@ -5245,6 +6145,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE.
 
     ZIF_EXCEL_SHEET_PROPERTIES~SHOW_ZEROS   = ZIF_EXCEL_SHEET_PROPERTIES=>C_SHOWZERO.
@@ -5259,11 +6163,20 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_STYLE                       TYPE        ZEXCEL_CELL_STYLE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE.
     ZIF_EXCEL_SHEET_PROPERTIES~STYLE = IP_STYLE.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE.
 
     ME->ZIF_EXCEL_SHEET_PROTECTION~PROTECTED = ZIF_EXCEL_SHEET_PROTECTION=>C_UNPROTECTED.
@@ -5290,11 +6203,21 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_CODENAME                    TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME.
     ME->ZIF_EXCEL_SHEET_VBA_PROJECT~CODENAME = IP_CODENAME.
   endmethod.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_EXCEL_WORKSHEET->ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_CODENAME_PR                 TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR.
     ME->ZIF_EXCEL_SHEET_VBA_PROJECT~CODENAME_PR = IP_CODENAME_PR.
   endmethod.
