@@ -4,9 +4,9 @@
 *&---------------------------------------------------------------------*
 *& This report creates a monthly calendar in the specified date range.
 *& Each month is put on a seperate worksheet. The pictures for each
-*& month can be specified in a tab delimited file called "Calendar.txt"
-*& which is saved in the Export Directory. By default this is the SAP
-*& Workdir. The file contains 3 fields:
+*& month can be specified in a tab delimited UTF-8 encoded file called
+*& "Calendar.txt" which is saved in the Export Directory.
+*& By default this is the SAP Workdir. The file contains 3 fields:
 *&
 *& Month (with leading 0)
 *& Image Filename
@@ -29,12 +29,12 @@ INCLUDE zdemo_calendar_classes.
 
 DATA: lv_workdir        TYPE string.
 
-PARAMETERS: p_from    TYPE dfrom DEFAULT '20130101',
-            p_to      TYPE dto   DEFAULT '20131231'.
+PARAMETERS: p_from TYPE dfrom DEFAULT '20190101',
+            p_to   TYPE dto   DEFAULT '20191231'.
 
 SELECTION-SCREEN BEGIN OF BLOCK orientation WITH FRAME TITLE orient.
-PARAMETERS: p_portr   TYPE flag RADIOBUTTON GROUP orie,
-            p_lands   TYPE flag RADIOBUTTON GROUP orie DEFAULT 'X'.
+PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
+            p_lands TYPE flag RADIOBUTTON GROUP orie DEFAULT 'X'.
 SELECTION-SCREEN END OF BLOCK orientation.
 
 INITIALIZATION.
@@ -45,27 +45,27 @@ INITIALIZATION.
 
 START-OF-SELECTION.
 
-  DATA: lo_excel                TYPE REF TO zcl_excel,
-        lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-        lo_column               TYPE REF TO zcl_excel_column,
-        lo_row                  TYPE REF TO zcl_excel_row,
-        lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-        lo_drawing              TYPE REF TO zcl_excel_drawing.
+  DATA: lo_excel     TYPE REF TO zcl_excel,
+        lo_worksheet TYPE REF TO zcl_excel_worksheet,
+        lo_column    TYPE REF TO zcl_excel_column,
+        lo_row       TYPE REF TO zcl_excel_row,
+        lo_hyperlink TYPE REF TO zcl_excel_hyperlink,
+        lo_drawing   TYPE REF TO zcl_excel_drawing.
 
-  DATA: lo_style_month          TYPE REF TO zcl_excel_style,
-        lv_style_month_guid     TYPE zexcel_cell_style.
-  DATA: lo_style_border         TYPE REF TO zcl_excel_style,
-        lo_border_dark          TYPE REF TO zcl_excel_style_border,
-        lv_style_border_guid    TYPE zexcel_cell_style.
-  DATA: lo_style_center         TYPE REF TO zcl_excel_style,
-        lv_style_center_guid    TYPE zexcel_cell_style.
+  DATA: lo_style_month      TYPE REF TO zcl_excel_style,
+        lv_style_month_guid TYPE zexcel_cell_style.
+  DATA: lo_style_border      TYPE REF TO zcl_excel_style,
+        lo_border_dark       TYPE REF TO zcl_excel_style_border,
+        lv_style_border_guid TYPE zexcel_cell_style.
+  DATA: lo_style_center      TYPE REF TO zcl_excel_style,
+        lv_style_center_guid TYPE zexcel_cell_style.
 
   DATA: lv_full_path      TYPE string,
         image_descr_path  TYPE string,
         lv_file_separator TYPE c.
-  DATA: lv_content TYPE xstring,
-        width      TYPE i,
-        lv_height  TYPE i,
+  DATA: lv_content  TYPE xstring,
+        width       TYPE i,
+        lv_height   TYPE i,
         lv_from_row TYPE zexcel_cell_row.
 
   DATA: month      TYPE i,
@@ -86,11 +86,11 @@ START-OF-SELECTION.
   FIELD-SYMBOLS: <month_name> LIKE LINE OF month_names.
 
   TYPES: BEGIN OF tt_datatab,
-          month_nr   TYPE fcmnr,
-          filename   TYPE string,
-          descr      TYPE string,
-          url        TYPE string,
-        END OF tt_datatab.
+           month_nr TYPE fcmnr,
+           filename TYPE string,
+           descr    TYPE string,
+           url      TYPE string,
+         END OF tt_datatab.
 
   DATA: image_descriptions TYPE TABLE OF tt_datatab.
   FIELD-SYMBOLS: <img_descr> LIKE LINE OF image_descriptions.
@@ -98,10 +98,10 @@ START-OF-SELECTION.
   CONSTANTS: lv_default_file_name TYPE string       VALUE 'Calendar', "#EC NOTEXT
              c_from_row_portrait  TYPE zexcel_cell_row VALUE 28,
              c_from_row_landscape TYPE zexcel_cell_row VALUE 38,
-             from_col TYPE zexcel_cell_column_alpha VALUE 'C',
-             c_height_portrait  TYPE i              VALUE 450,   " Image Height in Portrait Mode
-             c_height_landscape TYPE i              VALUE 670,   " Image Height in Landscape Mode
-             c_factor TYPE f                        VALUE '1.5'. " Image Ratio, default 3:2
+             from_col             TYPE zexcel_cell_column_alpha VALUE 'C',
+             c_height_portrait    TYPE i              VALUE 450,   " Image Height in Portrait Mode
+             c_height_landscape   TYPE i              VALUE 670,   " Image Height in Landscape Mode
+             c_factor             TYPE f                        VALUE '1.5'. " Image Ratio, default 3:2
 
   IF p_path IS INITIAL.
     p_path = lv_workdir.
@@ -117,6 +117,7 @@ START-OF-SELECTION.
       filetype                = 'ASC'    " File Type (ASCII, Binary)
       has_field_separator     = 'X'
       read_by_line            = 'X'    " File Written Line-By-Line to the Internal Table
+      codepage                = '4110'
     CHANGING
       data_tab                = image_descriptions    " Transfer table for file contents
     EXCEPTIONS
@@ -344,7 +345,7 @@ START-OF-SELECTION.
 *        last_day_of_month = date_to.
     date_to = date_from.
     date_to+6(2) = '01'.              " First of month
-    add 31 to date_to.                " Somewhere in following month
+    ADD 31 TO date_to.                " Somewhere in following month
     date_to = date_to - date_to+6(2). " Last of month
     IF p_portr = abap_true.
       zcl_helper=>add_calendar(
