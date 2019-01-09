@@ -3588,51 +3588,8 @@ METHOD create_xl_sheet.
   lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
   lo_element_root->append_child( new_child = lo_element ). " sheetData node
 
-  IF lo_autofilter IS BOUND.
-* Create node autofilter
-    lo_element = lo_document->create_simple_element( name   = lc_xml_node_autofilter
-                                                     parent = lo_document ).
-    lv_ref = lo_autofilter->get_filter_range( ) .
-    CONDENSE lv_ref NO-GAPS.
-    lo_element->set_attribute_ns( name  = lc_xml_attr_ref
-                                  value = lv_ref ).
-    lt_values = lo_autofilter->get_values( ) .
-    IF lt_values IS NOT INITIAL.
-* If we filter we need to set the filter mode to 1.
-      lo_element_2 = lo_document->find_from_name( name   = lc_xml_node_sheetpr ).
-      lo_element_2->set_attribute_ns( name  = lc_xml_attr_filtermode
-                                      value = '1' ).
-* Create node filtercolumn
-      CLEAR lv_column.
-      LOOP AT lt_values INTO ls_values.
-        IF ls_values-column <> lv_column.
-          IF lv_column IS NOT INITIAL.
-            lo_element_2->append_child( new_child = lo_element_3 ).
-            lo_element->append_child( new_child = lo_element_2 ).
-          ENDIF.
-          lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_filtercolumn
-                                                             parent = lo_element ).
-          lv_column   = ls_values-column - lo_autofilter->filter_area-col_start.
-          lv_value = lv_column.
-          CONDENSE lv_value NO-GAPS.
-          lo_element_2->set_attribute_ns( name  = lc_xml_attr_colid
-                                          value = lv_value ).
-          lo_element_3 = lo_document->create_simple_element( name   = lc_xml_node_filters
-                                                             parent = lo_element_2 ).
-          lv_column = ls_values-column.
-        ENDIF.
-        lo_element_4 = lo_document->create_simple_element( name   = lc_xml_node_filter
-                                                           parent = lo_element_3 ).
-        lo_element_4->set_attribute_ns( name  = lc_xml_attr_val
-                                        value = ls_values-value ).
-        lo_element_3->append_child( new_child = lo_element_4 ). " value node
-      ENDLOOP.
-      lo_element_2->append_child( new_child = lo_element_3 ).
-      lo_element->append_child( new_child = lo_element_2 ).
-    ENDIF.
-    lo_element_root->append_child( new_child = lo_element ).
-  ENDIF.
-
+*< Begin of insertion Issue #572 - Protect sheet with filter caused Excel error 
+* Autofilter must be set AFTER sheet protection in XML
   IF io_worksheet->zif_excel_sheet_protection~protected EQ abap_true.
     " sheetProtection node
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_sheetprotection
@@ -3709,7 +3666,131 @@ METHOD create_xl_sheet.
 
     lo_element_root->append_child( new_child = lo_element ).
   ENDIF.
-
+  *> End of insertion Issue #572 - Protect sheet with filter caused Excel error 
+  
+  IF lo_autofilter IS BOUND.
+* Create node autofilter
+    lo_element = lo_document->create_simple_element( name   = lc_xml_node_autofilter
+                                                     parent = lo_document ).
+    lv_ref = lo_autofilter->get_filter_range( ) .
+    CONDENSE lv_ref NO-GAPS.
+    lo_element->set_attribute_ns( name  = lc_xml_attr_ref
+                                  value = lv_ref ).
+    lt_values = lo_autofilter->get_values( ) .
+    IF lt_values IS NOT INITIAL.
+* If we filter we need to set the filter mode to 1.
+      lo_element_2 = lo_document->find_from_name( name   = lc_xml_node_sheetpr ).
+      lo_element_2->set_attribute_ns( name  = lc_xml_attr_filtermode
+                                      value = '1' ).
+* Create node filtercolumn
+      CLEAR lv_column.
+      LOOP AT lt_values INTO ls_values.
+        IF ls_values-column <> lv_column.
+          IF lv_column IS NOT INITIAL.
+            lo_element_2->append_child( new_child = lo_element_3 ).
+            lo_element->append_child( new_child = lo_element_2 ).
+          ENDIF.
+          lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_filtercolumn
+                                                             parent = lo_element ).
+          lv_column   = ls_values-column - lo_autofilter->filter_area-col_start.
+          lv_value = lv_column.
+          CONDENSE lv_value NO-GAPS.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_colid
+                                          value = lv_value ).
+          lo_element_3 = lo_document->create_simple_element( name   = lc_xml_node_filters
+                                                             parent = lo_element_2 ).
+          lv_column = ls_values-column.
+        ENDIF.
+        lo_element_4 = lo_document->create_simple_element( name   = lc_xml_node_filter
+                                                           parent = lo_element_3 ).
+        lo_element_4->set_attribute_ns( name  = lc_xml_attr_val
+                                        value = ls_values-value ).
+        lo_element_3->append_child( new_child = lo_element_4 ). " value node
+      ENDLOOP.
+      lo_element_2->append_child( new_child = lo_element_3 ).
+      lo_element->append_child( new_child = lo_element_2 ).
+    ENDIF.
+    lo_element_root->append_child( new_child = lo_element ).
+  ENDIF.
+  
+*< Comment for Issue #572 - Protect sheet with filter caused Excel error 
+*  IF io_worksheet->zif_excel_sheet_protection~protected EQ abap_true.
+*   " sheetProtection node
+*    lo_element = lo_document->create_simple_element( name   = lc_xml_node_sheetprotection
+*                                                     parent = lo_document ).
+*    MOVE io_worksheet->zif_excel_sheet_protection~password TO lv_value.
+*    IF lv_value IS NOT INITIAL.
+*      lo_element->set_attribute_ns( name  = lc_xml_attr_password
+*                                    value = lv_value ).
+*    ENDIF.
+*    lv_value = io_worksheet->zif_excel_sheet_protection~auto_filter.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_autofilter
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~delete_columns.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_deletecolumns
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~delete_rows.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_deleterows
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~format_cells.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_formatcells
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~format_columns.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_formatcolumns
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~format_rows.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_formatrows
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~insert_columns.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_insertcolumns
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~insert_hyperlinks.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_inserthyperlinks
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~insert_rows.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_insertrows
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~objects.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_objects
+*                                  value = lv_value ).
+*   lv_value = io_worksheet->zif_excel_sheet_protection~pivot_tables.
+*   CONDENSE lv_value NO-GAPS.
+*   lo_element->set_attribute_ns( name  = lc_xml_attr_pivottables
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~scenarios.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_scenarios
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~select_locked_cells.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_selectlockedcells
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~select_unlocked_cells.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_selectunlockedcell
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~sheet.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_sheet
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~sort.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_sort
+*                                  value = lv_value ).
+*
+*    lo_element_root->append_child( new_child = lo_element ).
+*  ENDIF.
+*> End of Comment for Issue #572 - Protect sheet with filter caused Excel error 
   " Merged cells
   lt_range_merge = io_worksheet->get_merge( ).
   IF lt_range_merge IS NOT INITIAL.
