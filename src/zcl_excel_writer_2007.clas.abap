@@ -3666,7 +3666,7 @@ METHOD create_xl_sheet.
 
     lo_element_root->append_child( new_child = lo_element ).
   ENDIF.
-  *> End of insertion Issue #572 - Protect sheet with filter caused Excel error
+*> End of insertion Issue #572 - Protect sheet with filter caused Excel error
 
   IF lo_autofilter IS BOUND.
 * Create node autofilter
