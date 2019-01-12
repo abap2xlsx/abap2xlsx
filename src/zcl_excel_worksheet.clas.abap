@@ -33,6 +33,9 @@ class ZCL_EXCEL_WORKSHEET definition
     data STYLES type ZEXCEL_T_SHEET_STYLE .
     data TABCOLOR type ZEXCEL_S_TABCOLOR read-only .
 
+  methods ADD_COMMENT
+    importing
+      !IP_COMMENT type ref to ZCL_EXCEL_COMMENT .
     methods ADD_DRAWING
       importing
         !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
@@ -293,11 +296,17 @@ class ZCL_EXCEL_WORKSHEET definition
         value(EP_DIMENSION_RANGE) type STRING
       raising
         ZCX_EXCEL .
+    methods GET_COMMENTS
+      returning
+        value(R_COMMENTS) type ref to ZCL_EXCEL_COMMENTS .
     methods GET_DRAWINGS
       importing
         !IP_TYPE          type ZEXCEL_DRAWING_TYPE optional
       returning
         value(R_DRAWINGS) type ref to ZCL_EXCEL_DRAWINGS .
+   methods GET_COMMENTS_ITERATOR
+     returning
+       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
     methods GET_DRAWINGS_ITERATOR
       importing
         !IP_TYPE           type ZEXCEL_DRAWING_TYPE
@@ -575,6 +584,7 @@ methods SET_AREA_STYLE
     data DATA_VALIDATIONS type ref to ZCL_EXCEL_DATA_VALIDATIONS .
     data DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT .
     data DEFAULT_EXCEL_TIME_FORMAT type ZEXCEL_NUMBER_FORMAT .
+    data COMMENTS type ref to ZCL_EXCEL_COMMENTS .
     data DRAWINGS type ref to ZCL_EXCEL_DRAWINGS .
     data FREEZE_PANE_CELL_COLUMN type ZEXCEL_CELL_COLUMN .
     data FREEZE_PANE_CELL_ROW type ZEXCEL_CELL_ROW .
@@ -621,6 +631,11 @@ ENDCLASS.
 
 
 CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
+
+
+  METHOD add_comment.
+    comments->include( ip_comment ).
+  ENDMETHOD.
 
 
   method ADD_DRAWING.
@@ -3724,6 +3739,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     ME->ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE( ).
     ME->ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE( ).
     create object HYPERLINKS.
+    CREATE OBJECT comments.  " (+) Issue #180
 
 * initialize active cell coordinates
     ACTIVE_CELL-CELL_ROW = 1.
@@ -3898,6 +3914,27 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     EO_ITERATOR = ME->COLUMNS->GET_ITERATOR( ).
 
   endmethod.
+
+
+  METHOD get_comments.
+    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
+          lo_iterator TYPE REF TO cl_object_collection_iterator.
+
+    CREATE OBJECT r_comments.
+
+    lo_iterator = comments->get_iterator( ).
+    WHILE lo_iterator->has_next( ) = abap_true.
+      lo_comment ?= lo_iterator->get_next( ).
+      r_comments->include( lo_comment ).
+    ENDWHILE.
+
+  ENDMETHOD.
+
+
+  METHOD get_comments_iterator.
+    eo_iterator = comments->get_iterator( ).
+
+  ENDMETHOD.
 
 
   method GET_DATA_VALIDATIONS_ITERATOR.
