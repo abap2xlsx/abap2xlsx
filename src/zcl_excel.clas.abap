@@ -21,6 +21,9 @@ public section.
       value(RO_AUTOFILTER) type ref to ZCL_EXCEL_AUTOFILTER
     raising
       ZCX_EXCEL .
+  methods ADD_NEW_COMMENT
+    returning
+      value(EO_COMMENT) type ref to ZCL_EXCEL_COMMENT .
   methods ADD_NEW_DRAWING
     importing
       !IP_TYPE type ZEXCEL_DRAWING_TYPE default ZCL_EXCEL_DRAWING=>TYPE_IMAGE
@@ -160,6 +163,7 @@ private section.
   data T_STYLEMAPPING1 type ZEXCEL_T_STYLEMAPPING1 .
   data T_STYLEMAPPING2 type ZEXCEL_T_STYLEMAPPING2 .
   data THEME type ref to ZCL_EXCEL_THEME .
+  data COMMENTS type ref to ZCL_EXCEL_COMMENTS .
 
   methods GET_STYLE_FROM_GUID
     importing
@@ -181,6 +185,13 @@ CLASS ZCL_EXCEL IMPLEMENTATION.
 METHOD add_new_autofilter.
 * Check for autofilter reference: new or overwrite; only one per sheet
   ro_autofilter = autofilters->add( io_sheet ) .
+ENDMETHOD.
+
+
+METHOD add_new_comment.
+  CREATE OBJECT eo_comment.
+
+  comments->add( eo_comment ).
 ENDMETHOD.
 
 
@@ -276,6 +287,7 @@ method CONSTRUCTOR.
   CREATE OBJECT charts
     EXPORTING
       ip_type = zcl_excel_drawing=>type_chart.
+  CREATE OBJECT comments.
   CREATE OBJECT legacy_palette.
   CREATE OBJECT autofilters.
 
