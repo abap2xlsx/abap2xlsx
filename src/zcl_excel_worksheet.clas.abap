@@ -4217,7 +4217,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
-  method GET_TABLE.
+  METHOD get_table.
 *--------------------------------------------------------------------*
 * Comment D. Rauchenstein
 * With this method, we get a fully functional Excel Upload, which solves
@@ -4230,116 +4230,116 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 * CL_EXCEL_READER_2007->ZIF_EXCEL_READER~LOAD_FILE()
 *--------------------------------------------------------------------*
 
-    field-symbols: <LS_LINE> type DATA.
-    field-symbols: <LV_VALUE> type DATA.
+    FIELD-SYMBOLS: <ls_line> TYPE data.
+    FIELD-SYMBOLS: <lv_value> TYPE data.
 
-    data LV_ACTUAL_ROW type INT4.
-    data LV_ACTUAL_COL type INT4.
-    data LV_ERRORMESSAGE type STRING.
-    data LV_MAX_COL type ZEXCEL_CELL_COLUMN.
-    data LV_MAX_ROW type INT4.
-    data LV_DELTA_COL type INT4.
-    data LV_VALUE  type ZEXCEL_CELL_VALUE.
-    data LV_RC  type SYSUBRC.
+    DATA lv_actual_row TYPE int4.
+    DATA lv_actual_col TYPE int4.
+    DATA lv_errormessage TYPE string.
+    DATA lv_max_col TYPE zexcel_cell_column.
+    DATA lv_max_row TYPE int4.
+    DATA lv_delta_col TYPE int4.
+    DATA lv_value  TYPE zexcel_cell_value.
+    DATA lv_rc  TYPE sysubrc.
 
 
-    LV_MAX_COL =  ME->GET_HIGHEST_COLUMN( ).
-    LV_MAX_ROW =  ME->GET_HIGHEST_ROW( ).
+    lv_max_col =  me->get_highest_column( ).
+    lv_max_row =  me->get_highest_row( ).
 
 *--------------------------------------------------------------------*
 * The row counter begins with 1 and should be corrected with the skips
 *--------------------------------------------------------------------*
-    LV_ACTUAL_ROW =  IV_SKIPPED_ROWS + 1.
-    LV_ACTUAL_COL =  IV_SKIPPED_COLS + 1.
+    lv_actual_row =  iv_skipped_rows + 1.
+    lv_actual_col =  iv_skipped_cols + 1.
 
 
-    try.
+    TRY.
 *--------------------------------------------------------------------*
 * Check if we the basic features are possible with given "any table"
 *--------------------------------------------------------------------*
-        append initial line to ET_TABLE assigning <LS_LINE>.
-        if SY-SUBRC <> 0 or <LS_LINE> is not assigned.
+        APPEND INITIAL LINE TO et_table ASSIGNING <ls_line>.
+        IF sy-subrc <> 0 OR <ls_line> IS NOT ASSIGNED.
 
-          LV_ERRORMESSAGE = 'Error at inserting new Line to internal Table'(002).
+          lv_errormessage = 'Error at inserting new Line to internal Table'(002).
           zcx_excel=>raise_text( lv_errormessage ).
 
-        else.
-          LV_DELTA_COL = LV_MAX_COL - IV_SKIPPED_COLS.
-          assign component LV_DELTA_COL of structure <LS_LINE> to <LV_VALUE>.
-          if SY-SUBRC <> 0 or <LV_VALUE> is not assigned.
-            LV_ERRORMESSAGE = 'Internal table has less columns than excel'(003).
+        ELSE.
+          lv_delta_col = lv_max_col - iv_skipped_cols.
+          ASSIGN COMPONENT lv_delta_col OF STRUCTURE <ls_line> TO <lv_value>.
+          IF sy-subrc <> 0 OR <lv_value> IS NOT ASSIGNED.
+            lv_errormessage = 'Internal table has less columns than excel'(003).
             zcx_excel=>raise_text( lv_errormessage ).
-          else.
+          ELSE.
 *--------------------------------------------------------------------*
 *now we are ready for handle the table data
 *--------------------------------------------------------------------*
-            refresh ET_TABLE.
+            REFRESH et_table.
 *--------------------------------------------------------------------*
 * Handle each Row until end on right side
 *--------------------------------------------------------------------*
-            while LV_ACTUAL_ROW <= LV_MAX_ROW .
+            WHILE lv_actual_row <= lv_max_row .
 
 *--------------------------------------------------------------------*
 * Handle each Column until end on bottom
 * First step is to step back on first column
 *--------------------------------------------------------------------*
-              LV_ACTUAL_COL =  IV_SKIPPED_COLS + 1.
+              lv_actual_col =  iv_skipped_cols + 1.
 
-              unassign <LS_LINE>.
-              append initial line to ET_TABLE assigning <LS_LINE>.
-              if SY-SUBRC <> 0 or <LS_LINE> is not assigned.
-                LV_ERRORMESSAGE = 'Error at inserting new Line to internal Table'(002).
+              UNASSIGN <ls_line>.
+              APPEND INITIAL LINE TO et_table ASSIGNING <ls_line>.
+              IF sy-subrc <> 0 OR <ls_line> IS NOT ASSIGNED.
+                lv_errormessage = 'Error at inserting new Line to internal Table'(002).
                 zcx_excel=>raise_text( lv_errormessage ).
-              endif.
-              while LV_ACTUAL_COL <= LV_MAX_COL.
+              ENDIF.
+              WHILE lv_actual_col <= lv_max_col.
 
-                LV_DELTA_COL = LV_ACTUAL_COL - IV_SKIPPED_COLS.
-                assign component LV_DELTA_COL of structure <LS_LINE> to <LV_VALUE>.
-                if SY-SUBRC <> 0.
-                  LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+                lv_delta_col = lv_actual_col - iv_skipped_cols.
+                ASSIGN COMPONENT lv_delta_col OF STRUCTURE <ls_line> TO <lv_value>.
+                IF sy-subrc <> 0.
+                  lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
                   zcx_excel=>raise_text( lv_errormessage ).
-                endif.
+                ENDIF.
 
-                ME->GET_CELL(
-                  exporting
-                    IP_COLUMN  = LV_ACTUAL_COL    " Cell Column
-                    IP_ROW     = LV_ACTUAL_ROW    " Cell Row
-                  importing
-                    EP_VALUE   = LV_VALUE    " Cell Value
-                    EP_RC      = LV_RC    " Return Value of ABAP Statements
+                me->get_cell(
+                  EXPORTING
+                    ip_column  = lv_actual_col    " Cell Column
+                    ip_row     = lv_actual_row    " Cell Row
+                  IMPORTING
+                    ep_value   = lv_value    " Cell Value
+                    ep_rc      = lv_rc    " Return Value of ABAP Statements
                 ).
-                if LV_RC <> 0
-                  and LV_RC <> 4.                                                   "No found error means, zero/no value in cell
-                  LV_ERRORMESSAGE = |{ 'Error at reading field value (Col:'(007) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+                IF lv_rc <> 0
+                  AND lv_rc <> 4.                                                   "No found error means, zero/no value in cell
+                  lv_errormessage = |{ 'Error at reading field value (Col:'(007) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
                   zcx_excel=>raise_text( lv_errormessage ).
-                endif.
+                ENDIF.
 
-                <LV_VALUE> = LV_VALUE.
+                <lv_value> = lv_value.
 *  CATCH zcx_excel.    "
-                add 1 to LV_ACTUAL_COL.
-              endwhile.
-              add 1 to LV_ACTUAL_ROW.
-            endwhile.
-          endif.
+                ADD 1 TO lv_actual_col.
+              ENDWHILE.
+              ADD 1 TO lv_actual_row.
+            ENDWHILE.
+          ENDIF.
 
 
-        endif.
+        ENDIF.
 
-      catch CX_SY_ASSIGN_CAST_ILLEGAL_CAST.
-        LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+      CATCH cx_sy_assign_cast_illegal_cast.
+        lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
         zcx_excel=>raise_text( lv_errormessage ).
-      catch CX_SY_ASSIGN_CAST_UNKNOWN_TYPE.
-        LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+      CATCH cx_sy_assign_cast_unknown_type.
+        lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
         zcx_excel=>raise_text( lv_errormessage ).
-      catch CX_SY_ASSIGN_OUT_OF_RANGE.
-        LV_ERRORMESSAGE = 'Internal table has less columns than excel'(003).
+      CATCH cx_sy_assign_out_of_range.
+        lv_errormessage = 'Internal table has less columns than excel'(003).
         zcx_excel=>raise_text( lv_errormessage ).
-      catch CX_SY_CONVERSION_ERROR.
-        LV_ERRORMESSAGE = |{ 'Error at converting field value (Col:'(006) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+      CATCH cx_sy_conversion_error.
+        lv_errormessage = |{ 'Error at converting field value (Col:'(006) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
         zcx_excel=>raise_text( lv_errormessage ).
 
-    endtry.
-  endmethod.
+    ENDTRY.
+  ENDMETHOD.
 
 
   method GET_TABLES_ITERATOR.
