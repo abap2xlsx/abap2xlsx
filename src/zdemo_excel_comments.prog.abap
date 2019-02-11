@@ -10,7 +10,8 @@ REPORT  zdemo_excel_comments.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_comment              TYPE REF TO zcl_excel_comment,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
+      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
+      lv_comment              TYPE string.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE 'Comments.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -37,8 +38,8 @@ START-OF-SELECTION.
   lo_comment->set_text( ip_ref = 'C18' ip_text = 'Another comment' ).
   lo_worksheet->add_comment( lo_comment ).
   lo_comment = lo_excel->add_new_comment( ).
-  lo_comment->set_text( ip_ref = 'F6' ip_text = |A comment split{ cl_abap_char_utilities=>cr_lf }on 2 lines?| ).
-  lo_worksheet->add_comment( lo_comment ).
+  CONCATENATE 'A comment split' cl_abap_char_utilities=>cr_lf 'on 2 lines?' INTO lv_comment.
+  lo_comment->set_text( ip_ref = 'F6' ip_text = lv_comment ).
 
   " Second sheet
   lo_worksheet = lo_excel->add_new_worksheet( ).
