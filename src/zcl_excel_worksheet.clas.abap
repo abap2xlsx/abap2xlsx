@@ -4234,7 +4234,9 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     FIELD-SYMBOLS: <lv_value> TYPE data.
 
     DATA lv_actual_row TYPE int4.
+    DATA lv_actual_row_string TYPE string.
     DATA lv_actual_col TYPE int4.
+    DATA lv_actual_col_string TYPE string.
     DATA lv_errormessage TYPE string.
     DATA lv_max_col TYPE zexcel_cell_column.
     DATA lv_max_row TYPE int4.
@@ -4296,7 +4298,9 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                 lv_delta_col = lv_actual_col - iv_skipped_cols.
                 ASSIGN COMPONENT lv_delta_col OF STRUCTURE <ls_line> TO <lv_value>.
                 IF sy-subrc <> 0.
-                  lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+                  lv_actual_col_string = lv_actual_col.
+                  lv_actual_row_string = lv_actual_row.
+                  CONCATENATE 'Error at assigning field (Col:'(004) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
                   zcx_excel=>raise_text( lv_errormessage ).
                 ENDIF.
 
@@ -4310,7 +4314,9 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                 ).
                 IF lv_rc <> 0
                   AND lv_rc <> 4.                                                   "No found error means, zero/no value in cell
-                  lv_errormessage = |{ 'Error at reading field value (Col:'(007) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+                  lv_actual_col_string = lv_actual_col.
+                  lv_actual_row_string = lv_actual_row.
+                  CONCATENATE 'Error at reading field value (Col:'(007) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
                   zcx_excel=>raise_text( lv_errormessage ).
                 ENDIF.
 
@@ -4326,16 +4332,22 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
         ENDIF.
 
       CATCH cx_sy_assign_cast_illegal_cast.
-        lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+        lv_actual_col_string = lv_actual_col.
+        lv_actual_row_string = lv_actual_row.
+        CONCATENATE 'Error at assigning field (Col:'(004) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
         zcx_excel=>raise_text( lv_errormessage ).
       CATCH cx_sy_assign_cast_unknown_type.
-        lv_errormessage = |{ 'Error at assigning field (Col:'(004) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+        lv_actual_col_string = lv_actual_col.
+        lv_actual_row_string = lv_actual_row.
+        CONCATENATE 'Error at assigning field (Col:'(004) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
         zcx_excel=>raise_text( lv_errormessage ).
       CATCH cx_sy_assign_out_of_range.
         lv_errormessage = 'Internal table has less columns than excel'(003).
         zcx_excel=>raise_text( lv_errormessage ).
       CATCH cx_sy_conversion_error.
-        lv_errormessage = |{ 'Error at converting field value (Col:'(006) } { lv_actual_col } { ' Row:'(005) } { lv_actual_row }|.
+        lv_actual_col_string = lv_actual_col.
+        lv_actual_row_string = lv_actual_row.
+        CONCATENATE 'Error at converting field value (Col:'(006) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
         zcx_excel=>raise_text( lv_errormessage ).
 
     ENDTRY.
