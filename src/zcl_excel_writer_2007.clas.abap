@@ -2298,7 +2298,8 @@ METHOD create_xl_comments.
         lo_iterator            TYPE REF TO cl_object_collection_iterator,
         lo_comments            TYPE REF TO zcl_excel_comments,
         lo_comment             TYPE REF TO zcl_excel_comment.
-  DATA: lv_rel_id            TYPE i.
+  DATA: lv_rel_id            TYPE i,
+        lv_author            TYPE string.
 
   DEFINE add_1_val_child_node.
 *   &1: parent element
@@ -2344,7 +2345,8 @@ METHOD create_xl_comments.
 
   lo_element_author  = lo_document->create_simple_element( name   = lc_xml_node_author
                                                            parent = lo_document ).
-  lo_element_author->set_value( |{ sy-uname }| ).
+  lv_author = sy-uname.
+  lo_element_author->set_value( lv_author ).
 
   lo_element_authors->append_child( new_child = lo_element_author ).
   lo_element_root->append_child( new_child = lo_element_authors ).
@@ -2890,59 +2892,59 @@ method CREATE_XL_DRAWING_ANCHOR.
 
 METHOD create_xl_drawing_for_comments.
 ** Constant node name
-  CONSTANTS:  lc_xml_node_xml             TYPE string VALUE 'xml',
-              lc_xml_node_ns_v            TYPE string VALUE 'urn:schemas-microsoft-com:vml',
-              lc_xml_node_ns_o            TYPE string VALUE 'urn:schemas-microsoft-com:office:office',
-              lc_xml_node_ns_x            TYPE string VALUE 'urn:schemas-microsoft-com:office:excel',
-              " shapelayout
-              lc_xml_node_shapelayout     TYPE string VALUE 'o:shapelayout',
-              lc_xml_node_idmap           TYPE string VALUE 'o:idmap',
-              " shapetype
-              lc_xml_node_shapetype       TYPE string VALUE 'v:shapetype',
-              lc_xml_node_stroke          TYPE string VALUE 'v:stroke',
-              lc_xml_node_path            TYPE string VALUE 'v:path',
-              " shape
-              lc_xml_node_shape           TYPE string VALUE 'v:shape',
-              lc_xml_node_fill            TYPE string VALUE 'v:fill',
-              lc_xml_node_shadow          TYPE string VALUE 'v:shadow',
-              lc_xml_node_textbox         TYPE string VALUE 'v:textbox',
-              lc_xml_node_div             TYPE string VALUE 'div',
-              lc_xml_node_clientdata      TYPE string VALUE 'x:ClientData',
-              lc_xml_node_movewithcells   TYPE string VALUE 'x:MoveWithCells',
-              lc_xml_node_sizewithcells   TYPE string VALUE 'x:SizeWithCells',
-              lc_xml_node_anchor          TYPE string VALUE 'x:Anchor',
-              lc_xml_node_autofill        TYPE string VALUE 'x:AutoFill',
-              lc_xml_node_row             TYPE string VALUE 'x:Row',
-              lc_xml_node_column          TYPE string VALUE 'x:Column',
-              " attributes,
-              lc_xml_attr_vext            TYPE string VALUE 'v:ext',
-              lc_xml_attr_data            TYPE string VALUE 'data',
-              lc_xml_attr_id              TYPE string VALUE 'id',
-              lc_xml_attr_coordsize       TYPE string VALUE 'coordsize',
-              lc_xml_attr_ospt            TYPE string VALUE 'o:spt',
-              lc_xml_attr_joinstyle       TYPE string VALUE 'joinstyle',
-              lc_xml_attr_path            TYPE string VALUE 'path',
-              lc_xml_attr_gradientshapeok TYPE string VALUE 'gradientshapeok',
-              lc_xml_attr_oconnecttype    TYPE string VALUE 'o:connecttype',
-              lc_xml_attr_type            TYPE string VALUE 'type',
-              lc_xml_attr_style           TYPE string VALUE 'style',
-              lc_xml_attr_fillcolor       TYPE string VALUE 'fillcolor',
-              lc_xml_attr_oinsetmode      TYPE string VALUE 'o:insetmode',
-              lc_xml_attr_color           TYPE string VALUE 'color',
-              lc_xml_attr_color2          TYPE string VALUE 'color2',
-              lc_xml_attr_on              TYPE string VALUE 'on',
-              lc_xml_attr_obscured        TYPE string VALUE 'obscured',
-              lc_xml_attr_objecttype      TYPE string VALUE 'ObjectType',
-              " attributes values
-              lc_xml_attr_val_edit        TYPE string VALUE 'edit',
-              lc_xml_attr_val_rect        TYPE string VALUE 'rect',
-              lc_xml_attr_val_t           TYPE string VALUE 't',
-              lc_xml_attr_val_miter       TYPE string VALUE 'miter',
-              lc_xml_attr_val_auto        TYPE string VALUE 'auto',
-              lc_xml_attr_val_black       TYPE string VALUE 'black',
-              lc_xml_attr_val_none        TYPE string VALUE 'none',
-              lc_xml_attr_val_msodir      TYPE string VALUE 'mso-direction-alt:auto',
-              lc_xml_attr_val_note        TYPE string VALUE 'Note'.
+  CONSTANTS: lc_xml_node_xml             TYPE string VALUE 'xml',
+             lc_xml_node_ns_v            TYPE string VALUE 'urn:schemas-microsoft-com:vml',
+             lc_xml_node_ns_o            TYPE string VALUE 'urn:schemas-microsoft-com:office:office',
+             lc_xml_node_ns_x            TYPE string VALUE 'urn:schemas-microsoft-com:office:excel',
+             " shapelayout
+             lc_xml_node_shapelayout     TYPE string VALUE 'o:shapelayout',
+             lc_xml_node_idmap           TYPE string VALUE 'o:idmap',
+             " shapetype
+             lc_xml_node_shapetype       TYPE string VALUE 'v:shapetype',
+             lc_xml_node_stroke          TYPE string VALUE 'v:stroke',
+             lc_xml_node_path            TYPE string VALUE 'v:path',
+             " shape
+             lc_xml_node_shape           TYPE string VALUE 'v:shape',
+             lc_xml_node_fill            TYPE string VALUE 'v:fill',
+             lc_xml_node_shadow          TYPE string VALUE 'v:shadow',
+             lc_xml_node_textbox         TYPE string VALUE 'v:textbox',
+             lc_xml_node_div             TYPE string VALUE 'div',
+             lc_xml_node_clientdata      TYPE string VALUE 'x:ClientData',
+             lc_xml_node_movewithcells   TYPE string VALUE 'x:MoveWithCells',
+             lc_xml_node_sizewithcells   TYPE string VALUE 'x:SizeWithCells',
+             lc_xml_node_anchor          TYPE string VALUE 'x:Anchor',
+             lc_xml_node_autofill        TYPE string VALUE 'x:AutoFill',
+             lc_xml_node_row             TYPE string VALUE 'x:Row',
+             lc_xml_node_column          TYPE string VALUE 'x:Column',
+             " attributes,
+             lc_xml_attr_vext            TYPE string VALUE 'v:ext',
+             lc_xml_attr_data            TYPE string VALUE 'data',
+             lc_xml_attr_id              TYPE string VALUE 'id',
+             lc_xml_attr_coordsize       TYPE string VALUE 'coordsize',
+             lc_xml_attr_ospt            TYPE string VALUE 'o:spt',
+             lc_xml_attr_joinstyle       TYPE string VALUE 'joinstyle',
+             lc_xml_attr_path            TYPE string VALUE 'path',
+             lc_xml_attr_gradientshapeok TYPE string VALUE 'gradientshapeok',
+             lc_xml_attr_oconnecttype    TYPE string VALUE 'o:connecttype',
+             lc_xml_attr_type            TYPE string VALUE 'type',
+             lc_xml_attr_style           TYPE string VALUE 'style',
+             lc_xml_attr_fillcolor       TYPE string VALUE 'fillcolor',
+             lc_xml_attr_oinsetmode      TYPE string VALUE 'o:insetmode',
+             lc_xml_attr_color           TYPE string VALUE 'color',
+             lc_xml_attr_color2          TYPE string VALUE 'color2',
+             lc_xml_attr_on              TYPE string VALUE 'on',
+             lc_xml_attr_obscured        TYPE string VALUE 'obscured',
+             lc_xml_attr_objecttype      TYPE string VALUE 'ObjectType',
+             " attributes values
+             lc_xml_attr_val_edit        TYPE string VALUE 'edit',
+             lc_xml_attr_val_rect        TYPE string VALUE 'rect',
+             lc_xml_attr_val_t           TYPE string VALUE 't',
+             lc_xml_attr_val_miter       TYPE string VALUE 'miter',
+             lc_xml_attr_val_auto        TYPE string VALUE 'auto',
+             lc_xml_attr_val_black       TYPE string VALUE 'black',
+             lc_xml_attr_val_none        TYPE string VALUE 'none',
+             lc_xml_attr_val_msodir      TYPE string VALUE 'mso-direction-alt:auto',
+             lc_xml_attr_val_note        TYPE string VALUE 'Note'.
 
 
   DATA: lo_ixml                  TYPE REF TO if_ixml,
@@ -2978,7 +2980,11 @@ METHOD create_xl_drawing_for_comments.
         lv_row                   TYPE zexcel_cell_row,
         lv_str_column            TYPE zexcel_cell_column_alpha,
         lv_column                TYPE zexcel_cell_column,
-        lv_index                 TYPE i.
+        lv_index                 TYPE i,
+        lv_attr_id_index         TYPE i,
+        lv_attr_id               TYPE string,
+        lv_int_value             TYPE i,
+        lv_int_value_string      TYPE string.
   DATA: lv_rel_id            TYPE i.
 
   DEFINE add_1_val_child_node.
@@ -3072,7 +3078,10 @@ METHOD create_xl_drawing_for_comments.
     lo_element_shape = lo_document->create_simple_element( name   = lc_xml_node_shape
                                                            parent = lo_document ).
 
-    lo_element_shape->set_attribute_ns( : name  = lc_xml_attr_id          value = |_x0000_s{ 1024 + lv_index }| ),
+    lv_attr_id_index = 1024 + lv_index.
+    lv_attr_id = lv_attr_id_index.
+    CONCATENATE '_x0000_s' lv_attr_id INTO lv_attr_id.
+    lo_element_shape->set_attribute_ns( : name  = lc_xml_attr_id          value = lv_attr_id ),
                                           name  = lc_xml_attr_type        value = '#_x0000_t202' ),
                                           name  = lc_xml_attr_style       value = 'size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden' ),
                                           name  = lc_xml_attr_fillcolor   value = '#ffffe1' ),
@@ -3124,13 +3133,15 @@ METHOD create_xl_drawing_for_comments.
     lo_element_clientdata->append_child( new_child = lo_element_autofill ).
     lo_element_row = lo_document->create_simple_element( name   = lc_xml_node_row
                                                          parent = lo_document ).
-*    lo_element_row->set_value( '12' ).
-    lo_element_row->set_value( |{ lv_row - 1 }| ).
+    lv_int_value = lv_row - 1.
+    lv_int_value_string = lv_int_value.
+    lo_element_row->set_value( lv_int_value_string ).
     lo_element_clientdata->append_child( new_child = lo_element_row ).
     lo_element_column = lo_document->create_simple_element( name   = lc_xml_node_column
                                                               parent = lo_document ).
-*    lo_element_column->set_value( '1' ).
-    lo_element_column->set_value( |{ lv_column - 1 }| ).
+    lv_int_value = lv_column - 1.
+    lv_int_value_string = lv_int_value.
+    lo_element_column->set_value( lv_int_value_string ).
     lo_element_clientdata->append_child( new_child = lo_element_column ).
 
     lo_element_shape->append_child( new_child = lo_element_clientdata ).
