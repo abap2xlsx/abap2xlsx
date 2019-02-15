@@ -260,15 +260,13 @@ METHOD get_header_footer_string.
       lv_value = '&G'.
       CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_odd_header.
     ENDIF.
-
     IF me->odd_header-center_image IS NOT INITIAL.
       lv_value = '&G'.
       CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_odd_header.
-
-      IF me->odd_header-right_image IS NOT INITIAL.
-        lv_value = '&G'.
-        CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_odd_header.
-      ENDIF.
+    ENDIF.
+    IF me->odd_header-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_odd_header.
     ENDIF.
 
   ENDIF.
@@ -290,6 +288,19 @@ METHOD get_header_footer_string.
       CONCATENATE ep_odd_footer lc_marker_right lv_value INTO ep_odd_footer.
     ENDIF.
 
+    IF me->odd_footer-left_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_odd_footer.
+    ENDIF.
+    IF me->odd_footer-center_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_odd_footer.
+    ENDIF.
+    IF me->odd_footer-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_odd_footer.
+    ENDIF.
+
   ENDIF.
 * ----------------------------------------------------------------------
   IF ep_even_header IS SUPPLIED.
@@ -309,6 +320,19 @@ METHOD get_header_footer_string.
       CONCATENATE ep_even_header lc_marker_right lv_value INTO ep_even_header.
     ENDIF.
 
+    IF me->even_header-left_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_even_header.
+    ENDIF.
+    IF me->even_header-center_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_even_header.
+    ENDIF.
+    IF me->even_header-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_even_header.
+    ENDIF.
+
   ENDIF.
 * ----------------------------------------------------------------------
   IF ep_even_footer IS SUPPLIED.
@@ -326,6 +350,19 @@ METHOD get_header_footer_string.
     IF me->even_footer-right_value IS NOT INITIAL.
       lv_value = me->process_header_footer( ip_header = me->even_footer ip_side = 'RIGHT' ).
       CONCATENATE ep_even_footer lc_marker_right lv_value INTO ep_even_footer.
+    ENDIF.
+
+    IF me->even_footer-left_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_even_footer.
+    ENDIF.
+    IF me->even_footer-center_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_even_footer.
+    ENDIF.
+    IF me->even_footer-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_even_footer.
     ENDIF.
 
   ENDIF.

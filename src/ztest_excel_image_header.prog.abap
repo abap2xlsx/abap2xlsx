@@ -12,7 +12,10 @@ DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
       lo_drawing              TYPE REF TO zcl_excel_drawing,
        ls_key TYPE wwwdatatab,
-       ls_header TYPE zexcel_s_worksheet_head_foot.
+       ls_header TYPE zexcel_s_worksheet_head_foot,
+       ls_footer TYPE zexcel_s_worksheet_head_foot,
+       lv_content TYPE xstring,
+       lo_bitmap TYPE REF TO zcl_abap_bitmap.
 
 
 DATA: ls_io TYPE skwf_io.
@@ -33,10 +36,8 @@ START-OF-SELECTION.
   ls_key-relid = 'MI'.
   ls_key-objid = 'SAPLOGO.GIF'.
   lo_drawing->set_media_www( ip_key = ls_key
-                             ip_width = 166
-                             ip_height = 75 ).
-
-
+                            ip_width = 166
+                            ip_height = 75 ).
 **********************************************************************
   ls_header-center_image = lo_drawing.
 
@@ -53,10 +54,12 @@ START-OF-SELECTION.
                              ip_height = 75 ).
 
 
-  ls_header-left_image = lo_drawing.
+  ls_header-left_image = ls_footer-left_image = lo_drawing.
+  ls_header-left_value = 'Hallo'.
   lo_worksheet = lo_excel->get_active_worksheet( ).
 
-  lo_worksheet->sheet_setup->set_header_footer( ip_odd_header = ls_header ).
+  lo_worksheet->sheet_setup->set_header_footer( ip_odd_header = ls_header
+                                                ip_odd_footer = ls_footer ).
 
 **********************************************************************
 *** Normal Image
