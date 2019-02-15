@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DEVC>
-    <CTEXT>Spreadsheet libraries</CTEXT>
+    <CTEXT>Excel Manupilation (XLSX, 2007)</CTEXT>
    </DEVC>
   </asx:values>
  </asx:abap>

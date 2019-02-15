@@ -11,9 +11,14 @@
     <REFKIND>D</REFKIND>
    </DD04V>
    <I18N_LANGS>
+    <LANGU>D</LANGU>
     <LANGU>R</LANGU>
    </I18N_LANGS>
    <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Pane Type</DDTEXT>
+    </item>
     <item>
      <DDLANGUAGE>R</DDLANGUAGE>
      <DDTEXT>Pane type</DDTEXT>

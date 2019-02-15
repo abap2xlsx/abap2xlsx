@@ -205,6 +205,8 @@ method ADD_NEW_DRAWING.
   CASE ip_type.
     WHEN 'image'.
       drawings->add( eo_drawing ).
+    WHEN 'hd_ft'.
+      drawings->add( eo_drawing ).
     WHEN 'chart'.
       charts->add( eo_drawing ).
   ENDCASE.
