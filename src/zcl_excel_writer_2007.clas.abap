@@ -7690,7 +7690,8 @@ ENDMETHOD.
 
 METHOD set_vml_shape_header.
 
-  CONSTANTS: lc_shape TYPE string VALUE '<v:shape id="{ID}" o:spid="_x0000_s1025" type="#_x0000_t75" style=''position:absolute;margin-left:0;margin-top:0;width:198.75pt;height:48.75pt; z-index:1''>',
+*  CONSTANTS: lc_shape TYPE string VALUE '<v:shape id="{ID}" o:spid="_x0000_s1025" type="#_x0000_t75" style=''position:absolute;margin-left:0;margin-top:0;width:198.75pt;height:48.75pt; z-index:1''>',
+  CONSTANTS: lc_shape TYPE string VALUE '<v:shape id="{ID}" o:spid="_x0000_s1025" type="#_x0000_t75" style=''position:absolute;margin-left:0;margin-top:0;width:{WIDTH}pt;height:{HEIGHT}pt; z-index:1''>',
              lc_shape_image TYPE string VALUE '<v:imagedata o:relid="{RID}" o:title="Logo Title"/><o:lock v:ext="edit" rotation="t"/></v:shape>',
              lc_shape_header_center TYPE string VALUE 'CH',
              lc_shape_header_left TYPE string VALUE 'LH',
@@ -7705,13 +7706,29 @@ METHOD set_vml_shape_header.
         lv_content_image_left TYPE string,
         lv_content_image_center TYPE string,
         lv_content_image_right TYPE string,
-        lv_value TYPE string.
+        lv_value TYPE string,
+        ls_drawing_position TYPE zexcel_drawing_position.
 
   CLEAR ep_content.
 
   IF is_header-left_image IS NOT INITIAL.
     lv_content_left = lc_shape.
     REPLACE '{ID}' IN lv_content_left WITH lc_shape_header_left.
+    ls_drawing_position = is_header-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_left WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_left WITH lv_value.
     lv_content_image_left = lc_shape_image.
     lv_value = is_header-left_image->get_index( ).
     CONDENSE lv_value.
@@ -7721,6 +7738,21 @@ METHOD set_vml_shape_header.
   IF is_header-center_image IS NOT INITIAL.
     lv_content_center = lc_shape.
     REPLACE '{ID}' IN lv_content_center WITH lc_shape_header_center.
+    ls_drawing_position = is_header-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_center WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_center WITH lv_value.
     lv_content_image_center = lc_shape_image.
     lv_value = is_header-center_image->get_index( ).
     CONDENSE lv_value.
@@ -7730,6 +7762,21 @@ METHOD set_vml_shape_header.
   IF is_header-right_image IS NOT INITIAL.
     lv_content_right = lc_shape.
     REPLACE '{ID}' IN lv_content_right WITH lc_shape_header_right.
+    ls_drawing_position = is_header-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_right WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_right WITH lv_value.
     lv_content_image_right = lc_shape_image.
     lv_value = is_header-right_image->get_index( ).
     CONDENSE lv_value.
