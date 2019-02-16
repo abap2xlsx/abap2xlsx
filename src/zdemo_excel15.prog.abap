@@ -8,7 +8,7 @@
 *& Added the functionality to have multiple input and output files
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel15.
+REPORT zdemo_excel15.
 
 TYPE-POOLS: abap.
 
@@ -17,6 +17,8 @@ TYPES:
     input TYPE string,
   END OF t_demo_excel15.
 
+CONSTANTS: sheet_with_date_formats TYPE string VALUE '24_Sheets_with_different_default_date_formats.xlsx'.
+
 DATA: excel           TYPE REF TO zcl_excel,
       lo_excel_writer TYPE REF TO zif_excel_writer,
       reader          TYPE REF TO zif_excel_reader.
@@ -24,9 +26,9 @@ DATA: excel           TYPE REF TO zcl_excel,
 DATA: ex  TYPE REF TO zcx_excel,
       msg TYPE string.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+DATA: lv_file      TYPE xstring,
+      lv_bytecount TYPE i,
+      lt_file_tab  TYPE solix_tab.
 
 DATA: lv_workdir        TYPE string,
       output_file_path  TYPE string,
@@ -39,7 +41,8 @@ DATA: worksheet      TYPE REF TO zcl_excel_worksheet,
       column         TYPE zexcel_cell_column VALUE 1,
       col_str        TYPE zexcel_cell_column_alpha,
       row            TYPE int4               VALUE 1,
-      value          TYPE zexcel_cell_value.
+      value          TYPE zexcel_cell_value,
+      converted_date TYPE d.
 
 DATA:
       lt_files       TYPE TABLE OF t_demo_excel15.
@@ -73,6 +76,8 @@ INITIALIZATION.
   APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
   <wa_files>-input  = '13_MergedCells.xlsx'.
   APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
+  <wa_files>-input  = sheet_with_date_formats.
+  APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
   <wa_files>-input  = '31_AutosizeWithDifferentFontSizes.xlsx'.
 
 START-OF-SELECTION.
@@ -96,7 +101,8 @@ START-OF-SELECTION.
           highest_column = worksheet->get_highest_column( ).
           highest_row    = worksheet->get_highest_row( ).
 
-          WRITE: 'Highest column: ', highest_column, 'Highest row: ', highest_row.
+          WRITE: / 'Filename ', <wa_files>-input.
+          WRITE: / 'Highest column: ', highest_column, 'Highest row: ', highest_row.
           WRITE: /.
 
           WHILE row <= highest_row.
@@ -116,6 +122,18 @@ START-OF-SELECTION.
             column = 1.
             row = row + 1.
           ENDWHILE.
+          IF <wa_files>-input = sheet_with_date_formats.
+            worksheet->get_cell(
+              EXPORTING
+                ip_column = 'A'
+                ip_row = 4
+              IMPORTING
+                ep_value = value
+            ).
+            WRITE: / 'Date value using get_cell: ', value.
+            converted_date = zcl_excel_common=>excel_string_to_date( ip_value = value ).
+            WRITE: / 'Converted date: ', converted_date.
+          ENDIF.
         ENDIF.
         CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
         lv_file = lo_excel_writer->write_file( excel ).

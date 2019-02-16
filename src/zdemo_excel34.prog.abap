@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel34.
+REPORT zdemo_excel34.
 
 CONSTANTS: width            TYPE f VALUE '10.14'.
 CONSTANTS: height           TYPE f VALUE '57.75'.

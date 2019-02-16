@@ -3,7 +3,7 @@
 * Demo for method zcl_excel_worksheet-bind_alv:
 * export data from ALV (CL_GUI_ALV_GRID) object to excel
 *--------------------------------------------------------------------*
-REPORT  zdemo_excel20.
+REPORT zdemo_excel20.
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_handle_events DEFINITION

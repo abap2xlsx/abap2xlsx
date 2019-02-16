@@ -761,6 +761,23 @@ METHOD load_drawing_anchor.
       ip_height = ls_size-height ).
 
   IF drawing_type = zcl_excel_drawing=>type_chart.
+*  Begin fix for Issue #551
+    DATA: lo_tmp_node_2                TYPE REF TO if_ixml_element.
+    lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'pieChart' namespace = 'c' ).
+    if lo_tmp_node_2 is not initial.
+        lo_drawing->graph_type = zcl_excel_drawing=>c_graph_pie.
+    else.
+        lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'barChart' namespace = 'c' ).
+          if lo_tmp_node_2 is not initial.
+                lo_drawing->graph_type = zcl_excel_drawing=>c_graph_bars.
+          else.
+              lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'lineChart' namespace = 'c' ).
+              if lo_tmp_node_2 is not initial.
+                   lo_drawing->graph_type = zcl_excel_drawing=>c_graph_line.
+              endif.
+          endif.
+    endif.
+* End fix for issue #551
     "-------------Added by Alessandro Iannacci - Should load chart attributes
     lo_drawing->load_chart_attributes( rel_drawing-content_xml ).
   ENDIF.
@@ -2152,6 +2169,7 @@ METHOD load_worksheet.
             scale       TYPE string,
             fittoheight TYPE string,
             fittowidth  TYPE string,
+            papersize   TYPE string,
           END OF lty_page_setup.
 
   TYPES:  BEGIN OF lty_sheetformatpr,
@@ -2694,6 +2712,7 @@ METHOD load_worksheet.
                                    cp_structure = ls_pagesetup ).
     io_worksheet->sheet_setup->orientation = ls_pagesetup-orientation.
     io_worksheet->sheet_setup->scale = ls_pagesetup-scale.
+    io_worksheet->sheet_setup->paper_size = ls_pagesetup-papersize.
     IF io_worksheet->sheet_setup->fit_to_page = 'X'.
       IF ls_pagesetup-fittowidth IS NOT INITIAL.
         io_worksheet->sheet_setup->fit_to_width = ls_pagesetup-fittowidth.

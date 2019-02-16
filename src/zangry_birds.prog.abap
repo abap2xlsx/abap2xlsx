@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zangry_birds.
+REPORT zangry_birds.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,

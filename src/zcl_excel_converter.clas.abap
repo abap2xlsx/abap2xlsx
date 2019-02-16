@@ -1036,7 +1036,7 @@ method GET_FILE.
 
 
 method GET_FUNCTION_NUMBER.
-*Number	Function
+*Number    Function
 *1  AVERAGE
 *2  COUNT
 *3  COUNTA

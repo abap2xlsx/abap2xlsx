@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel25.
+REPORT zdemo_excel25.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,

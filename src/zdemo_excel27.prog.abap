@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel27.
+REPORT zdemo_excel27.
 
 CONSTANTS: c_fish       TYPE string VALUE 'Fish'.
 

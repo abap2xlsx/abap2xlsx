@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel13.
+REPORT zdemo_excel13.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
@@ -76,6 +76,15 @@ START-OF-SELECTION.
   lo_worksheet->set_merge( ip_row = 13 ip_column_start = 'B' ip_column_end = 'C' ip_row_to = 15 ).
   lo_worksheet->set_merge( ip_row = 13 ip_column_start = 'D' ip_column_end = 'D' ip_row_to = 14 ).
   lo_worksheet->set_merge( ip_row = 13 ip_column_start = 'E' ip_column_end = 'F' ).
+
+  " Test area with merge
+  lo_worksheet->set_area(  ip_row = 18 ip_row_to = 19 ip_column_start = 'B' ip_column_end = 'G' ip_style = lv_style_bold_border_guid
+                           ip_value = 'Merge cells with new area method by Helmut Bohr ' ip_merge = abap_true ).
+
+  " Test area without merge
+  lo_worksheet->set_area(  ip_row = 21 ip_row_to = 22 ip_column_start = 'B' ip_column_end = 'G' ip_style = lv_style_bold_border_guid
+                           ip_value = 'Test area' ).
+
 
 
 
