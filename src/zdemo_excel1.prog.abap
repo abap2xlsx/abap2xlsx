@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel1.
+REPORT zdemo_excel1.
 
 
 DATA: lo_excel      TYPE REF TO zcl_excel,

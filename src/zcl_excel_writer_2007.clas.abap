@@ -31,6 +31,8 @@ protected section.
   data SHARED_STRINGS type ZEXCEL_T_SHARED_STRING .
   data STYLES_COND_MAPPING type ZEXCEL_T_STYLES_COND_MAPPING .
   data STYLES_MAPPING type ZEXCEL_T_STYLES_MAPPING .
+  constants C_XL_COMMENTS type STRING value 'xl/comments#.xml' ##NO_TEXT.
+  constants CL_XL_DRAWING_FOR_COMMENTS type STRING value 'xl/drawings/vmlDrawing#.vml' ##NO_TEXT.
 
   methods CREATE_XL_SHEET_SHEET_DATA
     importing
@@ -71,6 +73,11 @@ protected section.
       !IO_DRAWING type ref to ZCL_EXCEL_DRAWING
     returning
       value(EP_CONTENT) type XSTRING .
+  methods CREATE_XL_COMMENTS
+    importing
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+    returning
+      value(EP_CONTENT) type XSTRING .
   methods CREATE_XL_DRAWINGS
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
@@ -88,6 +95,11 @@ protected section.
       !IP_INDEX type I
     returning
       value(EP_ANCHOR) type ref to IF_IXML_ELEMENT .
+  methods CREATE_XL_DRAWING_FOR_COMMENTS
+    importing
+      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
+    returning
+      value(EP_CONTENT) type XSTRING .
   methods CREATE_XL_RELATIONSHIPS
     returning
       value(EP_CONTENT) type XSTRING .
@@ -113,6 +125,7 @@ protected section.
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
       !IV_DRAWING_INDEX type I
+      !IV_COMMENT_INDEX type I
     returning
       value(EP_CONTENT) type XSTRING .
   methods CREATE_XL_STYLES
@@ -181,17 +194,23 @@ method CREATE.
         lo_nested_iterator  TYPE REF TO cl_object_collection_iterator,
         lo_table            TYPE REF TO zcl_excel_table,
         lo_drawing          TYPE REF TO zcl_excel_drawing,
-        lo_drawings         TYPE REF TO zcl_excel_drawings.
+        lo_drawings         TYPE REF TO zcl_excel_drawings,
+        lo_comment          TYPE REF TO zcl_excel_comment,   " (+) Issue #180
+        lo_comments         TYPE REF TO zcl_excel_comments.  " (+) Issue #180
 
-  DATA: lv_content         TYPE xstring,
-        lv_active          TYPE flag,
-        lv_xl_sheet        TYPE string,
-        lv_xl_sheet_rels   TYPE string,
-        lv_xl_drawing      TYPE string,
-        lv_xl_drawing_rels TYPE string,
-        lv_syindex         TYPE string,
-        lv_value           TYPE string,
-        lv_drawing_index   TYPE i.
+  DATA: lv_content                TYPE xstring,
+        lv_active                 TYPE flag,
+        lv_xl_sheet               TYPE string,
+        lv_xl_sheet_rels          TYPE string,
+        lv_xl_drawing_for_comment TYPE string,   " (+) Issue #180
+        lv_xl_comment             TYPE string,   " (+) Issue #180
+        lv_xl_comment_rels        TYPE string,   " (+) Issue #180
+        lv_xl_drawing             TYPE string,
+        lv_xl_drawing_rels        TYPE string,
+        lv_syindex                TYPE string,
+        lv_value                  TYPE string,
+        lv_drawing_index          TYPE i,
+        lv_comment_index          TYPE i.        " (+) Issue #180
 
 **********************************************************************
 * Start of insertion # issue 139 - Dateretention of cellstyles
@@ -262,6 +281,7 @@ method CREATE.
   lo_iterator = me->excel->get_worksheets_iterator( ).
   lo_active_worksheet = me->excel->get_active_worksheet( ).
   lv_drawing_index = 1.
+  lv_comment_index = 1.  " (+) Issue #180
 
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
     lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
@@ -273,7 +293,8 @@ method CREATE.
     lv_content = me->create_xl_sheet( io_worksheet = lo_worksheet
                                       iv_active    = lv_active ).
     lv_xl_sheet = me->c_xl_sheet.
-    MOVE sy-index TO lv_syindex.
+    MOVE sy-index TO: lv_syindex,
+                       lv_comment_index.   " (+) Issue #180
     SHIFT lv_syindex RIGHT DELETING TRAILING space.
     SHIFT lv_syindex LEFT DELETING LEADING space.
     REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet WITH lv_syindex.
@@ -282,7 +303,8 @@ method CREATE.
 
     lv_xl_sheet_rels = me->c_xl_sheet_rels.
     lv_content = me->create_xl_sheet_rels( io_worksheet = lo_worksheet
-                                           iv_drawing_index = lv_drawing_index ).
+                                           iv_drawing_index = lv_drawing_index
+                                           iv_comment_index = lv_comment_index ).      " (+) Issue #180
     REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet_rels WITH lv_syindex.
     lo_zip->add( name    = lv_xl_sheet_rels
                  content = lv_content ).
@@ -298,6 +320,30 @@ method CREATE.
       lo_zip->add( name = lv_value
                     content = lv_content ).
     ENDWHILE.
+
+* Begin - Add - Issue #180
+* Add comments **********************************
+    lo_comments = lo_worksheet->get_comments( ).
+    IF lo_comments->is_empty( ) = abap_false.
+      MOVE lv_comment_index TO lv_syindex.
+      SHIFT lv_syindex RIGHT DELETING TRAILING space.
+      SHIFT lv_syindex LEFT DELETING LEADING space.
+
+      " Create comment itself
+      lv_content = me->create_xl_comments( lo_worksheet ).
+      lv_xl_comment = me->c_xl_comments.
+      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_comment WITH lv_syindex.
+      lo_zip->add( name    = lv_xl_comment
+                   content = lv_content ).
+
+      " Create vmlDrawing that will host the comment
+      lv_content = me->create_xl_drawing_for_comments( lo_worksheet ).
+      lv_xl_drawing_for_comment = me->cl_xl_drawing_for_comments.
+      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_for_comment WITH lv_syindex.
+      lo_zip->add( name    = lv_xl_drawing_for_comment
+                   content = lv_content ).
+    ENDIF.
+* End   - Add - Issue #180
 
 * Add drawings **********************************
     lo_drawings = lo_worksheet->get_drawings( ).
@@ -385,6 +431,7 @@ method CREATE_CONTENT_TYPES.
         " Node extension
         lc_xml_node_rels_ext      TYPE string VALUE 'rels',
         lc_xml_node_xml_ext       TYPE string VALUE 'xml',
+        lc_xml_node_xml_vml       TYPE string VALUE 'vml',   " (+) GGAR
         " Node partnumber
         lc_xml_node_theme_pn      TYPE string VALUE '/xl/theme/theme1.xml',
         lc_xml_node_styles_pn     TYPE string VALUE '/xl/styles.xml',
@@ -399,12 +446,14 @@ method CREATE_CONTENT_TYPES.
         lc_xml_node_styles_ct     TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml',
         lc_xml_node_workb_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml',
         lc_xml_node_rels_ct       TYPE string VALUE 'application/vnd.openxmlformats-package.relationships+xml',
+        lc_xml_node_vml_ct        TYPE string VALUE 'application/vnd.openxmlformats-officedocument.vmlDrawing',
         lc_xml_node_xml_ct        TYPE string VALUE 'application/xml',
         lc_xml_node_props_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.extended-properties+xml',
         lc_xml_node_worksheet_ct  TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml',
         lc_xml_node_strings_ct    TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml',
         lc_xml_node_core_ct       TYPE string VALUE 'application/vnd.openxmlformats-package.core-properties+xml',
         lc_xml_node_table_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml',
+        lc_xml_node_comments_ct   TYPE string VALUE 'application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml',   " (+) GGAR
         lc_xml_node_drawings_ct   TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawing+xml',
         lc_xml_node_chart_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawingml.chart+xml'.
 
@@ -425,6 +474,7 @@ method CREATE_CONTENT_TYPES.
         lv_worksheets_numc        TYPE numc3,
         lv_xml_node_worksheet_pn  TYPE string,
         lv_value                  TYPE string,
+        lv_comment_index          TYPE i VALUE 1,  " (+) GGAR
         lv_drawing_index          TYPE i VALUE 1,
         lv_index_str              TYPE string.
 
@@ -467,6 +517,17 @@ method CREATE_CONTENT_TYPES.
   lo_element->set_attribute_ns( name  = lc_xml_attr_contenttype
                                 value = lc_xml_node_xml_ct ).
   lo_element_root->append_child( new_child = lo_element ).
+
+* Begin - Add - GGAR
+  " VML node (for comments)
+  lo_element = lo_document->create_simple_element( name   = lc_xml_node_default
+                                                   parent = lo_document ).
+  lo_element->set_attribute_ns( name  = lc_xml_attr_extension
+                                value = lc_xml_node_xml_vml ).
+  lo_element->set_attribute_ns( name  = lc_xml_attr_contenttype
+                                value = lc_xml_node_vml_ct ).
+  lo_element_root->append_child( new_child = lo_element ).
+* End   - Add - GGAR
 
   " Theme node
   lo_element = lo_document->create_simple_element( name   = lc_xml_node_override
@@ -541,6 +602,29 @@ method CREATE_CONTENT_TYPES.
                                 value = lc_xml_node_table_ct ).
       lo_element_root->append_child( new_child = lo_element ).
     ENDWHILE.
+
+* Begin - Add - GGAR
+    " Comments
+    DATA: lo_comments TYPE REF TO zcl_excel_comments.
+
+    lo_comments = lo_worksheet->get_comments( ).
+    IF lo_comments->is_empty( ) = abap_false.
+      lv_index_str = lv_comment_index.
+      CONDENSE lv_index_str NO-GAPS.
+      CONCATENATE '/' me->c_xl_comments INTO lv_value.
+      REPLACE '#' WITH lv_index_str INTO lv_value.
+
+      lo_element = lo_document->create_simple_element( name   = lc_xml_node_override
+                                                       parent = lo_document ).
+      lo_element->set_attribute_ns( name  = lc_xml_attr_partname
+                                    value = lv_value ).
+      lo_element->set_attribute_ns( name  = lc_xml_attr_contenttype
+                                    value = lc_xml_node_comments_ct ).
+      lo_element_root->append_child( new_child = lo_element ).
+
+      ADD 1 TO lv_comment_index.
+    ENDIF.
+* End   - Add - GGAR
 
     " Drawings
     DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
@@ -2162,6 +2246,174 @@ METHOD create_xl_charts.
 ENDMETHOD.
 
 
+METHOD create_xl_comments.
+** Constant node name
+  CONSTANTS:  lc_xml_node_comments    TYPE string VALUE 'comments',
+              lc_xml_node_ns          TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+              " authors
+              lc_xml_node_author      TYPE string VALUE 'author',
+              lc_xml_node_authors     TYPE string VALUE 'authors',
+              " comments
+              lc_xml_node_commentlist TYPE string VALUE 'commentList',
+              lc_xml_node_comment     TYPE string VALUE 'comment',
+              lc_xml_node_text        TYPE string VALUE 'text',
+              lc_xml_node_r           TYPE string VALUE 'r',
+              lc_xml_node_rpr         TYPE string VALUE 'rPr',
+              lc_xml_node_b           TYPE string VALUE 'b',
+              lc_xml_node_sz          TYPE string VALUE 'sz',
+              lc_xml_node_color       TYPE string VALUE 'color',
+              lc_xml_node_rfont       TYPE string VALUE 'rFont',
+*             lc_xml_node_charset     TYPE string VALUE 'charset',
+              lc_xml_node_family      TYPE string VALUE 'family',
+              lc_xml_node_t           TYPE string VALUE 't',
+              " comments attributes
+              lc_xml_attr_ref         TYPE string VALUE 'ref',
+              lc_xml_attr_authorid    TYPE string VALUE 'authorId',
+              lc_xml_attr_val         TYPE string VALUE 'val',
+              lc_xml_attr_indexed     TYPE string VALUE 'indexed',
+              lc_xml_attr_xmlspacing  TYPE string VALUE 'xml:space'.
+
+
+  DATA: lo_ixml                TYPE REF TO if_ixml,
+        lo_document            TYPE REF TO if_ixml_document,
+        lo_element_root        TYPE REF TO if_ixml_element,
+        lo_element_authors     TYPE REF TO if_ixml_element,
+        lo_element_author      TYPE REF TO if_ixml_element,
+        lo_element_commentlist TYPE REF TO if_ixml_element,
+        lo_element_comment     TYPE REF TO if_ixml_element,
+        lo_element_text        TYPE REF TO if_ixml_element,
+        lo_element_r           TYPE REF TO if_ixml_element,
+        lo_element_rpr         TYPE REF TO if_ixml_element,
+        lo_element_b           TYPE REF TO if_ixml_element,
+        lo_element_sz          TYPE REF TO if_ixml_element,
+        lo_element_color       TYPE REF TO if_ixml_element,
+        lo_element_rfont       TYPE REF TO if_ixml_element,
+*       lo_element_charset     TYPE REF TO if_ixml_element,
+        lo_element_family      TYPE REF TO if_ixml_element,
+        lo_element_t           TYPE REF TO if_ixml_element,
+        lo_encoding            TYPE REF TO if_ixml_encoding,
+        lo_streamfactory       TYPE REF TO if_ixml_stream_factory,
+        lo_ostream             TYPE REF TO if_ixml_ostream,
+        lo_renderer            TYPE REF TO if_ixml_renderer,
+        lo_iterator            TYPE REF TO cl_object_collection_iterator,
+        lo_comments            TYPE REF TO zcl_excel_comments,
+        lo_comment             TYPE REF TO zcl_excel_comment.
+  DATA: lv_rel_id            TYPE i,
+        lv_author            TYPE string.
+
+  DEFINE add_1_val_child_node.
+*   &1: parent element
+*   &2: child element
+*   &3: element name
+*   &4: attribute name
+*   &5: attribute value
+
+    &2 = lo_document->create_simple_element( name   = &3
+                                             parent = lo_document ).
+    IF &4 IS NOT INITIAL.
+      &2->set_attribute_ns( name  = &4
+                            value = &5 ).
+    ENDIF.
+    &1->append_child( new_child = &2 ).
+  END-OF-DEFINITION.
+
+
+**********************************************************************
+* STEP 1: Create [Content_Types].xml into the root of the ZIP
+  lo_ixml = cl_ixml=>create( ).
+
+**********************************************************************
+* STEP 2: Set document attributes
+  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
+                                          character_set = 'utf-8' ).
+  lo_document = lo_ixml->create_document( ).
+  lo_document->set_encoding( lo_encoding ).
+  lo_document->set_standalone( abap_true ).
+
+***********************************************************************
+* STEP 3: Create main node relationships
+  lo_element_root = lo_document->create_simple_element( name   = lc_xml_node_comments
+                                                        parent = lo_document ).
+  lo_element_root->set_attribute_ns( name  = 'xmlns'
+                                     value = lc_xml_node_ns ).
+
+**********************************************************************
+* STEP 4: Create authors
+* TO-DO: management of several authors
+  lo_element_authors = lo_document->create_simple_element( name   = lc_xml_node_authors
+                                                           parent = lo_document ).
+
+  lo_element_author  = lo_document->create_simple_element( name   = lc_xml_node_author
+                                                           parent = lo_document ).
+  lv_author = sy-uname.
+  lo_element_author->set_value( lv_author ).
+
+  lo_element_authors->append_child( new_child = lo_element_author ).
+  lo_element_root->append_child( new_child = lo_element_authors ).
+
+**********************************************************************
+* STEP 5: Create comments
+
+  lo_element_commentlist = lo_document->create_simple_element( name   = lc_xml_node_commentlist
+                                                               parent = lo_document ).
+
+  lo_comments = io_worksheet->get_comments( ).
+
+  lo_iterator = lo_comments->get_iterator( ).
+  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_comment ?= lo_iterator->if_object_collection_iterator~get_next( ).
+
+    lo_element_comment = lo_document->create_simple_element( name   = lc_xml_node_comment
+                                                             parent = lo_document ).
+    lo_element_comment->set_attribute_ns( name  = lc_xml_attr_ref
+                                          value = lo_comment->get_ref( ) ).
+    lo_element_comment->set_attribute_ns( name  = lc_xml_attr_authorid
+                                          value = '0' ).  " TO-DO
+
+    lo_element_text = lo_document->create_simple_element( name   = lc_xml_node_text
+                                                          parent = lo_document ).
+    lo_element_r    = lo_document->create_simple_element( name   = lc_xml_node_r
+                                                          parent = lo_document ).
+    lo_element_rpr  = lo_document->create_simple_element( name   = lc_xml_node_rpr
+                                                          parent = lo_document ).
+
+    lo_element_b    = lo_document->create_simple_element( name   = lc_xml_node_b
+                                                          parent = lo_document ).
+    lo_element_rpr->append_child( new_child = lo_element_b ).
+
+    add_1_val_child_node lo_element_rpr: lo_element_sz       lc_xml_node_sz       lc_xml_attr_val      '9',
+                                         lo_element_color    lc_xml_node_color    lc_xml_attr_indexed  '81',
+                                         lo_element_rfont    lc_xml_node_rfont    lc_xml_attr_val      'Tahoma',
+                                         lo_element_family   lc_xml_node_family   lc_xml_attr_val      '2'
+*                                        lo_element_charset  lc_xml_node_charset  lc_xml_attr_val      '1'
+                                         .
+
+    lo_element_r->append_child( new_child = lo_element_rpr ).
+
+    lo_element_t    = lo_document->create_simple_element( name   = lc_xml_node_t
+                                                          parent = lo_document ).
+    lo_element_t->set_attribute_ns( name  = lc_xml_attr_xmlspacing
+                                    value = 'preserve' ).
+    lo_element_t->set_value( lo_comment->get_text( ) ).
+    lo_element_r->append_child( new_child = lo_element_t ).
+
+    lo_element_text->append_child( new_child = lo_element_r ).
+    lo_element_comment->append_child( new_child = lo_element_text ).
+    lo_element_commentlist->append_child( new_child = lo_element_comment ).
+  ENDWHILE.
+
+  lo_element_root->append_child( new_child = lo_element_commentlist ).
+
+**********************************************************************
+* STEP 5: Create xstring stream
+  lo_streamfactory = lo_ixml->create_stream_factory( ).
+  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
+  lo_renderer->render( ).
+
+ENDMETHOD.
+
+
 method CREATE_XL_DRAWINGS.
 
 
@@ -2638,6 +2890,275 @@ method CREATE_XL_DRAWING_ANCHOR.
   endmethod.
 
 
+METHOD create_xl_drawing_for_comments.
+** Constant node name
+  CONSTANTS: lc_xml_node_xml             TYPE string VALUE 'xml',
+             lc_xml_node_ns_v            TYPE string VALUE 'urn:schemas-microsoft-com:vml',
+             lc_xml_node_ns_o            TYPE string VALUE 'urn:schemas-microsoft-com:office:office',
+             lc_xml_node_ns_x            TYPE string VALUE 'urn:schemas-microsoft-com:office:excel',
+             " shapelayout
+             lc_xml_node_shapelayout     TYPE string VALUE 'o:shapelayout',
+             lc_xml_node_idmap           TYPE string VALUE 'o:idmap',
+             " shapetype
+             lc_xml_node_shapetype       TYPE string VALUE 'v:shapetype',
+             lc_xml_node_stroke          TYPE string VALUE 'v:stroke',
+             lc_xml_node_path            TYPE string VALUE 'v:path',
+             " shape
+             lc_xml_node_shape           TYPE string VALUE 'v:shape',
+             lc_xml_node_fill            TYPE string VALUE 'v:fill',
+             lc_xml_node_shadow          TYPE string VALUE 'v:shadow',
+             lc_xml_node_textbox         TYPE string VALUE 'v:textbox',
+             lc_xml_node_div             TYPE string VALUE 'div',
+             lc_xml_node_clientdata      TYPE string VALUE 'x:ClientData',
+             lc_xml_node_movewithcells   TYPE string VALUE 'x:MoveWithCells',
+             lc_xml_node_sizewithcells   TYPE string VALUE 'x:SizeWithCells',
+             lc_xml_node_anchor          TYPE string VALUE 'x:Anchor',
+             lc_xml_node_autofill        TYPE string VALUE 'x:AutoFill',
+             lc_xml_node_row             TYPE string VALUE 'x:Row',
+             lc_xml_node_column          TYPE string VALUE 'x:Column',
+             " attributes,
+             lc_xml_attr_vext            TYPE string VALUE 'v:ext',
+             lc_xml_attr_data            TYPE string VALUE 'data',
+             lc_xml_attr_id              TYPE string VALUE 'id',
+             lc_xml_attr_coordsize       TYPE string VALUE 'coordsize',
+             lc_xml_attr_ospt            TYPE string VALUE 'o:spt',
+             lc_xml_attr_joinstyle       TYPE string VALUE 'joinstyle',
+             lc_xml_attr_path            TYPE string VALUE 'path',
+             lc_xml_attr_gradientshapeok TYPE string VALUE 'gradientshapeok',
+             lc_xml_attr_oconnecttype    TYPE string VALUE 'o:connecttype',
+             lc_xml_attr_type            TYPE string VALUE 'type',
+             lc_xml_attr_style           TYPE string VALUE 'style',
+             lc_xml_attr_fillcolor       TYPE string VALUE 'fillcolor',
+             lc_xml_attr_oinsetmode      TYPE string VALUE 'o:insetmode',
+             lc_xml_attr_color           TYPE string VALUE 'color',
+             lc_xml_attr_color2          TYPE string VALUE 'color2',
+             lc_xml_attr_on              TYPE string VALUE 'on',
+             lc_xml_attr_obscured        TYPE string VALUE 'obscured',
+             lc_xml_attr_objecttype      TYPE string VALUE 'ObjectType',
+             " attributes values
+             lc_xml_attr_val_edit        TYPE string VALUE 'edit',
+             lc_xml_attr_val_rect        TYPE string VALUE 'rect',
+             lc_xml_attr_val_t           TYPE string VALUE 't',
+             lc_xml_attr_val_miter       TYPE string VALUE 'miter',
+             lc_xml_attr_val_auto        TYPE string VALUE 'auto',
+             lc_xml_attr_val_black       TYPE string VALUE 'black',
+             lc_xml_attr_val_none        TYPE string VALUE 'none',
+             lc_xml_attr_val_msodir      TYPE string VALUE 'mso-direction-alt:auto',
+             lc_xml_attr_val_note        TYPE string VALUE 'Note'.
+
+
+  DATA: lo_ixml                  TYPE REF TO if_ixml,
+        lo_document              TYPE REF TO if_ixml_document,
+        lo_element_root          TYPE REF TO if_ixml_element,
+        "shapelayout
+        lo_element_shapelayout   TYPE REF TO if_ixml_element,
+        lo_element_idmap         TYPE REF TO if_ixml_element,
+        "shapetype
+        lo_element_shapetype     TYPE REF TO if_ixml_element,
+        lo_element_stroke        TYPE REF TO if_ixml_element,
+        lo_element_path          TYPE REF TO if_ixml_element,
+        "shape
+        lo_element_shape         TYPE REF TO if_ixml_element,
+        lo_element_fill          TYPE REF TO if_ixml_element,
+        lo_element_shadow        TYPE REF TO if_ixml_element,
+        lo_element_textbox       TYPE REF TO if_ixml_element,
+        lo_element_div           TYPE REF TO if_ixml_element,
+        lo_element_clientdata    TYPE REF TO if_ixml_element,
+        lo_element_movewithcells TYPE REF TO if_ixml_element,
+        lo_element_sizewithcells TYPE REF TO if_ixml_element,
+        lo_element_anchor        TYPE REF TO if_ixml_element,
+        lo_element_autofill      TYPE REF TO if_ixml_element,
+        lo_element_row           TYPE REF TO if_ixml_element,
+        lo_element_column        TYPE REF TO if_ixml_element,
+        lo_encoding              TYPE REF TO if_ixml_encoding,
+        lo_streamfactory         TYPE REF TO if_ixml_stream_factory,
+        lo_ostream               TYPE REF TO if_ixml_ostream,
+        lo_renderer              TYPE REF TO if_ixml_renderer,
+        lo_iterator              TYPE REF TO cl_object_collection_iterator,
+        lo_comments              TYPE REF TO zcl_excel_comments,
+        lo_comment               TYPE REF TO zcl_excel_comment,
+        lv_row                   TYPE zexcel_cell_row,
+        lv_str_column            TYPE zexcel_cell_column_alpha,
+        lv_column                TYPE zexcel_cell_column,
+        lv_index                 TYPE i,
+        lv_attr_id_index         TYPE i,
+        lv_attr_id               TYPE string,
+        lv_int_value             TYPE i,
+        lv_int_value_string      TYPE string.
+  DATA: lv_rel_id            TYPE i.
+
+  DEFINE add_1_val_child_node.
+*   &1: parent element
+*   &2: child element
+*   &3: element name
+*   &4: attribute name
+*   &5: attribute value
+
+    &2 = lo_document->create_simple_element( name   = &3
+                                             parent = lo_document ).
+    IF &4 IS NOT INITIAL.
+      &2->set_attribute_ns( name  = &4
+                            value = &5 ).
+    ENDIF.
+    &1->append_child( new_child = &2 ).
+  END-OF-DEFINITION.
+
+
+**********************************************************************
+* STEP 1: Create XML document
+  lo_ixml     = cl_ixml=>create( ).
+  lo_document = lo_ixml->create_document( ).
+
+***********************************************************************
+* STEP 2: Create main node relationships
+  lo_element_root = lo_document->create_simple_element( name   = lc_xml_node_xml
+                                                        parent = lo_document ).
+  lo_element_root->set_attribute_ns( : name  = 'xmlns:v'  value = lc_xml_node_ns_v ),
+                                       name  = 'xmlns:o'  value = lc_xml_node_ns_o ),
+                                       name  = 'xmlns:x'  value = lc_xml_node_ns_x ).
+
+**********************************************************************
+* STEP 3: Create o:shapeLayout
+* TO-DO: management of several authors
+  lo_element_shapelayout = lo_document->create_simple_element( name   = lc_xml_node_shapelayout
+                                                               parent = lo_document ).
+
+  lo_element_shapelayout->set_attribute_ns( name  = lc_xml_attr_vext
+                                            value = lc_xml_attr_val_edit ).
+
+  lo_element_idmap = lo_document->create_simple_element( name   = lc_xml_node_idmap
+                                                         parent = lo_document ).
+  lo_element_idmap->set_attribute_ns( : name  = lc_xml_attr_vext  value = lc_xml_attr_val_edit ),
+                                        name  = lc_xml_attr_data  value = '1' ).
+
+  lo_element_shapelayout->append_child( new_child = lo_element_idmap ).
+
+  lo_element_root->append_child( new_child = lo_element_shapelayout ).
+
+**********************************************************************
+* STEP 4: Create v:shapetype
+
+  lo_element_shapetype = lo_document->create_simple_element( name   = lc_xml_node_shapetype
+                                                             parent = lo_document ).
+
+  lo_element_shapetype->set_attribute_ns( : name  = lc_xml_attr_id         value = '_x0000_t202' ),
+                                            name  = lc_xml_attr_coordsize  value = '21600,21600' ),
+                                            name  = lc_xml_attr_ospt       value = '202' ),
+                                            name  = lc_xml_attr_path       value = 'm,l,21600r21600,l21600,xe' ).
+
+  lo_element_stroke = lo_document->create_simple_element( name   = lc_xml_node_stroke
+                                                          parent = lo_document ).
+  lo_element_stroke->set_attribute_ns( name  = lc_xml_attr_joinstyle       value = lc_xml_attr_val_miter ).
+
+  lo_element_path   = lo_document->create_simple_element( name   = lc_xml_node_path
+                                                          parent = lo_document ).
+  lo_element_path->set_attribute_ns( : name  = lc_xml_attr_gradientshapeok value = lc_xml_attr_val_t ),
+                                       name  = lc_xml_attr_oconnecttype    value = lc_xml_attr_val_rect ).
+
+  lo_element_shapetype->append_child( : new_child = lo_element_stroke ),
+                                        new_child = lo_element_path ).
+
+  lo_element_root->append_child( new_child = lo_element_shapetype ).
+
+**********************************************************************
+* STEP 4: Create v:shapetype
+
+  lo_comments = io_worksheet->get_comments( ).
+
+  lo_iterator = lo_comments->get_iterator( ).
+  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    lv_index = sy-index.
+    lo_comment ?= lo_iterator->if_object_collection_iterator~get_next( ).
+
+    zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow = lo_comment->get_ref( )
+                                                      IMPORTING e_column = lv_str_column
+                                                                e_row    = lv_row ).
+    lv_column = zcl_excel_common=>convert_column2int( lv_str_column ).
+
+    lo_element_shape = lo_document->create_simple_element( name   = lc_xml_node_shape
+                                                           parent = lo_document ).
+
+    lv_attr_id_index = 1024 + lv_index.
+    lv_attr_id = lv_attr_id_index.
+    CONCATENATE '_x0000_s' lv_attr_id INTO lv_attr_id.
+    lo_element_shape->set_attribute_ns( : name  = lc_xml_attr_id          value = lv_attr_id ),
+                                          name  = lc_xml_attr_type        value = '#_x0000_t202' ),
+                                          name  = lc_xml_attr_style       value = 'size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden' ),
+                                          name  = lc_xml_attr_fillcolor   value = '#ffffe1' ),
+                                          name  = lc_xml_attr_oinsetmode  value = lc_xml_attr_val_auto ).
+
+    " Fill
+    lo_element_fill = lo_document->create_simple_element( name   = lc_xml_node_fill
+                                                          parent = lo_document ).
+    lo_element_fill->set_attribute_ns( name = lc_xml_attr_color2  value = '#ffffe1' ).
+    lo_element_shape->append_child( new_child = lo_element_fill ).
+    " Shadow
+    lo_element_shadow = lo_document->create_simple_element( name   = lc_xml_node_shadow
+                                                            parent = lo_document ).
+    lo_element_shadow->set_attribute_ns( : name = lc_xml_attr_on        value = lc_xml_attr_val_t ),
+                                           name = lc_xml_attr_color     value = lc_xml_attr_val_black ),
+                                           name = lc_xml_attr_obscured  value = lc_xml_attr_val_t ).
+    lo_element_shape->append_child( new_child = lo_element_shadow ).
+    " Path
+    lo_element_path = lo_document->create_simple_element( name   = lc_xml_node_path
+                                                          parent = lo_document ).
+    lo_element_path->set_attribute_ns( name = lc_xml_attr_oconnecttype  value = lc_xml_attr_val_none ).
+    lo_element_shape->append_child( new_child = lo_element_path ).
+    " Textbox
+    lo_element_textbox = lo_document->create_simple_element( name   = lc_xml_node_textbox
+                                                             parent = lo_document ).
+    lo_element_textbox->set_attribute_ns( name = lc_xml_attr_style  value = lc_xml_attr_val_msodir ).
+    lo_element_div = lo_document->create_simple_element( name   = lc_xml_node_div
+                                                         parent = lo_document ).
+    lo_element_div->set_attribute_ns( name = lc_xml_attr_style  value = 'text-align:left' ).
+    lo_element_textbox->append_child( new_child = lo_element_div ).
+    lo_element_shape->append_child( new_child = lo_element_textbox ).
+    " ClientData
+    lo_element_clientdata = lo_document->create_simple_element( name   = lc_xml_node_clientdata
+                                                                parent = lo_document ).
+    lo_element_clientdata->set_attribute_ns( name = lc_xml_attr_objecttype  value = lc_xml_attr_val_note ).
+    lo_element_movewithcells = lo_document->create_simple_element( name   = lc_xml_node_movewithcells
+                                                                   parent = lo_document ).
+    lo_element_clientdata->append_child( new_child = lo_element_movewithcells ).
+    lo_element_sizewithcells = lo_document->create_simple_element( name   = lc_xml_node_sizewithcells
+                                                                   parent = lo_document ).
+    lo_element_clientdata->append_child( new_child = lo_element_sizewithcells ).
+    lo_element_anchor = lo_document->create_simple_element( name   = lc_xml_node_anchor
+                                                            parent = lo_document ).
+    lo_element_anchor->set_value( '2, 15, 11, 10, 4, 31, 15, 9' ).
+    lo_element_clientdata->append_child( new_child = lo_element_anchor ).
+    lo_element_autofill = lo_document->create_simple_element( name   = lc_xml_node_autofill
+                                                              parent = lo_document ).
+    lo_element_autofill->set_value( 'False' ).
+    lo_element_clientdata->append_child( new_child = lo_element_autofill ).
+    lo_element_row = lo_document->create_simple_element( name   = lc_xml_node_row
+                                                         parent = lo_document ).
+    lv_int_value = lv_row - 1.
+    lv_int_value_string = lv_int_value.
+    lo_element_row->set_value( lv_int_value_string ).
+    lo_element_clientdata->append_child( new_child = lo_element_row ).
+    lo_element_column = lo_document->create_simple_element( name   = lc_xml_node_column
+                                                              parent = lo_document ).
+    lv_int_value = lv_column - 1.
+    lv_int_value_string = lv_int_value.
+    lo_element_column->set_value( lv_int_value_string ).
+    lo_element_clientdata->append_child( new_child = lo_element_column ).
+
+    lo_element_shape->append_child( new_child = lo_element_clientdata ).
+
+    lo_element_root->append_child( new_child = lo_element_shape ).
+  ENDWHILE.
+
+**********************************************************************
+* STEP 6: Create xstring stream
+  lo_streamfactory = lo_ixml->create_stream_factory( ).
+  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
+  lo_renderer->render( ).
+
+ENDMETHOD.
+
+
 method CREATE_XL_RELATIONSHIPS.
 
 
@@ -2976,6 +3497,7 @@ METHOD create_xl_sheet.
         lc_xml_node_mergecell          TYPE string VALUE 'mergeCell',
         lc_xml_node_mergecells         TYPE string VALUE 'mergeCells',
         lc_xml_node_drawing            TYPE string VALUE 'drawing',
+        lc_xml_node_drawing_for_cmt    TYPE string VALUE 'legacyDrawing',
         lc_xml_node_headerfooter       TYPE string VALUE 'headerFooter',
         lc_xml_node_oddheader          TYPE string VALUE 'oddHeader',
         lc_xml_node_oddfooter          TYPE string VALUE 'oddFooter',
@@ -3588,51 +4110,8 @@ METHOD create_xl_sheet.
   lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
   lo_element_root->append_child( new_child = lo_element ). " sheetData node
 
-  IF lo_autofilter IS BOUND.
-* Create node autofilter
-    lo_element = lo_document->create_simple_element( name   = lc_xml_node_autofilter
-                                                     parent = lo_document ).
-    lv_ref = lo_autofilter->get_filter_range( ) .
-    CONDENSE lv_ref NO-GAPS.
-    lo_element->set_attribute_ns( name  = lc_xml_attr_ref
-                                  value = lv_ref ).
-    lt_values = lo_autofilter->get_values( ) .
-    IF lt_values IS NOT INITIAL.
-* If we filter we need to set the filter mode to 1.
-      lo_element_2 = lo_document->find_from_name( name   = lc_xml_node_sheetpr ).
-      lo_element_2->set_attribute_ns( name  = lc_xml_attr_filtermode
-                                      value = '1' ).
-* Create node filtercolumn
-      CLEAR lv_column.
-      LOOP AT lt_values INTO ls_values.
-        IF ls_values-column <> lv_column.
-          IF lv_column IS NOT INITIAL.
-            lo_element_2->append_child( new_child = lo_element_3 ).
-            lo_element->append_child( new_child = lo_element_2 ).
-          ENDIF.
-          lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_filtercolumn
-                                                             parent = lo_element ).
-          lv_column   = ls_values-column - lo_autofilter->filter_area-col_start.
-          lv_value = lv_column.
-          CONDENSE lv_value NO-GAPS.
-          lo_element_2->set_attribute_ns( name  = lc_xml_attr_colid
-                                          value = lv_value ).
-          lo_element_3 = lo_document->create_simple_element( name   = lc_xml_node_filters
-                                                             parent = lo_element_2 ).
-          lv_column = ls_values-column.
-        ENDIF.
-        lo_element_4 = lo_document->create_simple_element( name   = lc_xml_node_filter
-                                                           parent = lo_element_3 ).
-        lo_element_4->set_attribute_ns( name  = lc_xml_attr_val
-                                        value = ls_values-value ).
-        lo_element_3->append_child( new_child = lo_element_4 ). " value node
-      ENDLOOP.
-      lo_element_2->append_child( new_child = lo_element_3 ).
-      lo_element->append_child( new_child = lo_element_2 ).
-    ENDIF.
-    lo_element_root->append_child( new_child = lo_element ).
-  ENDIF.
-
+*< Begin of insertion Issue #572 - Protect sheet with filter caused Excel error
+* Autofilter must be set AFTER sheet protection in XML
   IF io_worksheet->zif_excel_sheet_protection~protected EQ abap_true.
     " sheetProtection node
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_sheetprotection
@@ -3709,7 +4188,131 @@ METHOD create_xl_sheet.
 
     lo_element_root->append_child( new_child = lo_element ).
   ENDIF.
+*> End of insertion Issue #572 - Protect sheet with filter caused Excel error
 
+  IF lo_autofilter IS BOUND.
+* Create node autofilter
+    lo_element = lo_document->create_simple_element( name   = lc_xml_node_autofilter
+                                                     parent = lo_document ).
+    lv_ref = lo_autofilter->get_filter_range( ) .
+    CONDENSE lv_ref NO-GAPS.
+    lo_element->set_attribute_ns( name  = lc_xml_attr_ref
+                                  value = lv_ref ).
+    lt_values = lo_autofilter->get_values( ) .
+    IF lt_values IS NOT INITIAL.
+* If we filter we need to set the filter mode to 1.
+      lo_element_2 = lo_document->find_from_name( name   = lc_xml_node_sheetpr ).
+      lo_element_2->set_attribute_ns( name  = lc_xml_attr_filtermode
+                                      value = '1' ).
+* Create node filtercolumn
+      CLEAR lv_column.
+      LOOP AT lt_values INTO ls_values.
+        IF ls_values-column <> lv_column.
+          IF lv_column IS NOT INITIAL.
+            lo_element_2->append_child( new_child = lo_element_3 ).
+            lo_element->append_child( new_child = lo_element_2 ).
+          ENDIF.
+          lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_filtercolumn
+                                                             parent = lo_element ).
+          lv_column   = ls_values-column - lo_autofilter->filter_area-col_start.
+          lv_value = lv_column.
+          CONDENSE lv_value NO-GAPS.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_colid
+                                          value = lv_value ).
+          lo_element_3 = lo_document->create_simple_element( name   = lc_xml_node_filters
+                                                             parent = lo_element_2 ).
+          lv_column = ls_values-column.
+        ENDIF.
+        lo_element_4 = lo_document->create_simple_element( name   = lc_xml_node_filter
+                                                           parent = lo_element_3 ).
+        lo_element_4->set_attribute_ns( name  = lc_xml_attr_val
+                                        value = ls_values-value ).
+        lo_element_3->append_child( new_child = lo_element_4 ). " value node
+      ENDLOOP.
+      lo_element_2->append_child( new_child = lo_element_3 ).
+      lo_element->append_child( new_child = lo_element_2 ).
+    ENDIF.
+    lo_element_root->append_child( new_child = lo_element ).
+  ENDIF.
+
+*< Comment for Issue #572 - Protect sheet with filter caused Excel error
+*  IF io_worksheet->zif_excel_sheet_protection~protected EQ abap_true.
+*   " sheetProtection node
+*    lo_element = lo_document->create_simple_element( name   = lc_xml_node_sheetprotection
+*                                                     parent = lo_document ).
+*    MOVE io_worksheet->zif_excel_sheet_protection~password TO lv_value.
+*    IF lv_value IS NOT INITIAL.
+*      lo_element->set_attribute_ns( name  = lc_xml_attr_password
+*                                    value = lv_value ).
+*    ENDIF.
+*    lv_value = io_worksheet->zif_excel_sheet_protection~auto_filter.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_autofilter
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~delete_columns.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_deletecolumns
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~delete_rows.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_deleterows
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~format_cells.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_formatcells
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~format_columns.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_formatcolumns
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~format_rows.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_formatrows
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~insert_columns.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_insertcolumns
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~insert_hyperlinks.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_inserthyperlinks
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~insert_rows.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_insertrows
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~objects.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_objects
+*                                  value = lv_value ).
+*   lv_value = io_worksheet->zif_excel_sheet_protection~pivot_tables.
+*   CONDENSE lv_value NO-GAPS.
+*   lo_element->set_attribute_ns( name  = lc_xml_attr_pivottables
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~scenarios.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_scenarios
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~select_locked_cells.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_selectlockedcells
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~select_unlocked_cells.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_selectunlockedcell
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~sheet.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_sheet
+*                                  value = lv_value ).
+*    lv_value = io_worksheet->zif_excel_sheet_protection~sort.
+*    CONDENSE lv_value NO-GAPS.
+*    lo_element->set_attribute_ns( name  = lc_xml_attr_sort
+*                                  value = lv_value ).
+*
+*    lo_element_root->append_child( new_child = lo_element ).
+*  ENDIF.
+*> End of Comment for Issue #572 - Protect sheet with filter caused Excel error
   " Merged cells
   lt_range_merge = io_worksheet->get_merge( ).
   IF lt_range_merge IS NOT INITIAL.
@@ -4439,6 +5042,27 @@ METHOD create_xl_sheet.
     lo_element_root->append_child( new_child = lo_element ).
   ENDIF.
 
+* Begin - Add - Issue #180
+  " (Legacy) drawings for comments
+  DATA: lo_drawing_for_comments  TYPE REF TO zcl_excel_comments.
+
+  lo_drawing_for_comments = io_worksheet->get_comments( ).
+  IF lo_drawing_for_comments->is_empty( ) = abap_false.
+    lo_element = lo_document->create_simple_element( name   = lc_xml_node_drawing_for_cmt
+                                                     parent = lo_document ).
+    ADD 1 TO lv_relation_id.  " +1 for legacyDrawings
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    lo_element->set_attribute( name = 'r:id'
+                               value = lv_value ).
+    lo_element_root->append_child( new_child = lo_element ).
+
+    ADD 1 TO lv_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
+  ENDIF.
+* End   - Add - Issue #180
+
 * tables
   DATA lv_table_count TYPE i.
 
@@ -4575,11 +5199,13 @@ METHOD create_xl_sheet_rels.
         lc_xml_attr_target_mode    TYPE string VALUE 'TargetMode',
         lc_xml_val_external        TYPE string VALUE 'External',
         " Node namespace
-        lc_xml_node_rels_ns        TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
-        lc_xml_node_rid_table_tp   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/table',
-        lc_xml_node_rid_printer_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
-        lc_xml_node_rid_drawing_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
-        lc_xml_node_rid_link_tp    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink'.
+        lc_xml_node_rels_ns            TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
+        lc_xml_node_rid_table_tp       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/table',
+        lc_xml_node_rid_printer_tp     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
+        lc_xml_node_rid_drawing_tp     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+        lc_xml_node_rid_comment_tp     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',        " (+) Issue #180
+        lc_xml_node_rid_drawing_cmt_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing',      " (+) Issue #180
+        lc_xml_node_rid_link_tp        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink'.
 
   DATA: lo_ixml          TYPE REF TO if_ixml,
         lo_document      TYPE REF TO if_ixml_document,
@@ -4672,6 +5298,58 @@ METHOD create_xl_sheet_rels.
                               value = lv_value ).
     lo_element_root->append_child( new_child = lo_element ).
   ENDIF.
+
+* Begin - Add - Issue #180
+  DATA: lo_comments  TYPE REF TO zcl_excel_comments.
+
+  lo_comments = io_worksheet->get_comments( ).
+  IF lo_comments->is_empty( ) = abap_false.
+    " Drawing for comment
+    lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    lo_element->set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+    lo_element->set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_drawing_cmt_tp ).
+
+    lv_index_str = iv_comment_index.
+    CONDENSE lv_index_str NO-GAPS.
+    MOVE me->cl_xl_drawing_for_comments TO lv_value.
+    REPLACE 'xl' WITH '..' INTO lv_value.
+    REPLACE '#' WITH lv_index_str INTO lv_value.
+    lo_element->set_attribute_ns( name  = lc_xml_attr_target
+                                  value = lv_value ).
+    lo_element_root->append_child( new_child = lo_element ).
+
+    " Comment
+    lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
+                                                     parent = lo_document ).
+    ADD 1 TO lv_relation_id.
+
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    lo_element->set_attribute_ns( name  = lc_xml_attr_id
+                                  value = lv_value ).
+    lo_element->set_attribute_ns( name  = lc_xml_attr_type
+                                  value = lc_xml_node_rid_comment_tp ).
+
+    lv_index_str = iv_comment_index.
+    CONDENSE lv_index_str NO-GAPS.
+    MOVE me->c_xl_comments TO lv_value.
+    REPLACE 'xl' WITH '..' INTO lv_value.
+    REPLACE '#' WITH lv_index_str INTO lv_value.
+    lo_element->set_attribute_ns( name  = lc_xml_attr_target
+                              value = lv_value ).
+    lo_element_root->append_child( new_child = lo_element ).
+  ENDIF.
+* End   - Add - Issue #180
 
   lo_iterator = io_worksheet->get_tables_iterator( ).
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
@@ -4918,7 +5596,7 @@ METHOD create_xl_sheet_sheet_data.
           " Row visibility of previos row.
           IF lo_row->get_visible( io_worksheet ) = abap_false OR
              l_autofilter_hidden = abap_true.
-            lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
+            lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
           ENDIF.
 *          lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
 *          CONCATENATE lv_xstring lv_xstring_partial
@@ -4951,13 +5629,13 @@ METHOD create_xl_sheet_sheet_data.
            l_autofilter_hidden = abap_true.
           " Row dimensions
           IF lo_row->get_row_height( ) >= 0.
-            lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1').
+            lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1' ).
             lv_value = lo_row->get_row_height( ).
             lo_element_2->set_attribute_ns( name  = 'ht' value = lv_value ).
           ENDIF.
           " Collapsed
           IF lo_row->get_collapsed( io_worksheet ) = abap_true.
-            lo_element_2->set_attribute_ns( name  = 'collapsed' value = 'true').
+            lo_element_2->set_attribute_ns( name  = 'collapsed' value = 'true' ).
           ENDIF.
           " Outline level
           IF lo_row->get_outline_level( io_worksheet ) > 0.
@@ -4970,7 +5648,7 @@ METHOD create_xl_sheet_sheet_data.
           IF lo_row->get_xf_index( ) <> 0.
             lv_value = lo_row->get_xf_index( ).
             lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
-            lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1').
+            lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
           ENDIF.
         ENDIF.
         IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
@@ -5096,7 +5774,7 @@ METHOD create_xl_sheet_sheet_data.
     " Row visibility of previos row.
     IF lo_row->get_visible( ) = abap_false OR
        l_autofilter_hidden = abap_true.
-      lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
+      lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
     ENDIF.
 *    lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
 *    CONCATENATE lv_xstring lv_xstring_partial

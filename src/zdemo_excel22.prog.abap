@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel22.
+REPORT zdemo_excel22.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
@@ -36,7 +36,7 @@ START-OF-SELECTION.
 
   " Get active sheet
   lo_worksheet = lo_excel->get_active_worksheet( ).
-  lo_worksheet->set_title( ip_title = 'PN_MASSIVE').
+  lo_worksheet->set_title( ip_title = 'PN_MASSIVE' ).
 
   DATA lt_test TYPE TABLE OF sflight.
   SELECT * FROM sflight INTO TABLE lt_test. "#EC CI_NOWHERE

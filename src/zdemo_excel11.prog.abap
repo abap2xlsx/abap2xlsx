@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel11.
+REPORT zdemo_excel11.
 
 TYPE-POOLS: abap.
 

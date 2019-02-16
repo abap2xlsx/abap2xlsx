@@ -33,6 +33,9 @@ class ZCL_EXCEL_WORKSHEET definition
     data STYLES type ZEXCEL_T_SHEET_STYLE .
     data TABCOLOR type ZEXCEL_S_TABCOLOR read-only .
 
+  methods ADD_COMMENT
+    importing
+      !IP_COMMENT type ref to ZCL_EXCEL_COMMENT .
     methods ADD_DRAWING
       importing
         !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
@@ -293,11 +296,17 @@ class ZCL_EXCEL_WORKSHEET definition
         value(EP_DIMENSION_RANGE) type STRING
       raising
         ZCX_EXCEL .
+    methods GET_COMMENTS
+      returning
+        value(R_COMMENTS) type ref to ZCL_EXCEL_COMMENTS .
     methods GET_DRAWINGS
       importing
         !IP_TYPE          type ZEXCEL_DRAWING_TYPE optional
       returning
         value(R_DRAWINGS) type ref to ZCL_EXCEL_DRAWINGS .
+   methods GET_COMMENTS_ITERATOR
+     returning
+       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
     methods GET_DRAWINGS_ITERATOR
       importing
         !IP_TYPE           type ZEXCEL_DRAWING_TYPE
@@ -424,6 +433,9 @@ class ZCL_EXCEL_WORKSHEET definition
         !IP_COLUMN_END   type SIMPLE default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_COL
         !IP_ROW          type ZEXCEL_CELL_ROW default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_ROW
         !IP_ROW_TO       type ZEXCEL_CELL_ROW default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_ROW
+      !IP_STYLE type ZEXCEL_CELL_STYLE optional "added parameter
+      !IP_VALUE type SIMPLE optional "added parameter
+      !IP_FORMULA type ZEXCEL_CELL_FORMULA optional "added parameter
       raising
         ZCX_EXCEL .
     methods SET_PRINT_GRIDLINES
@@ -477,6 +489,50 @@ class ZCL_EXCEL_WORKSHEET definition
       raising
         ZCX_EXCEL.
 
+methods SET_MERGE_STYLE
+    importing
+      !IP_COLUMN_START type simple optional
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW optional
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_STYLE type ZEXCEL_CELL_STYLE optional .
+
+methods SET_AREA_FORMULA
+    importing
+      !IP_COLUMN_START type simple
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_FORMULA type ZEXCEL_CELL_FORMULA
+      !IP_MERGE type ABAP_BOOL optional
+    raising
+      ZCX_EXCEL .
+
+methods SET_AREA_STYLE
+    importing
+      !IP_COLUMN_START type simple
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_STYLE type ZEXCEL_CELL_STYLE
+      !IP_MERGE type ABAP_BOOL optional .
+
+ methods SET_AREA
+    importing
+      !IP_COLUMN_START type simple
+      !IP_COLUMN_END type simple optional
+      !IP_ROW type ZEXCEL_CELL_ROW
+      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
+      !IP_VALUE type SIMPLE optional
+      !IP_FORMULA type ZEXCEL_CELL_FORMULA optional
+      !IP_STYLE type ZEXCEL_CELL_STYLE optional
+      !IP_HYPERLINK type ref to ZCL_EXCEL_HYPERLINK optional
+      !IP_DATA_TYPE type ZEXCEL_CELL_DATA_TYPE optional
+      !IP_ABAP_TYPE type ABAP_TYPEKIND optional
+      !IP_MERGE type ABAP_BOOL optional
+    raising
+      ZCX_EXCEL .
+
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
@@ -528,6 +584,7 @@ class ZCL_EXCEL_WORKSHEET definition
     data DATA_VALIDATIONS type ref to ZCL_EXCEL_DATA_VALIDATIONS .
     data DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT .
     data DEFAULT_EXCEL_TIME_FORMAT type ZEXCEL_NUMBER_FORMAT .
+    data COMMENTS type ref to ZCL_EXCEL_COMMENTS .
     data DRAWINGS type ref to ZCL_EXCEL_DRAWINGS .
     data FREEZE_PANE_CELL_COLUMN type ZEXCEL_CELL_COLUMN .
     data FREEZE_PANE_CELL_ROW type ZEXCEL_CELL_ROW .
@@ -574,6 +631,11 @@ ENDCLASS.
 
 
 CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
+
+
+  METHOD add_comment.
+    comments->include( ip_comment ).
+  ENDMETHOD.
 
 
   method ADD_DRAWING.
@@ -3677,6 +3739,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     ME->ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE( ).
     ME->ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE( ).
     create object HYPERLINKS.
+    CREATE OBJECT comments.  " (+) Issue #180
 
 * initialize active cell coordinates
     ACTIVE_CELL-CELL_ROW = 1.
@@ -3851,6 +3914,27 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     EO_ITERATOR = ME->COLUMNS->GET_ITERATOR( ).
 
   endmethod.
+
+
+  METHOD get_comments.
+    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
+          lo_iterator TYPE REF TO cl_object_collection_iterator.
+
+    CREATE OBJECT r_comments.
+
+    lo_iterator = comments->get_iterator( ).
+    WHILE lo_iterator->has_next( ) = abap_true.
+      lo_comment ?= lo_iterator->get_next( ).
+      r_comments->include( lo_comment ).
+    ENDWHILE.
+
+  ENDMETHOD.
+
+
+  METHOD get_comments_iterator.
+    eo_iterator = comments->get_iterator( ).
+
+  ENDMETHOD.
 
 
   method GET_DATA_VALIDATIONS_ITERATOR.
@@ -4133,7 +4217,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   endmethod.
 
 
-  method GET_TABLE.
+  METHOD get_table.
 *--------------------------------------------------------------------*
 * Comment D. Rauchenstein
 * With this method, we get a fully functional Excel Upload, which solves
@@ -4146,116 +4230,128 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 * CL_EXCEL_READER_2007->ZIF_EXCEL_READER~LOAD_FILE()
 *--------------------------------------------------------------------*
 
-    field-symbols: <LS_LINE> type DATA.
-    field-symbols: <LV_VALUE> type DATA.
+    FIELD-SYMBOLS: <ls_line> TYPE data.
+    FIELD-SYMBOLS: <lv_value> TYPE data.
 
-    data LV_ACTUAL_ROW type INT4.
-    data LV_ACTUAL_COL type INT4.
-    data LV_ERRORMESSAGE type STRING.
-    data LV_MAX_COL type ZEXCEL_CELL_COLUMN.
-    data LV_MAX_ROW type INT4.
-    data LV_DELTA_COL type INT4.
-    data LV_VALUE  type ZEXCEL_CELL_VALUE.
-    data LV_RC  type SYSUBRC.
+    DATA lv_actual_row TYPE int4.
+    DATA lv_actual_row_string TYPE string.
+    DATA lv_actual_col TYPE int4.
+    DATA lv_actual_col_string TYPE string.
+    DATA lv_errormessage TYPE string.
+    DATA lv_max_col TYPE zexcel_cell_column.
+    DATA lv_max_row TYPE int4.
+    DATA lv_delta_col TYPE int4.
+    DATA lv_value  TYPE zexcel_cell_value.
+    DATA lv_rc  TYPE sysubrc.
 
 
-    LV_MAX_COL =  ME->GET_HIGHEST_COLUMN( ).
-    LV_MAX_ROW =  ME->GET_HIGHEST_ROW( ).
+    lv_max_col =  me->get_highest_column( ).
+    lv_max_row =  me->get_highest_row( ).
 
 *--------------------------------------------------------------------*
 * The row counter begins with 1 and should be corrected with the skips
 *--------------------------------------------------------------------*
-    LV_ACTUAL_ROW =  IV_SKIPPED_ROWS + 1.
-    LV_ACTUAL_COL =  IV_SKIPPED_COLS + 1.
+    lv_actual_row =  iv_skipped_rows + 1.
+    lv_actual_col =  iv_skipped_cols + 1.
 
 
-    try.
+    TRY.
 *--------------------------------------------------------------------*
 * Check if we the basic features are possible with given "any table"
 *--------------------------------------------------------------------*
-        append initial line to ET_TABLE assigning <LS_LINE>.
-        if SY-SUBRC <> 0 or <LS_LINE> is not assigned.
+        APPEND INITIAL LINE TO et_table ASSIGNING <ls_line>.
+        IF sy-subrc <> 0 OR <ls_line> IS NOT ASSIGNED.
 
-          LV_ERRORMESSAGE = 'Error at inserting new Line to internal Table'(002).
+          lv_errormessage = 'Error at inserting new Line to internal Table'(002).
           zcx_excel=>raise_text( lv_errormessage ).
 
-        else.
-          LV_DELTA_COL = LV_MAX_COL - IV_SKIPPED_COLS.
-          assign component LV_DELTA_COL of structure <LS_LINE> to <LV_VALUE>.
-          if SY-SUBRC <> 0 or <LV_VALUE> is not assigned.
-            LV_ERRORMESSAGE = 'Internal table has less columns than excel'(003).
+        ELSE.
+          lv_delta_col = lv_max_col - iv_skipped_cols.
+          ASSIGN COMPONENT lv_delta_col OF STRUCTURE <ls_line> TO <lv_value>.
+          IF sy-subrc <> 0 OR <lv_value> IS NOT ASSIGNED.
+            lv_errormessage = 'Internal table has less columns than excel'(003).
             zcx_excel=>raise_text( lv_errormessage ).
-          else.
+          ELSE.
 *--------------------------------------------------------------------*
 *now we are ready for handle the table data
 *--------------------------------------------------------------------*
-            refresh ET_TABLE.
+            REFRESH et_table.
 *--------------------------------------------------------------------*
 * Handle each Row until end on right side
 *--------------------------------------------------------------------*
-            while LV_ACTUAL_ROW <= LV_MAX_ROW .
+            WHILE lv_actual_row <= lv_max_row .
 
 *--------------------------------------------------------------------*
 * Handle each Column until end on bottom
 * First step is to step back on first column
 *--------------------------------------------------------------------*
-              LV_ACTUAL_COL =  IV_SKIPPED_COLS + 1.
+              lv_actual_col =  iv_skipped_cols + 1.
 
-              unassign <LS_LINE>.
-              append initial line to ET_TABLE assigning <LS_LINE>.
-              if SY-SUBRC <> 0 or <LS_LINE> is not assigned.
-                LV_ERRORMESSAGE = 'Error at inserting new Line to internal Table'(002).
+              UNASSIGN <ls_line>.
+              APPEND INITIAL LINE TO et_table ASSIGNING <ls_line>.
+              IF sy-subrc <> 0 OR <ls_line> IS NOT ASSIGNED.
+                lv_errormessage = 'Error at inserting new Line to internal Table'(002).
                 zcx_excel=>raise_text( lv_errormessage ).
-              endif.
-              while LV_ACTUAL_COL <= LV_MAX_COL.
+              ENDIF.
+              WHILE lv_actual_col <= lv_max_col.
 
-                LV_DELTA_COL = LV_ACTUAL_COL - IV_SKIPPED_COLS.
-                assign component LV_DELTA_COL of structure <LS_LINE> to <LV_VALUE>.
-                if SY-SUBRC <> 0.
-                  LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+                lv_delta_col = lv_actual_col - iv_skipped_cols.
+                ASSIGN COMPONENT lv_delta_col OF STRUCTURE <ls_line> TO <lv_value>.
+                IF sy-subrc <> 0.
+                  lv_actual_col_string = lv_actual_col.
+                  lv_actual_row_string = lv_actual_row.
+                  CONCATENATE 'Error at assigning field (Col:'(004) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
                   zcx_excel=>raise_text( lv_errormessage ).
-                endif.
+                ENDIF.
 
-                ME->GET_CELL(
-                  exporting
-                    IP_COLUMN  = LV_ACTUAL_COL    " Cell Column
-                    IP_ROW     = LV_ACTUAL_ROW    " Cell Row
-                  importing
-                    EP_VALUE   = LV_VALUE    " Cell Value
-                    EP_RC      = LV_RC    " Return Value of ABAP Statements
+                me->get_cell(
+                  EXPORTING
+                    ip_column  = lv_actual_col    " Cell Column
+                    ip_row     = lv_actual_row    " Cell Row
+                  IMPORTING
+                    ep_value   = lv_value    " Cell Value
+                    ep_rc      = lv_rc    " Return Value of ABAP Statements
                 ).
-                if LV_RC <> 0
-                  and LV_RC <> 4.                                                   "No found error means, zero/no value in cell
-                  LV_ERRORMESSAGE = |{ 'Error at reading field value (Col:'(007) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+                IF lv_rc <> 0
+                  AND lv_rc <> 4.                                                   "No found error means, zero/no value in cell
+                  lv_actual_col_string = lv_actual_col.
+                  lv_actual_row_string = lv_actual_row.
+                  CONCATENATE 'Error at reading field value (Col:'(007) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
                   zcx_excel=>raise_text( lv_errormessage ).
-                endif.
+                ENDIF.
 
-                <LV_VALUE> = LV_VALUE.
+                <lv_value> = lv_value.
 *  CATCH zcx_excel.    "
-                add 1 to LV_ACTUAL_COL.
-              endwhile.
-              add 1 to LV_ACTUAL_ROW.
-            endwhile.
-          endif.
+                ADD 1 TO lv_actual_col.
+              ENDWHILE.
+              ADD 1 TO lv_actual_row.
+            ENDWHILE.
+          ENDIF.
 
 
-        endif.
+        ENDIF.
 
-      catch CX_SY_ASSIGN_CAST_ILLEGAL_CAST.
-        LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+      CATCH cx_sy_assign_cast_illegal_cast.
+        lv_actual_col_string = lv_actual_col.
+        lv_actual_row_string = lv_actual_row.
+        CONCATENATE 'Error at assigning field (Col:'(004) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
         zcx_excel=>raise_text( lv_errormessage ).
-      catch CX_SY_ASSIGN_CAST_UNKNOWN_TYPE.
-        LV_ERRORMESSAGE = |{ 'Error at assigning field (Col:'(004) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+      CATCH cx_sy_assign_cast_unknown_type.
+        lv_actual_col_string = lv_actual_col.
+        lv_actual_row_string = lv_actual_row.
+        CONCATENATE 'Error at assigning field (Col:'(004) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
         zcx_excel=>raise_text( lv_errormessage ).
-      catch CX_SY_ASSIGN_OUT_OF_RANGE.
-        LV_ERRORMESSAGE = 'Internal table has less columns than excel'(003).
+      CATCH cx_sy_assign_out_of_range.
+        lv_errormessage = 'Internal table has less columns than excel'(003).
         zcx_excel=>raise_text( lv_errormessage ).
-      catch CX_SY_CONVERSION_ERROR.
-        LV_ERRORMESSAGE = |{ 'Error at converting field value (Col:'(006) } { LV_ACTUAL_COL } { ' Row:'(005) } { LV_ACTUAL_ROW }|.
+      CATCH cx_sy_conversion_error.
+        lv_actual_col_string = lv_actual_col.
+        lv_actual_row_string = lv_actual_row.
+        CONCATENATE 'Error at converting field value (Col:'(006) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
         zcx_excel=>raise_text( lv_errormessage ).
 
-    endtry.
-  endmethod.
+    ENDTRY.
+  ENDMETHOD.
 
 
   method GET_TABLES_ITERATOR.
@@ -4459,6 +4555,160 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   endmethod.
+
+
+METHOD set_area.
+
+  DATA: lv_row              TYPE zexcel_cell_row,
+        lv_row_end          TYPE zexcel_cell_row,
+        lv_column_start     TYPE zexcel_cell_column_alpha,
+        lv_column_end       TYPE zexcel_cell_column_alpha,
+        lv_column_start_int TYPE zexcel_cell_column_alpha,
+        lv_column_end_int   TYPE zexcel_cell_column_alpha.
+
+  MOVE: ip_row_to TO lv_row_end,
+        ip_row    TO lv_row.
+
+  IF lv_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+    lv_row_end = lv_row.
+  ENDIF.
+
+  MOVE: ip_column_start TO lv_column_start,
+        ip_column_end   TO lv_column_end.
+
+  IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+    lv_column_end = lv_column_start.
+  ENDIF.
+
+  lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
+  lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
+
+  IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_end.
+
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = 'Wrong Merging Parameters'.
+
+  ENDIF.
+
+  IF ip_data_type IS SUPPLIED OR
+     ip_abap_type IS SUPPLIED.
+
+    me->set_cell( ip_column    = lv_column_start
+                  ip_row       = lv_row
+                  ip_value     = ip_value
+                  ip_formula   = ip_formula
+                  ip_style     = ip_style
+                  ip_hyperlink = ip_hyperlink
+                  ip_data_type = ip_data_type
+                  ip_abap_type = ip_abap_type ).
+
+  ELSE.
+
+    me->set_cell( ip_column    = lv_column_start
+                  ip_row       = lv_row
+                  ip_value     = ip_value
+                  ip_formula   = ip_formula
+                  ip_style     = ip_style
+                  ip_hyperlink = ip_hyperlink ).
+
+  ENDIF.
+
+  IF ip_style IS SUPPLIED.
+
+    me->set_area_style( ip_column_start = lv_column_start
+                        ip_column_end   = lv_column_end
+                        ip_row          = lv_row
+                        ip_row_to       = lv_row_end
+                        ip_style        = ip_style ).
+  ENDIF.
+
+  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+
+    me->set_merge( ip_column_start = lv_column_start
+                   ip_column_end   = lv_column_end
+                   ip_row          = lv_row
+                   ip_row_to       = lv_row_end ).
+
+  ENDIF.
+
+ENDMETHOD.
+
+
+METHOD set_area_formula.
+  DATA: ld_row TYPE zexcel_cell_row,
+        ld_row_end TYPE zexcel_cell_row,
+        ld_column TYPE zexcel_cell_column_alpha,
+        ld_column_end TYPE zexcel_cell_column_alpha,
+        ld_column_int TYPE zexcel_cell_column_alpha,
+        ld_column_end_int TYPE zexcel_cell_column_alpha.
+
+  MOVE: ip_row_to TO ld_row_end,
+        ip_row    TO ld_row.
+  IF ld_row_end IS INITIAL or ip_row_to is not supplied.
+    ld_row_end = ld_row.
+  ENDIF.
+
+  MOVE: ip_column_start TO ld_column,
+        ip_column_end   TO ld_column_end.
+
+  if ld_column_end is initial or ip_column_end is not supplied.
+    ld_column_end = ld_column.
+  endif.
+
+  ld_column_int      = zcl_excel_common=>convert_column2int( ld_column ).
+  ld_column_end_int  = zcl_excel_common=>convert_column2int( ld_column_end ).
+
+  if ld_column_int > ld_column_end_int or ld_row > ld_row_end.
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
+        error = 'Wrong Merging Parameters'.
+  endif.
+
+  me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                        ip_formula = ip_formula ).
+
+  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+    me->set_merge( ip_column_start = ld_column ip_row = ld_row
+                   ip_column_end   = ld_column_end   ip_row_to = ld_row_end ).
+  ENDIF.
+ENDMETHOD.
+
+
+METHOD SET_AREA_STYLE.
+  DATA: ld_row_start TYPE zexcel_cell_row,
+      ld_row_end TYPE zexcel_cell_row,
+      ld_column_start_int TYPE zexcel_cell_column,
+      ld_column_end_int TYPE zexcel_cell_column,
+      ld_current_column TYPE zexcel_cell_column_alpha,
+      ld_current_row TYPE zexcel_cell_row.
+
+  MOVE: ip_row_to TO ld_row_end,
+        ip_row    TO ld_row_start.
+  IF ld_row_end IS INITIAL or ip_row_to is not supplied.
+    ld_row_end = ld_row_start.
+  ENDIF.
+  ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
+  ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
+  IF ld_column_end_int IS INITIAL or ip_column_end is not supplied.
+    ld_column_end_int = ld_column_start_int.
+  ENDIF.
+
+  WHILE ld_column_start_int <= ld_column_end_int.
+    ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
+    ld_current_row = ld_row_start.
+    WHILE ld_current_row <= ld_row_end.
+      me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
+                          ip_style = ip_style ).
+      ADD 1 TO ld_current_row.
+    ENDWHILE.
+    ADD 1 TO ld_column_start_int.
+  ENDWHILE.
+  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+    me->set_merge( ip_column_start = ip_column_start ip_row = ld_row_start
+                   ip_column_end   = ld_current_column    ip_row_to = ld_row_end ).
+  ENDIF.
+ENDMETHOD.
 
 
   method SET_CELL.
@@ -4779,6 +5029,27 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     data: LS_MERGE        type MTY_MERGE,
           LV_ERRORMESSAGE type STRING.
 
+...
+"just after variables definition
+if ip_value is supplied or ip_formula is supplied.
+" if there is a value or formula set the value to the top-left cell
+"maybe it is necessary to support other paramters for set_cell
+    if ip_value is supplied.
+      me->set_cell( ip_row = ip_row ip_column = ip_column_start
+                    ip_value = ip_value ).
+    endif.
+    if ip_formula is supplied.
+      me->set_cell( ip_row = ip_row ip_column = ip_column_start
+                    ip_value = ip_formula ).
+    endif.
+  endif.
+"call to set_merge_style to apply the style to all cells at the matrix
+  IF ip_style IS SUPPLIED.
+    me->set_merge_style( ip_row = ip_row ip_column_start = ip_column_start
+                         ip_row_to = ip_row_to ip_column_end = ip_column_end
+                         ip_style = ip_style ).
+  ENDIF.
+...
 *--------------------------------------------------------------------*
 * Build new range area to insert into range table
 *--------------------------------------------------------------------*
@@ -4822,6 +5093,38 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     insert LS_MERGE into table ME->MT_MERGED_CELLS.
 
   endmethod.
+
+
+METHOD set_merge_style.
+  DATA: ld_row_start TYPE zexcel_cell_row,
+        ld_row_end TYPE zexcel_cell_row,
+        ld_column_start TYPE zexcel_cell_column,
+        ld_column_end TYPE zexcel_cell_column,
+        ld_current_column TYPE zexcel_cell_column_alpha,
+        ld_current_row type zexcel_cell_row.
+
+  MOVE: ip_row_to TO ld_row_end,
+        ip_row    TO ld_row_start.
+  IF ld_row_end IS INITIAL.
+    ld_row_end = ld_row_start.
+  ENDIF.
+  ld_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
+  ld_column_end   = zcl_excel_common=>convert_column2int( ip_column_end ).
+  IF ld_column_end IS INITIAL.
+    ld_column_end = ld_column_start.
+  ENDIF.
+  "set the style cell by cell
+  WHILE ld_column_start <= ld_column_end.
+    ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start ).
+    ld_current_row = ld_row_start.
+    WHILE ld_current_row <= ld_row_end.
+      me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
+                          ip_style = ip_style ).
+      add 1 to ld_current_row.
+    ENDWHILE.
+    ADD 1 TO ld_column_start.
+  ENDWHILE.
+ENDMETHOD.
 
 
   method SET_PRINT_GRIDLINES.

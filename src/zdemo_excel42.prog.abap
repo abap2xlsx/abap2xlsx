@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  ZDEMO_EXCEL42.
+REPORT ZDEMO_EXCEL42.
 type-POOLS: vrm.
 
 DATA: lo_excel                TYPE REF TO zcl_excel,
