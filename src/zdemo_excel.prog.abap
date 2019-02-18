@@ -59,7 +59,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel22 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Bind table with field catalog & sheet style
   SUBMIT zdemo_excel23 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options
   SUBMIT zdemo_excel24 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Multiple sheets with different default date formats
-  SUBMIT zdemo_excel25 AND RETURN.                                                                             "#EC CI_SUBMIT abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
+  SUBMIT zdemo_excel25 AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Create and xlsx on Application Server (could be executed in batch mode)
   " zdemo_excel26 is not added because it uses ALV and cannot be processed (Native)
   SUBMIT zdemo_excel27 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Conditional Formatting
   SUBMIT zdemo_excel28 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: CSV writer
@@ -77,6 +77,8 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel39 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Charts
   SUBMIT zdemo_excel40 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Demo Printsettings
   SUBMIT zdemo_excel41 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Inheritance
+
+  SUBMIT zdemo_excel_comments WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Comments
   "
   " Reader/Writer Demo must always run at the end
   " to make sure all documents where created
