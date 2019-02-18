@@ -207,8 +207,9 @@ method CREATE.
         lv_xl_comment_rels        TYPE string,   " (+) Issue #180
         lv_xl_drawing             TYPE string,
         lv_xl_drawing_rels        TYPE string,
-        lv_syindex                TYPE string,
+        lv_index_str              TYPE string,
         lv_value                  TYPE string,
+        lv_sheet_index            TYPE i,
         lv_drawing_index          TYPE i,
         lv_comment_index          TYPE i.        " (+) Issue #180
 
@@ -280,10 +281,10 @@ method CREATE.
 * STEP 10: Add sheet#.xml and drawing#.xml to zip
   lo_iterator = me->excel->get_worksheets_iterator( ).
   lo_active_worksheet = me->excel->get_active_worksheet( ).
-  lv_drawing_index = 1.
-  lv_comment_index = 1.  " (+) Issue #180
 
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    lv_sheet_index = sy-index.
+
     lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
     IF lo_active_worksheet->get_guid( ) EQ lo_worksheet->get_guid( ).
       lv_active = abap_true.
@@ -293,19 +294,66 @@ method CREATE.
     lv_content = me->create_xl_sheet( io_worksheet = lo_worksheet
                                       iv_active    = lv_active ).
     lv_xl_sheet = me->c_xl_sheet.
-    MOVE sy-index TO: lv_syindex,
-                       lv_comment_index.   " (+) Issue #180
-    SHIFT lv_syindex RIGHT DELETING TRAILING space.
-    SHIFT lv_syindex LEFT DELETING LEADING space.
-    REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet WITH lv_syindex.
+
+    lv_index_str = lv_sheet_index.
+    CONDENSE lv_index_str NO-GAPS.
+    REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet WITH lv_index_str.
     lo_zip->add( name    = lv_xl_sheet
                  content = lv_content ).
+
+* Begin - Add - Issue #180
+* Add comments **********************************
+    lo_comments = lo_worksheet->get_comments( ).
+    IF lo_comments->is_empty( ) = abap_false.
+      lv_comment_index = lv_comment_index + 1.
+
+      " Create comment itself
+      lv_content = me->create_xl_comments( lo_worksheet ).
+      lv_xl_comment = me->c_xl_comments.
+      lv_index_str = lv_comment_index.
+      CONDENSE lv_index_str NO-GAPS.
+      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_comment WITH lv_index_str.
+      lo_zip->add( name    = lv_xl_comment
+                   content = lv_content ).
+
+      " Create vmlDrawing that will host the comment
+      lv_content = me->create_xl_drawing_for_comments( lo_worksheet ).
+      lv_xl_drawing_for_comment = me->cl_xl_drawing_for_comments.
+      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_for_comment WITH lv_index_str.
+      lo_zip->add( name    = lv_xl_drawing_for_comment
+                   content = lv_content ).
+    ENDIF.
+* End   - Add - Issue #180
+
+* Add drawings **********************************
+    lo_drawings = lo_worksheet->get_drawings( ).
+    IF lo_drawings->is_empty( ) = abap_false.
+      lv_drawing_index = lv_drawing_index + 1.
+
+      lv_content = me->create_xl_drawings( lo_worksheet ).
+      lv_xl_drawing = me->c_xl_drawings.
+      lv_index_str = lv_drawing_index.
+      CONDENSE lv_index_str NO-GAPS.
+      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing WITH lv_index_str.
+      lo_zip->add( name    = lv_xl_drawing
+                   content = lv_content ).
+
+      lv_content = me->create_xl_drawings_rels( lo_worksheet ).
+      lv_xl_drawing_rels = me->c_xl_drawings_rels.
+      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_rels WITH lv_index_str.
+      lo_zip->add( name    = lv_xl_drawing_rels
+                   content = lv_content ).
+    ENDIF.
+
 
     lv_xl_sheet_rels = me->c_xl_sheet_rels.
     lv_content = me->create_xl_sheet_rels( io_worksheet = lo_worksheet
                                            iv_drawing_index = lv_drawing_index
                                            iv_comment_index = lv_comment_index ).      " (+) Issue #180
-    REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet_rels WITH lv_syindex.
+
+    lv_index_str = lv_sheet_index.
+    CONDENSE lv_index_str NO-GAPS.
+    REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet_rels WITH lv_index_str.
     lo_zip->add( name    = lv_xl_sheet_rels
                  content = lv_content ).
 
@@ -321,50 +369,7 @@ method CREATE.
                     content = lv_content ).
     ENDWHILE.
 
-* Begin - Add - Issue #180
-* Add comments **********************************
-    lo_comments = lo_worksheet->get_comments( ).
-    IF lo_comments->is_empty( ) = abap_false.
-      MOVE lv_comment_index TO lv_syindex.
-      SHIFT lv_syindex RIGHT DELETING TRAILING space.
-      SHIFT lv_syindex LEFT DELETING LEADING space.
 
-      " Create comment itself
-      lv_content = me->create_xl_comments( lo_worksheet ).
-      lv_xl_comment = me->c_xl_comments.
-      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_comment WITH lv_syindex.
-      lo_zip->add( name    = lv_xl_comment
-                   content = lv_content ).
-
-      " Create vmlDrawing that will host the comment
-      lv_content = me->create_xl_drawing_for_comments( lo_worksheet ).
-      lv_xl_drawing_for_comment = me->cl_xl_drawing_for_comments.
-      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_for_comment WITH lv_syindex.
-      lo_zip->add( name    = lv_xl_drawing_for_comment
-                   content = lv_content ).
-    ENDIF.
-* End   - Add - Issue #180
-
-* Add drawings **********************************
-    lo_drawings = lo_worksheet->get_drawings( ).
-    IF lo_drawings->is_empty( ) = abap_false.
-      MOVE lv_drawing_index TO lv_syindex.
-      SHIFT lv_syindex RIGHT DELETING TRAILING space.
-      SHIFT lv_syindex LEFT DELETING LEADING space.
-
-      lv_content = me->create_xl_drawings( lo_worksheet ).
-      lv_xl_drawing = me->c_xl_drawings.
-      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing WITH lv_syindex.
-      lo_zip->add( name    = lv_xl_drawing
-                   content = lv_content ).
-
-      lv_content = me->create_xl_drawings_rels( lo_worksheet ).
-      lv_xl_drawing_rels = me->c_xl_drawings_rels.
-      REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_rels WITH lv_syindex.
-      lo_zip->add( name    = lv_xl_drawing_rels
-                   content = lv_content ).
-      ADD 1 TO lv_drawing_index.
-    ENDIF.
 
   ENDWHILE.
 
