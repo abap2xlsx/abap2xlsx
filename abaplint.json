@@ -69,7 +69,7 @@
       "enabled": false
     },
     "breakpoint": {
-      "enabled": false
+      "enabled": true 
     },
     "nesting": {
       "enabled": false,
