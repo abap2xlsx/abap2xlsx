@@ -31,8 +31,10 @@ protected section.
   data SHARED_STRINGS type ZEXCEL_T_SHARED_STRING .
   data STYLES_COND_MAPPING type ZEXCEL_T_STYLES_COND_MAPPING .
   data STYLES_MAPPING type ZEXCEL_T_STYLES_MAPPING .
-  constants C_XL_COMMENTS type STRING value 'xl/comments#.xml' ##NO_TEXT.
-  constants CL_XL_DRAWING_FOR_COMMENTS type STRING value 'xl/drawings/vmlDrawing#.vml' ##NO_TEXT.
+  constants C_XL_COMMENTS type STRING value 'xl/comments#.xml'. "#EC NOTEXT
+  constants CL_XL_DRAWING_FOR_COMMENTS type STRING value 'xl/drawings/vmlDrawing#.vml'. "#EC NOTEXT
+  constants C_XL_DRAWINGS_VML type STRING value 'xl/drawings/vmlDrawing1.vml'. "#EC NOTEXT
+  constants C_XL_DRAWINGS_VML_RELS type STRING value 'xl/drawings/_rels/vmlDrawing1.vml.rels'. "#EC NOTEXT
 
   methods CREATE_XL_SHEET_SHEET_DATA
     importing
@@ -158,6 +160,25 @@ protected section.
       !IV_IXML_ELEMENT type ref to IF_IXML_ELEMENT
     returning
       value(RV_XSTRING) type XSTRING .
+  methods CREATE_XL_DRAWINGS_VML
+    returning
+      value(EP_CONTENT) type XSTRING .
+  methods SET_VML_STRING
+    returning
+      value(EP_CONTENT) type STRING .
+  methods CREATE_XL_DRAWINGS_VML_RELS
+    returning
+      value(EP_CONTENT) type XSTRING .
+  methods SET_VML_SHAPE_FOOTER
+    importing
+      !IS_FOOTER type ZEXCEL_S_WORKSHEET_HEAD_FOOT
+    returning
+      value(EP_CONTENT) type STRING .
+  methods SET_VML_SHAPE_HEADER
+    importing
+      !IS_HEADER type ZEXCEL_S_WORKSHEET_HEAD_FOOT
+    returning
+      value(EP_CONTENT) type STRING .
 private section.
 
 *"* private components of class ZCL_EXCEL_WRITER_2007
@@ -183,7 +204,7 @@ METHOD add_further_data_to_zip.
 ENDMETHOD.
 
 
-method CREATE.
+METHOD create.
 
 * Office 2007 file format is a cab of several xml files with extension .xlsx
 
@@ -378,12 +399,14 @@ method CREATE.
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
     lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+*    IF lo_drawing->get_type( ) NE zcl_excel_drawing=>type_image_header_footer.
 
-    lv_content = lo_drawing->get_media( ).
-    lv_value = lo_drawing->get_media_name( ).
-    CONCATENATE 'xl/media/' lv_value INTO lv_value.
-    lo_zip->add( name    = lv_value
-                 content = lv_content ).
+      lv_content = lo_drawing->get_media( ).
+      lv_value = lo_drawing->get_media_name( ).
+      CONCATENATE 'xl/media/' lv_value INTO lv_value.
+      lo_zip->add( name    = lv_value
+                   content = lv_content ).
+*    ENDIF.
   ENDWHILE.
 
 **********************************************************************
@@ -410,6 +433,20 @@ method CREATE.
     "-------------------------------------------------
   ENDWHILE.
 
+**********************************************************************
+*** Header Footer Image
+*** Thanks to Marios Toumanis for the hints!
+  lv_content = me->create_xl_drawings_vml( ).
+  lo_zip->add( name    = me->c_xl_drawings_vml
+               content = lv_content ).
+
+  lv_content = me->create_xl_drawings_vml_rels( ).
+  lv_xl_drawing_rels = me->c_xl_drawings_vml_rels.
+  lo_zip->add( name    = lv_xl_drawing_rels
+               content = lv_content ).
+**********************************************************************
+**********************************************************************
+
 * Second to last step: Allow further information put into the zip archive by child classes
   me->add_further_data_to_zip( lo_zip ).
 
@@ -417,7 +454,7 @@ method CREATE.
 * Last step: Create the final zip
   ep_excel = lo_zip->save( ).
 
-  endmethod.
+ENDMETHOD.
 
 
 method CREATE_CONTENT_TYPES.
@@ -2591,6 +2628,137 @@ method CREATE_XL_DRAWINGS_RELS.
   endmethod.
 
 
+METHOD create_xl_drawings_vml.
+
+  DATA:
+      lo_xml_document TYPE REF TO cl_xml_document,
+      ld_stream       TYPE string.
+
+
+* INIT_RESULT
+  CLEAR ep_content.
+
+
+* BODY
+  ld_stream = set_vml_string( ).
+
+  CREATE OBJECT lo_xml_document.
+  CALL METHOD lo_xml_document->parse_string
+    EXPORTING
+      stream = ld_stream.
+
+*  CALL FUNCTION 'CRM_IC_XML_STRING2XSTRING'
+*    EXPORTING
+*      instring   = ld_stream
+*    IMPORTING
+*      outxstring = ep_content.
+
+  CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
+    EXPORTING
+      text   = ld_stream
+    IMPORTING
+      buffer = ep_content
+    EXCEPTIONS
+      failed = 1
+      OTHERS = 2.
+  IF sy-subrc <> 0.
+    CLEAR ep_content.
+  ENDIF.
+
+
+ENDMETHOD.
+
+
+METHOD create_xl_drawings_vml_rels.
+
+** Constant node name
+  DATA: lc_xml_node_relationships TYPE string VALUE 'Relationships',
+        lc_xml_node_relationship  TYPE string VALUE 'Relationship',
+        " Node attributes
+        lc_xml_attr_id            TYPE string VALUE 'Id',
+        lc_xml_attr_type          TYPE string VALUE 'Type',
+        lc_xml_attr_target        TYPE string VALUE 'Target',
+        " Node namespace
+        lc_xml_node_rels_ns       TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
+        lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
+        lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
+
+  DATA: lo_iterator           TYPE REF TO cl_object_collection_iterator,
+        lo_drawing          TYPE REF TO zcl_excel_drawing,
+        lo_ixml          TYPE REF TO if_ixml,
+        lo_document      TYPE REF TO if_ixml_document,
+        lo_element_root  TYPE REF TO if_ixml_element,
+        lo_element       TYPE REF TO if_ixml_element,
+        lo_encoding      TYPE REF TO if_ixml_encoding,
+        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+        lo_ostream       TYPE REF TO if_ixml_ostream,
+        lo_renderer      TYPE REF TO if_ixml_renderer,
+
+        lv_value       TYPE string,
+        lv_relation_id TYPE i.
+
+
+* BODY
+**********************************************************************
+* STEP 1: Create [Content_Types].xml into the root of the ZIP
+  lo_ixml = cl_ixml=>create( ).
+
+**********************************************************************
+* STEP 2: Set document attributes
+  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
+                                          character_set = 'utf-8' ).
+  lo_document = lo_ixml->create_document( ).
+  lo_document->set_encoding( lo_encoding ).
+  lo_document->set_standalone( abap_true ).
+
+**********************************************************************
+* STEP 3: Create main node relationships
+  lo_element_root  = lo_document->create_simple_element( name   = lc_xml_node_relationships
+                                                         parent = lo_document ).
+  lo_element_root->set_attribute_ns( name  = 'xmlns'
+                                     value = lc_xml_node_rels_ns ).
+
+**********************************************************************
+* STEP 4: Create subnodes
+  lv_relation_id = 0.
+  lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
+  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    IF lo_drawing->get_type( ) = zcl_excel_drawing=>type_image_header_footer.
+      ADD 1 TO lv_relation_id.
+      lv_value = lv_relation_id.
+      CONDENSE lv_value.
+      CONCATENATE 'rId' lv_value INTO lv_value.
+      lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
+                                                         parent = lo_document ).
+      lo_element->set_attribute_ns( name  = lc_xml_attr_id
+*                                    value = 'LOGO' ).
+                                    value = lv_value ).
+      lo_element->set_attribute_ns( name  = lc_xml_attr_type
+                                    value = lc_xml_node_rid_image_tp ).
+
+      lv_value = '../media/#'.
+      REPLACE '#' IN lv_value WITH lo_drawing->get_media_name( ).
+      lo_element->set_attribute_ns( name  = lc_xml_attr_target
+*                                    value = '../media/LOGO.png' ).
+                                    value = lv_value ).
+      lo_element_root->append_child( new_child = lo_element ).
+    ENDIF.
+
+  ENDWHILE.
+
+
+
+**********************************************************************
+* STEP 5: Create xstring stream
+  lo_streamfactory = lo_ixml->create_stream_factory( ).
+  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
+  lo_renderer->render( ).
+
+ENDMETHOD.
+
+
 method CREATE_XL_DRAWING_ANCHOR.
 
 ** Constant node name
@@ -3503,6 +3671,12 @@ METHOD create_xl_sheet.
         lc_xml_node_mergecells         TYPE string VALUE 'mergeCells',
         lc_xml_node_drawing            TYPE string VALUE 'drawing',
         lc_xml_node_drawing_for_cmt    TYPE string VALUE 'legacyDrawing',
+
+**********************************************************************
+        lc_xml_node_drawing_for_hd_ft    TYPE string VALUE 'legacyDrawingHF',
+**********************************************************************
+
+
         lc_xml_node_headerfooter       TYPE string VALUE 'headerFooter',
         lc_xml_node_oddheader          TYPE string VALUE 'oddHeader',
         lc_xml_node_oddfooter          TYPE string VALUE 'oddFooter',
@@ -5068,6 +5242,30 @@ METHOD create_xl_sheet.
   ENDIF.
 * End   - Add - Issue #180
 
+* Header/Footer Image
+  DATA:  lo_drawing          TYPE REF TO zcl_excel_drawing.
+  lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
+  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    IF lo_drawing->get_type( ) = zcl_excel_drawing=>type_image_header_footer.
+      lo_element = lo_document->create_simple_element( name   = lc_xml_node_drawing_for_hd_ft
+                                                           parent = lo_document ).
+      ADD 1 TO lv_relation_id.  " +1 for legacyDrawings
+      lv_value = lv_relation_id.
+      CONDENSE lv_value.
+      CONCATENATE 'rId' lv_value INTO lv_value.
+      lo_element->set_attribute( name = 'r:id'
+                                 value = lv_value ).
+      lo_element_root->append_child( new_child = lo_element ).
+
+      ADD 1 TO lv_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
+      EXIT.
+    ENDIF.
+  ENDWHILE.
+
+
+*
+
 * tables
   DATA lv_table_count TYPE i.
 
@@ -5355,6 +5553,46 @@ METHOD create_xl_sheet_rels.
     lo_element_root->append_child( new_child = lo_element ).
   ENDIF.
 * End   - Add - Issue #180
+
+**********************************************************************
+* header footer image
+  DATA: lo_drawing          TYPE REF TO zcl_excel_drawing.
+
+  lo_comments = io_worksheet->get_comments( ).
+  IF lo_comments->is_empty( ) = abap_true.
+*    lv_relation_id = 0.
+    lv_relation_id = iv_drawing_index.
+    lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
+    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+      lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+      IF lo_drawing->get_type( ) = zcl_excel_drawing=>type_image_header_footer.
+        ADD 1 TO lv_relation_id.
+        " Drawing for comment/header/footer
+        lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
+                                                         parent = lo_document ).
+        lv_value = lv_relation_id.
+        CONDENSE lv_value.
+        CONCATENATE 'rId' lv_value INTO lv_value.
+        lo_element->set_attribute_ns( name  = lc_xml_attr_id
+                                      value = lv_value ).
+        lo_element->set_attribute_ns( name  = lc_xml_attr_type
+                                      value = lc_xml_node_rid_drawing_cmt_tp ).
+
+        lv_index_str = iv_comment_index.
+        CONDENSE lv_index_str NO-GAPS.
+        MOVE me->cl_xl_drawing_for_comments TO lv_value.
+        REPLACE 'xl' WITH '..' INTO lv_value.
+        REPLACE '#' WITH lv_index_str INTO lv_value.
+        lo_element->set_attribute_ns( name  = lc_xml_attr_target
+                                      value = lv_value ).
+        lo_element_root->append_child( new_child = lo_element ).
+        EXIT.
+      ENDIF.
+    ENDWHILE.
+  ENDIF.
+*** End Header Footer
+**********************************************************************
+
 
   lo_iterator = io_worksheet->get_tables_iterator( ).
   WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
@@ -7437,6 +7675,293 @@ METHOD render_ixml_element_no_header.
 
 
 *  rv_xstring = lv_contentx.
+
+ENDMETHOD.
+
+
+METHOD set_vml_shape_footer.
+
+  CONSTANTS: lc_shape TYPE string VALUE '<v:shape id="{ID}" o:spid="_x0000_s1025" type="#_x0000_t75" style=''position:absolute;margin-left:0;margin-top:0;width:{WIDTH}pt;height:{HEIGHT}pt; z-index:1''>',
+             lc_shape_image TYPE string VALUE '<v:imagedata o:relid="{RID}" o:title="Logo Title"/><o:lock v:ext="edit" rotation="t"/></v:shape>',
+             lc_shape_header_center TYPE string VALUE 'CH',
+             lc_shape_header_left TYPE string VALUE 'LH',
+             lc_shape_header_right TYPE string VALUE 'RH',
+             lc_shape_footer_center TYPE string VALUE 'CF',
+             lc_shape_footer_left TYPE string VALUE 'LF',
+             lc_shape_footer_right TYPE string VALUE 'RF'.
+
+  DATA: lv_content_left TYPE string,
+        lv_content_center TYPE string,
+        lv_content_right TYPE string,
+        lv_content_image_left TYPE string,
+        lv_content_image_center TYPE string,
+        lv_content_image_right TYPE string,
+        lv_value TYPE string,
+        ls_drawing_position TYPE zexcel_drawing_position.
+
+  IF is_footer-left_image IS NOT INITIAL.
+    lv_content_left = lc_shape.
+    REPLACE '{ID}' IN lv_content_left WITH lc_shape_footer_left.
+    ls_drawing_position = is_footer-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_left WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_left WITH lv_value.
+    lv_content_image_left = lc_shape_image.
+    lv_value = is_footer-left_image->get_index( ).
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    REPLACE '{RID}' IN lv_content_image_left WITH lv_value.
+  ENDIF.
+  IF is_footer-center_image IS NOT INITIAL.
+    lv_content_center = lc_shape.
+    REPLACE '{ID}' IN lv_content_center WITH lc_shape_footer_center.
+    ls_drawing_position = is_footer-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_center WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_center WITH lv_value.
+    lv_content_image_center = lc_shape_image.
+    lv_value = is_footer-center_image->get_index( ).
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    REPLACE '{RID}' IN lv_content_image_center WITH lv_value.
+  ENDIF.
+  IF is_footer-right_image IS NOT INITIAL.
+    lv_content_right = lc_shape.
+    REPLACE '{ID}' IN lv_content_right WITH lc_shape_footer_right.
+    ls_drawing_position = is_footer-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_right WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_right WITH lv_value.
+    lv_content_image_right = lc_shape_image.
+    lv_value = is_footer-right_image->get_index( ).
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    REPLACE '{RID}' IN lv_content_image_right WITH lv_value.
+  ENDIF.
+
+  CONCATENATE lv_content_left
+              lv_content_image_left
+              lv_content_center
+              lv_content_image_center
+              lv_content_right
+              lv_content_image_right
+         INTO ep_content.
+
+ENDMETHOD.
+
+
+METHOD set_vml_shape_header.
+
+*  CONSTANTS: lc_shape TYPE string VALUE '<v:shape id="{ID}" o:spid="_x0000_s1025" type="#_x0000_t75" style=''position:absolute;margin-left:0;margin-top:0;width:198.75pt;height:48.75pt; z-index:1''>',
+  CONSTANTS: lc_shape TYPE string VALUE '<v:shape id="{ID}" o:spid="_x0000_s1025" type="#_x0000_t75" style=''position:absolute;margin-left:0;margin-top:0;width:{WIDTH}pt;height:{HEIGHT}pt; z-index:1''>',
+             lc_shape_image TYPE string VALUE '<v:imagedata o:relid="{RID}" o:title="Logo Title"/><o:lock v:ext="edit" rotation="t"/></v:shape>',
+             lc_shape_header_center TYPE string VALUE 'CH',
+             lc_shape_header_left TYPE string VALUE 'LH',
+             lc_shape_header_right TYPE string VALUE 'RH',
+             lc_shape_footer_center TYPE string VALUE 'CF',
+             lc_shape_footer_left TYPE string VALUE 'LF',
+             lc_shape_footer_right TYPE string VALUE 'RF'.
+
+  DATA: lv_content_left TYPE string,
+        lv_content_center TYPE string,
+        lv_content_right TYPE string,
+        lv_content_image_left TYPE string,
+        lv_content_image_center TYPE string,
+        lv_content_image_right TYPE string,
+        lv_value TYPE string,
+        ls_drawing_position TYPE zexcel_drawing_position.
+
+  CLEAR ep_content.
+
+  IF is_header-left_image IS NOT INITIAL.
+    lv_content_left = lc_shape.
+    REPLACE '{ID}' IN lv_content_left WITH lc_shape_header_left.
+    ls_drawing_position = is_header-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_left WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_left WITH lv_value.
+    lv_content_image_left = lc_shape_image.
+    lv_value = is_header-left_image->get_index( ).
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    REPLACE '{RID}' IN lv_content_image_left WITH lv_value.
+  ENDIF.
+  IF is_header-center_image IS NOT INITIAL.
+    lv_content_center = lc_shape.
+    REPLACE '{ID}' IN lv_content_center WITH lc_shape_header_center.
+    ls_drawing_position = is_header-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_center WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_center WITH lv_value.
+    lv_content_image_center = lc_shape_image.
+    lv_value = is_header-center_image->get_index( ).
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    REPLACE '{RID}' IN lv_content_image_center WITH lv_value.
+  ENDIF.
+  IF is_header-right_image IS NOT INITIAL.
+    lv_content_right = lc_shape.
+    REPLACE '{ID}' IN lv_content_right WITH lc_shape_header_right.
+    ls_drawing_position = is_header-left_image->get_position( ).
+    IF ls_drawing_position-size-height IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-height.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{HEIGHT}' IN lv_content_right WITH lv_value.
+    IF ls_drawing_position-size-width IS NOT INITIAL.
+      lv_value = ls_drawing_position-size-width.
+    ELSE.
+      lv_value = '100'.
+    ENDIF.
+    CONDENSE lv_value.
+    REPLACE '{WIDTH}' IN lv_content_right WITH lv_value.
+    lv_content_image_right = lc_shape_image.
+    lv_value = is_header-right_image->get_index( ).
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    REPLACE '{RID}' IN lv_content_image_right WITH lv_value.
+  ENDIF.
+
+  CONCATENATE lv_content_left
+              lv_content_image_left
+              lv_content_center
+              lv_content_image_center
+              lv_content_right
+              lv_content_image_right
+         INTO ep_content.
+
+ENDMETHOD.
+
+
+METHOD set_vml_string.
+
+  DATA:
+      ld_1 TYPE string,
+      ld_2 TYPE string,
+      ld_3 TYPE string,
+      ld_4 TYPE string,
+      ld_5 TYPE string,
+      ld_6 TYPE string,
+      ld_7 TYPE string,
+
+      lv_value       TYPE string,
+      lv_relation_id TYPE i,
+      lo_iterator    TYPE REF TO cl_object_collection_iterator,
+      lo_drawing     TYPE REF TO zcl_excel_drawing,
+      lo_worksheet   TYPE REF TO zcl_excel_worksheet,
+      ls_odd_header  TYPE zexcel_s_worksheet_head_foot,
+      ls_odd_footer  TYPE zexcel_s_worksheet_head_foot,
+      ls_even_header TYPE zexcel_s_worksheet_head_foot,
+      ls_even_footer TYPE zexcel_s_worksheet_head_foot.
+
+
+* INIT_RESULT
+  CLEAR ep_content.
+
+
+* BODY
+  ld_1 = '<xml xmlns:v="urn:schemas-microsoft-com:vml"  xmlns:o="urn:schemas-microsoft-com:office:office"  xmlns:x="urn:schemas-microsoft-com:office:excel"><o:shapelayout v:ext="edit"><o:idmap v:ext="edit" data="1"/></o:shapelayout>'.
+  ld_2 = '<v:shapetype id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f"><v:stroke joinstyle="miter"/><v:formulas><v:f eqn="if lineDrawn pixelLineWidth 0"/>'.
+  ld_3 = '<v:f eqn="sum @0 1 0"/><v:f eqn="sum 0 0 @1"/><v:f eqn="prod @2 1 2"/><v:f eqn="prod @3 21600 pixelWidth"/><v:f eqn="prod @3 21600 pixelHeight"/><v:f eqn="sum @0 0 1"/><v:f eqn="prod @6 1 2"/><v:f eqn="prod @7 21600 pixelWidth"/>'.
+  ld_4 = '<v:f eqn="sum @8 21600 0"/><v:f eqn="prod @7 21600 pixelHeight"/><v:f eqn="sum @10 21600 0"/></v:formulas><v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/><o:lock v:ext="edit" aspectratio="t"/></v:shapetype>'.
+
+
+  CONCATENATE ld_1
+              ld_2
+              ld_3
+              ld_4
+       INTO ep_content.
+
+  lv_relation_id = 0.
+  lo_iterator = me->excel->get_worksheets_iterator( ).
+  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+
+    lo_worksheet->sheet_setup->get_header_footer( IMPORTING ep_odd_header = ls_odd_header
+                                                            ep_odd_footer = ls_odd_footer
+                                                            ep_even_header = ls_even_header
+                                                            ep_even_footer = ls_even_footer ).
+
+    ld_5 = me->set_vml_shape_header( ls_odd_header ).
+    CONCATENATE ep_content
+                ld_5
+           INTO ep_content.
+    ld_5 = me->set_vml_shape_header( ls_even_header ).
+    CONCATENATE ep_content
+                ld_5
+           INTO ep_content.
+    ld_5 = me->set_vml_shape_footer( ls_odd_footer ).
+    CONCATENATE ep_content
+                ld_5
+           INTO ep_content.
+    ld_5 = me->set_vml_shape_footer( ls_even_footer ).
+    CONCATENATE ep_content
+                ld_5
+           INTO ep_content.
+  ENDWHILE.
+
+  ld_7 = '</xml>'.
+
+  CONCATENATE ep_content
+              ld_7
+         INTO ep_content.
 
 ENDMETHOD.
 
