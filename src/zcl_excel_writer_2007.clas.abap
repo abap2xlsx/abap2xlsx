@@ -2642,11 +2642,24 @@ METHOD create_xl_drawings_vml.
     EXPORTING
       stream = ld_stream.
 
-  CALL FUNCTION 'CRM_IC_XML_STRING2XSTRING'
+*  CALL FUNCTION 'CRM_IC_XML_STRING2XSTRING'
+*    EXPORTING
+*      instring   = ld_stream
+*    IMPORTING
+*      outxstring = ep_content.
+
+  CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
     EXPORTING
-      instring   = ld_stream
+      text   = ld_stream
     IMPORTING
-      outxstring = ep_content.
+      buffer = ep_content
+    EXCEPTIONS
+      failed = 1
+      OTHERS = 2.
+  IF sy-subrc <> 0.
+    CLEAR ep_content.
+  ENDIF.
+
 
 ENDMETHOD.
 
