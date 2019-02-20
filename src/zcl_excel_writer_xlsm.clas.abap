@@ -67,7 +67,8 @@ method CREATE.
         lv_xl_drawing_rels TYPE string,
         lv_syindex         TYPE string,
         lv_value           TYPE string,
-        lv_drawing_index   TYPE i.
+        lv_drawing_index   TYPE i,
+        lv_comment_index type i. " (+) Issue 588
 
 **********************************************************************
 * Start of insertion # issue 139 - Dateretention of cellstyles
@@ -150,7 +151,8 @@ method CREATE.
     lv_content = me->create_xl_sheet( io_worksheet = lo_worksheet
                                       iv_active    = lv_active ).
     lv_xl_sheet = me->c_xl_sheet.
-    MOVE sy-index TO lv_syindex.
+    MOVE sy-index TO: lv_syindex,
+                      lv_comment_index. " (+) Issue 588
     SHIFT lv_syindex RIGHT DELETING TRAILING space.
     SHIFT lv_syindex LEFT DELETING LEADING space.
     REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet WITH lv_syindex.
@@ -159,7 +161,8 @@ method CREATE.
 
     lv_xl_sheet_rels = me->c_xl_sheet_rels.
     lv_content = me->create_xl_sheet_rels( io_worksheet = lo_worksheet
-                                           iv_drawing_index = lv_drawing_index ).
+                                           iv_drawing_index = lv_drawing_index
+                                           iv_comment_index = lv_comment_index ). " (+) Issue 588
     REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet_rels WITH lv_syindex.
     lo_zip->add( name    = lv_xl_sheet_rels
                  content = lv_content ).
