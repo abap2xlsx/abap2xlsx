@@ -68,7 +68,7 @@ method CREATE.
         lv_syindex         TYPE string,
         lv_value           TYPE string,
         lv_drawing_index   TYPE i,
-        lv_comment_index type i. " (+) Issue 588
+        lv_comment_index   TYPE i. " (+) Issue 588
 
 **********************************************************************
 * Start of insertion # issue 139 - Dateretention of cellstyles
