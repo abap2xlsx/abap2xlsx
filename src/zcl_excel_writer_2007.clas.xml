@@ -111,6 +111,12 @@
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CLSNAME>ZCL_EXCEL_WRITER_2007</CLSNAME>
+     <CMPNAME>CREATE_XL_DRAWINGS_HDFT_RELS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Create &apos;xl/drawings/_rel/vmlDrawing1.vml.rels&apos;</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_WRITER_2007</CLSNAME>
      <CMPNAME>CREATE_XL_DRAWINGS_RELS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;</DESCRIPT>
