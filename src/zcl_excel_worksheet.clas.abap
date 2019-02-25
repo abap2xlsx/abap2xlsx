@@ -1,631 +1,634 @@
-class ZCL_EXCEL_WORKSHEET definition
-  public
-  create public .
+*----------------------------------------------------------------------*
+*       CLASS ZCL_EXCEL_WORKSHEET DEFINITION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS zcl_excel_worksheet DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-  public section.
+  PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-    type-pools ABAP .
-
-    interfaces ZIF_EXCEL_SHEET_PRINTSETTINGS .
-    interfaces ZIF_EXCEL_SHEET_PROPERTIES .
-    interfaces ZIF_EXCEL_SHEET_PROTECTION .
-    interfaces ZIF_EXCEL_SHEET_VBA_PROJECT .
-
-    types:
-      begin of  MTY_S_OUTLINE_ROW,
-        ROW_FROM  type I,
-        ROW_TO    type I,
-        COLLAPSED type ABAP_BOOL,
-      end of MTY_S_OUTLINE_ROW .
-    types:
-      MTY_TS_OUTLINES_ROW type sorted table of MTY_S_OUTLINE_ROW with unique key ROW_FROM ROW_TO .
-
-    constants C_BREAK_COLUMN type ZEXCEL_BREAK value 2.     "#EC NOTEXT
-    constants C_BREAK_NONE type ZEXCEL_BREAK value 0.       "#EC NOTEXT
-    constants C_BREAK_ROW type ZEXCEL_BREAK value 1.        "#EC NOTEXT
-    data EXCEL type ref to ZCL_EXCEL read-only .
-  data PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES read-only value ABAP_FALSE. "#EC NOTEXT . " .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-    data SHEET_CONTENT type ZEXCEL_T_CELL_DATA .
-    data SHEET_SETUP type ref to ZCL_EXCEL_SHEET_SETUP .
-   data SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-    data SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_GRIDLINES read-only value ABAP_TRUE. "#EC NOTEXT . " .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-    data STYLES type ZEXCEL_T_SHEET_STYLE .
-    data TABCOLOR type ZEXCEL_S_TABCOLOR read-only .
-
-  methods ADD_COMMENT
-    importing
-      !IP_COMMENT type ref to ZCL_EXCEL_COMMENT .
-    methods ADD_DRAWING
-      importing
-        !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
-    methods ADD_NEW_COLUMN
-      importing
-        !IP_COLUMN       type SIMPLE
-      returning
-        value(EO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-    methods ADD_NEW_STYLE_COND
-      returning
-        value(EO_STYLE_COND) type ref to ZCL_EXCEL_STYLE_COND .
-    methods ADD_NEW_DATA_VALIDATION
-      returning
-        value(EO_DATA_VALIDATION) type ref to ZCL_EXCEL_DATA_VALIDATION .
-    methods ADD_NEW_RANGE
-      returning
-        value(EO_RANGE) type ref to ZCL_EXCEL_RANGE .
-    methods ADD_NEW_ROW
-      importing
-        !IP_ROW       type SIMPLE
-      returning
-        value(EO_ROW) type ref to ZCL_EXCEL_ROW .
-    methods BIND_ALV
-      importing
-        !IO_ALV      type ref to OBJECT
-        !IT_TABLE    type standard table
-        !I_TOP       type I default 1
-        !I_LEFT      type I default 1
-        !TABLE_STYLE type ZEXCEL_TABLE_STYLE optional
-        !I_TABLE     type ABAP_BOOL default ABAP_TRUE
-      raising
-        ZCX_EXCEL .
-    type-pools SLIS .
-    type-pools SOI .
-    methods BIND_ALV_OLE2
-      importing
-        !I_DOCUMENT_URL      type CHAR255 default SPACE
-        !I_XLS               type C default SPACE
-        !I_SAVE_PATH         type STRING
-        !IO_ALV              type ref to CL_GUI_ALV_GRID
-        !IT_LISTHEADER       type SLIS_T_LISTHEADER optional
-        !I_TOP               type I default 1
-        !I_LEFT              type I default 1
-        !I_COLUMNS_HEADER    type C default 'X'
-        !I_COLUMNS_AUTOFIT   type C default 'X'
-        !I_FORMAT_COL_HEADER type SOI_FORMAT_ITEM optional
-        !I_FORMAT_SUBTOTAL   type SOI_FORMAT_ITEM optional
-        !I_FORMAT_TOTAL      type SOI_FORMAT_ITEM optional
-      exceptions
-        MISS_GUIDE
-        EX_TRANSFER_KKBLO_ERROR
-        FATAL_ERROR
-        INV_DATA_RANGE
-        DIM_MISMATCH_VKEY
-        DIM_MISMATCH_SEMA
-        ERROR_IN_SEMA .
-    methods BIND_TABLE
-      importing
-        !IP_TABLE               type standard table
-        !IT_FIELD_CATALOG       type ZEXCEL_T_FIELDCATALOG optional
-        !IS_TABLE_SETTINGS      type ZEXCEL_S_TABLE_SETTINGS optional
-        value(IV_DEFAULT_DESCR) type C optional
-      exporting
-        !ES_TABLE_SETTINGS      type ZEXCEL_S_TABLE_SETTINGS
-      raising
-        ZCX_EXCEL .
-    methods CALCULATE_COLUMN_WIDTHS
-      raising
-        ZCX_EXCEL .
-    methods CHANGE_CELL_STYLE
-      importing
-        !IP_COLUMN                      type SIMPLE
-        !IP_ROW                         type ZEXCEL_CELL_ROW
-        !IP_COMPLETE                    type ZEXCEL_S_CSTYLE_COMPLETE optional
-        !IP_XCOMPLETE                   type ZEXCEL_S_CSTYLEX_COMPLETE optional
-        !IP_FONT                        type ZEXCEL_S_CSTYLE_FONT optional
-        !IP_XFONT                       type ZEXCEL_S_CSTYLEX_FONT optional
-        !IP_FILL                        type ZEXCEL_S_CSTYLE_FILL optional
-        !IP_XFILL                       type ZEXCEL_S_CSTYLEX_FILL optional
-        !IP_BORDERS                     type ZEXCEL_S_CSTYLE_BORDERS optional
-        !IP_XBORDERS                    type ZEXCEL_S_CSTYLEX_BORDERS optional
-        !IP_ALIGNMENT                   type ZEXCEL_S_CSTYLE_ALIGNMENT optional
-        !IP_XALIGNMENT                  type ZEXCEL_S_CSTYLEX_ALIGNMENT optional
-        !IP_NUMBER_FORMAT_FORMAT_CODE   type ZEXCEL_NUMBER_FORMAT optional
-        !IP_PROTECTION                  type ZEXCEL_S_CSTYLE_PROTECTION optional
-        !IP_XPROTECTION                 type ZEXCEL_S_CSTYLEX_PROTECTION optional
-        !IP_FONT_BOLD                   type FLAG optional
-        !IP_FONT_COLOR                  type ZEXCEL_S_STYLE_COLOR optional
-        !IP_FONT_COLOR_RGB              type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_FONT_COLOR_INDEXED          type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_FONT_COLOR_THEME            type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_FONT_COLOR_TINT             type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_FONT_FAMILY                 type ZEXCEL_STYLE_FONT_FAMILY optional
-        !IP_FONT_ITALIC                 type FLAG optional
-        !IP_FONT_NAME                   type ZEXCEL_STYLE_FONT_NAME optional
-        !IP_FONT_SCHEME                 type ZEXCEL_STYLE_FONT_SCHEME optional
-        !IP_FONT_SIZE                   type ZEXCEL_STYLE_FONT_SIZE optional
-        !IP_FONT_STRIKETHROUGH          type FLAG optional
-        !IP_FONT_UNDERLINE              type FLAG optional
-        !IP_FONT_UNDERLINE_MODE         type ZEXCEL_STYLE_FONT_UNDERLINE optional
-        !IP_FILL_FILLTYPE               type ZEXCEL_FILL_TYPE optional
-        !IP_FILL_ROTATION               type ZEXCEL_ROTATION optional
-        !IP_FILL_FGCOLOR                type ZEXCEL_S_STYLE_COLOR optional
-        !IP_FILL_FGCOLOR_RGB            type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_FILL_FGCOLOR_INDEXED        type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_FILL_FGCOLOR_THEME          type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_FILL_FGCOLOR_TINT           type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_FILL_BGCOLOR                type ZEXCEL_S_STYLE_COLOR optional
-        !IP_FILL_BGCOLOR_RGB            type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_FILL_BGCOLOR_INDEXED        type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_FILL_BGCOLOR_THEME          type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_FILL_BGCOLOR_TINT           type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_BORDERS_ALLBORDERS          type ZEXCEL_S_CSTYLE_BORDER optional
-        !IP_FILL_GRADTYPE_TYPE          type ZEXCEL_S_GRADIENT_TYPE-TYPE optional
-        !IP_FILL_GRADTYPE_DEGREE        type ZEXCEL_S_GRADIENT_TYPE-DEGREE optional
-        !IP_XBORDERS_ALLBORDERS         type ZEXCEL_S_CSTYLEX_BORDER optional
-        !IP_BORDERS_DIAGONAL            type ZEXCEL_S_CSTYLE_BORDER optional
-        !IP_FILL_GRADTYPE_BOTTOM        type ZEXCEL_S_GRADIENT_TYPE-BOTTOM optional
-        !IP_FILL_GRADTYPE_TOP           type ZEXCEL_S_GRADIENT_TYPE-TOP optional
-        !IP_XBORDERS_DIAGONAL           type ZEXCEL_S_CSTYLEX_BORDER optional
-        !IP_BORDERS_DIAGONAL_MODE       type ZEXCEL_DIAGONAL optional
-        !IP_FILL_GRADTYPE_RIGHT         type ZEXCEL_S_GRADIENT_TYPE-RIGHT optional
-        !IP_BORDERS_DOWN                type ZEXCEL_S_CSTYLE_BORDER optional
-        !IP_FILL_GRADTYPE_LEFT          type ZEXCEL_S_GRADIENT_TYPE-LEFT optional
-        !IP_FILL_GRADTYPE_POSITION1     type ZEXCEL_S_GRADIENT_TYPE-POSITION1 optional
-        !IP_XBORDERS_DOWN               type ZEXCEL_S_CSTYLEX_BORDER optional
-        !IP_BORDERS_LEFT                type ZEXCEL_S_CSTYLE_BORDER optional
-        !IP_FILL_GRADTYPE_POSITION2     type ZEXCEL_S_GRADIENT_TYPE-POSITION2 optional
-        !IP_FILL_GRADTYPE_POSITION3     type ZEXCEL_S_GRADIENT_TYPE-POSITION3 optional
-        !IP_XBORDERS_LEFT               type ZEXCEL_S_CSTYLEX_BORDER optional
-        !IP_BORDERS_RIGHT               type ZEXCEL_S_CSTYLE_BORDER optional
-        !IP_XBORDERS_RIGHT              type ZEXCEL_S_CSTYLEX_BORDER optional
-        !IP_BORDERS_TOP                 type ZEXCEL_S_CSTYLE_BORDER optional
-        !IP_XBORDERS_TOP                type ZEXCEL_S_CSTYLEX_BORDER optional
-        !IP_ALIGNMENT_HORIZONTAL        type ZEXCEL_ALIGNMENT optional
-        !IP_ALIGNMENT_VERTICAL          type ZEXCEL_ALIGNMENT optional
-        !IP_ALIGNMENT_TEXTROTATION      type ZEXCEL_TEXT_ROTATION optional
-        !IP_ALIGNMENT_WRAPTEXT          type FLAG optional
-        !IP_ALIGNMENT_SHRINKTOFIT       type FLAG optional
-        !IP_ALIGNMENT_INDENT            type ZEXCEL_INDENT optional
-        !IP_PROTECTION_HIDDEN           type ZEXCEL_CELL_PROTECTION optional
-        !IP_PROTECTION_LOCKED           type ZEXCEL_CELL_PROTECTION optional
-        !IP_BORDERS_ALLBORDERS_STYLE    type ZEXCEL_BORDER optional
-        !IP_BORDERS_ALLBORDERS_COLOR    type ZEXCEL_S_STYLE_COLOR optional
-        !IP_BORDERS_ALLBO_COLOR_RGB     type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_BORDERS_ALLBO_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_BORDERS_ALLBO_COLOR_THEME   type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_BORDERS_ALLBO_COLOR_TINT    type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_BORDERS_DIAGONAL_STYLE      type ZEXCEL_BORDER optional
-        !IP_BORDERS_DIAGONAL_COLOR      type ZEXCEL_S_STYLE_COLOR optional
-        !IP_BORDERS_DIAGONAL_COLOR_RGB  type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_BORDERS_DIAGONAL_COLOR_INDE type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_BORDERS_DIAGONAL_COLOR_THEM type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_BORDERS_DIAGONAL_COLOR_TINT type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_BORDERS_DOWN_STYLE          type ZEXCEL_BORDER optional
-        !IP_BORDERS_DOWN_COLOR          type ZEXCEL_S_STYLE_COLOR optional
-        !IP_BORDERS_DOWN_COLOR_RGB      type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_BORDERS_DOWN_COLOR_INDEXED  type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_BORDERS_DOWN_COLOR_THEME    type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_BORDERS_DOWN_COLOR_TINT     type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_BORDERS_LEFT_STYLE          type ZEXCEL_BORDER optional
-        !IP_BORDERS_LEFT_COLOR          type ZEXCEL_S_STYLE_COLOR optional
-        !IP_BORDERS_LEFT_COLOR_RGB      type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_BORDERS_LEFT_COLOR_INDEXED  type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_BORDERS_LEFT_COLOR_THEME    type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_BORDERS_LEFT_COLOR_TINT     type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_BORDERS_RIGHT_STYLE         type ZEXCEL_BORDER optional
-        !IP_BORDERS_RIGHT_COLOR         type ZEXCEL_S_STYLE_COLOR optional
-        !IP_BORDERS_RIGHT_COLOR_RGB     type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_BORDERS_RIGHT_COLOR_INDEXED type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_BORDERS_RIGHT_COLOR_THEME   type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_BORDERS_RIGHT_COLOR_TINT    type ZEXCEL_STYLE_COLOR_TINT optional
-        !IP_BORDERS_TOP_STYLE           type ZEXCEL_BORDER optional
-        !IP_BORDERS_TOP_COLOR           type ZEXCEL_S_STYLE_COLOR optional
-        !IP_BORDERS_TOP_COLOR_RGB       type ZEXCEL_STYLE_COLOR_ARGB optional
-        !IP_BORDERS_TOP_COLOR_INDEXED   type ZEXCEL_STYLE_COLOR_INDEXED optional
-        !IP_BORDERS_TOP_COLOR_THEME     type ZEXCEL_STYLE_COLOR_THEME optional
-        !IP_BORDERS_TOP_COLOR_TINT      type ZEXCEL_STYLE_COLOR_TINT optional
-      returning
-        value(EP_GUID)                  type ZEXCEL_CELL_STYLE
-      raising
-        ZCX_EXCEL .
-    methods CONSTRUCTOR
-      importing
-        !IP_EXCEL type ref to ZCL_EXCEL
-        !IP_TITLE type ZEXCEL_SHEET_TITLE optional
-      raising
-        ZCX_EXCEL .
-    methods DELETE_MERGE
-      importing
-        !IP_CELL_COLUMN type SIMPLE optional
-        !IP_CELL_ROW    type ZEXCEL_CELL_ROW optional
-      raising
-        ZCX_EXCEL .
-    methods DELETE_ROW_OUTLINE
-      importing
-        !IV_ROW_FROM type I
-        !IV_ROW_TO   type I
-      raising
-        ZCX_EXCEL .
-    methods FREEZE_PANES
-      importing
-        !IP_NUM_COLUMNS type I optional
-        !IP_NUM_ROWS    type I optional
-      raising
-        ZCX_EXCEL .
-    methods GET_ACTIVE_CELL
-      returning
-        value(EP_ACTIVE_CELL) type STRING
-      raising
-        ZCX_EXCEL .
-    methods GET_CELL
-      importing
-        !IP_COLUMN  type SIMPLE
-        !IP_ROW     type ZEXCEL_CELL_ROW
-      exporting
-        !EP_VALUE   type ZEXCEL_CELL_VALUE
-        !EP_RC      type SYSUBRC
-        !EP_STYLE   type ref to ZCL_EXCEL_STYLE
-        !EP_GUID    type ZEXCEL_CELL_STYLE
-        !EP_FORMULA type ZEXCEL_CELL_FORMULA
-      raising
-        ZCX_EXCEL .
-    methods GET_COLUMN
-      importing
-        !IP_COLUMN       type SIMPLE
-      returning
-        value(EO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-    methods GET_COLUMNS
-      returning
-        value(EO_COLUMNS) type ref to ZCL_EXCEL_COLUMNS .
-    methods GET_COLUMNS_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_STYLE_COND_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_DATA_VALIDATIONS_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_DATA_VALIDATIONS_SIZE
-      returning
-        value(EP_SIZE) type I .
-    methods GET_DEFAULT_COLUMN
-      returning
-        value(EO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-    methods GET_DEFAULT_EXCEL_DATE_FORMAT
-      returning
-        value(EP_DEFAULT_EXCEL_DATE_FORMAT) type ZEXCEL_NUMBER_FORMAT .
-    methods GET_DEFAULT_EXCEL_TIME_FORMAT
-      returning
-        value(EP_DEFAULT_EXCEL_TIME_FORMAT) type ZEXCEL_NUMBER_FORMAT .
-    methods GET_DEFAULT_ROW
-      returning
-        value(EO_ROW) type ref to ZCL_EXCEL_ROW .
-    methods GET_DIMENSION_RANGE
-      returning
-        value(EP_DIMENSION_RANGE) type STRING
-      raising
-        ZCX_EXCEL .
-    methods GET_COMMENTS
-      returning
-        value(R_COMMENTS) type ref to ZCL_EXCEL_COMMENTS .
-    methods GET_DRAWINGS
-      importing
-        !IP_TYPE          type ZEXCEL_DRAWING_TYPE optional
-      returning
-        value(R_DRAWINGS) type ref to ZCL_EXCEL_DRAWINGS .
-   methods GET_COMMENTS_ITERATOR
-     returning
-       value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_DRAWINGS_ITERATOR
-      importing
-        !IP_TYPE           type ZEXCEL_DRAWING_TYPE
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_FREEZE_CELL
-      exporting
-        !EP_ROW    type ZEXCEL_CELL_ROW
-        !EP_COLUMN type ZEXCEL_CELL_COLUMN .
-    methods GET_GUID
-      returning
-        value(EP_GUID) type UUID .
-    methods GET_HIGHEST_COLUMN
-      returning
-        value(R_HIGHEST_COLUMN) type ZEXCEL_CELL_COLUMN
-      raising
-        ZCX_EXCEL .
-    methods GET_HIGHEST_ROW
-      returning
-        value(R_HIGHEST_ROW) type INT4
-      raising
-        ZCX_EXCEL .
-    methods GET_HYPERLINKS_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_HYPERLINKS_SIZE
-      returning
-        value(EP_SIZE) type I .
-    methods GET_MERGE
-      returning
-        value(MERGE_RANGE) type STRING_TABLE
-      raising
-        ZCX_EXCEL .
-    methods GET_PAGEBREAKS
-      returning
-        value(RO_PAGEBREAKS) type ref to ZCL_EXCEL_WORKSHEET_PAGEBREAKS
-      raising
-        ZCX_EXCEL .
-    methods GET_RANGES_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_ROW
-      importing
-        !IP_ROW       type INT4
-      returning
-        value(EO_ROW) type ref to ZCL_EXCEL_ROW .
-    methods GET_ROWS
-      returning
-        value(EO_ROWS) type ref to ZCL_EXCEL_ROWS .
-    methods GET_ROWS_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_ROW_OUTLINES
-      returning
-        value(RT_ROW_OUTLINES) type MTY_TS_OUTLINES_ROW .
-    methods GET_STYLE_COND
-      importing
-        !IP_GUID             type ZEXCEL_CELL_STYLE
-      returning
-        value(EO_STYLE_COND) type ref to ZCL_EXCEL_STYLE_COND .
-    methods GET_TABCOLOR
-      returning
-        value(EV_TABCOLOR) type ZEXCEL_S_TABCOLOR .
-    methods GET_TABLES_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods GET_TABLES_SIZE
-      returning
-        value(EP_SIZE) type I .
-    methods GET_TITLE
-      importing
-        !IP_ESCAPED     type FLAG default ''
-      returning
-        value(EP_TITLE) type ZEXCEL_SHEET_TITLE .
-    methods IS_CELL_MERGED
-      importing
-        !IP_COLUMN          type SIMPLE
-        !IP_ROW             type ZEXCEL_CELL_ROW
-      returning
-        value(RP_IS_MERGED) type ABAP_BOOL
-      raising
-        ZCX_EXCEL .
-    methods SET_CELL
-      importing
-        !IP_COLUMN    type SIMPLE
-        !IP_ROW       type ZEXCEL_CELL_ROW
-        !IP_VALUE     type SIMPLE optional
-        !IP_FORMULA   type ZEXCEL_CELL_FORMULA optional
-        !IP_STYLE     type ZEXCEL_CELL_STYLE optional
-        !IP_HYPERLINK type ref to ZCL_EXCEL_HYPERLINK optional
-        !IP_DATA_TYPE type ZEXCEL_CELL_DATA_TYPE optional
-        !IP_ABAP_TYPE type ABAP_TYPEKIND optional
-      raising
-        ZCX_EXCEL .
-    methods SET_CELL_FORMULA
-      importing
-        !IP_COLUMN  type SIMPLE
-        !IP_ROW     type ZEXCEL_CELL_ROW
-        !IP_FORMULA type ZEXCEL_CELL_FORMULA
-      raising
-        ZCX_EXCEL .
-    methods SET_CELL_STYLE
-      importing
-        !IP_COLUMN type SIMPLE
-        !IP_ROW    type ZEXCEL_CELL_ROW
-        !IP_STYLE  type ZEXCEL_CELL_STYLE
-      raising
-        ZCX_EXCEL .
-    methods SET_COLUMN_WIDTH
-      importing
-        !IP_COLUMN         type SIMPLE
-        !IP_WIDTH_FIX      type SIMPLE default 0
-        !IP_WIDTH_AUTOSIZE type FLAG default 'X'
-      raising
-        ZCX_EXCEL .
-    methods SET_DEFAULT_EXCEL_DATE_FORMAT
-      importing
-        !IP_DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT
-      raising
-        ZCX_EXCEL .
-    methods SET_MERGE
-      importing
-        !IP_COLUMN_START type SIMPLE default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_COL
-        !IP_COLUMN_END   type SIMPLE default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_COL
-        !IP_ROW          type ZEXCEL_CELL_ROW default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_ROW
-        !IP_ROW_TO       type ZEXCEL_CELL_ROW default ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_ROW
-      !IP_STYLE type ZEXCEL_CELL_STYLE optional "added parameter
-      !IP_VALUE type SIMPLE optional "added parameter
-      !IP_FORMULA type ZEXCEL_CELL_FORMULA optional "added parameter
-      raising
-        ZCX_EXCEL .
-    methods SET_PRINT_GRIDLINES
-      importing
-        !I_PRINT_GRIDLINES type ZEXCEL_PRINT_GRIDLINES .
-    methods SET_ROW_HEIGHT
-      importing
-        !IP_ROW        type SIMPLE
-        !IP_HEIGHT_FIX type SIMPLE
-      raising
-        ZCX_EXCEL .
-    methods SET_ROW_OUTLINE
-      importing
-        !IV_ROW_FROM  type I
-        !IV_ROW_TO    type I
-        !IV_COLLAPSED type ABAP_BOOL
-      raising
-        ZCX_EXCEL .
-    methods SET_SHOW_GRIDLINES
-      importing
-        !I_SHOW_GRIDLINES type ZEXCEL_SHOW_GRIDLINES .
-    methods SET_SHOW_ROWCOLHEADERS
-      importing
-        !I_SHOW_ROWCOLHEADERS type ZEXCEL_SHOW_ROWCOLHEADER .
-    methods SET_TABCOLOR
-      importing
-        !IV_TABCOLOR type ZEXCEL_S_TABCOLOR .
-    methods SET_TABLE
-      importing
-        !IP_TABLE           type standard table
-        !IP_HDR_STYLE       type ZEXCEL_CELL_STYLE optional
-        !IP_BODY_STYLE      type ZEXCEL_CELL_STYLE optional
-        !IP_TABLE_TITLE     type STRING
-        !IP_TOP_LEFT_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA default 'B'
-        !IP_TOP_LEFT_ROW    type ZEXCEL_CELL_ROW default 3
-        !IP_TRANSPOSE       type XFELD optional
-        !IP_NO_HEADER       type XFELD optional
-      raising
-        ZCX_EXCEL .
-    methods SET_TITLE
-      importing
-        !IP_TITLE type ZEXCEL_SHEET_TITLE
-      raising
-        ZCX_EXCEL .
-    methods GET_TABLE
-      importing
-        IV_SKIPPED_ROWS type INT4  default 0
-        IV_SKIPPED_COLS type INT4  default 0
-      exporting
-        ET_TABLE        type standard table
-      raising
-        ZCX_EXCEL.
-
-methods SET_MERGE_STYLE
-    importing
-      !IP_COLUMN_START type simple optional
-      !IP_COLUMN_END type simple optional
-      !IP_ROW type ZEXCEL_CELL_ROW optional
-      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
-      !IP_STYLE type ZEXCEL_CELL_STYLE optional .
-
-methods SET_AREA_FORMULA
-    importing
-      !IP_COLUMN_START type simple
-      !IP_COLUMN_END type simple optional
-      !IP_ROW type ZEXCEL_CELL_ROW
-      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
-      !IP_FORMULA type ZEXCEL_CELL_FORMULA
-      !IP_MERGE type ABAP_BOOL optional
-    raising
-      ZCX_EXCEL .
-
-methods SET_AREA_STYLE
-    importing
-      !IP_COLUMN_START type simple
-      !IP_COLUMN_END type simple optional
-      !IP_ROW type ZEXCEL_CELL_ROW
-      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
-      !IP_STYLE type ZEXCEL_CELL_STYLE
-      !IP_MERGE type ABAP_BOOL optional .
-
- methods SET_AREA
-    importing
-      !IP_COLUMN_START type simple
-      !IP_COLUMN_END type simple optional
-      !IP_ROW type ZEXCEL_CELL_ROW
-      !IP_ROW_TO type ZEXCEL_CELL_ROW optional
-      !IP_VALUE type SIMPLE optional
-      !IP_FORMULA type ZEXCEL_CELL_FORMULA optional
-      !IP_STYLE type ZEXCEL_CELL_STYLE optional
-      !IP_HYPERLINK type ref to ZCL_EXCEL_HYPERLINK optional
-      !IP_DATA_TYPE type ZEXCEL_CELL_DATA_TYPE optional
-      !IP_ABAP_TYPE type ABAP_TYPEKIND optional
-      !IP_MERGE type ABAP_BOOL optional
-    raising
-      ZCX_EXCEL .
-
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-  protected section.
-  private section.
+    TYPE-POOLS abap .
+    TYPE-POOLS slis .
+    TYPE-POOLS soi .
 
-    types:
-      begin of MTY_S_FONT_METRIC,
-        CHAR       type C length 1,
-        CHAR_WIDTH type TDCWIDTHS,
-      end of MTY_S_FONT_METRIC .
-    types:
-      MTY_TH_FONT_METRICS
-             type hashed table of MTY_S_FONT_METRIC
-             with unique key CHAR .
-    types:
-      begin of MTY_S_FONT_CACHE,
-        FONT_NAME       type ZEXCEL_STYLE_FONT_NAME,
-        FONT_HEIGHT     type TDFONTSIZE,
-        FLAG_BOLD       type ABAP_BOOL,
-        FLAG_ITALIC     type ABAP_BOOL,
-        TH_FONT_METRICS type MTY_TH_FONT_METRICS,
-      end of MTY_S_FONT_CACHE .
-    types:
-      MTY_TH_FONT_CACHE
-             type hashed table of MTY_S_FONT_CACHE
-             with unique key FONT_NAME FONT_HEIGHT FLAG_BOLD FLAG_ITALIC .
-    types:
+    INTERFACES zif_excel_sheet_printsettings .
+    INTERFACES zif_excel_sheet_properties .
+    INTERFACES zif_excel_sheet_protection .
+    INTERFACES zif_excel_sheet_vba_project .
+
+    TYPES:
+      BEGIN OF  mty_s_outline_row,
+          row_from  TYPE i,
+          row_to    TYPE i,
+          collapsed TYPE abap_bool,
+        END OF mty_s_outline_row .
+    TYPES:
+      mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
+
+    CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
+    CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
+    CONSTANTS c_break_row TYPE zexcel_break VALUE 1.        "#EC NOTEXT
+    DATA excel TYPE REF TO zcl_excel READ-ONLY .
+    DATA print_gridlines TYPE zexcel_print_gridlines READ-ONLY VALUE abap_false. "#EC NOTEXT
+    DATA sheet_content TYPE zexcel_t_cell_data .
+    DATA sheet_setup TYPE REF TO zcl_excel_sheet_setup .
+    DATA show_gridlines TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true. "#EC NOTEXT
+    DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true. "#EC NOTEXT
+    DATA styles TYPE zexcel_t_sheet_style .
+    DATA tabcolor TYPE zexcel_s_tabcolor READ-ONLY .
+
+    METHODS add_comment
+      IMPORTING
+        !ip_comment TYPE REF TO zcl_excel_comment .
+    METHODS add_drawing
+      IMPORTING
+        !ip_drawing TYPE REF TO zcl_excel_drawing .
+    METHODS add_new_column
+      IMPORTING
+        !ip_column TYPE simple
+      RETURNING
+        value(eo_column) TYPE REF TO zcl_excel_column .
+    METHODS add_new_style_cond
+      RETURNING
+        value(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
+    METHODS add_new_data_validation
+      RETURNING
+        value(eo_data_validation) TYPE REF TO zcl_excel_data_validation .
+    METHODS add_new_range
+      RETURNING
+        value(eo_range) TYPE REF TO zcl_excel_range .
+    METHODS add_new_row
+      IMPORTING
+        !ip_row TYPE simple
+      RETURNING
+        value(eo_row) TYPE REF TO zcl_excel_row .
+    METHODS bind_alv
+      IMPORTING
+        !io_alv TYPE REF TO object
+        !it_table TYPE STANDARD TABLE
+        !i_top TYPE i DEFAULT 1
+        !i_left TYPE i DEFAULT 1
+        !table_style TYPE zexcel_table_style OPTIONAL
+        !i_table TYPE abap_bool DEFAULT abap_true
+      RAISING
+        zcx_excel .
+    METHODS bind_alv_ole2
+      IMPORTING
+        !i_document_url TYPE char255 DEFAULT space
+        !i_xls TYPE c DEFAULT space
+        !i_save_path TYPE string
+        !io_alv TYPE REF TO cl_gui_alv_grid
+        !it_listheader TYPE slis_t_listheader OPTIONAL
+        !i_top TYPE i DEFAULT 1
+        !i_left TYPE i DEFAULT 1
+        !i_columns_header TYPE c DEFAULT 'X'
+        !i_columns_autofit TYPE c DEFAULT 'X'
+        !i_format_col_header TYPE soi_format_item OPTIONAL
+        !i_format_subtotal TYPE soi_format_item OPTIONAL
+        !i_format_total TYPE soi_format_item OPTIONAL
+      EXCEPTIONS
+        miss_guide
+        ex_transfer_kkblo_error
+        fatal_error
+        inv_data_range
+        dim_mismatch_vkey
+        dim_mismatch_sema
+        error_in_sema .
+    METHODS bind_table
+      IMPORTING
+        !ip_table TYPE STANDARD TABLE
+        !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
+        !is_table_settings TYPE zexcel_s_table_settings OPTIONAL
+        value(iv_default_descr) TYPE c OPTIONAL
+      EXPORTING
+        !es_table_settings TYPE zexcel_s_table_settings
+      RAISING
+        zcx_excel .
+    METHODS calculate_column_widths
+      RAISING
+        zcx_excel .
+    METHODS change_cell_style
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_row TYPE zexcel_cell_row
+        !ip_complete TYPE zexcel_s_cstyle_complete OPTIONAL
+        !ip_xcomplete TYPE zexcel_s_cstylex_complete OPTIONAL
+        !ip_font TYPE zexcel_s_cstyle_font OPTIONAL
+        !ip_xfont TYPE zexcel_s_cstylex_font OPTIONAL
+        !ip_fill TYPE zexcel_s_cstyle_fill OPTIONAL
+        !ip_xfill TYPE zexcel_s_cstylex_fill OPTIONAL
+        !ip_borders TYPE zexcel_s_cstyle_borders OPTIONAL
+        !ip_xborders TYPE zexcel_s_cstylex_borders OPTIONAL
+        !ip_alignment TYPE zexcel_s_cstyle_alignment OPTIONAL
+        !ip_xalignment TYPE zexcel_s_cstylex_alignment OPTIONAL
+        !ip_number_format_format_code TYPE zexcel_number_format OPTIONAL
+        !ip_protection TYPE zexcel_s_cstyle_protection OPTIONAL
+        !ip_xprotection TYPE zexcel_s_cstylex_protection OPTIONAL
+        !ip_font_bold TYPE flag OPTIONAL
+        !ip_font_color TYPE zexcel_s_style_color OPTIONAL
+        !ip_font_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_font_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_font_color_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_font_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_font_family TYPE zexcel_style_font_family OPTIONAL
+        !ip_font_italic TYPE flag OPTIONAL
+        !ip_font_name TYPE zexcel_style_font_name OPTIONAL
+        !ip_font_scheme TYPE zexcel_style_font_scheme OPTIONAL
+        !ip_font_size TYPE zexcel_style_font_size OPTIONAL
+        !ip_font_strikethrough TYPE flag OPTIONAL
+        !ip_font_underline TYPE flag OPTIONAL
+        !ip_font_underline_mode TYPE zexcel_style_font_underline OPTIONAL
+        !ip_fill_filltype TYPE zexcel_fill_type OPTIONAL
+        !ip_fill_rotation TYPE zexcel_rotation OPTIONAL
+        !ip_fill_fgcolor TYPE zexcel_s_style_color OPTIONAL
+        !ip_fill_fgcolor_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_fill_fgcolor_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_fill_fgcolor_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_fill_fgcolor_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_fill_bgcolor TYPE zexcel_s_style_color OPTIONAL
+        !ip_fill_bgcolor_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_fill_bgcolor_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_fill_bgcolor_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_fill_bgcolor_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_allborders TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_type TYPE zexcel_s_gradient_type-type OPTIONAL
+        !ip_fill_gradtype_degree TYPE zexcel_s_gradient_type-degree OPTIONAL
+        !ip_xborders_allborders TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_diagonal TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_bottom TYPE zexcel_s_gradient_type-bottom OPTIONAL
+        !ip_fill_gradtype_top TYPE zexcel_s_gradient_type-top OPTIONAL
+        !ip_xborders_diagonal TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_diagonal_mode TYPE zexcel_diagonal OPTIONAL
+        !ip_fill_gradtype_right TYPE zexcel_s_gradient_type-right OPTIONAL
+        !ip_borders_down TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_left TYPE zexcel_s_gradient_type-left OPTIONAL
+        !ip_fill_gradtype_position1 TYPE zexcel_s_gradient_type-position1 OPTIONAL
+        !ip_xborders_down TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_left TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_position2 TYPE zexcel_s_gradient_type-position2 OPTIONAL
+        !ip_fill_gradtype_position3 TYPE zexcel_s_gradient_type-position3 OPTIONAL
+        !ip_xborders_left TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_right TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_xborders_right TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_top TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_xborders_top TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_alignment_horizontal TYPE zexcel_alignment OPTIONAL
+        !ip_alignment_vertical TYPE zexcel_alignment OPTIONAL
+        !ip_alignment_textrotation TYPE zexcel_text_rotation OPTIONAL
+        !ip_alignment_wraptext TYPE flag OPTIONAL
+        !ip_alignment_shrinktofit TYPE flag OPTIONAL
+        !ip_alignment_indent TYPE zexcel_indent OPTIONAL
+        !ip_protection_hidden TYPE zexcel_cell_protection OPTIONAL
+        !ip_protection_locked TYPE zexcel_cell_protection OPTIONAL
+        !ip_borders_allborders_style TYPE zexcel_border OPTIONAL
+        !ip_borders_allborders_color TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_allbo_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_allbo_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_allbo_color_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_allbo_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_diagonal_style TYPE zexcel_border OPTIONAL
+        !ip_borders_diagonal_color TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_diagonal_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_diagonal_color_inde TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_diagonal_color_them TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_diagonal_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_down_style TYPE zexcel_border OPTIONAL
+        !ip_borders_down_color TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_down_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_down_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_down_color_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_down_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_left_style TYPE zexcel_border OPTIONAL
+        !ip_borders_left_color TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_left_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_left_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_left_color_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_left_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_right_style TYPE zexcel_border OPTIONAL
+        !ip_borders_right_color TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_right_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_right_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_right_color_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_right_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_top_style TYPE zexcel_border OPTIONAL
+        !ip_borders_top_color TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_top_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_top_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_top_color_theme TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_top_color_tint TYPE zexcel_style_color_tint OPTIONAL
+      RETURNING
+        value(ep_guid) TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
+    METHODS constructor
+      IMPORTING
+        !ip_excel TYPE REF TO zcl_excel
+        !ip_title TYPE zexcel_sheet_title OPTIONAL
+      RAISING
+        zcx_excel .
+    METHODS delete_merge
+      IMPORTING
+        !ip_cell_column TYPE simple OPTIONAL
+        !ip_cell_row TYPE zexcel_cell_row OPTIONAL
+      RAISING
+        zcx_excel .
+    METHODS delete_row_outline
+      IMPORTING
+        !iv_row_from TYPE i
+        !iv_row_to TYPE i
+      RAISING
+        zcx_excel .
+    METHODS freeze_panes
+      IMPORTING
+        !ip_num_columns TYPE i OPTIONAL
+        !ip_num_rows TYPE i OPTIONAL
+      RAISING
+        zcx_excel .
+    METHODS get_active_cell
+      RETURNING
+        value(ep_active_cell) TYPE string
+      RAISING
+        zcx_excel .
+    METHODS get_cell
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_row TYPE zexcel_cell_row
+      EXPORTING
+        !ep_value TYPE zexcel_cell_value
+        !ep_rc TYPE sysubrc
+        !ep_style TYPE REF TO zcl_excel_style
+        !ep_guid TYPE zexcel_cell_style
+        !ep_formula TYPE zexcel_cell_formula
+      RAISING
+        zcx_excel .
+    METHODS get_column
+      IMPORTING
+        !ip_column TYPE simple
+      RETURNING
+        value(eo_column) TYPE REF TO zcl_excel_column .
+    METHODS get_columns
+      RETURNING
+        value(eo_columns) TYPE REF TO zcl_excel_columns .
+    METHODS get_columns_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_style_cond_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_data_validations_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_data_validations_size
+      RETURNING
+        value(ep_size) TYPE i .
+    METHODS get_default_column
+      RETURNING
+        value(eo_column) TYPE REF TO zcl_excel_column .
+    METHODS get_default_excel_date_format
+      RETURNING
+        value(ep_default_excel_date_format) TYPE zexcel_number_format .
+    METHODS get_default_excel_time_format
+      RETURNING
+        value(ep_default_excel_time_format) TYPE zexcel_number_format .
+    METHODS get_default_row
+      RETURNING
+        value(eo_row) TYPE REF TO zcl_excel_row .
+    METHODS get_dimension_range
+      RETURNING
+        value(ep_dimension_range) TYPE string
+      RAISING
+        zcx_excel .
+    METHODS get_comments
+      RETURNING
+        value(r_comments) TYPE REF TO zcl_excel_comments .
+    METHODS get_drawings
+      IMPORTING
+        !ip_type TYPE zexcel_drawing_type OPTIONAL
+      RETURNING
+        value(r_drawings) TYPE REF TO zcl_excel_drawings .
+    METHODS get_comments_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_drawings_iterator
+      IMPORTING
+        !ip_type TYPE zexcel_drawing_type
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_freeze_cell
+      EXPORTING
+        !ep_row TYPE zexcel_cell_row
+        !ep_column TYPE zexcel_cell_column .
+    METHODS get_guid
+      RETURNING
+        value(ep_guid) TYPE uuid .
+    METHODS get_highest_column
+      RETURNING
+        value(r_highest_column) TYPE zexcel_cell_column
+      RAISING
+        zcx_excel .
+    METHODS get_highest_row
+      RETURNING
+        value(r_highest_row) TYPE int4
+      RAISING
+        zcx_excel .
+    METHODS get_hyperlinks_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_hyperlinks_size
+      RETURNING
+        value(ep_size) TYPE i .
+    METHODS get_merge
+      RETURNING
+        value(merge_range) TYPE string_table
+      RAISING
+        zcx_excel .
+    METHODS get_pagebreaks
+      RETURNING
+        value(ro_pagebreaks) TYPE REF TO zcl_excel_worksheet_pagebreaks
+      RAISING
+        zcx_excel .
+    METHODS get_ranges_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_row
+      IMPORTING
+        !ip_row TYPE int4
+      RETURNING
+        value(eo_row) TYPE REF TO zcl_excel_row .
+    METHODS get_rows
+      RETURNING
+        value(eo_rows) TYPE REF TO zcl_excel_rows .
+    METHODS get_rows_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_row_outlines
+      RETURNING
+        value(rt_row_outlines) TYPE mty_ts_outlines_row .
+    METHODS get_style_cond
+      IMPORTING
+        !ip_guid TYPE zexcel_cell_style
+      RETURNING
+        value(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
+    METHODS get_tabcolor
+      RETURNING
+        value(ev_tabcolor) TYPE zexcel_s_tabcolor .
+    METHODS get_tables_iterator
+      RETURNING
+        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS get_tables_size
+      RETURNING
+        value(ep_size) TYPE i .
+    METHODS get_title
+      IMPORTING
+        !ip_escaped TYPE flag DEFAULT ''
+      RETURNING
+        value(ep_title) TYPE zexcel_sheet_title .
+    METHODS is_cell_merged
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_row TYPE zexcel_cell_row
+      RETURNING
+        value(rp_is_merged) TYPE abap_bool
+      RAISING
+        zcx_excel .
+    METHODS set_cell
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_row TYPE zexcel_cell_row
+        !ip_value TYPE simple OPTIONAL
+        !ip_formula TYPE zexcel_cell_formula OPTIONAL
+        !ip_style TYPE zexcel_cell_style OPTIONAL
+        !ip_hyperlink TYPE REF TO zcl_excel_hyperlink OPTIONAL
+        !ip_data_type TYPE zexcel_cell_data_type OPTIONAL
+        !ip_abap_type TYPE abap_typekind OPTIONAL
+      RAISING
+        zcx_excel .
+    METHODS set_cell_formula
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_row TYPE zexcel_cell_row
+        !ip_formula TYPE zexcel_cell_formula
+      RAISING
+        zcx_excel .
+    METHODS set_cell_style
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_row TYPE zexcel_cell_row
+        !ip_style TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
+    METHODS set_column_width
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_width_fix TYPE simple DEFAULT 0
+        !ip_width_autosize TYPE flag DEFAULT 'X'
+      RAISING
+        zcx_excel .
+    METHODS set_default_excel_date_format
+      IMPORTING
+        !ip_default_excel_date_format TYPE zexcel_number_format
+      RAISING
+        zcx_excel .
+    METHODS set_merge
+      IMPORTING
+        !ip_column_start TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_min_col
+        !ip_column_end TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_max_col
+        !ip_row TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_min_row
+        !ip_row_to TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_max_row
+        !ip_style TYPE zexcel_cell_style OPTIONAL "added parameter
+        !ip_value TYPE simple OPTIONAL "added parameter
+        !ip_formula TYPE zexcel_cell_formula OPTIONAL "added parameter
+      RAISING
+        zcx_excel .
+    METHODS set_print_gridlines
+      IMPORTING
+        !i_print_gridlines TYPE zexcel_print_gridlines .
+    METHODS set_row_height
+      IMPORTING
+        !ip_row TYPE simple
+        !ip_height_fix TYPE simple
+      RAISING
+        zcx_excel .
+    METHODS set_row_outline
+      IMPORTING
+        !iv_row_from TYPE i
+        !iv_row_to TYPE i
+        !iv_collapsed TYPE abap_bool
+      RAISING
+        zcx_excel .
+    METHODS set_show_gridlines
+      IMPORTING
+        !i_show_gridlines TYPE zexcel_show_gridlines .
+    METHODS set_show_rowcolheaders
+      IMPORTING
+        !i_show_rowcolheaders TYPE zexcel_show_rowcolheader .
+    METHODS set_tabcolor
+      IMPORTING
+        !iv_tabcolor TYPE zexcel_s_tabcolor .
+    METHODS set_table
+      IMPORTING
+        !ip_table TYPE STANDARD TABLE
+        !ip_hdr_style TYPE zexcel_cell_style OPTIONAL
+        !ip_body_style TYPE zexcel_cell_style OPTIONAL
+        !ip_table_title TYPE string
+        !ip_top_left_column TYPE zexcel_cell_column_alpha DEFAULT 'B'
+        !ip_top_left_row TYPE zexcel_cell_row DEFAULT 3
+        !ip_transpose TYPE xfeld OPTIONAL
+        !ip_no_header TYPE xfeld OPTIONAL
+      RAISING
+        zcx_excel .
+    METHODS set_title
+      IMPORTING
+        !ip_title TYPE zexcel_sheet_title
+      RAISING
+        zcx_excel .
+    METHODS get_table
+      IMPORTING
+        !iv_skipped_rows TYPE int4 DEFAULT 0
+        !iv_skipped_cols TYPE int4 DEFAULT 0
+      EXPORTING
+        !et_table TYPE STANDARD TABLE
+      RAISING
+        zcx_excel .
+    METHODS set_merge_style
+      IMPORTING
+        !ip_column_start TYPE simple OPTIONAL
+        !ip_column_end TYPE simple OPTIONAL
+        !ip_row TYPE zexcel_cell_row OPTIONAL
+        !ip_row_to TYPE zexcel_cell_row OPTIONAL
+        !ip_style TYPE zexcel_cell_style OPTIONAL .
+    METHODS set_area_formula
+      IMPORTING
+        !ip_column_start TYPE simple
+        !ip_column_end TYPE simple OPTIONAL
+        !ip_row TYPE zexcel_cell_row
+        !ip_row_to TYPE zexcel_cell_row OPTIONAL
+        !ip_formula TYPE zexcel_cell_formula
+        !ip_merge TYPE abap_bool OPTIONAL
+      RAISING
+        zcx_excel .
+    METHODS set_area_style
+      IMPORTING
+        !ip_column_start TYPE simple
+        !ip_column_end TYPE simple OPTIONAL
+        !ip_row TYPE zexcel_cell_row
+        !ip_row_to TYPE zexcel_cell_row OPTIONAL
+        !ip_style TYPE zexcel_cell_style
+        !ip_merge TYPE abap_bool OPTIONAL .
+    METHODS set_area
+      IMPORTING
+        !ip_column_start TYPE simple
+        !ip_column_end TYPE simple OPTIONAL
+        !ip_row TYPE zexcel_cell_row
+        !ip_row_to TYPE zexcel_cell_row OPTIONAL
+        !ip_value TYPE simple OPTIONAL
+        !ip_formula TYPE zexcel_cell_formula OPTIONAL
+        !ip_style TYPE zexcel_cell_style OPTIONAL
+        !ip_hyperlink TYPE REF TO zcl_excel_hyperlink OPTIONAL
+        !ip_data_type TYPE zexcel_cell_data_type OPTIONAL
+        !ip_abap_type TYPE abap_typekind OPTIONAL
+        !ip_merge TYPE abap_bool OPTIONAL
+      RAISING
+        zcx_excel .
+    METHODS get_header_footer_drawings
+      RETURNING
+        value(rt_drawings) TYPE zexcel_t_drawings .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+
+    TYPES:
+      BEGIN OF mty_s_font_metric,
+        char       TYPE c LENGTH 1,
+        char_width TYPE tdcwidths,
+      END OF mty_s_font_metric .
+    TYPES:
+      mty_th_font_metrics
+             TYPE HASHED TABLE OF mty_s_font_metric
+             WITH UNIQUE KEY char .
+    TYPES:
+      BEGIN OF mty_s_font_cache,
+        font_name       TYPE zexcel_style_font_name,
+        font_height     TYPE tdfontsize,
+        flag_bold       TYPE abap_bool,
+        flag_italic     TYPE abap_bool,
+        th_font_metrics TYPE mty_th_font_metrics,
+      END OF mty_s_font_cache .
+    TYPES:
+      mty_th_font_cache
+             TYPE HASHED TABLE OF mty_s_font_cache
+             WITH UNIQUE KEY font_name font_height flag_bold flag_italic .
+    TYPES:
 *  types:
 *    mty_ts_row_dimension TYPE SORTED TABLE OF zexcel_s_worksheet_rowdimensio WITH UNIQUE KEY row .
-      begin of MTY_MERGE,
-        ROW_FROM type I,
-        ROW_TO   type I,
-        COL_FROM type I,
-        COL_TO   type I,
-      end of MTY_MERGE .
-    types:
-      MTY_TS_MERGE type sorted table of MTY_MERGE with unique key TABLE_LINE .
+      BEGIN OF mty_merge,
+        row_from TYPE i,
+        row_to   TYPE i,
+        col_from TYPE i,
+        col_to   TYPE i,
+      END OF mty_merge .
+    TYPES:
+      mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
 
 *"* private components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-    data ACTIVE_CELL type ZEXCEL_S_CELL_DATA .
-    data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
-    data COLUMNS type ref to ZCL_EXCEL_COLUMNS .
-    data ROW_DEFAULT type ref to ZCL_EXCEL_ROW .
-    data COLUMN_DEFAULT type ref to ZCL_EXCEL_COLUMN .
-    data STYLES_COND type ref to ZCL_EXCEL_STYLES_COND .
-    data DATA_VALIDATIONS type ref to ZCL_EXCEL_DATA_VALIDATIONS .
-    data DEFAULT_EXCEL_DATE_FORMAT type ZEXCEL_NUMBER_FORMAT .
-    data DEFAULT_EXCEL_TIME_FORMAT type ZEXCEL_NUMBER_FORMAT .
-    data COMMENTS type ref to ZCL_EXCEL_COMMENTS .
-    data DRAWINGS type ref to ZCL_EXCEL_DRAWINGS .
-    data FREEZE_PANE_CELL_COLUMN type ZEXCEL_CELL_COLUMN .
-    data FREEZE_PANE_CELL_ROW type ZEXCEL_CELL_ROW .
-    data GUID type UUID .
-    data HYPERLINKS type ref to CL_OBJECT_COLLECTION .
-    data LOWER_CELL type ZEXCEL_S_CELL_DATA .
-    data MO_PAGEBREAKS type ref to ZCL_EXCEL_WORKSHEET_PAGEBREAKS .
-    class-data MTH_FONT_CACHE type MTY_TH_FONT_CACHE .
-    data MT_MERGED_CELLS type MTY_TS_MERGE .
-    data MT_ROW_OUTLINES type MTY_TS_OUTLINES_ROW .
-    data PRINT_TITLE_COL_FROM type ZEXCEL_CELL_COLUMN_ALPHA .
-    data PRINT_TITLE_COL_TO type ZEXCEL_CELL_COLUMN_ALPHA .
-    data PRINT_TITLE_ROW_FROM type ZEXCEL_CELL_ROW .
-    data PRINT_TITLE_ROW_TO type ZEXCEL_CELL_ROW .
-    data RANGES type ref to ZCL_EXCEL_RANGES .
-    data ROWS type ref to ZCL_EXCEL_ROWS .
-    data TABLES type ref to CL_OBJECT_COLLECTION .
-    data TITLE type ZEXCEL_SHEET_TITLE value 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
-    data UPPER_CELL type ZEXCEL_S_CELL_DATA .
+    DATA active_cell TYPE zexcel_s_cell_data .
+    DATA charts TYPE REF TO zcl_excel_drawings .
+    DATA columns TYPE REF TO zcl_excel_columns .
+    DATA row_default TYPE REF TO zcl_excel_row .
+    DATA column_default TYPE REF TO zcl_excel_column .
+    DATA styles_cond TYPE REF TO zcl_excel_styles_cond .
+    DATA data_validations TYPE REF TO zcl_excel_data_validations .
+    DATA default_excel_date_format TYPE zexcel_number_format .
+    DATA default_excel_time_format TYPE zexcel_number_format .
+    DATA comments TYPE REF TO zcl_excel_comments .
+    DATA drawings TYPE REF TO zcl_excel_drawings .
+    DATA freeze_pane_cell_column TYPE zexcel_cell_column .
+    DATA freeze_pane_cell_row TYPE zexcel_cell_row .
+    DATA guid TYPE uuid .
+    DATA hyperlinks TYPE REF TO cl_object_collection .
+    DATA lower_cell TYPE zexcel_s_cell_data .
+    DATA mo_pagebreaks TYPE REF TO zcl_excel_worksheet_pagebreaks .
+    CLASS-DATA mth_font_cache TYPE mty_th_font_cache .
+    DATA mt_merged_cells TYPE mty_ts_merge .
+    DATA mt_row_outlines TYPE mty_ts_outlines_row .
+    DATA print_title_col_from TYPE zexcel_cell_column_alpha .
+    DATA print_title_col_to TYPE zexcel_cell_column_alpha .
+    DATA print_title_row_from TYPE zexcel_cell_row .
+    DATA print_title_row_to TYPE zexcel_cell_row .
+    DATA ranges TYPE REF TO zcl_excel_ranges .
+    DATA rows TYPE REF TO zcl_excel_rows .
+    DATA tables TYPE REF TO cl_object_collection .
+    DATA title TYPE zexcel_sheet_title VALUE 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
+    DATA upper_cell TYPE zexcel_s_cell_data .
 
-    methods CALCULATE_CELL_WIDTH
-      importing
-        !IP_COLUMN      type SIMPLE
-        !IP_ROW         type ZEXCEL_CELL_ROW
-      returning
-        value(EP_WIDTH) type FLOAT
-      raising
-        ZCX_EXCEL .
-    methods GENERATE_TITLE
-      returning
-        value(EP_TITLE) type ZEXCEL_SHEET_TITLE .
-    methods GET_VALUE_TYPE
-      importing
-        !IP_VALUE      type SIMPLE
-      exporting
-        !EP_VALUE      type SIMPLE
-        !EP_VALUE_TYPE type ABAP_TYPEKIND .
-    methods PRINT_TITLE_SET_RANGE .
-    methods UPDATE_DIMENSION_RANGE
-      raising
-        ZCX_EXCEL .
+    METHODS calculate_cell_width
+      IMPORTING
+        !ip_column      TYPE simple
+        !ip_row         TYPE zexcel_cell_row
+      RETURNING
+        value(ep_width) TYPE float
+      RAISING
+        zcx_excel .
+    METHODS generate_title
+      RETURNING
+        value(ep_title) TYPE zexcel_sheet_title .
+    METHODS get_value_type
+      IMPORTING
+        !ip_value      TYPE simple
+      EXPORTING
+        !ep_value      TYPE simple
+        !ep_value_type TYPE abap_typekind .
+    METHODS print_title_set_range .
+    METHODS update_dimension_range
+      RAISING
+        zcx_excel .
 ENDCLASS.
 
 
@@ -635,85 +638,85 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
   METHOD add_comment.
     comments->include( ip_comment ).
-  ENDMETHOD.
+  ENDMETHOD.                    "add_comment
 
 
-  method ADD_DRAWING.
-    case IP_DRAWING->GET_TYPE( ).
-      when ZCL_EXCEL_DRAWING=>TYPE_IMAGE.
-        DRAWINGS->INCLUDE( IP_DRAWING ).
-      when ZCL_EXCEL_DRAWING=>TYPE_CHART.
-        CHARTS->INCLUDE( IP_DRAWING ).
-    endcase.
-  endmethod.
+  METHOD add_drawing.
+    CASE ip_drawing->get_type( ).
+      WHEN zcl_excel_drawing=>type_image.
+        drawings->include( ip_drawing ).
+      WHEN zcl_excel_drawing=>type_chart.
+        charts->include( ip_drawing ).
+    ENDCASE.
+  ENDMETHOD.                    "ADD_DRAWING
 
 
-  method ADD_NEW_COLUMN.
-    data: LV_COLUMN_ALPHA type ZEXCEL_CELL_COLUMN_ALPHA.
+  METHOD add_new_column.
+    DATA: lv_column_alpha TYPE zexcel_cell_column_alpha.
 
-    LV_COLUMN_ALPHA = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( IP_COLUMN ).
+    lv_column_alpha = zcl_excel_common=>convert_column2alpha( ip_column ).
 
-    create object EO_COLUMN
-      exporting
-        IP_INDEX     = LV_COLUMN_ALPHA
-        IP_EXCEL     = ME->EXCEL
-        IP_WORKSHEET = ME.
-    COLUMNS->ADD( EO_COLUMN ).
-  endmethod.
-
-
-  method ADD_NEW_DATA_VALIDATION.
-
-    create object EO_DATA_VALIDATION.
-    DATA_VALIDATIONS->ADD( EO_DATA_VALIDATION ).
-  endmethod.
+    CREATE OBJECT eo_column
+      EXPORTING
+        ip_index     = lv_column_alpha
+        ip_excel     = me->excel
+        ip_worksheet = me.
+    columns->add( eo_column ).
+  ENDMETHOD.                    "ADD_NEW_COLUMN
 
 
-  method ADD_NEW_RANGE.
+  METHOD add_new_data_validation.
+
+    CREATE OBJECT eo_data_validation.
+    data_validations->add( eo_data_validation ).
+  ENDMETHOD.                    "ADD_NEW_DATA_VALIDATION
+
+
+  METHOD add_new_range.
 * Create default blank range
-    create object EO_RANGE.
-    RANGES->ADD( EO_RANGE ).
-  endmethod.
+    CREATE OBJECT eo_range.
+    ranges->add( eo_range ).
+  ENDMETHOD.                    "ADD_NEW_RANGE
 
 
-  method ADD_NEW_ROW.
-    create object EO_ROW
-      exporting
-        IP_INDEX = IP_ROW.
-    ROWS->ADD( EO_ROW ).
-  endmethod.
+  METHOD add_new_row.
+    CREATE OBJECT eo_row
+      EXPORTING
+        ip_index = ip_row.
+    rows->add( eo_row ).
+  ENDMETHOD.                    "ADD_NEW_ROW
 
 
-  method ADD_NEW_STYLE_COND.
-    create object EO_STYLE_COND.
-    STYLES_COND->ADD( EO_STYLE_COND ).
-  endmethod.
+  METHOD add_new_style_cond.
+    CREATE OBJECT eo_style_cond.
+    styles_cond->add( eo_style_cond ).
+  ENDMETHOD.                    "ADD_NEW_STYLE_COND
 
 
-  method BIND_ALV.
-    data: LO_CONVERTER type ref to ZCL_EXCEL_CONVERTER.
+  METHOD bind_alv.
+    DATA: lo_converter TYPE REF TO zcl_excel_converter.
 
-    create object LO_CONVERTER.
+    CREATE OBJECT lo_converter.
 
-    try.
-        LO_CONVERTER->CONVERT(
-          exporting
-            IO_ALV         = IO_ALV
-            IT_TABLE       = IT_TABLE
-            I_ROW_INT      = I_TOP
-            I_COLUMN_INT   = I_LEFT
-            I_TABLE        = I_TABLE
-            I_STYLE_TABLE  = TABLE_STYLE
-            IO_WORKSHEET   = ME
-          changing
-            CO_EXCEL       = EXCEL ).
-      catch ZCX_EXCEL .
-    endtry.
+    TRY.
+        lo_converter->convert(
+          EXPORTING
+            io_alv         = io_alv
+            it_table       = it_table
+            i_row_int      = i_top
+            i_column_int   = i_left
+            i_table        = i_table
+            i_style_table  = table_style
+            io_worksheet   = me
+          CHANGING
+            co_excel       = excel ).
+      CATCH zcx_excel .
+    ENDTRY.
 
-  endmethod.
+  ENDMETHOD.                    "BIND_ALV
 
 
-  method BIND_ALV_OLE2.
+  METHOD bind_alv_ole2.
 *--------------------------------------------------------------------*
 * Method description:
 *   Method use to export a CL_GUI_ALV_GRID object to xlsx/xls file
@@ -728,69 +731,69 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 * Data for session 0: DOI constructor
 * ------------------------------------------
 
-    data: LO_CONTROL  type ref to I_OI_CONTAINER_CONTROL.
-    data: LO_PROXY    type ref to I_OI_DOCUMENT_PROXY.
-    data: LO_SPREADSHEET type ref to I_OI_SPREADSHEET.
-    data: LO_ERROR    type ref to I_OI_ERROR.
-    data: LC_RETCODE  type SOI_RET_STRING.
-    data: LI_HAS      type I. "Proxy has spreadsheet interface?
-    data: L_IS_CLOSED type I.
+    DATA: lo_control  TYPE REF TO i_oi_container_control.
+    DATA: lo_proxy    TYPE REF TO i_oi_document_proxy.
+    DATA: lo_spreadsheet TYPE REF TO i_oi_spreadsheet.
+    DATA: lo_error    TYPE REF TO i_oi_error.
+    DATA: lc_retcode  TYPE soi_ret_string.
+    DATA: li_has      TYPE i. "Proxy has spreadsheet interface?
+    DATA: l_is_closed TYPE i.
 
 * Data for session 1: Get LVC data from ALV object
 * ------------------------------------------
 
-    data: L_HAS_ACTIVEX,
-          L_DOCTYPE_EXCEL_SHEET(11) type C.
+    DATA: l_has_activex,
+          l_doctype_excel_sheet(11) TYPE c.
 
 * LVC
-    data: LT_FIELDCAT_LVC       type LVC_T_FCAT.
-    data: WA_FIELDCAT_LVC       type LVC_S_FCAT.
-    data: LT_SORT_LVC           type LVC_T_SORT.
-    data: LT_FILTER_IDX_LVC     type LVC_T_FIDX.
-    data: LT_GROUPLEVELS_LVC    type LVC_T_GRPL.
+    DATA: lt_fieldcat_lvc       TYPE lvc_t_fcat.
+    DATA: wa_fieldcat_lvc       TYPE lvc_s_fcat.
+    DATA: lt_sort_lvc           TYPE lvc_t_sort.
+    DATA: lt_filter_idx_lvc     TYPE lvc_t_fidx.
+    DATA: lt_grouplevels_lvc    TYPE lvc_t_grpl.
 
 * KKBLO
-    data: LT_FIELDCAT_KKBLO     type  KKBLO_T_FIELDCAT.
-    data: LT_SORT_KKBLO         type  KKBLO_T_SORTINFO.
-    data: LT_GROUPLEVELS_KKBLO  type  KKBLO_T_GROUPLEVELS.
-    data: LT_FILTER_IDX_KKBLO   type  KKBLO_T_SFINFO.
-    data: WA_LISTHEADER         like line of IT_LISTHEADER.
+    DATA: lt_fieldcat_kkblo     TYPE  kkblo_t_fieldcat.
+    DATA: lt_sort_kkblo         TYPE  kkblo_t_sortinfo.
+    DATA: lt_grouplevels_kkblo  TYPE  kkblo_t_grouplevels.
+    DATA: lt_filter_idx_kkblo   TYPE  kkblo_t_sfinfo.
+    DATA: wa_listheader         LIKE LINE OF it_listheader.
 
 * Subtotal
-    data: LT_COLLECT00          type ref to DATA.
-    data: LT_COLLECT01          type ref to DATA.
-    data: LT_COLLECT02          type ref to DATA.
-    data: LT_COLLECT03          type ref to DATA.
-    data: LT_COLLECT04          type ref to DATA.
-    data: LT_COLLECT05          type ref to DATA.
-    data: LT_COLLECT06          type ref to DATA.
-    data: LT_COLLECT07          type ref to DATA.
-    data: LT_COLLECT08          type ref to DATA.
-    data: LT_COLLECT09          type ref to DATA.
+    DATA: lt_collect00          TYPE REF TO data.
+    DATA: lt_collect01          TYPE REF TO data.
+    DATA: lt_collect02          TYPE REF TO data.
+    DATA: lt_collect03          TYPE REF TO data.
+    DATA: lt_collect04          TYPE REF TO data.
+    DATA: lt_collect05          TYPE REF TO data.
+    DATA: lt_collect06          TYPE REF TO data.
+    DATA: lt_collect07          TYPE REF TO data.
+    DATA: lt_collect08          TYPE REF TO data.
+    DATA: lt_collect09          TYPE REF TO data.
 
 * data table name
-    data: L_TABNAME             type  KKBLO_TABNAME.
+    DATA: l_tabname             TYPE  kkblo_tabname.
 
 * local object
-    data: LO_GRID               type ref to LCL_GUI_ALV_GRID.
+    DATA: lo_grid               TYPE REF TO lcl_gui_alv_grid.
 
 * data table get from ALV
-    data: LT_ALV                  type ref to DATA.
+    DATA: lt_alv                  TYPE REF TO data.
 
 * total / subtotal data
-    field-symbols: <F_COLLECT00>  type standard table.
-    field-symbols: <F_COLLECT01>  type standard table.
-    field-symbols: <F_COLLECT02>  type standard table.
-    field-symbols: <F_COLLECT03>  type standard table.
-    field-symbols: <F_COLLECT04>  type standard table.
-    field-symbols: <F_COLLECT05>  type standard table.
-    field-symbols: <F_COLLECT06>  type standard table.
-    field-symbols: <F_COLLECT07>  type standard table.
-    field-symbols: <F_COLLECT08>  type standard table.
-    field-symbols: <F_COLLECT09>  type standard table.
+    FIELD-SYMBOLS: <f_collect00>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect01>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect02>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect03>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect04>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect05>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect06>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect07>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect08>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect09>  TYPE STANDARD TABLE.
 
 * table before append subtotal lines
-    field-symbols: <F_ALV_TAB>    type standard table.
+    FIELD-SYMBOLS: <f_alv_tab>    TYPE STANDARD TABLE.
 
 * data for session 2: sort, filter and calculate total/subtotal
 * ------------------------------------------
@@ -798,193 +801,193 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 * table to save index of subotal / total line in excel tanle
 * this ideal to control index of subtotal / total line later
 * for ex, when get subtotal / total line to format
-    types: begin of ST_SUBTOT_INDEXS,
-             INDEX type I,
-           end of ST_SUBTOT_INDEXS.
-    data: LT_SUBTOT_INDEXS type table of ST_SUBTOT_INDEXS.
-    data: WA_SUBTOT_INDEXS like line of LT_SUBTOT_INDEXS.
+    TYPES: BEGIN OF st_subtot_indexs,
+             index TYPE i,
+           END OF st_subtot_indexs.
+    DATA: lt_subtot_indexs TYPE TABLE OF st_subtot_indexs.
+    DATA: wa_subtot_indexs LIKE LINE OF lt_subtot_indexs.
 
 * data table after append subtotal
-    data: LT_EXCEL                type ref to DATA.
+    DATA: lt_excel                TYPE REF TO data.
 
-    data: L_TABIX                 type I.
-    data: L_SAVE_INDEX            type I.
+    DATA: l_tabix                 TYPE i.
+    DATA: l_save_index            TYPE i.
 
 * dyn subtotal table name
-    data: L_COLLECT               type STRING.
+    DATA: l_collect               TYPE string.
 
 * subtotal range, to format subtotal (and total)
-    data: SUBRANGES               type SOI_RANGE_LIST.
-    data: SUBRANGEITEM            type SOI_RANGE_ITEM.
-    data: L_SUB_INDEX             type I.
+    DATA: subranges               TYPE soi_range_list.
+    DATA: subrangeitem            TYPE soi_range_item.
+    DATA: l_sub_index             TYPE i.
 
 
 * table after append subtotal lines
-    field-symbols: <F_EXCEL_TAB>  type standard table.
-    field-symbols: <F_EXCEL_LINE> type ANY.
+    FIELD-SYMBOLS: <f_excel_tab>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_excel_line> TYPE any.
 
 * dyn subtotal tables
-    field-symbols: <F_COLLECT_TAB>      type standard table.
-    field-symbols: <F_COLLECT_LINE>     type ANY.
+    FIELD-SYMBOLS: <f_collect_tab>      TYPE STANDARD TABLE.
+    FIELD-SYMBOLS: <f_collect_line>     TYPE any.
 
-    field-symbols: <F_FILTER_IDX_LINE>  like line of LT_FILTER_IDX_KKBLO.
-    field-symbols: <F_FIELDCAT_LINE>    like line of LT_FIELDCAT_KKBLO.
-    field-symbols: <F_GROUPLEVELS_LINE> like line of LT_GROUPLEVELS_KKBLO.
-    field-symbols: <F_LINE>             type ANY.
+    FIELD-SYMBOLS: <f_filter_idx_line>  LIKE LINE OF lt_filter_idx_kkblo.
+    FIELD-SYMBOLS: <f_fieldcat_line>    LIKE LINE OF lt_fieldcat_kkblo.
+    FIELD-SYMBOLS: <f_grouplevels_line> LIKE LINE OF lt_grouplevels_kkblo.
+    FIELD-SYMBOLS: <f_line>             TYPE any.
 
 * Data for session 3: map data to semantic table
 * ------------------------------------------
 
-    types: begin of ST_COLUMN_INDEX,
-             FIELDNAME type KKBLO_FIELDNAME,
-             TABNAME   type KKBLO_TABNAME,
-             COL       like SY-INDEX,
-           end of ST_COLUMN_INDEX.
+    TYPES: BEGIN OF st_column_index,
+             fieldname TYPE kkblo_fieldname,
+             tabname   TYPE kkblo_tabname,
+             col       LIKE sy-index,
+           END OF st_column_index.
 
 * columns index
-    data: LT_COLUMN_INDEX   type table of ST_COLUMN_INDEX.
-    data: WA_COLUMN_INDEX   like line of LT_COLUMN_INDEX.
+    DATA: lt_column_index   TYPE TABLE OF st_column_index.
+    DATA: wa_column_index   LIKE LINE OF lt_column_index.
 
 * table of dependent field ( currency and quantity unit field)
-    data: LT_FIELDCAT_DEPF  type KKBLO_T_FIELDCAT.
-    data: WA_FIELDCAT_DEPF  type KKBLO_FIELDCAT.
+    DATA: lt_fieldcat_depf  TYPE kkblo_t_fieldcat.
+    DATA: wa_fieldcat_depf  TYPE kkblo_fieldcat.
 
 * XXL interface:
 * -XXL: contain exporting columns characteristic
-    data: LT_SEMA type table of GXXLT_S initial size 0.
-    data: WA_SEMA like line of LT_SEMA.
+    DATA: lt_sema TYPE TABLE OF gxxlt_s INITIAL SIZE 0.
+    DATA: wa_sema LIKE LINE OF lt_sema.
 
 * -XXL interface: header
-    data: LT_HKEY type table of GXXLT_H initial size 0.
-    data: WA_HKEY like line of LT_HKEY.
+    DATA: lt_hkey TYPE TABLE OF gxxlt_h INITIAL SIZE 0.
+    DATA: wa_hkey LIKE LINE OF lt_hkey.
 
 * -XXL interface: header keys
-    data: LT_VKEY type table of GXXLT_V initial size 0.
-    data: WA_VKEY like line of LT_VKEY.
+    DATA: lt_vkey TYPE TABLE OF gxxlt_v INITIAL SIZE 0.
+    DATA: wa_vkey LIKE LINE OF lt_vkey.
 
 * Number of H Keys: number of key columns
-    data: L_N_HRZ_KEYS      type  I.
+    DATA: l_n_hrz_keys      TYPE  i.
 * Number of data columns in the list object: non-key columns no
-    data: L_N_ATT_COLS      type  I.
+    DATA: l_n_att_cols      TYPE  i.
 * Number of V Keys: number of header row
-    data: L_N_VRT_KEYS      type  I.
+    DATA: l_n_vrt_keys      TYPE  i.
 
 * curency to format amount
-    data: LT_TCURX          type table of TCURX.
-    data: WA_TCURX          like line of LT_TCURX.
-    data: L_DEF             type FLAG. " currency / quantity flag
-    data: WA_T006           type T006. " decimal place of unit
+    DATA: lt_tcurx          TYPE TABLE OF tcurx.
+    DATA: wa_tcurx          LIKE LINE OF lt_tcurx.
+    DATA: l_def             TYPE flag. " currency / quantity flag
+    DATA: wa_t006           TYPE t006. " decimal place of unit
 
-    data: L_NUM             type I. " table columns number
-    data: L_TYP             type C. " table type
-    data: WA                type ref to DATA.
-    data: L_INT             type I.
-    data: L_COUNTER         type I.
+    DATA: l_num             TYPE i. " table columns number
+    DATA: l_typ             TYPE c. " table type
+    DATA: wa                TYPE REF TO data.
+    DATA: l_int             TYPE i.
+    DATA: l_counter         TYPE i.
 
-    field-symbols: <F_EXCEL_COLUMN>     type ANY.
-    field-symbols: <F_FCAT_COLUMN>      type ANY.
+    FIELD-SYMBOLS: <f_excel_column>     TYPE any.
+    FIELD-SYMBOLS: <f_fcat_column>      TYPE any.
 
 * Data for session 4: write to excel
 * ------------------------------------------
 
-    data: SEMA_TYPE         type  C.
+    DATA: sema_type         TYPE  c.
 
-    data L_ERROR           type ref to C_OI_PROXY_ERROR.
-    data COUNT              type I.
-    data DATAC              type I.
-    data DATAREAL           type I. " exporting column number
-    data VKEYCOUNT          type I.
-    data ALL type I.
-    data MIT type I         value 1.  " index of recent row?
-    data LI_COL_POS type I  value 1.  " column position
-    data LI_COL_NUM type I.           " table columns number
-    field-symbols: <LINE>   type ANY.
-    field-symbols: <ITEM>   type ANY.
+    DATA l_error           TYPE REF TO c_oi_proxy_error.
+    DATA count              TYPE i.
+    DATA datac              TYPE i.
+    DATA datareal           TYPE i. " exporting column number
+    DATA vkeycount          TYPE i.
+    DATA all TYPE i.
+    DATA mit TYPE i         VALUE 1.  " index of recent row?
+    DATA li_col_pos TYPE i  VALUE 1.  " column position
+    DATA li_col_num TYPE i.           " table columns number
+    FIELD-SYMBOLS: <line>   TYPE any.
+    FIELD-SYMBOLS: <item>   TYPE any.
 
-    data TD                 type SYDES_DESC.
+    DATA td                 TYPE sydes_desc.
 
-    data: TYP.
-    data: RANGES             type SOI_RANGE_LIST.
-    data: RANGEITEM          type SOI_RANGE_ITEM.
-    data: CONTENTS           type SOI_GENERIC_TABLE.
-    data: CONTENTSITEM       type SOI_GENERIC_ITEM.
-    data: SEMAITEM           type GXXLT_S.
-    data: HKEYITEM           type GXXLT_H.
-    data: VKEYITEM           type GXXLT_V.
-    data: LI_COMMENTARY_ROWS type I.  "row number of title lines + 1
-    data: LO_ERROR_W         type ref to  I_OI_ERROR.
-    data: L_RETCODE          type SOI_RET_STRING.
-    data: NO_FLUSH           type C value 'X'.
-    data: LI_HEAD_TOP        type I. "header rows position
+    DATA: typ.
+    DATA: ranges             TYPE soi_range_list.
+    DATA: rangeitem          TYPE soi_range_item.
+    DATA: contents           TYPE soi_generic_table.
+    DATA: contentsitem       TYPE soi_generic_item.
+    DATA: semaitem           TYPE gxxlt_s.
+    DATA: hkeyitem           TYPE gxxlt_h.
+    DATA: vkeyitem           TYPE gxxlt_v.
+    DATA: li_commentary_rows TYPE i.  "row number of title lines + 1
+    DATA: lo_error_w         TYPE REF TO  i_oi_error.
+    DATA: l_retcode          TYPE soi_ret_string.
+    DATA: no_flush           TYPE c VALUE 'X'.
+    DATA: li_head_top        TYPE i. "header rows position
 
 * Data for session 5: Save and clode document
 * ------------------------------------------
 
-    data: LI_DOCUMENT_SIZE   type I.
-    data: LS_PATH            type RLGRAP-FILENAME.
+    DATA: li_document_size   TYPE i.
+    DATA: ls_path            TYPE rlgrap-filename.
 
 * MACRO: Close_document
 *-------------------------------------------
 
-    define CLOSE_DOCUMENT.
-      clear: L_IS_CLOSED.
-      if LO_PROXY is not initial.
+    DEFINE close_document.
+      clear: l_is_closed.
+      if lo_proxy is not initial.
 
 * check proxy detroyed adi
 
-        call method LO_PROXY->IS_DESTROYED
+        call method lo_proxy->is_destroyed
           importing
-            RET_VALUE = L_IS_CLOSED.
+            ret_value = l_is_closed.
 
 * if dun detroyed yet: close -> release proxy
 
-        if L_IS_CLOSED is initial.
-          call method LO_PROXY->CLOSE_DOCUMENT
+        if l_is_closed is initial.
+          call method lo_proxy->close_document
 *        EXPORTING
 *          do_save = do_save
             importing
-              ERROR       = LO_ERROR
-              RETCODE     = LC_RETCODE.
+              error       = lo_error
+              retcode     = lc_retcode.
         endif.
 
-        call method LO_PROXY->RELEASE_DOCUMENT
+        call method lo_proxy->release_document
           importing
-            ERROR   = LO_ERROR
-            RETCODE = LC_RETCODE.
+            error   = lo_error
+            retcode = lc_retcode.
 
       else.
-        LC_RETCODE = C_OI_ERRORS=>RET_DOCUMENT_NOT_OPEN.
+        lc_retcode = c_oi_errors=>ret_document_not_open.
       endif.
 
 * Detroy control container
 
-      if LO_CONTROL is not initial.
-        call method LO_CONTROL->DESTROY_CONTROL.
+      if lo_control is not initial.
+        call method lo_control->destroy_control.
       endif.
 
       clear:
-        LO_SPREADSHEET,
-        LO_PROXY,
-        LO_CONTROL.
+        lo_spreadsheet,
+        lo_proxy,
+        lo_control.
 
 * free local
 
-      clear: L_IS_CLOSED.
+      clear: l_is_closed.
 
-    end-of-definition.
+    END-OF-DEFINITION.
 
 * Macro to catch DOI error
 *-------------------------------------------
 
-    define ERROR_DOI.
-      if LC_RETCODE ne C_OI_ERRORS=>RET_OK.
-        CLOSE_DOCUMENT.
-        call method LO_ERROR->RAISE_MESSAGE
+    DEFINE error_doi.
+      if lc_retcode ne c_oi_errors=>ret_ok.
+        close_document.
+        call method lo_error->raise_message
           exporting
-            TYPE = 'E'.
-        clear: LO_ERROR.
+            type = 'E'.
+        clear: lo_error.
       endif.
-    end-of-definition.
+    END-OF-DEFINITION.
 
 *--------------------------------------------------------------------*
 * SESSION 0: DOI CONSTRUCTOR
@@ -992,119 +995,119 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 * check active windown
 
-    call function 'GUI_HAS_ACTIVEX'
-      importing
-        RETURN = L_HAS_ACTIVEX.
+    CALL FUNCTION 'GUI_HAS_ACTIVEX'
+      IMPORTING
+        return = l_has_activex.
 
-    if L_HAS_ACTIVEX is initial.
-      raise MISS_GUIDE.
-    endif.
+    IF l_has_activex IS INITIAL.
+      RAISE miss_guide.
+    ENDIF.
 
 *   Get Container Object of Screen
 
-    call method C_OI_CONTAINER_CONTROL_CREATOR=>GET_CONTAINER_CONTROL
-      importing
-        CONTROL = LO_CONTROL
-        RETCODE = LC_RETCODE.
+    CALL METHOD c_oi_container_control_creator=>get_container_control
+      IMPORTING
+        control = lo_control
+        retcode = lc_retcode.
 
-    ERROR_DOI.
+    error_doi.
 
 * Initialize Container control
 
-    call method LO_CONTROL->INIT_CONTROL
-      exporting
-        PARENT                   = CL_GUI_CONTAINER=>DEFAULT_SCREEN
-        R3_APPLICATION_NAME      = ''
-        INPLACE_ENABLED          = 'X'
-        NO_FLUSH                 = 'X'
-        REGISTER_ON_CLOSE_EVENT  = 'X'
-        REGISTER_ON_CUSTOM_EVENT = 'X'
-      importing
-        ERROR                    = LO_ERROR
-        RETCODE                  = LC_RETCODE.
+    CALL METHOD lo_control->init_control
+      EXPORTING
+        parent                   = cl_gui_container=>default_screen
+        r3_application_name      = ''
+        inplace_enabled          = 'X'
+        no_flush                 = 'X'
+        register_on_close_event  = 'X'
+        register_on_custom_event = 'X'
+      IMPORTING
+        error                    = lo_error
+        retcode                  = lc_retcode.
 
-    ERROR_DOI.
+    error_doi.
 
 * Get Proxy Document:
 * check exist of document proxy, if exist -> close first
 
-    if not LO_PROXY is initial.
-      CLOSE_DOCUMENT.
-    endif.
+    IF NOT lo_proxy IS INITIAL.
+      close_document.
+    ENDIF.
 
-    if I_XLS is not initial.
+    IF i_xls IS NOT INITIAL.
 * xls format, doctype = soi_doctype_excel97_sheet
-      L_DOCTYPE_EXCEL_SHEET = 'Excel.Sheet.8'.
-    else.
+      l_doctype_excel_sheet = 'Excel.Sheet.8'.
+    ELSE.
 * xlsx format, doctype = soi_doctype_excel_sheet
-      L_DOCTYPE_EXCEL_SHEET = 'Excel.Sheet'.
-    endif.
+      l_doctype_excel_sheet = 'Excel.Sheet'.
+    ENDIF.
 
-    call method LO_CONTROL->GET_DOCUMENT_PROXY
-      exporting
-        DOCUMENT_TYPE      = L_DOCTYPE_EXCEL_SHEET
-        REGISTER_CONTAINER = 'X'
-      importing
-        DOCUMENT_PROXY     = LO_PROXY
-        ERROR              = LO_ERROR
-        RETCODE            = LC_RETCODE.
+    CALL METHOD lo_control->get_document_proxy
+      EXPORTING
+        document_type      = l_doctype_excel_sheet
+        register_container = 'X'
+      IMPORTING
+        document_proxy     = lo_proxy
+        error              = lo_error
+        retcode            = lc_retcode.
 
-    ERROR_DOI.
+    error_doi.
 
-    if I_DOCUMENT_URL is initial.
+    IF i_document_url IS INITIAL.
 
 * create new excel document
 
-      call method LO_PROXY->CREATE_DOCUMENT
-        exporting
-          CREATE_VIEW_DATA = 'X'
-          OPEN_INPLACE     = 'X'
-          NO_FLUSH         = 'X'
-        importing
-          ERROR            = LO_ERROR
-          RETCODE          = LC_RETCODE.
+      CALL METHOD lo_proxy->create_document
+        EXPORTING
+          create_view_data = 'X'
+          open_inplace     = 'X'
+          no_flush         = 'X'
+        IMPORTING
+          error            = lo_error
+          retcode          = lc_retcode.
 
-      ERROR_DOI.
+      error_doi.
 
-    else.
+    ELSE.
 
 * Read excel template for i_DOCUMENT_URL
 * this excel template can be store in local or server
 
-      call method LO_PROXY->OPEN_DOCUMENT
-        exporting
-          DOCUMENT_URL = I_DOCUMENT_URL
-          OPEN_INPLACE = 'X'
-          NO_FLUSH     = 'X'
-        importing
-          ERROR        = LO_ERROR
-          RETCODE      = LC_RETCODE.
+      CALL METHOD lo_proxy->open_document
+        EXPORTING
+          document_url = i_document_url
+          open_inplace = 'X'
+          no_flush     = 'X'
+        IMPORTING
+          error        = lo_error
+          retcode      = lc_retcode.
 
-      ERROR_DOI.
+      error_doi.
 
-    endif.
+    ENDIF.
 
 * Check Spreadsheet Interface of Document Proxy
 
-    call method LO_PROXY->HAS_SPREADSHEET_INTERFACE
-      importing
-        IS_AVAILABLE = LI_HAS
-        ERROR        = LO_ERROR
-        RETCODE      = LC_RETCODE.
+    CALL METHOD lo_proxy->has_spreadsheet_interface
+      IMPORTING
+        is_available = li_has
+        error        = lo_error
+        retcode      = lc_retcode.
 
-    ERROR_DOI.
+    error_doi.
 
 * create Spreadsheet object
 
-    check LI_HAS is not initial.
+    CHECK li_has IS NOT INITIAL.
 
-    call method LO_PROXY->GET_SPREADSHEET_INTERFACE
-      importing
-        SHEET_INTERFACE = LO_SPREADSHEET
-        ERROR           = LO_ERROR
-        RETCODE         = LC_RETCODE.
+    CALL METHOD lo_proxy->get_spreadsheet_interface
+      IMPORTING
+        sheet_interface = lo_spreadsheet
+        error           = lo_error
+        retcode         = lc_retcode.
 
-    ERROR_DOI.
+    error_doi.
 
 *--------------------------------------------------------------------*
 * SESSION 1: GET LVC DATA FROM ALV OBJECT
@@ -1112,109 +1115,109 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 * data table
 
-    create object LO_GRID
-      exporting
-        I_PARENT = CL_GUI_CONTAINER=>SCREEN0.
+    CREATE OBJECT lo_grid
+      EXPORTING
+        i_parent = cl_gui_container=>screen0.
 
-    call method LO_GRID->GET_ALV_ATTRIBUTES
-      exporting
-        IO_GRID  = IO_ALV
-      importing
-        ET_TABLE = LT_ALV.
+    CALL METHOD lo_grid->get_alv_attributes
+      EXPORTING
+        io_grid  = io_alv
+      IMPORTING
+        et_table = lt_alv.
 
-    assign LT_ALV->* to <F_ALV_TAB>.
+    ASSIGN lt_alv->* TO <f_alv_tab>.
 
 * fieldcat
 
-    call method IO_ALV->GET_FRONTEND_FIELDCATALOG
-      importing
-        ET_FIELDCATALOG = LT_FIELDCAT_LVC.
+    CALL METHOD io_alv->get_frontend_fieldcatalog
+      IMPORTING
+        et_fieldcatalog = lt_fieldcat_lvc.
 
 * table name
 
-    loop at LT_FIELDCAT_LVC into WA_FIELDCAT_LVC
-    where not TABNAME is initial.
-      L_TABNAME = WA_FIELDCAT_LVC-TABNAME.
-      exit.
-    endloop.
+    LOOP AT lt_fieldcat_lvc INTO wa_fieldcat_lvc
+    WHERE NOT tabname IS INITIAL.
+      l_tabname = wa_fieldcat_lvc-tabname.
+      EXIT.
+    ENDLOOP.
 
-    if SY-SUBRC ne 0.
-      L_TABNAME = '1'.
-    endif.
-    clear: WA_FIELDCAT_LVC.
+    IF sy-subrc NE 0.
+      l_tabname = '1'.
+    ENDIF.
+    CLEAR: wa_fieldcat_lvc.
 
 * sort table
 
-    call method IO_ALV->GET_SORT_CRITERIA
-      importing
-        ET_SORT = LT_SORT_LVC.
+    CALL METHOD io_alv->get_sort_criteria
+      IMPORTING
+        et_sort = lt_sort_lvc.
 
 
 * filter index
 
-    call method IO_ALV->GET_FILTERED_ENTRIES
-      importing
-        ET_FILTERED_ENTRIES = LT_FILTER_IDX_LVC.
+    CALL METHOD io_alv->get_filtered_entries
+      IMPORTING
+        et_filtered_entries = lt_filter_idx_lvc.
 
 * group level + subtotal
 
-    call method IO_ALV->GET_SUBTOTALS
-      importing
-        EP_COLLECT00   = LT_COLLECT00
-        EP_COLLECT01   = LT_COLLECT01
-        EP_COLLECT02   = LT_COLLECT02
-        EP_COLLECT03   = LT_COLLECT03
-        EP_COLLECT04   = LT_COLLECT04
-        EP_COLLECT05   = LT_COLLECT05
-        EP_COLLECT06   = LT_COLLECT06
-        EP_COLLECT07   = LT_COLLECT07
-        EP_COLLECT08   = LT_COLLECT08
-        EP_COLLECT09   = LT_COLLECT09
-        ET_GROUPLEVELS = LT_GROUPLEVELS_LVC.
+    CALL METHOD io_alv->get_subtotals
+      IMPORTING
+        ep_collect00   = lt_collect00
+        ep_collect01   = lt_collect01
+        ep_collect02   = lt_collect02
+        ep_collect03   = lt_collect03
+        ep_collect04   = lt_collect04
+        ep_collect05   = lt_collect05
+        ep_collect06   = lt_collect06
+        ep_collect07   = lt_collect07
+        ep_collect08   = lt_collect08
+        ep_collect09   = lt_collect09
+        et_grouplevels = lt_grouplevels_lvc.
 
-    assign LT_COLLECT00->* to <F_COLLECT00>.
-    assign LT_COLLECT01->* to <F_COLLECT01>.
-    assign LT_COLLECT02->* to <F_COLLECT02>.
-    assign LT_COLLECT03->* to <F_COLLECT03>.
-    assign LT_COLLECT04->* to <F_COLLECT04>.
-    assign LT_COLLECT05->* to <F_COLLECT05>.
-    assign LT_COLLECT06->* to <F_COLLECT06>.
-    assign LT_COLLECT07->* to <F_COLLECT07>.
-    assign LT_COLLECT08->* to <F_COLLECT08>.
-    assign LT_COLLECT09->* to <F_COLLECT09>.
+    ASSIGN lt_collect00->* TO <f_collect00>.
+    ASSIGN lt_collect01->* TO <f_collect01>.
+    ASSIGN lt_collect02->* TO <f_collect02>.
+    ASSIGN lt_collect03->* TO <f_collect03>.
+    ASSIGN lt_collect04->* TO <f_collect04>.
+    ASSIGN lt_collect05->* TO <f_collect05>.
+    ASSIGN lt_collect06->* TO <f_collect06>.
+    ASSIGN lt_collect07->* TO <f_collect07>.
+    ASSIGN lt_collect08->* TO <f_collect08>.
+    ASSIGN lt_collect09->* TO <f_collect09>.
 
 * transfer to KKBLO struct
 
-    call function 'LVC_TRANSFER_TO_KKBLO'
-      exporting
-        IT_FIELDCAT_LVC           = LT_FIELDCAT_LVC
-        IT_SORT_LVC               = LT_SORT_LVC
-        IT_FILTER_INDEX_LVC       = LT_FILTER_IDX_LVC
-        IT_GROUPLEVELS_LVC        = LT_GROUPLEVELS_LVC
-      importing
-        ET_FIELDCAT_KKBLO         = LT_FIELDCAT_KKBLO
-        ET_SORT_KKBLO             = LT_SORT_KKBLO
-        ET_FILTERED_ENTRIES_KKBLO = LT_FILTER_IDX_KKBLO
-        ET_GROUPLEVELS_KKBLO      = LT_GROUPLEVELS_KKBLO
-      tables
-        IT_DATA                   = <F_ALV_TAB>
-      exceptions
-        IT_DATA_MISSING           = 1
-        IT_FIELDCAT_LVC_MISSING   = 2
-        others                    = 3.
-    if SY-SUBRC <> 0.
-      raise EX_TRANSFER_KKBLO_ERROR.
-    endif.
+    CALL FUNCTION 'LVC_TRANSFER_TO_KKBLO'
+      EXPORTING
+        it_fieldcat_lvc           = lt_fieldcat_lvc
+        it_sort_lvc               = lt_sort_lvc
+        it_filter_index_lvc       = lt_filter_idx_lvc
+        it_grouplevels_lvc        = lt_grouplevels_lvc
+      IMPORTING
+        et_fieldcat_kkblo         = lt_fieldcat_kkblo
+        et_sort_kkblo             = lt_sort_kkblo
+        et_filtered_entries_kkblo = lt_filter_idx_kkblo
+        et_grouplevels_kkblo      = lt_grouplevels_kkblo
+      TABLES
+        it_data                   = <f_alv_tab>
+      EXCEPTIONS
+        it_data_missing           = 1
+        it_fieldcat_lvc_missing   = 2
+        OTHERS                    = 3.
+    IF sy-subrc <> 0.
+      RAISE ex_transfer_kkblo_error.
+    ENDIF.
 
-    clear:
-      WA_FIELDCAT_LVC,
-      LT_FIELDCAT_LVC,
-      LT_SORT_LVC,
-      LT_FILTER_IDX_LVC,
-      LT_GROUPLEVELS_LVC.
+    CLEAR:
+      wa_fieldcat_lvc,
+      lt_fieldcat_lvc,
+      lt_sort_lvc,
+      lt_filter_idx_lvc,
+      lt_grouplevels_lvc.
 
-    clear:
-      LO_GRID.
+    CLEAR:
+      lo_grid.
 
 
 *--------------------------------------------------------------------*
@@ -1223,176 +1226,176 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 * append subtotal & total line
 
-    create data LT_EXCEL like <F_ALV_TAB>.
-    assign LT_EXCEL->* to <F_EXCEL_TAB>.
+    CREATE DATA lt_excel LIKE <f_alv_tab>.
+    ASSIGN lt_excel->* TO <f_excel_tab>.
 
-    loop at <F_ALV_TAB> assigning <F_LINE>.
-      L_SAVE_INDEX = SY-TABIX.
+    LOOP AT <f_alv_tab> ASSIGNING <f_line>.
+      l_save_index = sy-tabix.
 
 * filter base on filter index table
 
-      read table LT_FILTER_IDX_KKBLO assigning <F_FILTER_IDX_LINE>
-      with key INDEX = L_SAVE_INDEX
-      binary search.
-      if SY-SUBRC ne 0.
-        append <F_LINE> to <F_EXCEL_TAB>.
-      endif.
+      READ TABLE lt_filter_idx_kkblo ASSIGNING <f_filter_idx_line>
+      WITH KEY index = l_save_index
+      BINARY SEARCH.
+      IF sy-subrc NE 0.
+        APPEND <f_line> TO <f_excel_tab>.
+      ENDIF.
 
 * append subtotal lines
 
-      read table LT_GROUPLEVELS_KKBLO assigning <F_GROUPLEVELS_LINE>
-      with key INDEX_TO = L_SAVE_INDEX
-      binary search.
-      if SY-SUBRC = 0.
-        L_TABIX = SY-TABIX.
-        do.
-          if <F_GROUPLEVELS_LINE>-SUBTOT eq 'X' and
-             <F_GROUPLEVELS_LINE>-HIDE_LEVEL is initial and
-             <F_GROUPLEVELS_LINE>-CINDEX_FROM ne 0.
+      READ TABLE lt_grouplevels_kkblo ASSIGNING <f_grouplevels_line>
+      WITH KEY index_to = l_save_index
+      BINARY SEARCH.
+      IF sy-subrc = 0.
+        l_tabix = sy-tabix.
+        DO.
+          IF <f_grouplevels_line>-subtot EQ 'X' AND
+             <f_grouplevels_line>-hide_level IS INITIAL AND
+             <f_grouplevels_line>-cindex_from NE 0.
 
 * dynamic append subtotal line to excel table base on grouplevel table
 * ex <f_GROUPLEVELS_line>-level = 1
 * then <f_collect_tab> = '<F_COLLECT01>'
 
-            L_COLLECT = <F_GROUPLEVELS_LINE>-LEVEL.
-            condense L_COLLECT.
-            concatenate '<F_COLLECT0'
-                        L_COLLECT '>'
+            l_collect = <f_grouplevels_line>-level.
+            CONDENSE l_collect.
+            CONCATENATE '<F_COLLECT0'
+                        l_collect '>'
 *                      '->*'
-                        into L_COLLECT.
+                        INTO l_collect.
 
-            assign (L_COLLECT) to <F_COLLECT_TAB>.
+            ASSIGN (l_collect) TO <f_collect_tab>.
 
 * incase there're more than 1 total line of group, at the same level
 * for example: subtotal of multi currency
 
-            loop at <F_COLLECT_TAB> assigning <F_COLLECT_LINE>.
-              if  SY-TABIX between <F_GROUPLEVELS_LINE>-CINDEX_FROM
-                              and  <F_GROUPLEVELS_LINE>-CINDEX_TO.
+            LOOP AT <f_collect_tab> ASSIGNING <f_collect_line>.
+              IF  sy-tabix BETWEEN <f_grouplevels_line>-cindex_from
+                              AND  <f_grouplevels_line>-cindex_to.
 
 
-                append <F_COLLECT_LINE> to <F_EXCEL_TAB>.
+                APPEND <f_collect_line> TO <f_excel_tab>.
 
 * save subtotal lines index
 
-                WA_SUBTOT_INDEXS-INDEX = SY-TABIX.
-                append WA_SUBTOT_INDEXS to LT_SUBTOT_INDEXS.
+                wa_subtot_indexs-index = sy-tabix.
+                APPEND wa_subtot_indexs TO lt_subtot_indexs.
 
 * append sub total ranges table for format later
 
-                add 1 to L_SUB_INDEX.
-                SUBRANGEITEM-NAME     =  L_SUB_INDEX.
-                condense SUBRANGEITEM-NAME.
-                concatenate 'SUBTOT'
-                            SUBRANGEITEM-NAME
-                            into SUBRANGEITEM-NAME.
+                ADD 1 TO l_sub_index.
+                subrangeitem-name     =  l_sub_index.
+                CONDENSE subrangeitem-name.
+                CONCATENATE 'SUBTOT'
+                            subrangeitem-name
+                            INTO subrangeitem-name.
 
-                SUBRANGEITEM-ROWS     = WA_SUBTOT_INDEXS-INDEX.
-                SUBRANGEITEM-COLUMNS  = 1.            " start col
-                append SUBRANGEITEM to SUBRANGES.
-                clear: SUBRANGEITEM.
+                subrangeitem-rows     = wa_subtot_indexs-index.
+                subrangeitem-columns  = 1.            " start col
+                APPEND subrangeitem TO subranges.
+                CLEAR: subrangeitem.
 
-              endif.
-            endloop.
-            unassign: <F_COLLECT_TAB>.
-            unassign: <F_COLLECT_LINE>.
-            clear: L_COLLECT.
-          endif.
+              ENDIF.
+            ENDLOOP.
+            UNASSIGN: <f_collect_tab>.
+            UNASSIGN: <f_collect_line>.
+            CLEAR: l_collect.
+          ENDIF.
 
 * check next subtotal level of group
 
-          unassign: <F_GROUPLEVELS_LINE>.
-          add 1 to L_TABIX.
+          UNASSIGN: <f_grouplevels_line>.
+          ADD 1 TO l_tabix.
 
-          read table LT_GROUPLEVELS_KKBLO assigning <F_GROUPLEVELS_LINE>
-          index L_TABIX.
-          if SY-SUBRC ne 0
-          or <F_GROUPLEVELS_LINE>-INDEX_TO ne L_SAVE_INDEX.
-            exit.
-          endif.
+          READ TABLE lt_grouplevels_kkblo ASSIGNING <f_grouplevels_line>
+          INDEX l_tabix.
+          IF sy-subrc NE 0
+          OR <f_grouplevels_line>-index_to NE l_save_index.
+            EXIT.
+          ENDIF.
 
-          unassign:
-            <F_COLLECT_TAB>,
-            <F_COLLECT_LINE>.
+          UNASSIGN:
+            <f_collect_tab>,
+            <f_collect_line>.
 
-        enddo.
-      endif.
+        ENDDO.
+      ENDIF.
 
-      clear:
-        L_TABIX,
-        L_SAVE_INDEX.
+      CLEAR:
+        l_tabix,
+        l_save_index.
 
-      unassign:
-        <F_FILTER_IDX_LINE>,
-        <F_GROUPLEVELS_LINE>.
+      UNASSIGN:
+        <f_filter_idx_line>,
+        <f_grouplevels_line>.
 
-    endloop.
+    ENDLOOP.
 
 * free local data
 
-    unassign:
-      <F_LINE>,
-      <F_COLLECT_TAB>,
-      <F_COLLECT_LINE>,
-      <F_FIELDCAT_LINE>.
+    UNASSIGN:
+      <f_line>,
+      <f_collect_tab>,
+      <f_collect_line>,
+      <f_fieldcat_line>.
 
 * append grand total line
 
-    if <F_COLLECT00> is assigned.
-      assign <F_COLLECT00> to <F_COLLECT_TAB>.
-      if <F_COLLECT_TAB> is not initial.
-        loop at <F_COLLECT_TAB> assigning <F_COLLECT_LINE>.
+    IF <f_collect00> IS ASSIGNED.
+      ASSIGN <f_collect00> TO <f_collect_tab>.
+      IF <f_collect_tab> IS NOT INITIAL.
+        LOOP AT <f_collect_tab> ASSIGNING <f_collect_line>.
 
-          append <F_COLLECT_LINE> to <F_EXCEL_TAB>.
+          APPEND <f_collect_line> TO <f_excel_tab>.
 
 * save total line index
 
-          WA_SUBTOT_INDEXS-INDEX = SY-TABIX.
-          append WA_SUBTOT_INDEXS to LT_SUBTOT_INDEXS.
+          wa_subtot_indexs-index = sy-tabix.
+          APPEND wa_subtot_indexs TO lt_subtot_indexs.
 
 * append grand total range (to format)
 
-          add 1 to L_SUB_INDEX.
-          SUBRANGEITEM-NAME     =  L_SUB_INDEX.
-          condense SUBRANGEITEM-NAME.
-          concatenate 'TOTAL'
-                      SUBRANGEITEM-NAME
-                      into SUBRANGEITEM-NAME.
+          ADD 1 TO l_sub_index.
+          subrangeitem-name     =  l_sub_index.
+          CONDENSE subrangeitem-name.
+          CONCATENATE 'TOTAL'
+                      subrangeitem-name
+                      INTO subrangeitem-name.
 
-          SUBRANGEITEM-ROWS     = WA_SUBTOT_INDEXS-INDEX.
-          SUBRANGEITEM-COLUMNS  = 1.            " start col
-          append SUBRANGEITEM to SUBRANGES.
-        endloop.
-      endif.
-    endif.
+          subrangeitem-rows     = wa_subtot_indexs-index.
+          subrangeitem-columns  = 1.            " start col
+          APPEND subrangeitem TO subranges.
+        ENDLOOP.
+      ENDIF.
+    ENDIF.
 
-    clear:
-      SUBRANGEITEM,
-      LT_SORT_KKBLO,
-      <F_COLLECT00>,
-      <F_COLLECT01>,
-      <F_COLLECT02>,
-      <F_COLLECT03>,
-      <F_COLLECT04>,
-      <F_COLLECT05>,
-      <F_COLLECT06>,
-      <F_COLLECT07>,
-      <F_COLLECT08>,
-      <F_COLLECT09>.
+    CLEAR:
+      subrangeitem,
+      lt_sort_kkblo,
+      <f_collect00>,
+      <f_collect01>,
+      <f_collect02>,
+      <f_collect03>,
+      <f_collect04>,
+      <f_collect05>,
+      <f_collect06>,
+      <f_collect07>,
+      <f_collect08>,
+      <f_collect09>.
 
-    unassign:
-      <F_COLLECT00>,
-      <F_COLLECT01>,
-      <F_COLLECT02>,
-      <F_COLLECT03>,
-      <F_COLLECT04>,
-      <F_COLLECT05>,
-      <F_COLLECT06>,
-      <F_COLLECT07>,
-      <F_COLLECT08>,
-      <F_COLLECT09>,
-      <F_COLLECT_TAB>,
-      <F_COLLECT_LINE>.
+    UNASSIGN:
+      <f_collect00>,
+      <f_collect01>,
+      <f_collect02>,
+      <f_collect03>,
+      <f_collect04>,
+      <f_collect05>,
+      <f_collect06>,
+      <f_collect07>,
+      <f_collect08>,
+      <f_collect09>,
+      <f_collect_tab>,
+      <f_collect_line>.
 
 *--------------------------------------------------------------------*
 * SESSION 3: MAP DATA TO SEMANTIC TABLE
@@ -1400,682 +1403,682 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 * get dependent field field: currency and quantity
 
-    create data WA like line of <F_EXCEL_TAB>.
-    assign WA->* to <F_EXCEL_LINE>.
+    CREATE DATA wa LIKE LINE OF <f_excel_tab>.
+    ASSIGN wa->* TO <f_excel_line>.
 
-    describe field <F_EXCEL_LINE> type L_TYP components L_NUM.
+    DESCRIBE FIELD <f_excel_line> TYPE l_typ COMPONENTS l_num.
 
-    do L_NUM times.
-      L_SAVE_INDEX = SY-INDEX.
-      assign component L_SAVE_INDEX of structure <F_EXCEL_LINE>
-      to <F_EXCEL_COLUMN>.
-      if SY-SUBRC ne 0.
-        message E059(0K) with 'FATAL ERROR' raising FATAL_ERROR.
-      endif.
+    DO l_num TIMES.
+      l_save_index = sy-index.
+      ASSIGN COMPONENT l_save_index OF STRUCTURE <f_excel_line>
+      TO <f_excel_column>.
+      IF sy-subrc NE 0.
+        MESSAGE e059(0k) WITH 'FATAL ERROR' RAISING fatal_error.
+      ENDIF.
 
-      loop at LT_FIELDCAT_KKBLO assigning <F_FIELDCAT_LINE>
-      where TABNAME = L_TABNAME.
-        assign component <F_FIELDCAT_LINE>-FIELDNAME
-        of structure <F_EXCEL_LINE> to <F_FCAT_COLUMN>.
+      LOOP AT lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
+      WHERE tabname = l_tabname.
+        ASSIGN COMPONENT <f_fieldcat_line>-fieldname
+        OF STRUCTURE <f_excel_line> TO <f_fcat_column>.
 
-        describe distance between <F_EXCEL_COLUMN> and <F_FCAT_COLUMN>
-        into L_INT in byte mode.
+        DESCRIBE DISTANCE BETWEEN <f_excel_column> AND <f_fcat_column>
+        INTO l_int IN BYTE MODE.
 
 * append column index
 * this columns index is of table, not fieldcat
 
-        if L_INT = 0.
-          WA_COLUMN_INDEX-FIELDNAME = <F_FIELDCAT_LINE>-FIELDNAME.
-          WA_COLUMN_INDEX-TABNAME   = <F_FIELDCAT_LINE>-TABNAME.
-          WA_COLUMN_INDEX-COL       = L_SAVE_INDEX.
-          append WA_COLUMN_INDEX to LT_COLUMN_INDEX.
-        endif.
+        IF l_int = 0.
+          wa_column_index-fieldname = <f_fieldcat_line>-fieldname.
+          wa_column_index-tabname   = <f_fieldcat_line>-tabname.
+          wa_column_index-col       = l_save_index.
+          APPEND wa_column_index TO lt_column_index.
+        ENDIF.
 
 * append dependent fields (currency and quantity unit)
 
-        if <F_FIELDCAT_LINE>-CFIELDNAME is not initial.
-          clear WA_FIELDCAT_DEPF.
-          WA_FIELDCAT_DEPF-FIELDNAME = <F_FIELDCAT_LINE>-CFIELDNAME.
-          WA_FIELDCAT_DEPF-TABNAME   = <F_FIELDCAT_LINE>-CTABNAME.
-          collect WA_FIELDCAT_DEPF into LT_FIELDCAT_DEPF.
-        endif.
+        IF <f_fieldcat_line>-cfieldname IS NOT INITIAL.
+          CLEAR wa_fieldcat_depf.
+          wa_fieldcat_depf-fieldname = <f_fieldcat_line>-cfieldname.
+          wa_fieldcat_depf-tabname   = <f_fieldcat_line>-ctabname.
+          COLLECT wa_fieldcat_depf INTO lt_fieldcat_depf.
+        ENDIF.
 
-        if <F_FIELDCAT_LINE>-QFIELDNAME is not initial.
-          clear WA_FIELDCAT_DEPF.
-          WA_FIELDCAT_DEPF-FIELDNAME = <F_FIELDCAT_LINE>-QFIELDNAME.
-          WA_FIELDCAT_DEPF-TABNAME   = <F_FIELDCAT_LINE>-QTABNAME.
-          collect WA_FIELDCAT_DEPF into LT_FIELDCAT_DEPF.
-        endif.
+        IF <f_fieldcat_line>-qfieldname IS NOT INITIAL.
+          CLEAR wa_fieldcat_depf.
+          wa_fieldcat_depf-fieldname = <f_fieldcat_line>-qfieldname.
+          wa_fieldcat_depf-tabname   = <f_fieldcat_line>-qtabname.
+          COLLECT wa_fieldcat_depf INTO lt_fieldcat_depf.
+        ENDIF.
 
 * rewrite field data type
 
-        if <F_FIELDCAT_LINE>-INTTYPE = 'X'
-        and <F_FIELDCAT_LINE>-DATATYPE(3) = 'INT'.
-          <F_FIELDCAT_LINE>-INTTYPE = 'I'.
-        endif.
+        IF <f_fieldcat_line>-inttype = 'X'
+        AND <f_fieldcat_line>-datatype(3) = 'INT'.
+          <f_fieldcat_line>-inttype = 'I'.
+        ENDIF.
 
-      endloop.
+      ENDLOOP.
 
-      clear: L_SAVE_INDEX.
-      unassign: <F_FIELDCAT_LINE>.
+      CLEAR: l_save_index.
+      UNASSIGN: <f_fieldcat_line>.
 
-    enddo.
+    ENDDO.
 
 * build semantic tables
 
-    L_N_HRZ_KEYS = 1.
+    l_n_hrz_keys = 1.
 
 *   Get keyfigures
 
-    loop at LT_FIELDCAT_KKBLO assigning <F_FIELDCAT_LINE>
-    where TABNAME = L_TABNAME
-    and TECH ne 'X'
-    and NO_OUT ne 'X'.
+    LOOP AT lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
+    WHERE tabname = l_tabname
+    AND tech NE 'X'
+    AND no_out NE 'X'.
 
-      clear WA_SEMA.
-      clear WA_HKEY.
+      CLEAR wa_sema.
+      CLEAR wa_hkey.
 
 *   Units belong to keyfigures -> display as str
 
-      read table LT_FIELDCAT_DEPF into WA_FIELDCAT_DEPF with key
-      FIELDNAME = <F_FIELDCAT_LINE>-FIELDNAME
-      TABNAME   = <F_FIELDCAT_LINE>-TABNAME.
+      READ TABLE lt_fieldcat_depf INTO wa_fieldcat_depf WITH KEY
+      fieldname = <f_fieldcat_line>-fieldname
+      tabname   = <f_fieldcat_line>-tabname.
 
-      if SY-SUBRC = 0.
-        WA_SEMA-COL_TYP = 'STR'.
-        WA_SEMA-COL_OPS = 'DFT'.
+      IF sy-subrc = 0.
+        wa_sema-col_typ = 'STR'.
+        wa_sema-col_ops = 'DFT'.
 
 *   Keyfigures
 
-      else.
-        case <F_FIELDCAT_LINE>-DATATYPE.
-          when 'QUAN'.
-            WA_SEMA-COL_TYP = 'N03'.
+      ELSE.
+        CASE <f_fieldcat_line>-datatype.
+          WHEN 'QUAN'.
+            wa_sema-col_typ = 'N03'.
 
-            if <F_FIELDCAT_LINE>-NO_SUM ne 'X'.
-              WA_SEMA-COL_OPS = 'ADD'.
-            else.
-              WA_SEMA-COL_OPS = 'NOP'. " no dependent field
-            endif.
+            IF <f_fieldcat_line>-no_sum NE 'X'.
+              wa_sema-col_ops = 'ADD'.
+            ELSE.
+              wa_sema-col_ops = 'NOP'. " no dependent field
+            ENDIF.
 
-          when 'DATS'.
-            WA_SEMA-COL_TYP = 'DAT'.
-            WA_SEMA-COL_OPS = 'NOP'.
+          WHEN 'DATS'.
+            wa_sema-col_typ = 'DAT'.
+            wa_sema-col_ops = 'NOP'.
 
-          when 'CHAR' or 'UNIT' or 'CUKY'. " Added fieldformats UNIT and CUKY - dd. 26-10-2012 Wouter Heuvelmans
-            WA_SEMA-COL_TYP = 'STR'.
-            WA_SEMA-COL_OPS = 'DFT'.   " dependent field
+          WHEN 'CHAR' OR 'UNIT' OR 'CUKY'. " Added fieldformats UNIT and CUKY - dd. 26-10-2012 Wouter Heuvelmans
+            wa_sema-col_typ = 'STR'.
+            wa_sema-col_ops = 'DFT'.   " dependent field
 
 *   incase numeric, ex '00120' -> display as '12'
 
-          when 'NUMC'.
-            WA_SEMA-COL_TYP = 'STR'.
-            WA_SEMA-COL_OPS = 'DFT'.
+          WHEN 'NUMC'.
+            wa_sema-col_typ = 'STR'.
+            wa_sema-col_ops = 'DFT'.
 
-          when others.
-            WA_SEMA-COL_TYP = 'NUM'.
+          WHEN OTHERS.
+            wa_sema-col_typ = 'NUM'.
 
-            if <F_FIELDCAT_LINE>-NO_SUM ne 'X'.
-              WA_SEMA-COL_OPS = 'ADD'.
-            else.
-              WA_SEMA-COL_OPS = 'NOP'.
-            endif.
-        endcase.
-      endif.
+            IF <f_fieldcat_line>-no_sum NE 'X'.
+              wa_sema-col_ops = 'ADD'.
+            ELSE.
+              wa_sema-col_ops = 'NOP'.
+            ENDIF.
+        ENDCASE.
+      ENDIF.
 
-      L_COUNTER = L_COUNTER + 1.
-      L_N_ATT_COLS = L_N_ATT_COLS + 1.
+      l_counter = l_counter + 1.
+      l_n_att_cols = l_n_att_cols + 1.
 
-      WA_SEMA-COL_NO = L_COUNTER.
+      wa_sema-col_no = l_counter.
 
-      read table LT_COLUMN_INDEX into WA_COLUMN_INDEX with key
-      FIELDNAME = <F_FIELDCAT_LINE>-FIELDNAME
-      TABNAME   = <F_FIELDCAT_LINE>-TABNAME.
+      READ TABLE lt_column_index INTO wa_column_index WITH KEY
+      fieldname = <f_fieldcat_line>-fieldname
+      tabname   = <f_fieldcat_line>-tabname.
 
-      if SY-SUBRC = 0.
-        WA_SEMA-COL_SRC = WA_COLUMN_INDEX-COL.
-      else.
-        raise FATAL_ERROR.
-      endif.
+      IF sy-subrc = 0.
+        wa_sema-col_src = wa_column_index-col.
+      ELSE.
+        RAISE fatal_error.
+      ENDIF.
 
 * columns index of ref currency field in table
 
-      if not <F_FIELDCAT_LINE>-CFIELDNAME is initial.
-        read table LT_COLUMN_INDEX into WA_COLUMN_INDEX with key
-        FIELDNAME = <F_FIELDCAT_LINE>-CFIELDNAME
-        TABNAME   = <F_FIELDCAT_LINE>-CTABNAME.
+      IF NOT <f_fieldcat_line>-cfieldname IS INITIAL.
+        READ TABLE lt_column_index INTO wa_column_index WITH KEY
+        fieldname = <f_fieldcat_line>-cfieldname
+        tabname   = <f_fieldcat_line>-ctabname.
 
-        if SY-SUBRC = 0.
-          WA_SEMA-COL_CUR = WA_COLUMN_INDEX-COL.
-        endif.
+        IF sy-subrc = 0.
+          wa_sema-col_cur = wa_column_index-col.
+        ENDIF.
 
 * quantities fields
 * treat as currency when display on excel
 
-      elseif not <F_FIELDCAT_LINE>-QFIELDNAME is initial.
-        read table LT_COLUMN_INDEX into WA_COLUMN_INDEX with key
-        FIELDNAME = <F_FIELDCAT_LINE>-QFIELDNAME
-        TABNAME   = <F_FIELDCAT_LINE>-QTABNAME.
-        if SY-SUBRC = 0.
-          WA_SEMA-COL_CUR = WA_COLUMN_INDEX-COL.
-        endif.
+      ELSEIF NOT <f_fieldcat_line>-qfieldname IS INITIAL.
+        READ TABLE lt_column_index INTO wa_column_index WITH KEY
+        fieldname = <f_fieldcat_line>-qfieldname
+        tabname   = <f_fieldcat_line>-qtabname.
+        IF sy-subrc = 0.
+          wa_sema-col_cur = wa_column_index-col.
+        ENDIF.
 
-      endif.
+      ENDIF.
 
 *   Treat of fixed currency in the fieldcatalog for column
 
-      data: L_NUM_HELP(2) type N.
+      DATA: l_num_help(2) TYPE n.
 
-      if not <F_FIELDCAT_LINE>-CURRENCY is initial.
+      IF NOT <f_fieldcat_line>-currency IS INITIAL.
 
-        select * from TCURX into table LT_TCURX.
-        sort LT_TCURX.
-        read table LT_TCURX into WA_TCURX
-                   with key CURRKEY = <F_FIELDCAT_LINE>-CURRENCY.
-        if SY-SUBRC = 0.
-          L_NUM_HELP = WA_TCURX-CURRDEC.
-          concatenate 'N' L_NUM_HELP into WA_SEMA-COL_TYP.
-          WA_SEMA-COL_CUR = SY-TABIX * ( -1 ).
-        endif.
+        SELECT * FROM tcurx INTO TABLE lt_tcurx.
+        SORT lt_tcurx.
+        READ TABLE lt_tcurx INTO wa_tcurx
+                   WITH KEY currkey = <f_fieldcat_line>-currency.
+        IF sy-subrc = 0.
+          l_num_help = wa_tcurx-currdec.
+          CONCATENATE 'N' l_num_help INTO wa_sema-col_typ.
+          wa_sema-col_cur = sy-tabix * ( -1 ).
+        ENDIF.
 
-      endif.
+      ENDIF.
 
-      WA_HKEY-COL_NO    = L_N_ATT_COLS.
-      WA_HKEY-ROW_NO    = L_N_HRZ_KEYS.
-      WA_HKEY-COL_NAME  = <F_FIELDCAT_LINE>-REPTEXT.
-      append WA_HKEY to LT_HKEY.
-      append WA_SEMA to LT_SEMA.
+      wa_hkey-col_no    = l_n_att_cols.
+      wa_hkey-row_no    = l_n_hrz_keys.
+      wa_hkey-col_name  = <f_fieldcat_line>-reptext.
+      APPEND wa_hkey TO lt_hkey.
+      APPEND wa_sema TO lt_sema.
 
-    endloop.
+    ENDLOOP.
 
 * free local data
 
-    clear:
-      LT_COLUMN_INDEX,
-      WA_COLUMN_INDEX,
-      LT_FIELDCAT_DEPF,
-      WA_FIELDCAT_DEPF,
-      LT_TCURX,
-      WA_TCURX,
-      L_NUM,
-      L_TYP,
-      WA,
-      L_INT,
-      L_COUNTER.
+    CLEAR:
+      lt_column_index,
+      wa_column_index,
+      lt_fieldcat_depf,
+      wa_fieldcat_depf,
+      lt_tcurx,
+      wa_tcurx,
+      l_num,
+      l_typ,
+      wa,
+      l_int,
+      l_counter.
 
-    unassign:
-      <F_FIELDCAT_LINE>,
-      <F_EXCEL_LINE>,
-      <F_EXCEL_COLUMN>,
-      <F_FCAT_COLUMN>.
+    UNASSIGN:
+      <f_fieldcat_line>,
+      <f_excel_line>,
+      <f_excel_column>,
+      <f_fcat_column>.
 
 *--------------------------------------------------------------------*
 * SESSION 4: WRITE TO EXCEL
 *--------------------------------------------------------------------*
 
-    clear: WA_TCURX.
-    refresh: LT_TCURX.
+    CLEAR: wa_tcurx.
+    REFRESH: lt_tcurx.
 
 *   if spreadsheet dun have proxy yet
 
-    if LI_HAS is initial.
-      L_RETCODE = C_OI_ERRORS=>RET_INTERFACE_NOT_SUPPORTED.
-      call method C_OI_ERRORS=>CREATE_ERROR_FOR_RETCODE
-        exporting
-          RETCODE  = L_RETCODE
-          NO_FLUSH = NO_FLUSH
-        importing
-          ERROR    = LO_ERROR_W.
-      exit.
-    endif.
+    IF li_has IS INITIAL.
+      l_retcode = c_oi_errors=>ret_interface_not_supported.
+      CALL METHOD c_oi_errors=>create_error_for_retcode
+        EXPORTING
+          retcode  = l_retcode
+          no_flush = no_flush
+        IMPORTING
+          error    = lo_error_w.
+      EXIT.
+    ENDIF.
 
-    create object L_ERROR
-      exporting
-        OBJECT_NAME = 'OLE_DOCUMENT_PROXY'
-        METHOD_NAME = 'get_ranges_names'.
+    CREATE OBJECT l_error
+      EXPORTING
+        object_name = 'OLE_DOCUMENT_PROXY'
+        method_name = 'get_ranges_names'.
 
-    call method C_OI_ERRORS=>ADD_ERROR
-      exporting
-        ERROR = L_ERROR.
-
-
-    describe table LT_SEMA lines DATAREAL.
-    describe table <F_EXCEL_TAB> lines DATAC.
-    describe table LT_VKEY lines VKEYCOUNT.
-
-    if DATAC = 0.
-      raise INV_DATA_RANGE.
-    endif.
+    CALL METHOD c_oi_errors=>add_error
+      EXPORTING
+        error = l_error.
 
 
-    if VKEYCOUNT ne L_N_VRT_KEYS.
-      raise DIM_MISMATCH_VKEY.
-    endif.
+    DESCRIBE TABLE lt_sema LINES datareal.
+    DESCRIBE TABLE <f_excel_tab> LINES datac.
+    DESCRIBE TABLE lt_vkey LINES vkeycount.
 
-    ALL = L_N_VRT_KEYS + L_N_ATT_COLS.
+    IF datac = 0.
+      RAISE inv_data_range.
+    ENDIF.
 
-    if DATAREAL ne ALL.
-      raise DIM_MISMATCH_SEMA.
-    endif.
 
-    data: DECIMAL type C.
+    IF vkeycount NE l_n_vrt_keys.
+      RAISE dim_mismatch_vkey.
+    ENDIF.
+
+    all = l_n_vrt_keys + l_n_att_cols.
+
+    IF datareal NE all.
+      RAISE dim_mismatch_sema.
+    ENDIF.
+
+    DATA: decimal TYPE c.
 
 * get decimal separator format ('.', ',', ...) in Office config
 
-    call method LO_PROXY->GET_APPLICATION_PROPERTY
-      exporting
-        PROPERTY_NAME    = 'INTERNATIONAL'
-        SUBPROPERTY_NAME = 'DECIMAL_SEPARATOR'
-      changing
-        RETVALUE         = DECIMAL.
+    CALL METHOD lo_proxy->get_application_property
+      EXPORTING
+        property_name    = 'INTERNATIONAL'
+        subproperty_name = 'DECIMAL_SEPARATOR'
+      CHANGING
+        retvalue         = decimal.
 
-    data: WA_USR type USR01.
-    select * from USR01 into WA_USR where BNAME = SY-UNAME.
-    endselect.
+    DATA: wa_usr TYPE usr01.
+    SELECT * FROM usr01 INTO wa_usr WHERE bname = sy-uname.
+    ENDSELECT.
 
-    data: COMMA_ELIM(4) type C.
-    field-symbols <G> type ANY.
-    data SEARCH_ITEM(4) value '   #'.
+    DATA: comma_elim(4) TYPE c.
+    FIELD-SYMBOLS <g> TYPE any.
+    DATA search_item(4) VALUE '   #'.
 
-    concatenate ',' DECIMAL '.' DECIMAL into COMMA_ELIM.
+    CONCATENATE ',' decimal '.' decimal INTO comma_elim.
 
-    data HELP type I. " table (with subtotal) line number
+    DATA help TYPE i. " table (with subtotal) line number
 
-    HELP = DATAC.
+    help = datac.
 
-    data: ROWMAX type I value 1.    " header row number
-    data: COLUMNMAX type I value 0. " header columns number
+    DATA: rowmax TYPE i VALUE 1.    " header row number
+    DATA: columnmax TYPE i VALUE 0. " header columns number
 
-    loop at LT_HKEY into HKEYITEM.
-      if HKEYITEM-COL_NO > COLUMNMAX.
-        COLUMNMAX = HKEYITEM-COL_NO.
-      endif.
+    LOOP AT lt_hkey INTO hkeyitem.
+      IF hkeyitem-col_no > columnmax.
+        columnmax = hkeyitem-col_no.
+      ENDIF.
 
-      if HKEYITEM-ROW_NO > ROWMAX.
-        ROWMAX = HKEYITEM-ROW_NO.
-      endif.
-    endloop.
+      IF hkeyitem-row_no > rowmax.
+        rowmax = hkeyitem-row_no.
+      ENDIF.
+    ENDLOOP.
 
-    data: HKEYCOLUMNS type I. " header columns no
+    DATA: hkeycolumns TYPE i. " header columns no
 
-    HKEYCOLUMNS = COLUMNMAX.
+    hkeycolumns = columnmax.
 
-    if HKEYCOLUMNS <   L_N_ATT_COLS.
-      HKEYCOLUMNS = L_N_ATT_COLS.
-    endif.
+    IF hkeycolumns <   l_n_att_cols.
+      hkeycolumns = l_n_att_cols.
+    ENDIF.
 
-    COLUMNMAX = 0.
+    columnmax = 0.
 
-    loop at LT_VKEY into VKEYITEM.
-      if VKEYITEM-COL_NO > COLUMNMAX.
-        COLUMNMAX = VKEYITEM-COL_NO.
-      endif.
-    endloop.
+    LOOP AT lt_vkey INTO vkeyitem.
+      IF vkeyitem-col_no > columnmax.
+        columnmax = vkeyitem-col_no.
+      ENDIF.
+    ENDLOOP.
 
-    data OVERFLOW type I value 1.
-    data TESTNAME(10) type C.
-    data TEMP2 type I.                " 1st item row position in excel
-    data REALMIT type I value 1.
-    data REALOVERFLOW type I value 1. " row index in content
+    DATA overflow TYPE i VALUE 1.
+    DATA testname(10) TYPE c.
+    DATA temp2 TYPE i.                " 1st item row position in excel
+    DATA realmit TYPE i VALUE 1.
+    DATA realoverflow TYPE i VALUE 1. " row index in content
 
-    call method LO_SPREADSHEET->SCREEN_UPDATE
-      exporting
-        UPDATING = ''.
+    CALL METHOD lo_spreadsheet->screen_update
+      EXPORTING
+        updating = ''.
 
-    call method LO_SPREADSHEET->LOAD_LIB.
+    CALL METHOD lo_spreadsheet->load_lib.
 
-    data: STR(40) type C. " range names of columns range (w/o col header)
-    data: ROWS type I.    " row postion of 1st item line in ecxel
+    DATA: str(40) TYPE c. " range names of columns range (w/o col header)
+    DATA: rows TYPE i.    " row postion of 1st item line in ecxel
 
 * calculate row position of data table
 
-    describe table IT_LISTHEADER lines LI_COMMENTARY_ROWS.
+    DESCRIBE TABLE it_listheader LINES li_commentary_rows.
 
 * if grid had title, add 1 empy line between title and table
 
-    if LI_COMMENTARY_ROWS ne 0.
-      add 1 to LI_COMMENTARY_ROWS.
-    endif.
+    IF li_commentary_rows NE 0.
+      ADD 1 TO li_commentary_rows.
+    ENDIF.
 
 * add top position of block data
 
-    LI_COMMENTARY_ROWS = LI_COMMENTARY_ROWS + I_TOP - 1.
+    li_commentary_rows = li_commentary_rows + i_top - 1.
 
 * write header (commentary rows)
 
-    data: LI_COMMENTARY_ROW_INDEX type I value 1.
-    data: LI_CONTENT_INDEX type I value 1.
-    data: LS_INDEX(10) type C.
-    data  LS_COMMENTARY_RANGE(40) type C value 'TITLE'.
-    data: LI_FONT_BOLD    type I.
-    data: LI_FONT_ITALIC  type I.
-    data: LI_FONT_SIZE    type I.
+    DATA: li_commentary_row_index TYPE i VALUE 1.
+    DATA: li_content_index TYPE i VALUE 1.
+    DATA: ls_index(10) TYPE c.
+    DATA  ls_commentary_range(40) TYPE c VALUE 'TITLE'.
+    DATA: li_font_bold    TYPE i.
+    DATA: li_font_italic  TYPE i.
+    DATA: li_font_size    TYPE i.
 
-    loop at IT_LISTHEADER into WA_LISTHEADER.
-      LI_COMMENTARY_ROW_INDEX = I_TOP + LI_CONTENT_INDEX - 1.
-      LS_INDEX = LI_CONTENT_INDEX.
-      condense LS_INDEX.
-      concatenate LS_COMMENTARY_RANGE(5) LS_INDEX
-                  into LS_COMMENTARY_RANGE.
-      condense LS_COMMENTARY_RANGE.
+    LOOP AT it_listheader INTO wa_listheader.
+      li_commentary_row_index = i_top + li_content_index - 1.
+      ls_index = li_content_index.
+      CONDENSE ls_index.
+      CONCATENATE ls_commentary_range(5) ls_index
+                  INTO ls_commentary_range.
+      CONDENSE ls_commentary_range.
 
 * insert title range
 
-      call method LO_SPREADSHEET->INSERT_RANGE_DIM
-        exporting
-          NAME     = LS_COMMENTARY_RANGE
-          TOP      = LI_COMMENTARY_ROW_INDEX
-          LEFT     = I_LEFT
-          ROWS     = 1
-          COLUMNS  = 1
-          NO_FLUSH = NO_FLUSH.
+      CALL METHOD lo_spreadsheet->insert_range_dim
+        EXPORTING
+          name     = ls_commentary_range
+          top      = li_commentary_row_index
+          left     = i_left
+          rows     = 1
+          columns  = 1
+          no_flush = no_flush.
 
 * format range
 
-      case WA_LISTHEADER-TYP.
-        when 'H'. "title
-          LI_FONT_SIZE    = 16.
-          LI_FONT_BOLD    = 1.
-          LI_FONT_ITALIC  = -1.
-        when 'S'. "subtile
-          LI_FONT_SIZE = -1.
-          LI_FONT_BOLD    = 1.
-          LI_FONT_ITALIC  = -1.
-        when others. "'A' comment
-          LI_FONT_SIZE = -1.
-          LI_FONT_BOLD    = -1.
-          LI_FONT_ITALIC  = 1.
-      endcase.
+      CASE wa_listheader-typ.
+        WHEN 'H'. "title
+          li_font_size    = 16.
+          li_font_bold    = 1.
+          li_font_italic  = -1.
+        WHEN 'S'. "subtile
+          li_font_size = -1.
+          li_font_bold    = 1.
+          li_font_italic  = -1.
+        WHEN OTHERS. "'A' comment
+          li_font_size = -1.
+          li_font_bold    = -1.
+          li_font_italic  = 1.
+      ENDCASE.
 
-      call method LO_SPREADSHEET->SET_FONT
-        exporting
-          RANGENAME = LS_COMMENTARY_RANGE
-          FAMILY    = ''
-          SIZE      = LI_FONT_SIZE
-          BOLD      = LI_FONT_BOLD
-          ITALIC    = LI_FONT_ITALIC
-          ALIGN     = 0
-          NO_FLUSH  = NO_FLUSH.
+      CALL METHOD lo_spreadsheet->set_font
+        EXPORTING
+          rangename = ls_commentary_range
+          family    = ''
+          size      = li_font_size
+          bold      = li_font_bold
+          italic    = li_font_italic
+          align     = 0
+          no_flush  = no_flush.
 
 * title: range content
 
-      RANGEITEM-NAME = LS_COMMENTARY_RANGE.
-      RANGEITEM-COLUMNS = 1.
-      RANGEITEM-ROWS = 1.
-      append RANGEITEM to RANGES.
+      rangeitem-name = ls_commentary_range.
+      rangeitem-columns = 1.
+      rangeitem-rows = 1.
+      APPEND rangeitem TO ranges.
 
-      CONTENTSITEM-ROW    = LI_CONTENT_INDEX.
-      CONTENTSITEM-COLUMN = 1.
-      concatenate WA_LISTHEADER-KEY
-                  WA_LISTHEADER-INFO
-                  into CONTENTSITEM-VALUE
-                  separated by SPACE.
-      condense CONTENTSITEM-VALUE.
-      append CONTENTSITEM to CONTENTS.
+      contentsitem-row    = li_content_index.
+      contentsitem-column = 1.
+      CONCATENATE wa_listheader-key
+                  wa_listheader-info
+                  INTO contentsitem-value
+                  SEPARATED BY space.
+      CONDENSE contentsitem-value.
+      APPEND contentsitem TO contents.
 
-      add 1 to LI_CONTENT_INDEX.
+      ADD 1 TO li_content_index.
 
-      clear:
-        RANGEITEM,
-        CONTENTSITEM,
-        LS_INDEX.
+      CLEAR:
+        rangeitem,
+        contentsitem,
+        ls_index.
 
-    endloop.
+    ENDLOOP.
 
 * set range data title
 
-    call method LO_SPREADSHEET->SET_RANGES_DATA
-      exporting
-        RANGES   = RANGES
-        CONTENTS = CONTENTS
-        NO_FLUSH = NO_FLUSH.
+    CALL METHOD lo_spreadsheet->set_ranges_data
+      EXPORTING
+        ranges   = ranges
+        contents = contents
+        no_flush = no_flush.
 
-    refresh:
-       RANGES,
-       CONTENTS.
+    REFRESH:
+       ranges,
+       contents.
 
-    ROWS = ROWMAX + LI_COMMENTARY_ROWS + 1.
+    rows = rowmax + li_commentary_rows + 1.
 
-    ALL = WA_USR-DATFM.
-    ALL = ALL + 3.
+    all = wa_usr-datfm.
+    all = all + 3.
 
-    loop at LT_SEMA into SEMAITEM.
-      if SEMAITEM-COL_TYP = 'DAT' or SEMAITEM-COL_TYP = 'MON' or
-         SEMAITEM-COL_TYP = 'N00' or SEMAITEM-COL_TYP = 'N01' or
-         SEMAITEM-COL_TYP = 'N01' or SEMAITEM-COL_TYP = 'N02' or
-         SEMAITEM-COL_TYP = 'N03' or SEMAITEM-COL_TYP = 'PCT' or
-         SEMAITEM-COL_TYP = 'STR' or SEMAITEM-COL_TYP = 'NUM'.
-        clear STR.
-        STR = SEMAITEM-COL_NO.
-        condense STR.
-        concatenate 'DATA' STR into STR.
-        MIT = SEMAITEM-COL_NO.
-        LI_COL_POS = SEMAITEM-COL_NO + I_LEFT - 1.
+    LOOP AT lt_sema INTO semaitem.
+      IF semaitem-col_typ = 'DAT' OR semaitem-col_typ = 'MON' OR
+         semaitem-col_typ = 'N00' OR semaitem-col_typ = 'N01' OR
+         semaitem-col_typ = 'N01' OR semaitem-col_typ = 'N02' OR
+         semaitem-col_typ = 'N03' OR semaitem-col_typ = 'PCT' OR
+         semaitem-col_typ = 'STR' OR semaitem-col_typ = 'NUM'.
+        CLEAR str.
+        str = semaitem-col_no.
+        CONDENSE str.
+        CONCATENATE 'DATA' str INTO str.
+        mit = semaitem-col_no.
+        li_col_pos = semaitem-col_no + i_left - 1.
 
 * range from data1 to data(n), for each columns of table
 
-        call method LO_SPREADSHEET->INSERT_RANGE_DIM
-          exporting
-            NAME     = STR
-            TOP      = ROWS
-            LEFT     = LI_COL_POS
-            ROWS     = HELP
-            COLUMNS  = 1
-            NO_FLUSH = NO_FLUSH.
+        CALL METHOD lo_spreadsheet->insert_range_dim
+          EXPORTING
+            name     = str
+            top      = rows
+            left     = li_col_pos
+            rows     = help
+            columns  = 1
+            no_flush = no_flush.
 
-        data DEC type I value -1.
-        data TYPEINFO type SYDES_TYPEINFO.
-        loop at <F_EXCEL_TAB> assigning <LINE>.
-          assign component SEMAITEM-COL_NO of structure <LINE> to <ITEM>.
-          describe field <ITEM> into TD.
-          read table TD-TYPES index 1 into TYPEINFO.
-          if TYPEINFO-TYPE = 'P'.
-            DEC = TYPEINFO-DECIMALS.
-          elseif TYPEINFO-TYPE = 'I'.
-            DEC = 0.
-          endif.
+        DATA dec TYPE i VALUE -1.
+        DATA typeinfo TYPE sydes_typeinfo.
+        LOOP AT <f_excel_tab> ASSIGNING <line>.
+          ASSIGN COMPONENT semaitem-col_no OF STRUCTURE <line> TO <item>.
+          DESCRIBE FIELD <item> INTO td.
+          READ TABLE td-types INDEX 1 INTO typeinfo.
+          IF typeinfo-type = 'P'.
+            dec = typeinfo-decimals.
+          ELSEIF typeinfo-type = 'I'.
+            dec = 0.
+          ENDIF.
 
-          describe field <LINE> type TYP components COUNT.
-          MIT = 1.
-          do COUNT times.
-            if MIT = SEMAITEM-COL_SRC.
-              assign component SY-INDEX of structure <LINE> to <ITEM>.
-              describe field <ITEM> into TD.
-              read table TD-TYPES index 1 into TYPEINFO.
-              if TYPEINFO-TYPE = 'P'.
-                DEC = TYPEINFO-DECIMALS.
-              endif.
-              exit.
-            endif.
-            MIT = MIT + 1.
-          enddo.
-          exit.
-        endloop.
+          DESCRIBE FIELD <line> TYPE typ COMPONENTS count.
+          mit = 1.
+          DO count TIMES.
+            IF mit = semaitem-col_src.
+              ASSIGN COMPONENT sy-index OF STRUCTURE <line> TO <item>.
+              DESCRIBE FIELD <item> INTO td.
+              READ TABLE td-types INDEX 1 INTO typeinfo.
+              IF typeinfo-type = 'P'.
+                dec = typeinfo-decimals.
+              ENDIF.
+              EXIT.
+            ENDIF.
+            mit = mit + 1.
+          ENDDO.
+          EXIT.
+        ENDLOOP.
 
 * format for each columns of table (w/o columns headers)
 
-        if SEMAITEM-COL_TYP = 'DAT'.
-          if SEMAITEM-COL_NO > VKEYCOUNT.
-            call method LO_SPREADSHEET->SET_FORMAT
-              exporting
-                RANGENAME = STR
-                CURRENCY  = ''
-                TYP       = ALL
-                NO_FLUSH  = NO_FLUSH.
-          else.
-            call method LO_SPREADSHEET->SET_FORMAT
-              exporting
-                RANGENAME = STR
-                CURRENCY  = ''
-                TYP       = 0
-                NO_FLUSH  = NO_FLUSH.
-          endif.
-        elseif SEMAITEM-COL_TYP = 'STR'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 0
-              NO_FLUSH  = NO_FLUSH.
-        elseif SEMAITEM-COL_TYP = 'MON'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 10
-              NO_FLUSH  = NO_FLUSH.
-        elseif SEMAITEM-COL_TYP = 'N00'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 1
-              DECIMALS  = 0
-              NO_FLUSH  = NO_FLUSH.
-        elseif SEMAITEM-COL_TYP = 'N01'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 1
-              DECIMALS  = 1
-              NO_FLUSH  = NO_FLUSH.
-        elseif SEMAITEM-COL_TYP = 'N02'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 1
-              DECIMALS  = 2
-              NO_FLUSH  = NO_FLUSH.
-        elseif SEMAITEM-COL_TYP = 'N03'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 1
-              DECIMALS  = 3
-              NO_FLUSH  = NO_FLUSH.
-        elseif SEMAITEM-COL_TYP = 'N04'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 1
-              DECIMALS  = 4
-              NO_FLUSH  = NO_FLUSH.
-        elseif SEMAITEM-COL_TYP = 'NUM'.
-          if DEC eq -1.
-            call method LO_SPREADSHEET->SET_FORMAT
-              exporting
-                RANGENAME = STR
-                CURRENCY  = ''
-                TYP       = 1
-                DECIMALS  = 2
-                NO_FLUSH  = NO_FLUSH.
-          else.
-            call method LO_SPREADSHEET->SET_FORMAT
-              exporting
-                RANGENAME = STR
-                CURRENCY  = ''
-                TYP       = 1
-                DECIMALS  = DEC
-                NO_FLUSH  = NO_FLUSH.
-          endif.
-        elseif SEMAITEM-COL_TYP = 'PCT'.
-          call method LO_SPREADSHEET->SET_FORMAT
-            exporting
-              RANGENAME = STR
-              CURRENCY  = ''
-              TYP       = 3
-              DECIMALS  = 0
-              NO_FLUSH  = NO_FLUSH.
-        endif.
+        IF semaitem-col_typ = 'DAT'.
+          IF semaitem-col_no > vkeycount.
+            CALL METHOD lo_spreadsheet->set_format
+              EXPORTING
+                rangename = str
+                currency  = ''
+                typ       = all
+                no_flush  = no_flush.
+          ELSE.
+            CALL METHOD lo_spreadsheet->set_format
+              EXPORTING
+                rangename = str
+                currency  = ''
+                typ       = 0
+                no_flush  = no_flush.
+          ENDIF.
+        ELSEIF semaitem-col_typ = 'STR'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 0
+              no_flush  = no_flush.
+        ELSEIF semaitem-col_typ = 'MON'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 10
+              no_flush  = no_flush.
+        ELSEIF semaitem-col_typ = 'N00'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 1
+              decimals  = 0
+              no_flush  = no_flush.
+        ELSEIF semaitem-col_typ = 'N01'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 1
+              decimals  = 1
+              no_flush  = no_flush.
+        ELSEIF semaitem-col_typ = 'N02'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 1
+              decimals  = 2
+              no_flush  = no_flush.
+        ELSEIF semaitem-col_typ = 'N03'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 1
+              decimals  = 3
+              no_flush  = no_flush.
+        ELSEIF semaitem-col_typ = 'N04'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 1
+              decimals  = 4
+              no_flush  = no_flush.
+        ELSEIF semaitem-col_typ = 'NUM'.
+          IF dec EQ -1.
+            CALL METHOD lo_spreadsheet->set_format
+              EXPORTING
+                rangename = str
+                currency  = ''
+                typ       = 1
+                decimals  = 2
+                no_flush  = no_flush.
+          ELSE.
+            CALL METHOD lo_spreadsheet->set_format
+              EXPORTING
+                rangename = str
+                currency  = ''
+                typ       = 1
+                decimals  = dec
+                no_flush  = no_flush.
+          ENDIF.
+        ELSEIF semaitem-col_typ = 'PCT'.
+          CALL METHOD lo_spreadsheet->set_format
+            EXPORTING
+              rangename = str
+              currency  = ''
+              typ       = 3
+              decimals  = 0
+              no_flush  = no_flush.
+        ENDIF.
 
-      endif.
-    endloop.
+      ENDIF.
+    ENDLOOP.
 
 * get item contents for set_range_data method
 * get currency cell also
 
-    MIT = 1.
+    mit = 1.
 
-    data: CURRCELLS type SOI_CELL_TABLE.
-    data: CURRITEM  type SOI_CELL_ITEM.
+    DATA: currcells TYPE soi_cell_table.
+    DATA: curritem  TYPE soi_cell_item.
 
-    CURRITEM-ROWS = 1.
-    CURRITEM-COLUMNS = 1.
-    CURRITEM-FRONT = -1.
-    CURRITEM-BACK = -1.
-    CURRITEM-FONT = ''.
-    CURRITEM-SIZE = -1.
-    CURRITEM-BOLD = -1.
-    CURRITEM-ITALIC = -1.
-    CURRITEM-ALIGN = -1.
-    CURRITEM-FRAMETYP = -1.
-    CURRITEM-FRAMECOLOR = -1.
-    CURRITEM-CURRENCY = ''.
-    CURRITEM-NUMBER = 1.
-    CURRITEM-INPUT = -1.
+    curritem-rows = 1.
+    curritem-columns = 1.
+    curritem-front = -1.
+    curritem-back = -1.
+    curritem-font = ''.
+    curritem-size = -1.
+    curritem-bold = -1.
+    curritem-italic = -1.
+    curritem-align = -1.
+    curritem-frametyp = -1.
+    curritem-framecolor = -1.
+    curritem-currency = ''.
+    curritem-number = 1.
+    curritem-input = -1.
 
-    data: CONST type I.
+    DATA: const TYPE i.
 
 *   Change for Correction request
 *    Initial 10000 lines are missing in Excel Export
 *    if there are only 2 columns in exported List object.
 
-    if DATAREAL gt 2.
-      CONST = 20000 / DATAREAL.
-    else.
-      CONST = 20000 / ( DATAREAL + 2 ).
-    endif.
+    IF datareal GT 2.
+      const = 20000 / datareal.
+    ELSE.
+      const = 20000 / ( datareal + 2 ).
+    ENDIF.
 
-    data: LINES type I.
-    data: INNERLINES type I.
-    data: COUNTER type I.
-    data: CURRITEM2 like CURRITEM.
-    data: CURRITEM3 like CURRITEM.
-    data: LENGTH type I.
-    data: FOUND.
+    DATA: lines TYPE i.
+    DATA: innerlines TYPE i.
+    DATA: counter TYPE i.
+    DATA: curritem2 LIKE curritem.
+    DATA: curritem3 LIKE curritem.
+    DATA: length TYPE i.
+    DATA: found.
 
 * append content table (for method set_range_content)
 
-    loop at <F_EXCEL_TAB> assigning <LINE>.
+    LOOP AT <f_excel_tab> ASSIGNING <line>.
 
 * save line index to compare with lt_subtot_indexs,
 * to discover line is a subtotal / totale line or not
 * ex use to set 'dun display zero in subtotal / total line'
 
-      L_SAVE_INDEX = SY-TABIX.
+      l_save_index = sy-tabix.
 
-      do DATAREAL times.
-        read table LT_SEMA into SEMAITEM with key COL_NO = SY-INDEX.
-        if SEMAITEM-COL_SRC ne 0.
-          assign component SEMAITEM-COL_SRC
-                 of structure <LINE> to <ITEM>.
-        else.
-          assign component SY-INDEX
-                 of structure <LINE> to <ITEM>.
-        endif.
+      DO datareal TIMES.
+        READ TABLE lt_sema INTO semaitem WITH KEY col_no = sy-index.
+        IF semaitem-col_src NE 0.
+          ASSIGN COMPONENT semaitem-col_src
+                 OF STRUCTURE <line> TO <item>.
+        ELSE.
+          ASSIGN COMPONENT sy-index
+                 OF STRUCTURE <line> TO <item>.
+        ENDIF.
 
-        CONTENTSITEM-ROW = REALOVERFLOW.
+        contentsitem-row = realoverflow.
 
-        if SY-SUBRC = 0.
-          move SEMAITEM-COL_OPS to SEARCH_ITEM(3).
-          search 'ADD#CNT#MIN#MAX#AVG#NOP#DFT#'
-                            for SEARCH_ITEM.
-          if SY-SUBRC ne 0.
-            raise ERROR_IN_SEMA.
-          endif.
-          move SEMAITEM-COL_TYP to SEARCH_ITEM(3).
-          search 'NUM#N00#N01#N02#N03#N04#PCT#DAT#MON#STR#'
-                            for SEARCH_ITEM.
-          if SY-SUBRC ne 0.
-            raise ERROR_IN_SEMA.
-          endif.
-          CONTENTSITEM-COLUMN = SY-INDEX.
-          if SEMAITEM-COL_TYP eq 'DAT' or SEMAITEM-COL_TYP eq 'MON'.
-            if SEMAITEM-COL_NO > VKEYCOUNT.
+        IF sy-subrc = 0.
+          MOVE semaitem-col_ops TO search_item(3).
+          SEARCH 'ADD#CNT#MIN#MAX#AVG#NOP#DFT#'
+                            FOR search_item.
+          IF sy-subrc NE 0.
+            RAISE error_in_sema.
+          ENDIF.
+          MOVE semaitem-col_typ TO search_item(3).
+          SEARCH 'NUM#N00#N01#N02#N03#N04#PCT#DAT#MON#STR#'
+                            FOR search_item.
+          IF sy-subrc NE 0.
+            RAISE error_in_sema.
+          ENDIF.
+          contentsitem-column = sy-index.
+          IF semaitem-col_typ EQ 'DAT' OR semaitem-col_typ EQ 'MON'.
+            IF semaitem-col_no > vkeycount.
 
               " Hinweis 512418
               " EXCEL bezieht Datumsangaben
@@ -2084,513 +2087,513 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
               " d.h. ab 1.3.1900 korrekt
               " 1.3.1900 als Zahl = 61
 
-              data: GENESIS type D value '18991230'.
-              data: NUMBER_OF_DAYS type P.
+              DATA: genesis TYPE d VALUE '18991230'.
+              DATA: number_of_days TYPE p.
 * change for date in char format & sema_type = X
-              data: TEMP_DATE type D.
+              DATA: temp_date TYPE d.
 
-              if not <ITEM> is initial and not <ITEM> co ' ' and not
-              <ITEM> co '0'.
+              IF NOT <item> IS INITIAL AND NOT <item> CO ' ' AND NOT
+              <item> CO '0'.
 * change for date in char format & sema_type = X starts
-                if SEMA_TYPE = 'X'.
-                  describe field <ITEM> type TYP.
-                  if TYP = 'C'.
-                    TEMP_DATE = <ITEM>.
-                    NUMBER_OF_DAYS = TEMP_DATE - GENESIS.
-                  else.
-                    NUMBER_OF_DAYS = <ITEM> - GENESIS.
-                  endif.
-                else.
-                  NUMBER_OF_DAYS = <ITEM> - GENESIS.
-                endif.
+                IF sema_type = 'X'.
+                  DESCRIBE FIELD <item> TYPE typ.
+                  IF typ = 'C'.
+                    temp_date = <item>.
+                    number_of_days = temp_date - genesis.
+                  ELSE.
+                    number_of_days = <item> - genesis.
+                  ENDIF.
+                ELSE.
+                  number_of_days = <item> - genesis.
+                ENDIF.
 * change for date in char format & sema_type = X ends
-                if NUMBER_OF_DAYS < 61.
-                  NUMBER_OF_DAYS = NUMBER_OF_DAYS - 1.
-                endif.
+                IF number_of_days < 61.
+                  number_of_days = number_of_days - 1.
+                ENDIF.
 
-                set country 'DE'.
-                write NUMBER_OF_DAYS to CONTENTSITEM-VALUE
-                no-grouping
-                                          left-justified.
-                set country SPACE.
-                translate CONTENTSITEM-VALUE using COMMA_ELIM.
-              else.
-                clear CONTENTSITEM-VALUE.
-              endif.
-            else.
-              move <ITEM> to CONTENTSITEM-VALUE.
-            endif.
-          elseif SEMAITEM-COL_TYP eq 'NUM' or
-                 SEMAITEM-COL_TYP eq 'N00' or
-                 SEMAITEM-COL_TYP eq 'N01' or
-                 SEMAITEM-COL_TYP eq 'N02' or
-                 SEMAITEM-COL_TYP eq 'N03' or
-                 SEMAITEM-COL_TYP eq 'N04' or
-                 SEMAITEM-COL_TYP eq 'PCT'.
-            set country 'DE'.
-            describe field <ITEM> type TYP.
+                SET COUNTRY 'DE'.
+                WRITE number_of_days TO contentsitem-value
+                NO-GROUPING
+                                          LEFT-JUSTIFIED.
+                SET COUNTRY space.
+                TRANSLATE contentsitem-value USING comma_elim.
+              ELSE.
+                CLEAR contentsitem-value.
+              ENDIF.
+            ELSE.
+              MOVE <item> TO contentsitem-value.
+            ENDIF.
+          ELSEIF semaitem-col_typ EQ 'NUM' OR
+                 semaitem-col_typ EQ 'N00' OR
+                 semaitem-col_typ EQ 'N01' OR
+                 semaitem-col_typ EQ 'N02' OR
+                 semaitem-col_typ EQ 'N03' OR
+                 semaitem-col_typ EQ 'N04' OR
+                 semaitem-col_typ EQ 'PCT'.
+            SET COUNTRY 'DE'.
+            DESCRIBE FIELD <item> TYPE typ.
 
-            if SEMAITEM-COL_CUR is initial.
-              if TYP ne 'F'.
-                write <ITEM> to CONTENTSITEM-VALUE no-grouping
-                                                   no-sign decimals 14.
-              else.
-                write <ITEM> to CONTENTSITEM-VALUE no-grouping
-                                                   no-sign.
-              endif.
-            else.
+            IF semaitem-col_cur IS INITIAL.
+              IF typ NE 'F'.
+                WRITE <item> TO contentsitem-value NO-GROUPING
+                                                   NO-SIGN DECIMALS 14.
+              ELSE.
+                WRITE <item> TO contentsitem-value NO-GROUPING
+                                                   NO-SIGN.
+              ENDIF.
+            ELSE.
 * Treat of fixed curreny for column >>Y9CK007319
-              if SEMAITEM-COL_CUR < 0.
-                SEMAITEM-COL_CUR = SEMAITEM-COL_CUR * ( -1 ).
-                select * from TCURX into table LT_TCURX.
-                sort LT_TCURX.
-                read table LT_TCURX into
-                                    WA_TCURX index SEMAITEM-COL_CUR.
-                if SY-SUBRC = 0.
-                  if TYP ne 'F'.
-                    write <ITEM> to CONTENTSITEM-VALUE no-grouping
-                     currency WA_TCURX-CURRKEY no-sign decimals 14.
-                  else.
-                    write <ITEM> to CONTENTSITEM-VALUE no-grouping
-                     currency WA_TCURX-CURRKEY no-sign.
-                  endif.
-                endif.
-              else.
-                assign component SEMAITEM-COL_CUR
-                     of structure <LINE> to <G>.
+              IF semaitem-col_cur < 0.
+                semaitem-col_cur = semaitem-col_cur * ( -1 ).
+                SELECT * FROM tcurx INTO TABLE lt_tcurx.
+                SORT lt_tcurx.
+                READ TABLE lt_tcurx INTO
+                                    wa_tcurx INDEX semaitem-col_cur.
+                IF sy-subrc = 0.
+                  IF typ NE 'F'.
+                    WRITE <item> TO contentsitem-value NO-GROUPING
+                     CURRENCY wa_tcurx-currkey NO-SIGN DECIMALS 14.
+                  ELSE.
+                    WRITE <item> TO contentsitem-value NO-GROUPING
+                     CURRENCY wa_tcurx-currkey NO-SIGN.
+                  ENDIF.
+                ENDIF.
+              ELSE.
+                ASSIGN COMPONENT semaitem-col_cur
+                     OF STRUCTURE <line> TO <g>.
 * mit = index of recent row
-                CURRITEM-TOP  = ROWMAX + MIT + LI_COMMENTARY_ROWS.
+                curritem-top  = rowmax + mit + li_commentary_rows.
 
-                LI_COL_POS =  SY-INDEX + I_LEFT - 1.
-                CURRITEM-LEFT = LI_COL_POS.
+                li_col_pos =  sy-index + i_left - 1.
+                curritem-left = li_col_pos.
 
 * if filed is quantity field (qfieldname ne space)
 * or amount field (cfieldname ne space), then format decimal place
 * corresponding with config
 
-                clear: L_DEF.
-                read table LT_FIELDCAT_KKBLO assigning <F_FIELDCAT_LINE>
-                with key  TABNAME = L_TABNAME
-                          TECH    = SPACE
-                          NO_OUT  = SPACE
-                          COL_POS = SEMAITEM-COL_NO.
-                if SY-SUBRC = 0.
-                  if <F_FIELDCAT_LINE>-CFIELDNAME is not initial.
-                    L_DEF = 'C'.
-                  else."if <f_fieldcat_line>-qfieldname is not initial.
-                    L_DEF = 'Q'.
-                  endif.
-                endif.
+                CLEAR: l_def.
+                READ TABLE lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
+                WITH KEY  tabname = l_tabname
+                          tech    = space
+                          no_out  = space
+                          col_pos = semaitem-col_no.
+                IF sy-subrc = 0.
+                  IF <f_fieldcat_line>-cfieldname IS NOT INITIAL.
+                    l_def = 'C'.
+                  ELSE."if <f_fieldcat_line>-qfieldname is not initial.
+                    l_def = 'Q'.
+                  ENDIF.
+                ENDIF.
 
 * if field is amount field
 * exporting of amount field base on currency decimal table: TCURX
-                if L_DEF = 'C'. "field is amount field
-                  select single * from TCURX into WA_TCURX
-                    where CURRKEY = <G>.
+                IF l_def = 'C'. "field is amount field
+                  SELECT SINGLE * FROM tcurx INTO wa_tcurx
+                    WHERE currkey = <g>.
 * if amount ref to un-know currency -> default decimal  = 2
-                  if SY-SUBRC eq 0.
-                    CURRITEM-DECIMALS = WA_TCURX-CURRDEC.
-                  else.
-                    CURRITEM-DECIMALS = 2.
-                  endif.
+                  IF sy-subrc EQ 0.
+                    curritem-decimals = wa_tcurx-currdec.
+                  ELSE.
+                    curritem-decimals = 2.
+                  ENDIF.
 
-                  append CURRITEM to CURRCELLS.
-                  if TYP ne 'F'.
-                    write <ITEM> to CONTENTSITEM-VALUE
-                                        currency <G>
-                       no-sign no-grouping.
-                  else.
-                    write <ITEM> to CONTENTSITEM-VALUE
-                       decimals 14      currency <G>
-                       no-sign no-grouping.
-                  endif.
+                  APPEND curritem TO currcells.
+                  IF typ NE 'F'.
+                    WRITE <item> TO contentsitem-value
+                                        CURRENCY <g>
+                       NO-SIGN NO-GROUPING.
+                  ELSE.
+                    WRITE <item> TO contentsitem-value
+                       DECIMALS 14      CURRENCY <g>
+                       NO-SIGN NO-GROUPING.
+                  ENDIF.
 
 * if field is quantity field
 * exporting of quantity field base on quantity decimal table: T006
 
-                else."if l_def = 'Q'. " field is quantity field
-                  clear: WA_T006.
-                  select single * from T006 into WA_T006
-                    where MSEHI = <G>.
+                ELSE."if l_def = 'Q'. " field is quantity field
+                  CLEAR: wa_t006.
+                  SELECT SINGLE * FROM t006 INTO wa_t006
+                    WHERE msehi = <g>.
 * if quantity ref to un-know unit-> default decimal  = 2
-                  if SY-SUBRC eq 0.
-                    CURRITEM-DECIMALS = WA_T006-DECAN.
-                  else.
-                    CURRITEM-DECIMALS = 2.
-                  endif.
-                  append CURRITEM to CURRCELLS.
+                  IF sy-subrc EQ 0.
+                    curritem-decimals = wa_t006-decan.
+                  ELSE.
+                    curritem-decimals = 2.
+                  ENDIF.
+                  APPEND curritem TO currcells.
 
-                  write <ITEM> to CONTENTSITEM-VALUE
-                                      unit <G>
-                     no-sign no-grouping.
-                  condense CONTENTSITEM-VALUE.
+                  WRITE <item> TO contentsitem-value
+                                      UNIT <g>
+                     NO-SIGN NO-GROUPING.
+                  CONDENSE contentsitem-value.
 
-                endif.
+                ENDIF.
 
-              endif.                                        "Y9CK007319
-            endif.
-            condense CONTENTSITEM-VALUE.
+              ENDIF.                                        "Y9CK007319
+            ENDIF.
+            CONDENSE contentsitem-value.
 
 * add function fieldcat-no zero display
 
-            loop at LT_FIELDCAT_KKBLO assigning <F_FIELDCAT_LINE>
-            where TABNAME = L_TABNAME
-            and   TECH ne 'X'
-            and   NO_OUT ne 'X'.
-              if <F_FIELDCAT_LINE>-COL_POS = SEMAITEM-COL_NO.
-                if <F_FIELDCAT_LINE>-NO_ZERO = 'X'.
-                  if <ITEM> = '0'.
-                    clear: CONTENTSITEM-VALUE.
-                  endif.
+            LOOP AT lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
+            WHERE tabname = l_tabname
+            AND   tech NE 'X'
+            AND   no_out NE 'X'.
+              IF <f_fieldcat_line>-col_pos = semaitem-col_no.
+                IF <f_fieldcat_line>-no_zero = 'X'.
+                  IF <item> = '0'.
+                    CLEAR: contentsitem-value.
+                  ENDIF.
 
 * dun display zero in total/subtotal line too
 
-                else.
-                  clear: WA_SUBTOT_INDEXS.
-                  read table LT_SUBTOT_INDEXS into WA_SUBTOT_INDEXS
-                  with key INDEX = L_SAVE_INDEX.
-                  if SY-SUBRC = 0 and <ITEM> = '0'.
-                    clear: CONTENTSITEM-VALUE.
-                  endif.
-                endif.
-              endif.
-            endloop.
-            unassign: <F_FIELDCAT_LINE>.
+                ELSE.
+                  CLEAR: wa_subtot_indexs.
+                  READ TABLE lt_subtot_indexs INTO wa_subtot_indexs
+                  WITH KEY index = l_save_index.
+                  IF sy-subrc = 0 AND <item> = '0'.
+                    CLEAR: contentsitem-value.
+                  ENDIF.
+                ENDIF.
+              ENDIF.
+            ENDLOOP.
+            UNASSIGN: <f_fieldcat_line>.
 
-            if <ITEM> lt 0.
-              search CONTENTSITEM-VALUE for 'E'.
-              if SY-FDPOS eq 0.
+            IF <item> LT 0.
+              SEARCH contentsitem-value FOR 'E'.
+              IF sy-fdpos EQ 0.
 
 * use prefix notation for signed numbers
 
-                translate CONTENTSITEM-VALUE using '- '.
-                condense CONTENTSITEM-VALUE no-gaps.
-                concatenate '-' CONTENTSITEM-VALUE
-                           into CONTENTSITEM-VALUE.
-              else.
-                concatenate '-' CONTENTSITEM-VALUE
-                           into CONTENTSITEM-VALUE.
-              endif.
-            endif.
-            set country SPACE.
+                TRANSLATE contentsitem-value USING '- '.
+                CONDENSE contentsitem-value NO-GAPS.
+                CONCATENATE '-' contentsitem-value
+                           INTO contentsitem-value.
+              ELSE.
+                CONCATENATE '-' contentsitem-value
+                           INTO contentsitem-value.
+              ENDIF.
+            ENDIF.
+            SET COUNTRY space.
 * Hier wird nur die korrekte Kommaseparatierung gemacht, wenn die
 * Zeichen einer
 * Zahl enthalten sind. Das ist für Timestamps, die auch ":" enthalten.
 * Für die
 * darf keine Kommaseparierung stattfinden.
 * Changing for correction request - Y6BK041073
-            if CONTENTSITEM-VALUE co '0123456789.,-+E '.
-              translate CONTENTSITEM-VALUE using COMMA_ELIM.
-            endif.
-          else.
-            clear CONTENTSITEM-VALUE.
+            IF contentsitem-value CO '0123456789.,-+E '.
+              TRANSLATE contentsitem-value USING comma_elim.
+            ENDIF.
+          ELSE.
+            CLEAR contentsitem-value.
 
 * if type is not numeric -> dun display with zero
 
-            write <ITEM> to CONTENTSITEM-VALUE no-zero.
+            WRITE <item> TO contentsitem-value NO-ZERO.
 
-            shift CONTENTSITEM-VALUE left deleting leading SPACE.
+            SHIFT contentsitem-value LEFT DELETING LEADING space.
 
-          endif.
-          append CONTENTSITEM to CONTENTS.
-        endif.
-      enddo.
+          ENDIF.
+          APPEND contentsitem TO contents.
+        ENDIF.
+      ENDDO.
 
-      REALMIT = REALMIT + 1.
-      REALOVERFLOW = REALOVERFLOW + 1.
+      realmit = realmit + 1.
+      realoverflow = realoverflow + 1.
 
-      MIT = MIT + 1.
+      mit = mit + 1.
 *   overflow = current row index in content table
-      OVERFLOW = OVERFLOW + 1.
-    endloop.
+      overflow = overflow + 1.
+    ENDLOOP.
 
-    unassign: <F_FIELDCAT_LINE>.
+    UNASSIGN: <f_fieldcat_line>.
 
 * set item range for set_range_data method
 
-    TESTNAME = MIT / CONST.
-    condense TESTNAME.
+    testname = mit / const.
+    CONDENSE testname.
 
-    concatenate 'TEST' TESTNAME into TESTNAME.
+    CONCATENATE 'TEST' testname INTO testname.
 
-    REALOVERFLOW = REALOVERFLOW - 1.
-    REALMIT = REALMIT - 1.
-    HELP = REALOVERFLOW.
+    realoverflow = realoverflow - 1.
+    realmit = realmit - 1.
+    help = realoverflow.
 
-    RANGEITEM-NAME = TESTNAME.
-    RANGEITEM-COLUMNS = DATAREAL.
-    RANGEITEM-ROWS = HELP.
-    append RANGEITEM to RANGES.
+    rangeitem-name = testname.
+    rangeitem-columns = datareal.
+    rangeitem-rows = help.
+    APPEND rangeitem TO ranges.
 
 * insert item range dim
 
-    TEMP2 = ROWMAX + 1 + LI_COMMENTARY_ROWS + REALMIT - REALOVERFLOW.
+    temp2 = rowmax + 1 + li_commentary_rows + realmit - realoverflow.
 
 * items data
 
-    call method LO_SPREADSHEET->INSERT_RANGE_DIM
-      exporting
-        NAME     = TESTNAME
-        TOP      = TEMP2
-        LEFT     = I_LEFT
-        ROWS     = HELP
-        COLUMNS  = DATAREAL
-        NO_FLUSH = NO_FLUSH.
+    CALL METHOD lo_spreadsheet->insert_range_dim
+      EXPORTING
+        name     = testname
+        top      = temp2
+        left     = i_left
+        rows     = help
+        columns  = datareal
+        no_flush = no_flush.
 
 * get columns header contents for set_range_data method
 * export columns header only if no columns header option = space
 
-    data: ROWCOUNT type I.
-    data: COLUMNCOUNT type I.
+    DATA: rowcount TYPE i.
+    DATA: columncount TYPE i.
 
-    if I_COLUMNS_HEADER = 'X'.
+    IF i_columns_header = 'X'.
 
 * append columns header to contents: hkey
 
-      ROWCOUNT = 1.
-      do ROWMAX times.
-        COLUMNCOUNT = 1.
-        do HKEYCOLUMNS times.
-          loop at LT_HKEY into HKEYITEM where COL_NO = COLUMNCOUNT
-                                           and ROW_NO   = ROWCOUNT.
-          endloop.
-          if SY-SUBRC = 0.
-            STR = HKEYITEM-COL_NAME.
-            CONTENTSITEM-VALUE = HKEYITEM-COL_NAME.
-          else.
-            CONTENTSITEM-VALUE = STR.
-          endif.
-          CONTENTSITEM-COLUMN = COLUMNCOUNT.
-          CONTENTSITEM-ROW = ROWCOUNT.
-          append CONTENTSITEM to CONTENTS.
-          COLUMNCOUNT = COLUMNCOUNT + 1.
-        enddo.
-        ROWCOUNT = ROWCOUNT + 1.
-      enddo.
+      rowcount = 1.
+      DO rowmax TIMES.
+        columncount = 1.
+        DO hkeycolumns TIMES.
+          LOOP AT lt_hkey INTO hkeyitem WHERE col_no = columncount
+                                           AND row_no   = rowcount.
+          ENDLOOP.
+          IF sy-subrc = 0.
+            str = hkeyitem-col_name.
+            contentsitem-value = hkeyitem-col_name.
+          ELSE.
+            contentsitem-value = str.
+          ENDIF.
+          contentsitem-column = columncount.
+          contentsitem-row = rowcount.
+          APPEND contentsitem TO contents.
+          columncount = columncount + 1.
+        ENDDO.
+        rowcount = rowcount + 1.
+      ENDDO.
 
 * incase columns header in multiline
 
-      data: ROWMAXTEMP type I.
-      if ROWMAX > 1.
-        ROWMAXTEMP = ROWMAX - 1.
-        ROWCOUNT = 1.
-        do ROWMAXTEMP times.
-          COLUMNCOUNT = 1.
-          do COLUMNMAX times.
-            CONTENTSITEM-COLUMN = COLUMNCOUNT.
-            CONTENTSITEM-ROW    = ROWCOUNT.
-            CONTENTSITEM-VALUE  = ''.
-            append CONTENTSITEM to CONTENTS.
-            COLUMNCOUNT = COLUMNCOUNT + 1.
-          enddo.
-          ROWCOUNT = ROWCOUNT + 1.
-        enddo.
-      endif.
+      DATA: rowmaxtemp TYPE i.
+      IF rowmax > 1.
+        rowmaxtemp = rowmax - 1.
+        rowcount = 1.
+        DO rowmaxtemp TIMES.
+          columncount = 1.
+          DO columnmax TIMES.
+            contentsitem-column = columncount.
+            contentsitem-row    = rowcount.
+            contentsitem-value  = ''.
+            APPEND contentsitem TO contents.
+            columncount = columncount + 1.
+          ENDDO.
+          rowcount = rowcount + 1.
+        ENDDO.
+      ENDIF.
 
 * append columns header to contents: vkey
 
-      COLUMNCOUNT = 1.
-      do COLUMNMAX times.
-        loop at LT_VKEY into VKEYITEM where COL_NO = COLUMNCOUNT.
-        endloop.
-        CONTENTSITEM-VALUE = VKEYITEM-COL_NAME.
-        CONTENTSITEM-ROW = ROWMAX.
-        CONTENTSITEM-COLUMN = COLUMNCOUNT.
-        append CONTENTSITEM to CONTENTS.
-        COLUMNCOUNT = COLUMNCOUNT + 1.
-      enddo.
+      columncount = 1.
+      DO columnmax TIMES.
+        LOOP AT lt_vkey INTO vkeyitem WHERE col_no = columncount.
+        ENDLOOP.
+        contentsitem-value = vkeyitem-col_name.
+        contentsitem-row = rowmax.
+        contentsitem-column = columncount.
+        APPEND contentsitem TO contents.
+        columncount = columncount + 1.
+      ENDDO.
 *--------------------------------------------------------------------*
 * set header range for method set_range_data
 * insert header keys range dim
 
-      LI_HEAD_TOP = LI_COMMENTARY_ROWS + 1.
-      LI_COL_POS = I_LEFT.
+      li_head_top = li_commentary_rows + 1.
+      li_col_pos = i_left.
 
 * insert range headers
 
-      if HKEYCOLUMNS ne 0.
-        RANGEITEM-NAME = 'TESTHKEY'.
-        RANGEITEM-ROWS = ROWMAX.
-        RANGEITEM-COLUMNS = HKEYCOLUMNS.
-        append RANGEITEM to RANGES.
-        clear: RANGEITEM.
+      IF hkeycolumns NE 0.
+        rangeitem-name = 'TESTHKEY'.
+        rangeitem-rows = rowmax.
+        rangeitem-columns = hkeycolumns.
+        APPEND rangeitem TO ranges.
+        CLEAR: rangeitem.
 
-        call method LO_SPREADSHEET->INSERT_RANGE_DIM
-          exporting
-            NAME     = 'TESTHKEY'
-            TOP      = LI_HEAD_TOP
-            LEFT     = LI_COL_POS
-            ROWS     = ROWMAX
-            COLUMNS  = HKEYCOLUMNS
-            NO_FLUSH = NO_FLUSH.
-      endif.
-    endif.
+        CALL METHOD lo_spreadsheet->insert_range_dim
+          EXPORTING
+            name     = 'TESTHKEY'
+            top      = li_head_top
+            left     = li_col_pos
+            rows     = rowmax
+            columns  = hkeycolumns
+            no_flush = no_flush.
+      ENDIF.
+    ENDIF.
 
 * format for columns header + total + subtotal
 * ------------------------------------------
 
-    HELP = ROWMAX + REALMIT. " table + header lines
+    help = rowmax + realmit. " table + header lines
 
-    data: LT_FORMAT     type SOI_FORMAT_TABLE.
-    data: WA_FORMAT     like line of LT_FORMAT.
-    data: WA_FORMAT_TEMP like line of LT_FORMAT.
+    DATA: lt_format     TYPE soi_format_table.
+    DATA: wa_format     LIKE LINE OF lt_format.
+    DATA: wa_format_temp LIKE LINE OF lt_format.
 
-    field-symbols: <F_SOURCE> type ANY.
-    field-symbols: <F_DES>    type ANY.
+    FIELD-SYMBOLS: <f_source> TYPE any.
+    FIELD-SYMBOLS: <f_des>    TYPE any.
 
 * columns header format
 
-    WA_FORMAT-FRONT       = -1.
-    WA_FORMAT-BACK        = 15. "grey
-    WA_FORMAT-FONT        = SPACE.
-    WA_FORMAT-SIZE        = -1.
-    WA_FORMAT-BOLD        = 1.
-    WA_FORMAT-ALIGN       = 0.
-    WA_FORMAT-FRAMETYP    = -1.
-    WA_FORMAT-FRAMECOLOR  = -1.
+    wa_format-front       = -1.
+    wa_format-back        = 15. "grey
+    wa_format-font        = space.
+    wa_format-size        = -1.
+    wa_format-bold        = 1.
+    wa_format-align       = 0.
+    wa_format-frametyp    = -1.
+    wa_format-framecolor  = -1.
 
 * get column header format from input record
 * -> map input format
 
-    if I_COLUMNS_HEADER = 'X'.
-      WA_FORMAT-NAME        = 'TESTHKEY'.
-      if I_FORMAT_COL_HEADER is not initial.
-        describe field I_FORMAT_COL_HEADER type L_TYP components
-        LI_COL_NUM.
-        do LI_COL_NUM times.
-          if SY-INDEX ne 1. " dun map range name
-            assign component SY-INDEX of structure I_FORMAT_COL_HEADER
-            to <F_SOURCE>.
-            if <F_SOURCE> is not initial.
-              assign component SY-INDEX of structure WA_FORMAT to <F_DES>.
-              <F_DES> = <F_SOURCE>.
-              unassign: <F_DES>.
-            endif.
-            unassign: <F_SOURCE>.
-          endif.
-        enddo.
+    IF i_columns_header = 'X'.
+      wa_format-name        = 'TESTHKEY'.
+      IF i_format_col_header IS NOT INITIAL.
+        DESCRIBE FIELD i_format_col_header TYPE l_typ COMPONENTS
+        li_col_num.
+        DO li_col_num TIMES.
+          IF sy-index NE 1. " dun map range name
+            ASSIGN COMPONENT sy-index OF STRUCTURE i_format_col_header
+            TO <f_source>.
+            IF <f_source> IS NOT INITIAL.
+              ASSIGN COMPONENT sy-index OF STRUCTURE wa_format TO <f_des>.
+              <f_des> = <f_source>.
+              UNASSIGN: <f_des>.
+            ENDIF.
+            UNASSIGN: <f_source>.
+          ENDIF.
+        ENDDO.
 
-        clear: LI_COL_NUM.
-      endif.
+        CLEAR: li_col_num.
+      ENDIF.
 
-      append WA_FORMAT to LT_FORMAT.
-    endif.
+      APPEND wa_format TO lt_format.
+    ENDIF.
 
 * Zusammenfassen der Spalten mit gleicher Nachkommastellenzahl
 * collect vertical cells (col)  with the same number of decimal places
 * to increase perfomance in currency cell format
 
-    describe table CURRCELLS lines LINES.
-    LINES = LINES - 1.
-    do LINES times.
-      describe table CURRCELLS lines INNERLINES.
-      INNERLINES = INNERLINES - 1.
-      sort CURRCELLS by LEFT TOP.
-      clear FOUND.
-      do INNERLINES times.
-        read table CURRCELLS index SY-INDEX into CURRITEM.
-        COUNTER = SY-INDEX + 1.
-        read table CURRCELLS index COUNTER into CURRITEM2.
-        if CURRITEM-LEFT eq CURRITEM2-LEFT.
-          LENGTH = CURRITEM-TOP + CURRITEM-ROWS.
-          if LENGTH eq CURRITEM2-TOP and CURRITEM-DECIMALS eq CURRITEM2-DECIMALS.
-            move CURRITEM to CURRITEM3.
-            CURRITEM3-ROWS = CURRITEM3-ROWS + CURRITEM2-ROWS.
-            CURRITEM-LEFT = -1.
-            modify CURRCELLS index SY-INDEX from CURRITEM.
-            CURRITEM2-LEFT = -1.
-            modify CURRCELLS index COUNTER from CURRITEM2.
-            append CURRITEM3 to CURRCELLS.
-            FOUND = 'X'.
-          endif.
-        endif.
-      enddo.
-      if FOUND is initial.
-        exit.
-      endif.
-      delete CURRCELLS where LEFT = -1.
-    enddo.
+    DESCRIBE TABLE currcells LINES lines.
+    lines = lines - 1.
+    DO lines TIMES.
+      DESCRIBE TABLE currcells LINES innerlines.
+      innerlines = innerlines - 1.
+      SORT currcells BY left top.
+      CLEAR found.
+      DO innerlines TIMES.
+        READ TABLE currcells INDEX sy-index INTO curritem.
+        counter = sy-index + 1.
+        READ TABLE currcells INDEX counter INTO curritem2.
+        IF curritem-left EQ curritem2-left.
+          length = curritem-top + curritem-rows.
+          IF length EQ curritem2-top AND curritem-decimals EQ curritem2-decimals.
+            MOVE curritem TO curritem3.
+            curritem3-rows = curritem3-rows + curritem2-rows.
+            curritem-left = -1.
+            MODIFY currcells INDEX sy-index FROM curritem.
+            curritem2-left = -1.
+            MODIFY currcells INDEX counter FROM curritem2.
+            APPEND curritem3 TO currcells.
+            found = 'X'.
+          ENDIF.
+        ENDIF.
+      ENDDO.
+      IF found IS INITIAL.
+        EXIT.
+      ENDIF.
+      DELETE currcells WHERE left = -1.
+    ENDDO.
 
 * Zusammenfassen der Zeilen mit gleicher Nachkommastellenzahl
 * collect horizontal cells (row) with the same number of decimal places
 * to increase perfomance in currency cell format
 
-    describe table CURRCELLS lines LINES.
-    LINES = LINES - 1.
-    do LINES times.
-      describe table CURRCELLS lines INNERLINES.
-      INNERLINES = INNERLINES - 1.
-      sort CURRCELLS by TOP LEFT.
-      clear FOUND.
-      do INNERLINES times.
-        read table CURRCELLS index SY-INDEX into CURRITEM.
-        COUNTER = SY-INDEX + 1.
-        read table CURRCELLS index COUNTER into CURRITEM2.
-        if CURRITEM-TOP eq CURRITEM2-TOP and CURRITEM-ROWS eq
-        CURRITEM2-ROWS.
-          LENGTH = CURRITEM-LEFT + CURRITEM-COLUMNS.
-          if LENGTH eq CURRITEM2-LEFT and CURRITEM-DECIMALS eq CURRITEM2-DECIMALS.
-            move CURRITEM to CURRITEM3.
-            CURRITEM3-COLUMNS = CURRITEM3-COLUMNS + CURRITEM2-COLUMNS.
-            CURRITEM-LEFT = -1.
-            modify CURRCELLS index SY-INDEX from CURRITEM.
-            CURRITEM2-LEFT = -1.
-            modify CURRCELLS index COUNTER from CURRITEM2.
-            append CURRITEM3 to CURRCELLS.
-            FOUND = 'X'.
-          endif.
-        endif.
-      enddo.
-      if FOUND is initial.
-        exit.
-      endif.
-      delete CURRCELLS where LEFT = -1.
-    enddo.
+    DESCRIBE TABLE currcells LINES lines.
+    lines = lines - 1.
+    DO lines TIMES.
+      DESCRIBE TABLE currcells LINES innerlines.
+      innerlines = innerlines - 1.
+      SORT currcells BY top left.
+      CLEAR found.
+      DO innerlines TIMES.
+        READ TABLE currcells INDEX sy-index INTO curritem.
+        counter = sy-index + 1.
+        READ TABLE currcells INDEX counter INTO curritem2.
+        IF curritem-top EQ curritem2-top AND curritem-rows EQ
+        curritem2-rows.
+          length = curritem-left + curritem-columns.
+          IF length EQ curritem2-left AND curritem-decimals EQ curritem2-decimals.
+            MOVE curritem TO curritem3.
+            curritem3-columns = curritem3-columns + curritem2-columns.
+            curritem-left = -1.
+            MODIFY currcells INDEX sy-index FROM curritem.
+            curritem2-left = -1.
+            MODIFY currcells INDEX counter FROM curritem2.
+            APPEND curritem3 TO currcells.
+            found = 'X'.
+          ENDIF.
+        ENDIF.
+      ENDDO.
+      IF found IS INITIAL.
+        EXIT.
+      ENDIF.
+      DELETE currcells WHERE left = -1.
+    ENDDO.
 * Ende der Zusammenfassung
 
 
 * item data: format for currency cell, corresponding with currency
 
-    call method LO_SPREADSHEET->CELL_FORMAT
-      exporting
-        CELLS    = CURRCELLS
-        NO_FLUSH = NO_FLUSH.
+    CALL METHOD lo_spreadsheet->cell_format
+      EXPORTING
+        cells    = currcells
+        no_flush = no_flush.
 
 * item data: write item table content
 
-    call method LO_SPREADSHEET->SET_RANGES_DATA
-      exporting
-        RANGES   = RANGES
-        CONTENTS = CONTENTS
-        NO_FLUSH = NO_FLUSH.
+    CALL METHOD lo_spreadsheet->set_ranges_data
+      EXPORTING
+        ranges   = ranges
+        contents = contents
+        no_flush = no_flush.
 
 * whole table range to format all table
 
-    if I_COLUMNS_HEADER = 'X'.
-      LI_HEAD_TOP = LI_COMMENTARY_ROWS + 1.
-    else.
-      LI_HEAD_TOP = LI_COMMENTARY_ROWS + 2.
-      HELP = HELP - 1.
-    endif.
+    IF i_columns_header = 'X'.
+      li_head_top = li_commentary_rows + 1.
+    ELSE.
+      li_head_top = li_commentary_rows + 2.
+      help = help - 1.
+    ENDIF.
 
-    call method LO_SPREADSHEET->INSERT_RANGE_DIM
-      exporting
-        NAME     = 'WHOLE_TABLE'
-        TOP      = LI_HEAD_TOP
-        LEFT     = I_LEFT
-        ROWS     = HELP
-        COLUMNS  = DATAREAL
-        NO_FLUSH = NO_FLUSH.
+    CALL METHOD lo_spreadsheet->insert_range_dim
+      EXPORTING
+        name     = 'WHOLE_TABLE'
+        top      = li_head_top
+        left     = i_left
+        rows     = help
+        columns  = datareal
+        no_flush = no_flush.
 
 * columns width auto fix
 * this parameter = space in case use with exist template
 
-    if I_COLUMNS_AUTOFIT = 'X'.
-      call method LO_SPREADSHEET->FIT_WIDEST
-        exporting
-          NAME     = 'WHOLE_TABLE'
-          NO_FLUSH = NO_FLUSH.
-    endif.
+    IF i_columns_autofit = 'X'.
+      CALL METHOD lo_spreadsheet->fit_widest
+        EXPORTING
+          name     = 'WHOLE_TABLE'
+          no_flush = no_flush.
+    ENDIF.
 
 * frame
 * The parameter has 8 bits
@@ -2607,171 +2610,171 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 * ( final DOI method call, set no_flush = space
 * equal to call method CL_GUI_CFW=>FLUSH )
 
-    call method LO_SPREADSHEET->SET_FRAME
-      exporting
-        RANGENAME = 'WHOLE_TABLE'
-        TYP       = 127
-        COLOR     = 1
-        NO_FLUSH  = SPACE
-      importing
-        ERROR     = LO_ERROR
-        RETCODE   = LC_RETCODE.
+    CALL METHOD lo_spreadsheet->set_frame
+      EXPORTING
+        rangename = 'WHOLE_TABLE'
+        typ       = 127
+        color     = 1
+        no_flush  = space
+      IMPORTING
+        error     = lo_error
+        retcode   = lc_retcode.
 
-    ERROR_DOI.
+    error_doi.
 
 * reformat subtotal / total line after format wholw table
 
-    loop at SUBRANGES into SUBRANGEITEM.
-      L_SUB_INDEX = SUBRANGEITEM-ROWS + LI_COMMENTARY_ROWS + ROWMAX.
+    LOOP AT subranges INTO subrangeitem.
+      l_sub_index = subrangeitem-rows + li_commentary_rows + rowmax.
 
-      call method LO_SPREADSHEET->INSERT_RANGE_DIM
-        exporting
-          NAME     = SUBRANGEITEM-NAME
-          LEFT     = I_LEFT
-          TOP      = L_SUB_INDEX
-          ROWS     = 1
-          COLUMNS  = DATAREAL
-          NO_FLUSH = NO_FLUSH.
+      CALL METHOD lo_spreadsheet->insert_range_dim
+        EXPORTING
+          name     = subrangeitem-name
+          left     = i_left
+          top      = l_sub_index
+          rows     = 1
+          columns  = datareal
+          no_flush = no_flush.
 
-      WA_FORMAT-NAME    = SUBRANGEITEM-NAME.
+      wa_format-name    = subrangeitem-name.
 
 *   default format:
 *     - clolor: subtotal = light yellow, subtotal = yellow
 *     - frame: box
 
-      if  SUBRANGEITEM-NAME(3) = 'SUB'.
-        WA_FORMAT-BACK = 36. "subtotal line
-        WA_FORMAT_TEMP = I_FORMAT_SUBTOTAL.
-      else.
-        WA_FORMAT-BACK = 27. "total line
-        WA_FORMAT_TEMP = I_FORMAT_TOTAL.
-      endif.
-      WA_FORMAT-FRAMETYP = 79.
-      WA_FORMAT-FRAMECOLOR = 1.
-      WA_FORMAT-NUMBER  = -1.
-      WA_FORMAT-ALIGN   = -1.
+      IF  subrangeitem-name(3) = 'SUB'.
+        wa_format-back = 36. "subtotal line
+        wa_format_temp = i_format_subtotal.
+      ELSE.
+        wa_format-back = 27. "total line
+        wa_format_temp = i_format_total.
+      ENDIF.
+      wa_format-frametyp = 79.
+      wa_format-framecolor = 1.
+      wa_format-number  = -1.
+      wa_format-align   = -1.
 
 *   get subtoal + total format from intput parameter
 *   overwrite default format
 
-      if WA_FORMAT_TEMP is not initial.
-        describe field WA_FORMAT_TEMP type L_TYP components LI_COL_NUM.
-        do LI_COL_NUM times.
-          if SY-INDEX ne 1. " dun map range name
-            assign component SY-INDEX of structure WA_FORMAT_TEMP
-            to <F_SOURCE>.
-            if <F_SOURCE> is not initial.
-              assign component SY-INDEX of structure WA_FORMAT to <F_DES>.
-              <F_DES> = <F_SOURCE>.
-              unassign: <F_DES>.
-            endif.
-            unassign: <F_SOURCE>.
-          endif.
-        enddo.
+      IF wa_format_temp IS NOT INITIAL.
+        DESCRIBE FIELD wa_format_temp TYPE l_typ COMPONENTS li_col_num.
+        DO li_col_num TIMES.
+          IF sy-index NE 1. " dun map range name
+            ASSIGN COMPONENT sy-index OF STRUCTURE wa_format_temp
+            TO <f_source>.
+            IF <f_source> IS NOT INITIAL.
+              ASSIGN COMPONENT sy-index OF STRUCTURE wa_format TO <f_des>.
+              <f_des> = <f_source>.
+              UNASSIGN: <f_des>.
+            ENDIF.
+            UNASSIGN: <f_source>.
+          ENDIF.
+        ENDDO.
 
-        clear: LI_COL_NUM.
-      endif.
+        CLEAR: li_col_num.
+      ENDIF.
 
-      append WA_FORMAT to LT_FORMAT.
-      clear: WA_FORMAT-NAME.
-      clear: L_SUB_INDEX.
-      clear: WA_FORMAT_TEMP.
+      APPEND wa_format TO lt_format.
+      CLEAR: wa_format-name.
+      CLEAR: l_sub_index.
+      CLEAR: wa_format_temp.
 
-    endloop.
+    ENDLOOP.
 
-    if LT_FORMAT[] is not initial.
-      call method LO_SPREADSHEET->SET_RANGES_FORMAT
-        exporting
-          FORMATTABLE = LT_FORMAT
-          NO_FLUSH    = NO_FLUSH.
-      refresh: LT_FORMAT.
-    endif.
+    IF lt_format[] IS NOT INITIAL.
+      CALL METHOD lo_spreadsheet->set_ranges_format
+        EXPORTING
+          formattable = lt_format
+          no_flush    = no_flush.
+      REFRESH: lt_format.
+    ENDIF.
 *--------------------------------------------------------------------*
-    call method LO_SPREADSHEET->SCREEN_UPDATE
-      exporting
-        UPDATING = 'X'.
+    CALL METHOD lo_spreadsheet->screen_update
+      EXPORTING
+        updating = 'X'.
 
-    call method C_OI_ERRORS=>FLUSH_ERRORS.
+    CALL METHOD c_oi_errors=>flush_errors.
 
-    LO_ERROR_W = L_ERROR.
-    LC_RETCODE = LO_ERROR_W->ERROR_CODE.
+    lo_error_w = l_error.
+    lc_retcode = lo_error_w->error_code.
 
 ** catch no_flush -> led to dump ( optional )
 *    go_error = l_error.
 *    gc_retcode = go_error->error_code.
 *    error_doi.
 
-    clear:
-      LT_SEMA,
-      WA_SEMA,
-      LT_HKEY,
-      WA_HKEY,
-      LT_VKEY,
-      WA_VKEY,
-      L_N_HRZ_KEYS,
-      L_N_ATT_COLS,
-      L_N_VRT_KEYS,
-      COUNT,
-      DATAC,
-      DATAREAL,
-      VKEYCOUNT,
-      ALL,
-      MIT,
-      LI_COL_POS,
-      LI_COL_NUM,
-      RANGES,
-      RANGEITEM,
-      CONTENTS,
-      CONTENTSITEM,
-      SEMAITEM,
-      HKEYITEM,
-      VKEYITEM,
-      LI_COMMENTARY_ROWS,
-      L_RETCODE,
-      LI_HEAD_TOP,
-      <F_EXCEL_TAB>.
+    CLEAR:
+      lt_sema,
+      wa_sema,
+      lt_hkey,
+      wa_hkey,
+      lt_vkey,
+      wa_vkey,
+      l_n_hrz_keys,
+      l_n_att_cols,
+      l_n_vrt_keys,
+      count,
+      datac,
+      datareal,
+      vkeycount,
+      all,
+      mit,
+      li_col_pos,
+      li_col_num,
+      ranges,
+      rangeitem,
+      contents,
+      contentsitem,
+      semaitem,
+      hkeyitem,
+      vkeyitem,
+      li_commentary_rows,
+      l_retcode,
+      li_head_top,
+      <f_excel_tab>.
 
-    clear:
-       LO_ERROR_W.
+    CLEAR:
+       lo_error_w.
 
-    unassign:
-    <LINE>,
-    <ITEM>,
-    <F_EXCEL_TAB>.
+    UNASSIGN:
+    <line>,
+    <item>,
+    <f_excel_tab>.
 
 *--------------------------------------------------------------------*
 * SESSION 5: SAVE AND CLOSE FILE
 *--------------------------------------------------------------------*
 
 * ex of save path: 'FILE://C:\temp\test.xlsx'
-    concatenate 'FILE://' I_SAVE_PATH
-                into LS_PATH.
+    CONCATENATE 'FILE://' i_save_path
+                INTO ls_path.
 
-    call method LO_PROXY->SAVE_DOCUMENT_TO_URL
-      exporting
-        NO_FLUSH      = 'X'
-        URL           = LS_PATH
-      importing
-        ERROR         = LO_ERROR
-        RETCODE       = LC_RETCODE
-      changing
-        DOCUMENT_SIZE = LI_DOCUMENT_SIZE.
+    CALL METHOD lo_proxy->save_document_to_url
+      EXPORTING
+        no_flush      = 'X'
+        url           = ls_path
+      IMPORTING
+        error         = lo_error
+        retcode       = lc_retcode
+      CHANGING
+        document_size = li_document_size.
 
-    ERROR_DOI.
+    error_doi.
 
 * if save successfully -> raise successful message
 *  message i499(sy) with 'Document is Exported to ' p_path.
-    message I499(SY) with 'Data has been exported successfully'.
+    MESSAGE i499(sy) WITH 'Data has been exported successfully'.
 
-    clear:
-      LS_PATH,
-      LI_DOCUMENT_SIZE.
+    CLEAR:
+      ls_path,
+      li_document_size.
 
-    CLOSE_DOCUMENT.
-  endmethod.
+    close_document.
+  ENDMETHOD.                    "BIND_ALV_OLE2
 
 
-  method BIND_TABLE.
+  METHOD bind_table.
 *--------------------------------------------------------------------*
 * issue #230   - Pimp my Code
 *              - Stefan Schmöcker,      (wi p)              2012-12-01
@@ -2784,310 +2787,310 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 * changes:     - Added raise if overlaps are detected
 *--------------------------------------------------------------------*
 
-    constants:
-      LC_TOP_LEFT_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA value 'A',
-      LC_TOP_LEFT_ROW    type ZEXCEL_CELL_ROW value 1.
+    CONSTANTS:
+      lc_top_left_column TYPE zexcel_cell_column_alpha VALUE 'A',
+      lc_top_left_row    TYPE zexcel_cell_row VALUE 1.
 
-    data:
-      LV_ROW_INT            type ZEXCEL_CELL_ROW,
-      LV_FIRST_ROW          type ZEXCEL_CELL_ROW,
-      LV_LAST_ROW           type ZEXCEL_CELL_ROW,
-      LV_COLUMN_INT         type ZEXCEL_CELL_COLUMN,
-      LV_COLUMN_ALPHA       type ZEXCEL_CELL_COLUMN_ALPHA,
-      LT_FIELD_CATALOG      type ZEXCEL_T_FIELDCATALOG,
-      LV_ID                 type I,
-      LV_ROWS               type I,
-      LV_FORMULA            type STRING,
-      LS_SETTINGS           type ZEXCEL_S_TABLE_SETTINGS,
-      LO_TABLE              type ref to ZCL_EXCEL_TABLE,
-      LT_COLUMN_NAME_BUFFER type sorted table of STRING with unique key TABLE_LINE,
-      LV_VALUE              type STRING,
-      LV_VALUE_LOWERCASE    type STRING,
-      LV_SYINDEX            type CHAR3,
-      LV_ERRORMESSAGE       type STRING,                                            "ins issue #237
+    DATA:
+      lv_row_int            TYPE zexcel_cell_row,
+      lv_first_row          TYPE zexcel_cell_row,
+      lv_last_row           TYPE zexcel_cell_row,
+      lv_column_int         TYPE zexcel_cell_column,
+      lv_column_alpha       TYPE zexcel_cell_column_alpha,
+      lt_field_catalog      TYPE zexcel_t_fieldcatalog,
+      lv_id                 TYPE i,
+      lv_rows               TYPE i,
+      lv_formula            TYPE string,
+      ls_settings           TYPE zexcel_s_table_settings,
+      lo_table              TYPE REF TO zcl_excel_table,
+      lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
+      lv_value              TYPE string,
+      lv_value_lowercase    TYPE string,
+      lv_syindex            TYPE char3,
+      lv_errormessage       TYPE string,                                            "ins issue #237
 
-      LV_COLUMNS            type I,
-      LT_COLUMNS            type ZEXCEL_T_FIELDCATALOG,
-      LV_MAXCOL             type I,
-      LV_MAXROW             type I,
-      LO_ITERATOR           type ref to CL_OBJECT_COLLECTION_ITERATOR,
-      LO_STYLE_COND         type ref to ZCL_EXCEL_STYLE_COND,
-      LO_CURTABLE           type ref to ZCL_EXCEL_TABLE.
+      lv_columns            TYPE i,
+      lt_columns            TYPE zexcel_t_fieldcatalog,
+      lv_maxcol             TYPE i,
+      lv_maxrow             TYPE i,
+      lo_iterator           TYPE REF TO cl_object_collection_iterator,
+      lo_style_cond         TYPE REF TO zcl_excel_style_cond,
+      lo_curtable           TYPE REF TO zcl_excel_table.
 
-    field-symbols:
-      <LS_FIELD_CATALOG>        type ZEXCEL_S_FIELDCATALOG,
-      <LS_FIELD_CATALOG_CUSTOM> type ZEXCEL_S_FIELDCATALOG,
-      <FS_TABLE_LINE>           type ANY,
-      <FS_FLDVAL>               type ANY.
+    FIELD-SYMBOLS:
+      <ls_field_catalog>        TYPE zexcel_s_fieldcatalog,
+      <ls_field_catalog_custom> TYPE zexcel_s_fieldcatalog,
+      <fs_table_line>           TYPE any,
+      <fs_fldval>               TYPE any.
 
-    LS_SETTINGS = IS_TABLE_SETTINGS.
+    ls_settings = is_table_settings.
 
-    if LS_SETTINGS-TOP_LEFT_COLUMN is initial.
-      LS_SETTINGS-TOP_LEFT_COLUMN = LC_TOP_LEFT_COLUMN.
-    endif.
+    IF ls_settings-top_left_column IS INITIAL.
+      ls_settings-top_left_column = lc_top_left_column.
+    ENDIF.
 
-    if LS_SETTINGS-TABLE_STYLE is initial.
-      LS_SETTINGS-TABLE_STYLE = ZCL_EXCEL_TABLE=>BUILTINSTYLE_MEDIUM2.
-    endif.
+    IF ls_settings-table_style IS INITIAL.
+      ls_settings-table_style = zcl_excel_table=>builtinstyle_medium2.
+    ENDIF.
 
-    if LS_SETTINGS-TOP_LEFT_ROW is initial.
-      LS_SETTINGS-TOP_LEFT_ROW = LC_TOP_LEFT_ROW.
-    endif.
+    IF ls_settings-top_left_row IS INITIAL.
+      ls_settings-top_left_row = lc_top_left_row.
+    ENDIF.
 
-    if IT_FIELD_CATALOG is not supplied.
-      LT_FIELD_CATALOG = ZCL_EXCEL_COMMON=>GET_FIELDCATALOG( IP_TABLE = IP_TABLE ).
-    else.
-      LT_FIELD_CATALOG = IT_FIELD_CATALOG.
-    endif.
+    IF it_field_catalog IS NOT SUPPLIED.
+      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table ).
+    ELSE.
+      lt_field_catalog = it_field_catalog.
+    ENDIF.
 
-    sort LT_FIELD_CATALOG by POSITION.
+    SORT lt_field_catalog BY position.
 
 *--------------------------------------------------------------------*
 *  issue #237   Check if overlapping areas exist  Start
 *--------------------------------------------------------------------*
     "Get the number of columns for the current table
-    LT_COLUMNS = LT_FIELD_CATALOG.
-    delete LT_COLUMNS where DYNPFLD ne ABAP_TRUE.
-    describe table LT_COLUMNS lines LV_COLUMNS.
+    lt_columns = lt_field_catalog.
+    DELETE lt_columns WHERE dynpfld NE abap_true.
+    DESCRIBE TABLE lt_columns LINES lv_columns.
 
     "Calculate the top left row of the current table
-    LV_COLUMN_INT = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LS_SETTINGS-TOP_LEFT_COLUMN ).
-    LV_ROW_INT    = LS_SETTINGS-TOP_LEFT_ROW.
+    lv_column_int = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
+    lv_row_int    = ls_settings-top_left_row.
 
     "Get number of row for the current table
-    describe table IP_TABLE lines LV_ROWS.
+    DESCRIBE TABLE ip_table LINES lv_rows.
 
     "Calculate the bottom right row for the current table
-    LV_MAXCOL                       = LV_COLUMN_INT + LV_COLUMNS - 1.
-    LV_MAXROW                       = LV_ROW_INT    + LV_ROWS - 1.
-    LS_SETTINGS-BOTTOM_RIGHT_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( LV_MAXCOL ).
-    LS_SETTINGS-BOTTOM_RIGHT_ROW    = LV_MAXROW.
+    lv_maxcol                       = lv_column_int + lv_columns - 1.
+    lv_maxrow                       = lv_row_int    + lv_rows - 1.
+    ls_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( lv_maxcol ).
+    ls_settings-bottom_right_row    = lv_maxrow.
 
-    LV_COLUMN_INT                   = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LS_SETTINGS-TOP_LEFT_COLUMN ).
+    lv_column_int                   = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
 
-    LO_ITERATOR = ME->TABLES->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
-    while LO_ITERATOR->IF_OBJECT_COLLECTION_ITERATOR~HAS_NEXT( ) eq ABAP_TRUE.
+    lo_iterator = me->tables->if_object_collection~get_iterator( ).
+    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
 
-      LO_CURTABLE ?= LO_ITERATOR->IF_OBJECT_COLLECTION_ITERATOR~GET_NEXT( ).
-      if  (    (  LS_SETTINGS-TOP_LEFT_ROW     ge LO_CURTABLE->SETTINGS-TOP_LEFT_ROW                             and LS_SETTINGS-TOP_LEFT_ROW     le LO_CURTABLE->SETTINGS-BOTTOM_RIGHT_ROW )
-            or
-               (  LS_SETTINGS-BOTTOM_RIGHT_ROW ge LO_CURTABLE->SETTINGS-TOP_LEFT_ROW                             and LS_SETTINGS-BOTTOM_RIGHT_ROW le LO_CURTABLE->SETTINGS-BOTTOM_RIGHT_ROW )
+      lo_curtable ?= lo_iterator->if_object_collection_iterator~get_next( ).
+      IF  (    (  ls_settings-top_left_row     GE lo_curtable->settings-top_left_row                             AND ls_settings-top_left_row     LE lo_curtable->settings-bottom_right_row )
+            OR
+               (  ls_settings-bottom_right_row GE lo_curtable->settings-top_left_row                             AND ls_settings-bottom_right_row LE lo_curtable->settings-bottom_right_row )
           )
-        and
-          (    (  LV_COLUMN_INT ge ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LO_CURTABLE->SETTINGS-TOP_LEFT_COLUMN ) and LV_COLUMN_INT le ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LO_CURTABLE->SETTINGS-BOTTOM_RIGHT_COLUMN ) )
-            or
-               (  LV_MAXCOL     ge ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LO_CURTABLE->SETTINGS-TOP_LEFT_COLUMN ) and LV_MAXCOL     le ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( LO_CURTABLE->SETTINGS-BOTTOM_RIGHT_COLUMN ) )
+        AND
+          (    (  lv_column_int GE zcl_excel_common=>convert_column2int( lo_curtable->settings-top_left_column ) AND lv_column_int LE zcl_excel_common=>convert_column2int( lo_curtable->settings-bottom_right_column ) )
+            OR
+               (  lv_maxcol     GE zcl_excel_common=>convert_column2int( lo_curtable->settings-top_left_column ) AND lv_maxcol     LE zcl_excel_common=>convert_column2int( lo_curtable->settings-bottom_right_column ) )
           ).
-        LV_ERRORMESSAGE = 'Table overlaps with previously bound table and will not be added to worksheet.'(400).
+        lv_errormessage = 'Table overlaps with previously bound table and will not be added to worksheet.'(400).
         zcx_excel=>raise_text( lv_errormessage ).
-      endif.
+      ENDIF.
 
-    endwhile.
+    ENDWHILE.
 *--------------------------------------------------------------------*
 *  issue #237   Check if overlapping areas exist  End
 *--------------------------------------------------------------------*
 
-    create object LO_TABLE.
-    LO_TABLE->SETTINGS = LS_SETTINGS.
-    LO_TABLE->SET_DATA( IR_DATA = IP_TABLE ).
-    LV_ID = ME->EXCEL->GET_NEXT_TABLE_ID( ).
-    LO_TABLE->SET_ID( IV_ID = LV_ID ).
+    CREATE OBJECT lo_table.
+    lo_table->settings = ls_settings.
+    lo_table->set_data( ir_data = ip_table ).
+    lv_id = me->excel->get_next_table_id( ).
+    lo_table->set_id( iv_id = lv_id ).
 *  lo_table->fieldcat = lt_field_catalog[].
 
-    ME->TABLES->ADD( LO_TABLE ).
+    me->tables->add( lo_table ).
 
 * It is better to loop column by column (only visible column)
-    loop at LT_FIELD_CATALOG assigning <LS_FIELD_CATALOG> where DYNPFLD eq ABAP_TRUE.
+    LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
-      LV_COLUMN_ALPHA = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( LV_COLUMN_INT ).
+      lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
       " Due restrinction of new table object we cannot have two column with the same name
       " Check if a column with the same name exists, if exists add a counter
       " If no medium description is provided we try to use small or long
 *    lv_value = <ls_field_catalog>-scrtext_m.
-      field-symbols: <SCRTXT1> type ANY,
-                     <SCRTXT2> type ANY,
-                     <SCRTXT3> type ANY.
+      FIELD-SYMBOLS: <scrtxt1> TYPE any,
+                     <scrtxt2> TYPE any,
+                     <scrtxt3> TYPE any.
 
-      case IV_DEFAULT_DESCR.
-        when 'M'.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_M to <SCRTXT1>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_S to <SCRTXT2>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_L to <SCRTXT3>.
-        when 'S'.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_S to <SCRTXT1>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_M to <SCRTXT2>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_L to <SCRTXT3>.
-        when 'L'.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_L to <SCRTXT1>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_M to <SCRTXT2>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_S to <SCRTXT3>.
-        when others.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_M to <SCRTXT1>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_S to <SCRTXT2>.
-          assign <LS_FIELD_CATALOG>-SCRTEXT_L to <SCRTXT3>.
-      endcase.
+      CASE iv_default_descr.
+        WHEN 'M'.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        WHEN 'S'.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        WHEN 'L'.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
+        WHEN OTHERS.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+      ENDCASE.
 
 
-      if <SCRTXT1> is not initial.
-        LV_VALUE = <SCRTXT1>.
-        <LS_FIELD_CATALOG>-SCRTEXT_L = LV_VALUE.
-      elseif <SCRTXT2> is not initial.
-        LV_VALUE = <SCRTXT2>.
-        <LS_FIELD_CATALOG>-SCRTEXT_L = LV_VALUE.
-      elseif <SCRTXT3> is not initial.
-        LV_VALUE = <SCRTXT3>.
-        <LS_FIELD_CATALOG>-SCRTEXT_L = LV_VALUE.
-      else.
-        LV_VALUE = 'Column'.  " default value as Excel does
-        <LS_FIELD_CATALOG>-SCRTEXT_L = LV_VALUE.
-      endif.
-      while 1 = 1.
-        LV_VALUE_LOWERCASE = LV_VALUE.
-        translate LV_VALUE_LOWERCASE to lower case.
-        read table LT_COLUMN_NAME_BUFFER transporting no fields with key TABLE_LINE = LV_VALUE_LOWERCASE binary search.
-        if SY-SUBRC <> 0.
-          <LS_FIELD_CATALOG>-SCRTEXT_L = LV_VALUE.
-          insert LV_VALUE_LOWERCASE into table LT_COLUMN_NAME_BUFFER.
-          exit.
-        else.
-          LV_SYINDEX = SY-INDEX.
-          concatenate <LS_FIELD_CATALOG>-SCRTEXT_L LV_SYINDEX into LV_VALUE.
-        endif.
+      IF <scrtxt1> IS NOT INITIAL.
+        lv_value = <scrtxt1>.
+        <ls_field_catalog>-scrtext_l = lv_value.
+      ELSEIF <scrtxt2> IS NOT INITIAL.
+        lv_value = <scrtxt2>.
+        <ls_field_catalog>-scrtext_l = lv_value.
+      ELSEIF <scrtxt3> IS NOT INITIAL.
+        lv_value = <scrtxt3>.
+        <ls_field_catalog>-scrtext_l = lv_value.
+      ELSE.
+        lv_value = 'Column'.  " default value as Excel does
+        <ls_field_catalog>-scrtext_l = lv_value.
+      ENDIF.
+      WHILE 1 = 1.
+        lv_value_lowercase = lv_value.
+        TRANSLATE lv_value_lowercase TO LOWER CASE.
+        READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
+        IF sy-subrc <> 0.
+          <ls_field_catalog>-scrtext_l = lv_value.
+          INSERT lv_value_lowercase INTO TABLE lt_column_name_buffer.
+          EXIT.
+        ELSE.
+          lv_syindex = sy-index.
+          CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO lv_value.
+        ENDIF.
 
-      endwhile.
+      ENDWHILE.
       " First of all write column header
-      if <LS_FIELD_CATALOG>-STYLE_HEADER is not initial.
-        ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                      IP_ROW    = LV_ROW_INT
-                      IP_VALUE  = LV_VALUE
-                      IP_STYLE  = <LS_FIELD_CATALOG>-STYLE_HEADER ).
-      else.
-        ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                      IP_ROW    = LV_ROW_INT
-                      IP_VALUE  = LV_VALUE ).
-      endif.
+      IF <ls_field_catalog>-style_header IS NOT INITIAL.
+        me->set_cell( ip_column = lv_column_alpha
+                      ip_row    = lv_row_int
+                      ip_value  = lv_value
+                      ip_style  = <ls_field_catalog>-style_header ).
+      ELSE.
+        me->set_cell( ip_column = lv_column_alpha
+                      ip_row    = lv_row_int
+                      ip_value  = lv_value ).
+      ENDIF.
 
-      add 1 to LV_ROW_INT.
-      loop at IP_TABLE assigning <FS_TABLE_LINE>.
+      ADD 1 TO lv_row_int.
+      LOOP AT ip_table ASSIGNING <fs_table_line>.
 
-        assign component <LS_FIELD_CATALOG>-FIELDNAME of structure <FS_TABLE_LINE> to <FS_FLDVAL>.
+        ASSIGN COMPONENT <ls_field_catalog>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
         " issue #290 Add formula support in table
-        if <LS_FIELD_CATALOG>-FORMULA eq ABAP_TRUE.
-          if <LS_FIELD_CATALOG>-STYLE is not initial.
-            if <LS_FIELD_CATALOG>-ABAP_TYPE is not initial.
-              ME->SET_CELL( IP_COLUMN   = LV_COLUMN_ALPHA
-                          IP_ROW      = LV_ROW_INT
-                          IP_FORMULA  = <FS_FLDVAL>
-                          IP_ABAP_TYPE = <LS_FIELD_CATALOG>-ABAP_TYPE
-                          IP_STYLE    = <LS_FIELD_CATALOG>-STYLE ).
-            else.
-              ME->SET_CELL( IP_COLUMN   = LV_COLUMN_ALPHA
-                            IP_ROW      = LV_ROW_INT
-                            IP_FORMULA  = <FS_FLDVAL>
-                            IP_STYLE    = <LS_FIELD_CATALOG>-STYLE ).
-            endif.
-          elseif <LS_FIELD_CATALOG>-ABAP_TYPE is not initial.
-            ME->SET_CELL( IP_COLUMN   = LV_COLUMN_ALPHA
-                          IP_ROW      = LV_ROW_INT
-                          IP_FORMULA  = <FS_FLDVAL>
-                          IP_ABAP_TYPE = <LS_FIELD_CATALOG>-ABAP_TYPE ).
-          else.
-            ME->SET_CELL( IP_COLUMN   = LV_COLUMN_ALPHA
-                          IP_ROW      = LV_ROW_INT
-                          IP_FORMULA  = <FS_FLDVAL> ).
-          endif.
-        else.
-          if <LS_FIELD_CATALOG>-STYLE is not initial.
-            if <LS_FIELD_CATALOG>-ABAP_TYPE is not initial.
-              ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                          IP_ROW    = LV_ROW_INT
-                          IP_VALUE  = <FS_FLDVAL>
-                          IP_ABAP_TYPE = <LS_FIELD_CATALOG>-ABAP_TYPE
-                          IP_STYLE  = <LS_FIELD_CATALOG>-STYLE ).
-            else.
-              ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                            IP_ROW    = LV_ROW_INT
-                            IP_VALUE  = <FS_FLDVAL>
-                            IP_STYLE  = <LS_FIELD_CATALOG>-STYLE ).
-            endif.
-          else.
-            if <LS_FIELD_CATALOG>-ABAP_TYPE is not initial.
-              ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                          IP_ROW    = LV_ROW_INT
-                          IP_ABAP_TYPE = <LS_FIELD_CATALOG>-ABAP_TYPE
-                          IP_VALUE  = <FS_FLDVAL> ).
-            else.
-              ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                            IP_ROW    = LV_ROW_INT
-                            IP_VALUE  = <FS_FLDVAL> ).
-            endif.
-          endif.
-        endif.
-        add 1 to LV_ROW_INT.
+        IF <ls_field_catalog>-formula EQ abap_true.
+          IF <ls_field_catalog>-style IS NOT INITIAL.
+            IF <ls_field_catalog>-abap_type IS NOT INITIAL.
+              me->set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = <fs_fldval>
+                          ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_style    = <ls_field_catalog>-style ).
+            ELSE.
+              me->set_cell( ip_column   = lv_column_alpha
+                            ip_row      = lv_row_int
+                            ip_formula  = <fs_fldval>
+                            ip_style    = <ls_field_catalog>-style ).
+            ENDIF.
+          ELSEIF <ls_field_catalog>-abap_type IS NOT INITIAL.
+            me->set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = <fs_fldval>
+                          ip_abap_type = <ls_field_catalog>-abap_type ).
+          ELSE.
+            me->set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = <fs_fldval> ).
+          ENDIF.
+        ELSE.
+          IF <ls_field_catalog>-style IS NOT INITIAL.
+            IF <ls_field_catalog>-abap_type IS NOT INITIAL.
+              me->set_cell( ip_column = lv_column_alpha
+                          ip_row    = lv_row_int
+                          ip_value  = <fs_fldval>
+                          ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_style  = <ls_field_catalog>-style ).
+            ELSE.
+              me->set_cell( ip_column = lv_column_alpha
+                            ip_row    = lv_row_int
+                            ip_value  = <fs_fldval>
+                            ip_style  = <ls_field_catalog>-style ).
+            ENDIF.
+          ELSE.
+            IF <ls_field_catalog>-abap_type IS NOT INITIAL.
+              me->set_cell( ip_column = lv_column_alpha
+                          ip_row    = lv_row_int
+                          ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_value  = <fs_fldval> ).
+            ELSE.
+              me->set_cell( ip_column = lv_column_alpha
+                            ip_row    = lv_row_int
+                            ip_value  = <fs_fldval> ).
+            ENDIF.
+          ENDIF.
+        ENDIF.
+        ADD 1 TO lv_row_int.
 
-      endloop.
-      if SY-SUBRC <> 0. "create empty row if table has no data
-        ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                      IP_ROW    = LV_ROW_INT
-                      IP_VALUE  = SPACE ).
-        add 1 to LV_ROW_INT.
-      endif.
+      ENDLOOP.
+      IF sy-subrc <> 0. "create empty row if table has no data
+        me->set_cell( ip_column = lv_column_alpha
+                      ip_row    = lv_row_int
+                      ip_value  = space ).
+        ADD 1 TO lv_row_int.
+      ENDIF.
 
 *--------------------------------------------------------------------*
       " totals
 *--------------------------------------------------------------------*
-      if <LS_FIELD_CATALOG>-TOTALS_FUNCTION is not initial.
-        LV_FORMULA = LO_TABLE->GET_TOTALS_FORMULA( IP_COLUMN = <LS_FIELD_CATALOG>-SCRTEXT_L IP_FUNCTION = <LS_FIELD_CATALOG>-TOTALS_FUNCTION ).
-        if <LS_FIELD_CATALOG>-STYLE_TOTAL is not initial.
-          ME->SET_CELL( IP_COLUMN   = LV_COLUMN_ALPHA
-                        IP_ROW      = LV_ROW_INT
-                        IP_FORMULA  = LV_FORMULA
-                        IP_STYLE    = <LS_FIELD_CATALOG>-STYLE_TOTAL ).
-        else.
-          ME->SET_CELL( IP_COLUMN   = LV_COLUMN_ALPHA
-                        IP_ROW      = LV_ROW_INT
-                        IP_FORMULA  = LV_FORMULA ).
-        endif.
-      endif.
+      IF <ls_field_catalog>-totals_function IS NOT INITIAL.
+        lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-scrtext_l ip_function = <ls_field_catalog>-totals_function ).
+        IF <ls_field_catalog>-style_total IS NOT INITIAL.
+          me->set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = lv_formula
+                        ip_style    = <ls_field_catalog>-style_total ).
+        ELSE.
+          me->set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = lv_formula ).
+        ENDIF.
+      ENDIF.
 
-      LV_ROW_INT = LS_SETTINGS-TOP_LEFT_ROW.
-      add 1 to LV_COLUMN_INT.
+      lv_row_int = ls_settings-top_left_row.
+      ADD 1 TO lv_column_int.
 
 *--------------------------------------------------------------------*
       " conditional formatting
 *--------------------------------------------------------------------*
-      if <LS_FIELD_CATALOG>-STYLE_COND is not initial.
-        LV_FIRST_ROW    = LS_SETTINGS-TOP_LEFT_ROW + 1. " +1 to exclude header
-        LV_LAST_ROW     = LS_SETTINGS-TOP_LEFT_ROW + LV_ROWS.
-        LO_STYLE_COND = ME->GET_STYLE_COND( <LS_FIELD_CATALOG>-STYLE_COND ).
-        LO_STYLE_COND->SET_RANGE( IP_START_COLUMN  = LV_COLUMN_ALPHA
-                                  IP_START_ROW     = LV_FIRST_ROW
-                                  IP_STOP_COLUMN   = LV_COLUMN_ALPHA
-                                  IP_STOP_ROW      = LV_LAST_ROW ).
-      endif.
+      IF <ls_field_catalog>-style_cond IS NOT INITIAL.
+        lv_first_row    = ls_settings-top_left_row + 1. " +1 to exclude header
+        lv_last_row     = ls_settings-top_left_row + lv_rows.
+        lo_style_cond = me->get_style_cond( <ls_field_catalog>-style_cond ).
+        lo_style_cond->set_range( ip_start_column  = lv_column_alpha
+                                  ip_start_row     = lv_first_row
+                                  ip_stop_column   = lv_column_alpha
+                                  ip_stop_row      = lv_last_row ).
+      ENDIF.
 
-    endloop.
+    ENDLOOP.
 
 *--------------------------------------------------------------------*
     " Set field catalog
 *--------------------------------------------------------------------*
-    LO_TABLE->FIELDCAT = LT_FIELD_CATALOG[].
+    lo_table->fieldcat = lt_field_catalog[].
 
-    ES_TABLE_SETTINGS = LS_SETTINGS.
-    ES_TABLE_SETTINGS-BOTTOM_RIGHT_COLUMN = LV_COLUMN_ALPHA.
+    es_table_settings = ls_settings.
+    es_table_settings-bottom_right_column = lv_column_alpha.
     " >> Issue #291
-    if IP_TABLE is initial.
-      ES_TABLE_SETTINGS-BOTTOM_RIGHT_ROW    = LS_SETTINGS-TOP_LEFT_ROW + 2.           "Last rows
-    else.
-      ES_TABLE_SETTINGS-BOTTOM_RIGHT_ROW    = LS_SETTINGS-TOP_LEFT_ROW + LV_ROWS + 1. "Last rows
-    endif.
+    IF ip_table IS INITIAL.
+      es_table_settings-bottom_right_row    = ls_settings-top_left_row + 2.           "Last rows
+    ELSE.
+      es_table_settings-bottom_right_row    = ls_settings-top_left_row + lv_rows + 1. "Last rows
+    ENDIF.
     " << Issue #291
 
-  endmethod.
+  ENDMETHOD.                    "BIND_TABLE
 
 
-  method CALCULATE_CELL_WIDTH.
+  METHOD calculate_cell_width.
 *--------------------------------------------------------------------*
 * issue #293   - Roberto Bianco
 *              - Christian Assig                            2014-03-14
@@ -3099,821 +3102,821 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 *          - Add cell padding to simulate Excel behavior
 *--------------------------------------------------------------------*
 
-    constants:
-      LC_DEFAULT_FONT_NAME   type ZEXCEL_STYLE_FONT_NAME value 'Calibri', "#EC NOTEXT
-      LC_DEFAULT_FONT_HEIGHT type TDFONTSIZE value '110',
-      LC_EXCEL_CELL_PADDING  type FLOAT value '0.75'.
+    CONSTANTS:
+      lc_default_font_name   TYPE zexcel_style_font_name VALUE 'Calibri', "#EC NOTEXT
+      lc_default_font_height TYPE tdfontsize VALUE '110',
+      lc_excel_cell_padding  TYPE float VALUE '0.75'.
 
-    data: LD_CELL_VALUE                type ZEXCEL_CELL_VALUE,
-          LD_CURRENT_CHARACTER         type C length 1,
-          LD_STYLE_GUID                type ZEXCEL_CELL_STYLE,
-          LS_STYLEMAPPING              type ZEXCEL_S_STYLEMAPPING,
-          LO_TABLE_OBJECT              type ref to OBJECT,
-          LO_TABLE                     type ref to ZCL_EXCEL_TABLE,
-          LD_TABLE_TOP_LEFT_COLUMN     type ZEXCEL_CELL_COLUMN,
-          LD_TABLE_BOTTOM_RIGHT_COLUMN type ZEXCEL_CELL_COLUMN,
-          LD_FLAG_CONTAINS_AUTO_FILTER type ABAP_BOOL value ABAP_FALSE,
-          LD_FLAG_BOLD                 type ABAP_BOOL value ABAP_FALSE,
-          LD_FLAG_ITALIC               type ABAP_BOOL value ABAP_FALSE,
-          LD_DATE                      type D,
-          LD_DATE_CHAR                 type C length 50,
-          LD_FONT_HEIGHT               type TDFONTSIZE value LC_DEFAULT_FONT_HEIGHT,
-          LT_ITCFC                     type standard table of ITCFC,
-          LD_OFFSET                    type I,
-          LD_LENGTH                    type I,
-          LD_UCCP                      type I,
-          LS_FONT_METRIC               type MTY_S_FONT_METRIC,
-          LD_WIDTH_FROM_FONT_METRICS   type I,
-          LD_FONT_FAMILY               type ITCFH-TDFAMILY,
-          LD_FONT_NAME                 type ZEXCEL_STYLE_FONT_NAME value LC_DEFAULT_FONT_NAME,
-          LT_FONT_FAMILIES             like standard table of LD_FONT_FAMILY,
-          LS_FONT_CACHE                type MTY_S_FONT_CACHE.
+    DATA: ld_cell_value                TYPE zexcel_cell_value,
+          ld_current_character         TYPE c LENGTH 1,
+          ld_style_guid                TYPE zexcel_cell_style,
+          ls_stylemapping              TYPE zexcel_s_stylemapping,
+          lo_table_object              TYPE REF TO object,
+          lo_table                     TYPE REF TO zcl_excel_table,
+          ld_table_top_left_column     TYPE zexcel_cell_column,
+          ld_table_bottom_right_column TYPE zexcel_cell_column,
+          ld_flag_contains_auto_filter TYPE abap_bool VALUE abap_false,
+          ld_flag_bold                 TYPE abap_bool VALUE abap_false,
+          ld_flag_italic               TYPE abap_bool VALUE abap_false,
+          ld_date                      TYPE d,
+          ld_date_char                 TYPE c LENGTH 50,
+          ld_font_height               TYPE tdfontsize VALUE lc_default_font_height,
+          lt_itcfc                     TYPE STANDARD TABLE OF itcfc,
+          ld_offset                    TYPE i,
+          ld_length                    TYPE i,
+          ld_uccp                      TYPE i,
+          ls_font_metric               TYPE mty_s_font_metric,
+          ld_width_from_font_metrics   TYPE i,
+          ld_font_family               TYPE itcfh-tdfamily,
+          ld_font_name                 TYPE zexcel_style_font_name VALUE lc_default_font_name,
+          lt_font_families             LIKE STANDARD TABLE OF ld_font_family,
+          ls_font_cache                TYPE mty_s_font_cache.
 
-    field-symbols: <LS_FONT_CACHE>  type MTY_S_FONT_CACHE,
-                   <LS_FONT_METRIC> type MTY_S_FONT_METRIC,
-                   <LS_ITCFC>       type ITCFC.
+    FIELD-SYMBOLS: <ls_font_cache>  TYPE mty_s_font_cache,
+                   <ls_font_metric> TYPE mty_s_font_metric,
+                   <ls_itcfc>       TYPE itcfc.
 
     " Determine cell content and cell style
-    ME->GET_CELL( exporting IP_COLUMN = IP_COLUMN
-                            IP_ROW    = IP_ROW
-                  importing EP_VALUE  = LD_CELL_VALUE
-                            EP_GUID   = LD_STYLE_GUID ).
+    me->get_cell( EXPORTING ip_column = ip_column
+                            ip_row    = ip_row
+                  IMPORTING ep_value  = ld_cell_value
+                            ep_guid   = ld_style_guid ).
 
     " ABAP2XLSX uses tables to define areas containing headers and
     " auto-filters. Find out if the current cell is in the header
     " of one of these tables.
-    loop at ME->TABLES->COLLECTION into LO_TABLE_OBJECT.
+    LOOP AT me->tables->collection INTO lo_table_object.
       " Downcast: OBJECT -> ZCL_EXCEL_TABLE
-      LO_TABLE ?= LO_TABLE_OBJECT.
+      lo_table ?= lo_table_object.
 
       " Convert column letters to corresponding integer values
-      LD_TABLE_TOP_LEFT_COLUMN =
-        ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT(
-          LO_TABLE->SETTINGS-TOP_LEFT_COLUMN ).
+      ld_table_top_left_column =
+        zcl_excel_common=>convert_column2int(
+          lo_table->settings-top_left_column ).
 
-      LD_TABLE_BOTTOM_RIGHT_COLUMN =
-        ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT(
-          LO_TABLE->SETTINGS-BOTTOM_RIGHT_COLUMN ).
+      ld_table_bottom_right_column =
+        zcl_excel_common=>convert_column2int(
+          lo_table->settings-bottom_right_column ).
 
       " Is the current cell part of the table header?
-      if IP_COLUMN between LD_TABLE_TOP_LEFT_COLUMN and
-                           LD_TABLE_BOTTOM_RIGHT_COLUMN and
-         IP_ROW    eq LO_TABLE->SETTINGS-TOP_LEFT_ROW.
+      IF ip_column BETWEEN ld_table_top_left_column AND
+                           ld_table_bottom_right_column AND
+         ip_row    EQ lo_table->settings-top_left_row.
         " Current cell is part of the table header
         " -> Assume that an auto filter is present and that the font is
         "    bold
-        LD_FLAG_CONTAINS_AUTO_FILTER = ABAP_TRUE.
-        LD_FLAG_BOLD = ABAP_TRUE.
-      endif.
-    endloop.
+        ld_flag_contains_auto_filter = abap_true.
+        ld_flag_bold = abap_true.
+      ENDIF.
+    ENDLOOP.
 
     " If a style GUID is present, read style attributes
-    if LD_STYLE_GUID is not initial.
-      try.
+    IF ld_style_guid IS NOT INITIAL.
+      TRY.
           " Read style attributes
-          LS_STYLEMAPPING = ME->EXCEL->GET_STYLE_TO_GUID( LD_STYLE_GUID ).
+          ls_stylemapping = me->excel->get_style_to_guid( ld_style_guid ).
 
           " If the current cell contains the default date format,
           " convert the cell value to a date and calculate its length
-          if LS_STYLEMAPPING-COMPLETE_STYLE-NUMBER_FORMAT-FORMAT_CODE =
-             ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_STD.
+          IF ls_stylemapping-complete_style-number_format-format_code =
+             zcl_excel_style_number_format=>c_format_date_std.
 
             " Convert excel date to ABAP date
-            LD_DATE =
-              ZCL_EXCEL_COMMON=>EXCEL_STRING_TO_DATE( LD_CELL_VALUE ).
+            ld_date =
+              zcl_excel_common=>excel_string_to_date( ld_cell_value ).
 
             " Format ABAP date using user's formatting settings
-            write LD_DATE to LD_DATE_CHAR.
+            WRITE ld_date TO ld_date_char.
 
             " Remember the formatted date to calculate the cell size
-            LD_CELL_VALUE = LD_DATE_CHAR.
+            ld_cell_value = ld_date_char.
 
-          endif.
+          ENDIF.
 
           " Read the font size and convert it to the font height
           " used by SAPscript (multiplication by 10)
-          if LS_STYLEMAPPING-COMPLETE_STYLEX-FONT-SIZE = ABAP_TRUE.
-            LD_FONT_HEIGHT = LS_STYLEMAPPING-COMPLETE_STYLE-FONT-SIZE * 10.
-          endif.
+          IF ls_stylemapping-complete_stylex-font-size = abap_true.
+            ld_font_height = ls_stylemapping-complete_style-font-size * 10.
+          ENDIF.
 
           " If set, remember the font name
-          if LS_STYLEMAPPING-COMPLETE_STYLEX-FONT-NAME = ABAP_TRUE.
-            LD_FONT_NAME = LS_STYLEMAPPING-COMPLETE_STYLE-FONT-NAME.
-          endif.
+          IF ls_stylemapping-complete_stylex-font-name = abap_true.
+            ld_font_name = ls_stylemapping-complete_style-font-name.
+          ENDIF.
 
           " If set, remember whether font is bold and italic.
-          if LS_STYLEMAPPING-COMPLETE_STYLEX-FONT-BOLD = ABAP_TRUE.
-            LD_FLAG_BOLD = LS_STYLEMAPPING-COMPLETE_STYLE-FONT-BOLD.
-          endif.
+          IF ls_stylemapping-complete_stylex-font-bold = abap_true.
+            ld_flag_bold = ls_stylemapping-complete_style-font-bold.
+          ENDIF.
 
-          if LS_STYLEMAPPING-COMPLETE_STYLEX-FONT-ITALIC = ABAP_TRUE.
-            LD_FLAG_ITALIC = LS_STYLEMAPPING-COMPLETE_STYLE-FONT-ITALIC.
-          endif.
+          IF ls_stylemapping-complete_stylex-font-italic = abap_true.
+            ld_flag_italic = ls_stylemapping-complete_style-font-italic.
+          ENDIF.
 
-        catch ZCX_EXCEL.                                "#EC NO_HANDLER
+        CATCH zcx_excel.                                "#EC NO_HANDLER
           " Style GUID is present, but style was not found
           " Continue with default values
 
-      endtry.
-    endif.
+      ENDTRY.
+    ENDIF.
 
     " Check if the same font (font name and font attributes) was already
     " used before
-    read table MTH_FONT_CACHE
-      with table key
-        FONT_NAME   = LD_FONT_NAME
-        FONT_HEIGHT = LD_FONT_HEIGHT
-        FLAG_BOLD   = LD_FLAG_BOLD
-        FLAG_ITALIC = LD_FLAG_ITALIC
-      assigning <LS_FONT_CACHE>.
+    READ TABLE mth_font_cache
+      WITH TABLE KEY
+        font_name   = ld_font_name
+        font_height = ld_font_height
+        flag_bold   = ld_flag_bold
+        flag_italic = ld_flag_italic
+      ASSIGNING <ls_font_cache>.
 
-    if SY-SUBRC <> 0.
+    IF sy-subrc <> 0.
       " Font is used for the first time
       " Add the font to our local font cache
-      LS_FONT_CACHE-FONT_NAME   = LD_FONT_NAME.
-      LS_FONT_CACHE-FONT_HEIGHT = LD_FONT_HEIGHT.
-      LS_FONT_CACHE-FLAG_BOLD   = LD_FLAG_BOLD.
-      LS_FONT_CACHE-FLAG_ITALIC = LD_FLAG_ITALIC.
-      insert LS_FONT_CACHE into table MTH_FONT_CACHE
-        assigning <LS_FONT_CACHE>.
+      ls_font_cache-font_name   = ld_font_name.
+      ls_font_cache-font_height = ld_font_height.
+      ls_font_cache-flag_bold   = ld_flag_bold.
+      ls_font_cache-flag_italic = ld_flag_italic.
+      INSERT ls_font_cache INTO TABLE mth_font_cache
+        ASSIGNING <ls_font_cache>.
 
       " Determine the SAPscript font family name from the Excel
       " font name
-      select TDFAMILY
-        from TFO01
-        into table LT_FONT_FAMILIES
-        up to 1 rows
-        where TDTEXT = LD_FONT_NAME
-        order by primary key.
+      SELECT tdfamily
+        FROM tfo01
+        INTO TABLE lt_font_families
+        UP TO 1 ROWS
+        WHERE tdtext = ld_font_name
+        ORDER BY PRIMARY KEY.
 
       " Check if a matching font family was found
       " Fonts can be uploaded from TTF files using transaction SE73
-      if LINES( LT_FONT_FAMILIES ) > 0.
-        read table LT_FONT_FAMILIES index 1 into LD_FONT_FAMILY.
+      IF lines( lt_font_families ) > 0.
+        READ TABLE lt_font_families INDEX 1 INTO ld_font_family.
 
         " Load font metrics (returns a table with the size of each letter
         " in the font)
-        call function 'LOAD_FONT'
-          exporting
-            FAMILY      = LD_FONT_FAMILY
-            HEIGHT      = LD_FONT_HEIGHT
-            PRINTER     = 'SWIN'
-            BOLD        = LD_FLAG_BOLD
-            ITALIC      = LD_FLAG_ITALIC
-          tables
-            METRIC      = LT_ITCFC
-          exceptions
-            FONT_FAMILY = 1
-            CODEPAGE    = 2
-            DEVICE_TYPE = 3
-            others      = 4.
-        if SY-SUBRC <> 0.
-          clear LT_ITCFC.
-        endif.
+        CALL FUNCTION 'LOAD_FONT'
+          EXPORTING
+            family      = ld_font_family
+            height      = ld_font_height
+            printer     = 'SWIN'
+            bold        = ld_flag_bold
+            italic      = ld_flag_italic
+          TABLES
+            metric      = lt_itcfc
+          EXCEPTIONS
+            font_family = 1
+            codepage    = 2
+            device_type = 3
+            OTHERS      = 4.
+        IF sy-subrc <> 0.
+          CLEAR lt_itcfc.
+        ENDIF.
 
         " For faster access, convert each character number to the actual
         " character, and store the characters and their sizes in a hash
         " table
-        loop at LT_ITCFC assigning <LS_ITCFC>.
-          LD_UCCP = <LS_ITCFC>-CPCHARNO.
-          LS_FONT_METRIC-CHAR =
-            CL_ABAP_CONV_IN_CE=>UCCPI( LD_UCCP ).
-          LS_FONT_METRIC-CHAR_WIDTH = <LS_ITCFC>-TDCWIDTHS.
-          insert LS_FONT_METRIC
-            into table <LS_FONT_CACHE>-TH_FONT_METRICS.
-        endloop.
+        LOOP AT lt_itcfc ASSIGNING <ls_itcfc>.
+          ld_uccp = <ls_itcfc>-cpcharno.
+          ls_font_metric-char =
+            cl_abap_conv_in_ce=>uccpi( ld_uccp ).
+          ls_font_metric-char_width = <ls_itcfc>-tdcwidths.
+          INSERT ls_font_metric
+            INTO TABLE <ls_font_cache>-th_font_metrics.
+        ENDLOOP.
 
-      endif.
-    endif.
+      ENDIF.
+    ENDIF.
 
     " Calculate the cell width
     " If available, use font metrics
-    if LINES( <LS_FONT_CACHE>-TH_FONT_METRICS ) = 0.
+    IF lines( <ls_font_cache>-th_font_metrics ) = 0.
       " Font metrics are not available
       " -> Calculate the cell width using only the font size
-      LD_LENGTH = STRLEN( LD_CELL_VALUE ).
-      EP_WIDTH = LD_LENGTH * LD_FONT_HEIGHT / LC_DEFAULT_FONT_HEIGHT + LC_EXCEL_CELL_PADDING.
+      ld_length = strlen( ld_cell_value ).
+      ep_width = ld_length * ld_font_height / lc_default_font_height + lc_excel_cell_padding.
 
-    else.
+    ELSE.
       " Font metrics are available
 
       " Calculate the size of the text by adding the sizes of each
       " letter
-      LD_LENGTH = STRLEN( LD_CELL_VALUE ).
-      do LD_LENGTH times.
+      ld_length = strlen( ld_cell_value ).
+      DO ld_length TIMES.
         " Subtract 1, because the first character is at offset 0
-        LD_OFFSET = SY-INDEX - 1.
+        ld_offset = sy-index - 1.
 
         " Read the current character from the cell value
-        LD_CURRENT_CHARACTER = LD_CELL_VALUE+LD_OFFSET(1).
+        ld_current_character = ld_cell_value+ld_offset(1).
 
         " Look up the size of the current letter
-        read table <LS_FONT_CACHE>-TH_FONT_METRICS
-          with table key CHAR = LD_CURRENT_CHARACTER
-          assigning <LS_FONT_METRIC>.
-        if SY-SUBRC = 0.
+        READ TABLE <ls_font_cache>-th_font_metrics
+          WITH TABLE KEY char = ld_current_character
+          ASSIGNING <ls_font_metric>.
+        IF sy-subrc = 0.
           " The size of the letter is known
           " -> Add the actual size of the letter
-          add <LS_FONT_METRIC>-CHAR_WIDTH to LD_WIDTH_FROM_FONT_METRICS.
-        else.
+          ADD <ls_font_metric>-char_width TO ld_width_from_font_metrics.
+        ELSE.
           " The size of the letter is unknown
           " -> Add the font height as the default letter size
-          add LD_FONT_HEIGHT to LD_WIDTH_FROM_FONT_METRICS.
-        endif.
-      enddo.
+          ADD ld_font_height TO ld_width_from_font_metrics.
+        ENDIF.
+      ENDDO.
 
       " Add cell padding (Excel makes columns a bit wider than the space
       " that is needed for the text itself) and convert unit
       " (division by 100)
-      EP_WIDTH = LD_WIDTH_FROM_FONT_METRICS / 100 + LC_EXCEL_CELL_PADDING.
-    endif.
+      ep_width = ld_width_from_font_metrics / 100 + lc_excel_cell_padding.
+    ENDIF.
 
     " If the current cell contains an auto filter, make it a bit wider.
     " The size used by the auto filter button does not depend on the font
     " size.
-    if LD_FLAG_CONTAINS_AUTO_FILTER = ABAP_TRUE.
-      add 2 to EP_WIDTH.
-    endif.
+    IF ld_flag_contains_auto_filter = abap_true.
+      ADD 2 TO ep_width.
+    ENDIF.
 
-  endmethod.
+  ENDMETHOD.                    "CALCULATE_CELL_WIDTH
 
 
-  method CALCULATE_COLUMN_WIDTHS.
-    types:
-      begin of T_AUTO_SIZE,
-        COL_INDEX type INT4,
-        WIDTH     type FLOAT,
-      end   of T_AUTO_SIZE.
-    types: TT_AUTO_SIZE type table of T_AUTO_SIZE.
+  METHOD calculate_column_widths.
+    TYPES:
+      BEGIN OF t_auto_size,
+        col_index TYPE int4,
+        width     TYPE float,
+      END   OF t_auto_size.
+    TYPES: tt_auto_size TYPE TABLE OF t_auto_size.
 
-    data: LO_COLUMN_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR,
-          LO_COLUMN          type ref to ZCL_EXCEL_COLUMN.
+    DATA: lo_column_iterator TYPE REF TO cl_object_collection_iterator,
+          lo_column          TYPE REF TO zcl_excel_column.
 
-    data: AUTO_SIZE   type FLAG.
-    data: AUTO_SIZES  type TT_AUTO_SIZE.
-    data: COUNT       type INT4.
-    data: HIGHEST_ROW type INT4.
-    data: WIDTH       type FLOAT.
+    DATA: auto_size   TYPE flag.
+    DATA: auto_sizes  TYPE tt_auto_size.
+    DATA: count       TYPE int4.
+    DATA: highest_row TYPE int4.
+    DATA: width       TYPE float.
 
-    field-symbols: <AUTO_SIZE>        like line of AUTO_SIZES.
+    FIELD-SYMBOLS: <auto_size>        LIKE LINE OF auto_sizes.
 
-    LO_COLUMN_ITERATOR = ME->GET_COLUMNS_ITERATOR( ).
-    while LO_COLUMN_ITERATOR->HAS_NEXT( ) = ABAP_TRUE.
-      LO_COLUMN ?= LO_COLUMN_ITERATOR->GET_NEXT( ).
-      AUTO_SIZE = LO_COLUMN->GET_AUTO_SIZE( ).
-      if AUTO_SIZE = ABAP_TRUE.
-        append initial line to AUTO_SIZES assigning <AUTO_SIZE>.
-        <AUTO_SIZE>-COL_INDEX = LO_COLUMN->GET_COLUMN_INDEX( ).
-        <AUTO_SIZE>-WIDTH     = -1.
-      endif.
-    endwhile.
+    lo_column_iterator = me->get_columns_iterator( ).
+    WHILE lo_column_iterator->has_next( ) = abap_true.
+      lo_column ?= lo_column_iterator->get_next( ).
+      auto_size = lo_column->get_auto_size( ).
+      IF auto_size = abap_true.
+        APPEND INITIAL LINE TO auto_sizes ASSIGNING <auto_size>.
+        <auto_size>-col_index = lo_column->get_column_index( ).
+        <auto_size>-width     = -1.
+      ENDIF.
+    ENDWHILE.
 
     " There is only something to do if there are some auto-size columns
-    if not AUTO_SIZES is initial.
-      HIGHEST_ROW = ME->GET_HIGHEST_ROW( ).
-      loop at AUTO_SIZES assigning <AUTO_SIZE>.
-        COUNT = 1.
-        while COUNT <= HIGHEST_ROW.
+    IF NOT auto_sizes IS INITIAL.
+      highest_row = me->get_highest_row( ).
+      LOOP AT auto_sizes ASSIGNING <auto_size>.
+        count = 1.
+        WHILE count <= highest_row.
 * Do not check merged cells
-          if IS_CELL_MERGED(
-              IP_COLUMN    = <AUTO_SIZE>-COL_INDEX
-              IP_ROW       = COUNT ) = ABAP_FALSE.
-            WIDTH = CALCULATE_CELL_WIDTH( IP_COLUMN = <AUTO_SIZE>-COL_INDEX     " issue #155 - less restrictive typing for ip_column
-                                          IP_ROW    = COUNT ).
-            if WIDTH > <AUTO_SIZE>-WIDTH.
-              <AUTO_SIZE>-WIDTH = WIDTH.
-            endif.
-          endif.
-          COUNT = COUNT + 1.
-        endwhile.
-        LO_COLUMN = ME->GET_COLUMN( <AUTO_SIZE>-COL_INDEX ). " issue #155 - less restrictive typing for ip_column
-        LO_COLUMN->SET_WIDTH( <AUTO_SIZE>-WIDTH ).
-      endloop.
-    endif.
+          IF is_cell_merged(
+              ip_column    = <auto_size>-col_index
+              ip_row       = count ) = abap_false.
+            width = calculate_cell_width( ip_column = <auto_size>-col_index     " issue #155 - less restrictive typing for ip_column
+                                          ip_row    = count ).
+            IF width > <auto_size>-width.
+              <auto_size>-width = width.
+            ENDIF.
+          ENDIF.
+          count = count + 1.
+        ENDWHILE.
+        lo_column = me->get_column( <auto_size>-col_index ). " issue #155 - less restrictive typing for ip_column
+        lo_column->set_width( <auto_size>-width ).
+      ENDLOOP.
+    ENDIF.
 
-  endmethod.
+  ENDMETHOD.                    "CALCULATE_COLUMN_WIDTHS
 
 
-  method CHANGE_CELL_STYLE.
+  METHOD change_cell_style.
     " issue # 139
-    data: STYLEMAPPING    type ZEXCEL_S_STYLEMAPPING,
+    DATA: stylemapping    TYPE zexcel_s_stylemapping,
 
-          COMPLETE_STYLE  type ZEXCEL_S_CSTYLE_COMPLETE,
-          COMPLETE_STYLEX type ZEXCEL_S_CSTYLEX_COMPLETE,
+          complete_style  TYPE zexcel_s_cstyle_complete,
+          complete_stylex TYPE zexcel_s_cstylex_complete,
 
-          BORDERX         type ZEXCEL_S_CSTYLEX_BORDER,
-          L_GUID          type ZEXCEL_CELL_STYLE.   "issue # 177
+          borderx         TYPE zexcel_s_cstylex_border,
+          l_guid          TYPE zexcel_cell_style.   "issue # 177
 
 * We have a lot of parameters.  Use some macros to make the coding more structured
 
-    define CLEAR_INITIAL_COLORXFIELDS.
-      if &1-RGB is initial.
-        clear &2-RGB.
+    DEFINE clear_initial_colorxfields.
+      if &1-rgb is initial.
+        clear &2-rgb.
       endif.
-      if &1-INDEXED is initial.
-        clear &2-INDEXED.
+      if &1-indexed is initial.
+        clear &2-indexed.
       endif.
-      if &1-THEME is initial.
-        clear &2-THEME.
+      if &1-theme is initial.
+        clear &2-theme.
       endif.
-      if &1-TINT is initial.
-        clear &2-TINT.
+      if &1-tint is initial.
+        clear &2-tint.
       endif.
-    end-of-definition.
+    END-OF-DEFINITION.
 
-    define MOVE_SUPPLIED_BORDERS.
-      if IP_&1 is supplied.  " only act if parameter was supplied
-        if IP_X&1 is supplied.  "
-          BORDERX = IP_X&1.          " use supplied x-parameter
+    DEFINE move_supplied_borders.
+      if ip_&1 is supplied.  " only act if parameter was supplied
+        if ip_x&1 is supplied.  "
+          borderx = ip_x&1.          " use supplied x-parameter
         else.
-          clear BORDERX with 'X'.
+          clear borderx with 'X'.
 * clear in a way that would be expected to work easily
-          if IP_&1-BORDER_STYLE is  initial.
-            clear BORDERX-BORDER_STYLE.
+          if ip_&1-border_style is  initial.
+            clear borderx-border_style.
           endif.
-          CLEAR_INITIAL_COLORXFIELDS IP_&1-BORDER_COLOR BORDERX-BORDER_COLOR.
+          clear_initial_colorxfields ip_&1-border_color borderx-border_color.
         endif.
-        move-corresponding IP_&1   to COMPLETE_STYLE-&2.
-        move-corresponding BORDERX to COMPLETE_STYLEX-&2.
+        move-corresponding ip_&1   to complete_style-&2.
+        move-corresponding borderx to complete_stylex-&2.
       endif.
-    end-of-definition.
+    END-OF-DEFINITION.
 
 * First get current stylsettings
-    try.
-        ME->GET_CELL( exporting IP_COLUMN = IP_COLUMN  " Cell Column
-                                IP_ROW    = IP_ROW      " Cell Row
-                      importing EP_GUID   = L_GUID )." Cell Value ).  "issue # 177
+    TRY.
+        me->get_cell( EXPORTING ip_column = ip_column  " Cell Column
+                                ip_row    = ip_row      " Cell Row
+                      IMPORTING ep_guid   = l_guid )." Cell Value ).  "issue # 177
 
 
-        STYLEMAPPING = ME->EXCEL->GET_STYLE_TO_GUID( L_GUID ).        "issue # 177
-        COMPLETE_STYLE  = STYLEMAPPING-COMPLETE_STYLE.
-        COMPLETE_STYLEX = STYLEMAPPING-COMPLETE_STYLEX.
-      catch ZCX_EXCEL.
+        stylemapping = me->excel->get_style_to_guid( l_guid ).        "issue # 177
+        complete_style  = stylemapping-complete_style.
+        complete_stylex = stylemapping-complete_stylex.
+      CATCH zcx_excel.
 * Error --> use submitted style
-    endtry.
+    ENDTRY.
 
 *  move_supplied_multistyles: complete.
-    if IP_COMPLETE is supplied.
-      if IP_XCOMPLETE is not supplied.
+    IF ip_complete IS SUPPLIED.
+      IF ip_xcomplete IS NOT SUPPLIED.
         zcx_excel=>raise_text( 'Complete styleinfo has to be supplied with corresponding X-field' ).
-      endif.
-      move-corresponding IP_COMPLETE  to COMPLETE_STYLE.
-      move-corresponding IP_XCOMPLETE to COMPLETE_STYLEX.
-    endif.
+      ENDIF.
+      MOVE-CORRESPONDING ip_complete  TO complete_style.
+      MOVE-CORRESPONDING ip_xcomplete TO complete_stylex.
+    ENDIF.
 
 
 
-    if IP_FONT is supplied.
-      data: FONTX like IP_XFONT.
-      if IP_XFONT is supplied.
-        FONTX = IP_XFONT.
-      else.
+    IF ip_font IS SUPPLIED.
+      DATA: fontx LIKE ip_xfont.
+      IF ip_xfont IS SUPPLIED.
+        fontx = ip_xfont.
+      ELSE.
 * Only supplied values should be used - exception: Flags bold and italic strikethrough underline
-        move 'X' to: FONTX-BOLD,
-                     FONTX-ITALIC,
-                     FONTX-STRIKETHROUGH,
-                     FONTX-UNDERLINE_MODE.
-        clear FONTX-COLOR with 'X'.
-        CLEAR_INITIAL_COLORXFIELDS IP_FONT-COLOR FONTX-COLOR.
-        if IP_FONT-FAMILY is not initial.
-          FONTX-FAMILY = 'X'.
-        endif.
-        if IP_FONT-NAME is not initial.
-          FONTX-NAME = 'X'.
-        endif.
-        if IP_FONT-SCHEME is not initial.
-          FONTX-SCHEME = 'X'.
-        endif.
-        if IP_FONT-SIZE is not initial.
-          FONTX-SIZE = 'X'.
-        endif.
-        if IP_FONT-UNDERLINE_MODE is not initial.
-          FONTX-UNDERLINE_MODE = 'X'.
-        endif.
-      endif.
-      move-corresponding IP_FONT  to COMPLETE_STYLE-FONT.
-      move-corresponding FONTX    to COMPLETE_STYLEX-FONT.
+        MOVE 'X' TO: fontx-bold,
+                     fontx-italic,
+                     fontx-strikethrough,
+                     fontx-underline_mode.
+        CLEAR fontx-color WITH 'X'.
+        clear_initial_colorxfields ip_font-color fontx-color.
+        IF ip_font-family IS NOT INITIAL.
+          fontx-family = 'X'.
+        ENDIF.
+        IF ip_font-name IS NOT INITIAL.
+          fontx-name = 'X'.
+        ENDIF.
+        IF ip_font-scheme IS NOT INITIAL.
+          fontx-scheme = 'X'.
+        ENDIF.
+        IF ip_font-size IS NOT INITIAL.
+          fontx-size = 'X'.
+        ENDIF.
+        IF ip_font-underline_mode IS NOT INITIAL.
+          fontx-underline_mode = 'X'.
+        ENDIF.
+      ENDIF.
+      MOVE-CORRESPONDING ip_font  TO complete_style-font.
+      MOVE-CORRESPONDING fontx    TO complete_stylex-font.
 * Correction for undeline mode
-    endif.
+    ENDIF.
 
-    if IP_FILL is supplied.
-      data: FILLX like IP_XFILL.
-      if IP_XFILL is supplied.
-        FILLX = IP_XFILL.
-      else.
-        clear FILLX with 'X'.
-        if IP_FILL-FILLTYPE is initial.
-          clear FILLX-FILLTYPE.
-        endif.
-        CLEAR_INITIAL_COLORXFIELDS IP_FILL-FGCOLOR FILLX-FGCOLOR.
-        CLEAR_INITIAL_COLORXFIELDS IP_FILL-BGCOLOR FILLX-BGCOLOR.
+    IF ip_fill IS SUPPLIED.
+      DATA: fillx LIKE ip_xfill.
+      IF ip_xfill IS SUPPLIED.
+        fillx = ip_xfill.
+      ELSE.
+        CLEAR fillx WITH 'X'.
+        IF ip_fill-filltype IS INITIAL.
+          CLEAR fillx-filltype.
+        ENDIF.
+        clear_initial_colorxfields ip_fill-fgcolor fillx-fgcolor.
+        clear_initial_colorxfields ip_fill-bgcolor fillx-bgcolor.
 
+      ENDIF.
+      MOVE-CORRESPONDING ip_fill  TO complete_style-fill.
+      MOVE-CORRESPONDING fillx    TO complete_stylex-fill.
+    ENDIF.
+
+
+    IF ip_borders IS SUPPLIED.
+      DATA: bordersx LIKE ip_xborders.
+      IF ip_xborders IS SUPPLIED.
+        bordersx = ip_xborders.
+      ELSE.
+        CLEAR bordersx WITH 'X'.
+        IF ip_borders-allborders-border_style IS INITIAL.
+          CLEAR bordersx-allborders-border_style.
+        ENDIF.
+        IF ip_borders-diagonal-border_style IS INITIAL.
+          CLEAR bordersx-diagonal-border_style.
+        ENDIF.
+        IF ip_borders-down-border_style IS INITIAL.
+          CLEAR bordersx-down-border_style.
+        ENDIF.
+        IF ip_borders-left-border_style IS INITIAL.
+          CLEAR bordersx-left-border_style.
+        ENDIF.
+        IF ip_borders-right-border_style IS INITIAL.
+          CLEAR bordersx-right-border_style.
+        ENDIF.
+        IF ip_borders-top-border_style IS INITIAL.
+          CLEAR bordersx-top-border_style.
+        ENDIF.
+        clear_initial_colorxfields ip_borders-allborders-border_color bordersx-allborders-border_color.
+        clear_initial_colorxfields ip_borders-diagonal-border_color   bordersx-diagonal-border_color.
+        clear_initial_colorxfields ip_borders-down-border_color       bordersx-down-border_color.
+        clear_initial_colorxfields ip_borders-left-border_color       bordersx-left-border_color.
+        clear_initial_colorxfields ip_borders-right-border_color      bordersx-right-border_color.
+        clear_initial_colorxfields ip_borders-top-border_color        bordersx-top-border_color.
+
+      ENDIF.
+      MOVE-CORRESPONDING ip_borders  TO complete_style-borders.
+      MOVE-CORRESPONDING bordersx    TO complete_stylex-borders.
+    ENDIF.
+
+    IF ip_alignment IS SUPPLIED.
+      DATA: alignmentx LIKE ip_xalignment.
+      IF ip_xalignment IS SUPPLIED.
+        alignmentx = ip_xalignment.
+      ELSE.
+        CLEAR alignmentx WITH 'X'.
+        IF ip_alignment-horizontal IS INITIAL.
+          CLEAR alignmentx-horizontal.
+        ENDIF.
+        IF ip_alignment-vertical IS INITIAL.
+          CLEAR alignmentx-vertical.
+        ENDIF.
+      ENDIF.
+      MOVE-CORRESPONDING ip_alignment  TO complete_style-alignment.
+      MOVE-CORRESPONDING alignmentx    TO complete_stylex-alignment.
+    ENDIF.
+
+    IF ip_protection IS SUPPLIED.
+      MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
+      IF ip_xprotection IS SUPPLIED.
+        MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
+      ELSE.
+        IF ip_protection-hidden IS NOT INITIAL.
+          complete_stylex-protection-hidden = 'X'.
+        ENDIF.
+        IF ip_protection-locked IS NOT INITIAL.
+          complete_stylex-protection-locked = 'X'.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+
+
+    move_supplied_borders    : borders_allborders borders-allborders,
+                               borders_diagonal   borders-diagonal  ,
+                               borders_down       borders-down      ,
+                               borders_left       borders-left      ,
+                               borders_right      borders-right     ,
+                               borders_top        borders-top       .
+
+    DEFINE move_supplied_singlestyles.
+      if ip_&1 is supplied.
+        complete_style-&2 = ip_&1.
+        complete_stylex-&2 = 'X'.
       endif.
-      move-corresponding IP_FILL  to COMPLETE_STYLE-FILL.
-      move-corresponding FILLX    to COMPLETE_STYLEX-FILL.
-    endif.
+    END-OF-DEFINITION.
 
+    move_supplied_singlestyles: number_format_format_code  number_format-format_code,
+                                font_bold                     font-bold,
+                                font_color                    font-color,
+                                font_color_rgb                font-color-rgb,
+                                font_color_indexed            font-color-indexed,
+                                font_color_theme              font-color-theme,
+                                font_color_tint               font-color-tint,
 
-    if IP_BORDERS is supplied.
-      data: BORDERSX like IP_XBORDERS.
-      if IP_XBORDERS is supplied.
-        BORDERSX = IP_XBORDERS.
-      else.
-        clear BORDERSX with 'X'.
-        if IP_BORDERS-ALLBORDERS-BORDER_STYLE is initial.
-          clear BORDERSX-ALLBORDERS-BORDER_STYLE.
-        endif.
-        if IP_BORDERS-DIAGONAL-BORDER_STYLE is initial.
-          clear BORDERSX-DIAGONAL-BORDER_STYLE.
-        endif.
-        if IP_BORDERS-DOWN-BORDER_STYLE is initial.
-          clear BORDERSX-DOWN-BORDER_STYLE.
-        endif.
-        if IP_BORDERS-LEFT-BORDER_STYLE is initial.
-          clear BORDERSX-LEFT-BORDER_STYLE.
-        endif.
-        if IP_BORDERS-RIGHT-BORDER_STYLE is initial.
-          clear BORDERSX-RIGHT-BORDER_STYLE.
-        endif.
-        if IP_BORDERS-TOP-BORDER_STYLE is initial.
-          clear BORDERSX-TOP-BORDER_STYLE.
-        endif.
-        CLEAR_INITIAL_COLORXFIELDS IP_BORDERS-ALLBORDERS-BORDER_COLOR BORDERSX-ALLBORDERS-BORDER_COLOR.
-        CLEAR_INITIAL_COLORXFIELDS IP_BORDERS-DIAGONAL-BORDER_COLOR   BORDERSX-DIAGONAL-BORDER_COLOR.
-        CLEAR_INITIAL_COLORXFIELDS IP_BORDERS-DOWN-BORDER_COLOR       BORDERSX-DOWN-BORDER_COLOR.
-        CLEAR_INITIAL_COLORXFIELDS IP_BORDERS-LEFT-BORDER_COLOR       BORDERSX-LEFT-BORDER_COLOR.
-        CLEAR_INITIAL_COLORXFIELDS IP_BORDERS-RIGHT-BORDER_COLOR      BORDERSX-RIGHT-BORDER_COLOR.
-        CLEAR_INITIAL_COLORXFIELDS IP_BORDERS-TOP-BORDER_COLOR        BORDERSX-TOP-BORDER_COLOR.
+                                font_family                   font-family,
+                                font_italic                   font-italic,
+                                font_name                     font-name,
+                                font_scheme                   font-scheme,
+                                font_size                     font-size,
+                                font_strikethrough            font-strikethrough,
+                                font_underline                font-underline,
+                                font_underline_mode           font-underline_mode,
+                                fill_filltype                 fill-filltype,
+                                fill_rotation                 fill-rotation,
+                                fill_fgcolor                  fill-fgcolor,
+                                fill_fgcolor_rgb              fill-fgcolor-rgb,
+                                fill_fgcolor_indexed          fill-fgcolor-indexed,
+                                fill_fgcolor_theme            fill-fgcolor-theme,
+                                fill_fgcolor_tint             fill-fgcolor-tint,
 
-      endif.
-      move-corresponding IP_BORDERS  to COMPLETE_STYLE-BORDERS.
-      move-corresponding BORDERSX    to COMPLETE_STYLEX-BORDERS.
-    endif.
+                                fill_bgcolor                  fill-bgcolor,
+                                fill_bgcolor_rgb              fill-bgcolor-rgb,
+                                fill_bgcolor_indexed          fill-bgcolor-indexed,
+                                fill_bgcolor_theme            fill-bgcolor-theme,
+                                fill_bgcolor_tint             fill-bgcolor-tint,
 
-    if IP_ALIGNMENT is supplied.
-      data: ALIGNMENTX like IP_XALIGNMENT.
-      if IP_XALIGNMENT is supplied.
-        ALIGNMENTX = IP_XALIGNMENT.
-      else.
-        clear ALIGNMENTX with 'X'.
-        if IP_ALIGNMENT-HORIZONTAL is initial.
-          clear ALIGNMENTX-HORIZONTAL.
-        endif.
-        if IP_ALIGNMENT-VERTICAL is initial.
-          clear ALIGNMENTX-VERTICAL.
-        endif.
-      endif.
-      move-corresponding IP_ALIGNMENT  to COMPLETE_STYLE-ALIGNMENT.
-      move-corresponding ALIGNMENTX    to COMPLETE_STYLEX-ALIGNMENT.
-    endif.
-
-    if IP_PROTECTION is supplied.
-      move-corresponding IP_PROTECTION  to COMPLETE_STYLE-PROTECTION.
-      if IP_XPROTECTION is supplied.
-        move-corresponding IP_XPROTECTION to COMPLETE_STYLEX-PROTECTION.
-      else.
-        if IP_PROTECTION-HIDDEN is not initial.
-          COMPLETE_STYLEX-PROTECTION-HIDDEN = 'X'.
-        endif.
-        if IP_PROTECTION-LOCKED is not initial.
-          COMPLETE_STYLEX-PROTECTION-LOCKED = 'X'.
-        endif.
-      endif.
-    endif.
-
-
-    MOVE_SUPPLIED_BORDERS    : BORDERS_ALLBORDERS BORDERS-ALLBORDERS,
-                               BORDERS_DIAGONAL   BORDERS-DIAGONAL  ,
-                               BORDERS_DOWN       BORDERS-DOWN      ,
-                               BORDERS_LEFT       BORDERS-LEFT      ,
-                               BORDERS_RIGHT      BORDERS-RIGHT     ,
-                               BORDERS_TOP        BORDERS-TOP       .
-
-    define MOVE_SUPPLIED_SINGLESTYLES.
-      if IP_&1 is supplied.
-        COMPLETE_STYLE-&2 = IP_&1.
-        COMPLETE_STYLEX-&2 = 'X'.
-      endif.
-    end-of-definition.
-
-    MOVE_SUPPLIED_SINGLESTYLES: NUMBER_FORMAT_FORMAT_CODE  NUMBER_FORMAT-FORMAT_CODE,
-                                FONT_BOLD                     FONT-BOLD,
-                                FONT_COLOR                    FONT-COLOR,
-                                FONT_COLOR_RGB                FONT-COLOR-RGB,
-                                FONT_COLOR_INDEXED            FONT-COLOR-INDEXED,
-                                FONT_COLOR_THEME              FONT-COLOR-THEME,
-                                FONT_COLOR_TINT               FONT-COLOR-TINT,
-
-                                FONT_FAMILY                   FONT-FAMILY,
-                                FONT_ITALIC                   FONT-ITALIC,
-                                FONT_NAME                     FONT-NAME,
-                                FONT_SCHEME                   FONT-SCHEME,
-                                FONT_SIZE                     FONT-SIZE,
-                                FONT_STRIKETHROUGH            FONT-STRIKETHROUGH,
-                                FONT_UNDERLINE                FONT-UNDERLINE,
-                                FONT_UNDERLINE_MODE           FONT-UNDERLINE_MODE,
-                                FILL_FILLTYPE                 FILL-FILLTYPE,
-                                FILL_ROTATION                 FILL-ROTATION,
-                                FILL_FGCOLOR                  FILL-FGCOLOR,
-                                FILL_FGCOLOR_RGB              FILL-FGCOLOR-RGB,
-                                FILL_FGCOLOR_INDEXED          FILL-FGCOLOR-INDEXED,
-                                FILL_FGCOLOR_THEME            FILL-FGCOLOR-THEME,
-                                FILL_FGCOLOR_TINT             FILL-FGCOLOR-TINT,
-
-                                FILL_BGCOLOR                  FILL-BGCOLOR,
-                                FILL_BGCOLOR_RGB              FILL-BGCOLOR-RGB,
-                                FILL_BGCOLOR_INDEXED          FILL-BGCOLOR-INDEXED,
-                                FILL_BGCOLOR_THEME            FILL-BGCOLOR-THEME,
-                                FILL_BGCOLOR_TINT             FILL-BGCOLOR-TINT,
-
-                                FILL_GRADTYPE_TYPE            FILL-GRADTYPE-TYPE,
-                                FILL_GRADTYPE_DEGREE          FILL-GRADTYPE-DEGREE,
-                                FILL_GRADTYPE_BOTTOM          FILL-GRADTYPE-BOTTOM,
-                                FILL_GRADTYPE_LEFT            FILL-GRADTYPE-LEFT,
-                                FILL_GRADTYPE_TOP             FILL-GRADTYPE-TOP,
-                                FILL_GRADTYPE_RIGHT           FILL-GRADTYPE-RIGHT,
-                                FILL_GRADTYPE_POSITION1       FILL-GRADTYPE-POSITION1,
-                                FILL_GRADTYPE_POSITION2       FILL-GRADTYPE-POSITION2,
-                                FILL_GRADTYPE_POSITION3       FILL-GRADTYPE-POSITION3,
+                                fill_gradtype_type            fill-gradtype-type,
+                                fill_gradtype_degree          fill-gradtype-degree,
+                                fill_gradtype_bottom          fill-gradtype-bottom,
+                                fill_gradtype_left            fill-gradtype-left,
+                                fill_gradtype_top             fill-gradtype-top,
+                                fill_gradtype_right           fill-gradtype-right,
+                                fill_gradtype_position1       fill-gradtype-position1,
+                                fill_gradtype_position2       fill-gradtype-position2,
+                                fill_gradtype_position3       fill-gradtype-position3,
 
 
 
-                                BORDERS_DIAGONAL_MODE         BORDERS-DIAGONAL_MODE,
-                                ALIGNMENT_HORIZONTAL          ALIGNMENT-HORIZONTAL,
-                                ALIGNMENT_VERTICAL            ALIGNMENT-VERTICAL,
-                                ALIGNMENT_TEXTROTATION        ALIGNMENT-TEXTROTATION,
-                                ALIGNMENT_WRAPTEXT            ALIGNMENT-WRAPTEXT,
-                                ALIGNMENT_SHRINKTOFIT         ALIGNMENT-SHRINKTOFIT,
-                                ALIGNMENT_INDENT              ALIGNMENT-INDENT,
-                                PROTECTION_HIDDEN             PROTECTION-HIDDEN,
-                                PROTECTION_LOCKED             PROTECTION-LOCKED,
+                                borders_diagonal_mode         borders-diagonal_mode,
+                                alignment_horizontal          alignment-horizontal,
+                                alignment_vertical            alignment-vertical,
+                                alignment_textrotation        alignment-textrotation,
+                                alignment_wraptext            alignment-wraptext,
+                                alignment_shrinktofit         alignment-shrinktofit,
+                                alignment_indent              alignment-indent,
+                                protection_hidden             protection-hidden,
+                                protection_locked             protection-locked,
 
-                                BORDERS_ALLBORDERS_STYLE      BORDERS-ALLBORDERS-BORDER_STYLE,
-                                BORDERS_ALLBORDERS_COLOR      BORDERS-ALLBORDERS-BORDER_COLOR,
-                                BORDERS_ALLBO_COLOR_RGB       BORDERS-ALLBORDERS-BORDER_COLOR-RGB,
-                                BORDERS_ALLBO_COLOR_INDEXED   BORDERS-ALLBORDERS-BORDER_COLOR-INDEXED,
-                                BORDERS_ALLBO_COLOR_THEME     BORDERS-ALLBORDERS-BORDER_COLOR-THEME,
-                                BORDERS_ALLBO_COLOR_TINT      BORDERS-ALLBORDERS-BORDER_COLOR-TINT,
+                                borders_allborders_style      borders-allborders-border_style,
+                                borders_allborders_color      borders-allborders-border_color,
+                                borders_allbo_color_rgb       borders-allborders-border_color-rgb,
+                                borders_allbo_color_indexed   borders-allborders-border_color-indexed,
+                                borders_allbo_color_theme     borders-allborders-border_color-theme,
+                                borders_allbo_color_tint      borders-allborders-border_color-tint,
 
-                                BORDERS_DIAGONAL_STYLE        BORDERS-DIAGONAL-BORDER_STYLE,
-                                BORDERS_DIAGONAL_COLOR        BORDERS-DIAGONAL-BORDER_COLOR,
-                                BORDERS_DIAGONAL_COLOR_RGB    BORDERS-DIAGONAL-BORDER_COLOR-RGB,
-                                BORDERS_DIAGONAL_COLOR_INDE   BORDERS-DIAGONAL-BORDER_COLOR-INDEXED,
-                                BORDERS_DIAGONAL_COLOR_THEM   BORDERS-DIAGONAL-BORDER_COLOR-THEME,
-                                BORDERS_DIAGONAL_COLOR_TINT   BORDERS-DIAGONAL-BORDER_COLOR-TINT,
+                                borders_diagonal_style        borders-diagonal-border_style,
+                                borders_diagonal_color        borders-diagonal-border_color,
+                                borders_diagonal_color_rgb    borders-diagonal-border_color-rgb,
+                                borders_diagonal_color_inde   borders-diagonal-border_color-indexed,
+                                borders_diagonal_color_them   borders-diagonal-border_color-theme,
+                                borders_diagonal_color_tint   borders-diagonal-border_color-tint,
 
-                                BORDERS_DOWN_STYLE            BORDERS-DOWN-BORDER_STYLE,
-                                BORDERS_DOWN_COLOR            BORDERS-DOWN-BORDER_COLOR,
-                                BORDERS_DOWN_COLOR_RGB        BORDERS-DOWN-BORDER_COLOR-RGB,
-                                BORDERS_DOWN_COLOR_INDEXED    BORDERS-DOWN-BORDER_COLOR-INDEXED,
-                                BORDERS_DOWN_COLOR_THEME      BORDERS-DOWN-BORDER_COLOR-THEME,
-                                BORDERS_DOWN_COLOR_TINT       BORDERS-DOWN-BORDER_COLOR-TINT,
+                                borders_down_style            borders-down-border_style,
+                                borders_down_color            borders-down-border_color,
+                                borders_down_color_rgb        borders-down-border_color-rgb,
+                                borders_down_color_indexed    borders-down-border_color-indexed,
+                                borders_down_color_theme      borders-down-border_color-theme,
+                                borders_down_color_tint       borders-down-border_color-tint,
 
-                                BORDERS_LEFT_STYLE            BORDERS-LEFT-BORDER_STYLE,
-                                BORDERS_LEFT_COLOR            BORDERS-LEFT-BORDER_COLOR,
-                                BORDERS_LEFT_COLOR_RGB        BORDERS-LEFT-BORDER_COLOR-RGB,
-                                BORDERS_LEFT_COLOR_INDEXED    BORDERS-LEFT-BORDER_COLOR-INDEXED,
-                                BORDERS_LEFT_COLOR_THEME      BORDERS-LEFT-BORDER_COLOR-THEME,
-                                BORDERS_LEFT_COLOR_TINT       BORDERS-LEFT-BORDER_COLOR-TINT,
+                                borders_left_style            borders-left-border_style,
+                                borders_left_color            borders-left-border_color,
+                                borders_left_color_rgb        borders-left-border_color-rgb,
+                                borders_left_color_indexed    borders-left-border_color-indexed,
+                                borders_left_color_theme      borders-left-border_color-theme,
+                                borders_left_color_tint       borders-left-border_color-tint,
 
-                                BORDERS_RIGHT_STYLE           BORDERS-RIGHT-BORDER_STYLE,
-                                BORDERS_RIGHT_COLOR           BORDERS-RIGHT-BORDER_COLOR,
-                                BORDERS_RIGHT_COLOR_RGB       BORDERS-RIGHT-BORDER_COLOR-RGB,
-                                BORDERS_RIGHT_COLOR_INDEXED   BORDERS-RIGHT-BORDER_COLOR-INDEXED,
-                                BORDERS_RIGHT_COLOR_THEME     BORDERS-RIGHT-BORDER_COLOR-THEME,
-                                BORDERS_RIGHT_COLOR_TINT      BORDERS-RIGHT-BORDER_COLOR-TINT,
+                                borders_right_style           borders-right-border_style,
+                                borders_right_color           borders-right-border_color,
+                                borders_right_color_rgb       borders-right-border_color-rgb,
+                                borders_right_color_indexed   borders-right-border_color-indexed,
+                                borders_right_color_theme     borders-right-border_color-theme,
+                                borders_right_color_tint      borders-right-border_color-tint,
 
-                                BORDERS_TOP_STYLE             BORDERS-TOP-BORDER_STYLE,
-                                BORDERS_TOP_COLOR             BORDERS-TOP-BORDER_COLOR,
-                                BORDERS_TOP_COLOR_RGB         BORDERS-TOP-BORDER_COLOR-RGB,
-                                BORDERS_TOP_COLOR_INDEXED     BORDERS-TOP-BORDER_COLOR-INDEXED,
-                                BORDERS_TOP_COLOR_THEME       BORDERS-TOP-BORDER_COLOR-THEME,
-                                BORDERS_TOP_COLOR_TINT        BORDERS-TOP-BORDER_COLOR-TINT.
+                                borders_top_style             borders-top-border_style,
+                                borders_top_color             borders-top-border_color,
+                                borders_top_color_rgb         borders-top-border_color-rgb,
+                                borders_top_color_indexed     borders-top-border_color-indexed,
+                                borders_top_color_theme       borders-top-border_color-theme,
+                                borders_top_color_tint        borders-top-border_color-tint.
 
 
 * Now we have a completly filled styles.
 * This can be used to get the guid
 * Return guid if requested.  Might be used if copy&paste of styles is requested
-    EP_GUID = ME->EXCEL->GET_STATIC_CELLSTYLE_GUID( IP_CSTYLE_COMPLETE  = COMPLETE_STYLE
-                                                    IP_CSTYLEX_COMPLETE = COMPLETE_STYLEX  ).
-    ME->SET_CELL_STYLE( IP_COLUMN = IP_COLUMN
-                        IP_ROW    = IP_ROW
-                        IP_STYLE  = EP_GUID ).
+    ep_guid = me->excel->get_static_cellstyle_guid( ip_cstyle_complete  = complete_style
+                                                    ip_cstylex_complete = complete_stylex  ).
+    me->set_cell_style( ip_column = ip_column
+                        ip_row    = ip_row
+                        ip_style  = ep_guid ).
 
-  endmethod.
+  ENDMETHOD.                    "CHANGE_CELL_STYLE
 
 
-  method CONSTRUCTOR.
-    data: LV_TITLE type ZEXCEL_SHEET_TITLE.
+  METHOD constructor.
+    DATA: lv_title TYPE zexcel_sheet_title.
 
-    ME->EXCEL = IP_EXCEL.
+    me->excel = ip_excel.
 
 *  CALL FUNCTION 'GUID_CREATE'                                    " del issue #379 - function is outdated in newer releases
 *    IMPORTING
 *      ev_guid_16 = me->guid.
-    ME->GUID = ZCL_EXCEL_OBSOLETE_FUNC_WRAP=>GUID_CREATE( ).        " ins issue #379 - replacement for outdated function call
+    me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).        " ins issue #379 - replacement for outdated function call
 
-    if IP_TITLE is not initial.
-      LV_TITLE = IP_TITLE.
-    else.
+    IF ip_title IS NOT INITIAL.
+      lv_title = ip_title.
+    ELSE.
 *    lv_title = me->guid.             " del issue #154 - Names of worksheets
-      LV_TITLE = ME->GENERATE_TITLE( ). " ins issue #154 - Names of worksheets
-    endif.
+      lv_title = me->generate_title( ). " ins issue #154 - Names of worksheets
+    ENDIF.
 
-    ME->SET_TITLE( IP_TITLE = LV_TITLE ).
+    me->set_title( ip_title = lv_title ).
 
-    create object SHEET_SETUP.
-    create object STYLES_COND.
-    create object DATA_VALIDATIONS.
-    create object TABLES.
-    create object COLUMNS.
-    create object ROWS.
-    create object RANGES. " issue #163
-    create object MO_PAGEBREAKS.
-    create object DRAWINGS
-      exporting
-        IP_TYPE = ZCL_EXCEL_DRAWING=>TYPE_IMAGE.
-    create object CHARTS
-      exporting
-        IP_TYPE = ZCL_EXCEL_DRAWING=>TYPE_CHART.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE( ).
-    ME->ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE( ).
-    create object HYPERLINKS.
+    CREATE OBJECT sheet_setup.
+    CREATE OBJECT styles_cond.
+    CREATE OBJECT data_validations.
+    CREATE OBJECT tables.
+    CREATE OBJECT columns.
+    CREATE OBJECT rows.
+    CREATE OBJECT ranges. " issue #163
+    CREATE OBJECT mo_pagebreaks.
+    CREATE OBJECT drawings
+      EXPORTING
+        ip_type = zcl_excel_drawing=>type_image.
+    CREATE OBJECT charts
+      EXPORTING
+        ip_type = zcl_excel_drawing=>type_chart.
+    me->zif_excel_sheet_protection~initialize( ).
+    me->zif_excel_sheet_properties~initialize( ).
+    CREATE OBJECT hyperlinks.
     CREATE OBJECT comments.  " (+) Issue #180
 
 * initialize active cell coordinates
-    ACTIVE_CELL-CELL_ROW = 1.
-    ACTIVE_CELL-CELL_COLUMN = 1.
+    active_cell-cell_row = 1.
+    active_cell-cell_column = 1.
 
 * inizialize dimension range
-    LOWER_CELL-CELL_ROW     = 1.
-    LOWER_CELL-CELL_COLUMN  = 1.
-    UPPER_CELL-CELL_ROW     = 1.
-    UPPER_CELL-CELL_COLUMN  = 1.
+    lower_cell-cell_row     = 1.
+    lower_cell-cell_column  = 1.
+    upper_cell-cell_row     = 1.
+    upper_cell-cell_column  = 1.
 
-  endmethod.
+  ENDMETHOD.                    "CONSTRUCTOR
 
 
-  method DELETE_MERGE.
+  METHOD delete_merge.
 
-    data: LV_COLUMN type I.
+    DATA: lv_column TYPE i.
 *--------------------------------------------------------------------*
 * If cell information is passed delete merge including this cell,
 * otherwise delete all merges
 *--------------------------------------------------------------------*
-    if   IP_CELL_COLUMN is initial
-      or IP_CELL_ROW    is initial.
-      clear ME->MT_MERGED_CELLS.
-    else.
-      LV_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_CELL_COLUMN ).
+    IF   ip_cell_column IS INITIAL
+      OR ip_cell_row    IS INITIAL.
+      CLEAR me->mt_merged_cells.
+    ELSE.
+      lv_column = zcl_excel_common=>convert_column2int( ip_cell_column ).
 
-      loop at ME->MT_MERGED_CELLS transporting no fields
-      where
-          ( ROW_FROM <= IP_CELL_ROW and ROW_TO >= IP_CELL_ROW )
-      and
-          ( COL_FROM <= LV_COLUMN and COL_TO >= LV_COLUMN ).
+      LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS
+      WHERE
+          ( row_from <= ip_cell_row AND row_to >= ip_cell_row )
+      AND
+          ( col_from <= lv_column AND col_to >= lv_column ).
 
-        delete ME->MT_MERGED_CELLS.
-        exit.
-      endloop.
-    endif.
+        DELETE me->mt_merged_cells.
+        EXIT.
+      ENDLOOP.
+    ENDIF.
 
-  endmethod.
+  ENDMETHOD.                    "DELETE_MERGE
 
 
-  method DELETE_ROW_OUTLINE.
+  METHOD delete_row_outline.
 
-    delete ME->MT_ROW_OUTLINES where ROW_FROM = IV_ROW_FROM
-                                 and ROW_TO   = IV_ROW_TO.
-    if SY-SUBRC <> 0.  " didn't find outline that was to be deleted
+    DELETE me->mt_row_outlines WHERE row_from = iv_row_from
+                                 AND row_to   = iv_row_to.
+    IF sy-subrc <> 0.  " didn't find outline that was to be deleted
       zcx_excel=>raise_text( 'Row outline to be deleted does not exist' ).
-    endif.
+    ENDIF.
 
-  endmethod.
+  ENDMETHOD.                    "DELETE_ROW_OUTLINE
 
 
-  method FREEZE_PANES.
+  METHOD freeze_panes.
 
-    if IP_NUM_COLUMNS is not supplied and IP_NUM_ROWS is not supplied.
+    IF ip_num_columns IS NOT SUPPLIED AND ip_num_rows IS NOT SUPPLIED.
       zcx_excel=>raise_text( 'Pleas provide number of rows and/or columns to freeze' ).
-    endif.
+    ENDIF.
 
-    if IP_NUM_COLUMNS is supplied and IP_NUM_COLUMNS <= 0.
+    IF ip_num_columns IS SUPPLIED AND ip_num_columns <= 0.
       zcx_excel=>raise_text( 'Number of columns to freeze should be positive' ).
-    endif.
+    ENDIF.
 
-    if IP_NUM_ROWS is supplied and IP_NUM_ROWS <= 0.
+    IF ip_num_rows IS SUPPLIED AND ip_num_rows <= 0.
       zcx_excel=>raise_text( 'Number of rows to freeze should be positive' ).
-    endif.
+    ENDIF.
 
-    FREEZE_PANE_CELL_COLUMN = IP_NUM_COLUMNS + 1.
-    FREEZE_PANE_CELL_ROW = IP_NUM_ROWS + 1.
-  endmethod.
+    freeze_pane_cell_column = ip_num_columns + 1.
+    freeze_pane_cell_row = ip_num_rows + 1.
+  ENDMETHOD.                    "FREEZE_PANES
 
 
-  method GENERATE_TITLE.
-    data: LO_WORKSHEETS_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR,
-          LO_WORKSHEET           type ref to ZCL_EXCEL_WORKSHEET.
+  METHOD generate_title.
+    DATA: lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator,
+          lo_worksheet           TYPE REF TO zcl_excel_worksheet.
 
-    data: T_TITLES    type hashed table of ZEXCEL_SHEET_TITLE with unique key TABLE_LINE,
-          TITLE       type ZEXCEL_SHEET_TITLE,
-          SHEETNUMBER type I.
+    DATA: t_titles    TYPE HASHED TABLE OF zexcel_sheet_title WITH UNIQUE KEY table_line,
+          title       TYPE zexcel_sheet_title,
+          sheetnumber TYPE i.
 
 * Get list of currently used titles
-    LO_WORKSHEETS_ITERATOR = ME->EXCEL->GET_WORKSHEETS_ITERATOR( ).
-    while LO_WORKSHEETS_ITERATOR->HAS_NEXT( ) = ABAP_TRUE.
-      LO_WORKSHEET ?= LO_WORKSHEETS_ITERATOR->GET_NEXT( ).
-      TITLE = LO_WORKSHEET->GET_TITLE( ).
-      insert TITLE into table T_TITLES.
-      add 1 to SHEETNUMBER.
-    endwhile.
+    lo_worksheets_iterator = me->excel->get_worksheets_iterator( ).
+    WHILE lo_worksheets_iterator->has_next( ) = abap_true.
+      lo_worksheet ?= lo_worksheets_iterator->get_next( ).
+      title = lo_worksheet->get_title( ).
+      INSERT title INTO TABLE t_titles.
+      ADD 1 TO sheetnumber.
+    ENDWHILE.
 
 * Now build sheetnumber.  Increase counter until we hit a number that is not used so far
-    add 1 to SHEETNUMBER.  " Start counting with next number
-    do.
-      TITLE = SHEETNUMBER.
-      shift TITLE left deleting leading SPACE.
-      concatenate 'Sheet'(001) TITLE into EP_TITLE.
-      insert EP_TITLE into table T_TITLES.
-      if SY-SUBRC = 0.  " Title not used so far --> take it
-        exit.
-      endif.
+    ADD 1 TO sheetnumber.  " Start counting with next number
+    DO.
+      title = sheetnumber.
+      SHIFT title LEFT DELETING LEADING space.
+      CONCATENATE 'Sheet'(001) title INTO ep_title.
+      INSERT ep_title INTO TABLE t_titles.
+      IF sy-subrc = 0.  " Title not used so far --> take it
+        EXIT.
+      ENDIF.
 
-      add 1 to SHEETNUMBER.
-    enddo.
-  endmethod.
-
-
-  method GET_ACTIVE_CELL.
-
-    data: LV_ACTIVE_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA,
-          LV_ACTIVE_ROW    type STRING.
-
-    LV_ACTIVE_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( ACTIVE_CELL-CELL_COLUMN ).
-    LV_ACTIVE_ROW    = ACTIVE_CELL-CELL_ROW.
-    shift LV_ACTIVE_ROW right deleting trailing SPACE.
-    shift LV_ACTIVE_ROW left deleting leading SPACE.
-    concatenate LV_ACTIVE_COLUMN LV_ACTIVE_ROW into EP_ACTIVE_CELL.
-
-  endmethod.
+      ADD 1 TO sheetnumber.
+    ENDDO.
+  ENDMETHOD.                    "GENERATE_TITLE
 
 
-  method GET_CELL.
+  METHOD get_active_cell.
 
-    data: LV_COLUMN        type ZEXCEL_CELL_COLUMN,
-          LS_SHEET_CONTENT type ZEXCEL_S_CELL_DATA.
+    DATA: lv_active_column TYPE zexcel_cell_column_alpha,
+          lv_active_row    TYPE string.
 
-    LV_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN ).
+    lv_active_column = zcl_excel_common=>convert_column2alpha( active_cell-cell_column ).
+    lv_active_row    = active_cell-cell_row.
+    SHIFT lv_active_row RIGHT DELETING TRAILING space.
+    SHIFT lv_active_row LEFT DELETING LEADING space.
+    CONCATENATE lv_active_column lv_active_row INTO ep_active_cell.
 
-    read table SHEET_CONTENT into LS_SHEET_CONTENT with table key CELL_ROW     = IP_ROW
-                                                                  CELL_COLUMN  = LV_COLUMN.
+  ENDMETHOD.                    "GET_ACTIVE_CELL
 
-    EP_RC = SY-SUBRC.
-    EP_VALUE    = LS_SHEET_CONTENT-CELL_VALUE.
-    EP_GUID     = LS_SHEET_CONTENT-CELL_STYLE.       " issue 139 - added this to be used for columnwidth calculation
-    EP_FORMULA  = LS_SHEET_CONTENT-CELL_FORMULA.
+
+  METHOD get_cell.
+
+    DATA: lv_column        TYPE zexcel_cell_column,
+          ls_sheet_content TYPE zexcel_s_cell_data.
+
+    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+
+    READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = ip_row
+                                                                  cell_column  = lv_column.
+
+    ep_rc = sy-subrc.
+    ep_value    = ls_sheet_content-cell_value.
+    ep_guid     = ls_sheet_content-cell_style.       " issue 139 - added this to be used for columnwidth calculation
+    ep_formula  = ls_sheet_content-cell_formula.
 
     " Addition to solve issue #120, contribution by Stefan Schmöcker
-    data: STYLE_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR,
-          STYLE          type ref to ZCL_EXCEL_STYLE.
-    if EP_STYLE is requested.
-      STYLE_ITERATOR = ME->EXCEL->GET_STYLES_ITERATOR( ).
-      while STYLE_ITERATOR->HAS_NEXT( ) = 'X'.
-        STYLE ?= STYLE_ITERATOR->GET_NEXT( ).
-        if STYLE->GET_GUID( ) = LS_SHEET_CONTENT-CELL_STYLE.
-          EP_STYLE = STYLE.
-          exit.
-        endif.
-      endwhile.
-    endif.
-  endmethod.
+    DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
+          style          TYPE REF TO zcl_excel_style.
+    IF ep_style IS REQUESTED.
+      style_iterator = me->excel->get_styles_iterator( ).
+      WHILE style_iterator->has_next( ) = 'X'.
+        style ?= style_iterator->get_next( ).
+        IF style->get_guid( ) = ls_sheet_content-cell_style.
+          ep_style = style.
+          EXIT.
+        ENDIF.
+      ENDWHILE.
+    ENDIF.
+  ENDMETHOD.                    "GET_CELL
 
 
-  method GET_COLUMN.
+  METHOD get_column.
 
-    data: LV_COLUMN type ZEXCEL_CELL_COLUMN.
+    DATA: lv_column TYPE zexcel_cell_column.
 
-    LV_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN ).
+    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
 
-    EO_COLUMN = ME->COLUMNS->GET( IP_INDEX = LV_COLUMN ).
+    eo_column = me->columns->get( ip_index = lv_column ).
 
-    if EO_COLUMN is not bound.
-      EO_COLUMN = ME->ADD_NEW_COLUMN( IP_COLUMN ).
-    endif.
+    IF eo_column IS NOT BOUND.
+      eo_column = me->add_new_column( ip_column ).
+    ENDIF.
 
-  endmethod.
-
-
-  method GET_COLUMNS.
-    EO_COLUMNS = ME->COLUMNS.
-  endmethod.
+  ENDMETHOD.                    "GET_COLUMN
 
 
-  method GET_COLUMNS_ITERATOR.
+  METHOD get_columns.
+    eo_columns = me->columns.
+  ENDMETHOD.                    "GET_COLUMNS
 
-    EO_ITERATOR = ME->COLUMNS->GET_ITERATOR( ).
 
-  endmethod.
+  METHOD get_columns_iterator.
+
+    eo_iterator = me->columns->get_iterator( ).
+
+  ENDMETHOD.                    "GET_COLUMNS_ITERATOR
 
 
   METHOD get_comments.
@@ -3928,293 +3931,374 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       r_comments->include( lo_comment ).
     ENDWHILE.
 
-  ENDMETHOD.
+  ENDMETHOD.                    "get_comments
 
 
   METHOD get_comments_iterator.
     eo_iterator = comments->get_iterator( ).
 
-  ENDMETHOD.
+  ENDMETHOD.                    "get_comments_iterator
 
 
-  method GET_DATA_VALIDATIONS_ITERATOR.
+  METHOD get_data_validations_iterator.
 
-    EO_ITERATOR = ME->DATA_VALIDATIONS->GET_ITERATOR( ).
-  endmethod.
-
-
-  method GET_DATA_VALIDATIONS_SIZE.
-    EP_SIZE = ME->DATA_VALIDATIONS->SIZE( ).
-  endmethod.
+    eo_iterator = me->data_validations->get_iterator( ).
+  ENDMETHOD.                    "GET_DATA_VALIDATIONS_ITERATOR
 
 
-  method GET_DEFAULT_COLUMN.
-    if ME->COLUMN_DEFAULT is not bound.
-      create object ME->COLUMN_DEFAULT
-        exporting
-          IP_INDEX     = 'A'         " ????
-          IP_WORKSHEET = ME
-          IP_EXCEL     = ME->EXCEL.
-    endif.
-
-    EO_COLUMN = ME->COLUMN_DEFAULT.
-  endmethod.
+  METHOD get_data_validations_size.
+    ep_size = me->data_validations->size( ).
+  ENDMETHOD.                    "GET_DATA_VALIDATIONS_SIZE
 
 
-  method GET_DEFAULT_EXCEL_DATE_FORMAT.
-    constants: C_LANG_E type LANG value 'E'.
+  METHOD get_default_column.
+    IF me->column_default IS NOT BOUND.
+      CREATE OBJECT me->column_default
+        EXPORTING
+          ip_index     = 'A'         " ????
+          ip_worksheet = me
+          ip_excel     = me->excel.
+    ENDIF.
 
-    if DEFAULT_EXCEL_DATE_FORMAT is not initial.
-      EP_DEFAULT_EXCEL_DATE_FORMAT = DEFAULT_EXCEL_DATE_FORMAT.
-      return.
-    endif.
+    eo_column = me->column_default.
+  ENDMETHOD.                    "GET_DEFAULT_COLUMN
+
+
+  METHOD get_default_excel_date_format.
+    CONSTANTS: c_lang_e TYPE lang VALUE 'E'.
+
+    IF default_excel_date_format IS NOT INITIAL.
+      ep_default_excel_date_format = default_excel_date_format.
+      RETURN.
+    ENDIF.
 
     "try to get defaults
-    try.
-        CL_ABAP_DATFM=>GET_DATE_FORMAT_DES( exporting IM_LANGU = C_LANG_E
-                                            importing EX_DATEFORMAT = DEFAULT_EXCEL_DATE_FORMAT ).
-      catch CX_ABAP_DATFM_FORMAT_UNKNOWN.
+    TRY.
+        cl_abap_datfm=>get_date_format_des( EXPORTING im_langu = c_lang_e
+                                            IMPORTING ex_dateformat = default_excel_date_format ).
+      CATCH cx_abap_datfm_format_unknown.
 
-    endtry.
+    ENDTRY.
 
     " and fallback to fixed format
-    if DEFAULT_EXCEL_DATE_FORMAT is initial.
-      DEFAULT_EXCEL_DATE_FORMAT = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_DDMMYYYYDOT.
-    endif.
+    IF default_excel_date_format IS INITIAL.
+      default_excel_date_format = zcl_excel_style_number_format=>c_format_date_ddmmyyyydot.
+    ENDIF.
 
-    EP_DEFAULT_EXCEL_DATE_FORMAT = DEFAULT_EXCEL_DATE_FORMAT.
-  endmethod.
+    ep_default_excel_date_format = default_excel_date_format.
+  ENDMETHOD.                    "GET_DEFAULT_EXCEL_DATE_FORMAT
 
 
-  method GET_DEFAULT_EXCEL_TIME_FORMAT.
-    data: L_TIMEFM type XUTIMEFM.
+  METHOD get_default_excel_time_format.
+    DATA: l_timefm TYPE xutimefm.
 
-    if DEFAULT_EXCEL_TIME_FORMAT is not initial.
-      EP_DEFAULT_EXCEL_TIME_FORMAT = DEFAULT_EXCEL_TIME_FORMAT.
-      return.
-    endif.
+    IF default_excel_time_format IS NOT INITIAL.
+      ep_default_excel_time_format = default_excel_time_format.
+      RETURN.
+    ENDIF.
 
 * Let's get default
-    L_TIMEFM = CL_ABAP_TIMEFM=>GET_ENVIRONMENT_TIMEFM( ).
-    case L_TIMEFM.
-      when 0.
+    l_timefm = cl_abap_timefm=>get_environment_timefm( ).
+    CASE l_timefm.
+      WHEN 0.
 *0  24 Hour Format (Example: 12:05:10)
-        DEFAULT_EXCEL_TIME_FORMAT = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_TIME6.
-      when 1.
+        default_excel_time_format = zcl_excel_style_number_format=>c_format_date_time6.
+      WHEN 1.
 *1  12 Hour Format (Example: 12:05:10 PM)
-        DEFAULT_EXCEL_TIME_FORMAT = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_TIME2.
-      when 2.
+        default_excel_time_format = zcl_excel_style_number_format=>c_format_date_time2.
+      WHEN 2.
 *2  12 Hour Format (Example: 12:05:10 pm) for now all the same. no chnage upper lower
-        DEFAULT_EXCEL_TIME_FORMAT = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_TIME2.
-      when 3.
+        default_excel_time_format = zcl_excel_style_number_format=>c_format_date_time2.
+      WHEN 3.
 *3  Hours from 0 to 11 (Example: 00:05:10 PM)  for now all the same. no chnage upper lower
-        DEFAULT_EXCEL_TIME_FORMAT = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_TIME2.
-      when 4.
+        default_excel_time_format = zcl_excel_style_number_format=>c_format_date_time2.
+      WHEN 4.
 *4  Hours from 0 to 11 (Example: 00:05:10 pm)  for now all the same. no chnage upper lower
-        DEFAULT_EXCEL_TIME_FORMAT = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_TIME2.
-      when others.
+        default_excel_time_format = zcl_excel_style_number_format=>c_format_date_time2.
+      WHEN OTHERS.
         " and fallback to fixed format
-        DEFAULT_EXCEL_TIME_FORMAT = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_TIME6.
-    endcase.
+        default_excel_time_format = zcl_excel_style_number_format=>c_format_date_time6.
+    ENDCASE.
 
-    EP_DEFAULT_EXCEL_TIME_FORMAT = DEFAULT_EXCEL_TIME_FORMAT.
-  endmethod.
-
-
-  method GET_DEFAULT_ROW.
-    if ME->ROW_DEFAULT is not bound.
-      create object ME->ROW_DEFAULT.
-    endif.
-
-    EO_ROW = ME->ROW_DEFAULT.
-  endmethod.
+    ep_default_excel_time_format = default_excel_time_format.
+  ENDMETHOD.                    "GET_DEFAULT_EXCEL_TIME_FORMAT
 
 
-  method GET_DIMENSION_RANGE.
+  METHOD get_default_row.
+    IF me->row_default IS NOT BOUND.
+      CREATE OBJECT me->row_default.
+    ENDIF.
 
-    ME->UPDATE_DIMENSION_RANGE( ).
-    if UPPER_CELL eq LOWER_CELL. "only one cell
+    eo_row = me->row_default.
+  ENDMETHOD.                    "GET_DEFAULT_ROW
+
+
+  METHOD get_dimension_range.
+
+    me->update_dimension_range( ).
+    IF upper_cell EQ lower_cell. "only one cell
       " Worksheet not filled
 *    IF upper_cell-cell_coords = '0'.
-      if UPPER_CELL-CELL_COORDS is initial.
-        EP_DIMENSION_RANGE = 'A1'.
-      else.
-        EP_DIMENSION_RANGE = UPPER_CELL-CELL_COORDS.
-      endif.
-    else.
-      concatenate UPPER_CELL-CELL_COORDS ':' LOWER_CELL-CELL_COORDS into EP_DIMENSION_RANGE.
-    endif.
+      IF upper_cell-cell_coords IS INITIAL.
+        ep_dimension_range = 'A1'.
+      ELSE.
+        ep_dimension_range = upper_cell-cell_coords.
+      ENDIF.
+    ELSE.
+      CONCATENATE upper_cell-cell_coords ':' lower_cell-cell_coords INTO ep_dimension_range.
+    ENDIF.
 
-  endmethod.
-
-
-  method GET_DRAWINGS.
-
-    data: LO_DRAWING  type ref to ZCL_EXCEL_DRAWING,
-          LO_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR.
-
-    case IP_TYPE.
-      when ZCL_EXCEL_DRAWING=>TYPE_IMAGE.
-        R_DRAWINGS = DRAWINGS.
-      when ZCL_EXCEL_DRAWING=>TYPE_CHART.
-        R_DRAWINGS = CHARTS.
-      when SPACE.
-        create object R_DRAWINGS
-          exporting
-            IP_TYPE = ''.
-
-        LO_ITERATOR = DRAWINGS->GET_ITERATOR( ).
-        while LO_ITERATOR->HAS_NEXT( ) = ABAP_TRUE.
-          LO_DRAWING ?= LO_ITERATOR->GET_NEXT( ).
-          R_DRAWINGS->INCLUDE( LO_DRAWING ).
-        endwhile.
-        LO_ITERATOR = CHARTS->GET_ITERATOR( ).
-        while LO_ITERATOR->HAS_NEXT( ) = ABAP_TRUE.
-          LO_DRAWING ?= LO_ITERATOR->GET_NEXT( ).
-          R_DRAWINGS->INCLUDE( LO_DRAWING ).
-        endwhile.
-      when others.
-    endcase.
-  endmethod.
+  ENDMETHOD.                    "GET_DIMENSION_RANGE
 
 
-  method GET_DRAWINGS_ITERATOR.
-    case IP_TYPE.
-      when ZCL_EXCEL_DRAWING=>TYPE_IMAGE.
-        EO_ITERATOR = DRAWINGS->GET_ITERATOR( ).
-      when ZCL_EXCEL_DRAWING=>TYPE_CHART.
-        EO_ITERATOR = CHARTS->GET_ITERATOR( ).
-    endcase.
-  endmethod.
+  METHOD get_drawings.
+
+    DATA: lo_drawing  TYPE REF TO zcl_excel_drawing,
+          lo_iterator TYPE REF TO cl_object_collection_iterator.
+
+    CASE ip_type.
+      WHEN zcl_excel_drawing=>type_image.
+        r_drawings = drawings.
+      WHEN zcl_excel_drawing=>type_chart.
+        r_drawings = charts.
+      WHEN space.
+        CREATE OBJECT r_drawings
+          EXPORTING
+            ip_type = ''.
+
+        lo_iterator = drawings->get_iterator( ).
+        WHILE lo_iterator->has_next( ) = abap_true.
+          lo_drawing ?= lo_iterator->get_next( ).
+          r_drawings->include( lo_drawing ).
+        ENDWHILE.
+        lo_iterator = charts->get_iterator( ).
+        WHILE lo_iterator->has_next( ) = abap_true.
+          lo_drawing ?= lo_iterator->get_next( ).
+          r_drawings->include( lo_drawing ).
+        ENDWHILE.
+      WHEN OTHERS.
+    ENDCASE.
+  ENDMETHOD.                    "GET_DRAWINGS
 
 
-  method GET_FREEZE_CELL.
-    EP_ROW = ME->FREEZE_PANE_CELL_ROW.
-    EP_COLUMN = ME->FREEZE_PANE_CELL_COLUMN.
-  endmethod.
+  METHOD get_drawings_iterator.
+    CASE ip_type.
+      WHEN zcl_excel_drawing=>type_image.
+        eo_iterator = drawings->get_iterator( ).
+      WHEN zcl_excel_drawing=>type_chart.
+        eo_iterator = charts->get_iterator( ).
+    ENDCASE.
+  ENDMETHOD.                    "GET_DRAWINGS_ITERATOR
 
 
-  method GET_GUID.
-
-    EP_GUID = ME->GUID.
-
-  endmethod.
-
-
-  method GET_HIGHEST_COLUMN.
-    ME->UPDATE_DIMENSION_RANGE( ).
-    R_HIGHEST_COLUMN = ME->LOWER_CELL-CELL_COLUMN.
-  endmethod.
+  METHOD get_freeze_cell.
+    ep_row = me->freeze_pane_cell_row.
+    ep_column = me->freeze_pane_cell_column.
+  ENDMETHOD.                    "GET_FREEZE_CELL
 
 
-  method GET_HIGHEST_ROW.
-    ME->UPDATE_DIMENSION_RANGE( ).
-    R_HIGHEST_ROW = ME->LOWER_CELL-CELL_ROW.
-  endmethod.
+  METHOD get_guid.
+
+    ep_guid = me->guid.
+
+  ENDMETHOD.                    "GET_GUID
 
 
-  method GET_HYPERLINKS_ITERATOR.
-    EO_ITERATOR = HYPERLINKS->GET_ITERATOR( ).
-  endmethod.
+  METHOD get_header_footer_drawings.
+    DATA: ls_odd_header  TYPE zexcel_s_worksheet_head_foot,
+          ls_odd_footer  TYPE zexcel_s_worksheet_head_foot,
+          ls_even_header TYPE zexcel_s_worksheet_head_foot,
+          ls_even_footer TYPE zexcel_s_worksheet_head_foot,
+          ls_hd_ft  TYPE zexcel_s_worksheet_head_foot.
+
+    FIELD-SYMBOLS: <fs_drawings> TYPE zexcel_s_drawings.
+
+    me->sheet_setup->get_header_footer( IMPORTING ep_odd_header = ls_odd_header
+                                                  ep_odd_footer = ls_odd_footer
+                                                  ep_even_header = ls_even_header
+                                                  ep_even_footer = ls_even_footer ).
+
+**********************************************************************
+*** Odd header
+    ls_hd_ft = ls_odd_header.
+    IF ls_hd_ft-left_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-left_image.
+    ENDIF.
+    IF ls_hd_ft-right_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-right_image.
+    ENDIF.
+    IF ls_hd_ft-center_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-center_image.
+    ENDIF.
+
+**********************************************************************
+*** Odd footer
+    ls_hd_ft = ls_odd_footer.
+    IF ls_hd_ft-left_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-left_image.
+    ENDIF.
+    IF ls_hd_ft-right_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-right_image.
+    ENDIF.
+    IF ls_hd_ft-center_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-center_image.
+    ENDIF.
+
+**********************************************************************
+*** Even header
+    ls_hd_ft = ls_even_header.
+    IF ls_hd_ft-left_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-left_image.
+    ENDIF.
+    IF ls_hd_ft-right_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-right_image.
+    ENDIF.
+    IF ls_hd_ft-center_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-center_image.
+    ENDIF.
+
+**********************************************************************
+*** Even footer
+    ls_hd_ft = ls_even_footer.
+    IF ls_hd_ft-left_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-left_image.
+    ENDIF.
+    IF ls_hd_ft-right_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-right_image.
+    ENDIF.
+    IF ls_hd_ft-center_image IS NOT INITIAL.
+      APPEND INITIAL LINE TO rt_drawings ASSIGNING <fs_drawings>.
+      <fs_drawings>-drawing = ls_hd_ft-center_image.
+    ENDIF.
+
+  ENDMETHOD.                    "get_header_footer_drawings
 
 
-  method GET_HYPERLINKS_SIZE.
-    EP_SIZE = HYPERLINKS->SIZE( ).
-  endmethod.
+  METHOD get_highest_column.
+    me->update_dimension_range( ).
+    r_highest_column = me->lower_cell-cell_column.
+  ENDMETHOD.                    "GET_HIGHEST_COLUMN
 
 
-  method GET_MERGE.
-
-    field-symbols: <LS_MERGED_CELL> like line of ME->MT_MERGED_CELLS.
-
-    data: LV_COL_FROM    type STRING,
-          LV_COL_TO      type STRING,
-          LV_ROW_FROM    type STRING,
-          LV_ROW_TO      type STRING,
-          LV_MERGE_RANGE type STRING.
-
-    loop at ME->MT_MERGED_CELLS assigning <LS_MERGED_CELL>.
-
-      LV_COL_FROM = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( <LS_MERGED_CELL>-COL_FROM ).
-      LV_COL_TO   = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( <LS_MERGED_CELL>-COL_TO   ).
-      LV_ROW_FROM = <LS_MERGED_CELL>-ROW_FROM.
-      LV_ROW_TO   = <LS_MERGED_CELL>-ROW_TO  .
-      concatenate LV_COL_FROM LV_ROW_FROM ':' LV_COL_TO LV_ROW_TO
-         into LV_MERGE_RANGE.
-      condense LV_MERGE_RANGE no-gaps.
-      append LV_MERGE_RANGE to MERGE_RANGE.
-
-    endloop.
-
-  endmethod.
+  METHOD get_highest_row.
+    me->update_dimension_range( ).
+    r_highest_row = me->lower_cell-cell_row.
+  ENDMETHOD.                    "GET_HIGHEST_ROW
 
 
-  method GET_PAGEBREAKS.
-    RO_PAGEBREAKS = MO_PAGEBREAKS.
-  endmethod.
+  METHOD get_hyperlinks_iterator.
+    eo_iterator = hyperlinks->get_iterator( ).
+  ENDMETHOD.                    "GET_HYPERLINKS_ITERATOR
 
 
-  method GET_RANGES_ITERATOR.
-
-    EO_ITERATOR = ME->RANGES->GET_ITERATOR( ).
-
-  endmethod.
+  METHOD get_hyperlinks_size.
+    ep_size = hyperlinks->size( ).
+  ENDMETHOD.                    "GET_HYPERLINKS_SIZE
 
 
-  method GET_ROW.
-    EO_ROW = ME->ROWS->GET( IP_INDEX = IP_ROW ).
+  METHOD get_merge.
 
-    if EO_ROW is not bound.
-      EO_ROW = ME->ADD_NEW_ROW( IP_ROW ).
-    endif.
-  endmethod.
+    FIELD-SYMBOLS: <ls_merged_cell> LIKE LINE OF me->mt_merged_cells.
 
+    DATA: lv_col_from    TYPE string,
+          lv_col_to      TYPE string,
+          lv_row_from    TYPE string,
+          lv_row_to      TYPE string,
+          lv_merge_range TYPE string.
 
-  method GET_ROWS.
-    EO_ROWS = ME->ROWS.
-  endmethod.
+    LOOP AT me->mt_merged_cells ASSIGNING <ls_merged_cell>.
 
+      lv_col_from = zcl_excel_common=>convert_column2alpha( <ls_merged_cell>-col_from ).
+      lv_col_to   = zcl_excel_common=>convert_column2alpha( <ls_merged_cell>-col_to   ).
+      lv_row_from = <ls_merged_cell>-row_from.
+      lv_row_to   = <ls_merged_cell>-row_to  .
+      CONCATENATE lv_col_from lv_row_from ':' lv_col_to lv_row_to
+         INTO lv_merge_range.
+      CONDENSE lv_merge_range NO-GAPS.
+      APPEND lv_merge_range TO merge_range.
 
-  method GET_ROWS_ITERATOR.
+    ENDLOOP.
 
-    EO_ITERATOR = ME->ROWS->GET_ITERATOR( ).
-
-  endmethod.
-
-
-  method GET_ROW_OUTLINES.
-
-    RT_ROW_OUTLINES = ME->MT_ROW_OUTLINES.
-
-  endmethod.
+  ENDMETHOD.                    "GET_MERGE
 
 
-  method GET_STYLE_COND.
-
-    data: LO_STYLE_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR,
-          LO_STYLE_COND     type ref to ZCL_EXCEL_STYLE_COND.
-
-    LO_STYLE_ITERATOR = ME->GET_STYLE_COND_ITERATOR( ).
-    while LO_STYLE_ITERATOR->HAS_NEXT( ) = ABAP_TRUE.
-      LO_STYLE_COND ?= LO_STYLE_ITERATOR->GET_NEXT( ).
-      if LO_STYLE_COND->GET_GUID( ) = IP_GUID.
-        EO_STYLE_COND = LO_STYLE_COND.
-        exit.
-      endif.
-    endwhile.
-
-  endmethod.
+  METHOD get_pagebreaks.
+    ro_pagebreaks = mo_pagebreaks.
+  ENDMETHOD.                    "GET_PAGEBREAKS
 
 
-  method GET_STYLE_COND_ITERATOR.
+  METHOD get_ranges_iterator.
 
-    EO_ITERATOR = STYLES_COND->GET_ITERATOR( ).
-  endmethod.
+    eo_iterator = me->ranges->get_iterator( ).
+
+  ENDMETHOD.                    "GET_RANGES_ITERATOR
 
 
-  method GET_TABCOLOR.
-    EV_TABCOLOR = ME->TABCOLOR.
-  endmethod.
+  METHOD get_row.
+    eo_row = me->rows->get( ip_index = ip_row ).
+
+    IF eo_row IS NOT BOUND.
+      eo_row = me->add_new_row( ip_row ).
+    ENDIF.
+  ENDMETHOD.                    "GET_ROW
+
+
+  METHOD get_rows.
+    eo_rows = me->rows.
+  ENDMETHOD.                    "GET_ROWS
+
+
+  METHOD get_rows_iterator.
+
+    eo_iterator = me->rows->get_iterator( ).
+
+  ENDMETHOD.                    "GET_ROWS_ITERATOR
+
+
+  METHOD get_row_outlines.
+
+    rt_row_outlines = me->mt_row_outlines.
+
+  ENDMETHOD.                    "GET_ROW_OUTLINES
+
+
+  METHOD get_style_cond.
+
+    DATA: lo_style_iterator TYPE REF TO cl_object_collection_iterator,
+          lo_style_cond     TYPE REF TO zcl_excel_style_cond.
+
+    lo_style_iterator = me->get_style_cond_iterator( ).
+    WHILE lo_style_iterator->has_next( ) = abap_true.
+      lo_style_cond ?= lo_style_iterator->get_next( ).
+      IF lo_style_cond->get_guid( ) = ip_guid.
+        eo_style_cond = lo_style_cond.
+        EXIT.
+      ENDIF.
+    ENDWHILE.
+
+  ENDMETHOD.                    "GET_STYLE_COND
+
+
+  METHOD get_style_cond_iterator.
+
+    eo_iterator = styles_cond->get_iterator( ).
+  ENDMETHOD.                    "GET_STYLE_COND_ITERATOR
+
+
+  METHOD get_tabcolor.
+    ev_tabcolor = me->tabcolor.
+  ENDMETHOD.                    "GET_TABCOLOR
 
 
   METHOD get_table.
@@ -4351,463 +4435,463 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
         zcx_excel=>raise_text( lv_errormessage ).
 
     ENDTRY.
-  ENDMETHOD.
+  ENDMETHOD.                    "get_table
 
 
-  method GET_TABLES_ITERATOR.
-    EO_ITERATOR = TABLES->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
-  endmethod.
+  METHOD get_tables_iterator.
+    eo_iterator = tables->if_object_collection~get_iterator( ).
+  ENDMETHOD.                    "GET_TABLES_ITERATOR
 
 
-  method GET_TABLES_SIZE.
-    EP_SIZE = TABLES->IF_OBJECT_COLLECTION~SIZE( ).
-  endmethod.
+  METHOD get_tables_size.
+    ep_size = tables->if_object_collection~size( ).
+  ENDMETHOD.                    "GET_TABLES_SIZE
 
 
-  method GET_TITLE.
-    data LV_VALUE type STRING.
-    if IP_ESCAPED eq ABAP_TRUE.
-      LV_VALUE = ME->TITLE.
-      EP_TITLE = ZCL_EXCEL_COMMON=>ESCAPE_STRING( LV_VALUE ).
-    else.
-      EP_TITLE = ME->TITLE.
-    endif.
-  endmethod.
+  METHOD get_title.
+    DATA lv_value TYPE string.
+    IF ip_escaped EQ abap_true.
+      lv_value = me->title.
+      ep_title = zcl_excel_common=>escape_string( lv_value ).
+    ELSE.
+      ep_title = me->title.
+    ENDIF.
+  ENDMETHOD.                    "GET_TITLE
 
 
-  method GET_VALUE_TYPE.
-    data: LO_ADDIT    type ref to CL_ABAP_ELEMDESCR,
-          LS_DFIES    type DFIES,
-          L_FUNCTION  type FUNCNAME,
-          L_VALUE(50) type C.
+  METHOD get_value_type.
+    DATA: lo_addit    TYPE REF TO cl_abap_elemdescr,
+          ls_dfies    TYPE dfies,
+          l_function  TYPE funcname,
+          l_value(50) TYPE c.
 
-    EP_VALUE = IP_VALUE.
-    EP_VALUE_TYPE = CL_ABAP_TYPEDESCR=>TYPEKIND_STRING. " Thats our default if something goes wrong.
+    ep_value = ip_value.
+    ep_value_type = cl_abap_typedescr=>typekind_string. " Thats our default if something goes wrong.
 
-    try.
-        LO_ADDIT            ?= CL_ABAP_TYPEDESCR=>DESCRIBE_BY_DATA( IP_VALUE ).
-      catch CX_SY_MOVE_CAST_ERROR.
-        clear LO_ADDIT.
-    endtry.
-    if LO_ADDIT is bound.
-      LO_ADDIT->GET_DDIC_FIELD( receiving  P_FLDDESCR   = LS_DFIES
-                                exceptions NOT_FOUND    = 1
-                                           NO_DDIC_TYPE = 2
-                                           others       = 3 ) .
-      if SY-SUBRC = 0.
-        EP_VALUE_TYPE = LS_DFIES-INTTYPE.
+    TRY.
+        lo_addit            ?= cl_abap_typedescr=>describe_by_data( ip_value ).
+      CATCH cx_sy_move_cast_error.
+        CLEAR lo_addit.
+    ENDTRY.
+    IF lo_addit IS BOUND.
+      lo_addit->get_ddic_field( RECEIVING  p_flddescr   = ls_dfies
+                                EXCEPTIONS not_found    = 1
+                                           no_ddic_type = 2
+                                           OTHERS       = 3 ) .
+      IF sy-subrc = 0.
+        ep_value_type = ls_dfies-inttype.
 
-        if LS_DFIES-CONVEXIT is not initial.
+        IF ls_dfies-convexit IS NOT INITIAL.
 * We need to convert with output conversion function
-          concatenate 'CONVERSION_EXIT_' LS_DFIES-CONVEXIT '_OUTPUT' into L_FUNCTION.
-          select single FUNCNAME into L_FUNCTION
-                from TFDIR
-                where FUNCNAME = L_FUNCTION.
-          if SY-SUBRC = 0.
-            call function L_FUNCTION
-              exporting
-                INPUT  = IP_VALUE
-              importing
+          CONCATENATE 'CONVERSION_EXIT_' ls_dfies-convexit '_OUTPUT' INTO l_function.
+          SELECT SINGLE funcname INTO l_function
+                FROM tfdir
+                WHERE funcname = l_function.
+          IF sy-subrc = 0.
+            CALL FUNCTION l_function
+              EXPORTING
+                input      = ip_value
+              IMPORTING
 *               LONG_TEXT  =
-                OUTPUT = L_VALUE
+                output     = l_value
 *               SHORT_TEXT =
-              exceptions
-                others = 1.
-            if SY-SUBRC <> 0.
+              EXCEPTIONS
+                OTHERS     = 1.
+            IF sy-subrc <> 0.
 * MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
 *         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
-            else.
-              try.
-                  EP_VALUE = L_VALUE.
-                catch CX_ROOT.
-                  EP_VALUE = IP_VALUE.
-              endtry.
-            endif.
-          endif.
-        endif.
-      else.
-        EP_VALUE_TYPE = LO_ADDIT->GET_DATA_TYPE_KIND( IP_VALUE ).
-      endif.
-    endif.
+            ELSE.
+              TRY.
+                  ep_value = l_value.
+                CATCH cx_root.
+                  ep_value = ip_value.
+              ENDTRY.
+            ENDIF.
+          ENDIF.
+        ENDIF.
+      ELSE.
+        ep_value_type = lo_addit->get_data_type_kind( ip_value ).
+      ENDIF.
+    ENDIF.
 
-  endmethod.
-
-
-  method IS_CELL_MERGED.
-
-    data: LV_COLUMN type I.
-
-    field-symbols: <LS_MERGED_CELL> like line of ME->MT_MERGED_CELLS.
-
-    LV_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN ).
-
-    RP_IS_MERGED = ABAP_FALSE.                                        " Assume not in merged area
-
-    loop at ME->MT_MERGED_CELLS assigning <LS_MERGED_CELL>.
-
-      if    <LS_MERGED_CELL>-COL_FROM <= LV_COLUMN
-        and <LS_MERGED_CELL>-COL_TO   >= LV_COLUMN
-        and <LS_MERGED_CELL>-ROW_FROM <= IP_ROW
-        and <LS_MERGED_CELL>-ROW_TO   >= IP_ROW.
-        RP_IS_MERGED = ABAP_TRUE.                                     " until we are proven different
-        return.
-      endif.
-
-    endloop.
-
-  endmethod.
+  ENDMETHOD.                    "GET_VALUE_TYPE
 
 
-  method PRINT_TITLE_SET_RANGE.
+  METHOD is_cell_merged.
+
+    DATA: lv_column TYPE i.
+
+    FIELD-SYMBOLS: <ls_merged_cell> LIKE LINE OF me->mt_merged_cells.
+
+    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+
+    rp_is_merged = abap_false.                                        " Assume not in merged area
+
+    LOOP AT me->mt_merged_cells ASSIGNING <ls_merged_cell>.
+
+      IF    <ls_merged_cell>-col_from <= lv_column
+        AND <ls_merged_cell>-col_to   >= lv_column
+        AND <ls_merged_cell>-row_from <= ip_row
+        AND <ls_merged_cell>-row_to   >= ip_row.
+        rp_is_merged = abap_true.                                     " until we are proven different
+        RETURN.
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDMETHOD.                    "IS_CELL_MERGED
+
+
+  METHOD print_title_set_range.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
 *           - Stefan Schmoecker,                            2012-12-02
 *--------------------------------------------------------------------*
 
 
-    data: LO_RANGE_ITERATOR         type ref to CL_OBJECT_COLLECTION_ITERATOR,
-          LO_RANGE                  type ref to ZCL_EXCEL_RANGE,
-          LV_REPEAT_RANGE_SHEETNAME type STRING,
-          LV_REPEAT_RANGE_COL       type STRING,
-          LV_ROW_CHAR_FROM          type CHAR10,
-          LV_ROW_CHAR_TO            type CHAR10,
-          LV_REPEAT_RANGE_ROW       type STRING,
-          LV_REPEAT_RANGE           type STRING.
+    DATA: lo_range_iterator         TYPE REF TO cl_object_collection_iterator,
+          lo_range                  TYPE REF TO zcl_excel_range,
+          lv_repeat_range_sheetname TYPE string,
+          lv_repeat_range_col       TYPE string,
+          lv_row_char_from          TYPE char10,
+          lv_row_char_to            TYPE char10,
+          lv_repeat_range_row       TYPE string,
+          lv_repeat_range           TYPE string.
 
 
 *--------------------------------------------------------------------*
 * Get range that represents printarea
 * if non-existant, create it
 *--------------------------------------------------------------------*
-    LO_RANGE_ITERATOR = ME->GET_RANGES_ITERATOR( ).
-    while LO_RANGE_ITERATOR->HAS_NEXT( ) = ABAP_TRUE.
+    lo_range_iterator = me->get_ranges_iterator( ).
+    WHILE lo_range_iterator->has_next( ) = abap_true.
 
-      LO_RANGE ?= LO_RANGE_ITERATOR->GET_NEXT( ).
-      if LO_RANGE->NAME = ZIF_EXCEL_SHEET_PRINTSETTINGS=>GCV_PRINT_TITLE_NAME.
-        exit.  " Found it
-      endif.
-      clear LO_RANGE.
+      lo_range ?= lo_range_iterator->get_next( ).
+      IF lo_range->name = zif_excel_sheet_printsettings=>gcv_print_title_name.
+        EXIT.  " Found it
+      ENDIF.
+      CLEAR lo_range.
 
-    endwhile.
+    ENDWHILE.
 
 
-    if ME->PRINT_TITLE_COL_FROM is initial and
-       ME->PRINT_TITLE_ROW_FROM is initial.
+    IF me->print_title_col_from IS INITIAL AND
+       me->print_title_row_from IS INITIAL.
 *--------------------------------------------------------------------*
 * No print titles are present,
 *--------------------------------------------------------------------*
-      if LO_RANGE is bound.
-        ME->RANGES->REMOVE( LO_RANGE ).
-      endif.
-    else.
+      IF lo_range IS BOUND.
+        me->ranges->remove( lo_range ).
+      ENDIF.
+    ELSE.
 *--------------------------------------------------------------------*
 * Print titles are present,
 *--------------------------------------------------------------------*
-      if LO_RANGE is not bound.
-        LO_RANGE =  ME->ADD_NEW_RANGE( ).
-        LO_RANGE->NAME = ZIF_EXCEL_SHEET_PRINTSETTINGS=>GCV_PRINT_TITLE_NAME.
-      endif.
+      IF lo_range IS NOT BOUND.
+        lo_range =  me->add_new_range( ).
+        lo_range->name = zif_excel_sheet_printsettings=>gcv_print_title_name.
+      ENDIF.
 
-      LV_REPEAT_RANGE_SHEETNAME = ME->GET_TITLE( ).
-      LV_REPEAT_RANGE_SHEETNAME = ZCL_EXCEL_COMMON=>ESCAPE_STRING( LV_REPEAT_RANGE_SHEETNAME ).
+      lv_repeat_range_sheetname = me->get_title( ).
+      lv_repeat_range_sheetname = zcl_excel_common=>escape_string( lv_repeat_range_sheetname ).
 
 *--------------------------------------------------------------------*
 * Repeat-columns
 *--------------------------------------------------------------------*
-      if ME->PRINT_TITLE_COL_FROM is not initial.
-        concatenate LV_REPEAT_RANGE_SHEETNAME
-                    '!$' ME->PRINT_TITLE_COL_FROM
-                    ':$' ME->PRINT_TITLE_COL_TO
-            into LV_REPEAT_RANGE_COL.
-      endif.
+      IF me->print_title_col_from IS NOT INITIAL.
+        CONCATENATE lv_repeat_range_sheetname
+                    '!$' me->print_title_col_from
+                    ':$' me->print_title_col_to
+            INTO lv_repeat_range_col.
+      ENDIF.
 
 *--------------------------------------------------------------------*
 * Repeat-rows
 *--------------------------------------------------------------------*
-      if ME->PRINT_TITLE_ROW_FROM is not initial.
-        LV_ROW_CHAR_FROM = ME->PRINT_TITLE_ROW_FROM.
-        LV_ROW_CHAR_TO   = ME->PRINT_TITLE_ROW_TO.
-        concatenate '!$' LV_ROW_CHAR_FROM
-                    ':$' LV_ROW_CHAR_TO
-            into LV_REPEAT_RANGE_ROW.
-        condense LV_REPEAT_RANGE_ROW no-gaps.
-        concatenate LV_REPEAT_RANGE_SHEETNAME
-                    LV_REPEAT_RANGE_ROW
-            into LV_REPEAT_RANGE_ROW.
-      endif.
+      IF me->print_title_row_from IS NOT INITIAL.
+        lv_row_char_from = me->print_title_row_from.
+        lv_row_char_to   = me->print_title_row_to.
+        CONCATENATE '!$' lv_row_char_from
+                    ':$' lv_row_char_to
+            INTO lv_repeat_range_row.
+        CONDENSE lv_repeat_range_row NO-GAPS.
+        CONCATENATE lv_repeat_range_sheetname
+                    lv_repeat_range_row
+            INTO lv_repeat_range_row.
+      ENDIF.
 
 *--------------------------------------------------------------------*
 * Concatenate repeat-rows and columns
 *--------------------------------------------------------------------*
-      if LV_REPEAT_RANGE_COL is initial.
-        LV_REPEAT_RANGE = LV_REPEAT_RANGE_ROW.
-      elseif LV_REPEAT_RANGE_ROW is initial.
-        LV_REPEAT_RANGE = LV_REPEAT_RANGE_COL.
-      else.
-        concatenate LV_REPEAT_RANGE_COL LV_REPEAT_RANGE_ROW
-            into LV_REPEAT_RANGE separated by ','.
-      endif.
+      IF lv_repeat_range_col IS INITIAL.
+        lv_repeat_range = lv_repeat_range_row.
+      ELSEIF lv_repeat_range_row IS INITIAL.
+        lv_repeat_range = lv_repeat_range_col.
+      ELSE.
+        CONCATENATE lv_repeat_range_col lv_repeat_range_row
+            INTO lv_repeat_range SEPARATED BY ','.
+      ENDIF.
 
 
-      LO_RANGE->SET_RANGE_VALUE( LV_REPEAT_RANGE ).
-    endif.
+      lo_range->set_range_value( lv_repeat_range ).
+    ENDIF.
 
 
 
-  endmethod.
+  ENDMETHOD.                    "PRINT_TITLE_SET_RANGE
 
 
-METHOD set_area.
+  METHOD set_area.
 
-  DATA: lv_row              TYPE zexcel_cell_row,
-        lv_row_end          TYPE zexcel_cell_row,
-        lv_column_start     TYPE zexcel_cell_column_alpha,
-        lv_column_end       TYPE zexcel_cell_column_alpha,
-        lv_column_start_int TYPE zexcel_cell_column_alpha,
-        lv_column_end_int   TYPE zexcel_cell_column_alpha.
+    DATA: lv_row              TYPE zexcel_cell_row,
+          lv_row_end          TYPE zexcel_cell_row,
+          lv_column_start     TYPE zexcel_cell_column_alpha,
+          lv_column_end       TYPE zexcel_cell_column_alpha,
+          lv_column_start_int TYPE zexcel_cell_column_alpha,
+          lv_column_end_int   TYPE zexcel_cell_column_alpha.
 
-  MOVE: ip_row_to TO lv_row_end,
-        ip_row    TO lv_row.
+    MOVE: ip_row_to TO lv_row_end,
+          ip_row    TO lv_row.
 
-  IF lv_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
-    lv_row_end = lv_row.
-  ENDIF.
+    IF lv_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+      lv_row_end = lv_row.
+    ENDIF.
 
-  MOVE: ip_column_start TO lv_column_start,
-        ip_column_end   TO lv_column_end.
+    MOVE: ip_column_start TO lv_column_start,
+          ip_column_end   TO lv_column_end.
 
-  IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
-    lv_column_end = lv_column_start.
-  ENDIF.
+    IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+      lv_column_end = lv_column_start.
+    ENDIF.
 
-  lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
-  lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
+    lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
+    lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
 
-  IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_end.
+    IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_end.
 
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Wrong Merging Parameters'.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Wrong Merging Parameters'.
 
-  ENDIF.
+    ENDIF.
 
-  IF ip_data_type IS SUPPLIED OR
-     ip_abap_type IS SUPPLIED.
+    IF ip_data_type IS SUPPLIED OR
+       ip_abap_type IS SUPPLIED.
 
-    me->set_cell( ip_column    = lv_column_start
-                  ip_row       = lv_row
-                  ip_value     = ip_value
-                  ip_formula   = ip_formula
-                  ip_style     = ip_style
-                  ip_hyperlink = ip_hyperlink
-                  ip_data_type = ip_data_type
-                  ip_abap_type = ip_abap_type ).
+      me->set_cell( ip_column    = lv_column_start
+                    ip_row       = lv_row
+                    ip_value     = ip_value
+                    ip_formula   = ip_formula
+                    ip_style     = ip_style
+                    ip_hyperlink = ip_hyperlink
+                    ip_data_type = ip_data_type
+                    ip_abap_type = ip_abap_type ).
 
-  ELSE.
+    ELSE.
 
-    me->set_cell( ip_column    = lv_column_start
-                  ip_row       = lv_row
-                  ip_value     = ip_value
-                  ip_formula   = ip_formula
-                  ip_style     = ip_style
-                  ip_hyperlink = ip_hyperlink ).
+      me->set_cell( ip_column    = lv_column_start
+                    ip_row       = lv_row
+                    ip_value     = ip_value
+                    ip_formula   = ip_formula
+                    ip_style     = ip_style
+                    ip_hyperlink = ip_hyperlink ).
 
-  ENDIF.
+    ENDIF.
 
-  IF ip_style IS SUPPLIED.
+    IF ip_style IS SUPPLIED.
 
-    me->set_area_style( ip_column_start = lv_column_start
-                        ip_column_end   = lv_column_end
-                        ip_row          = lv_row
-                        ip_row_to       = lv_row_end
-                        ip_style        = ip_style ).
-  ENDIF.
+      me->set_area_style( ip_column_start = lv_column_start
+                          ip_column_end   = lv_column_end
+                          ip_row          = lv_row
+                          ip_row_to       = lv_row_end
+                          ip_style        = ip_style ).
+    ENDIF.
 
-  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+    IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
 
-    me->set_merge( ip_column_start = lv_column_start
-                   ip_column_end   = lv_column_end
-                   ip_row          = lv_row
-                   ip_row_to       = lv_row_end ).
+      me->set_merge( ip_column_start = lv_column_start
+                     ip_column_end   = lv_column_end
+                     ip_row          = lv_row
+                     ip_row_to       = lv_row_end ).
 
-  ENDIF.
+    ENDIF.
 
-ENDMETHOD.
+  ENDMETHOD.                    "set_area
 
 
-METHOD set_area_formula.
-  DATA: ld_row TYPE zexcel_cell_row,
+  METHOD set_area_formula.
+    DATA: ld_row TYPE zexcel_cell_row,
+          ld_row_end TYPE zexcel_cell_row,
+          ld_column TYPE zexcel_cell_column_alpha,
+          ld_column_end TYPE zexcel_cell_column_alpha,
+          ld_column_int TYPE zexcel_cell_column_alpha,
+          ld_column_end_int TYPE zexcel_cell_column_alpha.
+
+    MOVE: ip_row_to TO ld_row_end,
+          ip_row    TO ld_row.
+    IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+      ld_row_end = ld_row.
+    ENDIF.
+
+    MOVE: ip_column_start TO ld_column,
+          ip_column_end   TO ld_column_end.
+
+    IF ld_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+      ld_column_end = ld_column.
+    ENDIF.
+
+    ld_column_int      = zcl_excel_common=>convert_column2int( ld_column ).
+    ld_column_end_int  = zcl_excel_common=>convert_column2int( ld_column_end ).
+
+    IF ld_column_int > ld_column_end_int OR ld_row > ld_row_end.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Wrong Merging Parameters'.
+    ENDIF.
+
+    me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                          ip_formula = ip_formula ).
+
+    IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+      me->set_merge( ip_column_start = ld_column ip_row = ld_row
+                     ip_column_end   = ld_column_end   ip_row_to = ld_row_end ).
+    ENDIF.
+  ENDMETHOD.                    "set_area_formula
+
+
+  METHOD set_area_style.
+    DATA: ld_row_start TYPE zexcel_cell_row,
         ld_row_end TYPE zexcel_cell_row,
-        ld_column TYPE zexcel_cell_column_alpha,
-        ld_column_end TYPE zexcel_cell_column_alpha,
-        ld_column_int TYPE zexcel_cell_column_alpha,
-        ld_column_end_int TYPE zexcel_cell_column_alpha.
+        ld_column_start_int TYPE zexcel_cell_column,
+        ld_column_end_int TYPE zexcel_cell_column,
+        ld_current_column TYPE zexcel_cell_column_alpha,
+        ld_current_row TYPE zexcel_cell_row.
 
-  MOVE: ip_row_to TO ld_row_end,
-        ip_row    TO ld_row.
-  IF ld_row_end IS INITIAL or ip_row_to is not supplied.
-    ld_row_end = ld_row.
-  ENDIF.
+    MOVE: ip_row_to TO ld_row_end,
+          ip_row    TO ld_row_start.
+    IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+      ld_row_end = ld_row_start.
+    ENDIF.
+    ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
+    ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
+    IF ld_column_end_int IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+      ld_column_end_int = ld_column_start_int.
+    ENDIF.
 
-  MOVE: ip_column_start TO ld_column,
-        ip_column_end   TO ld_column_end.
-
-  if ld_column_end is initial or ip_column_end is not supplied.
-    ld_column_end = ld_column.
-  endif.
-
-  ld_column_int      = zcl_excel_common=>convert_column2int( ld_column ).
-  ld_column_end_int  = zcl_excel_common=>convert_column2int( ld_column_end ).
-
-  if ld_column_int > ld_column_end_int or ld_row > ld_row_end.
-    RAISE EXCEPTION TYPE zcx_excel
-      EXPORTING
-        error = 'Wrong Merging Parameters'.
-  endif.
-
-  me->set_cell_formula( ip_column = ld_column ip_row = ld_row
-                        ip_formula = ip_formula ).
-
-  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
-    me->set_merge( ip_column_start = ld_column ip_row = ld_row
-                   ip_column_end   = ld_column_end   ip_row_to = ld_row_end ).
-  ENDIF.
-ENDMETHOD.
-
-
-METHOD SET_AREA_STYLE.
-  DATA: ld_row_start TYPE zexcel_cell_row,
-      ld_row_end TYPE zexcel_cell_row,
-      ld_column_start_int TYPE zexcel_cell_column,
-      ld_column_end_int TYPE zexcel_cell_column,
-      ld_current_column TYPE zexcel_cell_column_alpha,
-      ld_current_row TYPE zexcel_cell_row.
-
-  MOVE: ip_row_to TO ld_row_end,
-        ip_row    TO ld_row_start.
-  IF ld_row_end IS INITIAL or ip_row_to is not supplied.
-    ld_row_end = ld_row_start.
-  ENDIF.
-  ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
-  ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
-  IF ld_column_end_int IS INITIAL or ip_column_end is not supplied.
-    ld_column_end_int = ld_column_start_int.
-  ENDIF.
-
-  WHILE ld_column_start_int <= ld_column_end_int.
-    ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
-    ld_current_row = ld_row_start.
-    WHILE ld_current_row <= ld_row_end.
-      me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
-                          ip_style = ip_style ).
-      ADD 1 TO ld_current_row.
+    WHILE ld_column_start_int <= ld_column_end_int.
+      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
+      ld_current_row = ld_row_start.
+      WHILE ld_current_row <= ld_row_end.
+        me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
+                            ip_style = ip_style ).
+        ADD 1 TO ld_current_row.
+      ENDWHILE.
+      ADD 1 TO ld_column_start_int.
     ENDWHILE.
-    ADD 1 TO ld_column_start_int.
-  ENDWHILE.
-  IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
-    me->set_merge( ip_column_start = ip_column_start ip_row = ld_row_start
-                   ip_column_end   = ld_current_column    ip_row_to = ld_row_end ).
-  ENDIF.
-ENDMETHOD.
+    IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
+      me->set_merge( ip_column_start = ip_column_start ip_row = ld_row_start
+                     ip_column_end   = ld_current_column    ip_row_to = ld_row_end ).
+    ENDIF.
+  ENDMETHOD.                    "SET_AREA_STYLE
 
 
-  method SET_CELL.
+  METHOD set_cell.
 
-    data: LV_COLUMN        type ZEXCEL_CELL_COLUMN,
-          LS_SHEET_CONTENT type ZEXCEL_S_CELL_DATA,
-          LV_ROW_ALPHA     type STRING,
-          LV_COL_ALPHA     type ZEXCEL_CELL_COLUMN_ALPHA,
-          LV_VALUE         type ZEXCEL_CELL_VALUE,
-          LV_DATA_TYPE     type ZEXCEL_CELL_DATA_TYPE,
-          LV_VALUE_TYPE    type ABAP_TYPEKIND,
-          LV_STYLE_GUID    type ZEXCEL_CELL_STYLE,
-          LO_ADDIT         type ref to CL_ABAP_ELEMDESCR,
-          LO_VALUE         type ref to DATA,
-          LO_VALUE_NEW     type ref to DATA.
+    DATA: lv_column        TYPE zexcel_cell_column,
+          ls_sheet_content TYPE zexcel_s_cell_data,
+          lv_row_alpha     TYPE string,
+          lv_col_alpha     TYPE zexcel_cell_column_alpha,
+          lv_value         TYPE zexcel_cell_value,
+          lv_data_type     TYPE zexcel_cell_data_type,
+          lv_value_type    TYPE abap_typekind,
+          lv_style_guid    TYPE zexcel_cell_style,
+          lo_addit         TYPE REF TO cl_abap_elemdescr,
+          lo_value         TYPE REF TO data,
+          lo_value_new     TYPE REF TO data.
 
-    field-symbols: <FS_SHEET_CONTENT> type ZEXCEL_S_CELL_DATA,
-                   <FS_NUMERIC>       type NUMERIC,
-                   <FS_DATE>          type D,
-                   <FS_TIME>          type T,
-                   <FS_VALUE>         type SIMPLE.
+    FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data,
+                   <fs_numeric>       TYPE numeric,
+                   <fs_date>          TYPE d,
+                   <fs_time>          TYPE t,
+                   <fs_value>         TYPE simple.
 
-    if IP_VALUE  is not supplied and IP_FORMULA is not supplied.
+    IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED.
       zcx_excel=>raise_text( 'Please provide the value or formula' ).
-    endif.
+    ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 *  lv_style_guid = ip_style.
-    LV_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN ).
-    read table SHEET_CONTENT assigning <FS_SHEET_CONTENT> with table key CELL_ROW    = IP_ROW      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
-                                                                         CELL_COLUMN = LV_COLUMN.
-    if SY-SUBRC = 0.
-      if IP_STYLE is initial.
+    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = ip_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
+                                                                         cell_column = lv_column.
+    IF sy-subrc = 0.
+      IF ip_style IS INITIAL.
         " If no style is provided as method-parameter and cell is found use cell's current style
-        LV_STYLE_GUID = <FS_SHEET_CONTENT>-CELL_STYLE.
-      else.
+        lv_style_guid = <fs_sheet_content>-cell_style.
+      ELSE.
         " Style provided as method-parameter --> use this
-        LV_STYLE_GUID = IP_STYLE.
-      endif.
-    else.
+        lv_style_guid = ip_style.
+      ENDIF.
+    ELSE.
       " No cell found --> use supplied style even if empty
-      LV_STYLE_GUID = IP_STYLE.
-    endif.
+      lv_style_guid = ip_style.
+    ENDIF.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
-    if IP_VALUE is supplied.
+    IF ip_value IS SUPPLIED.
       "if data type is passed just write the value. Otherwise map abap type to excel and perform conversion
       "IP_DATA_TYPE is passed by excel reader so source types are preserved
 *First we get reference into local var.
-      create data LO_VALUE like IP_VALUE.
-      assign LO_VALUE->* to <FS_VALUE>.
-      <FS_VALUE> = IP_VALUE.
-      if IP_DATA_TYPE is supplied.
-        if IP_ABAP_TYPE is not supplied.
-          GET_VALUE_TYPE( exporting IP_VALUE      = IP_VALUE
-                          importing EP_VALUE      = <FS_VALUE> ) .
-        endif.
-        LV_VALUE = <FS_VALUE>.
-        LV_DATA_TYPE = IP_DATA_TYPE.
-      else.
-        if IP_ABAP_TYPE is supplied.
-          LV_VALUE_TYPE = IP_ABAP_TYPE.
-        else.
-          GET_VALUE_TYPE( exporting IP_VALUE      = IP_VALUE
-                          importing EP_VALUE      = <FS_VALUE>
-                                    EP_VALUE_TYPE = LV_VALUE_TYPE ).
-        endif.
-        case LV_VALUE_TYPE.
-          when CL_ABAP_TYPEDESCR=>TYPEKIND_INT or CL_ABAP_TYPEDESCR=>TYPEKIND_INT1 or CL_ABAP_TYPEDESCR=>TYPEKIND_INT2.
-            LO_ADDIT = CL_ABAP_ELEMDESCR=>GET_I( ).
-            create data LO_VALUE_NEW type handle LO_ADDIT.
-            assign LO_VALUE_NEW->* to <FS_NUMERIC>.
-            if SY-SUBRC = 0.
-              <FS_NUMERIC> = <FS_VALUE>.
-              LV_VALUE = ZCL_EXCEL_COMMON=>NUMBER_TO_EXCEL_STRING( IP_VALUE = <FS_NUMERIC> ).
-            endif.
+      CREATE DATA lo_value LIKE ip_value.
+      ASSIGN lo_value->* TO <fs_value>.
+      <fs_value> = ip_value.
+      IF ip_data_type IS SUPPLIED.
+        IF ip_abap_type IS NOT SUPPLIED.
+          get_value_type( EXPORTING ip_value      = ip_value
+                          IMPORTING ep_value      = <fs_value> ) .
+        ENDIF.
+        lv_value = <fs_value>.
+        lv_data_type = ip_data_type.
+      ELSE.
+        IF ip_abap_type IS SUPPLIED.
+          lv_value_type = ip_abap_type.
+        ELSE.
+          get_value_type( EXPORTING ip_value      = ip_value
+                          IMPORTING ep_value      = <fs_value>
+                                    ep_value_type = lv_value_type ).
+        ENDIF.
+        CASE lv_value_type.
+          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2.
+            lo_addit = cl_abap_elemdescr=>get_i( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_numeric>.
+            IF sy-subrc = 0.
+              <fs_numeric> = <fs_value>.
+              lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+            ENDIF.
 
-          when CL_ABAP_TYPEDESCR=>TYPEKIND_FLOAT or CL_ABAP_TYPEDESCR=>TYPEKIND_PACKED.
-            LO_ADDIT = CL_ABAP_ELEMDESCR=>GET_F( ).
-            create data LO_VALUE_NEW type handle LO_ADDIT.
-            assign LO_VALUE_NEW->* to <FS_NUMERIC>.
-            if SY-SUBRC = 0.
-              <FS_NUMERIC> = <FS_VALUE>.
-              LV_VALUE = ZCL_EXCEL_COMMON=>NUMBER_TO_EXCEL_STRING( IP_VALUE = <FS_NUMERIC> ).
-            endif.
+          WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed.
+            lo_addit = cl_abap_elemdescr=>get_f( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_numeric>.
+            IF sy-subrc = 0.
+              <fs_numeric> = <fs_value>.
+              lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+            ENDIF.
 
-          when CL_ABAP_TYPEDESCR=>TYPEKIND_CHAR or CL_ABAP_TYPEDESCR=>TYPEKIND_STRING or CL_ABAP_TYPEDESCR=>TYPEKIND_NUM or
-               CL_ABAP_TYPEDESCR=>TYPEKIND_HEX.
-            LV_VALUE = <FS_VALUE>.
-            LV_DATA_TYPE = 's'.
+          WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR
+               cl_abap_typedescr=>typekind_hex.
+            lv_value = <fs_value>.
+            lv_data_type = 's'.
 
-          when CL_ABAP_TYPEDESCR=>TYPEKIND_DATE.
-            LO_ADDIT = CL_ABAP_ELEMDESCR=>GET_D( ).
-            create data LO_VALUE_NEW type handle LO_ADDIT.
-            assign LO_VALUE_NEW->* to <FS_DATE>.
-            if SY-SUBRC = 0.
-              <FS_DATE> = <FS_VALUE>.
-              LV_VALUE = ZCL_EXCEL_COMMON=>DATE_TO_EXCEL_STRING( IP_VALUE = <FS_DATE> ) .
-            endif.
+          WHEN cl_abap_typedescr=>typekind_date.
+            lo_addit = cl_abap_elemdescr=>get_d( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_date>.
+            IF sy-subrc = 0.
+              <fs_date> = <fs_value>.
+              lv_value = zcl_excel_common=>date_to_excel_string( ip_value = <fs_date> ) .
+            ENDIF.
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * Moved to end of routine - apply date-format even if other styleinformation is passed
 *          IF ip_style IS NOT SUPPLIED. "get default date format in case parameter is initial
@@ -4817,14 +4901,14 @@ ENDMETHOD.
 *          ENDIF.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
-          when CL_ABAP_TYPEDESCR=>TYPEKIND_TIME.
-            LO_ADDIT = CL_ABAP_ELEMDESCR=>GET_T( ).
-            create data LO_VALUE_NEW type handle LO_ADDIT.
-            assign LO_VALUE_NEW->* to <FS_TIME>.
-            if SY-SUBRC = 0.
-              <FS_TIME> = <FS_VALUE>.
-              LV_VALUE = ZCL_EXCEL_COMMON=>TIME_TO_EXCEL_STRING( IP_VALUE = <FS_TIME> ).
-            endif.
+          WHEN cl_abap_typedescr=>typekind_time.
+            lo_addit = cl_abap_elemdescr=>get_t( ).
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_time>.
+            IF sy-subrc = 0.
+              <fs_time> = <fs_value>.
+              lv_value = zcl_excel_common=>time_to_excel_string( ip_value = <fs_time> ).
+            ENDIF.
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * Moved to end of routine - apply time-format even if other styleinformation is passed
 *          IF ip_style IS NOT SUPPLIED. "get default time format for user in case parameter is initial
@@ -4834,18 +4918,18 @@ ENDMETHOD.
 *          ENDIF.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
-          when others.
+          WHEN OTHERS.
             zcx_excel=>raise_text( 'Invalid data type of input value' ).
-        endcase.
-      endif.
+        ENDCASE.
+      ENDIF.
 
-    endif.
+    ENDIF.
 
-    if IP_HYPERLINK is bound.
-      IP_HYPERLINK->SET_CELL_REFERENCE( IP_COLUMN = IP_COLUMN
-                                        IP_ROW = IP_ROW ).
-      ME->HYPERLINKS->ADD( IP_HYPERLINK ).
-    endif.
+    IF ip_hyperlink IS BOUND.
+      ip_hyperlink->set_cell_reference( ip_column = ip_column
+                                        ip_row = ip_row ).
+      me->hyperlinks->add( ip_hyperlink ).
+    ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * Read table moved up, so that current style may be evaluated
@@ -4855,424 +4939,424 @@ ENDMETHOD.
 *                                                                 cell_column = lv_column.
 *
 *  IF sy-subrc EQ 0.
-    if <FS_SHEET_CONTENT> is assigned.
+    IF <fs_sheet_content> IS ASSIGNED.
 * End of change issue #152 - don't touch exisiting style if only value is passed
-      <FS_SHEET_CONTENT>-CELL_VALUE   = LV_VALUE.
-      <FS_SHEET_CONTENT>-CELL_FORMULA = IP_FORMULA.
-      <FS_SHEET_CONTENT>-CELL_STYLE   = LV_STYLE_GUID.
-      <FS_SHEET_CONTENT>-DATA_TYPE    = LV_DATA_TYPE.
-    else.
-      LS_SHEET_CONTENT-CELL_ROW     = IP_ROW.
-      LS_SHEET_CONTENT-CELL_COLUMN  = LV_COLUMN.
-      LS_SHEET_CONTENT-CELL_VALUE   = LV_VALUE.
-      LS_SHEET_CONTENT-CELL_FORMULA = IP_FORMULA.
-      LS_SHEET_CONTENT-CELL_STYLE   = LV_STYLE_GUID.
-      LS_SHEET_CONTENT-DATA_TYPE    = LV_DATA_TYPE.
-      LV_ROW_ALPHA = IP_ROW.
+      <fs_sheet_content>-cell_value   = lv_value.
+      <fs_sheet_content>-cell_formula = ip_formula.
+      <fs_sheet_content>-cell_style   = lv_style_guid.
+      <fs_sheet_content>-data_type    = lv_data_type.
+    ELSE.
+      ls_sheet_content-cell_row     = ip_row.
+      ls_sheet_content-cell_column  = lv_column.
+      ls_sheet_content-cell_value   = lv_value.
+      ls_sheet_content-cell_formula = ip_formula.
+      ls_sheet_content-cell_style   = lv_style_guid.
+      ls_sheet_content-data_type    = lv_data_type.
+      lv_row_alpha = ip_row.
 *    SHIFT lv_row_alpha RIGHT DELETING TRAILING space."del #152 - replaced with condense - should be faster
 *    SHIFT lv_row_alpha LEFT DELETING LEADING space.  "del #152 - replaced with condense - should be faster
-      condense LV_ROW_ALPHA no-gaps.                    "ins #152 - replaced 2 shifts      - should be faster
-      LV_COL_ALPHA = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( IP_COLUMN ).       " issue #155 - less restrictive typing for ip_column
-      concatenate LV_COL_ALPHA LV_ROW_ALPHA into LS_SHEET_CONTENT-CELL_COORDS.  " issue #155 - less restrictive typing for ip_column
-      insert LS_SHEET_CONTENT into table SHEET_CONTENT assigning <FS_SHEET_CONTENT>. "ins #152 - Now <fs_sheet_content> always holds the data
+      CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
+      lv_col_alpha = zcl_excel_common=>convert_column2alpha( ip_column ).       " issue #155 - less restrictive typing for ip_column
+      CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
+      INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
 *    APPEND ls_sheet_content TO sheet_content.
 *    SORT sheet_content BY cell_row cell_column.
       " me->update_dimension_range( ).
 
-    endif.
+    ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * For Date- or Timefields change the formatcode if nothing is set yet
 * Enhancement option:  Check if existing formatcode is a date/ or timeformat
 *                      If not, use default
-    data: LO_FORMAT_CODE_DATETIME type ZEXCEL_NUMBER_FORMAT.
-    data: STYLEMAPPING    type ZEXCEL_S_STYLEMAPPING.
-    case LV_VALUE_TYPE.
-      when CL_ABAP_TYPEDESCR=>TYPEKIND_DATE.
-        try.
-            STYLEMAPPING = ME->EXCEL->GET_STYLE_TO_GUID( <FS_SHEET_CONTENT>-CELL_STYLE ).
-          catch ZCX_EXCEL .
-        endtry.
-        if STYLEMAPPING-COMPLETE_STYLEX-NUMBER_FORMAT-FORMAT_CODE is initial or
-           STYLEMAPPING-COMPLETE_STYLE-NUMBER_FORMAT-FORMAT_CODE is initial.
-          LO_FORMAT_CODE_DATETIME = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_STD.
-        else.
-          LO_FORMAT_CODE_DATETIME = STYLEMAPPING-COMPLETE_STYLE-NUMBER_FORMAT-FORMAT_CODE.
-        endif.
-        ME->CHANGE_CELL_STYLE( IP_COLUMN                      = IP_COLUMN
-                               IP_ROW                         = IP_ROW
-                               IP_NUMBER_FORMAT_FORMAT_CODE   = LO_FORMAT_CODE_DATETIME ).
+    DATA: lo_format_code_datetime TYPE zexcel_number_format.
+    DATA: stylemapping    TYPE zexcel_s_stylemapping.
+    CASE lv_value_type.
+      WHEN cl_abap_typedescr=>typekind_date.
+        TRY.
+            stylemapping = me->excel->get_style_to_guid( <fs_sheet_content>-cell_style ).
+          CATCH zcx_excel .
+        ENDTRY.
+        IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
+           stylemapping-complete_style-number_format-format_code IS INITIAL.
+          lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_std.
+        ELSE.
+          lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
+        ENDIF.
+        me->change_cell_style( ip_column                      = ip_column
+                               ip_row                         = ip_row
+                               ip_number_format_format_code   = lo_format_code_datetime ).
 
-      when CL_ABAP_TYPEDESCR=>TYPEKIND_TIME.
-        try.
-            STYLEMAPPING = ME->EXCEL->GET_STYLE_TO_GUID( <FS_SHEET_CONTENT>-CELL_STYLE ).
-          catch ZCX_EXCEL .
-        endtry.
-        if STYLEMAPPING-COMPLETE_STYLEX-NUMBER_FORMAT-FORMAT_CODE is initial or
-           STYLEMAPPING-COMPLETE_STYLE-NUMBER_FORMAT-FORMAT_CODE is initial.
-          LO_FORMAT_CODE_DATETIME = ZCL_EXCEL_STYLE_NUMBER_FORMAT=>C_FORMAT_DATE_TIME6.
-        else.
-          LO_FORMAT_CODE_DATETIME = STYLEMAPPING-COMPLETE_STYLE-NUMBER_FORMAT-FORMAT_CODE.
-        endif.
-        ME->CHANGE_CELL_STYLE( IP_COLUMN                      = IP_COLUMN
-                               IP_ROW                         = IP_ROW
-                               IP_NUMBER_FORMAT_FORMAT_CODE   = LO_FORMAT_CODE_DATETIME ).
+      WHEN cl_abap_typedescr=>typekind_time.
+        TRY.
+            stylemapping = me->excel->get_style_to_guid( <fs_sheet_content>-cell_style ).
+          CATCH zcx_excel .
+        ENDTRY.
+        IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
+           stylemapping-complete_style-number_format-format_code IS INITIAL.
+          lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_time6.
+        ELSE.
+          lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
+        ENDIF.
+        me->change_cell_style( ip_column                      = ip_column
+                               ip_row                         = ip_row
+                               ip_number_format_format_code   = lo_format_code_datetime ).
 
-    endcase.
+    ENDCASE.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
 * Fix issue #162
-    LV_VALUE = IP_VALUE.
-    if LV_VALUE cs CL_ABAP_CHAR_UTILITIES=>CR_LF.
-      ME->CHANGE_CELL_STYLE( IP_COLUMN               = IP_COLUMN
-                             IP_ROW                  = IP_ROW
-                             IP_ALIGNMENT_WRAPTEXT   = ABAP_TRUE ).
-    endif.
+    lv_value = ip_value.
+    IF lv_value CS cl_abap_char_utilities=>cr_lf.
+      me->change_cell_style( ip_column               = ip_column
+                             ip_row                  = ip_row
+                             ip_alignment_wraptext   = abap_true ).
+    ENDIF.
 * End of Fix issue #162
 
-  endmethod.
+  ENDMETHOD.                    "SET_CELL
 
 
-  method SET_CELL_FORMULA.
-    data:
-      LV_COLUMN        type ZEXCEL_CELL_COLUMN,
-      LS_SHEET_CONTENT like line of ME->SHEET_CONTENT.
+  METHOD set_cell_formula.
+    DATA:
+      lv_column        TYPE zexcel_cell_column,
+      ls_sheet_content LIKE LINE OF me->sheet_content.
 
-    field-symbols:
-                <SHEET_CONTENT>                 like line of ME->SHEET_CONTENT.
+    FIELD-SYMBOLS:
+                <sheet_content>                 LIKE LINE OF me->sheet_content.
 
 *--------------------------------------------------------------------*
 * Get cell to set formula into
 *--------------------------------------------------------------------*
-    LV_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN ).
-    read table ME->SHEET_CONTENT assigning <SHEET_CONTENT> with table key CELL_ROW    = IP_ROW
-                                                                          CELL_COLUMN = LV_COLUMN.
-    if SY-SUBRC <> 0.                                                                           " Create new entry in sheet_content if necessary
-      check IP_FORMULA is initial.                                                              " no need to create new entry in sheet_content when no formula is passed
-      LS_SHEET_CONTENT-CELL_ROW    = IP_ROW.
-      LS_SHEET_CONTENT-CELL_COLUMN = LV_COLUMN.
-      insert LS_SHEET_CONTENT into table ME->SHEET_CONTENT assigning <SHEET_CONTENT>.
-    endif.
+    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+    READ TABLE me->sheet_content ASSIGNING <sheet_content> WITH TABLE KEY cell_row    = ip_row
+                                                                          cell_column = lv_column.
+    IF sy-subrc <> 0.                                                                           " Create new entry in sheet_content if necessary
+      CHECK ip_formula IS INITIAL.                                                              " no need to create new entry in sheet_content when no formula is passed
+      ls_sheet_content-cell_row    = ip_row.
+      ls_sheet_content-cell_column = lv_column.
+      INSERT ls_sheet_content INTO TABLE me->sheet_content ASSIGNING <sheet_content>.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 * Fieldsymbol now holds the relevant cell
 *--------------------------------------------------------------------*
-    <SHEET_CONTENT>-CELL_FORMULA = IP_FORMULA.
+    <sheet_content>-cell_formula = ip_formula.
 
 
-  endmethod.
+  ENDMETHOD.                    "SET_CELL_FORMULA
 
 
-  method SET_CELL_STYLE.
+  METHOD set_cell_style.
 
-    data: LV_COLUMN     type ZEXCEL_CELL_COLUMN,
-          LV_STYLE_GUID type ZEXCEL_CELL_STYLE.
+    DATA: lv_column     TYPE zexcel_cell_column,
+          lv_style_guid TYPE zexcel_cell_style.
 
-    field-symbols: <FS_SHEET_CONTENT> type ZEXCEL_S_CELL_DATA.
+    FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
-    LV_STYLE_GUID = IP_STYLE.
+    lv_style_guid = ip_style.
 
-    LV_COLUMN = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN ).
+    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
 
-    read table SHEET_CONTENT assigning <FS_SHEET_CONTENT> with key CELL_ROW    = IP_ROW
-                                                                   CELL_COLUMN = LV_COLUMN.
+    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
+                                                                   cell_column = lv_column.
 
-    if SY-SUBRC eq 0.
-      <FS_SHEET_CONTENT>-CELL_STYLE   = LV_STYLE_GUID.
-    else.
-      SET_CELL( IP_COLUMN = IP_COLUMN IP_ROW = IP_ROW IP_VALUE = '' IP_STYLE = IP_STYLE ).
-    endif.
+    IF sy-subrc EQ 0.
+      <fs_sheet_content>-cell_style   = lv_style_guid.
+    ELSE.
+      set_cell( ip_column = ip_column ip_row = ip_row ip_value = '' ip_style = ip_style ).
+    ENDIF.
 
-  endmethod.
+  ENDMETHOD.                    "SET_CELL_STYLE
 
 
-  method SET_COLUMN_WIDTH.
-    data: LO_COLUMN  type ref to ZCL_EXCEL_COLUMN.
-    data: WIDTH             type FLOAT.
+  METHOD set_column_width.
+    DATA: lo_column  TYPE REF TO zcl_excel_column.
+    DATA: width             TYPE float.
 
-    LO_COLUMN = ME->GET_COLUMN( IP_COLUMN ).
+    lo_column = me->get_column( ip_column ).
 
 * if a fix size is supplied use this
-    if IP_WIDTH_FIX is supplied.
-      try.
-          WIDTH = IP_WIDTH_FIX.
-          if WIDTH <= 0.
+    IF ip_width_fix IS SUPPLIED.
+      TRY.
+          width = ip_width_fix.
+          IF width <= 0.
             zcx_excel=>raise_text( 'Please supply a positive number as column-width' ).
-          endif.
-          LO_COLUMN->SET_WIDTH( WIDTH ).
-          exit.
-        catch CX_SY_CONVERSION_NO_NUMBER.
+          ENDIF.
+          lo_column->set_width( width ).
+          EXIT.
+        CATCH cx_sy_conversion_no_number.
 * Strange stuff passed --> raise error
           zcx_excel=>raise_text( 'Unable to interpret supplied input as number' ).
-      endtry.
-    endif.
+      ENDTRY.
+    ENDIF.
 
 * If we get down to here, we have to use whatever is found in autosize.
-    LO_COLUMN->SET_AUTO_SIZE( IP_WIDTH_AUTOSIZE ).
+    lo_column->set_auto_size( ip_width_autosize ).
 
 
-  endmethod.
+  ENDMETHOD.                    "SET_COLUMN_WIDTH
 
 
-  method SET_DEFAULT_EXCEL_DATE_FORMAT.
+  METHOD set_default_excel_date_format.
 
-    if IP_DEFAULT_EXCEL_DATE_FORMAT is initial.
+    IF ip_default_excel_date_format IS INITIAL.
       zcx_excel=>raise_text( 'Default date format cannot be blank' ).
-    endif.
+    ENDIF.
 
-    DEFAULT_EXCEL_DATE_FORMAT = IP_DEFAULT_EXCEL_DATE_FORMAT.
-  endmethod.
+    default_excel_date_format = ip_default_excel_date_format.
+  ENDMETHOD.                    "SET_DEFAULT_EXCEL_DATE_FORMAT
 
 
-  method SET_MERGE.
+  METHOD set_merge.
 
-    data: LS_MERGE        type MTY_MERGE,
-          LV_ERRORMESSAGE type STRING.
+    DATA: ls_merge        TYPE mty_merge,
+          lv_errormessage TYPE string.
 
-...
-"just after variables definition
-if ip_value is supplied or ip_formula is supplied.
-" if there is a value or formula set the value to the top-left cell
-"maybe it is necessary to support other paramters for set_cell
-    if ip_value is supplied.
-      me->set_cell( ip_row = ip_row ip_column = ip_column_start
-                    ip_value = ip_value ).
-    endif.
-    if ip_formula is supplied.
-      me->set_cell( ip_row = ip_row ip_column = ip_column_start
-                    ip_value = ip_formula ).
-    endif.
-  endif.
-"call to set_merge_style to apply the style to all cells at the matrix
-  IF ip_style IS SUPPLIED.
-    me->set_merge_style( ip_row = ip_row ip_column_start = ip_column_start
-                         ip_row_to = ip_row_to ip_column_end = ip_column_end
-                         ip_style = ip_style ).
-  ENDIF.
-...
+    ...
+    "just after variables definition
+    IF ip_value IS SUPPLIED OR ip_formula IS SUPPLIED.
+      " if there is a value or formula set the value to the top-left cell
+      "maybe it is necessary to support other paramters for set_cell
+      IF ip_value IS SUPPLIED.
+        me->set_cell( ip_row = ip_row ip_column = ip_column_start
+                      ip_value = ip_value ).
+      ENDIF.
+      IF ip_formula IS SUPPLIED.
+        me->set_cell( ip_row = ip_row ip_column = ip_column_start
+                      ip_value = ip_formula ).
+      ENDIF.
+    ENDIF.
+    "call to set_merge_style to apply the style to all cells at the matrix
+    IF ip_style IS SUPPLIED.
+      me->set_merge_style( ip_row = ip_row ip_column_start = ip_column_start
+                           ip_row_to = ip_row_to ip_column_end = ip_column_end
+                           ip_style = ip_style ).
+    ENDIF.
+    ...
 *--------------------------------------------------------------------*
 * Build new range area to insert into range table
 *--------------------------------------------------------------------*
-    LS_MERGE-ROW_FROM = IP_ROW.
-    if IP_ROW is supplied and IP_ROW is not initial and IP_ROW_TO is not supplied.
-      LS_MERGE-ROW_TO   = LS_MERGE-ROW_FROM.
-    else.
-      LS_MERGE-ROW_TO   = IP_ROW_TO.
-    endif.
-    if LS_MERGE-ROW_FROM > LS_MERGE-ROW_TO.
-      LV_ERRORMESSAGE = 'Merge: First row larger then last row'(405).
+    ls_merge-row_from = ip_row.
+    IF ip_row IS SUPPLIED AND ip_row IS NOT INITIAL AND ip_row_to IS NOT SUPPLIED.
+      ls_merge-row_to   = ls_merge-row_from.
+    ELSE.
+      ls_merge-row_to   = ip_row_to.
+    ENDIF.
+    IF ls_merge-row_from > ls_merge-row_to.
+      lv_errormessage = 'Merge: First row larger then last row'(405).
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
-    LS_MERGE-COL_FROM = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN_START ).
-    if IP_COLUMN_START is supplied and IP_COLUMN_START is not initial and IP_COLUMN_END is not supplied.
-      LS_MERGE-COL_TO   = LS_MERGE-COL_FROM.
-    else.
-      LS_MERGE-COL_TO   = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_COLUMN_END ).
-    endif.
-    if LS_MERGE-COL_FROM > LS_MERGE-COL_TO.
-      LV_ERRORMESSAGE = 'Merge: First column larger then last column'(406).
+    ls_merge-col_from = zcl_excel_common=>convert_column2int( ip_column_start ).
+    IF ip_column_start IS SUPPLIED AND ip_column_start IS NOT INITIAL AND ip_column_end IS NOT SUPPLIED.
+      ls_merge-col_to   = ls_merge-col_from.
+    ELSE.
+      ls_merge-col_to   = zcl_excel_common=>convert_column2int( ip_column_end ).
+    ENDIF.
+    IF ls_merge-col_from > ls_merge-col_to.
+      lv_errormessage = 'Merge: First column larger then last column'(406).
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 * Check merge not overlapping with existing merges
 *--------------------------------------------------------------------*
-    loop at ME->MT_MERGED_CELLS transporting no fields where not (    ROW_FROM > LS_MERGE-ROW_TO
-                                                                   or ROW_TO   < LS_MERGE-ROW_FROM
-                                                                   or COL_FROM > LS_MERGE-COL_TO
-                                                                   or COL_TO   < LS_MERGE-COL_FROM ).
-      LV_ERRORMESSAGE = 'Overlapping merges'(404).
+    LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS WHERE NOT (    row_from > ls_merge-row_to
+                                                                   OR row_to   < ls_merge-row_from
+                                                                   OR col_from > ls_merge-col_to
+                                                                   OR col_to   < ls_merge-col_from ).
+      lv_errormessage = 'Overlapping merges'(404).
       zcx_excel=>raise_text( lv_errormessage ).
 
-    endloop.
+    ENDLOOP.
 
 *--------------------------------------------------------------------*
 * Everything seems ok --> add to merge table
 *--------------------------------------------------------------------*
-    insert LS_MERGE into table ME->MT_MERGED_CELLS.
+    INSERT ls_merge INTO TABLE me->mt_merged_cells.
 
-  endmethod.
+  ENDMETHOD.                    "SET_MERGE
 
 
-METHOD set_merge_style.
-  DATA: ld_row_start TYPE zexcel_cell_row,
-        ld_row_end TYPE zexcel_cell_row,
-        ld_column_start TYPE zexcel_cell_column,
-        ld_column_end TYPE zexcel_cell_column,
-        ld_current_column TYPE zexcel_cell_column_alpha,
-        ld_current_row type zexcel_cell_row.
+  METHOD set_merge_style.
+    DATA: ld_row_start TYPE zexcel_cell_row,
+          ld_row_end TYPE zexcel_cell_row,
+          ld_column_start TYPE zexcel_cell_column,
+          ld_column_end TYPE zexcel_cell_column,
+          ld_current_column TYPE zexcel_cell_column_alpha,
+          ld_current_row TYPE zexcel_cell_row.
 
-  MOVE: ip_row_to TO ld_row_end,
-        ip_row    TO ld_row_start.
-  IF ld_row_end IS INITIAL.
-    ld_row_end = ld_row_start.
-  ENDIF.
-  ld_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
-  ld_column_end   = zcl_excel_common=>convert_column2int( ip_column_end ).
-  IF ld_column_end IS INITIAL.
-    ld_column_end = ld_column_start.
-  ENDIF.
-  "set the style cell by cell
-  WHILE ld_column_start <= ld_column_end.
-    ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start ).
-    ld_current_row = ld_row_start.
-    WHILE ld_current_row <= ld_row_end.
-      me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
-                          ip_style = ip_style ).
-      add 1 to ld_current_row.
+    MOVE: ip_row_to TO ld_row_end,
+          ip_row    TO ld_row_start.
+    IF ld_row_end IS INITIAL.
+      ld_row_end = ld_row_start.
+    ENDIF.
+    ld_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
+    ld_column_end   = zcl_excel_common=>convert_column2int( ip_column_end ).
+    IF ld_column_end IS INITIAL.
+      ld_column_end = ld_column_start.
+    ENDIF.
+    "set the style cell by cell
+    WHILE ld_column_start <= ld_column_end.
+      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start ).
+      ld_current_row = ld_row_start.
+      WHILE ld_current_row <= ld_row_end.
+        me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
+                            ip_style = ip_style ).
+        ADD 1 TO ld_current_row.
+      ENDWHILE.
+      ADD 1 TO ld_column_start.
     ENDWHILE.
-    ADD 1 TO ld_column_start.
-  ENDWHILE.
-ENDMETHOD.
+  ENDMETHOD.                    "set_merge_style
 
 
-  method SET_PRINT_GRIDLINES.
-    ME->PRINT_GRIDLINES = I_PRINT_GRIDLINES.
-  endmethod.
+  METHOD set_print_gridlines.
+    me->print_gridlines = i_print_gridlines.
+  ENDMETHOD.                    "SET_PRINT_GRIDLINES
 
 
-  method SET_ROW_HEIGHT.
-    data: LO_ROW  type ref to ZCL_EXCEL_ROW.
-    data: HEIGHT  type FLOAT.
+  METHOD set_row_height.
+    DATA: lo_row  TYPE REF TO zcl_excel_row.
+    DATA: height  TYPE float.
 
-    LO_ROW = ME->GET_ROW( IP_ROW ).
+    lo_row = me->get_row( ip_row ).
 
 * if a fix size is supplied use this
-    try.
-        HEIGHT = IP_HEIGHT_FIX.
-        if HEIGHT <= 0.
+    TRY.
+        height = ip_height_fix.
+        IF height <= 0.
           zcx_excel=>raise_text( 'Please supply a positive number as row-height' ).
-        endif.
-        LO_ROW->SET_ROW_HEIGHT( HEIGHT ).
-        exit.
-      catch CX_SY_CONVERSION_NO_NUMBER.
+        ENDIF.
+        lo_row->set_row_height( height ).
+        EXIT.
+      CATCH cx_sy_conversion_no_number.
 * Strange stuff passed --> raise error
         zcx_excel=>raise_text( 'Unable to interpret supplied input as number' ).
-    endtry.
+    ENDTRY.
 
-  endmethod.
+  ENDMETHOD.                    "SET_ROW_HEIGHT
 
 
-  method SET_ROW_OUTLINE.
+  METHOD set_row_outline.
 
-    data: LS_ROW_OUTLINE like line of ME->MT_ROW_OUTLINES.
-    field-symbols: <LS_ROW_OUTLINE> like line of ME->MT_ROW_OUTLINES.
+    DATA: ls_row_outline LIKE LINE OF me->mt_row_outlines.
+    FIELD-SYMBOLS: <ls_row_outline> LIKE LINE OF me->mt_row_outlines.
 
-    read table ME->MT_ROW_OUTLINES assigning <LS_ROW_OUTLINE> with table key ROW_FROM = IV_ROW_FROM
-                                                                             ROW_TO   = IV_ROW_TO.
-    if SY-SUBRC <> 0.
-      if IV_ROW_FROM <= 0.
+    READ TABLE me->mt_row_outlines ASSIGNING <ls_row_outline> WITH TABLE KEY row_from = iv_row_from
+                                                                             row_to   = iv_row_to.
+    IF sy-subrc <> 0.
+      IF iv_row_from <= 0.
         zcx_excel=>raise_text( 'First row of outline must be a positive number' ).
-      endif.
-      if IV_ROW_TO < IV_ROW_FROM.
+      ENDIF.
+      IF iv_row_to < iv_row_from.
         zcx_excel=>raise_text( 'Last row of outline may not be less than first line of outline' ).
-      endif.
-      LS_ROW_OUTLINE-ROW_FROM = IV_ROW_FROM.
-      LS_ROW_OUTLINE-ROW_TO   = IV_ROW_TO.
-      insert LS_ROW_OUTLINE into table ME->MT_ROW_OUTLINES assigning <LS_ROW_OUTLINE>.
-    endif.
+      ENDIF.
+      ls_row_outline-row_from = iv_row_from.
+      ls_row_outline-row_to   = iv_row_to.
+      INSERT ls_row_outline INTO TABLE me->mt_row_outlines ASSIGNING <ls_row_outline>.
+    ENDIF.
 
-    case IV_COLLAPSED.
+    CASE iv_collapsed.
 
-      when ABAP_TRUE
-        or ABAP_FALSE.
-        <LS_ROW_OUTLINE>-COLLAPSED = IV_COLLAPSED.
+      WHEN abap_true
+        OR abap_false.
+        <ls_row_outline>-collapsed = iv_collapsed.
 
-      when others.
+      WHEN OTHERS.
         zcx_excel=>raise_text( 'Unknown collapse state' ).
 
-    endcase.
-  endmethod.
+    ENDCASE.
+  ENDMETHOD.                    "SET_ROW_OUTLINE
 
 
-  method SET_SHOW_GRIDLINES.
-    ME->SHOW_GRIDLINES = I_SHOW_GRIDLINES.
-  endmethod.
+  METHOD set_show_gridlines.
+    me->show_gridlines = i_show_gridlines.
+  ENDMETHOD.                    "SET_SHOW_GRIDLINES
 
 
-  method SET_SHOW_ROWCOLHEADERS.
-    ME->SHOW_ROWCOLHEADERS = I_SHOW_ROWCOLHEADERS.
-  endmethod.
+  METHOD set_show_rowcolheaders.
+    me->show_rowcolheaders = i_show_rowcolheaders.
+  ENDMETHOD.                    "SET_SHOW_ROWCOLHEADERS
 
 
-  method SET_TABCOLOR.
-    ME->TABCOLOR = IV_TABCOLOR.
-  endmethod.
+  METHOD set_tabcolor.
+    me->tabcolor = iv_tabcolor.
+  ENDMETHOD.                    "SET_TABCOLOR
 
 
-  method SET_TABLE.
+  METHOD set_table.
 
-    data: LO_TABDESCR     type ref to CL_ABAP_STRUCTDESCR,
-          LR_DATA         type ref to DATA,
-          LS_HEADER       type X030L,
-          LT_DFIES        type DDFIELDS,
-          LV_ROW_INT      type ZEXCEL_CELL_ROW,
-          LV_COLUMN_INT   type ZEXCEL_CELL_COLUMN,
-          LV_COLUMN_ALPHA type ZEXCEL_CELL_COLUMN_ALPHA,
-          LV_CELL_VALUE   type ZEXCEL_CELL_VALUE.
+    DATA: lo_tabdescr     TYPE REF TO cl_abap_structdescr,
+          lr_data         TYPE REF TO data,
+          ls_header       TYPE x030l,
+          lt_dfies        TYPE ddfields,
+          lv_row_int      TYPE zexcel_cell_row,
+          lv_column_int   TYPE zexcel_cell_column,
+          lv_column_alpha TYPE zexcel_cell_column_alpha,
+          lv_cell_value   TYPE zexcel_cell_value.
 
 
-    field-symbols: <FS_TABLE_LINE> type ANY,
-                   <FS_FLDVAL>     type ANY,
-                   <FS_DFIES>      type DFIES.
+    FIELD-SYMBOLS: <fs_table_line> TYPE any,
+                   <fs_fldval>     TYPE any,
+                   <fs_dfies>      TYPE dfies.
 
-    LV_COLUMN_INT = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_TOP_LEFT_COLUMN ).
-    LV_ROW_INT    = IP_TOP_LEFT_ROW.
+    lv_column_int = zcl_excel_common=>convert_column2int( ip_top_left_column ).
+    lv_row_int    = ip_top_left_row.
 
-    create data LR_DATA like line of IP_TABLE.
+    CREATE DATA lr_data LIKE LINE OF ip_table.
 
-    LO_TABDESCR ?= CL_ABAP_STRUCTDESCR=>DESCRIBE_BY_DATA_REF( LR_DATA ).
+    lo_tabdescr ?= cl_abap_structdescr=>describe_by_data_ref( lr_data ).
 
-    LS_HEADER = LO_TABDESCR->GET_DDIC_HEADER( ).
+    ls_header = lo_tabdescr->get_ddic_header( ).
 
-    LT_DFIES = LO_TABDESCR->GET_DDIC_FIELD_LIST( ).
+    lt_dfies = lo_tabdescr->get_ddic_field_list( ).
 
 * It is better to loop column by column
-    loop at LT_DFIES assigning <FS_DFIES>.
-      LV_COLUMN_ALPHA = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( LV_COLUMN_INT ).
+    LOOP AT lt_dfies ASSIGNING <fs_dfies>.
+      lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
-      if IP_NO_HEADER = ABAP_FALSE.
+      IF ip_no_header = abap_false.
         " First of all write column header
-        LV_CELL_VALUE = <FS_DFIES>-SCRTEXT_M.
-        ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                      IP_ROW    = LV_ROW_INT
-                      IP_VALUE  = LV_CELL_VALUE
-                      IP_STYLE  = IP_HDR_STYLE ).
-        if IP_TRANSPOSE = ABAP_TRUE.
-          add 1 to LV_COLUMN_INT.
-        else.
-          add 1 to LV_ROW_INT.
-        endif.
-      endif.
+        lv_cell_value = <fs_dfies>-scrtext_m.
+        me->set_cell( ip_column = lv_column_alpha
+                      ip_row    = lv_row_int
+                      ip_value  = lv_cell_value
+                      ip_style  = ip_hdr_style ).
+        IF ip_transpose = abap_true.
+          ADD 1 TO lv_column_int.
+        ELSE.
+          ADD 1 TO lv_row_int.
+        ENDIF.
+      ENDIF.
 
-      loop at IP_TABLE assigning <FS_TABLE_LINE>.
-        LV_COLUMN_ALPHA = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( LV_COLUMN_INT ).
-        assign component <FS_DFIES>-FIELDNAME of structure <FS_TABLE_LINE> to <FS_FLDVAL>.
-        move <FS_FLDVAL> to LV_CELL_VALUE.
-        ME->SET_CELL( IP_COLUMN = LV_COLUMN_ALPHA
-                      IP_ROW    = LV_ROW_INT
-                      IP_VALUE  = <FS_FLDVAL>   "lv_cell_value
-                      IP_STYLE  = IP_BODY_STYLE ).
-        if IP_TRANSPOSE = ABAP_TRUE.
-          add 1 to LV_COLUMN_INT.
-        else.
-          add 1 to LV_ROW_INT.
-        endif.
-      endloop.
-      if IP_TRANSPOSE = ABAP_TRUE.
-        LV_COLUMN_INT = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IP_TOP_LEFT_COLUMN ).
-        add 1 to LV_ROW_INT.
-      else.
-        LV_ROW_INT = IP_TOP_LEFT_ROW.
-        add 1 to LV_COLUMN_INT.
-      endif.
-    endloop.
+      LOOP AT ip_table ASSIGNING <fs_table_line>.
+        lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+        ASSIGN COMPONENT <fs_dfies>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
+        MOVE <fs_fldval> TO lv_cell_value.
+        me->set_cell( ip_column = lv_column_alpha
+                      ip_row    = lv_row_int
+                      ip_value  = <fs_fldval>   "lv_cell_value
+                      ip_style  = ip_body_style ).
+        IF ip_transpose = abap_true.
+          ADD 1 TO lv_column_int.
+        ELSE.
+          ADD 1 TO lv_row_int.
+        ENDIF.
+      ENDLOOP.
+      IF ip_transpose = abap_true.
+        lv_column_int = zcl_excel_common=>convert_column2int( ip_top_left_column ).
+        ADD 1 TO lv_row_int.
+      ELSE.
+        lv_row_int = ip_top_left_row.
+        ADD 1 TO lv_column_int.
+      ENDIF.
+    ENDLOOP.
 
-  endmethod.
+  ENDMETHOD.                    "SET_TABLE
 
 
-  method SET_TITLE.
+  METHOD set_title.
 *--------------------------------------------------------------------*
 * ToDos:
 *        2do §1  The current coding for replacing a named ranges name
@@ -5291,15 +5375,15 @@ ENDMETHOD.
 *              - Stefan Schmoecker,                          2012-12-02
 * changes: added additional check for ' as first character
 *--------------------------------------------------------------------*
-    data: LO_WORKSHEETS_ITERATOR type ref to CL_OBJECT_COLLECTION_ITERATOR,
-          LO_WORKSHEET           type ref to ZCL_EXCEL_WORKSHEET,
-          ERRORMESSAGE           type STRING,
-          LV_RANGESHEETNAME_OLD  type STRING,
-          LV_RANGESHEETNAME_NEW  type STRING,
-          LO_RANGES_ITERATOR     type ref to CL_OBJECT_COLLECTION_ITERATOR,
-          LO_RANGE               type ref to ZCL_EXCEL_RANGE,
-          LV_RANGE_VALUE         type ZEXCEL_RANGE_VALUE,
-          LV_ERRORMESSAGE        type STRING.                          " Can't pass '...'(abc) to exception-class
+    DATA: lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator,
+          lo_worksheet           TYPE REF TO zcl_excel_worksheet,
+          errormessage           TYPE string,
+          lv_rangesheetname_old  TYPE string,
+          lv_rangesheetname_new  TYPE string,
+          lo_ranges_iterator     TYPE REF TO cl_object_collection_iterator,
+          lo_range               TYPE REF TO zcl_excel_range,
+          lv_range_value         TYPE zexcel_range_value,
+          lv_errormessage        TYPE string.                          " Can't pass '...'(abc) to exception-class
 
 
 *--------------------------------------------------------------------*
@@ -5307,39 +5391,39 @@ ENDMETHOD.
 * Illegal characters are: /	\	[	]	*	?	:  --> http://msdn.microsoft.com/en-us/library/ff837411.aspx
 * Illegal characters not in documentation:   ' as first character
 *--------------------------------------------------------------------*
-    if IP_TITLE ca '/\[]*?:'.
-      LV_ERRORMESSAGE = 'Found illegal character in sheetname. List of forbidden characters: /\[]*?:'(402).
+    IF ip_title CA '/\[]*?:'.
+      lv_errormessage = 'Found illegal character in sheetname. List of forbidden characters: /\[]*?:'(402).
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
-    if IP_TITLE is not initial and IP_TITLE(1) = `'`.
-      LV_ERRORMESSAGE = 'Sheetname may not start with &'(403).   " & used instead of ' to allow fallbacklanguage
-      replace '&' in LV_ERRORMESSAGE with `'`.
+    IF ip_title IS NOT INITIAL AND ip_title(1) = `'`.
+      lv_errormessage = 'Sheetname may not start with &'(403).   " & used instead of ' to allow fallbacklanguage
+      REPLACE '&' IN lv_errormessage WITH `'`.
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
 
 *--------------------------------------------------------------------*
 * Check whether title is unique in workbook
 *--------------------------------------------------------------------*
-    LO_WORKSHEETS_ITERATOR = ME->EXCEL->GET_WORKSHEETS_ITERATOR( ).
-    while LO_WORKSHEETS_ITERATOR->HAS_NEXT( ) = 'X'.
+    lo_worksheets_iterator = me->excel->get_worksheets_iterator( ).
+    WHILE lo_worksheets_iterator->has_next( ) = 'X'.
 
-      LO_WORKSHEET ?= LO_WORKSHEETS_ITERATOR->GET_NEXT( ).
-      check ME->GUID <> LO_WORKSHEET->GET_GUID( ).  " Don't check against itself
-      if IP_TITLE = LO_WORKSHEET->GET_TITLE( ).  " Not unique --> raise exception
-        ERRORMESSAGE = 'Duplicate sheetname &'.
-        replace '&' in ERRORMESSAGE with IP_TITLE.
+      lo_worksheet ?= lo_worksheets_iterator->get_next( ).
+      CHECK me->guid <> lo_worksheet->get_guid( ).  " Don't check against itself
+      IF ip_title = lo_worksheet->get_title( ).  " Not unique --> raise exception
+        errormessage = 'Duplicate sheetname &'.
+        REPLACE '&' IN errormessage WITH ip_title.
         zcx_excel=>raise_text( errormessage ).
-      endif.
+      ENDIF.
 
-    endwhile.
+    ENDWHILE.
 
 *--------------------------------------------------------------------*
 * Remember old sheetname and rename sheet to desired name
 *--------------------------------------------------------------------*
-    concatenate ME->TITLE '!' into LV_RANGESHEETNAME_OLD.
-    ME->TITLE = IP_TITLE.
+    CONCATENATE me->title '!' INTO lv_rangesheetname_old.
+    me->title = ip_title.
 
 *--------------------------------------------------------------------*
 * After changing this worksheet's title we have to adjust
@@ -5349,256 +5433,256 @@ ENDMETHOD.
 *           I fear it isn't - but this implementation is better then
 *           nothing at all since it handles a supposed majority of cases
 *--------------------------------------------------------------------*
-    concatenate ME->TITLE '!' into LV_RANGESHEETNAME_NEW.
+    CONCATENATE me->title '!' INTO lv_rangesheetname_new.
 
-    LO_RANGES_ITERATOR = ME->EXCEL->GET_RANGES_ITERATOR( ).
-    while LO_RANGES_ITERATOR->HAS_NEXT( ) = 'X'.
+    lo_ranges_iterator = me->excel->get_ranges_iterator( ).
+    WHILE lo_ranges_iterator->has_next( ) = 'X'.
 
-      LO_RANGE ?= LO_RANGES_ITERATOR->GET_NEXT( ).
-      LV_RANGE_VALUE = LO_RANGE->GET_VALUE( ).
-      replace all occurrences of LV_RANGESHEETNAME_OLD in LV_RANGE_VALUE with LV_RANGESHEETNAME_NEW.
-      if SY-SUBRC = 0.
-        LO_RANGE->SET_RANGE_VALUE( LV_RANGE_VALUE ).
-      endif.
+      lo_range ?= lo_ranges_iterator->get_next( ).
+      lv_range_value = lo_range->get_value( ).
+      REPLACE ALL OCCURRENCES OF lv_rangesheetname_old IN lv_range_value WITH lv_rangesheetname_new.
+      IF sy-subrc = 0.
+        lo_range->set_range_value( lv_range_value ).
+      ENDIF.
 
-    endwhile.
-
-
-  endmethod.
+    ENDWHILE.
 
 
-  method UPDATE_DIMENSION_RANGE.
-
-    data: LS_SHEET_CONTENT type ZEXCEL_S_CELL_DATA,
-          LV_ROW_ALPHA     type STRING,
-          LV_COLUMN_ALPHA  type ZEXCEL_CELL_COLUMN_ALPHA.
-
-    check SHEET_CONTENT is not initial.
-
-    UPPER_CELL-CELL_ROW = ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_ROW.
-    UPPER_CELL-CELL_COLUMN = ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MAX_COL.
-
-    LOWER_CELL-CELL_ROW = ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_ROW.
-    LOWER_CELL-CELL_COLUMN = ZCL_EXCEL_COMMON=>C_EXCEL_SHEET_MIN_COL.
-
-    loop at SHEET_CONTENT into LS_SHEET_CONTENT.
-      if UPPER_CELL-CELL_ROW > LS_SHEET_CONTENT-CELL_ROW.
-        UPPER_CELL-CELL_ROW = LS_SHEET_CONTENT-CELL_ROW.
-      endif.
-      if UPPER_CELL-CELL_COLUMN > LS_SHEET_CONTENT-CELL_COLUMN.
-        UPPER_CELL-CELL_COLUMN = LS_SHEET_CONTENT-CELL_COLUMN.
-      endif.
-      if LOWER_CELL-CELL_ROW < LS_SHEET_CONTENT-CELL_ROW.
-        LOWER_CELL-CELL_ROW = LS_SHEET_CONTENT-CELL_ROW.
-      endif.
-      if LOWER_CELL-CELL_COLUMN < LS_SHEET_CONTENT-CELL_COLUMN.
-        LOWER_CELL-CELL_COLUMN = LS_SHEET_CONTENT-CELL_COLUMN.
-      endif.
-    endloop.
-
-    LV_ROW_ALPHA = UPPER_CELL-CELL_ROW.
-    LV_COLUMN_ALPHA = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( UPPER_CELL-CELL_COLUMN ).
-    shift LV_ROW_ALPHA right deleting trailing SPACE.
-    shift LV_ROW_ALPHA left deleting leading SPACE.
-    concatenate LV_COLUMN_ALPHA LV_ROW_ALPHA into UPPER_CELL-CELL_COORDS.
-
-    LV_ROW_ALPHA = LOWER_CELL-CELL_ROW.
-    LV_COLUMN_ALPHA = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2ALPHA( LOWER_CELL-CELL_COLUMN ).
-    shift LV_ROW_ALPHA right deleting trailing SPACE.
-    shift LV_ROW_ALPHA left deleting leading SPACE.
-    concatenate LV_COLUMN_ALPHA LV_ROW_ALPHA into LOWER_CELL-CELL_COORDS.
-
-  endmethod.
+  ENDMETHOD.                    "SET_TITLE
 
 
-  method ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS.
+  METHOD update_dimension_range.
+
+    DATA: ls_sheet_content TYPE zexcel_s_cell_data,
+          lv_row_alpha     TYPE string,
+          lv_column_alpha  TYPE zexcel_cell_column_alpha.
+
+    CHECK sheet_content IS NOT INITIAL.
+
+    upper_cell-cell_row = zcl_excel_common=>c_excel_sheet_max_row.
+    upper_cell-cell_column = zcl_excel_common=>c_excel_sheet_max_col.
+
+    lower_cell-cell_row = zcl_excel_common=>c_excel_sheet_min_row.
+    lower_cell-cell_column = zcl_excel_common=>c_excel_sheet_min_col.
+
+    LOOP AT sheet_content INTO ls_sheet_content.
+      IF upper_cell-cell_row > ls_sheet_content-cell_row.
+        upper_cell-cell_row = ls_sheet_content-cell_row.
+      ENDIF.
+      IF upper_cell-cell_column > ls_sheet_content-cell_column.
+        upper_cell-cell_column = ls_sheet_content-cell_column.
+      ENDIF.
+      IF lower_cell-cell_row < ls_sheet_content-cell_row.
+        lower_cell-cell_row = ls_sheet_content-cell_row.
+      ENDIF.
+      IF lower_cell-cell_column < ls_sheet_content-cell_column.
+        lower_cell-cell_column = ls_sheet_content-cell_column.
+      ENDIF.
+    ENDLOOP.
+
+    lv_row_alpha = upper_cell-cell_row.
+    lv_column_alpha = zcl_excel_common=>convert_column2alpha( upper_cell-cell_column ).
+    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+    SHIFT lv_row_alpha LEFT DELETING LEADING space.
+    CONCATENATE lv_column_alpha lv_row_alpha INTO upper_cell-cell_coords.
+
+    lv_row_alpha = lower_cell-cell_row.
+    lv_column_alpha = zcl_excel_common=>convert_column2alpha( lower_cell-cell_column ).
+    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+    SHIFT lv_row_alpha LEFT DELETING LEADING space.
+    CONCATENATE lv_column_alpha lv_row_alpha INTO lower_cell-cell_coords.
+
+  ENDMETHOD.                    "UPDATE_DIMENSION_RANGE
+
+
+  METHOD zif_excel_sheet_printsettings~clear_print_repeat_columns.
 
 *--------------------------------------------------------------------*
 * adjust internal representation
 *--------------------------------------------------------------------*
-    clear:  ME->PRINT_TITLE_COL_FROM,
-            ME->PRINT_TITLE_COL_TO  .
+    CLEAR:  me->print_title_col_from,
+            me->print_title_col_to  .
 
 
 *--------------------------------------------------------------------*
 * adjust corresponding range
 *--------------------------------------------------------------------*
-    ME->PRINT_TITLE_SET_RANGE( ).
+    me->print_title_set_range( ).
 
 
-  endmethod.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_COLUMNS
 
 
-  method ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS.
+  METHOD zif_excel_sheet_printsettings~clear_print_repeat_rows.
 
 *--------------------------------------------------------------------*
 * adjust internal representation
 *--------------------------------------------------------------------*
-    clear:  ME->PRINT_TITLE_ROW_FROM,
-            ME->PRINT_TITLE_ROW_TO  .
+    CLEAR:  me->print_title_row_from,
+            me->print_title_row_to  .
 
 
 *--------------------------------------------------------------------*
 * adjust corresponding range
 *--------------------------------------------------------------------*
-    ME->PRINT_TITLE_SET_RANGE( ).
+    me->print_title_set_range( ).
 
 
-  endmethod.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~CLEAR_PRINT_REPEAT_ROWS
 
 
-  method ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS.
-    EV_COLUMNS_FROM = ME->PRINT_TITLE_COL_FROM.
-    EV_COLUMNS_TO   = ME->PRINT_TITLE_COL_TO.
-  endmethod.
+  METHOD zif_excel_sheet_printsettings~get_print_repeat_columns.
+    ev_columns_from = me->print_title_col_from.
+    ev_columns_to   = me->print_title_col_to.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_COLUMNS
 
 
-  method ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS.
-    EV_ROWS_FROM = ME->PRINT_TITLE_ROW_FROM.
-    EV_ROWS_TO   = ME->PRINT_TITLE_ROW_TO.
-  endmethod.
+  METHOD zif_excel_sheet_printsettings~get_print_repeat_rows.
+    ev_rows_from = me->print_title_row_from.
+    ev_rows_to   = me->print_title_row_to.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~GET_PRINT_REPEAT_ROWS
 
 
-  method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS.
+  METHOD zif_excel_sheet_printsettings~set_print_repeat_columns.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
 *           - Stefan Schmöcker,                             2012-12-02
 *--------------------------------------------------------------------*
 
-    data: LV_COL_FROM_INT type I,
-          LV_COL_TO_INT   type I,
-          LV_ERRORMESSAGE type STRING.
+    DATA: lv_col_from_int TYPE i,
+          lv_col_to_int   TYPE i,
+          lv_errormessage TYPE string.
 
 
-    LV_COL_FROM_INT = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IV_COLUMNS_FROM ).
-    LV_COL_TO_INT   = ZCL_EXCEL_COMMON=>CONVERT_COLUMN2INT( IV_COLUMNS_TO ).
+    lv_col_from_int = zcl_excel_common=>convert_column2int( iv_columns_from ).
+    lv_col_to_int   = zcl_excel_common=>convert_column2int( iv_columns_to ).
 
 *--------------------------------------------------------------------*
 * Check if valid range is supplied
 *--------------------------------------------------------------------*
-    if LV_COL_FROM_INT < 1.
-      LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable columns'(401).
+    IF lv_col_from_int < 1.
+      lv_errormessage = 'Invalid range supplied for print-title repeatable columns'(401).
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
-    if  LV_COL_FROM_INT > LV_COL_TO_INT.
-      LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable columns'(401).
+    IF  lv_col_from_int > lv_col_to_int.
+      lv_errormessage = 'Invalid range supplied for print-title repeatable columns'(401).
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 * adjust internal representation
 *--------------------------------------------------------------------*
-    ME->PRINT_TITLE_COL_FROM = IV_COLUMNS_FROM.
-    ME->PRINT_TITLE_COL_TO   = IV_COLUMNS_TO.
+    me->print_title_col_from = iv_columns_from.
+    me->print_title_col_to   = iv_columns_to.
 
 
 *--------------------------------------------------------------------*
 * adjust corresponding range
 *--------------------------------------------------------------------*
-    ME->PRINT_TITLE_SET_RANGE( ).
+    me->print_title_set_range( ).
 
-  endmethod.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_COLUMNS
 
 
-  method ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS.
+  METHOD zif_excel_sheet_printsettings~set_print_repeat_rows.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
 *           - Stefan Schmöcker,                             2012-12-02
 *--------------------------------------------------------------------*
 
-    data:     LV_ERRORMESSAGE                 type STRING.
+    DATA:     lv_errormessage                 TYPE string.
 
 
 *--------------------------------------------------------------------*
 * Check if valid range is supplied
 *--------------------------------------------------------------------*
-    if IV_ROWS_FROM < 1.
-      LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable rowumns'(401).
+    IF iv_rows_from < 1.
+      lv_errormessage = 'Invalid range supplied for print-title repeatable rowumns'(401).
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
-    if  IV_ROWS_FROM > IV_ROWS_TO.
-      LV_ERRORMESSAGE = 'Invalid range supplied for print-title repeatable rowumns'(401).
+    IF  iv_rows_from > iv_rows_to.
+      lv_errormessage = 'Invalid range supplied for print-title repeatable rowumns'(401).
       zcx_excel=>raise_text( lv_errormessage ).
-    endif.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 * adjust internal representation
 *--------------------------------------------------------------------*
-    ME->PRINT_TITLE_ROW_FROM = IV_ROWS_FROM.
-    ME->PRINT_TITLE_ROW_TO   = IV_ROWS_TO.
+    me->print_title_row_from = iv_rows_from.
+    me->print_title_row_to   = iv_rows_to.
 
 
 *--------------------------------------------------------------------*
 * adjust corresponding range
 *--------------------------------------------------------------------*
-    ME->PRINT_TITLE_SET_RANGE( ).
+    me->print_title_set_range( ).
 
 
-  endmethod.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS
 
 
-  method ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE.
-    if ZIF_EXCEL_SHEET_PROPERTIES~STYLE is not initial.
-      EP_STYLE = ZIF_EXCEL_SHEET_PROPERTIES~STYLE.
-    else.
-      EP_STYLE = ME->EXCEL->GET_DEFAULT_STYLE( ).
-    endif.
-  endmethod.
+  METHOD zif_excel_sheet_properties~get_style.
+    IF zif_excel_sheet_properties~style IS NOT INITIAL.
+      ep_style = zif_excel_sheet_properties~style.
+    ELSE.
+      ep_style = me->excel->get_default_style( ).
+    ENDIF.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PROPERTIES~GET_STYLE
 
 
-  method ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE.
+  METHOD zif_excel_sheet_properties~initialize.
 
-    ZIF_EXCEL_SHEET_PROPERTIES~SHOW_ZEROS   = ZIF_EXCEL_SHEET_PROPERTIES=>C_SHOWZERO.
-    ZIF_EXCEL_SHEET_PROPERTIES~SUMMARYBELOW = ZIF_EXCEL_SHEET_PROPERTIES=>C_BELOW_ON.
-    ZIF_EXCEL_SHEET_PROPERTIES~SUMMARYRIGHT = ZIF_EXCEL_SHEET_PROPERTIES=>C_RIGHT_ON.
+    zif_excel_sheet_properties~show_zeros   = zif_excel_sheet_properties=>c_showzero.
+    zif_excel_sheet_properties~summarybelow = zif_excel_sheet_properties=>c_below_on.
+    zif_excel_sheet_properties~summaryright = zif_excel_sheet_properties=>c_right_on.
 
 * inizialize zoomscale values
-    ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE = 100.
-    ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_NORMAL = 100.
-    ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_PAGELAYOUTVIEW = 100 .
-    ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_SHEETLAYOUTVIEW = 100 .
-  endmethod.
+    zif_excel_sheet_properties~zoomscale = 100.
+    zif_excel_sheet_properties~zoomscale_normal = 100.
+    zif_excel_sheet_properties~zoomscale_pagelayoutview = 100 .
+    zif_excel_sheet_properties~zoomscale_sheetlayoutview = 100 .
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE
 
 
-  method ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE.
-    ZIF_EXCEL_SHEET_PROPERTIES~STYLE = IP_STYLE.
-  endmethod.
+  METHOD zif_excel_sheet_properties~set_style.
+    zif_excel_sheet_properties~style = ip_style.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PROPERTIES~SET_STYLE
 
 
-  method ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE.
+  METHOD zif_excel_sheet_protection~initialize.
 
-    ME->ZIF_EXCEL_SHEET_PROTECTION~PROTECTED = ZIF_EXCEL_SHEET_PROTECTION=>C_UNPROTECTED.
-    clear ME->ZIF_EXCEL_SHEET_PROTECTION~PASSWORD.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~AUTO_FILTER            = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~DELETE_COLUMNS         = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~DELETE_ROWS            = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~FORMAT_CELLS           = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~FORMAT_COLUMNS         = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~FORMAT_ROWS            = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~INSERT_COLUMNS         = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~INSERT_HYPERLINKS      = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~INSERT_ROWS            = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~OBJECTS                = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
+    me->zif_excel_sheet_protection~protected = zif_excel_sheet_protection=>c_unprotected.
+    CLEAR me->zif_excel_sheet_protection~password.
+    me->zif_excel_sheet_protection~auto_filter            = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~delete_columns         = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~delete_rows            = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~format_cells           = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~format_columns         = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~format_rows            = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~insert_columns         = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~insert_hyperlinks      = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~insert_rows            = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~objects                = zif_excel_sheet_protection=>c_noactive.
 *  me->zif_excel_sheet_protection~password               = zif_excel_sheet_protection=>c_noactive. "issue #68
-    ME->ZIF_EXCEL_SHEET_PROTECTION~PIVOT_TABLES           = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~PROTECTED              = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~SCENARIOS              = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~SELECT_LOCKED_CELLS    = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~SELECT_UNLOCKED_CELLS  = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~SHEET                  = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
-    ME->ZIF_EXCEL_SHEET_PROTECTION~SORT                   = ZIF_EXCEL_SHEET_PROTECTION=>C_NOACTIVE.
+    me->zif_excel_sheet_protection~pivot_tables           = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~protected              = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~scenarios              = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~select_locked_cells    = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~select_unlocked_cells  = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~sheet                  = zif_excel_sheet_protection=>c_noactive.
+    me->zif_excel_sheet_protection~sort                   = zif_excel_sheet_protection=>c_noactive.
 
-  endmethod.
-
-
-  method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME.
-    ME->ZIF_EXCEL_SHEET_VBA_PROJECT~CODENAME = IP_CODENAME.
-  endmethod.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_PROTECTION~INITIALIZE
 
 
-  method ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR.
-    ME->ZIF_EXCEL_SHEET_VBA_PROJECT~CODENAME_PR = IP_CODENAME_PR.
-  endmethod.
+  METHOD zif_excel_sheet_vba_project~set_codename.
+    me->zif_excel_sheet_vba_project~codename = ip_codename.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME
+
+
+  METHOD zif_excel_sheet_vba_project~set_codename_pr.
+    me->zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
+  ENDMETHOD.                    "ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR
 ENDCLASS.

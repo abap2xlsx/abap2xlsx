@@ -76,5 +76,28 @@ START-OF-SELECTION.
   " assign drawing to the worksheet
   lo_worksheet->add_drawing( lo_drawing ).
 
+**********************************************************************
+**********************************************************************
+* New sheet
+  lo_worksheet = lo_excel->add_new_worksheet( 'Sheet2' ).
+
+**********************************************************************
+*** Header Left
+  " create global drawing, set position and media from web repository
+  lo_drawing = lo_excel->add_new_drawing( ip_type = zcl_excel_drawing=>type_image_header_footer ).
+
+  ls_key-relid = 'MI'.
+  ls_key-objid = 'SAPLOGO.GIF'.
+  lo_drawing->set_media_www( ip_key = ls_key
+                             ip_width = 166
+                             ip_height = 75 ).
+
+
+  CLEAR ls_header.
+  ls_header-left_image = ls_footer-left_image = lo_drawing.
+
+  lo_worksheet->sheet_setup->set_header_footer( ip_odd_header = ls_header ).
+
+
 *** Create output
   lcl_output=>output( lo_excel ).
