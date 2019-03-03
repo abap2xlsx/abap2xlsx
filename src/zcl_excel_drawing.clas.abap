@@ -6,13 +6,19 @@ class ZCL_EXCEL_DRAWING definition
 public section.
 *"* public components of class ZCL_EXCEL_DRAWING
 *"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_DRAWING
+*"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_DRAWING
+*"* do not include other source files here!!!
+*"* protected components of class ZCL_EXCEL_DRAWING
+*"* do not include other source files here!!!
   type-pools ABAP .
 
   constants C_GRAPH_PIE type ZEXCEL_GRAPH_TYPE value 1. "#EC NOTEXT
   constants C_GRAPH_LINE type ZEXCEL_GRAPH_TYPE value 2. "#EC NOTEXT
   constants C_GRAPH_BARS type ZEXCEL_GRAPH_TYPE value 0. "#EC NOTEXT
   data GRAPH_TYPE type ZEXCEL_GRAPH_TYPE .
-  data TITLE type STRING value 'image1.jpg'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  . " .
+  data TITLE type STRING value 'image1.jpg'. "#EC NOTEXT
   data X_REFERENCES type CHAR1 .
   data Y_REFERENCES type CHAR1 .
   constants TYPE_IMAGE type ZEXCEL_DRAWING_TYPE value 'image'. "#EC NOTEXT
@@ -24,6 +30,7 @@ public section.
   constants C_MEDIA_TYPE_BMP type STRING value 'bmp'. "#EC NOTEXT
   constants C_MEDIA_TYPE_XML type STRING value 'xml'. "#EC NOTEXT
   constants C_MEDIA_TYPE_JPG type STRING value 'jpg'. "#EC NOTEXT
+  constants TYPE_IMAGE_HEADER_FOOTER type ZEXCEL_DRAWING_TYPE value 'hd_ft'. "#EC NOTEXT
 
   methods CONSTRUCTOR
     importing
@@ -118,12 +125,6 @@ public section.
   methods LOAD_CHART_ATTRIBUTES
     importing
       value(IP_CHART) type ref to IF_IXML_DOCUMENT .
-*"* protected components of class ZCL_EXCEL_DRAWING
-*"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_DRAWING
-*"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_DRAWING
-*"* do not include other source files here!!!
 protected section.
 private section.
 
