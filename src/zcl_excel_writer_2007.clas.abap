@@ -5446,27 +5446,20 @@ METHOD create_xl_sheet.
 * End   - Add - Issue #180
 
 * Header/Footer Image
-  DATA:  lo_drawing          TYPE REF TO zcl_excel_drawing.
-  lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
-    IF lo_drawing->get_type( ) = zcl_excel_drawing=>type_image_header_footer.
-      lo_element = lo_document->create_simple_element( name   = lc_xml_node_drawing_for_hd_ft
-                                                           parent = lo_document ).
-      ADD 1 TO lv_relation_id.  " +1 for legacyDrawings
-      lv_value = lv_relation_id.
-      CONDENSE lv_value.
-      CONCATENATE 'rId' lv_value INTO lv_value.
-      lo_element->set_attribute( name = 'r:id'
-                                 value = lv_value ).
-      lo_element_root->append_child( new_child = lo_element ).
-
-      ADD 1 TO lv_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
-      EXIT.
-    ENDIF.
-  ENDWHILE.
-
-
+  DATA: lt_drawings TYPE zexcel_t_drawings.
+  lt_drawings = io_worksheet->get_header_footer_drawings( ).
+  IF lines( lt_drawings ) > 0. "Header or footer image exist
+    lo_element = lo_document->create_simple_element( name   = lc_xml_node_drawing_for_hd_ft
+                                                     parent = lo_document ).
+    ADD 1 TO lv_relation_id.  " +1 for legacyDrawings
+    lv_value = lv_relation_id.
+    CONDENSE lv_value.
+    CONCATENATE 'rId' lv_value INTO lv_value.
+    lo_element->set_attribute( name = 'r:id'
+                               value = lv_value ).
+    lo_element_root->append_child( new_child = lo_element ).
+    ADD 1 TO lv_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
+  ENDIF.
 *
 
 * tables
