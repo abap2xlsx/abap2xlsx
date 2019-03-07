@@ -7,10 +7,10 @@ public section.
 *"* public components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
   interfaces ZIF_EXCEL_WRITER .
+  METHODS constructor.
+
 protected section.
 
-  data MV_SHEET_DATA_XSTRING type XSTRING .
-  data MV_SHEET_DATA_XSTRING_DUMMY type XSTRING .
 *"* protected components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
   constants C_CONTENT_TYPES type STRING value '[Content_Types].xml'. "#EC NOTEXT
@@ -34,6 +34,7 @@ protected section.
   constants C_XL_COMMENTS type STRING value 'xl/comments#.xml'. "#EC NOTEXT
   constants CL_XL_DRAWING_FOR_COMMENTS type STRING value 'xl/drawings/vmlDrawing#.vml'. "#EC NOTEXT
   constants C_XL_DRAWINGS_VML_RELS type STRING value 'xl/drawings/_rels/vmlDrawing#.vml.rels'. "#EC NOTEXT
+  data ixml type ref to if_ixml.
 
   methods CREATE_XL_SHEET_SHEET_DATA
     importing
@@ -154,11 +155,6 @@ protected section.
       !IP_CELL_VALUE type ZEXCEL_CELL_VALUE
     returning
       value(EP_INDEX) type INT4 .
-  methods RENDER_IXML_ELEMENT_NO_HEADER
-    importing
-      !IV_IXML_ELEMENT type ref to IF_IXML_ELEMENT
-    returning
-      value(RV_XSTRING) type XSTRING .
   methods CREATE_XL_DRAWINGS_VML
     returning
       value(EP_CONTENT) type XSTRING .
@@ -188,6 +184,14 @@ protected section.
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
     returning
       value(EP_CONTENT) type XSTRING .
+  methods create_xml_document
+    returning
+    value(ro_document) type ref to if_ixml_document.
+  methods render_xml_document
+    importing
+      io_document type ref to if_ixml_document
+    returning
+    value(ep_content) type xstring.
 private section.
 
 *"* private components of class ZCL_EXCEL_WRITER_2007
@@ -206,6 +210,10 @@ ENDCLASS.
 
 
 CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
+
+  METHOD CONSTRUCTOR.
+    me->ixml = cl_ixml=>create( ).
+  ENDMETHOD.
 
 
 METHOD add_further_data_to_zip.
@@ -242,6 +250,8 @@ METHOD create.
         lv_sheet_index            TYPE i,
         lv_drawing_index          TYPE i,
         lv_comment_index          TYPE i.        " (+) Issue #180
+
+**********************************************************************
 
 **********************************************************************
 * Start of insertion # issue 139 - Dateretention of cellstyles
@@ -518,14 +528,9 @@ method CREATE_CONTENT_TYPES.
         lc_xml_node_drawings_ct   TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawing+xml',
         lc_xml_node_chart_ct      TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawingml.chart+xml'.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
+  DATA: lo_document       TYPE REF TO if_ixml_document,
         lo_element_root   TYPE REF TO if_ixml_element,
         lo_element        TYPE REF TO if_ixml_element,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer,
         lo_worksheet      TYPE REF TO zcl_excel_worksheet,
         lo_iterator       TYPE REF TO cl_object_collection_iterator,
         lo_nested_iterator TYPE REF TO cl_object_collection_iterator,
@@ -541,15 +546,7 @@ method CREATE_CONTENT_TYPES.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'UTF-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node types
@@ -779,12 +776,8 @@ method CREATE_CONTENT_TYPES.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
-
-  endmethod.
+  ep_content = render_xml_document( lo_document ).
+endmethod.
 
 
 method CREATE_DOCPROPS_APP.
@@ -814,18 +807,13 @@ method CREATE_DOCPROPS_APP.
         lc_xml_attr_size              TYPE string VALUE 'size',
         lc_xml_attr_basetype          TYPE string VALUE 'baseType'.
 
-  DATA: lo_ixml                 TYPE REF TO if_ixml,
-        lo_document             TYPE REF TO if_ixml_document,
+  DATA: lo_document             TYPE REF TO if_ixml_document,
         lo_element_root         TYPE REF TO if_ixml_element,
         lo_element              TYPE REF TO if_ixml_element,
         lo_sub_element_vector   TYPE REF TO if_ixml_element,
         lo_sub_element_variant  TYPE REF TO if_ixml_element,
         lo_sub_element_lpstr    TYPE REF TO if_ixml_element,
         lo_sub_element_i4       TYPE REF TO if_ixml_element,
-        lo_encoding             TYPE REF TO if_ixml_encoding,
-        lo_streamfactory        TYPE REF TO if_ixml_stream_factory,
-        lo_ostream              TYPE REF TO if_ixml_ostream,
-        lo_renderer             TYPE REF TO if_ixml_renderer,
         lo_iterator             TYPE REF TO cl_object_collection_iterator,
         lo_worksheet            TYPE REF TO zcl_excel_worksheet.
 
@@ -833,15 +821,7 @@ method CREATE_DOCPROPS_APP.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node properties
@@ -1001,12 +981,8 @@ method CREATE_DOCPROPS_APP.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
-
-  endmethod.
+  ep_content = render_xml_document( lo_document ).
+endmethod.
 
 
 method CREATE_DOCPROPS_CORE.
@@ -1034,14 +1010,9 @@ method CREATE_DOCPROPS_CORE.
         lc_xml_node_dcmitype_ns     TYPE string VALUE 'http://purl.org/dc/dcmitype/',
         lc_xml_node_xsi_ns          TYPE string VALUE 'http://www.w3.org/2001/XMLSchema-instance'.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
+  DATA: lo_document       TYPE REF TO if_ixml_document,
         lo_element_root   TYPE REF TO if_ixml_element,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer.
+        lo_element        TYPE REF TO if_ixml_element.
 
   DATA: lv_value          TYPE string,
         lv_date           TYPE sydatum,
@@ -1049,15 +1020,7 @@ method CREATE_DOCPROPS_CORE.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node coreProperties
@@ -1134,12 +1097,8 @@ method CREATE_DOCPROPS_CORE.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
-
-  endmethod.
+  ep_content = render_xml_document( lo_document ).
+endmethod.
 
 
 METHOD create_dxf_style.
@@ -1297,26 +1256,13 @@ method CREATE_RELATIONSHIPS.
         lc_xml_node_rId2_tg       TYPE string VALUE 'docProps/core.xml',
         lc_xml_node_rId3_tg       TYPE string VALUE 'docProps/app.xml'.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
+  DATA: lo_document       TYPE REF TO if_ixml_document,
         lo_element_root   TYPE REF TO if_ixml_element,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer.
+        lo_element        TYPE REF TO if_ixml_element.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node relationships
@@ -1362,12 +1308,8 @@ method CREATE_RELATIONSHIPS.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
-
-  endmethod.
+  ep_content = render_xml_document( lo_document ).
+endmethod.
 
 
 METHOD create_xl_charts.
@@ -1476,13 +1418,9 @@ METHOD create_xl_charts.
               lc_xml_node_pagesetup             TYPE string VALUE 'c:pageSetup'.
 
 
-  DATA: lo_ixml                                 TYPE REF TO if_ixml,
-        lo_document                             TYPE REF TO if_ixml_document,
-        lo_element_root                         TYPE REF TO if_ixml_element,
-        lo_encoding                             TYPE REF TO if_ixml_encoding,
-        lo_streamfactory                        TYPE REF TO if_ixml_stream_factory,
-        lo_ostream                              TYPE REF TO if_ixml_ostream,
-        lo_renderer                             TYPE REF TO if_ixml_renderer.
+  DATA: lo_document                             TYPE REF TO if_ixml_document,
+        lo_element_root                         TYPE REF TO if_ixml_element.
+
 
   DATA lo_element                               TYPE REF TO if_ixml_element.
   DATA lo_element2                              TYPE REF TO if_ixml_element.
@@ -1495,15 +1433,7 @@ METHOD create_xl_charts.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 ***********************************************************************
 * STEP 3: Create main node relationships
@@ -2299,11 +2229,7 @@ METHOD create_xl_charts.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
-
+  ep_content = render_xml_document( lo_document ).
 ENDMETHOD.
 
 
@@ -2335,8 +2261,7 @@ METHOD create_xl_comments.
               lc_xml_attr_xmlspacing  TYPE string VALUE 'xml:space'.
 
 
-  DATA: lo_ixml                TYPE REF TO if_ixml,
-        lo_document            TYPE REF TO if_ixml_document,
+  DATA: lo_document            TYPE REF TO if_ixml_document,
         lo_element_root        TYPE REF TO if_ixml_element,
         lo_element_authors     TYPE REF TO if_ixml_element,
         lo_element_author      TYPE REF TO if_ixml_element,
@@ -2352,10 +2277,6 @@ METHOD create_xl_comments.
 *       lo_element_charset     TYPE REF TO if_ixml_element,
         lo_element_family      TYPE REF TO if_ixml_element,
         lo_element_t           TYPE REF TO if_ixml_element,
-        lo_encoding            TYPE REF TO if_ixml_encoding,
-        lo_streamfactory       TYPE REF TO if_ixml_stream_factory,
-        lo_ostream             TYPE REF TO if_ixml_ostream,
-        lo_renderer            TYPE REF TO if_ixml_renderer,
         lo_iterator            TYPE REF TO cl_object_collection_iterator,
         lo_comments            TYPE REF TO zcl_excel_comments,
         lo_comment             TYPE REF TO zcl_excel_comment.
@@ -2381,15 +2302,7 @@ METHOD create_xl_comments.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 ***********************************************************************
 * STEP 3: Create main node relationships
@@ -2467,10 +2380,7 @@ METHOD create_xl_comments.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -2483,14 +2393,9 @@ method CREATE_XL_DRAWINGS.
               lc_xml_node_ns_xdr  TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
               lc_xml_node_ns_a    TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main'.
 
-  DATA: lo_ixml             TYPE REF TO if_ixml,
-        lo_document         TYPE REF TO if_ixml_document,
+  DATA: lo_document         TYPE REF TO if_ixml_document,
         lo_element_root     TYPE REF TO if_ixml_element,
         lo_element_cellanchor TYPE REF TO if_ixml_element,
-        lo_encoding         TYPE REF TO if_ixml_encoding,
-        lo_streamfactory    TYPE REF TO if_ixml_stream_factory,
-        lo_ostream          TYPE REF TO if_ixml_ostream,
-        lo_renderer         TYPE REF TO if_ixml_renderer,
         lo_iterator         TYPE REF TO cl_object_collection_iterator,
         lo_drawings         TYPE REF TO zcl_excel_drawings,
         lo_drawing          TYPE REF TO zcl_excel_drawing.
@@ -2500,15 +2405,7 @@ method CREATE_XL_DRAWINGS.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 ***********************************************************************
 * STEP 3: Create main node relationships
@@ -2542,12 +2439,9 @@ method CREATE_XL_DRAWINGS.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
-  endmethod.
+endmethod.
 
 
 METHOD create_xl_drawings_hdft_rels.
@@ -2566,15 +2460,9 @@ METHOD create_xl_drawings_hdft_rels.
 
   DATA: lo_iterator      TYPE REF TO cl_object_collection_iterator,
         lo_drawing       TYPE REF TO zcl_excel_drawing,
-        lo_ixml          TYPE REF TO if_ixml,
         lo_document      TYPE REF TO if_ixml_document,
         lo_element_root  TYPE REF TO if_ixml_element,
         lo_element       TYPE REF TO if_ixml_element,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
-        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-        lo_ostream       TYPE REF TO if_ixml_ostream,
-        lo_renderer      TYPE REF TO if_ixml_renderer,
-
         lv_value       TYPE string,
         lv_relation_id TYPE i,
         lt_temp TYPE strtable,
@@ -2587,15 +2475,7 @@ METHOD create_xl_drawings_hdft_rels.
 * BODY
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node relationships
@@ -2641,10 +2521,7 @@ METHOD create_xl_drawings_hdft_rels.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.                    "create_xl_drawings_hdft_rels
 
@@ -2663,14 +2540,9 @@ method CREATE_XL_DRAWINGS_RELS.
         lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
         lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
+  DATA: lo_document       TYPE REF TO if_ixml_document,
         lo_element_root   TYPE REF TO if_ixml_element,
         lo_element        TYPE REF TO if_ixml_element,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer,
         lo_iterator       TYPE REF TO cl_object_collection_iterator,
         lo_drawings       TYPE REF TO zcl_excel_drawings,
         lo_drawing        TYPE REF TO zcl_excel_drawing.
@@ -2680,15 +2552,7 @@ method CREATE_XL_DRAWINGS_RELS.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node relationships
@@ -2738,12 +2602,9 @@ method CREATE_XL_DRAWINGS_RELS.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
-  endmethod.
+endmethod.
 
 
 METHOD create_xl_drawings_vml.
@@ -2803,15 +2664,9 @@ METHOD create_xl_drawings_vml_rels.
 
   DATA: lo_iterator           TYPE REF TO cl_object_collection_iterator,
         lo_drawing          TYPE REF TO zcl_excel_drawing,
-        lo_ixml          TYPE REF TO if_ixml,
         lo_document      TYPE REF TO if_ixml_document,
         lo_element_root  TYPE REF TO if_ixml_element,
         lo_element       TYPE REF TO if_ixml_element,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
-        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-        lo_ostream       TYPE REF TO if_ixml_ostream,
-        lo_renderer      TYPE REF TO if_ixml_renderer,
-
         lv_value       TYPE string,
         lv_relation_id TYPE i.
 
@@ -2819,15 +2674,7 @@ METHOD create_xl_drawings_vml_rels.
 * BODY
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node relationships
@@ -2869,10 +2716,7 @@ METHOD create_xl_drawings_vml_rels.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -3238,8 +3082,7 @@ METHOD create_xl_drawing_for_comments.
              lc_xml_attr_val_note        TYPE string VALUE 'Note'.
 
 
-  DATA: lo_ixml                  TYPE REF TO if_ixml,
-        lo_document              TYPE REF TO if_ixml_document,
+  DATA: lo_document              TYPE REF TO if_ixml_document,
         lo_element_root          TYPE REF TO if_ixml_element,
         "shapelayout
         lo_element_shapelayout   TYPE REF TO if_ixml_element,
@@ -3261,10 +3104,6 @@ METHOD create_xl_drawing_for_comments.
         lo_element_autofill      TYPE REF TO if_ixml_element,
         lo_element_row           TYPE REF TO if_ixml_element,
         lo_element_column        TYPE REF TO if_ixml_element,
-        lo_encoding              TYPE REF TO if_ixml_encoding,
-        lo_streamfactory         TYPE REF TO if_ixml_stream_factory,
-        lo_ostream               TYPE REF TO if_ixml_ostream,
-        lo_renderer              TYPE REF TO if_ixml_renderer,
         lo_iterator              TYPE REF TO cl_object_collection_iterator,
         lo_comments              TYPE REF TO zcl_excel_comments,
         lo_comment               TYPE REF TO zcl_excel_comment,
@@ -3297,8 +3136,7 @@ METHOD create_xl_drawing_for_comments.
 
 **********************************************************************
 * STEP 1: Create XML document
-  lo_ixml     = cl_ixml=>create( ).
-  lo_document = lo_ixml->create_document( ).
+  lo_document = me->ixml->create_document( ).
 
 ***********************************************************************
 * STEP 2: Create main node relationships
@@ -3442,10 +3280,7 @@ METHOD create_xl_drawing_for_comments.
 
 **********************************************************************
 * STEP 6: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -3560,14 +3395,9 @@ method CREATE_XL_RELATIONSHIPS.
         lc_xml_node_rid_styles_tg     TYPE string VALUE 'styles.xml',
         lc_xml_node_rid_theme_tg      TYPE string VALUE 'theme/theme1.xml'.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
+  DATA: lo_document       TYPE REF TO if_ixml_document,
         lo_element_root   TYPE REF TO if_ixml_element,
-        lo_element        TYPE REF TO if_ixml_element,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer.
+        lo_element        TYPE REF TO if_ixml_element.
 
   DATA: lv_xml_node_ridx_tg       TYPE string,
         lv_xml_node_ridx_id       TYPE string,
@@ -3576,15 +3406,7 @@ method CREATE_XL_RELATIONSHIPS.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node relationships
@@ -3677,12 +3499,9 @@ method CREATE_XL_RELATIONSHIPS.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
-  endmethod.
+endmethod.
 
 
 METHOD create_xl_sharedstrings.
@@ -3698,15 +3517,10 @@ METHOD create_xl_sharedstrings.
         " Node namespace
         lc_xml_node_ns          TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'.
 
-  DATA: lo_ixml          TYPE REF TO if_ixml,
-        lo_document      TYPE REF TO if_ixml_document,
+  DATA: lo_document      TYPE REF TO if_ixml_document,
         lo_element_root  TYPE REF TO if_ixml_element,
         lo_element       TYPE REF TO if_ixml_element,
         lo_sub_element   TYPE REF TO if_ixml_element,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
-        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-        lo_ostream       TYPE REF TO if_ixml_ostream,
-        lo_renderer      TYPE REF TO if_ixml_renderer,
         lo_iterator      TYPE REF TO cl_object_collection_iterator,
         lo_worksheet     TYPE REF TO zcl_excel_worksheet.
 
@@ -3761,15 +3575,7 @@ METHOD create_xl_sharedstrings.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node
@@ -3800,10 +3606,7 @@ METHOD create_xl_sharedstrings.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -3990,17 +3793,12 @@ METHOD create_xl_sheet.
         lc_xml_node_comp_pref          TYPE string VALUE 'x14ac',
         lc_xml_node_ig_ns              TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac'.
 
-  DATA: lo_ixml               TYPE REF TO if_ixml,
-        lo_document           TYPE REF TO if_ixml_document,
+  DATA: lo_document           TYPE REF TO if_ixml_document,
         lo_element_root       TYPE REF TO if_ixml_element,
         lo_element            TYPE REF TO if_ixml_element,
         lo_element_2          TYPE REF TO if_ixml_element,
         lo_element_3          TYPE REF TO if_ixml_element,
         lo_element_4          TYPE REF TO if_ixml_element,
-        lo_encoding           TYPE REF TO if_ixml_encoding,
-        lo_streamfactory      TYPE REF TO if_ixml_stream_factory,
-        lo_ostream            TYPE REF TO if_ixml_ostream,
-        lo_renderer           TYPE REF TO if_ixml_renderer,
         lo_iterator           TYPE REF TO cl_object_collection_iterator,
         lo_style_cond         TYPE REF TO zcl_excel_style_cond,
         lo_data_validation    TYPE REF TO zcl_excel_data_validation,
@@ -4059,15 +3857,7 @@ METHOD create_xl_sheet.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 ***********************************************************************
 * STEP 3: Create main node relationships
@@ -5503,10 +5293,7 @@ METHOD create_xl_sheet.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -5613,14 +5400,9 @@ METHOD create_xl_sheet_rels.
         lc_xml_node_rid_drawing_cmt_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing',      " (+) Issue #180
         lc_xml_node_rid_link_tp        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink'.
 
-  DATA: lo_ixml          TYPE REF TO if_ixml,
-        lo_document      TYPE REF TO if_ixml_document,
+  DATA: lo_document      TYPE REF TO if_ixml_document,
         lo_element_root  TYPE REF TO if_ixml_element,
         lo_element       TYPE REF TO if_ixml_element,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
-        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-        lo_ostream       TYPE REF TO if_ixml_ostream,
-        lo_renderer      TYPE REF TO if_ixml_renderer,
         lo_iterator      TYPE REF TO cl_object_collection_iterator,
         lo_table         TYPE REF TO zcl_excel_table,
         lo_link          TYPE REF TO zcl_excel_hyperlink.
@@ -5632,15 +5414,7 @@ METHOD create_xl_sheet_rels.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node relationships
@@ -5840,10 +5614,7 @@ METHOD create_xl_sheet_rels.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -5912,7 +5683,6 @@ METHOD create_xl_sheet_sheet_data.
   " sheetData node
   rv_ixml_sheet_data_root = io_document->create_simple_element( name   = lc_xml_node_sheetdata
                                                                 parent = io_document ).
-  me->mv_sheet_data_xstring_dummy = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
 
   " Get column count
   col_count      = io_worksheet->get_highest_column( ).
@@ -6223,25 +5993,6 @@ METHOD create_xl_sheet_sheet_data.
   ENDIF.
   DELETE io_worksheet->sheet_content WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries
 
-*
-*
-*  me->mv_sheet_data_xstring = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
-*
-*
-** Für den Dummystringersatz jetzt alles zurück auf Anfang
-*  rv_ixml_sheet_data_root = io_document->create_simple_element( name   = lc_xml_node_sheetdata
-*                                                                parent = io_document ).
-*  me->mv_sheet_data_xstring_dummy = render_ixml_element_no_header( rv_ixml_sheet_data_root ).
-*
-*  DATA: lv_sheetdata_tag_start TYPE xstring,
-*        lv_sheetdata_tag_end   TYPE xstring.
-*
-*  lv_sheetdata_tag_start = cl_bcs_convert=>string_to_xstring( '<sheetData>' ).
-*  lv_sheetdata_tag_end   = cl_bcs_convert=>string_to_xstring( '</sheetData>' ).
-*  CONCATENATE lv_sheetdata_tag_start lv_xstring lv_sheetdata_tag_end
-*      INTO lv_xstring IN BYTE MODE.
-*  me->mv_sheet_data_xstring = lv_xstring.
-
 ENDMETHOD.
 
 
@@ -6349,8 +6100,7 @@ METHOD create_xl_styles.
               lc_xml_attr_right             TYPE string VALUE 'right',
               lc_xml_attr_left              TYPE string VALUE 'left'.
 
-  DATA: lo_ixml              TYPE REF TO if_ixml,
-        lo_document          TYPE REF TO if_ixml_document,
+  DATA: lo_document          TYPE REF TO if_ixml_document,
         lo_element_root      TYPE REF TO if_ixml_element,
         lo_element_fonts     TYPE REF TO if_ixml_element,
         lo_element_font      TYPE REF TO if_ixml_element,
@@ -6364,10 +6114,6 @@ METHOD create_xl_styles.
         lo_element           TYPE REF TO if_ixml_element,
         lo_sub_element       TYPE REF TO if_ixml_element,
         lo_sub_element_2     TYPE REF TO if_ixml_element,
-        lo_encoding          TYPE REF TO if_ixml_encoding,
-        lo_streamfactory     TYPE REF TO if_ixml_stream_factory,
-        lo_ostream           TYPE REF TO if_ixml_ostream,
-        lo_renderer          TYPE REF TO if_ixml_renderer,
         lo_iterator          TYPE REF TO cl_object_collection_iterator,
         lo_iterator2         TYPE REF TO cl_object_collection_iterator,
         lo_worksheet         TYPE REF TO zcl_excel_worksheet,
@@ -6412,15 +6158,7 @@ METHOD create_xl_styles.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 ***********************************************************************
 * STEP 3: Create main node relationships
@@ -7230,10 +6968,7 @@ METHOD create_xl_styles.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -7300,16 +7035,10 @@ METHOD create_xl_table.
         " Node id
         lc_xml_node_ridx_id       TYPE string VALUE 'rId#'.
 
-  DATA: lo_ixml           TYPE REF TO if_ixml,
-        lo_document       TYPE REF TO if_ixml_document,
+  DATA: lo_document       TYPE REF TO if_ixml_document,
         lo_element_root   TYPE REF TO if_ixml_element,
         lo_element        TYPE REF TO if_ixml_element,
         lo_element2       TYPE REF TO if_ixml_element,
-        lo_encoding       TYPE REF TO if_ixml_encoding,
-        lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-        lo_ostream        TYPE REF TO if_ixml_ostream,
-        lo_renderer       TYPE REF TO if_ixml_renderer,
-
         lv_table_name         TYPE string,
         lv_id                 TYPE i,
         lv_match              TYPE i,
@@ -7321,15 +7050,7 @@ METHOD create_xl_table.
 
 **********************************************************************
 * STEP 1: Create xml
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node table
@@ -7452,10 +7173,7 @@ METHOD create_xl_table.
   lo_element_root->append_child( new_child = lo_element ).
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -7529,16 +7247,11 @@ METHOD create_xl_workbook.
               " Node id
               lc_xml_node_ridx_id            TYPE string VALUE 'rId#'.
 
-  DATA:       lo_ixml           TYPE REF TO if_ixml,
-              lo_document       TYPE REF TO if_ixml_document,
+  DATA:       lo_document       TYPE REF TO if_ixml_document,
               lo_element_root   TYPE REF TO if_ixml_element,
               lo_element        TYPE REF TO if_ixml_element,
               lo_element_range  TYPE REF TO if_ixml_element,
               lo_sub_element    TYPE REF TO if_ixml_element,
-              lo_encoding       TYPE REF TO if_ixml_encoding,
-              lo_streamfactory  TYPE REF TO if_ixml_stream_factory,
-              lo_ostream        TYPE REF TO if_ixml_ostream,
-              lo_renderer       TYPE REF TO if_ixml_renderer,
               lo_iterator       TYPE REF TO cl_object_collection_iterator,
               lo_iterator_range TYPE REF TO cl_object_collection_iterator,
               lo_worksheet      TYPE REF TO zcl_excel_worksheet,
@@ -7554,15 +7267,7 @@ METHOD create_xl_workbook.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
+  lo_document = create_xml_document( ).
 
 **********************************************************************
 * STEP 3: Create main node
@@ -7792,10 +7497,7 @@ METHOD create_xl_workbook.
 
 **********************************************************************
 * STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
+  ep_content = render_xml_document( lo_document ).
 
 ENDMETHOD.
 
@@ -7821,60 +7523,6 @@ METHOD get_shared_string_index.
   ep_index = ls_shared_string-string_no.
 
 ENDMETHOD.
-
-
-METHOD render_ixml_element_no_header.
-
-*
-  DATA: lo_ixml          TYPE REF TO if_ixml,
-        lo_document      TYPE REF TO if_ixml_document,
-*      lo_element_root  type ref to if_ixml_element,
-*      lo_element       type ref to if_ixml_element,
-        lo_encoding      TYPE REF TO if_ixml_encoding,
-        lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-        lo_ostream       TYPE REF TO if_ixml_ostream,
-        lo_renderer      TYPE REF TO if_ixml_renderer.
-
-
-  DATA: lv_content TYPE string.
-
-**********************************************************************
-* STEP 1: Create [Content_Types].xml into the root of the ZIP
-  lo_ixml = cl_ixml=>create( ).
-
-**********************************************************************
-* STEP 2: Set document attributes
-  lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                          character_set = 'utf-8' ).
-  lo_document = lo_ixml->create_document( ).
-  lo_document->set_encoding( lo_encoding ).
-  lo_document->set_standalone( abap_true ).
-  lo_document->set_declaration( abap_false ).  "  NO header!!
-
-  lo_document->append_child( new_child = iv_ixml_element ).
-
-
-**********************************************************************
-* STEP 5: Create xstring stream
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-*  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  lo_ostream = lo_streamfactory->create_ostream_cstring( string = lv_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
-
-*  write:/ lv_content.
-
-  lo_streamfactory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_streamfactory->create_ostream_xstring( string = rv_xstring ).
-*  lo_ostream = lo_streamfactory->create_ostream_cstring( string = lv_content ).
-  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
-  lo_renderer->render( ).
-
-
-*  rv_xstring = lv_contentx.
-
-ENDMETHOD.
-
 
 METHOD set_vml_shape_footer.
 
@@ -8160,6 +7808,26 @@ METHOD set_vml_string.
               ld_7
          INTO ep_content.
 
+ENDMETHOD.
+
+METHOD create_xml_document.
+  DATA lo_encoding TYPE REF TO if_ixml_encoding.
+  lo_encoding = me->ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
+                                           character_set = 'utf-8' ).
+  ro_document = me->ixml->create_document( ).
+  ro_document->set_encoding( lo_encoding ).
+  ro_document->set_standalone( abap_true ).
+ENDMETHOD.
+
+METHOD render_xml_document.
+  DATA lo_streamfactory TYPE REF TO if_ixml_stream_factory.
+  DATA lo_ostream       TYPE REF TO if_ixml_ostream.
+  DATA lo_renderer      TYPE REF TO if_ixml_renderer.
+
+  lo_streamfactory = me->ixml->create_stream_factory( ).
+  lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+  lo_renderer = me->ixml->create_renderer( ostream  = lo_ostream document = io_document ).
+  lo_renderer->render( ).
 ENDMETHOD.
 
 
