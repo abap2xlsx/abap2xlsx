@@ -4861,7 +4861,8 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                                     ep_value_type = lv_value_type ).
         ENDIF.
         CASE lv_value_type.
-          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2.
+          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
+            OR cl_abap_typedescr=>typekind_int8. "Allow INT8 types columns
             lo_addit = cl_abap_elemdescr=>get_i( ).
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
