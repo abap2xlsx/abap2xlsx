@@ -107,6 +107,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
         !is_table_settings TYPE zexcel_s_table_settings OPTIONAL
         value(iv_default_descr) TYPE c OPTIONAL
+        !IV_NO_LINE_IF_EMPTY type ABAP_BOOL default ABAP_FALSE
       EXPORTING
         !es_table_settings TYPE zexcel_s_table_settings
       RAISING
