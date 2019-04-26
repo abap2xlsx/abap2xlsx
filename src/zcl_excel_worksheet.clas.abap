@@ -3031,7 +3031,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
         ADD 1 TO lv_row_int.
 
       ENDLOOP.
-      IF sy-subrc <> 0. "create empty row if table has no data
+      IF sy-subrc <> 0 AND iv_no_line_if_empty = abap_false. "create empty row if table has no data
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
                       ip_value  = space ).
