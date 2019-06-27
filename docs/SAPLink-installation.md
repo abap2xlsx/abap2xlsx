@@ -3,7 +3,7 @@
 * [SAPlink Plugins](http://www.saplink.org) installed in your system: DDic, Interface (I would suggest to install the complete nugg package in build/SAPlink-plugins_Daily.nugg)SAP
 
 ## Procedure
-Download the nugg file from [build folder](https://github.com/ivanfemia/abap2xlsx/tree/master/build) and save it locally on your system. Logon on your SAP system and execute report ZSAPLINK Select "Import Nugget" and locate your nugg file, check overwrite originals only if you have a previous installation of abap2xlsx and you want to update.
+Download the nugg file from [build folder](https://github.com/sapmentors/abap2xlsx/tree/master/build) and save it locally on your system. Logon on your SAP system and execute report ZSAPLINK Select "Import Nugget" and locate your nugg file, check overwrite originals only if you have a previous installation of abap2xlsx and you want to update.
  
 ![SAPlink Install](http://www.plinky.it/images/github/saplinkinstall1.png)
 
