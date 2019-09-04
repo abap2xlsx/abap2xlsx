@@ -4,6 +4,8 @@
   <asx:values>
    <PROGDIR>
     <NAME>ZTEST_EXCEL_IMAGE_HEADER</NAME>
+    <STATE>A</STATE>
+    <VARCL>X</VARCL>
     <SUBC>1</SUBC>
     <RLOAD>D</RLOAD>
     <FIXPT>X</FIXPT>

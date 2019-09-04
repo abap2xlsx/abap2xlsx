@@ -4,6 +4,8 @@
   <asx:values>
    <PROGDIR>
     <NAME>ZDEMO_EXCEL11</NAME>
+    <STATE>A</STATE>
+    <VARCL>X</VARCL>
     <SUBC>1</SUBC>
     <RSTAT>K</RSTAT>
     <RLOAD>E</RLOAD>

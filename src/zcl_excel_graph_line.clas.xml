@@ -4,6 +4,7 @@
   <asx:values>
    <VSEOCLASS>
     <CLSNAME>ZCL_EXCEL_GRAPH_LINE</CLSNAME>
+    <VERSION>1</VERSION>
     <LANGU>E</LANGU>
     <DESCRIPT>Bars Graphic</DESCRIPT>
     <STATE>1</STATE>

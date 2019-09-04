@@ -4,6 +4,8 @@
   <asx:values>
    <PROGDIR>
     <NAME>ZDEMO_EXCEL_OUTPUTOPT_INCL</NAME>
+    <STATE>A</STATE>
+    <VARCL>X</VARCL>
     <SUBC>I</SUBC>
     <RLOAD>E</RLOAD>
     <UCCHECK>X</UCCHECK>

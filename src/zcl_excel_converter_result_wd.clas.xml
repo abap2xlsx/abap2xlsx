@@ -4,6 +4,7 @@
   <asx:values>
    <VSEOCLASS>
     <CLSNAME>ZCL_EXCEL_CONVERTER_RESULT_WD</CLSNAME>
+    <VERSION>1</VERSION>
     <LANGU>E</LANGU>
     <DESCRIPT>SALV converter for web dynpro</DESCRIPT>
     <STATE>1</STATE>

@@ -4,6 +4,7 @@
   <asx:values>
    <VSEOCLASS>
     <CLSNAME>ZCL_EXCEL_COLUMN</CLSNAME>
+    <VERSION>1</VERSION>
     <LANGU>E</LANGU>
     <DESCRIPT>Worksheet Column</DESCRIPT>
     <STATE>1</STATE>
