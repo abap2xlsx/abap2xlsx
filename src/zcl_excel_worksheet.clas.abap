@@ -4397,7 +4397,8 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                     ep_rc      = lv_rc    " Return Value of ABAP Statements
                 ).
                 IF lv_rc <> 0
-                  AND lv_rc <> 4.                                                   "No found error means, zero/no value in cell
+                  AND lv_rc <> 4                                                   "No found error means, zero/no value in cell
+                  AND lv_rc <> 8. "rc is 8 when the last row contains cells with zero / no values
                   lv_actual_col_string = lv_actual_col.
                   lv_actual_row_string = lv_actual_row.
                   CONCATENATE 'Error at reading field value (Col:'(007) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
