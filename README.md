@@ -1,4 +1,4 @@
-[![abaplint](https://abaplint.org/badges/sapmentors/abap2xlsx)](https://abaplint.org/project/sapmentors/abap2xlsx)
+[![abaplint](https://app.abaplint.org/badges/sapmentors/abap2xlsx)](https://app.abaplint.org/project/sapmentors/abap2xlsx)
 
 abap2xlsx
 =========

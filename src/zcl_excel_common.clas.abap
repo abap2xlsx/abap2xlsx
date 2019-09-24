@@ -553,7 +553,12 @@ method CONVERT_RANGE2COLUMN_A_ROW.
 
   ELSEIF i_range CS '!'.                                " c) sheetname existing - does not start with '
     SPLIT i_range AT '!' INTO lv_sheet lv_range.
-
+      " begin Dennis Schaaf
+      IF lv_range CP '*#REF*'.
+        lv_errormessage = 'Invalid range'(001).
+        zcx_excel=>raise_text( lv_errormessage ).
+      ENDIF.
+      " end Dennis Schaaf
   ELSE.                                                 " d) no sheetname - just area
     lv_range = i_range.
   ENDIF.

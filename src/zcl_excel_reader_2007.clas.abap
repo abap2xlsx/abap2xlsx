@@ -2005,15 +2005,21 @@ method LOAD_WORKBOOK.
 * insert autofilters
 *--------------------------------------------------------------------*
           WHEN zcl_excel_autofilters=>c_autofilter.
-            lo_autofilter = io_excel->add_new_autofilter( io_sheet = <worksheet>-worksheet ) .
-            zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range        = lv_range_value
-                                                          IMPORTING e_column_start = lv_col_start_alpha
-                                                                    e_column_end   = lv_col_end_alpha
-                                                                    e_row_start    = ls_area-row_start
-                                                                    e_row_end      = ls_area-row_end ).
-            ls_area-col_start = zcl_excel_common=>convert_column2int( lv_col_start_alpha ).
-            ls_area-col_end   = zcl_excel_common=>convert_column2int( lv_col_end_alpha ).
-            lo_autofilter->set_filter_area( is_area = ls_area ).
+              " begin Dennis Schaaf
+              TRY.
+                  zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range        = lv_range_value
+                                                                IMPORTING e_column_start = lv_col_start_alpha
+                                                                          e_column_end   = lv_col_end_alpha
+                                                                          e_row_start    = ls_area-row_start
+                                                                          e_row_end      = ls_area-row_end ).
+                  ls_area-col_start = zcl_excel_common=>convert_column2int( lv_col_start_alpha ).
+                  ls_area-col_end   = zcl_excel_common=>convert_column2int( lv_col_end_alpha ).
+                  lo_autofilter = io_excel->add_new_autofilter( io_sheet = <worksheet>-worksheet ) .
+                  lo_autofilter->set_filter_area( is_area = ls_area ).
+                CATCH zcx_excel.
+                  " we expected a range but it was not usable, so just ignore it
+              ENDTRY.
+              " end Dennis Schaaf
 
 *--------------------------------------------------------------------*
 * repeat print rows/columns
