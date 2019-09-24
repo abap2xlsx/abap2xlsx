@@ -1,8 +1,17 @@
 {
   "global": {
-    "version": "v700",
+    "files": "/src/**/*.*",
     "skipGeneratedGatewayClasses": true,
-    "skipGeneratedPersistentClasses": true
+    "skipGeneratedFunctionGroups": true,
+    "skipGeneratedPersistentClasses": true,
+    "applyUnspecifiedRules": false
+  },
+  "dependencies": [],
+  "syntax": {
+    "version": "v700",
+    "errorNamespace": "^(Z|Y)",
+    "globalConstants": [],
+    "globalMacros": []
   },
   "rules": {
     "7bit_ascii": {
@@ -69,7 +78,7 @@
       "enabled": false
     },
     "breakpoint": {
-      "enabled": true 
+      "enabled": true
     },
     "nesting": {
       "enabled": false,
