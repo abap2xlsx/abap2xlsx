@@ -4327,6 +4327,9 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     DATA lv_delta_col TYPE int4.
     DATA lv_value  TYPE zexcel_cell_value.
     DATA lv_rc  TYPE sysubrc.
+    DATA lx_conversion_error TYPE REF TO cx_sy_conversion_error.
+    DATA lv_float TYPE f.
+    DATA lv_type.
 
 
     lv_max_col =  me->get_highest_column( ).
@@ -4405,7 +4408,18 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                   zcx_excel=>raise_text( lv_errormessage ).
                 ENDIF.
 
-                <lv_value> = lv_value.
+                TRY.
+                    <lv_value> = lv_value. "Will raise exception if data type of <lv_value> is not float (or decfloat16/34) and excel delivers exponential number e.g. -2.9398924194538267E-2
+                  CATCH cx_sy_conversion_error INTO lx_conversion_error.
+                    "Another try with conversion to float...
+                    DESCRIBE FIELD <lv_value> TYPE lv_type.
+                    IF lv_type = 'P'.
+                      <lv_value> = lv_float = lv_value.
+                    ELSE.
+                      RAISE EXCEPTION lx_conversion_error. "Pass on original exception
+                    ENDIF.
+                ENDTRY.
+
 *  CATCH zcx_excel.    "
                 ADD 1 TO lv_actual_col.
               ENDWHILE.
