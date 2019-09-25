@@ -1,30 +1,30 @@
 *&---------------------------------------------------------------------*
-*& Report  ZDEMO_EXCEL43
+*& Report  ZDEMO_EXCEL44
 *&
 *&---------------------------------------------------------------------*
 *&
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel43.
+REPORT  zdemo_excel44.
 
 DATA: lo_excel              TYPE REF TO zcl_excel,
       lo_worksheet          TYPE REF TO zcl_excel_worksheet.
 
 DATA: lt_field_catalog    TYPE zexcel_t_fieldcatalog.
 
-CONSTANTS: gc_save_file_name TYPE string VALUE '43_iTabEmptyOrNot.xlsx'.
+CONSTANTS: gc_save_file_name TYPE string VALUE '44_iTabEmptyOrNot.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
 
-SELECTION-SCREEN BEGIN OF BLOCK b43 WITH FRAME TITLE txt_b43.
+SELECTION-SCREEN BEGIN OF BLOCK b44 WITH FRAME TITLE txt_b44.
 
 * No line if internal table is empty
 PARAMETERS: p_mtyfil TYPE flag AS CHECKBOX DEFAULT 'X'.
 
-SELECTION-SCREEN END OF BLOCK b43.
+SELECTION-SCREEN END OF BLOCK b44.
 
 INITIALIZATION.
-  txt_b43 = 'Testing empty file option'(b43).
+  txt_b44 = 'Testing empty file option'(b44).
 
 START-OF-SELECTION.
 
