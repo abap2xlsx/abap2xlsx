@@ -107,6 +107,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
         !is_table_settings TYPE zexcel_s_table_settings OPTIONAL
         value(iv_default_descr) TYPE c OPTIONAL
+        !IV_NO_LINE_IF_EMPTY type ABAP_BOOL default ABAP_FALSE
       EXPORTING
         !es_table_settings TYPE zexcel_s_table_settings
       RAISING
@@ -3030,7 +3031,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
         ADD 1 TO lv_row_int.
 
       ENDLOOP.
-      IF sy-subrc <> 0. "create empty row if table has no data
+      IF sy-subrc <> 0 AND iv_no_line_if_empty = abap_false. "create empty row if table has no data
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
                       ip_value  = space ).
@@ -4327,6 +4328,9 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     DATA lv_delta_col TYPE int4.
     DATA lv_value  TYPE zexcel_cell_value.
     DATA lv_rc  TYPE sysubrc.
+    DATA lx_conversion_error TYPE REF TO cx_sy_conversion_error.
+    DATA lv_float TYPE f.
+    DATA lv_type.
 
 
     lv_max_col =  me->get_highest_column( ).
@@ -4397,14 +4401,26 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                     ep_rc      = lv_rc    " Return Value of ABAP Statements
                 ).
                 IF lv_rc <> 0
-                  AND lv_rc <> 4.                                                   "No found error means, zero/no value in cell
+                  AND lv_rc <> 4                                                   "No found error means, zero/no value in cell
+                  AND lv_rc <> 8. "rc is 8 when the last row contains cells with zero / no values
                   lv_actual_col_string = lv_actual_col.
                   lv_actual_row_string = lv_actual_row.
                   CONCATENATE 'Error at reading field value (Col:'(007) lv_actual_col_string ' Row:'(005) lv_actual_row_string INTO lv_errormessage.
                   zcx_excel=>raise_text( lv_errormessage ).
                 ENDIF.
 
-                <lv_value> = lv_value.
+                TRY.
+                    <lv_value> = lv_value. "Will raise exception if data type of <lv_value> is not float (or decfloat16/34) and excel delivers exponential number e.g. -2.9398924194538267E-2
+                  CATCH cx_sy_conversion_error INTO lx_conversion_error.
+                    "Another try with conversion to float...
+                    DESCRIBE FIELD <lv_value> TYPE lv_type.
+                    IF lv_type = 'P'.
+                      <lv_value> = lv_float = lv_value.
+                    ELSE.
+                      RAISE EXCEPTION lx_conversion_error. "Pass on original exception
+                    ENDIF.
+                ENDTRY.
+
 *  CATCH zcx_excel.    "
                 ADD 1 TO lv_actual_col.
               ENDWHILE.
@@ -4861,7 +4877,8 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                                     ep_value_type = lv_value_type ).
         ENDIF.
         CASE lv_value_type.
-          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2.
+          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
+            OR cl_abap_typedescr=>typekind_int8. "Allow INT8 types columns
             lo_addit = cl_abap_elemdescr=>get_i( ).
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
