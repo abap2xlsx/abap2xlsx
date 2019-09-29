@@ -77,6 +77,7 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel39 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Charts
   SUBMIT zdemo_excel40 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Demo Printsettings
   SUBMIT zdemo_excel41 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Inheritance
+  SUBMIT zdemo_excel44 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: No line if empty
 
   SUBMIT zdemo_excel_comments     WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Comments
   SUBMIT ztest_excel_image_header WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Image in Header and Footer

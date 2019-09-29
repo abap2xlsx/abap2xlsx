@@ -107,6 +107,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
         !is_table_settings TYPE zexcel_s_table_settings OPTIONAL
         value(iv_default_descr) TYPE c OPTIONAL
+        !IV_NO_LINE_IF_EMPTY type ABAP_BOOL default ABAP_FALSE
       EXPORTING
         !es_table_settings TYPE zexcel_s_table_settings
       RAISING
@@ -3030,7 +3031,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
         ADD 1 TO lv_row_int.
 
       ENDLOOP.
-      IF sy-subrc <> 0. "create empty row if table has no data
+      IF sy-subrc <> 0 AND iv_no_line_if_empty = abap_false. "create empty row if table has no data
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
                       ip_value  = space ).
@@ -4876,7 +4877,8 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                                     ep_value_type = lv_value_type ).
         ENDIF.
         CASE lv_value_type.
-          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2.
+          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
+            OR cl_abap_typedescr=>typekind_int8. "Allow INT8 types columns
             lo_addit = cl_abap_elemdescr=>get_i( ).
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
