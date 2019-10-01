@@ -12,9 +12,57 @@
    </PROGDIR>
    <TPOOL>
     <item>
+     <ID>I</ID>
+     <KEY>CLS</KEY>
+     <ENTRY>Choose reader- and writerclass to use</ENTRY>
+     <LENGTH>70</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>DUM</KEY>
+     <ENTRY>Dump on uncaught exception - you&apos;ll know when you need this</ENTRY>
+     <LENGTH>60</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>ERR</KEY>
+     <ENTRY>Special switches</ENTRY>
+     <LENGTH>60</LENGTH>
+    </item>
+    <item>
      <ID>R</ID>
      <ENTRY>Read xlsx-file and output = using templates</ENTRY>
      <LENGTH>43</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>CB_DUMP</KEY>
+     <ENTRY>Dump for uncaught exceptions</ENTRY>
+     <LENGTH>36</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>CB_ERRL</KEY>
+     <ENTRY>Show position of exception</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>LB_READ</KEY>
+     <ENTRY>Reader-class</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>LB_WRITE</KEY>
+     <ENTRY>Writer-class</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_UPFILE</KEY>
+     <ENTRY>File to upload</ENTRY>
+     <LENGTH>22</LENGTH>
     </item>
    </TPOOL>
    <I18N_TPOOL>

@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Text Rotation</DDTEXT>
+     <REPTEXT>Text Rotation</REPTEXT>
+     <SCRTEXT_S>Rotation</SCRTEXT_S>
+     <SCRTEXT_M>Text Rotation</SCRTEXT_M>
+     <SCRTEXT_L>Text Rotation</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

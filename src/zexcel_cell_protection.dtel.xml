@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Cell protection indicator</DDTEXT>
+     <REPTEXT>Cell protection</REPTEXT>
+     <SCRTEXT_S>Protection</SCRTEXT_S>
+     <SCRTEXT_M>Cell protection</SCRTEXT_M>
+     <SCRTEXT_L>Cell protection</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

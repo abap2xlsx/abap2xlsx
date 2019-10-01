@@ -27,6 +27,29 @@
      <DDTEXT>Excel 2003 workbook (.xls)</DDTEXT>
     </DD07V>
    </DD07V_TAB>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>File format</DDTEXT>
+    </item>
+   </DD01_TEXTS>
+   <DD07_TEXTS>
+    <item>
+     <VALPOS>0001</VALPOS>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DOMVALUE_L>XLSX</DOMVALUE_L>
+     <DDTEXT>Excel 2007 workbook (.xlsx)</DDTEXT>
+    </item>
+    <item>
+     <VALPOS>0002</VALPOS>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DOMVALUE_L>XLS</DOMVALUE_L>
+     <DDTEXT>Excel 2003 workbook (.xls)</DDTEXT>
+    </item>
+   </DD07_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

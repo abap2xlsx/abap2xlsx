@@ -19,6 +19,19 @@
     <LENG>000010</LENG>
     <OUTPUTLEN>000011</OUTPUTLEN>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Indexed color value</DDTEXT>
+     <REPTEXT>Indexed color value</REPTEXT>
+     <SCRTEXT_S>Color</SCRTEXT_S>
+     <SCRTEXT_M>Indexed color</SCRTEXT_M>
+     <SCRTEXT_L>Indexed color value</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

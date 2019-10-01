@@ -19,6 +19,7 @@ CLASS lcl_perform DEFINITION CREATE PRIVATE.
     TYPES: BEGIN OF ty_reports,
              progname TYPE reposrc-progname,
              sort     TYPE reposrc-progname,
+             description TYPE repti,
              filename TYPE string,
            END OF ty_reports.
 
@@ -84,14 +85,19 @@ CLASS lcl_perform IMPLEMENTATION.
     is_layout-cwidth_opt = 'X'.
 
     APPEND INITIAL LINE TO it_fieldcat ASSIGNING <fc>.
-    <fc>-fieldname = 'PROGNAME'.
-    <fc>-tabname   = 'REPOSRC'.
+    <fc>-fieldname   = 'PROGNAME'.
+    <fc>-tabname     = 'REPOSRC'.
 
     APPEND INITIAL LINE TO it_fieldcat ASSIGNING <fc>.
     <fc>-fieldname   = 'SORT'.
     <fc>-ref_field   = 'PROGNAME'.
     <fc>-ref_table   = 'REPOSRC'.
+    <fc>-tech        = abap_true. "No need to display this help field
 
+    APPEND INITIAL LINE TO it_fieldcat ASSIGNING <fc>.
+    <fc>-fieldname   = 'DESCRIPTION'.
+    <fc>-ref_field   = 'REPTI'.
+    <fc>-ref_table   = 'RS38M'.
 
     lo_grid->set_table_for_first_display( EXPORTING
                                             is_variant                    = is_variant
@@ -145,8 +151,10 @@ CLASS lcl_perform IMPLEMENTATION.
 
   "collect_reports
   METHOD collect_reports.
-    FIELD-SYMBOLS:<report> LIKE LINE OF t_reports.
-    DATA: t_source TYPE STANDARD TABLE OF text255 WITH NON-UNIQUE DEFAULT KEY.
+    FIELD-SYMBOLS <report> LIKE LINE OF t_reports.
+    DATA t_source TYPE STANDARD TABLE OF text255 WITH NON-UNIQUE DEFAULT KEY.
+    DATA texts TYPE STANDARD TABLE OF textpool.
+    DATA description TYPE textpool.
 
 * Get all demoreports
     SELECT progname
@@ -174,7 +182,20 @@ CLASS lcl_perform IMPLEMENTATION.
       REPLACE REGEX '(ZDEMO_EXCEL)(\d\d)\s*$' IN <report>-sort WITH '$1\0$2'. "      REPLACE REGEX '(ZDEMO_EXCEL)([^][^])*$' IN <report>-sort WITH '$1$2'.REPLACE REGEX '(ZDEMO_EXCEL)([^][^])*$' IN <report>-sort WITH '$1$2'.REPLACE
 
       REPLACE REGEX '(ZDEMO_EXCEL)(\d)\s*$'      IN <report>-sort WITH '$1\0\0$2'.
+
+* get report text
+      READ TEXTPOOL <report>-progname INTO texts LANGUAGE sy-langu.
+      READ TABLE texts INTO description WITH KEY id = 'R'.
+      IF sy-subrc > 0.
+        "If not available in logon language, use english
+        READ TEXTPOOL <report>-progname INTO texts LANGUAGE 'E'.
+        READ TABLE texts INTO description WITH KEY id = 'R'.
+      ENDIF.
+      "set report title
+      <report>-description = description-entry.
+
     ENDLOOP.
+
     SORT t_reports BY sort progname.
 
   ENDMETHOD.  "collect_reports

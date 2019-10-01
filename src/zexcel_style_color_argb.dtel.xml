@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>ZEXCEL_STYLE_COLOR_ARGB</DDTEXT>
+     <REPTEXT>Color ARGB</REPTEXT>
+     <SCRTEXT_S>Color ARGB</SCRTEXT_S>
+     <SCRTEXT_M>Color ARGB</SCRTEXT_M>
+     <SCRTEXT_L>Color ARGB</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>
