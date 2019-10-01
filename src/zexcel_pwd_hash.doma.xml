@@ -10,6 +10,15 @@
     <OUTPUTLEN>000004</OUTPUTLEN>
     <DDTEXT>Password hash</DDTEXT>
    </DD01V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>ZEXCEL_PWD_HASH</DDTEXT>
+    </item>
+   </DD01_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

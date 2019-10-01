@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Cell hidden</DDTEXT>
+     <REPTEXT>Cell hidden</REPTEXT>
+     <SCRTEXT_S>Cell hide</SCRTEXT_S>
+     <SCRTEXT_M>Cell hidden</SCRTEXT_M>
+     <SCRTEXT_L>Cell hidden</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

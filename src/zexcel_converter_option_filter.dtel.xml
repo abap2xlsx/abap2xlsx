@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Filter options for converter with grid object</DDTEXT>
+     <REPTEXT>Filter options</REPTEXT>
+     <SCRTEXT_S>Filter</SCRTEXT_S>
+     <SCRTEXT_M>Filter options</SCRTEXT_M>
+     <SCRTEXT_L>Converter Filter options</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

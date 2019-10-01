@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Font size</DDTEXT>
+     <REPTEXT>Font size</REPTEXT>
+     <SCRTEXT_S>Size</SCRTEXT_S>
+     <SCRTEXT_M>Font size</SCRTEXT_M>
+     <SCRTEXT_L>Font size</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

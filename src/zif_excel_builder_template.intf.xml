@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>ZIF_EXCEL_BUILDER_TEMPLATE</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Substituce prom. pro vyplneni sablony</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>X</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_EXCEL_BUILDER_TEMPLATE</CLSNAME>
+     <CMPNAME>ADD_DRAWING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Vložení obrázku</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_EXCEL_BUILDER_TEMPLATE</CLSNAME>
+     <CMPNAME>ON_END_OF_ROW</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Udalost pri ukonceni radky, vrati TRUE -&gt; dalsi radka</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_EXCEL_BUILDER_TEMPLATE</CLSNAME>
+     <CMPNAME>ON_END_OF_SHEET</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Udalost pri ukonceni listu, vrati TRUE -&gt; dalsi list</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_EXCEL_BUILDER_TEMPLATE</CLSNAME>
+     <CMPNAME>SUBST</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Nahrada promennych hodnotami</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Font underline</DDTEXT>
+     <REPTEXT>Font underline</REPTEXT>
+     <SCRTEXT_S>Underline</SCRTEXT_S>
+     <SCRTEXT_M>Font underline</SCRTEXT_M>
+     <SCRTEXT_L>Font underline</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Condition rule iconset</DDTEXT>
+     <REPTEXT>Condition rule iconset</REPTEXT>
+     <SCRTEXT_S>Cond. rule</SCRTEXT_S>
+     <SCRTEXT_M>Cond. rule iconset</SCRTEXT_M>
+     <SCRTEXT_L>Condition rule iconset</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

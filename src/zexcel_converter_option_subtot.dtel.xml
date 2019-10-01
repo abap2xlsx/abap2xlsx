@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Subtotal options for converter with grid object</DDTEXT>
+     <REPTEXT>Subtotal options</REPTEXT>
+     <SCRTEXT_S>Subtotal</SCRTEXT_S>
+     <SCRTEXT_M>Subtotal options</SCRTEXT_M>
+     <SCRTEXT_L>Converter subtotal options</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

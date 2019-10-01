@@ -17,6 +17,19 @@
     <DTELMASTER>E</DTELMASTER>
     <DATATYPE>STRG</DATATYPE>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Cell data type</DDTEXT>
+     <REPTEXT>Cell data type</REPTEXT>
+     <SCRTEXT_S>Data type</SCRTEXT_S>
+     <SCRTEXT_M>Cell data type</SCRTEXT_M>
+     <SCRTEXT_L>Cell data type</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

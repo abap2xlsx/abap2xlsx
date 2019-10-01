@@ -11,6 +11,16 @@
     <DTELMASTER>E</DTELMASTER>
     <DATATYPE>STRG</DATATYPE>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Name of the table style</DDTEXT>
+     <SCRTEXT_S>Table styl</SCRTEXT_S>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

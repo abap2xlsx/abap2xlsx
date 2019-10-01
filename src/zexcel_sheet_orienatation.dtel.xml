@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>ZEXCEL_SHEET_ORIENATATION</DDTEXT>
+     <REPTEXT>Sheet orientation</REPTEXT>
+     <SCRTEXT_S>Orientat.</SCRTEXT_S>
+     <SCRTEXT_M>Sheet orientation</SCRTEXT_M>
+     <SCRTEXT_L>Sheet orientation</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

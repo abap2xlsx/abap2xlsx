@@ -18,6 +18,19 @@
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Data validation error style</DDTEXT>
+     <REPTEXT>Data validation error style</REPTEXT>
+     <SCRTEXT_S>Error sty</SCRTEXT_S>
+     <SCRTEXT_M>Data val. err. style</SCRTEXT_M>
+     <SCRTEXT_L>Data validation error style</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>
