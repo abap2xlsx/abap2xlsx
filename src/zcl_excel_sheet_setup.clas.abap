@@ -412,6 +412,7 @@ METHOD process_header_footer.
       IF <ls_font>-size IS NOT INITIAL.
         lv_string = <ls_font>-size.
         CONCATENATE rv_processed_string '&' lv_string INTO rv_processed_string.
+        CONDENSE rv_processed_string NO-GAPS.
       ENDIF.
 
       CONCATENATE rv_processed_string <lv_value> INTO rv_processed_string.
