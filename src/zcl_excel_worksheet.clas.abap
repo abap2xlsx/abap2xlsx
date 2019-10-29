@@ -494,6 +494,8 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !iv_skipped_rows TYPE int4 DEFAULT 0
         !iv_skipped_cols TYPE int4 DEFAULT 0
+        !iv_max_col TYPE int4 OPTIONAL
+        !iv_max_row TYPE int4 OPTIONAL
       EXPORTING
         !et_table TYPE STANDARD TABLE
       RAISING
@@ -4332,9 +4334,14 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     DATA lv_float TYPE f.
     DATA lv_type.
 
-
     lv_max_col =  me->get_highest_column( ).
+    IF iv_max_col IS SUPPLIED AND iv_max_col < lv_max_col.
+      lv_max_col = iv_max_col.
+    ENDIF.
     lv_max_row =  me->get_highest_row( ).
+    IF iv_max_row IS SUPPLIED AND iv_max_row < lv_max_row.
+      lv_max_row = iv_max_row.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 * The row counter begins with 1 and should be corrected with the skips
