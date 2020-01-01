@@ -12,9 +12,57 @@
    </PROGDIR>
    <TPOOL>
     <item>
+     <ID>I</ID>
+     <KEY>000</KEY>
+     <ENTRY>Orientation</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>001</KEY>
+     <ENTRY>CW</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>002</KEY>
+     <ENTRY>Created with abap2xlsx. Find more information at https://github.com/sapmentors/abap2xlsx.</ENTRY>
+     <LENGTH>132</LENGTH>
+    </item>
+    <item>
      <ID>R</ID>
      <ENTRY>abap2xlsx Demo: Create Calendar with Pictures</ENTRY>
      <LENGTH>45</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_FROM</KEY>
+     <ENTRY>From</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_LANDS</KEY>
+     <ENTRY>Landscape</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_PATH</KEY>
+     <ENTRY>Path</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_PORTR</KEY>
+     <ENTRY>Portrait</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_TO</KEY>
+     <ENTRY>To</ENTRY>
+     <LENGTH>10</LENGTH>
     </item>
    </TPOOL>
    <I18N_TPOOL>
@@ -25,19 +73,19 @@
        <ID>I</ID>
        <KEY>000</KEY>
        <ENTRY>Ausrichtung</ENTRY>
-       <LENGTH>11</LENGTH>
+       <LENGTH>21</LENGTH>
       </item>
       <item>
        <ID>I</ID>
        <KEY>001</KEY>
        <ENTRY>KW</ENTRY>
-       <LENGTH>4</LENGTH>
+       <LENGTH>12</LENGTH>
       </item>
       <item>
        <ID>I</ID>
        <KEY>002</KEY>
-       <ENTRY>Erzeugt mit abap2xlsx. Weitere Informationen unter https://ivanfemia.github.io/abap2xlsx/</ENTRY>
-       <LENGTH>100</LENGTH>
+       <ENTRY>Erzeugt mit abap2xlsx. Weitere Informationen unter https://github.com/sapmentors/abap2xlsx.</ENTRY>
+       <LENGTH>132</LENGTH>
       </item>
       <item>
        <ID>R</ID>
@@ -46,36 +94,33 @@
       </item>
       <item>
        <ID>S</ID>
+       <KEY>P_FROM</KEY>
+       <ENTRY>Von</ENTRY>
+       <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
        <KEY>P_LANDS</KEY>
        <ENTRY>Querformat</ENTRY>
-       <LENGTH>18</LENGTH>
+       <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_PATH</KEY>
+       <ENTRY>Pfad</ENTRY>
+       <LENGTH>38</LENGTH>
       </item>
       <item>
        <ID>S</ID>
        <KEY>P_PORTR</KEY>
        <ENTRY>Hochformat</ENTRY>
-       <LENGTH>18</LENGTH>
-      </item>
-      <item>
-       <ID>S</ID>
-       <KEY>P_FROM</KEY>
-       <ENTRY>.</ENTRY>
-       <LENGTH>17</LENGTH>
-       <SPLIT>D</SPLIT>
-      </item>
-      <item>
-       <ID>S</ID>
-       <KEY>P_PATH</KEY>
-       <ENTRY>.</ENTRY>
-       <LENGTH>24</LENGTH>
-       <SPLIT>D</SPLIT>
+       <LENGTH>38</LENGTH>
       </item>
       <item>
        <ID>S</ID>
        <KEY>P_TO</KEY>
-       <ENTRY>.</ENTRY>
-       <LENGTH>15</LENGTH>
-       <SPLIT>D</SPLIT>
+       <ENTRY>Bis</ENTRY>
+       <LENGTH>38</LENGTH>
       </item>
      </TEXTPOOL>
     </item>
