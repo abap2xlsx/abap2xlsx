@@ -1,4 +1,4 @@
-REPORT.
+REPORT zdemo_excel41.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE 'ABAP2XLSX Inheritance.xlsx'.
 

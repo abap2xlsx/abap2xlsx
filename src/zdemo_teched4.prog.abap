@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT zdemo_teched3.
+REPORT zdemo_teched4.
 
 *******************************
 *   Data Object declaration   *
