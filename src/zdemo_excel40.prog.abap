@@ -1,4 +1,4 @@
-REPORT.
+REPORT zdemo_excel40.
 
 
 DATA: lo_excel                TYPE REF TO zcl_excel,

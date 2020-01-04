@@ -48,7 +48,7 @@
     "keyword_case": false,
     "local_class_naming": false,
     "local_testclass_location": true,
-    "main_file_contents": false,
+    "main_file_contents": true,
     "message_exists": false,
     "msag_consistency": true,
     "newline_between_methods": false,
@@ -144,15 +144,13 @@
       "enabled": false,
       "depth": 5
     },
-    "keywords_upper": {
-      "enabled": false,
-      "ignoreExceptions": true
-    },
     "cloud_types": {
       "enabled": true
     },
     "method_length": {
       "enabled": false,
+      "errorWhenEmpty": true,
+      "ignoreTestClasses": true,
       "statements": 100
     },
     "mix_returning": {
