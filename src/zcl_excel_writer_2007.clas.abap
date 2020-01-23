@@ -7819,7 +7819,7 @@ METHOD render_xml_document.
 
   lo_streamfactory = me->ixml->create_stream_factory( ).
   lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
-  
+
   " remove illegal characters in the XML according to the note 1750204
   " the following method is only available if the corresponding kernel is used
   TRY.
@@ -7829,7 +7829,7 @@ METHOD render_xml_document.
     CATCH cx_sy_dyn_call_illegal_method.
 
   ENDTRY.
-  
+
   lo_renderer = me->ixml->create_renderer( ostream  = lo_ostream document = io_document ).
   lo_renderer->render( ).
 ENDMETHOD.
