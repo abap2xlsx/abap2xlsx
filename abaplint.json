@@ -3,8 +3,7 @@
     "files": "/src/**/*.*",
     "skipGeneratedGatewayClasses": true,
     "skipGeneratedFunctionGroups": true,
-    "skipGeneratedPersistentClasses": true,
-    "applyUnspecifiedRules": false
+    "skipGeneratedPersistentClasses": true
   },
   "dependencies": [],
   "syntax": {
@@ -14,6 +13,8 @@
     "globalMacros": []
   },
   "rules": {
+    "prefix_is_current_class": false,
+    "unused_variables": false,
     "abapdoc": false,
     "allowed_object_naming": true,
     "allowed_object_types": false,
@@ -73,114 +74,30 @@
     "use_new": false,
     "when_others_last": true,
     "xml_consistency": true,
-    "7bit_ascii": {
-      "enabled": false
-    },
-    "contains_tab": {
-      "enabled": false
-    },
-    "functional_writing": {
-      "enabled": false,
-      "ignoreExceptions": true
-    },
-    "line_length": {
-      "enabled": false,
-      "length": 120
-    },
-    "max_one_statement": {
-      "enabled": false
-    },
-    "parser_error": {
-      "enabled": true
-    },
-    "space_before_colon": {
-      "enabled": false
-    },
-    "colon_missing_space": {
-      "enabled": false
-    },
-    "exit_or_check": {
-      "enabled": false
-    },
-    "line_only_punc": {
-      "enabled": false,
-      "ignoreExceptions": true
-    },
-    "obsolete_statement": {
-      "enabled": false,
-      "refresh": true,
-      "compute": true,
-      "add": true,
-      "subtract": true,
-      "multiply": true,
-      "move": true,
-      "divide": true,
-      "requested": true,
-      "occurs": true
-    },
-    "start_at_tab": {
-      "enabled": false
-    },
-    "whitespace_end": {
-      "enabled": true
-    },
-    "exporting": {
-      "enabled": false
-    },
-    "empty_statement": {
-      "enabled": false
-    },
-    "sequential_blank": {
-      "enabled": false,
-      "lines": 4
-    },
-    "definitions_top": {
-      "enabled": false
-    },
-    "breakpoint": {
-      "enabled": true
-    },
-    "nesting": {
-      "enabled": false,
-      "depth": 5
-    },
-    "cloud_types": {
-      "enabled": true
-    },
-    "method_length": {
-      "enabled": false,
-      "errorWhenEmpty": true,
-      "ignoreTestClasses": true,
-      "statements": 100
-    },
-    "mix_returning": {
-      "enabled": true
-    },
-    "method_parameter_names": {
-      "enabled": false,
-      "ignoreExceptions": true,
-      "importing": "^I._.*$",
-      "returning": "^R._.*$",
-      "changing": "^C._.*$",
-      "exporting": "^E._.*$",
-      "ignoreNames": [
-        "P_TASK"
-      ]
-    },
-    "inline_data_old_versions": {
-      "enabled": true
-    },
-    "local_variable_names": {
-      "enabled": false,
-      "expectedData": "^L._.*$",
-      "expectedConstant": "^LC_.*$",
-      "expectedFS": "^<L._.*>$"
-    },
-    "class_attribute_names": {
-      "enabled": false,
-      "ignoreExceptions": true,
-      "statics": "^G._.*$",
-      "instance": "^M._.*$"
-    }
+    "7bit_ascii": false,
+    "contains_tab": false,
+    "functional_writing": false,
+    "line_length": false,
+    "max_one_statement": false,
+    "parser_error": true,
+    "space_before_colon": false,
+    "colon_missing_space": false,
+    "exit_or_check": false,
+    "line_only_punc": false,
+    "obsolete_statement": false,
+    "start_at_tab": false,
+    "whitespace_end": true,
+    "exporting": false,
+    "empty_statement": false,
+    "sequential_blank": false,
+    "definitions_top": false,
+    "nesting": false,
+    "cloud_types": true,
+    "method_length": false,
+    "mix_returning": true,
+    "method_parameter_names": false,
+    "inline_data_old_versions": true,
+    "local_variable_names": false,
+    "class_attribute_names": false
   }
 }
