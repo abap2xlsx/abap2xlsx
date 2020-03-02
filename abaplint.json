@@ -18,7 +18,7 @@
     "abapdoc": false,
     "allowed_object_naming": true,
     "allowed_object_types": false,
-    "ambiguous_statement": true,
+    "ambiguous_statement": false,
     "avoid_use": false,
     "begin_end_names": true,
     "chain_mainly_declarations": false,
