@@ -74,6 +74,10 @@ method SET_VALUE.
   lv_value = ip_sheet_name.
   me->value = zcl_excel_common=>escape_string( ip_value = lv_value ).
 
-  CONCATENATE me->value '!$' ip_start_column '$' lv_start_row_c ':$' ip_stop_column '$' lv_stop_row_c INTO me->value.
+  IF ip_stop_column IS INITIAL AND ip_stop_row IS INITIAL.
+    CONCATENATE me->value '!$' ip_start_column '$' lv_start_row_c INTO me->value.
+  ELSE.
+    CONCATENATE me->value '!$' ip_start_column '$' lv_start_row_c ':$' ip_stop_column '$' lv_stop_row_c INTO me->value.
+  ENDIF.
   endmethod.
 ENDCLASS.
