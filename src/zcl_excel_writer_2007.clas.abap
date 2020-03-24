@@ -3568,7 +3568,7 @@ METHOD create_xl_sharedstrings.
     MOVE lv_sytabix                    TO ls_shared_string-string_no.
     MOVE <fs_sheet_content>-cell_value TO ls_shared_string-string_value.
     MOVE <fs_sheet_content>-data_type TO ls_shared_string-string_type.
-    APPEND ls_shared_string TO shared_strings.
+    INSERT ls_shared_string INTO TABLE shared_strings.
     add 1 to lv_count.
   ENDLOOP.
 
