@@ -13,7 +13,7 @@
     "globalMacros": []
   },
   "rules": {
-    "prefix_is_current_class": false,
+    "prefix_is_current_class": true,
     "unused_variables": false,
     "abapdoc": false,
     "allowed_object_naming": true,
