@@ -3815,19 +3815,6 @@ method RESOLVE_REFERENCED_FORMULAE.
   endmethod.
 
 
-method ZIF_EXCEL_READER~CAN_READ_FILE.
-*--------------------------------------------------------------------*
-* issue #230   - Pimp my Code
-*              - Stefan Schmöcker,      (done)              2012-11-07
-*              - ...
-* changes: nothing done in code
-*          but started discussion about killing this method
-*--------------------------------------------------------------------*
-* For now always Unknown
-  r_readable = abap_undefined.
-  endmethod.
-
-
 METHOD zif_excel_reader~load.
 *--------------------------------------------------------------------*
 * ToDos:

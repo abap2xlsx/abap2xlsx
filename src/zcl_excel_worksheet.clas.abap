@@ -1675,9 +1675,8 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       CHANGING
         retvalue         = decimal.
 
-    DATA: wa_usr TYPE usr01.
-    SELECT * FROM usr01 INTO wa_usr WHERE bname = sy-uname.
-    ENDSELECT.
+    DATA date_format TYPE usr01-datfm.
+    SELECT SINGLE datfm FROM usr01 INTO date_format WHERE bname = sy-uname.
 
     DATA: comma_elim(4) TYPE c.
     FIELD-SYMBOLS <g> TYPE any.
@@ -1842,7 +1841,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     rows = rowmax + li_commentary_rows + 1.
 
-    all = wa_usr-datfm.
+    all = date_format.
     all = all + 3.
 
     LOOP AT lt_sema INTO semaitem.
