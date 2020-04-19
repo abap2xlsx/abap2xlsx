@@ -6,7 +6,7 @@ public section.
 
   types:
     BEGIN OF ts_pagebreak_at ,
-             cell_row  	 TYPE zexcel_cell_row,
+             cell_row    TYPE zexcel_cell_row,
              cell_column TYPE zexcel_cell_column,
            END OF ts_pagebreak_at .
   types:

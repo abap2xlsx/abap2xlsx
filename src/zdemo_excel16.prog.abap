@@ -129,8 +129,5 @@ START-OF-SELECTION.
     lo_worksheet->add_drawing( lo_drawing ).
   ENDIF.
 
-
-
-
 *** Create output
   lcl_output=>output( lo_excel ).

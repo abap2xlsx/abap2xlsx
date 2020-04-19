@@ -194,8 +194,8 @@ ENDFORM.                    "EXPORT_TO_EXCEL_BIND
 *  <--  p2        text
 *----------------------------------------------------------------------*
 FORM write_file .
-  DATA: lt_file	    TYPE solix_tab,
-        l_bytecount	TYPE i,
+  DATA: lt_file     TYPE solix_tab,
+        l_bytecount TYPE i,
         l_file      TYPE xstring.
 
   DATA: lo_excel_writer         TYPE REF TO zif_excel_writer.

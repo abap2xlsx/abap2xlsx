@@ -246,9 +246,6 @@ CLASS lcl_output IMPLEMENTATION.
 
     CLOSE DATASET p_backfn.
 
-
-
-
     IF sy-repid <> sy-cprog AND sy-cprog IS NOT INITIAL.  " no need to display anything if download was selected and report was called for demo purposes
       LEAVE PROGRAM.
     ELSE.

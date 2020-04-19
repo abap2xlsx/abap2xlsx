@@ -286,12 +286,6 @@ START-OF-SELECTION.
 *     ip_crossbetween  =
     .
 
-
-
-
-
-
-
   " Creates active sheet
   CREATE OBJECT lo_excel.
 

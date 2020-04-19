@@ -76,8 +76,5 @@ START-OF-SELECTION.
     CATCH zcx_excel .
   ENDTRY.
 
-
-
-
 *** Create output
   lcl_output=>output( lo_excel ).

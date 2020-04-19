@@ -202,9 +202,9 @@ START-OF-SELECTION.
   DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
         ls_table_settings       TYPE zexcel_s_table_settings.
 
-  DATA: column        TYPE zexcel_cell_column,
-        column_alpha  TYPE zexcel_cell_column_alpha,
-        value	        TYPE zexcel_cell_value.
+  DATA: column       TYPE zexcel_cell_column,
+        column_alpha TYPE zexcel_cell_column_alpha,
+        value        TYPE zexcel_cell_value.
 
   FIELD-SYMBOLS: <fs_field_catalog> TYPE zexcel_s_fieldcatalog.
 

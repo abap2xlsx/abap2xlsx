@@ -30,8 +30,5 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel->get_active_worksheet( ).
   lo_worksheet->set_cell( ip_row = 4 ip_column = 'C' ip_value = 'This cell is unlocked' ip_style = lv_style_protection_guid ).
 
-
-
-
 *** Create output
   lcl_output=>output( lo_excel ).

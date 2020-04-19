@@ -85,8 +85,5 @@ START-OF-SELECTION.
   lo_worksheet->set_area(  ip_row = 21 ip_row_to = 22 ip_column_start = 'B' ip_column_end = 'G' ip_style = lv_style_bold_border_guid
                            ip_value = 'Test area' ).
 
-
-
-
 *** Create output
   lcl_output=>output( lo_excel ).
