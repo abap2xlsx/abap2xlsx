@@ -5363,9 +5363,6 @@ METHOD create_xl_sheet_pagebreaks.
   lo_node_colbreaks->set_attribute( name = 'count'             value = lv_value ).
   lo_node_colbreaks->set_attribute( name = 'manualBreakCount'  value = lv_value ).
 
-
-
-
   io_parent->append_child( new_child = lo_node_rowbreaks ).
   io_parent->append_child( new_child = lo_node_colbreaks ).
 
@@ -6515,9 +6512,6 @@ METHOD create_xl_styles.
             iv_color_elem_name = lc_xml_node_color ).
         lo_sub_element->append_child( new_child = lo_sub_element_2 ).
       ENDIF.
-
-
-
 
     ELSE.
       "pattern

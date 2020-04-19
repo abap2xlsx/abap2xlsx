@@ -5411,7 +5411,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 *--------------------------------------------------------------------*
 * Check whether title consists only of allowed characters
-* Illegal characters are: /	\	[	]	*	?	:  --> http://msdn.microsoft.com/en-us/library/ff837411.aspx
+* Illegal characters are: / \ [ ] * ? : --> http://msdn.microsoft.com/en-us/library/ff837411.aspx
 * Illegal characters not in documentation:   ' as first character
 *--------------------------------------------------------------------*
     IF ip_title CA '/\[]*?:'.

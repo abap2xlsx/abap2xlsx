@@ -92,8 +92,5 @@ START-OF-SELECTION.
   lo_column = lo_worksheet->get_column( ip_column = 'E' ).
   lo_column->set_auto_size( abap_true ).
 
-
-
-
 *** Create output
   lcl_output=>output( lo_excel ).

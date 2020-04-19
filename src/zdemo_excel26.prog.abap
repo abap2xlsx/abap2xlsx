@@ -158,8 +158,8 @@ endform.                    "EXPORT_TO_EXCEL
 *  <--  p2        text
 *----------------------------------------------------------------------*
 form write_file .
-  data: lt_file	    type solix_tab,
-        l_bytecount	type i,
+  data: lt_file     type solix_tab,
+        l_bytecount type i,
         l_file      type xstring.
 
   data: lo_excel_writer         type ref to zif_excel_writer.

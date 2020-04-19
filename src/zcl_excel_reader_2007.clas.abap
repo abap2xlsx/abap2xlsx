@@ -565,9 +565,6 @@ METHOD get_dxf_style_guid.
 
   ENDWHILE.
 
-
-
-
   rv_style_guid = io_excel->get_static_cellstyle_guid( ip_cstyle_complete  = ls_cstyle
                                                        ip_cstylex_complete = ls_cstylex  ).
 

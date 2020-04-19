@@ -49,8 +49,5 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 7 ip_column = 'C' ip_value = 'This cell is unlocked' ip_style = lv_style_protection_guid ).
   lo_worksheet->set_cell( ip_row = 8 ip_column = 'C' ip_value = 'This cell is locked as all the others empty cell' ).
 
-
-
-
 *** Create output
   lcl_output=>output( lo_excel ).
