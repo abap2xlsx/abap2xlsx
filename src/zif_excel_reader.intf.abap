@@ -1,24 +1,24 @@
-interface ZIF_EXCEL_READER
-  public .
+INTERFACE zif_excel_reader
+  PUBLIC .
 
 
-  methods LOAD_FILE
-    importing
-      !I_FILENAME type CSEQUENCE
-      !I_USE_ALTERNATE_ZIP type SEOCLSNAME default SPACE
-      !I_FROM_APPLSERVER type SYBATCH default SY-BATCH
-      !IV_ZCL_EXCEL_CLASSNAME type CLIKE optional
-    returning
-      value(R_EXCEL) type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD
-    importing
-      !I_EXCEL2007 type XSTRING
-      !I_USE_ALTERNATE_ZIP type SEOCLSNAME default SPACE
-      !IV_ZCL_EXCEL_CLASSNAME type CLIKE optional
-    returning
-      value(R_EXCEL) type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-endinterface.
+  METHODS load_file
+    IMPORTING
+      !i_filename             TYPE csequence
+      !i_use_alternate_zip    TYPE seoclsname DEFAULT space
+      !i_from_applserver      TYPE sybatch DEFAULT sy-batch
+      !iv_zcl_excel_classname TYPE clike OPTIONAL
+    RETURNING
+      VALUE(r_excel)          TYPE REF TO zcl_excel
+    RAISING
+      zcx_excel .
+  METHODS load
+    IMPORTING
+      !i_excel2007            TYPE xstring
+      !i_use_alternate_zip    TYPE seoclsname DEFAULT space
+      !iv_zcl_excel_classname TYPE clike OPTIONAL
+    RETURNING
+      VALUE(r_excel)          TYPE REF TO zcl_excel
+    RAISING
+      zcx_excel .
+ENDINTERFACE.

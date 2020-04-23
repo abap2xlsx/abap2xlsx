@@ -1,7 +1,7 @@
-interface ZIF_EXCEL_CUSTOMUI_ELEMENT
-  public .
+INTERFACE zif_excel_customui_element
+  PUBLIC .
 
 
-  data ID type STRING .
-  data LABEL type STRING .
-endinterface.
+  DATA id TYPE string .
+  DATA label TYPE string .
+ENDINTERFACE.

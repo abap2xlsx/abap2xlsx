@@ -1,34 +1,34 @@
-interface ZIF_EXCEL_SHEET_PROPERTIES
-  public .
+INTERFACE zif_excel_sheet_properties
+  PUBLIC .
 
 
-  constants C_HIDDEN type ZEXCEL_SHEET_HIDDEN value 'X'. "#EC NOTEXT
-  constants C_VERYHIDDEN type ZEXCEL_SHEET_HIDDEN value '2'. "#EC NOTEXT
-  constants C_HIDEZERO type ZEXCEL_SHEET_SHOWZEROS value ''. "#EC NOTEXT
-  constants C_SHOWZERO type ZEXCEL_SHEET_SHOWZEROS value 'X'. "#EC NOTEXT
-  constants C_VISIBLE type ZEXCEL_SHEET_HIDDEN value ''. "#EC NOTEXT
-  data HIDDEN type ZEXCEL_SHEET_HIDDEN .
-  data SHOW_ZEROS type ZEXCEL_SHEET_SHOWZEROS .
-  data STYLE type ZEXCEL_CELL_STYLE .
-  data ZOOMSCALE type ZEXCEL_SHEET_ZOOMSCALE .
-  data ZOOMSCALE_NORMAL type ZEXCEL_SHEET_ZOOMSCALE .
-  data ZOOMSCALE_PAGELAYOUTVIEW type ZEXCEL_SHEET_ZOOMSCALE .
-  data ZOOMSCALE_SHEETLAYOUTVIEW type ZEXCEL_SHEET_ZOOMSCALE .
-  data SUMMARYBELOW type ZEXCEL_SHEET_SUMMARY .
-  constants C_BELOW_ON type ZEXCEL_SHEET_SUMMARY value 1. "#EC NOTEXT
-  constants C_BELOW_OFF type ZEXCEL_SHEET_SUMMARY value 0. "#EC NOTEXT
-  data SUMMARYRIGHT type ZEXCEL_SHEET_SUMMARY .
-  constants C_RIGHT_ON type ZEXCEL_SHEET_SUMMARY value 1. "#EC NOTEXT
-  constants C_RIGHT_OFF type ZEXCEL_SHEET_SUMMARY value 0. "#EC NOTEXT
-  data SELECTED type ZEXCEL_SHEET_SELECTED .
-  constants C_SELECTED type ZEXCEL_SHEET_SELECTED value 'X'. "#EC NOTEXT
-  data HIDE_COLUMNS_FROM type ZEXCEL_CELL_COLUMN_ALPHA .
+  CONSTANTS c_hidden TYPE zexcel_sheet_hidden VALUE 'X'.    "#EC NOTEXT
+  CONSTANTS c_veryhidden TYPE zexcel_sheet_hidden VALUE '2'. "#EC NOTEXT
+  CONSTANTS c_hidezero TYPE zexcel_sheet_showzeros VALUE ''. "#EC NOTEXT
+  CONSTANTS c_showzero TYPE zexcel_sheet_showzeros VALUE 'X'. "#EC NOTEXT
+  CONSTANTS c_visible TYPE zexcel_sheet_hidden VALUE ''.    "#EC NOTEXT
+  DATA hidden TYPE zexcel_sheet_hidden .
+  DATA show_zeros TYPE zexcel_sheet_showzeros .
+  DATA style TYPE zexcel_cell_style .
+  DATA zoomscale TYPE zexcel_sheet_zoomscale .
+  DATA zoomscale_normal TYPE zexcel_sheet_zoomscale .
+  DATA zoomscale_pagelayoutview TYPE zexcel_sheet_zoomscale .
+  DATA zoomscale_sheetlayoutview TYPE zexcel_sheet_zoomscale .
+  DATA summarybelow TYPE zexcel_sheet_summary .
+  CONSTANTS c_below_on TYPE zexcel_sheet_summary VALUE 1.   "#EC NOTEXT
+  CONSTANTS c_below_off TYPE zexcel_sheet_summary VALUE 0.  "#EC NOTEXT
+  DATA summaryright TYPE zexcel_sheet_summary .
+  CONSTANTS c_right_on TYPE zexcel_sheet_summary VALUE 1.   "#EC NOTEXT
+  CONSTANTS c_right_off TYPE zexcel_sheet_summary VALUE 0.  "#EC NOTEXT
+  DATA selected TYPE zexcel_sheet_selected .
+  CONSTANTS c_selected TYPE zexcel_sheet_selected VALUE 'X'. "#EC NOTEXT
+  DATA hide_columns_from TYPE zexcel_cell_column_alpha .
 
-  methods INITIALIZE .
-  methods GET_STYLE
-    returning
-      value(EP_STYLE) type ZEXCEL_CELL_STYLE .
-  methods SET_STYLE
-    importing
-      !IP_STYLE type ZEXCEL_CELL_STYLE .
-endinterface.
+  METHODS initialize .
+  METHODS get_style
+    RETURNING
+      VALUE(ep_style) TYPE zexcel_cell_style .
+  METHODS set_style
+    IMPORTING
+      !ip_style TYPE zexcel_cell_style .
+ENDINTERFACE.
