@@ -2455,8 +2455,10 @@ METHOD load_worksheet.
 
       CASE ls_cell-t.
         WHEN 's'. " String values are stored as index in shared string table
-          lv_index = lo_ixml_value_elem->get_value( ) + 1.
-          READ TABLE shared_strings INTO lv_cell_value INDEX lv_index.
+          IF lo_ixml_value_elem IS BOUND.
+            lv_index = lo_ixml_value_elem->get_value( ) + 1.
+            READ TABLE shared_strings INTO lv_cell_value INDEX lv_index.
+          ENDIF.
         WHEN 'inlineStr'. " inlineStr values are kept in special node
           lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name( name = 'is' ).
           IF lo_ixml_value_elem IS BOUND.
