@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD02V>
+    <TABNAME>ZEXCEL_TEMPLATE_S_VAR</TABNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <TABCLASS>INTTAB</TABCLASS>
+    <DDTEXT>var description</DDTEXT>
+   </DD02V>
+   <DD03P_TABLE>
+    <DD03P>
+     <TABNAME>ZEXCEL_TEMPLATE_S_VAR</TABNAME>
+     <FIELDNAME>SHEET</FIELDNAME>
+     <POSITION>0001</POSITION>
+     <ROLLNAME>ZEXCEL_SHEET_TITLE</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+    <DD03P>
+     <TABNAME>ZEXCEL_TEMPLATE_S_VAR</TABNAME>
+     <FIELDNAME>PARENT</FIELDNAME>
+     <POSITION>0002</POSITION>
+     <ROLLNAME>ZEXCEL_CELL_ROW</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+    <DD03P>
+     <TABNAME>ZEXCEL_TEMPLATE_S_VAR</TABNAME>
+     <FIELDNAME>NAME</FIELDNAME>
+     <POSITION>0003</POSITION>
+     <ROLLNAME>ZEXCEL_SHEET_TITLE</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+   </DD03P_TABLE>
+  </asx:values>
+ </asx:abap>
+</abapGit>

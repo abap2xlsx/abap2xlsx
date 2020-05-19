@@ -146,6 +146,9 @@ public section.
   methods SET_THEME
     importing
       !IO_THEME type ref to ZCL_EXCEL_THEME .
+  methods FILL_TEMPLATE
+    importing
+      !IV_DATA type ref to ZCL_EXCEL_TEMPLATE_DATA .
 protected section.
 
   data WORKSHEETS type ref to ZCL_EXCEL_WORKSHEETS .
@@ -357,6 +360,39 @@ METHOD delete_worksheet_by_name.
   me->delete_worksheet( lo_worksheet ).
 
 ENDMETHOD.
+
+
+  method fill_template.
+
+    data
+          : lo_template_filler type ref to zcl_excel_fill_template
+          .
+
+    create object lo_template_filler .
+
+    lo_template_filler->get_range( me ).
+    lo_template_filler->discard_overlapped( ).
+    lo_template_filler->sign_range( ).
+    lo_template_filler->find_var( me ).
+
+
+
+    data
+          : lt_data type table of zexcel_s_cell_data
+          , lv_column_alpha             type zexcel_cell_column_alpha
+          .
+
+    loop at lo_template_filler->mt_sheet assigning field-symbol(<fs_sheet>).
+
+      read table iv_data->mt_data assigning field-symbol(<fs_data>) with key sheet = <fs_sheet>.
+      check sy-subrc = 0.
+      lo_template_filler->fill_sheet( <fs_data> ).
+
+    endloop.
+
+
+
+  endmethod.
 
 
 method GET_ACTIVE_SHEET_INDEX.

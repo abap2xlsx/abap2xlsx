@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD02V>
+    <TABNAME>ZEXCEL_S_TEMPLATE_DATA</TABNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <TABCLASS>INTTAB</TABCLASS>
+    <DDTEXT>Data for template</DDTEXT>
+   </DD02V>
+   <DD03P_TABLE>
+    <DD03P>
+     <TABNAME>ZEXCEL_S_TEMPLATE_DATA</TABNAME>
+     <FIELDNAME>SHEET</FIELDNAME>
+     <POSITION>0001</POSITION>
+     <ROLLNAME>ZEXCEL_SHEET_TITLE</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+    <DD03P>
+     <TABNAME>ZEXCEL_S_TEMPLATE_DATA</TABNAME>
+     <FIELDNAME>DATA</FIELDNAME>
+     <POSITION>0002</POSITION>
+     <ROLLNAME>DATA</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <DATATYPE>REF</DATATYPE>
+     <MASK>  REF RD</MASK>
+     <COMPTYPE>R</COMPTYPE>
+     <REFTYPE>D</REFTYPE>
+    </DD03P>
+   </DD03P_TABLE>
+  </asx:values>
+ </asx:abap>
+</abapGit>

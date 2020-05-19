@@ -23,6 +23,12 @@
      <LANGU>E</LANGU>
      <DESCRIPT>Loads ZCL_EXCEL from file</DESCRIPT>
     </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_EXCEL_READER</CLSNAME>
+     <CMPNAME>LOAD_SMW0</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Loads ZCL_EXCEL from file</DESCRIPT>
+    </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>
  </asx:abap>
