@@ -8,8 +8,6 @@
 
 report zdemo_excel_fill_template.
 
-* define types
-
 TYPES
 : begin of t_TABLE1
 ,     PERSON type string
@@ -27,13 +25,13 @@ TYPES
 
 , tt_LINE1 type table of  t_LINE1 with empty key
 
-, begin of t_SUBTABLE1
+, begin of t_TABLE2
 ,     CARRID type string
 ,     PRICE type i
 ,     LINE1 type tt_LINE1
-, end of t_SUBTABLE1
+, end of t_TABLE2
 
-, tt_SUBTABLE1 type table of  t_SUBTABLE1 with empty key
+, tt_TABLE2 type table of  t_TABLE2 with empty key
 
 , begin of t_Sheet1
 ,     DATE type string
@@ -42,16 +40,33 @@ TYPES
 ,     TOTAL type i
 ,     PRICE type i
 ,     TABLE1 type tt_TABLE1
-,     SUBTABLE1 type tt_SUBTABLE1
+,     TABLE2 type tt_TABLE2
 , end of t_Sheet1
+
+
+, begin of t_TABLE3
+,     PERSON type string
+,     SALARY type i
+, end of t_TABLE3
+
+, tt_TABLE3 type table of  t_TABLE3 with empty key
+
+, begin of t_Sheet2
+,     DATE type string
+,     TIME type string
+,     USER type string
+,     TOTAL type i
+,     TABLE3 type tt_TABLE3
+, end of t_Sheet2
 .
 
-* define variables
+
+
 DATA
 : lo_data type ref to ZCL_EXCEL_TEMPLATE_DATA
-, gs_sheet1 type t_sheet1
+, gs_sheet1 TYPE   t_Sheet1
+, gs_sheet2 TYPE   t_Sheet2
 .
-
 
 * define variables
 data: lo_excel type ref to zcl_excel,
@@ -90,7 +105,7 @@ start-of-selection.
                   )
 
   total = '5600'
-  subtable1 = value #(
+  table2 = value #(
                       ( line1 = value #(
                                          (  carrid = 'AC' connid = '0820'  fldate = '20.12.2002' price = '1222'  )
                                        )
@@ -195,8 +210,23 @@ start-of-selection.
   ).
 
 
+  gs_sheet2 = value #(
+  date = |{ sy-datum date = environment }|
+  time = |{ sy-uzeit time = environment }|
+  user  = |{ sy-uname }|
+
+  table3 = value #(
+                    ( person = 'Lurch Schpellchek' salary = '1200' )
+                    ( person = 'Russell Sprout'    salary = '1300' )
+                    ( person = 'Fergus Douchebag'  salary = '3000' )
+                    ( person = 'Bartholomew Shoe'  salary = '100' )
+                  )
+
+  total = '5600' ).
+
 * add data
   lo_data->add( iv_sheet = 'Sheet1' iv_data = gs_sheet1 ).
+  lo_data->add( iv_sheet = 'Sheet2' iv_data = gs_sheet2 ).
 
 * create reader
 
