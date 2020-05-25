@@ -8,56 +8,58 @@
 
 REPORT zdemo_excel_fill_template.
 
-TYPES:
-  BEGIN OF t_table1,
+
+
+
+TYPES:  BEGIN OF t_table1,
     person TYPE string,
-    salary TYPE i,
-  END OF t_table1,
+    salary TYPE i.
+TYPES:  END OF t_table1.
 
-  tt_table1 TYPE TABLE OF  t_table1 WITH EMPTY KEY,
+  TYPES: tt_table1 TYPE TABLE OF  t_table1 WITH EMPTY KEY.
 
-  BEGIN OF t_line1,
+TYPES:  BEGIN OF t_line1,
     carrid TYPE string,
     connid TYPE string,
     fldate TYPE string,
-    price  TYPE i,
-  END OF t_line1,
+    price  TYPE i.
+TYPES:  END OF t_line1.
 
-  tt_line1 TYPE TABLE OF  t_line1 WITH EMPTY KEY,
+TYPES:  tt_line1 TYPE TABLE OF  t_line1 WITH EMPTY KEY.
 
-  BEGIN OF t_table2,
+TYPES:  BEGIN OF t_table2,
     carrid TYPE string,
     price  TYPE i,
-    line1  TYPE tt_line1,
-  END OF t_table2,
+    line1  TYPE tt_line1.
+TYPES:  END OF t_table2.
 
-  tt_table2 TYPE TABLE OF  t_table2 WITH EMPTY KEY,
+TYPES:  tt_table2 TYPE TABLE OF  t_table2 WITH EMPTY KEY.
 
-  BEGIN OF t_sheet1,
+TYPES:  BEGIN OF t_sheet1,
     date   TYPE string,
     time   TYPE string,
     user   TYPE string,
     total  TYPE i,
     price  TYPE i,
     table1 TYPE tt_table1,
-    table2 TYPE tt_table2,
-  END OF t_sheet1,
+    table2 TYPE tt_table2.
+TYPES:  END OF t_sheet1.
 
 
-  BEGIN OF t_table3,
+TYPES:  BEGIN OF t_table3,
     person TYPE string,
-    salary TYPE string,
-  END OF t_table3,
+    salary TYPE string.
+TYPES:  END OF t_table3.
 
-  tt_table3 TYPE TABLE OF  t_table3 WITH EMPTY KEY,
+TYPES:  tt_table3 TYPE TABLE OF  t_table3 WITH EMPTY KEY.
 
-  BEGIN OF t_sheet2,
+TYPES:  BEGIN OF t_sheet2,
     date   TYPE string,
     time   TYPE string,
     user   TYPE string,
     total  TYPE i,
-    table3 TYPE tt_table1,
-  END OF t_sheet2.
+    table3 TYPE tt_table1.
+TYPES:  END OF t_sheet2.
 
 
 FIELD-SYMBOLS

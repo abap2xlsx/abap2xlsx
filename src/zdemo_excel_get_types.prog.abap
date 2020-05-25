@@ -8,9 +8,7 @@
 
 REPORT zdemo_excel_get_types.
 
-TYPES
-: tt_text TYPE TABLE OF text80 WITH EMPTY KEY
-.
+TYPES : tt_text TYPE TABLE OF text80 WITH EMPTY KEY.
 
 DATA  : lo_excel     TYPE REF TO zcl_excel
       , reader          TYPE REF TO zif_excel_reader

@@ -382,9 +382,14 @@ ENDMETHOD.
           , lv_column_alpha             TYPE zexcel_cell_column_alpha
           .
 
-    LOOP AT lo_template_filler->mt_sheet ASSIGNING FIELD-SYMBOL(<fs_sheet>).
+    FIELD-SYMBOLS
+                   : <fs_sheet> TYPE ZEXCEL_TEMPLATE_SHEET_TITLE
+                   , <fs_data> type ZEXCEL_S_TEMPLATE_DATA
+                   .
 
-      READ TABLE iv_data->mt_data ASSIGNING FIELD-SYMBOL(<fs_data>) WITH KEY sheet = <fs_sheet>.
+    LOOP AT lo_template_filler->mt_sheet ASSIGNING <fs_sheet>.
+
+      READ TABLE iv_data->mt_data ASSIGNING <fs_data> WITH KEY sheet = <fs_sheet>.
       CHECK sy-subrc = 0.
       lo_template_filler->fill_sheet( <fs_data> ).
 
