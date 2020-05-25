@@ -597,8 +597,12 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
 
     READ TABLE lt_str INTO lv_start INDEX 2.
 
+    FIELD-SYMBOLS
+                   : <fs_range> type ZEXCEL_TEMPLATE_S_RANGE
+                   .
+
     IF lv_start CO '0123456789'.
-      APPEND INITIAL LINE TO mt_range ASSIGNING FIELD-SYMBOL(<fs_range>).
+      APPEND INITIAL LINE TO mt_range ASSIGNING <fs_range>.
       <fs_range>-sheet = lv_sheet.
       <fs_range>-name = name.
       <fs_range>-start = lv_start.
