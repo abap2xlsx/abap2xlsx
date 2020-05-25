@@ -44,61 +44,61 @@ ENDCLASS.
 CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
 
 
-  method discard_overlapped.
-    data
-      : lt_range type zexcel_template_t_range
+  METHOD discard_overlapped.
+    DATA
+      : lt_range TYPE zexcel_template_t_range
       .
 
-    sort mt_range by sheet  start  stop.
+    SORT mt_range BY sheet  start  stop.
 
-    loop at mt_range assigning field-symbol(<fs_range>).
+    LOOP AT mt_range ASSIGNING FIELD-SYMBOL(<fs_range>).
 
-      loop at mt_range assigning field-symbol(<fs_tmp>) where sheet = <fs_range>-sheet and
-                                                              name ne <fs_range>-name and
-                                                              stop >= <fs_range>-start  and
-                                                              start < <fs_range>-start  and
+      LOOP AT mt_range ASSIGNING FIELD-SYMBOL(<fs_tmp>) WHERE sheet = <fs_range>-sheet AND
+                                                              name NE <fs_range>-name AND
+                                                              stop >= <fs_range>-start  AND
+                                                              start < <fs_range>-start  AND
                                                               stop < <fs_range>-stop   .
         .
 
-      endloop.
+      ENDLOOP.
 
-      if sy-subrc ne 0.
-        append <fs_range> to lt_range.
-      endif.
+      IF sy-subrc NE 0.
+        APPEND <fs_range> TO lt_range.
+      ENDIF.
 
-    endloop.
+    ENDLOOP.
 
     mt_range = lt_range.
 
-    sort mt_range by sheet  start  stop descending.
+    SORT mt_range BY sheet  start  stop DESCENDING.
 
-  endmethod.
-
-
-  method fill_range.
+  ENDMETHOD.
 
 
-    data
-          : tmp_cells_template type zexcel_template_t_cell_data
-          , lt_cells_result    type zexcel_template_t_cell_data
-          , tmp_cells          type zexcel_template_t_cell_data
-          , ls_cell            type zexcel_s_cell_data
-
-          , tmp_merged_cells_template type zcl_excel_worksheet=>mty_ts_merge
-          , lt_merged_cells_result    type zcl_excel_worksheet=>mty_ts_merge
-          , lt_merged_cells_half      type zcl_excel_worksheet=>mty_ts_merge
-          , tmp_merged_cells          type zcl_excel_worksheet=>mty_ts_merge
-          , ls_merged_cell            like line of tmp_merged_cells
-
-          , lv_start type i
-          , lv_stop type i
+  METHOD fill_range.
 
 
-          , col_str type string
+    DATA
+          : tmp_cells_template TYPE zexcel_template_t_cell_data
+          , lt_cells_result    TYPE zexcel_template_t_cell_data
+          , tmp_cells          TYPE zexcel_template_t_cell_data
+          , ls_cell            TYPE zexcel_s_cell_data
+
+          , tmp_merged_cells_template TYPE zcl_excel_worksheet=>mty_ts_merge
+          , lt_merged_cells_result    TYPE zcl_excel_worksheet=>mty_ts_merge
+          , lt_merged_cells_half      TYPE zcl_excel_worksheet=>mty_ts_merge
+          , tmp_merged_cells          TYPE zcl_excel_worksheet=>mty_ts_merge
+          , ls_merged_cell            LIKE LINE OF tmp_merged_cells
+
+          , lv_start TYPE i
+          , lv_stop TYPE i
+
+
+          , col_str TYPE string
 
           .
-    field-symbols
-                   : <fs_table> type any table
+    FIELD-SYMBOLS
+                   : <fs_table> TYPE ANY TABLE
                    .
 
 
@@ -110,7 +110,7 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
 
 * recursive fill nested range
 
-    loop at mt_range assigning field-symbol(<fs_range>) where sheet = iv_sheet and
+    LOOP AT mt_range ASSIGNING FIELD-SYMBOL(<fs_range>) WHERE sheet = iv_sheet AND
                                                               parent = iv_parent.
 
 
@@ -118,28 +118,28 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
 
 *      update cells before any range
 
-      loop at ct_cells into ls_cell  where cell_row >= lv_start and cell_row <= lv_stop .
+      LOOP AT ct_cells INTO ls_cell  WHERE cell_row >= lv_start AND cell_row <= lv_stop .
         ls_cell-cell_row =  ls_cell-cell_row + ch_diff.
         col_str = zcl_excel_common=>convert_column2alpha( ls_cell-cell_column ).
 
         ls_cell-cell_coords = ls_cell-cell_row.
-        concatenate col_str ls_cell-cell_coords into ls_cell-cell_coords.
-        condense ls_cell-cell_coords no-gaps.
+        CONCATENATE col_str ls_cell-cell_coords INTO ls_cell-cell_coords.
+        CONDENSE ls_cell-cell_coords NO-GAPS.
 
-        append ls_cell to lt_cells_result.
-      endloop.
+        APPEND ls_cell TO lt_cells_result.
+      ENDLOOP.
 
 
 
 *      update merged cells before range
 
-      loop at ct_merged_cells into ls_merged_cell where row_from >=  lv_start and row_to <= lv_stop.
+      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from >=  lv_start AND row_to <= lv_stop.
         ls_merged_cell-row_from = ls_merged_cell-row_from + ch_diff.
         ls_merged_cell-row_to = ls_merged_cell-row_to + ch_diff.
 
-        append ls_merged_cell to lt_merged_cells_result.
+        APPEND ls_merged_cell TO lt_merged_cells_result.
 
-      endloop.
+      ENDLOOP.
 
 
 
@@ -147,28 +147,28 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
 
 
 
-      clear
+      CLEAR
       : tmp_cells_template
       , tmp_merged_cells_template
       .
 
 *copy cell template
-      loop at ct_cells into ls_cell where cell_row >= <fs_range>-start and cell_row <= <fs_range>-stop.
-        append ls_cell to tmp_cells_template.
-      endloop.
+      LOOP AT ct_cells INTO ls_cell WHERE cell_row >= <fs_range>-start AND cell_row <= <fs_range>-stop.
+        APPEND ls_cell TO tmp_cells_template.
+      ENDLOOP.
 
-      loop at ct_merged_cells into ls_merged_cell where row_from >= <fs_range>-start and row_to <= <fs_range>-stop.
-        append ls_merged_cell to tmp_merged_cells_template.
-      endloop.
+      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from >= <fs_range>-start AND row_to <= <fs_range>-stop.
+        APPEND ls_merged_cell TO tmp_merged_cells_template.
+      ENDLOOP.
 
 
-      assign component <fs_range>-name of structure iv_data to <fs_table>.
-      check sy-subrc = 0.
+      ASSIGN COMPONENT <fs_range>-name OF STRUCTURE iv_data TO <fs_table>.
+      CHECK sy-subrc = 0.
 
       ch_diff = ch_diff - <fs_range>-length.
 
 *merge each line of data table with template
-      loop at <fs_table> assigning field-symbol(<fs_line>) .
+      LOOP AT <fs_table> ASSIGNING FIELD-SYMBOL(<fs_line>) .
 *        make local copy
         tmp_cells = tmp_cells_template.
         tmp_merged_cells = tmp_merged_cells_template.
@@ -176,236 +176,236 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
 *fill data
 
         fill_range(
-          exporting
+          EXPORTING
             io_sheet = io_sheet
             iv_sheet  = iv_sheet
             iv_parent = <fs_range>-id
             iv_data   = <fs_line>
             iv_range_length = <fs_range>-length
-          changing
+          CHANGING
             ct_cells  = tmp_cells
             ct_merged_cells  = tmp_merged_cells
             ch_diff = ch_diff ).
 
 *collect data
 
-        append lines of tmp_cells to lt_cells_result.
-        append lines of tmp_merged_cells to lt_merged_cells_result.
+        APPEND LINES OF tmp_cells TO lt_cells_result.
+        APPEND LINES OF tmp_merged_cells TO lt_merged_cells_result.
 
-      endloop.
+      ENDLOOP.
 
-    endloop.
+    ENDLOOP.
 
 
-    if <fs_range> is assigned.
+    IF <fs_range> IS ASSIGNED.
 
-      loop at ct_cells into ls_cell where cell_row > <fs_range>-stop .
+      LOOP AT ct_cells INTO ls_cell WHERE cell_row > <fs_range>-stop .
         ls_cell-cell_row =  ls_cell-cell_row + ch_diff.
         col_str = zcl_excel_common=>convert_column2alpha( ls_cell-cell_column ).
 
         ls_cell-cell_coords = ls_cell-cell_row.
-        concatenate col_str ls_cell-cell_coords into ls_cell-cell_coords.
-        condense ls_cell-cell_coords no-gaps.
+        CONCATENATE col_str ls_cell-cell_coords INTO ls_cell-cell_coords.
+        CONDENSE ls_cell-cell_coords NO-GAPS.
 
-        append ls_cell to lt_cells_result.
-      endloop.
+        APPEND ls_cell TO lt_cells_result.
+      ENDLOOP.
 
       ct_cells = lt_cells_result.
 
-      loop at ct_merged_cells into ls_merged_cell where row_from > <fs_range>-stop.
+      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from > <fs_range>-stop.
         ls_merged_cell-row_from = ls_merged_cell-row_from + ch_diff.
         ls_merged_cell-row_to = ls_merged_cell-row_to + ch_diff.
 
-        append ls_merged_cell to lt_merged_cells_result.
-      endloop.
+        APPEND ls_merged_cell TO lt_merged_cells_result.
+      ENDLOOP.
 
       ct_merged_cells = lt_merged_cells_result.
 
-    else.
+    ELSE.
 
-      loop at ct_cells assigning field-symbol(<fs_cell>).
+      LOOP AT ct_cells ASSIGNING FIELD-SYMBOL(<fs_cell>).
         <fs_cell>-cell_row =  <fs_cell>-cell_row + ch_diff.
         col_str = zcl_excel_common=>convert_column2alpha( <fs_cell>-cell_column ).
 
         <fs_cell>-cell_coords = <fs_cell>-cell_row.
-        concatenate col_str <fs_cell>-cell_coords into <fs_cell>-cell_coords.
-        condense <fs_cell>-cell_coords no-gaps.
-      endloop.
+        CONCATENATE col_str <fs_cell>-cell_coords INTO <fs_cell>-cell_coords.
+        CONDENSE <fs_cell>-cell_coords NO-GAPS.
+      ENDLOOP.
 
-      loop at ct_merged_cells into ls_merged_cell .
+      LOOP AT ct_merged_cells INTO ls_merged_cell .
         ls_merged_cell-row_from = ls_merged_cell-row_from + ch_diff.
         ls_merged_cell-row_to = ls_merged_cell-row_to + ch_diff.
 
-        append ls_merged_cell to lt_merged_cells_result.
-      endloop.
+        APPEND ls_merged_cell TO lt_merged_cells_result.
+      ENDLOOP.
 
       ct_merged_cells = lt_merged_cells_result.
 
-    endif.
+    ENDIF.
 
 
 *check if variables in this range
-    loop at mt_var transporting no fields where sheet = iv_sheet and parent = iv_parent.
-      exit.
-    endloop.
+    LOOP AT mt_var TRANSPORTING NO FIELDS WHERE sheet = iv_sheet AND parent = iv_parent.
+      EXIT.
+    ENDLOOP.
 
-    if sy-subrc = 0.
+    IF sy-subrc = 0.
 *      replace variables of current range with data
-      loop at ct_cells assigning <fs_cell>.
+      LOOP AT ct_cells ASSIGNING <fs_cell>.
 
-        data
-              : result_tab type match_result_tab
-              , lv_search type string
-              , lv_var_name type string
-              , lo_value_new     type ref to data
-              , lo_addit    type ref to cl_abap_elemdescr
+        DATA
+              : result_tab TYPE match_result_tab
+              , lv_search TYPE string
+              , lv_var_name TYPE string
+              , lo_value_new     TYPE REF TO data
+              , lo_addit    TYPE REF TO cl_abap_elemdescr
               .
 
-        field-symbols
-                       : <fs_numeric>       type numeric
+        FIELD-SYMBOLS
+                       : <fs_numeric>       TYPE numeric
                        .
 
-        refresh result_tab.
+        REFRESH result_tab.
 
-        find all occurrences of regex '\[[^\]]*\]' in <fs_cell>-cell_value  results result_tab.
+        FIND ALL OCCURRENCES OF REGEX '\[[^\]]*\]' IN <fs_cell>-cell_value  RESULTS result_tab.
 
-        sort result_tab by offset descending .
+        SORT result_tab BY offset DESCENDING .
 
-        loop at result_tab assigning field-symbol(<fs_result>).
+        LOOP AT result_tab ASSIGNING FIELD-SYMBOL(<fs_result>).
           lv_search = <fs_cell>-cell_value+<fs_result>-offset(<fs_result>-length).
           lv_var_name = lv_search.
 
-          translate lv_var_name to upper case.
-          translate lv_var_name using '[ ] '.
-          condense lv_var_name .
+          TRANSLATE lv_var_name TO UPPER CASE.
+          TRANSLATE lv_var_name USING '[ ] '.
+          CONDENSE lv_var_name .
 
-          assign component lv_var_name of structure iv_data to field-symbol(<fs_var>).
-          check sy-subrc = 0.
+          ASSIGN COMPONENT lv_var_name OF STRUCTURE iv_data TO FIELD-SYMBOL(<fs_var>).
+          CHECK sy-subrc = 0.
 
-          data
-                : lv_str type string
+          DATA
+                : lv_str TYPE string
                 .
 
           lv_str = <fs_var>.
 
 
-          replace all occurrences of lv_search in <fs_cell>-cell_value  with lv_str.
+          REPLACE ALL OCCURRENCES OF lv_search IN <fs_cell>-cell_value  WITH lv_str.
 
 
-        endloop.
+        ENDLOOP.
 
-        check  lines( result_tab )  = 1.
+        CHECK  lines( result_tab )  = 1.
 
-        check  <fs_cell>-cell_value co '1234567890. '.
+        CHECK  <fs_cell>-cell_value CO '1234567890. '.
 
-        describe field <fs_var> type data(lv_value_type).
+        DESCRIBE FIELD <fs_var> TYPE DATA(lv_value_type).
 
-        check  lv_value_type = 'I'
-            or lv_value_type = 'P'
-            or lv_value_type = 's'
-            or lv_value_type = '8'
-            or lv_value_type = 'a'
-            or lv_value_type = 'e'
-            or lv_value_type = 'F'.
+        CHECK  lv_value_type = 'I'
+            OR lv_value_type = 'P'
+            OR lv_value_type = 's'
+            OR lv_value_type = '8'
+            OR lv_value_type = 'a'
+            OR lv_value_type = 'e'
+            OR lv_value_type = 'F'.
 
-        case lv_value_type.
-          when cl_abap_typedescr=>typekind_int or cl_abap_typedescr=>typekind_int1 or cl_abap_typedescr=>typekind_int2
-            or cl_abap_typedescr=>typekind_int8. "Allow INT8 types columns
+        CASE lv_value_type.
+          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
+            OR cl_abap_typedescr=>typekind_int8. "Allow INT8 types columns
             lo_addit = cl_abap_elemdescr=>get_i( ).
-            create data lo_value_new type handle lo_addit.
-            assign lo_value_new->* to <fs_numeric>.
-            if sy-subrc = 0.
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_numeric>.
+            IF sy-subrc = 0.
               <fs_numeric> = <fs_var>.
               <fs_cell>-cell_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
-              clear <fs_cell>-data_type.
-            endif.
+              CLEAR <fs_cell>-data_type.
+            ENDIF.
 
-          when cl_abap_typedescr=>typekind_float or cl_abap_typedescr=>typekind_packed.
+          WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed.
             lo_addit = cl_abap_elemdescr=>get_f( ).
-            create data lo_value_new type handle lo_addit.
-            assign lo_value_new->* to <fs_numeric>.
-            if sy-subrc = 0.
+            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+            ASSIGN lo_value_new->* TO <fs_numeric>.
+            IF sy-subrc = 0.
               <fs_numeric> = <fs_var>.
               <fs_cell>-cell_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
-              clear <fs_cell>-data_type.
-            endif.
-        endcase.
+              CLEAR <fs_cell>-data_type.
+            ENDIF.
+        ENDCASE.
 
-      endloop.
-    endif.
-
-
-  endmethod.
+      ENDLOOP.
+    ENDIF.
 
 
-  method fill_sheet.
+  ENDMETHOD.
 
-    data
-          : lo_worksheet    type ref to zcl_excel_worksheet
+
+  METHOD fill_sheet.
+
+    DATA
+          : lo_worksheet    TYPE REF TO zcl_excel_worksheet
           .
 
     lo_worksheet = mo_excel->get_worksheet_by_name( iv_data-sheet ).
 
-    assign iv_data-data->* to field-symbol(<fs_data>).
+    ASSIGN iv_data-data->* TO FIELD-SYMBOL(<fs_data>).
 
 
-    data
-          : lt_sheet_content type  zexcel_template_t_cell_data
-          , lt_merged_cells type zcl_excel_worksheet=>mty_ts_merge
+    DATA
+          : lt_sheet_content TYPE  zexcel_template_t_cell_data
+          , lt_merged_cells TYPE zcl_excel_worksheet=>mty_ts_merge
           .
 
     lt_sheet_content = lo_worksheet->sheet_content.
     lt_merged_cells = lo_worksheet->mt_merged_cells.
 
-    assign iv_data-data->* to field-symbol(<any_data>).
+    ASSIGN iv_data-data->* TO FIELD-SYMBOL(<any_data>).
 
-    data
-          : lv_dif type i
+    DATA
+          : lv_dif TYPE i
           .
 
     fill_range(
-      exporting
+      EXPORTING
         io_sheet = lo_worksheet
         iv_range_length = 0
         iv_sheet  = iv_data-sheet
         iv_parent = 0
         iv_data   = <any_data>
-      changing
+      CHANGING
         ct_cells  = lt_sheet_content
         ct_merged_cells = lt_merged_cells
         ch_diff   = lv_dif  ).
 
 
-    refresh  lo_worksheet->sheet_content.
+    REFRESH  lo_worksheet->sheet_content.
 
-    loop at lt_sheet_content assigning field-symbol(<fs_sheet_content>).
-      insert <fs_sheet_content> into table lo_worksheet->sheet_content.
-    endloop.
+    LOOP AT lt_sheet_content ASSIGNING FIELD-SYMBOL(<fs_sheet_content>).
+      INSERT <fs_sheet_content> INTO TABLE lo_worksheet->sheet_content.
+    ENDLOOP.
 
-    refresh  lo_worksheet->mt_merged_cells.
+    REFRESH  lo_worksheet->mt_merged_cells.
 
-    loop at lt_merged_cells assigning field-symbol(<fs_merged_cell>).
-      insert <fs_merged_cell> into table lo_worksheet->mt_merged_cells.
-    endloop.
-
-
-
-  endmethod.
+    LOOP AT lt_merged_cells ASSIGNING FIELD-SYMBOL(<fs_merged_cell>).
+      INSERT <fs_merged_cell> INTO TABLE lo_worksheet->mt_merged_cells.
+    ENDLOOP.
 
 
-  method find_var.
 
-    data
-          : row type i
-          , column type i
-          , col_str type string
-          , value type string
+  ENDMETHOD.
 
-          , lo_worksheet type ref to zcl_excel_worksheet
+
+  METHOD find_var.
+
+    DATA
+          : row TYPE i
+          , column TYPE i
+          , col_str TYPE string
+          , value TYPE string
+
+          , lo_worksheet TYPE REF TO zcl_excel_worksheet
           , ls_var TYPE zexcel_template_s_var
           .
 
-    loop at mt_sheet assigning field-symbol(<fs_sheet>).
+    LOOP AT mt_sheet ASSIGNING FIELD-SYMBOL(<fs_sheet>).
 
 
 
@@ -413,164 +413,164 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
       row = 1.
       column = 1.
 
-      data(highest_column) = lo_worksheet->get_highest_column( ).
-      data(highest_row)    = lo_worksheet->get_highest_row( ).
+      DATA(highest_column) = lo_worksheet->get_highest_column( ).
+      DATA(highest_row)    = lo_worksheet->get_highest_row( ).
 
-      while row <= highest_row.
-        while column <= highest_column.
+      WHILE row <= highest_row.
+        WHILE column <= highest_column.
           col_str = zcl_excel_common=>convert_column2alpha( column ).
           lo_worksheet->get_cell(
-            exporting
+            EXPORTING
               ip_column = col_str
               ip_row    = row
-            importing
+            IMPORTING
               ep_value = value
           ).
 
 
-          data
-                : result_tab type match_result_tab
-                , lv_search type string
-                , lv_replace type string
+          DATA
+                : result_tab TYPE match_result_tab
+                , lv_search TYPE string
+                , lv_replace TYPE string
                 .
 
-          find all occurrences of regex '\[[^\]]*\]' in value results result_tab.
+          FIND ALL OCCURRENCES OF REGEX '\[[^\]]*\]' IN value RESULTS result_tab.
 
-          loop at result_tab assigning field-symbol(<fs_result>).
+          LOOP AT result_tab ASSIGNING FIELD-SYMBOL(<fs_result>).
             lv_search = value+<fs_result>-offset(<fs_result>-length).
             lv_replace = lv_search.
 
-            translate lv_replace to upper case.
+            TRANSLATE lv_replace TO UPPER CASE.
 
-            clear ls_var.
+            CLEAR ls_var.
 
             ls_var-sheet = <fs_sheet>.
             ls_var-name = lv_replace.
-            translate ls_var-name using '[ ] '.
-            condense ls_var-name .
+            TRANSLATE ls_var-name USING '[ ] '.
+            CONDENSE ls_var-name .
 
-            loop at mt_range assigning field-symbol(<fs_range>) where sheet = <fs_sheet>
-                                                                    and start <= row
-                                                                    and stop >= row.
+            LOOP AT mt_range ASSIGNING FIELD-SYMBOL(<fs_range>) WHERE sheet = <fs_sheet>
+                                                                    AND start <= row
+                                                                    AND stop >= row.
               ls_var-parent = <fs_range>-id.
-              exit.
-            endloop.
+              EXIT.
+            ENDLOOP.
 
-            read table mt_var transporting no fields with key sheet = ls_var-sheet name = ls_var-name parent = ls_var-parent.
-            if sy-subrc ne 0.
-              append ls_var to mt_var.
-            endif.
+            READ TABLE mt_var TRANSPORTING NO FIELDS WITH KEY sheet = ls_var-sheet name = ls_var-name parent = ls_var-parent.
+            IF sy-subrc NE 0.
+              APPEND ls_var TO mt_var.
+            ENDIF.
 
 
-          endloop.
+          ENDLOOP.
           column = column + 1.
-        endwhile.
+        ENDWHILE.
         column = 1.
         row = row + 1.
-      endwhile.
-    endloop.
+      ENDWHILE.
+    ENDLOOP.
 
-    sort mt_range by id .
-  endmethod.
+    SORT mt_range BY id .
+  ENDMETHOD.
 
 
-  method get_range.
-    data
-          : lo_worksheets_iterator type ref to cl_object_collection_iterator
-          , lo_worksheet type ref to zcl_excel_worksheet
+  METHOD get_range.
+    DATA
+          : lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator
+          , lo_worksheet TYPE REF TO zcl_excel_worksheet
           , lo_range_iterator TYPE REF TO cl_object_collection_iterator
-          , lo_range type ref to zcl_excel_range
+          , lo_range TYPE REF TO zcl_excel_range
           .
 
-    mo_excel = IO_EXCEL.
+    mo_excel = io_excel.
 
     lo_worksheets_iterator = io_excel->get_worksheets_iterator( ).
 
 
-    while lo_worksheets_iterator->has_next( ) = 'X'.
+    WHILE lo_worksheets_iterator->has_next( ) = 'X'.
       lo_worksheet ?= lo_worksheets_iterator->get_next( ).
-      append lo_worksheet->get_title( ) to mt_sheet.
-    endwhile.
+      APPEND lo_worksheet->get_title( ) TO mt_sheet.
+    ENDWHILE.
 
     lo_range_iterator = io_excel->get_ranges_iterator( ).
 
-    while lo_range_iterator->has_next(  ) = 'X'.
+    WHILE lo_range_iterator->has_next(  ) = 'X'.
       lo_range ?= lo_range_iterator->get_next( ).
       validate_range( lo_range ).
-    endwhile.
+    ENDWHILE.
 
-  endmethod.
+  ENDMETHOD.
 
 
-  method sign_range.
-    loop at mt_range assigning field-symbol(<fs_range>).
+  METHOD sign_range.
+    LOOP AT mt_range ASSIGNING FIELD-SYMBOL(<fs_range>).
       <fs_range>-id = sy-tabix.
-    endloop.
+    ENDLOOP.
 
-    loop at mt_range assigning  <fs_range>.
-      data
-            : lv_tabix type i
+    LOOP AT mt_range ASSIGNING  <fs_range>.
+      DATA
+            : lv_tabix TYPE i
             .
       lv_tabix = sy-tabix + 1.
-      loop at mt_range assigning  field-symbol(<fs_range_tmp>)
-                                  from lv_tabix
-                                  where sheet = <fs_range>-sheet.
+      LOOP AT mt_range ASSIGNING  FIELD-SYMBOL(<fs_range_tmp>)
+                                  FROM lv_tabix
+                                  WHERE sheet = <fs_range>-sheet.
 
-        if <fs_range_tmp>-start >= <fs_range>-start and <fs_range_tmp>-stop <= <fs_range>-stop.
+        IF <fs_range_tmp>-start >= <fs_range>-start AND <fs_range_tmp>-stop <= <fs_range>-stop.
           <fs_range_tmp>-parent = <fs_range>-id.
-        endif.
+        ENDIF.
 
-      endloop.
+      ENDLOOP.
 
-    endloop.
+    ENDLOOP.
 
-    sort mt_range by id descending.
-  endmethod.
+    SORT mt_range BY id DESCENDING.
+  ENDMETHOD.
 
 
-  method validate_range.
+  METHOD validate_range.
 
-    data
-          : name type string
-          , value type string
-          , start type string
-          , stop  type string
-          , lv_sheet type string
-          , lv_value type string
-          , lt_str type table of string
-          , lv_start type string
-          , lv_stop  type string
+    DATA
+          : name TYPE string
+          , value TYPE string
+          , start TYPE string
+          , stop  TYPE string
+          , lv_sheet TYPE string
+          , lv_value TYPE string
+          , lt_str TYPE TABLE OF string
+          , lv_start TYPE string
+          , lv_stop  TYPE string
           .
 
     name = io_range->name.
-    translate name TO UPPER CASE.
+    TRANSLATE name TO UPPER CASE.
     value = io_range->get_value( ).
 
-    split value at '!' into lv_sheet lv_value.
+    SPLIT value AT '!' INTO lv_sheet lv_value.
 
-    split lv_value at ':' into start stop.
+    SPLIT lv_value AT ':' INTO start stop.
 
-    split start at '$' into table lt_str.
+    SPLIT start AT '$' INTO TABLE lt_str.
 
-    if lines( lt_str ) > 2.
-      return.
-    endif.
+    IF lines( lt_str ) > 2.
+      RETURN.
+    ENDIF.
 
-    read table lt_str into lv_start index 2.
+    READ TABLE lt_str INTO lv_start INDEX 2.
 
-    if lv_start co '0123456789'.
-      append initial line to mt_range assigning field-symbol(<fs_range>).
+    IF lv_start CO '0123456789'.
+      APPEND INITIAL LINE TO mt_range ASSIGNING FIELD-SYMBOL(<fs_range>).
       <fs_range>-sheet = lv_sheet.
       <fs_range>-name = name.
       <fs_range>-start = lv_start.
 
-      split stop at '$' into table lt_str.
-      read table lt_str into lv_stop index 2.
+      SPLIT stop AT '$' INTO TABLE lt_str.
+      READ TABLE lt_str INTO lv_stop INDEX 2.
       <fs_range>-stop = lv_stop.
 
       <fs_range>-length = <fs_range>-stop - <fs_range>-start + 1.
 
-    endif.
+    ENDIF.
 
-  endmethod.
+  ENDMETHOD.
 ENDCLASS.

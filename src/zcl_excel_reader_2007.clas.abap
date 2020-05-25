@@ -3927,17 +3927,17 @@ METHOD zif_excel_reader~load_file.
 ENDMETHOD.
 
 
-  method ZIF_EXCEL_READER~LOAD_SMW0.
-      DATA: lv_excel_data TYPE xstring,
-            lt_mime TYPE TABLE OF w3mime.
+  METHOD zif_excel_reader~load_smw0.
+    DATA: lv_excel_data TYPE xstring,
+          lt_mime       TYPE TABLE OF w3mime.
 
 *--------------------------------------------------------------------*
 * Read file into binary string
 *--------------------------------------------------------------------*
 
- DATA(ls_key) = VALUE wwwdatatab(
-    relid = 'MI'
-    objid = iv_w3objid ).
+    DATA(ls_key) = VALUE wwwdatatab(
+       relid = 'MI'
+       objid = iv_w3objid ).
 
     CALL FUNCTION 'WWWDATA_IMPORT'
       EXPORTING
@@ -3959,10 +3959,10 @@ ENDMETHOD.
 *--------------------------------------------------------------------*
 * Parse Excel data into ZCL_EXCEL object from binary string
 *--------------------------------------------------------------------*
-  r_excel = zif_excel_reader~load( i_excel2007            = lv_excel_data
-                                   i_use_alternate_zip    = i_use_alternate_zip
-                                   iv_zcl_excel_classname = iv_zcl_excel_classname ).
+    r_excel = zif_excel_reader~load( i_excel2007            = lv_excel_data
+                                     i_use_alternate_zip    = i_use_alternate_zip
+                                     iv_zcl_excel_classname = iv_zcl_excel_classname ).
 
 
-  endmethod.
+  ENDMETHOD.
 ENDCLASS.

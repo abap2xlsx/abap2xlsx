@@ -27,7 +27,7 @@
      <CLSNAME>ZIF_EXCEL_READER</CLSNAME>
      <CMPNAME>LOAD_SMW0</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Loads ZCL_EXCEL from file</DESCRIPT>
+     <DESCRIPT>Loads ZCL_EXCEL from smw0</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>

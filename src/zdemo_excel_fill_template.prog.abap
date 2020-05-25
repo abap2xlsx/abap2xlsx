@@ -6,98 +6,98 @@
 *&
 *&---------------------------------------------------------------------*
 
-report zdemo_excel_fill_template.
+REPORT zdemo_excel_fill_template.
 
 TYPES
-: begin of t_TABLE1
-,     PERSON type string
-,     SALARY type i
-, end of t_TABLE1
+: BEGIN OF t_table1
+,     person TYPE string
+,     salary TYPE i
+, END OF t_table1
 
-, tt_TABLE1 type table of  t_TABLE1 with empty key
+, tt_table1 TYPE TABLE OF  t_table1 WITH EMPTY KEY
 
-, begin of t_LINE1
-,     CARRID type string
-,     CONNID type string
-,     FLDATE type string
-,     PRICE type i
-, end of t_LINE1
+, BEGIN OF t_line1
+,     carrid TYPE string
+,     connid TYPE string
+,     fldate TYPE string
+,     price TYPE i
+, END OF t_line1
 
-, tt_LINE1 type table of  t_LINE1 with empty key
+, tt_line1 TYPE TABLE OF  t_line1 WITH EMPTY KEY
 
-, begin of t_TABLE2
-,     CARRID type string
-,     PRICE type i
-,     LINE1 type tt_LINE1
-, end of t_TABLE2
+, BEGIN OF t_table2
+,     carrid TYPE string
+,     price TYPE i
+,     line1 TYPE tt_line1
+, END OF t_table2
 
-, tt_TABLE2 type table of  t_TABLE2 with empty key
+, tt_table2 TYPE TABLE OF  t_table2 WITH EMPTY KEY
 
-, begin of t_Sheet1
-,     DATE type string
-,     TIME type string
-,     USER type string
-,     TOTAL type i
-,     PRICE type i
-,     TABLE1 type tt_TABLE1
-,     TABLE2 type tt_TABLE2
-, end of t_Sheet1
+, BEGIN OF t_sheet1
+,     date TYPE string
+,     time TYPE string
+,     user TYPE string
+,     total TYPE i
+,     price TYPE i
+,     table1 TYPE tt_table1
+,     table2 TYPE tt_table2
+, END OF t_sheet1
 
 
-, begin of t_TABLE3
-,     PERSON type string
-,     SALARY type i
-, end of t_TABLE3
+, BEGIN OF t_table3
+,     person TYPE string
+,     salary TYPE i
+, END OF t_table3
 
-, tt_TABLE3 type table of  t_TABLE3 with empty key
+, tt_table3 TYPE TABLE OF  t_table3 WITH EMPTY KEY
 
-, begin of t_Sheet2
-,     DATE type string
-,     TIME type string
-,     USER type string
-,     TOTAL type i
-,     TABLE3 type tt_TABLE3
-, end of t_Sheet2
+, BEGIN OF t_sheet2
+,     date TYPE string
+,     time TYPE string
+,     user TYPE string
+,     total TYPE i
+,     table3 TYPE tt_table3
+, END OF t_sheet2
 .
 
 
 
 DATA
-: lo_data type ref to ZCL_EXCEL_TEMPLATE_DATA
-, gs_sheet1 TYPE   t_Sheet1
-, gs_sheet2 TYPE   t_Sheet2
+: lo_data TYPE REF TO zcl_excel_template_data
+, gs_sheet1 TYPE   t_sheet1
+, gs_sheet2 TYPE   t_sheet2
 .
 
 * define variables
-data: lo_excel type ref to zcl_excel,
-      reader   type ref to zif_excel_reader.
+DATA: lo_excel TYPE REF TO zcl_excel,
+      reader   TYPE REF TO zif_excel_reader.
 
 
-constants: gc_save_file_name type string value 'fill_template_example.xlsx'.
-include zdemo_excel_outputopt_incl.
+CONSTANTS: gc_save_file_name TYPE string VALUE 'fill_template_example.xlsx'.
+INCLUDE zdemo_excel_outputopt_incl.
 
-parameters: p_fpath type string obligatory lower case default 'C:\Users\sadfasdf\Desktop\abap2xlsx\ZABAP2XLSX_EXAMPLE.xlsx'.
+PARAMETERS: p_fpath TYPE string OBLIGATORY LOWER CASE DEFAULT 'C:\Users\sadfasdf\Desktop\abap2xlsx\ZABAP2XLSX_EXAMPLE.xlsx'.
 
 
-parameters: p_file radiobutton group rad1 default 'X'
-          , p_smw0 radiobutton group rad1
+PARAMETERS: p_file RADIOBUTTON GROUP rad1 DEFAULT 'X'
+          , p_smw0 RADIOBUTTON GROUP rad1
           .
 
-at selection-screen on value-request for p_fpath.
-  perform get_file_path changing p_fpath.
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_fpath.
+  PERFORM get_file_path CHANGING p_fpath.
 
 
-start-of-selection.
+START-OF-SELECTION.
 
-  create object lo_data.
+  CREATE OBJECT lo_data.
 
 * generate data
-  gs_sheet1 = value #(
-  date = |{ sy-datum date = environment }|
-  time = |{ sy-uzeit time = environment }|
+  gs_sheet1 = VALUE #(
+  date = |{ sy-datum DATE = ENVIRONMENT }|
+  time = |{ sy-uzeit TIME = ENVIRONMENT }|
   user  = |{ sy-uname }|
 
-  table1 = value #(
+  table1 = VALUE #(
                     ( person = 'Lurch Schpellchek' salary = '1200' )
                     ( person = 'Russell Sprout'    salary = '1300' )
                     ( person = 'Fergus Douchebag'  salary = '3000' )
@@ -105,21 +105,21 @@ start-of-selection.
                   )
 
   total = '5600'
-  table2 = value #(
-                      ( line1 = value #(
+  table2 = VALUE #(
+                      ( line1 = VALUE #(
                                          (  carrid = 'AC' connid = '0820'  fldate = '20.12.2002' price = '1222'  )
                                        )
                         carrid ='AC'
                         price = '1222'
                       )
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'AF' connid = '0820'  fldate = '23.12.2002' price = '2222'  )
                                        )
                         carrid ='AF'
                         price = '2222'
                       )
 
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
                                           (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
                                           (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
@@ -129,14 +129,14 @@ start-of-selection.
                         carrid ='LH'
                         price = '9488'
                       )
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
                                         )
                         carrid ='SQ'
                         price = '849'
                       )
 
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
                                           (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
                                           (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
@@ -146,14 +146,14 @@ start-of-selection.
                         carrid ='LH'
                         price = '9488'
                       )
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
                                         )
                         carrid ='SQ'
                         price = '849'
                       )
 
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
                                           (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
                                           (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
@@ -163,14 +163,14 @@ start-of-selection.
                         carrid ='LH'
                         price = '9488'
                       )
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
                                         )
                         carrid ='SQ'
                         price = '849'
                       )
 
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
                                           (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
                                           (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
@@ -180,14 +180,14 @@ start-of-selection.
                         carrid ='LH'
                         price = '9488'
                       )
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
                                         )
                         carrid ='SQ'
                         price = '849'
                       )
 
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
                                           (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
                                           (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
@@ -197,7 +197,7 @@ start-of-selection.
                         carrid ='LH'
                         price = '9488'
                       )
-                      ( line1 = value #(
+                      ( line1 = VALUE #(
                                           (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
                                         )
                         carrid ='SQ'
@@ -210,12 +210,12 @@ start-of-selection.
   ).
 
 
-  gs_sheet2 = value #(
-  date = |{ sy-datum date = environment }|
-  time = |{ sy-uzeit time = environment }|
+  gs_sheet2 = VALUE #(
+  date = |{ sy-datum DATE = ENVIRONMENT }|
+  time = |{ sy-uzeit TIME = ENVIRONMENT }|
   user  = |{ sy-uname }|
 
-  table3 = value #(
+  table3 = VALUE #(
                     ( person = 'Lurch Schpellchek' salary = '1200' )
                     ( person = 'Russell Sprout'    salary = '1300' )
                     ( person = 'Fergus Douchebag'  salary = '3000' )
@@ -230,12 +230,12 @@ start-of-selection.
 
 * create reader
 
-  create object reader type zcl_excel_reader_2007.
+  CREATE OBJECT reader TYPE zcl_excel_reader_2007.
 * load template
 
-  IF p_file is NOT INITIAL.
+  IF p_file IS NOT INITIAL.
     lo_excel = reader->load_file( p_fpath ).
-  else.
+  ELSE.
     lo_excel = reader->load_smw0( 'ZEXCEL_DEMO_TEMPLATE' ).
   ENDIF.
 
@@ -250,36 +250,36 @@ start-of-selection.
 *&---------------------------------------------------------------------*
 *&      Form  Get_file_path
 *&---------------------------------------------------------------------*
-form get_file_path changing cv_path type string.
-  clear cv_path.
+FORM get_file_path CHANGING cv_path TYPE string.
+  CLEAR cv_path.
 
-  data:
-    lv_rc          type  i,
-    lv_user_action type  i,
-    lt_file_table  type  filetable,
-    ls_file_table  like line of lt_file_table.
+  DATA:
+    lv_rc          TYPE  i,
+    lv_user_action TYPE  i,
+    lt_file_table  TYPE  filetable,
+    ls_file_table  LIKE LINE OF lt_file_table.
 
   cl_gui_frontend_services=>file_open_dialog(
-  exporting
+  EXPORTING
     window_title        = 'select template  xlsx'
     multiselection      = ''
     default_extension   = '*.xlsx'
     file_filter         = 'Text file (*.xlsx)|*.xlsx|All (*.*)|*.*'
-  changing
+  CHANGING
     file_table          = lt_file_table
     rc                  = lv_rc
     user_action         = lv_user_action
-  exceptions
-    others              = 1
+  EXCEPTIONS
+    OTHERS              = 1
     ).
-  if sy-subrc = 0.
-    if lv_user_action = cl_gui_frontend_services=>action_ok.
-      if lt_file_table is not initial.
-        read table lt_file_table into ls_file_table index 1.
-        if sy-subrc = 0.
+  IF sy-subrc = 0.
+    IF lv_user_action = cl_gui_frontend_services=>action_ok.
+      IF lt_file_table IS NOT INITIAL.
+        READ TABLE lt_file_table INTO ls_file_table INDEX 1.
+        IF sy-subrc = 0.
           cv_path = ls_file_table-filename.
-        endif.
-      endif.
-    endif.
-  endif.
-endform.                    " Get_file_path
+        ENDIF.
+      ENDIF.
+    ENDIF.
+  ENDIF.
+ENDFORM.                    " Get_file_path

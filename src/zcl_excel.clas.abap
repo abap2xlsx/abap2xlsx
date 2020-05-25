@@ -362,13 +362,13 @@ METHOD delete_worksheet_by_name.
 ENDMETHOD.
 
 
-  method fill_template.
+  METHOD fill_template.
 
-    data
-          : lo_template_filler type ref to zcl_excel_fill_template
+    DATA
+          : lo_template_filler TYPE REF TO zcl_excel_fill_template
           .
 
-    create object lo_template_filler .
+    CREATE OBJECT lo_template_filler .
 
     lo_template_filler->get_range( me ).
     lo_template_filler->discard_overlapped( ).
@@ -377,22 +377,22 @@ ENDMETHOD.
 
 
 
-    data
-          : lt_data type table of zexcel_s_cell_data
-          , lv_column_alpha             type zexcel_cell_column_alpha
+    DATA
+          : lt_data TYPE TABLE OF zexcel_s_cell_data
+          , lv_column_alpha             TYPE zexcel_cell_column_alpha
           .
 
-    loop at lo_template_filler->mt_sheet assigning field-symbol(<fs_sheet>).
+    LOOP AT lo_template_filler->mt_sheet ASSIGNING FIELD-SYMBOL(<fs_sheet>).
 
-      read table iv_data->mt_data assigning field-symbol(<fs_data>) with key sheet = <fs_sheet>.
-      check sy-subrc = 0.
+      READ TABLE iv_data->mt_data ASSIGNING FIELD-SYMBOL(<fs_data>) WITH KEY sheet = <fs_sheet>.
+      CHECK sy-subrc = 0.
       lo_template_filler->fill_sheet( <fs_data> ).
 
-    endloop.
+    ENDLOOP.
 
 
 
-  endmethod.
+  ENDMETHOD.
 
 
 method GET_ACTIVE_SHEET_INDEX.
