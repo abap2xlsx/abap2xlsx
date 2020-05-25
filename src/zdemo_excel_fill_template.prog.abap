@@ -8,57 +8,63 @@
 
 REPORT zdemo_excel_fill_template.
 
-TYPES
-: BEGIN OF t_table1
-,     person TYPE string
-,     salary TYPE i
-, END OF t_table1
+TYPES:
+  BEGIN OF t_table1,
+    person TYPE string,
+    salary TYPE i,
+  END OF t_table1,
 
-, tt_table1 TYPE TABLE OF  t_table1 WITH EMPTY KEY
+  tt_table1 TYPE TABLE OF  t_table1 WITH EMPTY KEY,
 
-, BEGIN OF t_line1
-,     carrid TYPE string
-,     connid TYPE string
-,     fldate TYPE string
-,     price TYPE i
-, END OF t_line1
+  BEGIN OF t_line1,
+    carrid TYPE string,
+    connid TYPE string,
+    fldate TYPE string,
+    price  TYPE i,
+  END OF t_line1,
 
-, tt_line1 TYPE TABLE OF  t_line1 WITH EMPTY KEY
+  tt_line1 TYPE TABLE OF  t_line1 WITH EMPTY KEY,
 
-, BEGIN OF t_table2
-,     carrid TYPE string
-,     price TYPE i
-,     line1 TYPE tt_line1
-, END OF t_table2
+  BEGIN OF t_table2,
+    carrid TYPE string,
+    price  TYPE i,
+    line1  TYPE tt_line1,
+  END OF t_table2,
 
-, tt_table2 TYPE TABLE OF  t_table2 WITH EMPTY KEY
+  tt_table2 TYPE TABLE OF  t_table2 WITH EMPTY KEY,
 
-, BEGIN OF t_sheet1
-,     date TYPE string
-,     time TYPE string
-,     user TYPE string
-,     total TYPE i
-,     price TYPE i
-,     table1 TYPE tt_table1
-,     table2 TYPE tt_table2
-, END OF t_sheet1
+  BEGIN OF t_sheet1,
+    date   TYPE string,
+    time   TYPE string,
+    user   TYPE string,
+    total  TYPE i,
+    price  TYPE i,
+    table1 TYPE tt_table1,
+    table2 TYPE tt_table2,
+  END OF t_sheet1,
 
 
-, BEGIN OF t_table3
-,     person TYPE string
-,     salary TYPE i
-, END OF t_table3
+  BEGIN OF t_table3,
+    person TYPE string,
+    salary TYPE string,
+  END OF t_table3,
 
-, tt_table3 TYPE TABLE OF  t_table3 WITH EMPTY KEY
+  tt_table3 TYPE TABLE OF  t_table3 WITH EMPTY KEY,
 
-, BEGIN OF t_sheet2
-,     date TYPE string
-,     time TYPE string
-,     user TYPE string
-,     total TYPE i
-,     table3 TYPE tt_table3
-, END OF t_sheet2
-.
+  BEGIN OF t_sheet2,
+    date   TYPE string,
+    time   TYPE string,
+    user   TYPE string,
+    total  TYPE i,
+    table3 TYPE tt_table1,
+  END OF t_sheet2.
+
+
+FIELD-SYMBOLS
+               : <fs_table1> TYPE t_table1
+               , <fs_line> TYPE t_line1
+               , <fs_table2> TYPE t_table2
+               .
 
 
 
@@ -91,138 +97,113 @@ START-OF-SELECTION.
 
   CREATE OBJECT lo_data.
 
+data
+      : lv_date TYPE char10
+      , lv_time TYPE char8
+      .
+
+  WRITE sy-datum TO lv_date.
+  gs_sheet1-date = lv_date.
+  WRITE sy-uzeit TO lv_time.
+  gs_sheet1-time = lv_time.
+
+  gs_sheet1-user = sy-uname.
+  gs_sheet1-total = '5600'.
+
+  APPEND INITIAL LINE TO gs_sheet1-table1 ASSIGNING <fs_table1>.
+  <fs_table1>-person = 'Lurch Schpellchek'.
+  <fs_table1>-salary = '1200'.
+
+  APPEND INITIAL LINE TO gs_sheet1-table1 ASSIGNING <fs_table1>.
+  <fs_table1>-person = 'Russell Sprout'.
+  <fs_table1>-salary = '1300'.
+
+  APPEND INITIAL LINE TO gs_sheet1-table1 ASSIGNING <fs_table1>.
+  <fs_table1>-person = 'Fergus Douchebag'.
+  <fs_table1>-salary = '3000'.
+
+  APPEND INITIAL LINE TO gs_sheet1-table1 ASSIGNING <fs_table1>.
+  <fs_table1>-person = 'Bartholomew Shoe'.
+  <fs_table1>-salary = '100'.
+
+
+  gs_sheet1-price = '14003'.
+
+
+
+  APPEND INITIAL LINE TO gs_sheet1-table2 ASSIGNING <fs_table2>.
+  <fs_table2>-carrid ='AC'.
+  <fs_table2>-price ='1222'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'AC'.
+  <fs_line>-connid = '0820'.
+  <fs_line>-fldate = '20.12.2002'.
+  <fs_line>-price = '1222'.
+
+
+  APPEND INITIAL LINE TO gs_sheet1-table2 ASSIGNING <fs_table2>.
+  <fs_table2>-carrid ='AF'.
+  <fs_table2>-price ='2222'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'AF'.
+  <fs_line>-connid = '0820'.
+  <fs_line>-fldate = '23.12.2002'.
+  <fs_line>-price = '2222'.
+
+
+  APPEND INITIAL LINE TO gs_sheet1-table2 ASSIGNING <fs_table2>.
+  <fs_table2>-carrid ='LH'.
+  <fs_table2>-price ='9488'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'LH'.
+  <fs_line>-connid = '0400'.
+  <fs_line>-fldate = '28.02.1995'.
+  <fs_line>-price = '899'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'LH'.
+  <fs_line>-connid = '0400'.
+  <fs_line>-fldate = '17.11.1995'.
+  <fs_line>-price = '1499'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'LH'.
+  <fs_line>-connid = '0400'.
+  <fs_line>-fldate = '06.06.1995'.
+  <fs_line>-price = '1090'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'LH'.
+  <fs_line>-connid = '0400'.
+  <fs_line>-fldate = '28.04.1995'.
+  <fs_line>-price = '6000'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'LH'.
+  <fs_line>-connid = '0400'.
+  <fs_line>-fldate = '21.12.2002'.
+  <fs_line>-price = '222'.
+
+
+  APPEND INITIAL LINE TO gs_sheet1-table2 ASSIGNING <fs_table2>.
+  <fs_table2>-carrid ='SQ'.
+  <fs_table2>-price ='849'.
+
+  APPEND INITIAL LINE TO <fs_table2>-line1 ASSIGNING <fs_line>.
+  <fs_line>-carrid = 'SQ'.
+  <fs_line>-connid = '0026'.
+  <fs_line>-fldate = '28.02.1995'.
+  <fs_line>-price = '849'.
+
+
+  MOVE-CORRESPONDING gs_sheet1 TO gs_sheet2.
+  gs_sheet2-table3 = gs_sheet1-table1.
+
 * generate data
-  gs_sheet1 = VALUE #(
-  date = |{ sy-datum DATE = ENVIRONMENT }|
-  time = |{ sy-uzeit TIME = ENVIRONMENT }|
-  user  = |{ sy-uname }|
 
-  table1 = VALUE #(
-                    ( person = 'Lurch Schpellchek' salary = '1200' )
-                    ( person = 'Russell Sprout'    salary = '1300' )
-                    ( person = 'Fergus Douchebag'  salary = '3000' )
-                    ( person = 'Bartholomew Shoe'  salary = '100' )
-                  )
-
-  total = '5600'
-  table2 = VALUE #(
-                      ( line1 = VALUE #(
-                                         (  carrid = 'AC' connid = '0820'  fldate = '20.12.2002' price = '1222'  )
-                                       )
-                        carrid ='AC'
-                        price = '1222'
-                      )
-                      ( line1 = VALUE #(
-                                          (  carrid = 'AF' connid = '0820'  fldate = '23.12.2002' price = '2222'  )
-                                       )
-                        carrid ='AF'
-                        price = '2222'
-                      )
-
-                      ( line1 = VALUE #(
-                                          (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
-                                          (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '28.04.1995' price = '6000'  )
-                                          (  carrid = 'LH' connid = '9981'  fldate = '21.12.2002' price = '222'  )
-                                       )
-                        carrid ='LH'
-                        price = '9488'
-                      )
-                      ( line1 = VALUE #(
-                                          (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
-                                        )
-                        carrid ='SQ'
-                        price = '849'
-                      )
-
-                      ( line1 = VALUE #(
-                                          (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
-                                          (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '28.04.1995' price = '6000'  )
-                                          (  carrid = 'LH' connid = '9981'  fldate = '21.12.2002' price = '222'  )
-                                       )
-                        carrid ='LH'
-                        price = '9488'
-                      )
-                      ( line1 = VALUE #(
-                                          (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
-                                        )
-                        carrid ='SQ'
-                        price = '849'
-                      )
-
-                      ( line1 = VALUE #(
-                                          (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
-                                          (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '28.04.1995' price = '6000'  )
-                                          (  carrid = 'LH' connid = '9981'  fldate = '21.12.2002' price = '222'  )
-                                       )
-                        carrid ='LH'
-                        price = '9488'
-                      )
-                      ( line1 = VALUE #(
-                                          (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
-                                        )
-                        carrid ='SQ'
-                        price = '849'
-                      )
-
-                      ( line1 = VALUE #(
-                                          (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
-                                          (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '28.04.1995' price = '6000'  )
-                                          (  carrid = 'LH' connid = '9981'  fldate = '21.12.2002' price = '222'  )
-                                       )
-                        carrid ='LH'
-                        price = '9488'
-                      )
-                      ( line1 = VALUE #(
-                                          (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
-                                        )
-                        carrid ='SQ'
-                        price = '849'
-                      )
-
-                      ( line1 = VALUE #(
-                                          (  carrid = 'LH' connid = '0400'  fldate = '28.02.1995' price = '899'  )
-                                          (  carrid = 'LH' connid = '0454'  fldate = '17.11.1995' price = '1499'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '06.06.1995' price = '1090'  )
-                                          (  carrid = 'LH' connid = '0455'  fldate = '28.04.1995' price = '6000'  )
-                                          (  carrid = 'LH' connid = '9981'  fldate = '21.12.2002' price = '222'  )
-                                       )
-                        carrid ='LH'
-                        price = '9488'
-                      )
-                      ( line1 = VALUE #(
-                                          (  carrid = 'SQ' connid = '0026'  fldate = '28.02.1995' price = '849'  )
-                                        )
-                        carrid ='SQ'
-                        price = '849'
-                      )
-
-  )
-
-  price = '14003'
-  ).
-
-
-  gs_sheet2 = VALUE #(
-  date = |{ sy-datum DATE = ENVIRONMENT }|
-  time = |{ sy-uzeit TIME = ENVIRONMENT }|
-  user  = |{ sy-uname }|
-
-  table3 = VALUE #(
-                    ( person = 'Lurch Schpellchek' salary = '1200' )
-                    ( person = 'Russell Sprout'    salary = '1300' )
-                    ( person = 'Fergus Douchebag'  salary = '3000' )
-                    ( person = 'Bartholomew Shoe'  salary = '100' )
-                  )
-
-  total = '5600' ).
 
 * add data
   lo_data->add( iv_sheet = 'Sheet1' iv_data = gs_sheet1 ).

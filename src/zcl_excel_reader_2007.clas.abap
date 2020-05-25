@@ -3934,10 +3934,12 @@ ENDMETHOD.
 *--------------------------------------------------------------------*
 * Read file into binary string
 *--------------------------------------------------------------------*
+data
+      : ls_key TYPE wwwdatatab
+      .
 
-    DATA(ls_key) = VALUE wwwdatatab(
-       relid = 'MI'
-       objid = iv_w3objid ).
+       ls_key-relid = 'MI'.
+       ls_key-objid = iv_w3objid .
 
     CALL FUNCTION 'WWWDATA_IMPORT'
       EXPORTING

@@ -87,7 +87,11 @@ FORM get_types .
         , lt_res TYPE tt_text
         , lt_buf TYPE tt_text
         .
-  LOOP AT lo_template_filler->mt_sheet ASSIGNING FIELD-SYMBOL(<fs_sheet>).
+
+  FIELD-SYMBOLS
+                 : <fs_sheet> LIKE LINE OF lo_template_filler->mt_sheet
+                 .
+  LOOP AT lo_template_filler->mt_sheet ASSIGNING <fs_sheet>.
 
     CLEAR lv_sum.
 
@@ -112,9 +116,12 @@ FORM get_types .
         : lv_lines TYPE i
         .
 
+  FIELD-SYMBOLS
+                 : <fs_res> TYPE text80
+                 .
 
   IF p_normal IS INITIAL.
-    READ TABLE lt_res ASSIGNING FIELD-SYMBOL(<fs_res>) INDEX 1.
+    READ TABLE lt_res ASSIGNING <fs_res> INDEX 1.
     TRANSLATE <fs_res> USING ',:'.
     INSERT INITIAL LINE INTO lt_res ASSIGNING <fs_res> INDEX 1.
     <fs_res> = 'TYPES'.
@@ -166,8 +173,16 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
         , lv_sum TYPE i
         .
 
+  FIELD-SYMBOLS
+                 : <fs_buf> TYPE text80
+                 .
 
-  LOOP AT lo_template_filler->mt_range ASSIGNING FIELD-SYMBOL(<fs_range>) WHERE sheet = p_sheet
+  FIELD-SYMBOLS
+                 : <fs_range> LIKE LINE OF lo_template_filler->mt_range
+                 .
+
+
+  LOOP AT lo_template_filler->mt_range ASSIGNING <fs_range> WHERE sheet = p_sheet
                                                         AND parent = p_parent.
 
     PERFORM get_type_r
@@ -196,11 +211,11 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
     lv_name = <fs_range>-name.
   ENDIF.
 
-  APPEND INITIAL LINE TO lt_buf ASSIGNING FIELD-SYMBOL(<fs_buf>).
+  APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
   IF p_normal IS INITIAL.
-    <fs_buf> = |, begin of t_{ lv_name }|.
+    CONCATENATE ', begin of t_'   lv_name INTO <fs_buf>.
   ELSE.
-    <fs_buf> = | begin of t_{ lv_name },|.
+    CONCATENATE ' begin of t_' lv_name ',' INTO <fs_buf>.
   ENDIF.
 
 
@@ -209,9 +224,9 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
 
     APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
     IF p_normal IS INITIAL.
-      <fs_buf> = |,     { <fs_var>-name } type string|.
+      CONCATENATE ',     '  <fs_var>-name ' type string' INTO <fs_buf> RESPECTING BLANKS.
     ELSE.
-      <fs_buf> = |     { <fs_var>-name } type string,|.
+      CONCATENATE '     '  <fs_var>-name ' type string,' INTO <fs_buf> RESPECTING BLANKS.
     ENDIF.
 
 
@@ -224,9 +239,9 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
 
     APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
     IF p_normal IS INITIAL.
-      <fs_buf> = |,     { <fs_range>-name } type tt_{ <fs_range>-name }|.
+      CONCATENATE ',     ' <fs_range>-name ' type tt_' <fs_range>-name INTO <fs_buf> RESPECTING BLANKS .
     ELSE.
-      <fs_buf> = |     { <fs_range>-name } type tt_{ <fs_range>-name },|.
+      CONCATENATE '     ' <fs_range>-name ' type tt_' <fs_range>-name ',' INTO <fs_buf> RESPECTING BLANKS .
     ENDIF.
 
 
@@ -235,9 +250,9 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
   IF lv_sum > 4.
     APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
     IF p_normal IS INITIAL.
-      <fs_buf> = |,     xz type i|.
+      <fs_buf> = ',     xz type i'.
     ELSE.
-      <fs_buf> = |     xz type i,|.
+      <fs_buf> = '     xz type i,'.
     ENDIF.
 
   ENDIF.
@@ -245,9 +260,9 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
 
   APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
   IF p_normal IS INITIAL.
-    <fs_buf> = |, end of t_{ lv_name }|.
+    CONCATENATE ', end of t_' lv_name INTO <fs_buf>.
   ELSE.
-    <fs_buf> = | end of t_{ lv_name },|.
+    CONCATENATE ' end of t_' lv_name ',' INTO <fs_buf>.
   ENDIF.
 
   APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
@@ -255,9 +270,9 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
   IF p_parent NE 0.
     APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
     IF p_normal IS INITIAL.
-      <fs_buf> = |, tt_{ lv_name } type table of  t_{ lv_name } with empty key|.
+      CONCATENATE ', tt_' lv_name ' type table of  t_' lv_name  ' with empty key' INTO <fs_buf> RESPECTING BLANKS .
     ELSE.
-      <fs_buf> = | tt_{ lv_name } type table of  t_{ lv_name } with empty key,|.
+      CONCATENATE ' tt_' lv_name ' type table of  t_' lv_name   ' with empty key,' INTO <fs_buf> RESPECTING BLANKS .
     ENDIF.
 
   ENDIF.
