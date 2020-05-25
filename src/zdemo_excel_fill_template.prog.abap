@@ -8,9 +8,6 @@
 
 REPORT zdemo_excel_fill_template.
 
-
-
-
 TYPES:  BEGIN OF t_table1,
     person TYPE string,
     salary TYPE i.
@@ -45,7 +42,6 @@ TYPES:  BEGIN OF t_sheet1,
     table2 TYPE tt_table2.
 TYPES:  END OF t_sheet1.
 
-
 TYPES:  BEGIN OF t_table3,
     person TYPE string,
     salary TYPE string.
@@ -67,8 +63,6 @@ FIELD-SYMBOLS
                , <fs_line> TYPE t_line1
                , <fs_table2> TYPE t_table2
                .
-
-
 
 DATA
 : lo_data TYPE REF TO zcl_excel_template_data
@@ -131,8 +125,6 @@ data
 
   gs_sheet1-price = '14003'.
 
-
-
   APPEND INITIAL LINE TO gs_sheet1-table2 ASSIGNING <fs_table2>.
   <fs_table2>-carrid ='AC'.
   <fs_table2>-price ='1222'.
@@ -189,7 +181,6 @@ data
   <fs_line>-fldate = '21.12.2002'.
   <fs_line>-price = '222'.
 
-
   APPEND INITIAL LINE TO gs_sheet1-table2 ASSIGNING <fs_table2>.
   <fs_table2>-carrid ='SQ'.
   <fs_table2>-price ='849'.
@@ -206,7 +197,6 @@ data
 
 * generate data
 
-
 * add data
   lo_data->add( iv_sheet = 'Sheet1' iv_data = gs_sheet1 ).
   lo_data->add( iv_sheet = 'Sheet2' iv_data = gs_sheet2 ).
@@ -221,7 +211,6 @@ data
   ELSE.
     lo_excel = reader->load_smw0( 'ZEXCEL_DEMO_TEMPLATE' ).
   ENDIF.
-
 
 * merge data with template
   lo_excel->fill_template( lo_data ).

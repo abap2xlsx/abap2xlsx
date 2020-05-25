@@ -216,8 +216,11 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
     CONCATENATE ' begin of t_' lv_name ',' INTO <fs_buf>.
   ENDIF.
 
+  FIELD-SYMBOLS
+                 : <fs_var> type ZEXCEL_TEMPLATE_S_VAR
+                 .
 
-  LOOP AT lo_template_filler->mt_var ASSIGNING FIELD-SYMBOL(<fs_var>) WHERE sheet = p_sheet
+  LOOP AT lo_template_filler->mt_var ASSIGNING <fs_var> WHERE sheet = p_sheet
                                                     AND parent = p_parent.
 
     APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.

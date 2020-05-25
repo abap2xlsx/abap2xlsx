@@ -275,6 +275,7 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
         FIELD-SYMBOLS
                        : <fs_numeric>       TYPE numeric
                        , <fs_result> TYPE MATCH_RESULT
+                       , <fs_var> TYPE any
                        .
 
         REFRESH result_tab.
@@ -291,7 +292,7 @@ CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
           TRANSLATE lv_var_name USING '[ ] '.
           CONDENSE lv_var_name .
 
-          ASSIGN COMPONENT lv_var_name OF STRUCTURE iv_data TO FIELD-SYMBOL(<fs_var>).
+          ASSIGN COMPONENT lv_var_name OF STRUCTURE iv_data TO <fs_var>.
           CHECK sy-subrc = 0.
 
           DATA
