@@ -13,7 +13,7 @@ TYPES:  BEGIN OF t_table1,
     salary TYPE i.
 TYPES:  END OF t_table1.
 
-  TYPES: tt_table1 TYPE TABLE OF  t_table1 WITH EMPTY KEY.
+  TYPES: tt_table1 TYPE  t_table1 OCCURS 0.
 
 TYPES:  BEGIN OF t_line1,
     carrid TYPE string,
@@ -22,7 +22,7 @@ TYPES:  BEGIN OF t_line1,
     price  TYPE i.
 TYPES:  END OF t_line1.
 
-TYPES:  tt_line1 TYPE TABLE OF  t_line1 WITH EMPTY KEY.
+TYPES:  tt_line1 TYPE  t_line1 OCCURS 0 .
 
 TYPES:  BEGIN OF t_table2,
     carrid TYPE string,
@@ -30,7 +30,7 @@ TYPES:  BEGIN OF t_table2,
     line1  TYPE tt_line1.
 TYPES:  END OF t_table2.
 
-TYPES:  tt_table2 TYPE TABLE OF  t_table2 WITH EMPTY KEY.
+TYPES:  tt_table2 TYPE   t_table2 OCCURS 0.
 
 TYPES:  BEGIN OF t_sheet1,
     date   TYPE string,
@@ -47,7 +47,7 @@ TYPES:  BEGIN OF t_table3,
     salary TYPE string.
 TYPES:  END OF t_table3.
 
-TYPES:  tt_table3 TYPE TABLE OF  t_table3 WITH EMPTY KEY.
+TYPES:  tt_table3 TYPE t_table3 OCCURS 0.
 
 TYPES:  BEGIN OF t_sheet2,
     date   TYPE string,

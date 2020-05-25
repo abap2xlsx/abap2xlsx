@@ -271,9 +271,9 @@ FORM get_type_r USING p_sheet TYPE zexcel_template_sheet_title
   IF p_parent NE 0.
     APPEND INITIAL LINE TO lt_buf ASSIGNING <fs_buf>.
     IF p_normal IS INITIAL.
-      CONCATENATE ', tt_' lv_name ' type table of  t_' lv_name  ' with empty key' INTO <fs_buf> RESPECTING BLANKS .
+      CONCATENATE ', tt_' lv_name ' type t_' lv_name  ' OCCURS 0' INTO <fs_buf> RESPECTING BLANKS .
     ELSE.
-      CONCATENATE ' tt_' lv_name ' type table of  t_' lv_name   ' with empty key,' INTO <fs_buf> RESPECTING BLANKS .
+      CONCATENATE ' tt_' lv_name ' type t_' lv_name   ' OCCURS 0,' INTO <fs_buf> RESPECTING BLANKS .
     ENDIF.
 
   ENDIF.

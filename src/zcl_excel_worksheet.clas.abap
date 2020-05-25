@@ -32,7 +32,7 @@ public section.
   types:
     mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
   types:
-    mty_ts_outlines_row_2 TYPE TABLE OF mty_s_outline_row WITH EMPTY KEY .
+    mty_ts_outlines_row_2 TYPE STANDARD TABLE OF mty_s_outline_row .
   types:
     BEGIN OF mty_merge,
         row_from TYPE i,
@@ -41,7 +41,7 @@ public section.
         col_to   TYPE i,
       END OF mty_merge .
   types:
-    mty_ts_merge TYPE TABLE OF mty_merge WITH EMPTY KEY .
+    mty_ts_merge TYPE  STANDARD TABLE OF mty_merge .
 
   constants C_BREAK_COLUMN type ZEXCEL_BREAK value 2 ##NO_TEXT.
   constants C_BREAK_NONE type ZEXCEL_BREAK value 0 ##NO_TEXT.
