@@ -1415,7 +1415,6 @@ method LOOP_SUBTOTAL.
   LOOP AT wt_fieldcatalog ASSIGNING <fs_sfcat>.
     l_row_int = i_row_int.
     l_col_int = i_col_int + <fs_sfcat>-position - 1.
-    
 * Freeze panes
     IF <fs_sfcat>-fix_column = abap_true.
       ADD 1 TO r_freeze_col.
