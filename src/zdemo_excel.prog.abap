@@ -66,7 +66,7 @@ START-OF-SELECTION.
   " SUBMIT zdemo_excel29 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path  = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Macro enabled workbook
   SUBMIT zdemo_excel30 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: ABAP Cell data types + leading blanks string
   SUBMIT zdemo_excel31 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Autosize Column with different Font sizes
-  " zdemo_excel32 is not added because it uses ALV and cannot be processed (Native)
+  SUBMIT zdemo_excel32 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Demo for export options from ALV GRID
   SUBMIT zdemo_excel33 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Table autofilter
   SUBMIT zdemo_excel34 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Static Styles Chess
   SUBMIT zdemo_excel35 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Static Styles
