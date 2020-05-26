@@ -1159,10 +1159,6 @@ method LOOP_NORMAL.
     l_row_int = i_row_int.
     l_col_int = i_col_int + <fs_sfcat>-position - 1.
 
-* ignore ALV-color-column (deep data type)
-*   'h' = table, e.g. color column in ALV
-    CHECK <fs_sfcat>-inttype NE 'h'.
-    
 *   Freeze panes
     IF <fs_sfcat>-fix_column = abap_true.
       ADD 1 TO r_freeze_col.
@@ -1419,10 +1415,6 @@ method LOOP_SUBTOTAL.
   LOOP AT wt_fieldcatalog ASSIGNING <fs_sfcat>.
     l_row_int = i_row_int.
     l_col_int = i_col_int + <fs_sfcat>-position - 1.
-    
-* ignore ALV-color-column (deep data type)
-*   'h' = table, e.g. color column in ALV
-    CHECK <fs_sfcat>-inttype NE 'h'.    
     
 * Freeze panes
     IF <fs_sfcat>-fix_column = abap_true.
