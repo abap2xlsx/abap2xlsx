@@ -6,6 +6,10 @@
 *--------------------------------------------------------------------*
 REPORT zdemo_excel32.
 
+* These parameters are used when called from ZDEMO_EXCEL
+PARAMETERS: rb_down NO-DISPLAY.
+PARAMETERS: rb_show NO-DISPLAY DEFAULT 'X'.
+PARAMETERS: p_path  TYPE string LOWER CASE NO-DISPLAY.
 *----------------------------------------------------------------------*
 *       CLASS lcl_handle_events DEFINITION
 *----------------------------------------------------------------------*
@@ -33,20 +37,25 @@ ENDCLASS.                     "lcl_handle_events IMPLEMENTATION
 * DATA DECLARATION
 *--------------------------------------------------------------------*
 
-DATA: lo_excel          TYPE REF TO zcl_excel,
-      lo_worksheet      TYPE REF TO zcl_excel_worksheet,
-      lo_salv           TYPE REF TO cl_salv_table,
-      gr_events         TYPE REF TO lcl_handle_events,
-      lr_events         TYPE REF TO cl_salv_events_table,
-      gt_sbook          TYPE TABLE OF sbook.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_salv      TYPE REF TO cl_salv_table,
+      gr_events    TYPE REF TO lcl_handle_events,
+      lr_events    TYPE REF TO cl_salv_events_table,
+      BEGIN OF gs_sbook.
+        INCLUDE TYPE sbook.
+        DATA:   color_cell TYPE lvc_t_scol,
+      END OF gs_sbook,
+      gt_sbook LIKE TABLE OF gs_sbook.
 
 DATA: l_path            TYPE string,  " local dir
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
 CONSTANTS:
-      lv_default_file_name TYPE string VALUE '32_Export_ALV.xlsx',
-      lv_default_file_name2 TYPE string VALUE '32_Export_Convert.xlsx'.
+  lv_default_file_name  TYPE string VALUE '32_Export_ALV.xlsx',
+  lv_default_file_name2 TYPE string VALUE '32_Export_Convert.xlsx'.
+
 *--------------------------------------------------------------------*
 *START-OF-SELECTION
 *--------------------------------------------------------------------*
@@ -57,39 +66,80 @@ START-OF-SELECTION.
 * ------------------------------------------
 
   SELECT *
-      INTO TABLE gt_sbook[]
+      INTO CORRESPONDING FIELDS OF TABLE gt_sbook[]
       FROM sbook                                        "#EC CI_NOWHERE
       UP TO 100 ROWS.
+
+* color amount/currency
+  FIELD-SYMBOLS:
+    <sbook> LIKE LINE OF gt_sbook,
+    <color> TYPE lvc_s_scol.
+
+  LOOP AT gt_sbook ASSIGNING <sbook>.
+    IF <sbook>-forcurkey = <sbook>-loccurkey.
+      APPEND INITIAL LINE TO <sbook>-color_cell ASSIGNING <color>.
+      <color>-fname = 'FORCURAM'.
+      <color>-color-col = col_positive.
+      <color>-color-int = 0.
+      <color>-color-inv = 0.
+    ELSE.
+      APPEND INITIAL LINE TO <sbook>-color_cell ASSIGNING <color>.
+      <color>-fname = 'FORCURKEY'.
+      <color>-color-col = col_negative.
+      <color>-color-int = 0.
+      <color>-color-inv = 0.
+    ENDIF.
+  ENDLOOP.
+
+  IF rb_show = 'X'.
 
 * Display ALV
 * ------------------------------------------
 
-  TRY.
-      cl_salv_table=>factory(
-        EXPORTING
-          list_display = abap_false
-        IMPORTING
-          r_salv_table = lo_salv
-        CHANGING
-          t_table      = gt_sbook[] ).
-    CATCH cx_salv_msg .
-  ENDTRY.
+    TRY.
+        cl_salv_table=>factory(
+          EXPORTING
+            list_display = abap_false
+          IMPORTING
+            r_salv_table = lo_salv
+          CHANGING
+            t_table      = gt_sbook[] ).
+      CATCH cx_salv_msg .
+    ENDTRY.
 
-  TRY.
-      lo_salv->set_screen_status(
-        EXPORTING
-          report        = sy-repid
-          pfstatus      = 'ALV_STATUS'
-          set_functions = lo_salv->c_functions_all ).
-    CATCH cx_salv_msg .
-  ENDTRY.
+* Field that identify cell color in internal table
+    DATA: lr_columns TYPE REF TO cl_salv_columns_table.
+    lr_columns = lo_salv->get_columns( ).
+    lr_columns->set_color_column( 'COLOR_CELL' ).
 
-  lr_events = lo_salv->get_event( ).
-  CREATE OBJECT gr_events.
-  SET HANDLER gr_events->on_user_command FOR lr_events.
+    TRY.
+        lo_salv->set_screen_status(
+          EXPORTING
+            report        = sy-repid
+            pfstatus      = 'ALV_STATUS'
+            set_functions = lo_salv->c_functions_all ).
+      CATCH cx_salv_msg .
+    ENDTRY.
 
-  lo_salv->display( ).
+    lr_events = lo_salv->get_event( ).
+    CREATE OBJECT gr_events.
+    SET HANDLER gr_events->on_user_command FOR lr_events.
 
+    lo_salv->display( ).
+
+  ELSE.
+
+* Download table to GUI Frontend
+* You might recognize that the color is missing
+* ------------------------------------------
+
+    cl_gui_frontend_services=>get_file_separator(
+    CHANGING file_separator = lv_file_separator ).
+    CONCATENATE p_path lv_file_separator lv_default_file_name2
+                INTO l_path.
+    PERFORM export_to_excel_conv.
+
+  ENDIF.
 
 *&---------------------------------------------------------------------*
 *&      Form  USER_COMMAND
@@ -99,20 +149,20 @@ START-OF-SELECTION.
 FORM user_command .
 
 * get save file path
-      cl_gui_frontend_services=>get_sapgui_workdir( CHANGING sapworkdir = l_path ).
-      cl_gui_cfw=>flush( ).
-      cl_gui_frontend_services=>directory_browse(
-        EXPORTING initial_folder = l_path
-        CHANGING selected_folder = l_path ).
+  cl_gui_frontend_services=>get_sapgui_workdir( CHANGING sapworkdir = l_path ).
+  cl_gui_cfw=>flush( ).
+  cl_gui_frontend_services=>directory_browse(
+    EXPORTING initial_folder = l_path
+    CHANGING selected_folder = l_path ).
 
-      IF l_path IS INITIAL.
-        cl_gui_frontend_services=>get_sapgui_workdir(
-          CHANGING sapworkdir = lv_workdir ).
-        l_path = lv_workdir.
-      ENDIF.
+  IF l_path IS INITIAL.
+    cl_gui_frontend_services=>get_sapgui_workdir(
+      CHANGING sapworkdir = lv_workdir ).
+    l_path = lv_workdir.
+  ENDIF.
 
-      cl_gui_frontend_services=>get_file_separator(
-        CHANGING file_separator = lv_file_separator ).
+  cl_gui_frontend_services=>get_file_separator(
+    CHANGING file_separator = lv_file_separator ).
 
 
 
@@ -216,7 +266,7 @@ FORM write_file .
       RECEIVING
         et_solix   = lt_file.
 
-    l_bytecount = XSTRLEN( l_file ).
+    l_bytecount = xstrlen( l_file ).
   ELSE.
     " Convert to binary
     CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
