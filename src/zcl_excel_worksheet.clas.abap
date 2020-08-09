@@ -56,8 +56,10 @@ CLASS zcl_excel_worksheet DEFINITION
       RETURNING
         VALUE(eo_column) TYPE REF TO zcl_excel_column .
     METHODS add_new_style_cond
+      IMPORTING
+        !ip_dimension_range  TYPE string DEFAULT 'A1'
       RETURNING
-        VALUE(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
+        VALUE(eo_style_cond) TYPE REF TO zcl_excel_style_cond.
     METHODS add_new_data_validation
       RETURNING
         VALUE(eo_data_validation) TYPE REF TO zcl_excel_data_validation .
@@ -691,7 +693,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD add_new_style_cond.
-    CREATE OBJECT eo_style_cond.
+    CREATE OBJECT eo_style_cond EXPORTING ip_dimension_range = ip_dimension_range.
     styles_cond->add( eo_style_cond ).
   ENDMETHOD.                    "ADD_NEW_STYLE_COND
 
@@ -4891,7 +4893,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ENDIF.
 
         CASE lv_value_type.
-          WHEN cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
+          WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
             OR <fs_typekind_int8>. "Allow INT8 types columns
             lo_addit = cl_abap_elemdescr=>get_i( ).
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.

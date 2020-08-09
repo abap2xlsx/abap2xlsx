@@ -64,9 +64,10 @@ public section.
   data PRIORITY type ZEXCEL_STYLE_PRIORITY value 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data RULE type ZEXCEL_CONDITION_RULE .
 
-  methods CONSTRUCTOR
-    importing
-      !IP_GUID type ZEXCEL_CELL_STYLE optional .
+  METHODS constructor
+    IMPORTING
+      !ip_guid            TYPE zexcel_cell_style OPTIONAL
+      !ip_dimension_range TYPE string.
   methods GET_DIMENSION_RANGE
     returning
       value(EP_DIMENSION_RANGE) type STRING .
@@ -191,7 +192,7 @@ METHOD constructor.
   me->priority      = 1.
 
 * inizialize dimension range
-  me->mv_rule_range     = 'A1'.
+  me->mv_rule_range     = ip_dimension_range.
 
   IF ip_guid IS NOT INITIAL.
     me->guid = ip_guid.

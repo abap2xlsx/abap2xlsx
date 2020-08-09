@@ -3644,6 +3644,12 @@ METHOD create_xl_sheet.
 * issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 1 - end
 *--------------------------------------------------------------------*
 
+    TYPES: BEGIN OF ty_condformating_range,
+             dimension_range     TYPE string,
+             condformatting_node TYPE REF TO if_ixml_element,
+           END OF ty_condformating_range,
+           ty_condformating_ranges TYPE STANDARD TABLE OF ty_condformating_range.
+
 ** Constant node name
   DATA: lc_xml_node_worksheet          TYPE string VALUE 'worksheet',
         lc_xml_node_sheetpr            TYPE string VALUE 'sheetPr',
@@ -3839,11 +3845,14 @@ METHOD create_xl_sheet.
         ls_values                   TYPE zexcel_s_autofilter_values,
         lo_autofilters              TYPE REF TO zcl_excel_autofilters,
         lo_autofilter               TYPE REF TO zcl_excel_autofilter,
-        lv_ref                      TYPE string.
+        lv_ref                      TYPE string,
+        lt_condformating_ranges     TYPE ty_condformating_ranges,
+        ls_condformating_range      TYPE ty_condformating_range.
 
-  FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data,
-                 <fs_range_merge>   LIKE LINE OF lt_range_merge,
-                 <ls_row_outline>   LIKE LINE OF lts_row_outlines.
+  FIELD-SYMBOLS: <ls_sheet_content>       TYPE zexcel_s_cell_data,
+                 <fs_range_merge>         LIKE LINE OF lt_range_merge,
+                 <ls_row_outline>         LIKE LINE OF lts_row_outlines,
+                 <ls_condformating_range> TYPE ty_condformating_range.
 
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 2 - start
@@ -4515,11 +4524,23 @@ METHOD create_xl_sheet.
     IF lo_style_cond->rule IS INITIAL.
       CONTINUE.
     ENDIF.
-    lo_element = lo_document->create_simple_element( name   = lc_xml_node_condformatting
-                                                     parent = lo_document ).
-    lv_value = lo_style_cond->get_dimension_range( ) .
-    lo_element->set_attribute_ns( name  = lc_xml_attr_sqref
-                                  value = lv_value ).
+
+    lv_value = lo_style_cond->get_dimension_range( ).
+
+    READ TABLE lt_condformating_ranges WITH KEY dimension_range = lv_value ASSIGNING <ls_condformating_range>.
+    IF sy-subrc = 0.
+      lo_element = <ls_condformating_range>-condformatting_node.
+    ELSE.
+      lo_element = lo_document->create_simple_element( name   = lc_xml_node_condformatting
+                                                       parent = lo_document ).
+      lo_element->set_attribute_ns( name  = lc_xml_attr_sqref
+                                    value = lv_value ).
+
+      ls_condformating_range-dimension_range = lv_value.
+      ls_condformating_range-condformatting_node = lo_element.
+      INSERT ls_condformating_range INTO TABLE lt_condformating_ranges.
+
+    ENDIF.
 
     " cfRule node
     lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_cfrule

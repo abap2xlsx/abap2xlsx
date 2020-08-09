@@ -2912,11 +2912,10 @@ METHOD load_worksheet_cond_format.
            lo_ixml_rule,
            lo_style_cond.
 
-
 *--------------------------------------------------------------------*
 * Get type of rule
 *--------------------------------------------------------------------*
-    lo_ixml_rules       =  io_ixml_worksheet->get_elements_by_tag_name( name = 'cfRule' ).
+    lo_ixml_rules       =  lo_ixml_cond_format->get_elements_by_tag_name( name = 'cfRule' ).
     lo_ixml_iterator2   =  lo_ixml_rules->create_iterator( ).
     lo_ixml_rule        ?= lo_ixml_iterator2->get_next( ).
 
@@ -2930,37 +2929,37 @@ METHOD load_worksheet_cond_format.
       CASE lv_rule.
 
         WHEN zcl_excel_style_cond=>c_rule_cellis.
-          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          lo_style_cond = io_worksheet->add_new_style_cond( '' ).
           load_worksheet_cond_format_ci( io_ixml_rule  = lo_ixml_rule
                                          io_style_cond = lo_style_cond ).
 
         WHEN zcl_excel_style_cond=>c_rule_databar.
-          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          lo_style_cond = io_worksheet->add_new_style_cond( '' ).
           load_worksheet_cond_format_db( io_ixml_rule  = lo_ixml_rule
                                          io_style_cond = lo_style_cond ).
 
         WHEN zcl_excel_style_cond=>c_rule_expression.
-          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          lo_style_cond = io_worksheet->add_new_style_cond( '' ).
           load_worksheet_cond_format_ex( io_ixml_rule  = lo_ixml_rule
                                          io_style_cond = lo_style_cond ).
 
         WHEN zcl_excel_style_cond=>c_rule_iconset.
-          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          lo_style_cond = io_worksheet->add_new_style_cond( '' ).
           load_worksheet_cond_format_is( io_ixml_rule  = lo_ixml_rule
                                          io_style_cond = lo_style_cond ).
 
         WHEN zcl_excel_style_cond=>c_rule_colorscale.
-          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          lo_style_cond = io_worksheet->add_new_style_cond( '' ).
           load_worksheet_cond_format_cs( io_ixml_rule  = lo_ixml_rule
                                          io_style_cond = lo_style_cond ).
 
         WHEN zcl_excel_style_cond=>c_rule_top10.
-          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          lo_style_cond = io_worksheet->add_new_style_cond( '' ).
           load_worksheet_cond_format_t10( io_ixml_rule  = lo_ixml_rule
                                          io_style_cond = lo_style_cond ).
 
         WHEN zcl_excel_style_cond=>c_rule_above_average.
-          lo_style_cond = io_worksheet->add_new_style_cond( ).
+          lo_style_cond = io_worksheet->add_new_style_cond( '' ).
           load_worksheet_cond_format_aa(  io_ixml_rule  = lo_ixml_rule
                                          io_style_cond = lo_style_cond ).
         WHEN OTHERS.
