@@ -135,7 +135,6 @@ METHOD create_xl_sheet.
     lty_bool TYPE c LENGTH 5.
 
   CONSTANTS:
-    lc_false              TYPE lty_bool   VALUE 'false',    "#EC NEEDED
     lc_true               TYPE lty_bool   VALUE 'true',
     lc_zero               TYPE c LENGTH 1 VALUE '0',
     lc_one                TYPE c LENGTH 1 VALUE '1',
