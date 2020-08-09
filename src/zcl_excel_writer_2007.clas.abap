@@ -3766,6 +3766,7 @@ METHOD create_xl_sheet.
         lc_xml_attr_showdropdown       TYPE string VALUE 'showDropDown',
         lc_xml_attr_errortitle         TYPE string VALUE 'errorTitle',
         lc_xml_attr_error              TYPE string VALUE 'error',
+        lc_xml_attr_errorstyle         TYPE string VALUE 'errorStyle',
         lc_xml_attr_prompttitle        TYPE string VALUE 'promptTitle',
         lc_xml_attr_prompt             TYPE string VALUE 'prompt',
         lc_xml_attr_count              TYPE string VALUE 'count',
@@ -4892,6 +4893,11 @@ METHOD create_xl_sheet.
       IF NOT lo_data_validation->error IS INITIAL.
         lv_value = lo_data_validation->error.
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_error
+                                        value = lv_value ).
+      ENDIF.
+      IF NOT lo_data_validation->errorstyle IS INITIAL.
+        lv_value = lo_data_validation->errorstyle.
+        lo_element_2->set_attribute_ns( name  = lc_xml_attr_errorstyle
                                         value = lv_value ).
       ENDIF.
       IF NOT lo_data_validation->prompttitle IS INITIAL.
