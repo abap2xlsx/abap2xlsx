@@ -3763,7 +3763,7 @@ METHOD create_xl_sheet.
         lc_xml_attr_allowblank         TYPE string VALUE 'allowBlank',
         lc_xml_attr_showinputmessage   TYPE string VALUE 'showInputMessage',
         lc_xml_attr_showerrormessage   TYPE string VALUE 'showErrorMessage',
-        lc_xml_attr_showdropdown       TYPE string VALUE 'showDropDown',
+        lc_xml_attr_showdropdown       TYPE string VALUE 'ShowDropDown', " 'showDropDown' does not work
         lc_xml_attr_errortitle         TYPE string VALUE 'errorTitle',
         lc_xml_attr_error              TYPE string VALUE 'error',
         lc_xml_attr_errorstyle         TYPE string VALUE 'errorStyle',
