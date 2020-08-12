@@ -13,6 +13,11 @@
     "globalMacros": []
   },
   "rules": {
+    "downport": false,
+    "forbidden_void_type": false,
+    "line_break_multiple_parameters": false,
+    "prefer_inline": false,
+    "reduce_string_templates": true,
     "forbidden_identifier": false,
     "try_without_catch": true,
     "unknown_types": false,
@@ -79,6 +84,7 @@
       "ttyp": "^ZEXCEL",
       "dtel": "^ZEXCEL",
       "doma": "^Z",
+      "shlp": "^Z",
       "msag": "^Z",
       "tran": "^Z",
       "enqu": "^EZ",

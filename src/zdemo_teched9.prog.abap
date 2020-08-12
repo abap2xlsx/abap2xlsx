@@ -35,15 +35,12 @@ DATA: lo_style_title           TYPE REF TO zcl_excel_style,
 DATA: lo_send_request TYPE REF TO cl_bcs,
       lo_document     TYPE REF TO cl_document_bcs,
       lo_sender       TYPE REF TO cl_sapuser_bcs,
-      lo_recipient    TYPE REF TO cl_sapuser_bcs,
-      lo_recipient_i  TYPE REF TO CL_CAM_ADDRESS_BCS.
+      lo_recipient    TYPE REF TO cl_sapuser_bcs.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
       lv_bytecount_c          TYPE sood-objlen,
       lt_file_tab             TYPE solix_tab.
-
-CONSTANTS: lv_default_file_name TYPE string VALUE 'TechEd01.xlsx'.
 
 *******************************
 *    abap2xlsx create XLSX    *
@@ -205,7 +202,6 @@ CONSTANTS: lv_default_file_name TYPE string VALUE 'TechEd01.xlsx'.
 
   lo_sender       = cl_sapuser_bcs=>create( sy-uname ).
   lo_recipient    = cl_sapuser_bcs=>create( sy-uname ).
-*  lo_recipient_i  = cl_cam_address_bcs=>create_internet_address( 'ivan.femia@techedge.it' ).
 
   lo_send_request = cl_bcs=>create_persistent( ).
   lo_send_request->set_document( lo_document ).

@@ -11,16 +11,13 @@ REPORT zdemo_excel28.
 DATA: lo_excel                TYPE REF TO zcl_excel,
       lo_excel_writer         TYPE REF TO zif_excel_writer,
       lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
       lo_column               TYPE REF TO zcl_excel_column.
 
 DATA: lv_file                 TYPE xstring,
       lv_bytecount            TYPE i,
       lt_file_tab             TYPE solix_tab.
 
-DATA: lv_file_name      TYPE string,
-      lv_file_path      TYPE string,
-      lv_full_path      TYPE string,
+DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
