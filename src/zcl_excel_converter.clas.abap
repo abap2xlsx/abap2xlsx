@@ -437,7 +437,7 @@ method CLASS_CONSTRUCTOR.
 
 
 method CLEAN_FIELDCATALOG.
-  DATA: l_position TYPE int1.
+  DATA: l_position TYPE tabfdpos.
 
   FIELD-SYMBOLS: <fs_sfcat>   TYPE zexcel_s_converter_fcat.
 
