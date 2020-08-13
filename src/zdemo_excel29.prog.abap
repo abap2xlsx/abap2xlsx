@@ -18,8 +18,7 @@ DATA: lv_file                 TYPE xstring,
 
 DATA: lv_full_path      TYPE string,
       lv_filename       TYPE string,
-      lv_workdir        TYPE string,
-      lv_file_separator TYPE c.
+      lv_workdir        TYPE string.
 
 PARAMETERS: p_path TYPE zexcel_export_dir OBLIGATORY.
 

@@ -242,7 +242,6 @@ METHOD create.
         lv_xl_sheet_rels          TYPE string,
         lv_xl_drawing_for_comment TYPE string,   " (+) Issue #180
         lv_xl_comment             TYPE string,   " (+) Issue #180
-        lv_xl_comment_rels        TYPE string,   " (+) Issue #180
         lv_xl_drawing             TYPE string,
         lv_xl_drawing_rels        TYPE string,
         lv_index_str              TYPE string,
@@ -3294,7 +3293,6 @@ METHOD create_xl_drawing_for_hdft_im.
       ld_3 TYPE string,
       ld_4 TYPE string,
       ld_5 TYPE string,
-      ld_6 TYPE string,
       ld_7 TYPE string,
 
       ls_odd_header  TYPE zexcel_s_worksheet_head_foot,
@@ -7757,13 +7755,10 @@ METHOD set_vml_string.
       ld_3 TYPE string,
       ld_4 TYPE string,
       ld_5 TYPE string,
-      ld_6 TYPE string,
       ld_7 TYPE string,
 
-      lv_value       TYPE string,
       lv_relation_id TYPE i,
       lo_iterator    TYPE REF TO cl_object_collection_iterator,
-      lo_drawing     TYPE REF TO zcl_excel_drawing,
       lo_worksheet   TYPE REF TO zcl_excel_worksheet,
       ls_odd_header  TYPE zexcel_s_worksheet_head_foot,
       ls_odd_footer  TYPE zexcel_s_worksheet_head_foot,
