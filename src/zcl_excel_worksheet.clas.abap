@@ -25,10 +25,10 @@ CLASS zcl_excel_worksheet DEFINITION
 
     TYPES:
       BEGIN OF  mty_s_outline_row,
-          row_from  TYPE i,
-          row_to    TYPE i,
-          collapsed TYPE abap_bool,
-        END OF mty_s_outline_row .
+        row_from  TYPE i,
+        row_to    TYPE i,
+        collapsed TYPE abap_bool,
+      END OF mty_s_outline_row .
     TYPES:
       mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
 
@@ -52,47 +52,49 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_drawing TYPE REF TO zcl_excel_drawing .
     METHODS add_new_column
       IMPORTING
-        !ip_column TYPE simple
+        !ip_column       TYPE simple
       RETURNING
-        value(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column .
     METHODS add_new_style_cond
+      IMPORTING
+        !ip_dimension_range  TYPE string DEFAULT 'A1'
       RETURNING
-        value(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
+        VALUE(eo_style_cond) TYPE REF TO zcl_excel_style_cond.
     METHODS add_new_data_validation
       RETURNING
-        value(eo_data_validation) TYPE REF TO zcl_excel_data_validation .
+        VALUE(eo_data_validation) TYPE REF TO zcl_excel_data_validation .
     METHODS add_new_range
       RETURNING
-        value(eo_range) TYPE REF TO zcl_excel_range .
+        VALUE(eo_range) TYPE REF TO zcl_excel_range .
     METHODS add_new_row
       IMPORTING
-        !ip_row TYPE simple
+        !ip_row       TYPE simple
       RETURNING
-        value(eo_row) TYPE REF TO zcl_excel_row .
+        VALUE(eo_row) TYPE REF TO zcl_excel_row .
     METHODS bind_alv
       IMPORTING
-        !io_alv TYPE REF TO object
-        !it_table TYPE STANDARD TABLE
-        !i_top TYPE i DEFAULT 1
-        !i_left TYPE i DEFAULT 1
+        !io_alv      TYPE REF TO object
+        !it_table    TYPE STANDARD TABLE
+        !i_top       TYPE i DEFAULT 1
+        !i_left      TYPE i DEFAULT 1
         !table_style TYPE zexcel_table_style OPTIONAL
-        !i_table TYPE abap_bool DEFAULT abap_true
+        !i_table     TYPE abap_bool DEFAULT abap_true
       RAISING
         zcx_excel .
     METHODS bind_alv_ole2
       IMPORTING
-        !i_document_url TYPE char255 DEFAULT space
-        !i_xls TYPE c DEFAULT space
-        !i_save_path TYPE string
-        !io_alv TYPE REF TO cl_gui_alv_grid
-        !it_listheader TYPE slis_t_listheader OPTIONAL
-        !i_top TYPE i DEFAULT 1
-        !i_left TYPE i DEFAULT 1
-        !i_columns_header TYPE c DEFAULT 'X'
-        !i_columns_autofit TYPE c DEFAULT 'X'
+        !i_document_url      TYPE char255 DEFAULT space
+        !i_xls               TYPE c DEFAULT space
+        !i_save_path         TYPE string
+        !io_alv              TYPE REF TO cl_gui_alv_grid
+        !it_listheader       TYPE slis_t_listheader OPTIONAL
+        !i_top               TYPE i DEFAULT 1
+        !i_left              TYPE i DEFAULT 1
+        !i_columns_header    TYPE c DEFAULT 'X'
+        !i_columns_autofit   TYPE c DEFAULT 'X'
         !i_format_col_header TYPE soi_format_item OPTIONAL
-        !i_format_subtotal TYPE soi_format_item OPTIONAL
-        !i_format_total TYPE soi_format_item OPTIONAL
+        !i_format_subtotal   TYPE soi_format_item OPTIONAL
+        !i_format_total      TYPE soi_format_item OPTIONAL
       EXCEPTIONS
         miss_guide
         ex_transfer_kkblo_error
@@ -103,13 +105,13 @@ CLASS zcl_excel_worksheet DEFINITION
         error_in_sema .
     METHODS bind_table
       IMPORTING
-        !ip_table TYPE STANDARD TABLE
-        !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
-        !is_table_settings TYPE zexcel_s_table_settings OPTIONAL
-        value(iv_default_descr) TYPE c OPTIONAL
-        !IV_NO_LINE_IF_EMPTY type ABAP_BOOL default ABAP_FALSE
+        !ip_table               TYPE STANDARD TABLE
+        !it_field_catalog       TYPE zexcel_t_fieldcatalog OPTIONAL
+        !is_table_settings      TYPE zexcel_s_table_settings OPTIONAL
+        VALUE(iv_default_descr) TYPE c OPTIONAL
+        !iv_no_line_if_empty    TYPE abap_bool DEFAULT abap_false
       EXPORTING
-        !es_table_settings TYPE zexcel_s_table_settings
+        !es_table_settings      TYPE zexcel_s_table_settings
       RAISING
         zcx_excel .
     METHODS calculate_column_widths
@@ -117,115 +119,115 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS change_cell_style
       IMPORTING
-        !ip_column TYPE simple
-        !ip_row TYPE zexcel_cell_row
-        !ip_complete TYPE zexcel_s_cstyle_complete OPTIONAL
-        !ip_xcomplete TYPE zexcel_s_cstylex_complete OPTIONAL
-        !ip_font TYPE zexcel_s_cstyle_font OPTIONAL
-        !ip_xfont TYPE zexcel_s_cstylex_font OPTIONAL
-        !ip_fill TYPE zexcel_s_cstyle_fill OPTIONAL
-        !ip_xfill TYPE zexcel_s_cstylex_fill OPTIONAL
-        !ip_borders TYPE zexcel_s_cstyle_borders OPTIONAL
-        !ip_xborders TYPE zexcel_s_cstylex_borders OPTIONAL
-        !ip_alignment TYPE zexcel_s_cstyle_alignment OPTIONAL
-        !ip_xalignment TYPE zexcel_s_cstylex_alignment OPTIONAL
-        !ip_number_format_format_code TYPE zexcel_number_format OPTIONAL
-        !ip_protection TYPE zexcel_s_cstyle_protection OPTIONAL
-        !ip_xprotection TYPE zexcel_s_cstylex_protection OPTIONAL
-        !ip_font_bold TYPE flag OPTIONAL
-        !ip_font_color TYPE zexcel_s_style_color OPTIONAL
-        !ip_font_color_rgb TYPE zexcel_style_color_argb OPTIONAL
-        !ip_font_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_font_color_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_font_color_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_font_family TYPE zexcel_style_font_family OPTIONAL
-        !ip_font_italic TYPE flag OPTIONAL
-        !ip_font_name TYPE zexcel_style_font_name OPTIONAL
-        !ip_font_scheme TYPE zexcel_style_font_scheme OPTIONAL
-        !ip_font_size TYPE zexcel_style_font_size OPTIONAL
-        !ip_font_strikethrough TYPE flag OPTIONAL
-        !ip_font_underline TYPE flag OPTIONAL
-        !ip_font_underline_mode TYPE zexcel_style_font_underline OPTIONAL
-        !ip_fill_filltype TYPE zexcel_fill_type OPTIONAL
-        !ip_fill_rotation TYPE zexcel_rotation OPTIONAL
-        !ip_fill_fgcolor TYPE zexcel_s_style_color OPTIONAL
-        !ip_fill_fgcolor_rgb TYPE zexcel_style_color_argb OPTIONAL
-        !ip_fill_fgcolor_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_fill_fgcolor_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_fill_fgcolor_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_fill_bgcolor TYPE zexcel_s_style_color OPTIONAL
-        !ip_fill_bgcolor_rgb TYPE zexcel_style_color_argb OPTIONAL
-        !ip_fill_bgcolor_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_fill_bgcolor_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_fill_bgcolor_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_borders_allborders TYPE zexcel_s_cstyle_border OPTIONAL
-        !ip_fill_gradtype_type TYPE zexcel_s_gradient_type-type OPTIONAL
-        !ip_fill_gradtype_degree TYPE zexcel_s_gradient_type-degree OPTIONAL
-        !ip_xborders_allborders TYPE zexcel_s_cstylex_border OPTIONAL
-        !ip_borders_diagonal TYPE zexcel_s_cstyle_border OPTIONAL
-        !ip_fill_gradtype_bottom TYPE zexcel_s_gradient_type-bottom OPTIONAL
-        !ip_fill_gradtype_top TYPE zexcel_s_gradient_type-top OPTIONAL
-        !ip_xborders_diagonal TYPE zexcel_s_cstylex_border OPTIONAL
-        !ip_borders_diagonal_mode TYPE zexcel_diagonal OPTIONAL
-        !ip_fill_gradtype_right TYPE zexcel_s_gradient_type-right OPTIONAL
-        !ip_borders_down TYPE zexcel_s_cstyle_border OPTIONAL
-        !ip_fill_gradtype_left TYPE zexcel_s_gradient_type-left OPTIONAL
-        !ip_fill_gradtype_position1 TYPE zexcel_s_gradient_type-position1 OPTIONAL
-        !ip_xborders_down TYPE zexcel_s_cstylex_border OPTIONAL
-        !ip_borders_left TYPE zexcel_s_cstyle_border OPTIONAL
-        !ip_fill_gradtype_position2 TYPE zexcel_s_gradient_type-position2 OPTIONAL
-        !ip_fill_gradtype_position3 TYPE zexcel_s_gradient_type-position3 OPTIONAL
-        !ip_xborders_left TYPE zexcel_s_cstylex_border OPTIONAL
-        !ip_borders_right TYPE zexcel_s_cstyle_border OPTIONAL
-        !ip_xborders_right TYPE zexcel_s_cstylex_border OPTIONAL
-        !ip_borders_top TYPE zexcel_s_cstyle_border OPTIONAL
-        !ip_xborders_top TYPE zexcel_s_cstylex_border OPTIONAL
-        !ip_alignment_horizontal TYPE zexcel_alignment OPTIONAL
-        !ip_alignment_vertical TYPE zexcel_alignment OPTIONAL
-        !ip_alignment_textrotation TYPE zexcel_text_rotation OPTIONAL
-        !ip_alignment_wraptext TYPE flag OPTIONAL
-        !ip_alignment_shrinktofit TYPE flag OPTIONAL
-        !ip_alignment_indent TYPE zexcel_indent OPTIONAL
-        !ip_protection_hidden TYPE zexcel_cell_protection OPTIONAL
-        !ip_protection_locked TYPE zexcel_cell_protection OPTIONAL
-        !ip_borders_allborders_style TYPE zexcel_border OPTIONAL
-        !ip_borders_allborders_color TYPE zexcel_s_style_color OPTIONAL
-        !ip_borders_allbo_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_column                      TYPE simple
+        !ip_row                         TYPE zexcel_cell_row
+        !ip_complete                    TYPE zexcel_s_cstyle_complete OPTIONAL
+        !ip_xcomplete                   TYPE zexcel_s_cstylex_complete OPTIONAL
+        !ip_font                        TYPE zexcel_s_cstyle_font OPTIONAL
+        !ip_xfont                       TYPE zexcel_s_cstylex_font OPTIONAL
+        !ip_fill                        TYPE zexcel_s_cstyle_fill OPTIONAL
+        !ip_xfill                       TYPE zexcel_s_cstylex_fill OPTIONAL
+        !ip_borders                     TYPE zexcel_s_cstyle_borders OPTIONAL
+        !ip_xborders                    TYPE zexcel_s_cstylex_borders OPTIONAL
+        !ip_alignment                   TYPE zexcel_s_cstyle_alignment OPTIONAL
+        !ip_xalignment                  TYPE zexcel_s_cstylex_alignment OPTIONAL
+        !ip_number_format_format_code   TYPE zexcel_number_format OPTIONAL
+        !ip_protection                  TYPE zexcel_s_cstyle_protection OPTIONAL
+        !ip_xprotection                 TYPE zexcel_s_cstylex_protection OPTIONAL
+        !ip_font_bold                   TYPE flag OPTIONAL
+        !ip_font_color                  TYPE zexcel_s_style_color OPTIONAL
+        !ip_font_color_rgb              TYPE zexcel_style_color_argb OPTIONAL
+        !ip_font_color_indexed          TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_font_color_theme            TYPE zexcel_style_color_theme OPTIONAL
+        !ip_font_color_tint             TYPE zexcel_style_color_tint OPTIONAL
+        !ip_font_family                 TYPE zexcel_style_font_family OPTIONAL
+        !ip_font_italic                 TYPE flag OPTIONAL
+        !ip_font_name                   TYPE zexcel_style_font_name OPTIONAL
+        !ip_font_scheme                 TYPE zexcel_style_font_scheme OPTIONAL
+        !ip_font_size                   TYPE zexcel_style_font_size OPTIONAL
+        !ip_font_strikethrough          TYPE flag OPTIONAL
+        !ip_font_underline              TYPE flag OPTIONAL
+        !ip_font_underline_mode         TYPE zexcel_style_font_underline OPTIONAL
+        !ip_fill_filltype               TYPE zexcel_fill_type OPTIONAL
+        !ip_fill_rotation               TYPE zexcel_rotation OPTIONAL
+        !ip_fill_fgcolor                TYPE zexcel_s_style_color OPTIONAL
+        !ip_fill_fgcolor_rgb            TYPE zexcel_style_color_argb OPTIONAL
+        !ip_fill_fgcolor_indexed        TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_fill_fgcolor_theme          TYPE zexcel_style_color_theme OPTIONAL
+        !ip_fill_fgcolor_tint           TYPE zexcel_style_color_tint OPTIONAL
+        !ip_fill_bgcolor                TYPE zexcel_s_style_color OPTIONAL
+        !ip_fill_bgcolor_rgb            TYPE zexcel_style_color_argb OPTIONAL
+        !ip_fill_bgcolor_indexed        TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_fill_bgcolor_theme          TYPE zexcel_style_color_theme OPTIONAL
+        !ip_fill_bgcolor_tint           TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_allborders          TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_type          TYPE zexcel_s_gradient_type-type OPTIONAL
+        !ip_fill_gradtype_degree        TYPE zexcel_s_gradient_type-degree OPTIONAL
+        !ip_xborders_allborders         TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_diagonal            TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_bottom        TYPE zexcel_s_gradient_type-bottom OPTIONAL
+        !ip_fill_gradtype_top           TYPE zexcel_s_gradient_type-top OPTIONAL
+        !ip_xborders_diagonal           TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_diagonal_mode       TYPE zexcel_diagonal OPTIONAL
+        !ip_fill_gradtype_right         TYPE zexcel_s_gradient_type-right OPTIONAL
+        !ip_borders_down                TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_left          TYPE zexcel_s_gradient_type-left OPTIONAL
+        !ip_fill_gradtype_position1     TYPE zexcel_s_gradient_type-position1 OPTIONAL
+        !ip_xborders_down               TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_left                TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_position2     TYPE zexcel_s_gradient_type-position2 OPTIONAL
+        !ip_fill_gradtype_position3     TYPE zexcel_s_gradient_type-position3 OPTIONAL
+        !ip_xborders_left               TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_right               TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_xborders_right              TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_top                 TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_xborders_top                TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_alignment_horizontal        TYPE zexcel_alignment OPTIONAL
+        !ip_alignment_vertical          TYPE zexcel_alignment OPTIONAL
+        !ip_alignment_textrotation      TYPE zexcel_text_rotation OPTIONAL
+        !ip_alignment_wraptext          TYPE flag OPTIONAL
+        !ip_alignment_shrinktofit       TYPE flag OPTIONAL
+        !ip_alignment_indent            TYPE zexcel_indent OPTIONAL
+        !ip_protection_hidden           TYPE zexcel_cell_protection OPTIONAL
+        !ip_protection_locked           TYPE zexcel_cell_protection OPTIONAL
+        !ip_borders_allborders_style    TYPE zexcel_border OPTIONAL
+        !ip_borders_allborders_color    TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_allbo_color_rgb     TYPE zexcel_style_color_argb OPTIONAL
         !ip_borders_allbo_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_borders_allbo_color_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_borders_allbo_color_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_borders_diagonal_style TYPE zexcel_border OPTIONAL
-        !ip_borders_diagonal_color TYPE zexcel_s_style_color OPTIONAL
-        !ip_borders_diagonal_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_allbo_color_theme   TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_allbo_color_tint    TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_diagonal_style      TYPE zexcel_border OPTIONAL
+        !ip_borders_diagonal_color      TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_diagonal_color_rgb  TYPE zexcel_style_color_argb OPTIONAL
         !ip_borders_diagonal_color_inde TYPE zexcel_style_color_indexed OPTIONAL
         !ip_borders_diagonal_color_them TYPE zexcel_style_color_theme OPTIONAL
         !ip_borders_diagonal_color_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_borders_down_style TYPE zexcel_border OPTIONAL
-        !ip_borders_down_color TYPE zexcel_s_style_color OPTIONAL
-        !ip_borders_down_color_rgb TYPE zexcel_style_color_argb OPTIONAL
-        !ip_borders_down_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_borders_down_color_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_borders_down_color_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_borders_left_style TYPE zexcel_border OPTIONAL
-        !ip_borders_left_color TYPE zexcel_s_style_color OPTIONAL
-        !ip_borders_left_color_rgb TYPE zexcel_style_color_argb OPTIONAL
-        !ip_borders_left_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_borders_left_color_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_borders_left_color_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_borders_right_style TYPE zexcel_border OPTIONAL
-        !ip_borders_right_color TYPE zexcel_s_style_color OPTIONAL
-        !ip_borders_right_color_rgb TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_down_style          TYPE zexcel_border OPTIONAL
+        !ip_borders_down_color          TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_down_color_rgb      TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_down_color_indexed  TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_down_color_theme    TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_down_color_tint     TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_left_style          TYPE zexcel_border OPTIONAL
+        !ip_borders_left_color          TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_left_color_rgb      TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_left_color_indexed  TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_left_color_theme    TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_left_color_tint     TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_right_style         TYPE zexcel_border OPTIONAL
+        !ip_borders_right_color         TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_right_color_rgb     TYPE zexcel_style_color_argb OPTIONAL
         !ip_borders_right_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_borders_right_color_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_borders_right_color_tint TYPE zexcel_style_color_tint OPTIONAL
-        !ip_borders_top_style TYPE zexcel_border OPTIONAL
-        !ip_borders_top_color TYPE zexcel_s_style_color OPTIONAL
-        !ip_borders_top_color_rgb TYPE zexcel_style_color_argb OPTIONAL
-        !ip_borders_top_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
-        !ip_borders_top_color_theme TYPE zexcel_style_color_theme OPTIONAL
-        !ip_borders_top_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_right_color_theme   TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_right_color_tint    TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_top_style           TYPE zexcel_border OPTIONAL
+        !ip_borders_top_color           TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_top_color_rgb       TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_top_color_indexed   TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_top_color_theme     TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_top_color_tint      TYPE zexcel_style_color_tint OPTIONAL
       RETURNING
-        value(ep_guid) TYPE zexcel_cell_style
+        VALUE(ep_guid)                  TYPE zexcel_cell_style
       RAISING
         zcx_excel .
     METHODS constructor
@@ -237,175 +239,175 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS delete_merge
       IMPORTING
         !ip_cell_column TYPE simple OPTIONAL
-        !ip_cell_row TYPE zexcel_cell_row OPTIONAL
+        !ip_cell_row    TYPE zexcel_cell_row OPTIONAL
       RAISING
         zcx_excel .
     METHODS delete_row_outline
       IMPORTING
         !iv_row_from TYPE i
-        !iv_row_to TYPE i
+        !iv_row_to   TYPE i
       RAISING
         zcx_excel .
     METHODS freeze_panes
       IMPORTING
         !ip_num_columns TYPE i OPTIONAL
-        !ip_num_rows TYPE i OPTIONAL
+        !ip_num_rows    TYPE i OPTIONAL
       RAISING
         zcx_excel .
     METHODS get_active_cell
       RETURNING
-        value(ep_active_cell) TYPE string
+        VALUE(ep_active_cell) TYPE string
       RAISING
         zcx_excel .
     METHODS get_cell
       IMPORTING
-        !ip_column TYPE simple
-        !ip_row TYPE zexcel_cell_row
+        !ip_column  TYPE simple
+        !ip_row     TYPE zexcel_cell_row
       EXPORTING
-        !ep_value TYPE zexcel_cell_value
-        !ep_rc TYPE sysubrc
-        !ep_style TYPE REF TO zcl_excel_style
-        !ep_guid TYPE zexcel_cell_style
+        !ep_value   TYPE zexcel_cell_value
+        !ep_rc      TYPE sysubrc
+        !ep_style   TYPE REF TO zcl_excel_style
+        !ep_guid    TYPE zexcel_cell_style
         !ep_formula TYPE zexcel_cell_formula
       RAISING
         zcx_excel .
     METHODS get_column
       IMPORTING
-        !ip_column TYPE simple
+        !ip_column       TYPE simple
       RETURNING
-        value(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column .
     METHODS get_columns
       RETURNING
-        value(eo_columns) TYPE REF TO zcl_excel_columns .
+        VALUE(eo_columns) TYPE REF TO zcl_excel_columns .
     METHODS get_columns_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_style_cond_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_data_validations_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_data_validations_size
       RETURNING
-        value(ep_size) TYPE i .
+        VALUE(ep_size) TYPE i .
     METHODS get_default_column
       RETURNING
-        value(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column .
     METHODS get_default_excel_date_format
       RETURNING
-        value(ep_default_excel_date_format) TYPE zexcel_number_format .
+        VALUE(ep_default_excel_date_format) TYPE zexcel_number_format .
     METHODS get_default_excel_time_format
       RETURNING
-        value(ep_default_excel_time_format) TYPE zexcel_number_format .
+        VALUE(ep_default_excel_time_format) TYPE zexcel_number_format .
     METHODS get_default_row
       RETURNING
-        value(eo_row) TYPE REF TO zcl_excel_row .
+        VALUE(eo_row) TYPE REF TO zcl_excel_row .
     METHODS get_dimension_range
       RETURNING
-        value(ep_dimension_range) TYPE string
+        VALUE(ep_dimension_range) TYPE string
       RAISING
         zcx_excel .
     METHODS get_comments
       RETURNING
-        value(r_comments) TYPE REF TO zcl_excel_comments .
+        VALUE(r_comments) TYPE REF TO zcl_excel_comments .
     METHODS get_drawings
       IMPORTING
-        !ip_type TYPE zexcel_drawing_type OPTIONAL
+        !ip_type          TYPE zexcel_drawing_type OPTIONAL
       RETURNING
-        value(r_drawings) TYPE REF TO zcl_excel_drawings .
+        VALUE(r_drawings) TYPE REF TO zcl_excel_drawings .
     METHODS get_comments_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_drawings_iterator
       IMPORTING
-        !ip_type TYPE zexcel_drawing_type
+        !ip_type           TYPE zexcel_drawing_type
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_freeze_cell
       EXPORTING
-        !ep_row TYPE zexcel_cell_row
+        !ep_row    TYPE zexcel_cell_row
         !ep_column TYPE zexcel_cell_column .
     METHODS get_guid
       RETURNING
-        value(ep_guid) TYPE uuid .
+        VALUE(ep_guid) TYPE uuid .
     METHODS get_highest_column
       RETURNING
-        value(r_highest_column) TYPE zexcel_cell_column
+        VALUE(r_highest_column) TYPE zexcel_cell_column
       RAISING
         zcx_excel .
     METHODS get_highest_row
       RETURNING
-        value(r_highest_row) TYPE int4
+        VALUE(r_highest_row) TYPE int4
       RAISING
         zcx_excel .
     METHODS get_hyperlinks_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_hyperlinks_size
       RETURNING
-        value(ep_size) TYPE i .
+        VALUE(ep_size) TYPE i .
     METHODS get_merge
       RETURNING
-        value(merge_range) TYPE string_table
+        VALUE(merge_range) TYPE string_table
       RAISING
         zcx_excel .
     METHODS get_pagebreaks
       RETURNING
-        value(ro_pagebreaks) TYPE REF TO zcl_excel_worksheet_pagebreaks
+        VALUE(ro_pagebreaks) TYPE REF TO zcl_excel_worksheet_pagebreaks
       RAISING
         zcx_excel .
     METHODS get_ranges_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_row
       IMPORTING
-        !ip_row TYPE int4
+        !ip_row       TYPE int4
       RETURNING
-        value(eo_row) TYPE REF TO zcl_excel_row .
+        VALUE(eo_row) TYPE REF TO zcl_excel_row .
     METHODS get_rows
       RETURNING
-        value(eo_rows) TYPE REF TO zcl_excel_rows .
+        VALUE(eo_rows) TYPE REF TO zcl_excel_rows .
     METHODS get_rows_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_row_outlines
       RETURNING
-        value(rt_row_outlines) TYPE mty_ts_outlines_row .
+        VALUE(rt_row_outlines) TYPE mty_ts_outlines_row .
     METHODS get_style_cond
       IMPORTING
-        !ip_guid TYPE zexcel_cell_style
+        !ip_guid             TYPE zexcel_cell_style
       RETURNING
-        value(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
+        VALUE(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
     METHODS get_tabcolor
       RETURNING
-        value(ev_tabcolor) TYPE zexcel_s_tabcolor .
+        VALUE(ev_tabcolor) TYPE zexcel_s_tabcolor .
     METHODS get_tables_iterator
       RETURNING
-        value(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
     METHODS get_tables_size
       RETURNING
-        value(ep_size) TYPE i .
+        VALUE(ep_size) TYPE i .
     METHODS get_title
       IMPORTING
-        !ip_escaped TYPE flag DEFAULT ''
+        !ip_escaped     TYPE flag DEFAULT ''
       RETURNING
-        value(ep_title) TYPE zexcel_sheet_title .
+        VALUE(ep_title) TYPE zexcel_sheet_title .
     METHODS is_cell_merged
       IMPORTING
-        !ip_column TYPE simple
-        !ip_row TYPE zexcel_cell_row
+        !ip_column          TYPE simple
+        !ip_row             TYPE zexcel_cell_row
       RETURNING
-        value(rp_is_merged) TYPE abap_bool
+        VALUE(rp_is_merged) TYPE abap_bool
       RAISING
         zcx_excel .
     METHODS set_cell
       IMPORTING
-        !ip_column TYPE simple
-        !ip_row TYPE zexcel_cell_row
-        !ip_value TYPE simple OPTIONAL
-        !ip_formula TYPE zexcel_cell_formula OPTIONAL
-        !ip_style TYPE zexcel_cell_style OPTIONAL
+        !ip_column    TYPE simple
+        !ip_row       TYPE zexcel_cell_row
+        !ip_value     TYPE simple OPTIONAL
+        !ip_formula   TYPE zexcel_cell_formula OPTIONAL
+        !ip_style     TYPE zexcel_cell_style OPTIONAL
         !ip_hyperlink TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type TYPE abap_typekind OPTIONAL
@@ -413,22 +415,22 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS set_cell_formula
       IMPORTING
-        !ip_column TYPE simple
-        !ip_row TYPE zexcel_cell_row
+        !ip_column  TYPE simple
+        !ip_row     TYPE zexcel_cell_row
         !ip_formula TYPE zexcel_cell_formula
       RAISING
         zcx_excel .
     METHODS set_cell_style
       IMPORTING
         !ip_column TYPE simple
-        !ip_row TYPE zexcel_cell_row
-        !ip_style TYPE zexcel_cell_style
+        !ip_row    TYPE zexcel_cell_row
+        !ip_style  TYPE zexcel_cell_style
       RAISING
         zcx_excel .
     METHODS set_column_width
       IMPORTING
-        !ip_column TYPE simple
-        !ip_width_fix TYPE simple DEFAULT 0
+        !ip_column         TYPE simple
+        !ip_width_fix      TYPE simple DEFAULT 0
         !ip_width_autosize TYPE flag DEFAULT 'X'
       RAISING
         zcx_excel .
@@ -440,12 +442,12 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS set_merge
       IMPORTING
         !ip_column_start TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_min_col
-        !ip_column_end TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_max_col
-        !ip_row TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_min_row
-        !ip_row_to TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_max_row
-        !ip_style TYPE zexcel_cell_style OPTIONAL "added parameter
-        !ip_value TYPE simple OPTIONAL "added parameter
-        !ip_formula TYPE zexcel_cell_formula OPTIONAL "added parameter
+        !ip_column_end   TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_max_col
+        !ip_row          TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_min_row
+        !ip_row_to       TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_max_row
+        !ip_style        TYPE zexcel_cell_style OPTIONAL "added parameter
+        !ip_value        TYPE simple OPTIONAL "added parameter
+        !ip_formula      TYPE zexcel_cell_formula OPTIONAL "added parameter
       RAISING
         zcx_excel .
     METHODS set_print_gridlines
@@ -453,14 +455,14 @@ CLASS zcl_excel_worksheet DEFINITION
         !i_print_gridlines TYPE zexcel_print_gridlines .
     METHODS set_row_height
       IMPORTING
-        !ip_row TYPE simple
+        !ip_row        TYPE simple
         !ip_height_fix TYPE simple
       RAISING
         zcx_excel .
     METHODS set_row_outline
       IMPORTING
-        !iv_row_from TYPE i
-        !iv_row_to TYPE i
+        !iv_row_from  TYPE i
+        !iv_row_to    TYPE i
         !iv_collapsed TYPE abap_bool
       RAISING
         zcx_excel .
@@ -475,14 +477,14 @@ CLASS zcl_excel_worksheet DEFINITION
         !iv_tabcolor TYPE zexcel_s_tabcolor .
     METHODS set_table
       IMPORTING
-        !ip_table TYPE STANDARD TABLE
-        !ip_hdr_style TYPE zexcel_cell_style OPTIONAL
-        !ip_body_style TYPE zexcel_cell_style OPTIONAL
-        !ip_table_title TYPE string
+        !ip_table           TYPE STANDARD TABLE
+        !ip_hdr_style       TYPE zexcel_cell_style OPTIONAL
+        !ip_body_style      TYPE zexcel_cell_style OPTIONAL
+        !ip_table_title     TYPE string
         !ip_top_left_column TYPE zexcel_cell_column_alpha DEFAULT 'B'
-        !ip_top_left_row TYPE zexcel_cell_row DEFAULT 3
-        !ip_transpose TYPE xfeld OPTIONAL
-        !ip_no_header TYPE xfeld OPTIONAL
+        !ip_top_left_row    TYPE zexcel_cell_row DEFAULT 3
+        !ip_transpose       TYPE xfeld OPTIONAL
+        !ip_no_header       TYPE xfeld OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_title
@@ -494,55 +496,55 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !iv_skipped_rows TYPE int4 DEFAULT 0
         !iv_skipped_cols TYPE int4 DEFAULT 0
-        !iv_max_col TYPE int4 OPTIONAL
-        !iv_max_row TYPE int4 OPTIONAL
+        !iv_max_col      TYPE int4 OPTIONAL
+        !iv_max_row      TYPE int4 OPTIONAL
       EXPORTING
-        !et_table TYPE STANDARD TABLE
+        !et_table        TYPE STANDARD TABLE
       RAISING
         zcx_excel .
     METHODS set_merge_style
       IMPORTING
         !ip_column_start TYPE simple OPTIONAL
-        !ip_column_end TYPE simple OPTIONAL
-        !ip_row TYPE zexcel_cell_row OPTIONAL
-        !ip_row_to TYPE zexcel_cell_row OPTIONAL
-        !ip_style TYPE zexcel_cell_style OPTIONAL .
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row OPTIONAL
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_style        TYPE zexcel_cell_style OPTIONAL .
     METHODS set_area_formula
       IMPORTING
         !ip_column_start TYPE simple
-        !ip_column_end TYPE simple OPTIONAL
-        !ip_row TYPE zexcel_cell_row
-        !ip_row_to TYPE zexcel_cell_row OPTIONAL
-        !ip_formula TYPE zexcel_cell_formula
-        !ip_merge TYPE abap_bool OPTIONAL
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_formula      TYPE zexcel_cell_formula
+        !ip_merge        TYPE abap_bool OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_area_style
       IMPORTING
         !ip_column_start TYPE simple
-        !ip_column_end TYPE simple OPTIONAL
-        !ip_row TYPE zexcel_cell_row
-        !ip_row_to TYPE zexcel_cell_row OPTIONAL
-        !ip_style TYPE zexcel_cell_style
-        !ip_merge TYPE abap_bool OPTIONAL .
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_style        TYPE zexcel_cell_style
+        !ip_merge        TYPE abap_bool OPTIONAL .
     METHODS set_area
       IMPORTING
         !ip_column_start TYPE simple
-        !ip_column_end TYPE simple OPTIONAL
-        !ip_row TYPE zexcel_cell_row
-        !ip_row_to TYPE zexcel_cell_row OPTIONAL
-        !ip_value TYPE simple OPTIONAL
-        !ip_formula TYPE zexcel_cell_formula OPTIONAL
-        !ip_style TYPE zexcel_cell_style OPTIONAL
-        !ip_hyperlink TYPE REF TO zcl_excel_hyperlink OPTIONAL
-        !ip_data_type TYPE zexcel_cell_data_type OPTIONAL
-        !ip_abap_type TYPE abap_typekind OPTIONAL
-        !ip_merge TYPE abap_bool OPTIONAL
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_value        TYPE simple OPTIONAL
+        !ip_formula      TYPE zexcel_cell_formula OPTIONAL
+        !ip_style        TYPE zexcel_cell_style OPTIONAL
+        !ip_hyperlink    TYPE REF TO zcl_excel_hyperlink OPTIONAL
+        !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
+        !ip_abap_type    TYPE abap_typekind OPTIONAL
+        !ip_merge        TYPE abap_bool OPTIONAL
       RAISING
         zcx_excel .
     METHODS get_header_footer_drawings
       RETURNING
-        value(rt_drawings) TYPE zexcel_t_drawings .
+        VALUE(rt_drawings) TYPE zexcel_t_drawings .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -616,12 +618,12 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column      TYPE simple
         !ip_row         TYPE zexcel_cell_row
       RETURNING
-        value(ep_width) TYPE float
+        VALUE(ep_width) TYPE float
       RAISING
         zcx_excel .
     METHODS generate_title
       RETURNING
-        value(ep_title) TYPE zexcel_sheet_title .
+        VALUE(ep_title) TYPE zexcel_sheet_title .
     METHODS get_value_type
       IMPORTING
         !ip_value      TYPE simple
@@ -636,7 +638,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
+CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD add_comment.
@@ -691,7 +693,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   METHOD add_new_style_cond.
-    CREATE OBJECT eo_style_cond.
+    CREATE OBJECT eo_style_cond EXPORTING ip_dimension_range = ip_dimension_range.
     styles_cond->add( eo_style_cond ).
   ENDMETHOD.                    "ADD_NEW_STYLE_COND
 
@@ -3744,7 +3746,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     me->zif_excel_sheet_protection~initialize( ).
     me->zif_excel_sheet_properties~initialize( ).
     CREATE OBJECT hyperlinks.
-    CREATE OBJECT comments.  " (+) Issue #180
+    CREATE OBJECT comments. " (+) Issue #180
 
 * initialize active cell coordinates
     active_cell-cell_row = 1.
@@ -4111,7 +4113,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           ls_odd_footer  TYPE zexcel_s_worksheet_head_foot,
           ls_even_header TYPE zexcel_s_worksheet_head_foot,
           ls_even_footer TYPE zexcel_s_worksheet_head_foot,
-          ls_hd_ft  TYPE zexcel_s_worksheet_head_foot.
+          ls_hd_ft       TYPE zexcel_s_worksheet_head_foot.
 
     FIELD-SYMBOLS: <fs_drawings> TYPE zexcel_s_drawings.
 
@@ -4512,13 +4514,13 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           IF sy-subrc = 0.
             CALL FUNCTION l_function
               EXPORTING
-                input      = ip_value
+                input  = ip_value
               IMPORTING
 *               LONG_TEXT  =
-                output     = l_value
+                output = l_value
 *               SHORT_TEXT =
               EXCEPTIONS
-                OTHERS     = 1.
+                OTHERS = 1.
             IF sy-subrc <> 0.
 * MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
 *         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
@@ -4742,11 +4744,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   METHOD set_area_formula.
-    DATA: ld_row TYPE zexcel_cell_row,
-          ld_row_end TYPE zexcel_cell_row,
-          ld_column TYPE zexcel_cell_column_alpha,
-          ld_column_end TYPE zexcel_cell_column_alpha,
-          ld_column_int TYPE zexcel_cell_column_alpha,
+    DATA: ld_row            TYPE zexcel_cell_row,
+          ld_row_end        TYPE zexcel_cell_row,
+          ld_column         TYPE zexcel_cell_column_alpha,
+          ld_column_end     TYPE zexcel_cell_column_alpha,
+          ld_column_int     TYPE zexcel_cell_column_alpha,
           ld_column_end_int TYPE zexcel_cell_column_alpha.
 
     MOVE: ip_row_to TO ld_row_end,
@@ -4782,12 +4784,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   METHOD set_area_style.
-    DATA: ld_row_start TYPE zexcel_cell_row,
-        ld_row_end TYPE zexcel_cell_row,
-        ld_column_start_int TYPE zexcel_cell_column,
-        ld_column_end_int TYPE zexcel_cell_column,
-        ld_current_column TYPE zexcel_cell_column_alpha,
-        ld_current_row TYPE zexcel_cell_row.
+    DATA: ld_row_start        TYPE zexcel_cell_row,
+          ld_row_end          TYPE zexcel_cell_row,
+          ld_column_start_int TYPE zexcel_cell_column,
+          ld_column_end_int   TYPE zexcel_cell_column,
+          ld_current_column   TYPE zexcel_cell_column_alpha,
+          ld_current_row      TYPE zexcel_cell_row.
 
     MOVE: ip_row_to TO ld_row_end,
           ip_row    TO ld_row_start.
@@ -4835,7 +4837,9 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                    <fs_numeric>       TYPE numeric,
                    <fs_date>          TYPE d,
                    <fs_time>          TYPE t,
-                   <fs_value>         TYPE simple.
+                   <fs_value>         TYPE simple,
+                   <fs_typekind_int8> TYPE abap_typekind.
+
 
     IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED.
       zcx_excel=>raise_text( 'Please provide the value or formula' ).
@@ -4882,9 +4886,15 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
                           IMPORTING ep_value      = <fs_value>
                                     ep_value_type = lv_value_type ).
         ENDIF.
+
+        ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_INT8') TO <fs_typekind_int8>.
+        IF sy-subrc <> 0.
+          ASSIGN space TO <fs_typekind_int8>. "not used as typekind!
+        ENDIF.
+
         CASE lv_value_type.
           WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
-            OR cl_abap_typedescr=>typekind_int8. "Allow INT8 types columns
+            OR <fs_typekind_int8>. "Allow INT8 types columns
             lo_addit = cl_abap_elemdescr=>get_i( ).
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
@@ -5203,12 +5213,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   METHOD set_merge_style.
-    DATA: ld_row_start TYPE zexcel_cell_row,
-          ld_row_end TYPE zexcel_cell_row,
-          ld_column_start TYPE zexcel_cell_column,
-          ld_column_end TYPE zexcel_cell_column,
+    DATA: ld_row_start      TYPE zexcel_cell_row,
+          ld_row_end        TYPE zexcel_cell_row,
+          ld_column_start   TYPE zexcel_cell_column,
+          ld_column_end     TYPE zexcel_cell_column,
           ld_current_column TYPE zexcel_cell_column_alpha,
-          ld_current_row TYPE zexcel_cell_row.
+          ld_current_row    TYPE zexcel_cell_row.
 
     MOVE: ip_row_to TO ld_row_end,
           ip_row    TO ld_row_start.

@@ -72,6 +72,10 @@ INITIALIZATION.
   APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
   <wa_files>-input  = '04_Sheets.xlsx'.
   APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
+  <wa_files>-input = '05_Conditional.xlsx'.
+  APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
+  <wa_files>-input = '07_ConditionalAll.xlsx'.
+  APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
   <wa_files>-input  = '08_Range.xlsx'.
   APPEND INITIAL LINE TO lt_files ASSIGNING <wa_files>.
   <wa_files>-input  = '13_MergedCells.xlsx'.
