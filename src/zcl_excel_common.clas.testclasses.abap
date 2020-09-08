@@ -1026,7 +1026,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           " F & RC are not columns
           `SUM(F_1,F_2)`                         1   1       `SUM(F_1,F_2)`,
           `INDIRECT(&quot;RC[4]&quot;,FALSE)`    1   1       `INDIRECT(&quot;RC[4]&quot;,FALSE)`,
-          
+
 *          'SIN((((((B2))))))'                    1   1       'SIN((((((C3))))))',        " Deep nesting
 *          'SIN(SIN(SIN(SIN(E22))))'              0   1       'SIN(SIN(SIN(SIN(E23))))',   " Different type of deep nesting
           `SIN(SIN(SIN(SIN(E22))))`              0   1       'SIN(SIN(SIN(SIN(E23))))',   " same as above - but with string input instead of Char-input
