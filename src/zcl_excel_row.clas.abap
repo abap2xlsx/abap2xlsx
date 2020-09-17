@@ -15,7 +15,7 @@ public section.
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
     returning
-      value(R_COLLAPSED) type BOOLEAN .
+      value(R_COLLAPSED) type abap_bool .
   methods GET_OUTLINE_LEVEL
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
@@ -31,7 +31,7 @@ public section.
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
     returning
-      value(R_VISIBLE) type BOOLEAN .
+      value(R_VISIBLE) type abap_bool .
   methods GET_XF_INDEX
     returning
       value(R_XF_INDEX) type INT4 .
