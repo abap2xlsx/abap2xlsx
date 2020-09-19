@@ -5,7 +5,13 @@
     "skipGeneratedFunctionGroups": true,
     "skipGeneratedPersistentClasses": true
   },
-  "dependencies": [],
+  "dependencies": [
+    {
+      "url": "https://github.com/abaplint/deps",
+      "folder": "/deps",
+      "files": "/src/**/*.*"
+    }
+  ],
   "syntax": {
     "version": "v702",
     "errorNamespace": "^(Z|Y)",
@@ -13,6 +19,16 @@
     "globalMacros": []
   },
   "rules": {
+    "begin_single_include": true,
+    "check_subrc": false,
+    "cyclomatic_complexity": false,
+    "forbidden_pseudo_and_pragma": false,
+    "identical_conditions": false,
+    "line_break_style": false,
+    "names_no_dash": true,
+    "parser_missing_space": true,
+    "unused_types": false,
+    "use_line_exists": false,
     "downport": false,
     "forbidden_void_type": false,
     "line_break_multiple_parameters": false,
@@ -54,7 +70,6 @@
     "double_space": false,
     "empty_line_in_statement": false,
     "empty_structure": false,
-    "form_no_dash": true,
     "form_tables_obsolete": true,
     "fully_type_constants": false,
     "global_class": true,
@@ -107,7 +122,6 @@
     "sql_escape_host_variables": false,
     "superclass_final": false,
     "tabl_enhancement_category": false,
-    "type_begin_single_include": true,
     "type_form_parameters": true,
     "types_naming": false,
     "unreachable_code": true,
