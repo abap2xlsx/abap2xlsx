@@ -28,11 +28,11 @@ START-OF-SELECTION.
 *--------------------------------------------------------------------*
 *  Get some testdata
 *--------------------------------------------------------------------*
-  lo_worksheet->set_cell( ip_row = 4 ip_column = 'C' ip_value = 100  ).
-  lo_worksheet->set_cell( ip_row = 5 ip_column = 'C' ip_value = 1000  ).
+  lo_worksheet->set_cell( ip_row = 4 ip_column = 'C' ip_value = 100 ).
+  lo_worksheet->set_cell( ip_row = 5 ip_column = 'C' ip_value = 1000 ).
   lo_worksheet->set_cell( ip_row = 6 ip_column = 'C' ip_value = 150 ).
-  lo_worksheet->set_cell( ip_row = 7 ip_column = 'C' ip_value = -10  ).
-  lo_worksheet->set_cell( ip_row = 8 ip_column = 'C' ip_value = 500  ).
+  lo_worksheet->set_cell( ip_row = 7 ip_column = 'C' ip_value = -10 ).
+  lo_worksheet->set_cell( ip_row = 8 ip_column = 'C' ip_value = 500 ).
 
 
 *--------------------------------------------------------------------*

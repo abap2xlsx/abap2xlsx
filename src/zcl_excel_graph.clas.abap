@@ -42,7 +42,7 @@ public section.
   data NS_PLOTVISONLYVAL type STRING value '1'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data NS_DISPBLANKSASVAL type STRING value 'gap'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data NS_SHOWDLBLSOVERMAXVAL type STRING value '0'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
-  data TITLE type STRING .               .  . " .
+  data TITLE type STRING .
   data SERIES type T_SERIES .
   data NS_C14STYLEVAL type STRING value '102'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data PRINT_LABEL type C value 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  . " .

@@ -103,8 +103,8 @@ START-OF-SELECTION.
   lo_worksheet->set_title( lv_title ).
 
   " Maximum Text length
-  lo_worksheet->set_cell(  ip_row = 1 ip_column = 'A' ip_value = 'Validate Maximum Text length of <= 10 in Cell A2:' ).
-  lo_worksheet->set_cell(  ip_row = 2 ip_column = 'A' ip_value = 'abcdefghij' ).
+  lo_worksheet->set_cell( ip_row = 1 ip_column = 'A' ip_value = 'Validate Maximum Text length of <= 10 in Cell A2:' ).
+  lo_worksheet->set_cell( ip_row = 2 ip_column = 'A' ip_value = 'abcdefghij' ).
   lo_data_validation              = lo_worksheet->add_new_data_validation( ).
   lo_data_validation->type        = zcl_excel_data_validation=>c_type_textlength.
   lo_data_validation->operator    = zcl_excel_data_validation=>c_operator_lessthanorequal.
@@ -113,8 +113,8 @@ START-OF-SELECTION.
   lo_data_validation->cell_column = 'A'.
 
   " Integer Value between 1 and 10
-  lo_worksheet->set_cell(  ip_row = 4 ip_column = 'A' ip_value = 'Validate Integer Value between 1 and 10 in Cell A5:' ).
-  lo_worksheet->set_cell(  ip_row = 5 ip_column = 'A' ip_value = '5' ).
+  lo_worksheet->set_cell( ip_row = 4 ip_column = 'A' ip_value = 'Validate Integer Value between 1 and 10 in Cell A5:' ).
+  lo_worksheet->set_cell( ip_row = 5 ip_column = 'A' ip_value = '5' ).
   lo_data_validation              = lo_worksheet->add_new_data_validation( ).
   lo_data_validation->type        = zcl_excel_data_validation=>c_type_whole.
   lo_data_validation->operator    = zcl_excel_data_validation=>c_operator_between.
@@ -128,9 +128,9 @@ START-OF-SELECTION.
   lo_data_validation->cell_column = 'A'.
 
   " Evaluation by Formula from issue #161
-  lo_worksheet->set_cell(  ip_row = 7 ip_column = 'A' ip_value = 'Validate if B8 contains a "-":' ).
-  lo_worksheet->set_cell(  ip_row = 8 ip_column = 'A' ip_value = 'Text' ).
-  lo_worksheet->set_cell(  ip_row = 8 ip_column = 'B' ip_value = '-' ).
+  lo_worksheet->set_cell( ip_row = 7 ip_column = 'A' ip_value = 'Validate if B8 contains a "-":' ).
+  lo_worksheet->set_cell( ip_row = 8 ip_column = 'A' ip_value = 'Text' ).
+  lo_worksheet->set_cell( ip_row = 8 ip_column = 'B' ip_value = '-' ).
   lo_data_validation              = lo_worksheet->add_new_data_validation( ).
   lo_data_validation->type        = zcl_excel_data_validation=>c_type_custom.
   lo_data_validation->formula1    = '"IF(B8<>"""";INDIRECT(LEFT(B8;SEARCH(""-"";B8;1)));EMPTY)"'.
@@ -138,7 +138,7 @@ START-OF-SELECTION.
   lo_data_validation->cell_column = 'A'.
 
   " There was an error when data validation was combined with cell merges this should test that:
-  lo_worksheet->set_cell(  ip_row = 10 ip_column = 'A' ip_value = 'Demo for data validation with a dropdown list' ).
+  lo_worksheet->set_cell( ip_row = 10 ip_column = 'A' ip_value = 'Demo for data validation with a dropdown list' ).
   lo_worksheet->set_merge( ip_row = 10 ip_column_start = 'A' ip_column_end = 'F' ).
 
   " Headlines

@@ -45,15 +45,15 @@ START-OF-SELECTION.
 
       TRY.
           IF lv_row <= 3.
-            lo_worksheet->change_cell_style(  ip_column           = lv_col
-                                              ip_row              = lv_row
-                                              ip_fill_filltype    = zcl_excel_style_fill=>c_fill_solid
-                                              ip_fill_fgcolor_rgb = zcl_excel_style_color=>c_yellow ).
+            lo_worksheet->change_cell_style( ip_column           = lv_col
+                                             ip_row              = lv_row
+                                             ip_fill_filltype    = zcl_excel_style_fill=>c_fill_solid
+                                             ip_fill_fgcolor_rgb = zcl_excel_style_color=>c_yellow ).
           ENDIF.
           IF lv_col <= 4.
-            lo_worksheet->change_cell_style(  ip_column           = lv_col
-                                              ip_row              = lv_row
-                                              ip_font_color_rgb   = zcl_excel_style_color=>c_red ).
+            lo_worksheet->change_cell_style( ip_column           = lv_col
+                                             ip_row              = lv_row
+                                             ip_font_color_rgb   = zcl_excel_style_color=>c_red ).
           ENDIF.
         CATCH zcx_excel .
       ENDTRY.
@@ -71,9 +71,10 @@ START-OF-SELECTION.
   TRY.
       lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = 'A'
                                                                             iv_columns_to   = 'D' ).
-      lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows(    iv_rows_from    = 1
-                                                                            iv_rows_to      = 3 ).
-    CATCH zcx_excel .
+
+      lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = 1
+                                                                         iv_rows_to   = 3 ).
+    CATCH zcx_excel.
   ENDTRY.
 
 *** Create output

@@ -5146,7 +5146,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: ls_merge        TYPE mty_merge,
           lv_errormessage TYPE string.
 
-    ...
     "just after variables definition
     IF ip_value IS SUPPLIED OR ip_formula IS SUPPLIED.
       " if there is a value or formula set the value to the top-left cell
@@ -5166,7 +5165,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                            ip_row_to = ip_row_to ip_column_end = ip_column_end
                            ip_style = ip_style ).
     ENDIF.
-    ...
+
 *--------------------------------------------------------------------*
 * Build new range area to insert into range table
 *--------------------------------------------------------------------*

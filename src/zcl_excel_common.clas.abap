@@ -1002,7 +1002,9 @@ METHOD recursive_struct_to_class.
 * not - then it is an attribute of the class - use different assign then
       CONCATENATE 'E_TARGET->' wa_component-name INTO attribute_name.
       ASSIGN (attribute_name) TO <attribute>.
-      IF sy-subrc <> 0.EXIT.ENDIF.  " Should not happen if structure is built properly - otherwise just exit to create no dumps
+      IF sy-subrc <> 0.
+        EXIT.
+      ENDIF.  " Should not happen if structure is built properly - otherwise just exit to create no dumps
       flag_class = abap_true.
     ENDIF.
 

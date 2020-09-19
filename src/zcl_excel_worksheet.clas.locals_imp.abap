@@ -84,8 +84,10 @@ CLASS c_oi_proxy_error IMPLEMENTATION.
 *                              param2 TYPE c
 *                              param3 TYPE c
 *                              param4 TYPE c.
-    param1 = me->param1. param2 = me->param2.
-    param3 = me->param3. param4 = me->param4.
+    param1 = me->param1.
+    param2 = me->param2.
+    param3 = me->param3.
+    param4 = me->param4.
 
     message_id = me->message_id.
     message_number = me->message_nr.

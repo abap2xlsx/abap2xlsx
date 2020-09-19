@@ -5881,8 +5881,6 @@ METHOD create_xl_sheet_sheet_data.
         ELSE.
           l_autofilter_hidden = abap_true. " First default is not showing
         ENDIF.
-      ELSE.
-
       ENDIF.
     ENDWHILE.
 

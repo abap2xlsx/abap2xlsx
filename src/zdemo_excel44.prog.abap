@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT  zdemo_excel44.
+REPORT zdemo_excel44.
 
 DATA: lo_excel_no_line_if_empty     TYPE REF TO zcl_excel,
       lo_excel                      TYPE REF TO zcl_excel,

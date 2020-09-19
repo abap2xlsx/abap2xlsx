@@ -930,7 +930,9 @@ method EXECUTE_CONVERTER.
           et_filter       = wt_filter
           ).
 *  data lines of highest level.
-      if ws_layout-max_subtotal_level > 0. add 1 to ws_layout-max_subtotal_level. endif.
+      if ws_layout-max_subtotal_level > 0.
+        add 1 to ws_layout-max_subtotal_level.
+      endif.
     else.
       RAISE EXCEPTION type zcx_excel.
     endif.
