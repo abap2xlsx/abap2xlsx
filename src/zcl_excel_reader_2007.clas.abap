@@ -120,7 +120,7 @@ protected section.
   methods GET_IXML_FROM_ZIP_ARCHIVE
     importing
       !I_FILENAME type STRING
-      !IS_NORMALIZING type BOOLEAN default 'X'
+      !IS_NORMALIZING type abap_bool default 'X'
     returning
       value(R_IXML) type ref to IF_IXML_DOCUMENT
     raising
