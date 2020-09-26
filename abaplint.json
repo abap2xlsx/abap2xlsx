@@ -19,6 +19,7 @@
     "globalMacros": []
   },
   "rules": {
+    "identical_contents": false,
     "begin_single_include": true,
     "check_subrc": false,
     "cyclomatic_complexity": false,
