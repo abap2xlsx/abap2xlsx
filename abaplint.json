@@ -19,6 +19,10 @@
     "globalMacros": []
   },
   "rules": {
+    "many_parenthesis": false,
+    "prefer_is_not": false,
+    "prefer_xsdbool": false,
+    "use_bool_expression": false,
     "identical_contents": false,
     "begin_single_include": true,
     "check_subrc": false,
@@ -48,6 +52,7 @@
       "define": false,
       "endselect": false,
       "execSQL": true,
+      "describeLines": false,
       "kernelCall": true,
       "communication": true,
       "statics": false,
