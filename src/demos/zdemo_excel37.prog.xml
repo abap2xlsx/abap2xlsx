@@ -13,8 +13,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Read xlsx-file and output = using templates</ENTRY>
-     <LENGTH>43</LENGTH>
+     <ENTRY>abap2xlsx Demo: Read xlsx-file and output = using templates</ENTRY>
+     <LENGTH>59</LENGTH>
     </item>
    </TPOOL>
    <I18N_TPOOL>

@@ -13,8 +13,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Read file and output</ENTRY>
-     <LENGTH>20</LENGTH>
+     <ENTRY>abap2xlsx Demo: Read file and output</ENTRY>
+     <LENGTH>36</LENGTH>
     </item>
     <item>
      <ID>S</ID>
