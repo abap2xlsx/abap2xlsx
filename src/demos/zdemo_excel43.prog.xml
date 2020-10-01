@@ -12,8 +12,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Demo 43 GET_TABLE</ENTRY>
-     <LENGTH>17</LENGTH>
+     <ENTRY>abap2xlsx Demo: Demo 43 GET_TABLE</ENTRY>
+     <LENGTH>33</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

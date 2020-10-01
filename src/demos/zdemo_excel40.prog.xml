@@ -13,8 +13,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Print settings</ENTRY>
-     <LENGTH>20</LENGTH>
+     <ENTRY>abap2xlsx Demo: Print settings</ENTRY>
+     <LENGTH>30</LENGTH>
     </item>
     <item>
      <ID>S</ID>

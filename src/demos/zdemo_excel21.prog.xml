@@ -13,7 +13,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <LENGTH>38</LENGTH>
+     <ENTRY>abap2xlsx Demo:</ENTRY>
+     <LENGTH>15</LENGTH>
     </item>
     <item>
      <ID>S</ID>

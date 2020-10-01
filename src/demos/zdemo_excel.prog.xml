@@ -12,6 +12,11 @@
    </PROGDIR>
    <TPOOL>
     <item>
+     <ID>R</ID>
+     <ENTRY>abap2xlsx Demo:</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
      <ID>S</ID>
      <KEY>P_PATH</KEY>
      <ENTRY>Select output path</ENTRY>
