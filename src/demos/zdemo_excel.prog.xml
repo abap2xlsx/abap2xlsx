@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZDEMO_EXCEL40</NAME>
+    <NAME>ZDEMO_EXCEL</NAME>
     <SUBC>1</SUBC>
     <RSTAT>T</RSTAT>
     <RLOAD>E</RLOAD>
@@ -13,15 +13,14 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Print settings</ENTRY>
-     <LENGTH>20</LENGTH>
+     <ENTRY>abap2xlsx Demo:</ENTRY>
+     <LENGTH>15</LENGTH>
     </item>
     <item>
      <ID>S</ID>
-     <KEY>S_ICON</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
-     <SPLIT>D</SPLIT>
+     <KEY>P_PATH</KEY>
+     <ENTRY>Select output path</ENTRY>
+     <LENGTH>26</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

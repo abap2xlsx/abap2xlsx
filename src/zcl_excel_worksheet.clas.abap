@@ -1849,7 +1849,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     LOOP AT lt_sema INTO semaitem.
       IF semaitem-col_typ = 'DAT' OR semaitem-col_typ = 'MON' OR
          semaitem-col_typ = 'N00' OR semaitem-col_typ = 'N01' OR
-         semaitem-col_typ = 'N01' OR semaitem-col_typ = 'N02' OR
+         semaitem-col_typ = 'N02' OR
          semaitem-col_typ = 'N03' OR semaitem-col_typ = 'PCT' OR
          semaitem-col_typ = 'STR' OR semaitem-col_typ = 'NUM'.
         CLEAR str.

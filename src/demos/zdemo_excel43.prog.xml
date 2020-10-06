@@ -3,10 +3,8 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZDEMO_EXCEL42</NAME>
+    <NAME>ZDEMO_EXCEL43</NAME>
     <SUBC>1</SUBC>
-    <APPL>*</APPL>
-    <RSTAT>K</RSTAT>
     <RLOAD>E</RLOAD>
     <FIXPT>X</FIXPT>
     <UCCHECK>X</UCCHECK>
@@ -14,8 +12,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Theme manipulation demo</ENTRY>
-     <LENGTH>23</LENGTH>
+     <ENTRY>abap2xlsx Demo: Demo 43 GET_TABLE</ENTRY>
+     <LENGTH>33</LENGTH>
     </item>
    </TPOOL>
   </asx:values>
