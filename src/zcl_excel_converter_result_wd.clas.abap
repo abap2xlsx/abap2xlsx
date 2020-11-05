@@ -12,6 +12,8 @@ public section.
     redefinition .
   methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
     redefinition .
+  methods ZIF_EXCEL_CONVERTER~GET_SUPPORTED_CLASS
+    REDEFINITION .
 *"* protected components of class ZCL_EXCEL_CONVERTER_RESULT_WD
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_CONVERTER_RESULT_WD
@@ -192,6 +194,9 @@ method GET_FIELDS_INFO.
 
   endmethod.
 
+METHOD ZIF_EXCEL_CONVERTER~GET_SUPPORTED_CLASS.
+  rv_supported_class = 'CL_SALV_WD_RESULT_DATA_TABLE'.
+ENDMETHOD.
 
 METHOD ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
 

@@ -12,6 +12,8 @@ public section.
     redefinition .
   methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
     redefinition .
+  methods ZIF_EXCEL_CONVERTER~GET_SUPPORTED_CLASS
+    redefinition .
 *"* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_CONVERTER_SALV_TABLE
@@ -206,6 +208,10 @@ method LOAD_DATA.
 
   endmethod.
 
+
+METHOD zif_excel_converter~get_supported_class.
+  rv_supported_class = 'CL_SALV_TABLE'.
+ENDMETHOD.
 
 METHOD zif_excel_converter~can_convert_object.
 
