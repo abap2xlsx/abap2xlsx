@@ -937,7 +937,8 @@ endmethod.
       ls_impkey                 TYPE seor_implementing_key,
       ls_classkey               TYPE seoclskey,
       lr_implementation         TYPE REF TO zif_excel_converter,
-      ls_object                 TYPE ts_alv_types.
+      ls_object                 TYPE ts_alv_types,
+      lr_classdescr             TYPE REF TO cl_abap_classdescr.
 
     ls_classkey-clsname = 'ZIF_EXCEL_CONVERTER'.
 
@@ -952,7 +953,8 @@ endmethod.
     CHECK sy-subrc = 0.
 
     LOOP AT lt_direct_implementations INTO ls_impkey.
-      IF cl_abap_classdescr=>describe_by_name( ls_impkey-clsname )->is_instantiatable( ) = abap_true.
+      lr_classdescr ?= cl_abap_classdescr=>describe_by_name( ls_impkey-clsname ).
+      IF lr_classdescr->is_instantiatable( ) = abap_true.
         APPEND ls_impkey TO lt_all_implementations.
       ENDIF.
 
@@ -1157,7 +1159,9 @@ method GET_STYLE.
 
   METHOD get_subclasses.
     DATA:
-      lt_subclasses TYPE seor_inheritance_keys.
+      lt_subclasses TYPE seor_inheritance_keys,
+      ls_subclass   TYPE seor_inheritance_key,
+      lr_classdescr TYPE REF TO cl_abap_classdescr.
 
     CALL FUNCTION 'SEO_CLASS_GET_ALL_SUBS'
       EXPORTING
@@ -1170,8 +1174,9 @@ method GET_STYLE.
 
     CHECK sy-subrc = 0.
 
-    LOOP AT lt_subclasses INTO DATA(ls_subclass).
-      IF cl_abap_classdescr=>describe_by_name( ls_subclass-clsname )->is_instantiatable( ).
+    LOOP AT lt_subclasses INTO ls_subclass.
+      lr_classdescr ?= cl_abap_classdescr=>describe_by_name( ls_subclass-clsname ).
+      IF lr_classdescr->is_instantiatable( ) = abap_true.
         APPEND ls_subclass TO ct_classes.
       ENDIF.
     ENDLOOP.
