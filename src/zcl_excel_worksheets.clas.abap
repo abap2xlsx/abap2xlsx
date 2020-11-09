@@ -72,21 +72,21 @@ method GET.
 
   DATA lv_index TYPE i.
   lv_index = ip_index.
-  eo_worksheet ?= worksheets->if_object_collection~get( lv_index ).
+  eo_worksheet ?= worksheets->get( lv_index ).
 
   endmethod.
 
 
 method GET_ITERATOR.
 
-  eo_iterator ?= worksheets->if_object_collection~get_iterator( ).
+  eo_iterator ?= worksheets->get_iterator( ).
 
   endmethod.
 
 
 method IS_EMPTY.
 
-  is_empty = worksheets->if_object_collection~is_empty( ).
+  is_empty = worksheets->is_empty( ).
 
   endmethod.
 
@@ -100,7 +100,7 @@ method REMOVE.
 
 method SIZE.
 
-  ep_size = worksheets->if_object_collection~size( ).
+  ep_size = worksheets->size( ).
 
   endmethod.
 ENDCLASS.

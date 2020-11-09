@@ -93,12 +93,12 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 
 
   method GET_ITERATOR.
-    EO_ITERATOR ?= ROWS->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
+    EO_ITERATOR ?= ROWS->GET_ITERATOR( ).
   endmethod.                    "GET_ITERATOR
 
 
   method IS_EMPTY.
-    IS_EMPTY = ROWS->IF_OBJECT_COLLECTION~IS_EMPTY( ).
+    IS_EMPTY = ROWS->IS_EMPTY( ).
   endmethod.                    "IS_EMPTY
 
 
@@ -109,6 +109,6 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 
 
   method SIZE.
-    EP_SIZE = ROWS->IF_OBJECT_COLLECTION~SIZE( ).
+    EP_SIZE = ROWS->SIZE( ).
   endmethod.                    "SIZE
 ENDCLASS.

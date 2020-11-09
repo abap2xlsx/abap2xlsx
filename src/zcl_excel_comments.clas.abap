@@ -45,7 +45,7 @@ METHOD add.
   DATA: lv_index TYPE i.
 
   comments->add( ip_comment ).
-  lv_index = comments->if_object_collection~size( ).
+  lv_index = comments->size( ).
 
 ENDMETHOD.
 
@@ -65,14 +65,14 @@ ENDMETHOD.
 method GET.
   DATA lv_index TYPE i.
   lv_index = ip_index.
-  eo_comment ?= comments->if_object_collection~get( lv_index ).
+  eo_comment ?= comments->get( lv_index ).
 
 endmethod.
 
 
 method GET_ITERATOR.
 
-  eo_iterator ?= comments->if_object_collection~get_iterator( ).
+  eo_iterator ?= comments->get_iterator( ).
   endmethod.
 
 
@@ -83,7 +83,7 @@ ENDMETHOD.
 
 method IS_EMPTY.
 
-  is_empty = comments->if_object_collection~is_empty( ).
+  is_empty = comments->is_empty( ).
   endmethod.
 
 
@@ -95,6 +95,6 @@ method REMOVE.
 
 method SIZE.
 
-  ep_size = comments->if_object_collection~size( ).
+  ep_size = comments->size( ).
   endmethod.
 ENDCLASS.

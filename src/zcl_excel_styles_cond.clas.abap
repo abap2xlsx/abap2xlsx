@@ -64,17 +64,17 @@ ENDMETHOD.
 METHOD get.
   DATA lv_index TYPE i.
   lv_index = ip_index.
-  eo_style_cond ?= styles_cond->if_object_collection~get( lv_index ).
+  eo_style_cond ?= styles_cond->get( lv_index ).
 ENDMETHOD.
 
 
 METHOD get_iterator.
-  eo_iterator ?= styles_cond->if_object_collection~get_iterator( ).
+  eo_iterator ?= styles_cond->get_iterator( ).
 ENDMETHOD.
 
 
 METHOD is_empty.
-  is_empty = styles_cond->if_object_collection~is_empty( ).
+  is_empty = styles_cond->is_empty( ).
 ENDMETHOD.
 
 
@@ -84,6 +84,6 @@ ENDMETHOD.
 
 
 METHOD size.
-  ep_size = styles_cond->if_object_collection~size( ).
+  ep_size = styles_cond->size( ).
 ENDMETHOD.
 ENDCLASS.

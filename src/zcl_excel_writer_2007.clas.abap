@@ -321,10 +321,10 @@ METHOD create.
   lo_iterator = me->excel->get_worksheets_iterator( ).
   lo_active_worksheet = me->excel->get_active_worksheet( ).
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+  WHILE lo_iterator->has_next( ) EQ abap_true.
     lv_sheet_index = sy-index.
 
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    lo_worksheet ?= lo_iterator->get_next( ).
     IF lo_active_worksheet->get_guid( ) EQ lo_worksheet->get_guid( ).
       lv_active = abap_true.
     ELSE.
@@ -422,8 +422,8 @@ METHOD create.
 
     lo_nested_iterator = lo_worksheet->get_tables_iterator( ).
 
-    WHILE lo_nested_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_table ?= lo_nested_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_nested_iterator->has_next( ) EQ abap_true.
+      lo_table ?= lo_nested_iterator->get_next( ).
       lv_content = me->create_xl_table( lo_table ).
 
       lv_value = lo_table->get_name( ).
@@ -439,8 +439,8 @@ METHOD create.
 **********************************************************************
 * STEP 11: Add media
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 *    IF lo_drawing->get_type( ) NE zcl_excel_drawing=>type_image_header_footer.
 
     lv_content = lo_drawing->get_media( ).
@@ -454,8 +454,8 @@ METHOD create.
 **********************************************************************
 * STEP 12: Add charts
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_chart ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     lv_content = lo_drawing->get_media( ).
 
@@ -640,13 +640,13 @@ method CREATE_CONTENT_TYPES.
   ENDDO.
 
   lo_iterator = me->excel->get_worksheets_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
 
     lo_nested_iterator = lo_worksheet->get_tables_iterator( ).
 
-    WHILE lo_nested_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_table ?= lo_nested_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_nested_iterator->has_next( ) EQ abap_true.
+      lo_table ?= lo_nested_iterator->get_next( ).
 
       lv_value = lo_table->get_name( ).
       CONCATENATE '/xl/tables/' lv_value '.xml' INTO lv_value.
@@ -712,8 +712,8 @@ method CREATE_CONTENT_TYPES.
         lv_mime_type  TYPE mimetypes-type.
 
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) = abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) = abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     lv_media_type = lo_drawing->get_media_type( ).
     COLLECT lv_media_type INTO lt_media_type.
@@ -739,8 +739,8 @@ method CREATE_CONTENT_TYPES.
 
   " Charts
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_chart ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) = abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) = abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_override
                                                      parent = lo_document ).
@@ -924,12 +924,12 @@ method CREATE_DOCPROPS_APP.
 
   lo_iterator = excel->get_worksheets_iterator( ).
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+  WHILE lo_iterator->has_next( ) EQ abap_true.
     " ** lpstr node
     lo_sub_element_lpstr = lo_document->create_simple_element_ns( name   = lc_xml_node_lpstr
                                                                   prefix = lc_vt_ns
                                                                   parent = lo_document ).
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    lo_worksheet ?= lo_iterator->get_next( ).
     lv_value = lo_worksheet->get_title( ).
     lo_sub_element_lpstr->set_value( value = lv_value ).
     lo_sub_element_vector->append_child( new_child = lo_sub_element_lpstr ). " lpstr node
@@ -2333,8 +2333,8 @@ METHOD create_xl_comments.
   lo_comments = io_worksheet->get_comments( ).
 
   lo_iterator = lo_comments->get_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_comment ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_comment ?= lo_iterator->get_next( ).
 
     lo_element_comment = lo_document->create_simple_element( name   = lc_xml_node_comment
                                                              parent = lo_document ).
@@ -2423,8 +2423,8 @@ method CREATE_XL_DRAWINGS.
   lo_drawings = io_worksheet->get_drawings( ).
 
   lo_iterator = lo_drawings->get_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     ADD 1 TO lv_rel_id.
     lo_element_cellanchor = me->create_xl_drawing_anchor(
@@ -2567,8 +2567,8 @@ method CREATE_XL_DRAWINGS_RELS.
   lv_counter = 0.
   lo_drawings = io_worksheet->get_drawings( ).
   lo_iterator = lo_drawings->get_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
     ADD 1 TO lv_counter.
 
     lv_value = lv_counter.
@@ -2686,8 +2686,8 @@ METHOD create_xl_drawings_vml_rels.
 * STEP 4: Create subnodes
   lv_relation_id = 0.
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
     IF lo_drawing->get_type( ) = zcl_excel_drawing=>type_image_header_footer.
       ADD 1 TO lv_relation_id.
       lv_value = lv_relation_id.
@@ -3194,9 +3194,9 @@ METHOD create_xl_drawing_for_comments.
   lo_comments = io_worksheet->get_comments( ).
 
   lo_iterator = lo_comments->get_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+  WHILE lo_iterator->has_next( ) EQ abap_true.
     lv_index = sy-index.
-    lo_comment ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    lo_comment ?= lo_iterator->get_next( ).
 
     zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow = lo_comment->get_ref( )
                                                       IMPORTING e_column = lv_str_column
@@ -3537,8 +3537,8 @@ METHOD create_xl_sharedstrings.
 * STEP 1: Collect strings from each worksheet
   lo_iterator = excel->get_worksheets_iterator( ).
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
     APPEND LINES OF lo_worksheet->sheet_content TO lt_cell_data.
   ENDWHILE.
 
@@ -4517,8 +4517,8 @@ METHOD create_xl_sheet.
 
   " Conditional formatting node
   lo_iterator = io_worksheet->get_style_cond_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_style_cond ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_style_cond ?= lo_iterator->get_next( ).
     IF lo_style_cond->rule IS INITIAL.
       CONTINUE.
     ENDIF.
@@ -4842,8 +4842,8 @@ METHOD create_xl_sheet.
                                                      parent = lo_document ).
     " Conditional formatting node
     lo_iterator = io_worksheet->get_data_validations_iterator( ).
-    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_data_validation ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
+      lo_data_validation ?= lo_iterator->get_next( ).
       " dataValidation node
       lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_datavalidation
                                                          parent = lo_document ).
@@ -4950,8 +4950,8 @@ METHOD create_xl_sheet.
                                                       parent = lo_document ).
 
     lo_iterator = io_worksheet->get_hyperlinks_iterator( ).
-    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_link ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
+      lo_link ?= lo_iterator->get_next( ).
 
       lo_element_2 = lo_document->create_simple_element( name   = 'hyperlink'
                                                     parent = lo_element ).
@@ -5290,8 +5290,8 @@ METHOD create_xl_sheet.
                                    value = lv_value ).
 
     lo_iterator = io_worksheet->get_tables_iterator( ).
-    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_table ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
+      lo_table ?= lo_iterator->get_next( ).
       ADD 1 TO lv_relation_id.
 
       lv_value = lv_relation_id.
@@ -5444,8 +5444,8 @@ METHOD create_xl_sheet_rels.
   " Add sheet Relationship nodes here
   lv_relation_id = 0.
   lo_iterator = io_worksheet->get_hyperlinks_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_link ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_link ?= lo_iterator->get_next( ).
     CHECK lo_link->is_internal( ) = abap_false.  " issue #340 - don't put internal links here
     ADD 1 TO lv_relation_id.
 
@@ -5581,8 +5581,8 @@ METHOD create_xl_sheet_rels.
 
 
   lo_iterator = io_worksheet->get_tables_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_table ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_table ?= lo_iterator->get_next( ).
     ADD 1 TO lv_relation_id.
 
     lv_value = lv_relation_id.
@@ -5715,8 +5715,8 @@ METHOD create_xl_sheet_sheet_data.
 *--------------------------------------------------------------------*
 *Build table to hold all table-areas attached to this sheet
   lo_iterator = io_worksheet->get_tables_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_table ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_table ?= lo_iterator->get_next( ).
     ls_table_area-left   = zcl_excel_common=>convert_column2int( lo_table->settings-top_left_column ).
     ls_table_area-right  = lo_table->get_right_column_integer( ).
     ls_table_area-top    = lo_table->settings-top_left_row.
@@ -6208,8 +6208,8 @@ METHOD create_xl_styles.
   ENDLOOP.
 * Compress styles
   lo_iterator = excel->get_styles_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_style ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_style ?= lo_iterator->get_next( ).
     ls_font       = lo_style->font->get_structure( ).
     ls_fill       = lo_style->fill->get_structure( ).
     ls_border     = lo_style->borders->get_structure( ).
@@ -6879,12 +6879,12 @@ METHOD create_xl_styles.
 
   lo_iterator = me->excel->get_worksheets_iterator( ).
   " get sheets
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
     " Conditional formatting styles into exch sheet
     lo_iterator2 = lo_worksheet->get_style_cond_iterator( ).
-    WHILE lo_iterator2->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_style_cond ?= lo_iterator2->if_object_collection_iterator~get_next( ).
+    WHILE lo_iterator2->has_next( ) EQ abap_true.
+      lo_style_cond ?= lo_iterator2->get_next( ).
       CASE lo_style_cond->rule.
 * begin of change issue #366 - missing conditional rules: top10, move dfx-styles to own method
         WHEN zcl_excel_style_cond=>c_rule_cellis.
@@ -7274,7 +7274,7 @@ METHOD create_xl_workbook.
   DATA:       lv_xml_node_ridx_id TYPE string,
               lv_value            TYPE string,
               lv_syindex          TYPE string,
-              l_guid              TYPE uuid,
+              l_guid              TYPE sysuuid_x16,
               lv_active_sheet     TYPE zexcel_active_worksheet.
 
 **********************************************************************
@@ -7382,11 +7382,11 @@ METHOD create_xl_workbook.
   lo_element_range = lo_document->create_simple_element( name   = lc_xml_node_definednames " issue 163 +
                                                          parent = lo_document ).           " issue 163 +
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+  WHILE lo_iterator->has_next( ) EQ abap_true.
     " sheet node
     lo_sub_element = lo_document->create_simple_element_ns( name   = lc_xml_node_sheet
                                                             parent = lo_document ).
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    lo_worksheet ?= lo_iterator->get_next( ).
     lv_syindex = sy-index.                                                                  " question by Stefan SchmÃ¶cker 2012-12-02:  sy-index seems to do the job - but is it proven to work or purely coincedence
     lv_value = lo_worksheet->get_title( ).
     SHIFT lv_syindex RIGHT DELETING TRAILING space.
@@ -7415,11 +7415,11 @@ METHOD create_xl_workbook.
 *--------------------------------------------------------------------*
 * Defined names sheetlocal:  Ranges, Repeat rows and columns
 *--------------------------------------------------------------------*
-    WHILE lo_iterator_range->if_object_collection_iterator~has_next( ) EQ abap_true.
+    WHILE lo_iterator_range->has_next( ) EQ abap_true.
       " range node
       lo_sub_element = lo_document->create_simple_element_ns( name   = lc_xml_node_definedname
                                                               parent = lo_document ).
-      lo_range ?= lo_iterator_range->if_object_collection_iterator~get_next( ).
+      lo_range ?= lo_iterator_range->get_next( ).
       lv_value = lo_range->name.
 
       lo_sub_element->set_attribute_ns( name  = lc_xml_attr_name
@@ -7451,11 +7451,11 @@ METHOD create_xl_workbook.
 *                                                   parent = lo_document ).           " issue 163 -
   lo_iterator = excel->get_ranges_iterator( ).
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+  WHILE lo_iterator->has_next( ) EQ abap_true.
     " range node
     lo_sub_element = lo_document->create_simple_element_ns( name   = lc_xml_node_definedname
                                                             parent = lo_document ).
-    lo_range ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    lo_range ?= lo_iterator->get_next( ).
     lv_value = lo_range->name.
     lo_sub_element->set_attribute_ns( name  = lc_xml_attr_name
                                       value = lv_value ).
@@ -7471,9 +7471,9 @@ METHOD create_xl_workbook.
   lo_autofilters = excel->get_autofilters_reference( ).
   IF lo_autofilters->is_empty( ) = abap_false.
     lo_iterator = excel->get_worksheets_iterator( ).
-    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    WHILE lo_iterator->has_next( ) EQ abap_true.
 
-      lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+      lo_worksheet ?= lo_iterator->get_next( ).
       lv_syindex = sy-index - 1 .
       l_guid = lo_worksheet->get_guid( ).
       lo_autofilter = lo_autofilters->get( i_sheet_guid = l_guid ) .
@@ -7785,8 +7785,8 @@ METHOD set_vml_string.
 
   lv_relation_id = 0.
   lo_iterator = me->excel->get_worksheets_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
 
     lo_worksheet->sheet_setup->get_header_footer( IMPORTING ep_odd_header = ls_odd_header
                                                             ep_odd_footer = ls_odd_footer
