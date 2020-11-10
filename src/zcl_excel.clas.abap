@@ -151,7 +151,7 @@ protected section.
   data WORKSHEETS type ref to ZCL_EXCEL_WORKSHEETS .
 private section.
 
-  constants VERSION type CHAR10 value '7.0.6'. "#EC NOTEXT
+  constants VERSION type CHAR10 value '7.2.0'. "#EC NOTEXT
   data AUTOFILTERS type ref to ZCL_EXCEL_AUTOFILTERS .
   data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
   data DEFAULT_STYLE type ZEXCEL_CELL_STYLE .
@@ -402,8 +402,8 @@ method GET_NEXT_TABLE_ID.
         lv_tables_count   TYPE i.
 
   lo_iterator = me->get_worksheets_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
 
     lv_tables_count = lo_worksheet->get_tables_size( ).
     ADD lv_tables_count TO ep_id.
@@ -597,8 +597,8 @@ METHOD set_active_sheet_index_by_name.
 
   ws_it = me->worksheets->get_iterator( ).
 
-  WHILE ws_it->if_object_collection_iterator~has_next( ) = abap_true.
-    ws ?= ws_it->if_object_collection_iterator~get_next( ).
+  WHILE ws_it->has_next( ) = abap_true.
+    ws ?= ws_it->get_next( ).
     lv_title = ws->get_title( ).
     IF lv_title = i_worksheet_name.
       me->worksheets->active_worksheet = count.
