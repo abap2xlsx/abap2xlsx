@@ -5,7 +5,7 @@ Please refer to the official wiki for the [abapGit installation guide](https://s
 
 ## Discussion Board 
 
-We use the [SAP Community Network](https://answers.sap.com/questions/ask.html?primaryTagId=833755570260738661924709785639136&topics=abap2xlsx). Please add the user tag *abap2xlsx* (prefilled when you use the link). You can view existing discussion by searching for this tag: [abap2xlsx](https://answers.sap.com/topics/abap2xlsx.html).
+We use the [SAP Community Network](https://community.sap.com/) as our discussion board. You can [search for all content containing abap2xlsx](https://community.sap.com/search/?ct=all&q=abap2xlxs) before you post a new question. You also can limit the search [using the tag: abap2xlsx](https://answers.sap.com/topics/abap2xlsx.html). Please use this link when you want to [post a new question](https://answers.sap.com/questions/ask.html?primaryTagId=833755570260738661924709785639136&topics=abap2xlsx&question=%5Babap2xlsx%5D%20) the tag *abap2xlsx* will be prefilled).
 
 ## Slack
 
