@@ -140,8 +140,8 @@ method CREATE.
   lo_active_worksheet = me->excel->get_active_worksheet( ).
   lv_drawing_index = 1.
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
     IF lo_active_worksheet->get_guid( ) EQ lo_worksheet->get_guid( ).
       lv_active = abap_true.
     ELSE.
@@ -169,8 +169,8 @@ method CREATE.
 
     lo_nested_iterator = lo_worksheet->get_tables_iterator( ).
 
-    WHILE lo_nested_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_table ?= lo_nested_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_nested_iterator->has_next( ) EQ abap_true.
+      lo_table ?= lo_nested_iterator->get_next( ).
       lv_content = me->create_xl_table( lo_table ).
 
       lv_value = lo_table->get_name( ).
@@ -204,8 +204,8 @@ method CREATE.
 **********************************************************************
 * STEP 11: Add media
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     lv_content = lo_drawing->get_media( ).
     lv_value = lo_drawing->get_media_name( ).
@@ -217,8 +217,8 @@ method CREATE.
 **********************************************************************
 * STEP 12: Add charts
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_chart ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     lv_content = lo_drawing->get_media( ).
     lv_value = lo_drawing->get_media_name( ).

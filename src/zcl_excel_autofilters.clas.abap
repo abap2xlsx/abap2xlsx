@@ -21,7 +21,7 @@ public section.
   methods GET
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
-      !I_SHEET_GUID type UUID optional
+      !I_SHEET_GUID type sysuuid_x16 optional
     returning
       value(RO_AUTOFILTER) type ref to ZCL_EXCEL_AUTOFILTER .
   methods IS_EMPTY

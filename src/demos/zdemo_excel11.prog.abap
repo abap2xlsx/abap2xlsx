@@ -147,7 +147,7 @@ START-OF-SELECTION.
         ASSIGNING <relationship_address>
         WITH KEY standardaddress = 'X'.
 
-      IF <relationship_address> IS ASSIGNED.
+      IF sy-subrc = 0.
         " Read Relationship Address
         CLEAR addressdata.
         CALL FUNCTION 'BAPI_BUPA_ADDRESS_GETDETAIL'

@@ -71,10 +71,7 @@ method IF_MESSAGE~GET_LONGTEXT.
 *--------------------------------------------------------------------*
 * otherwise use standard method to derive text
 *--------------------------------------------------------------------*
-    super->if_message~get_longtext( EXPORTING
-                                      preserve_newlines = preserve_newlines
-                                    RECEIVING
-                                      result            = result ).
+    result = super->if_message~get_longtext( preserve_newlines = preserve_newlines ).
   ENDIF.
   endmethod.
 

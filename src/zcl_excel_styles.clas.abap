@@ -75,21 +75,21 @@ method CONSTRUCTOR.
 method GET.
 
 
-  eo_style ?= styles->if_object_collection~get( ip_index ).
+  eo_style ?= styles->get( ip_index ).
   endmethod.
 
 
 method GET_ITERATOR.
 
 
-  eo_iterator ?= styles->if_object_collection~get_iterator( ).
+  eo_iterator ?= styles->get_iterator( ).
   endmethod.
 
 
 method IS_EMPTY.
 
 
-  is_empty = styles->if_object_collection~is_empty( ).
+  is_empty = styles->is_empty( ).
   endmethod.
 
 
@@ -111,6 +111,6 @@ method REMOVE.
 method SIZE.
 
 
-  ep_size = styles->if_object_collection~size( ).
+  ep_size = styles->size( ).
   endmethod.
 ENDCLASS.

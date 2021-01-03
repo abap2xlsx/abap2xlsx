@@ -330,7 +330,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ep_column TYPE zexcel_cell_column .
     METHODS get_guid
       RETURNING
-        VALUE(ep_guid) TYPE uuid .
+        VALUE(ep_guid) TYPE sysuuid_x16 .
     METHODS get_highest_column
       RETURNING
         VALUE(r_highest_column) TYPE zexcel_cell_column
@@ -596,7 +596,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA drawings TYPE REF TO zcl_excel_drawings .
     DATA freeze_pane_cell_column TYPE zexcel_cell_column .
     DATA freeze_pane_cell_row TYPE zexcel_cell_row .
-    DATA guid TYPE uuid .
+    DATA guid TYPE sysuuid_x16 .
     DATA hyperlinks TYPE REF TO cl_object_collection .
     DATA lower_cell TYPE zexcel_s_cell_data .
     DATA mo_pagebreaks TYPE REF TO zcl_excel_worksheet_pagebreaks .
@@ -2872,10 +2872,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     lv_column_int                   = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
 
-    lo_iterator = me->tables->if_object_collection~get_iterator( ).
-    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
+    lo_iterator = me->tables->get_iterator( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
 
-      lo_curtable ?= lo_iterator->if_object_collection_iterator~get_next( ).
+      lo_curtable ?= lo_iterator->get_next( ).
       IF  (    (  ls_settings-top_left_row     GE lo_curtable->settings-top_left_row                             AND ls_settings-top_left_row     LE lo_curtable->settings-bottom_right_row )
             OR
                (  ls_settings-bottom_right_row GE lo_curtable->settings-top_left_row                             AND ls_settings-bottom_right_row LE lo_curtable->settings-bottom_right_row )
@@ -4463,12 +4463,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_tables_iterator.
-    eo_iterator = tables->if_object_collection~get_iterator( ).
+    eo_iterator = tables->get_iterator( ).
   ENDMETHOD.                    "GET_TABLES_ITERATOR
 
 
   METHOD get_tables_size.
-    ep_size = tables->if_object_collection~size( ).
+    ep_size = tables->size( ).
   ENDMETHOD.                    "GET_TABLES_SIZE
 
 

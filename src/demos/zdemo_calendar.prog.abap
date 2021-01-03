@@ -29,8 +29,8 @@ INCLUDE zdemo_calendar_classes.
 
 DATA: lv_workdir        TYPE string.
 
-PARAMETERS: p_from TYPE dfrom DEFAULT '20190101',
-            p_to   TYPE dto   DEFAULT '20191231'.
+PARAMETERS: p_from TYPE dfrom,
+            p_to   TYPE dto.
 
 SELECTION-SCREEN BEGIN OF BLOCK orientation WITH FRAME TITLE orient.
 PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
@@ -42,6 +42,8 @@ INITIALIZATION.
   cl_gui_cfw=>flush( ).
   p_path = lv_workdir.
   orient = 'Orientation'(000).
+  p_from = |{ sy-datum(4) }0101|.
+  p_to   = |{ sy-datum(4) }1231|.
 
 START-OF-SELECTION.
 
