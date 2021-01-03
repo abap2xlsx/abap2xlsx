@@ -49,7 +49,7 @@ DATA:
 FIELD-SYMBOLS: <wa_files> TYPE t_demo_excel15.
 
 PARAMETERS: p_path  TYPE zexcel_export_dir,
-            p_noout TYPE xfeld DEFAULT abap_true.
+            p_noout TYPE abap_bool DEFAULT abap_true.
 
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.

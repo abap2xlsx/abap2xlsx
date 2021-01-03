@@ -17,7 +17,7 @@ DATA: lo_excel                  TYPE REF TO zcl_excel,
 CONSTANTS: gc_save_file_name TYPE string VALUE '19_SetActiveSheet.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
 
-PARAMETERS: p_noout TYPE xfeld DEFAULT abap_true.
+PARAMETERS: p_noout TYPE abap_bool DEFAULT abap_true.
 
 
 START-OF-SELECTION.
