@@ -12,7 +12,7 @@ public section.
 
   data LEGACY_PALETTE type ref to ZCL_EXCEL_LEGACY_PALETTE read-only .
   data SECURITY type ref to ZCL_EXCEL_SECURITY .
-  data USE_TEMPLATE type XFELD .
+  data USE_TEMPLATE type ABAP_BOOL .
 
   methods ADD_NEW_AUTOFILTER
     importing

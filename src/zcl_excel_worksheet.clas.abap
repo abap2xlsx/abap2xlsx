@@ -483,8 +483,8 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_table_title     TYPE string
         !ip_top_left_column TYPE zexcel_cell_column_alpha DEFAULT 'B'
         !ip_top_left_row    TYPE zexcel_cell_row DEFAULT 3
-        !ip_transpose       TYPE xfeld OPTIONAL
-        !ip_no_header       TYPE xfeld OPTIONAL
+        !ip_transpose       TYPE abap_bool OPTIONAL
+        !ip_no_header       TYPE abap_bool OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_title
