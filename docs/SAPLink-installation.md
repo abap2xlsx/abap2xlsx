@@ -1,3 +1,6 @@
+## DISCLAIMER
+As far as abap2xlsx is concerned, SAPlink is obsolete and should only be used on systems lower than 702.
+
 ## Prerequisites
 * [SAPlink](http://www.saplink.org) installed in your system.
 * [SAPlink Plugins](http://www.saplink.org) installed in your system: DDic, Interface (I would suggest to install the complete nugg package in build/SAPlink-plugins_Daily.nugg)SAP
@@ -5,18 +8,12 @@
 ## Procedure
 Download the nugg file from [build folder](https://github.com/sapmentors/abap2xlsx/tree/master/build) and save it locally on your system. Logon on your SAP system and execute report ZSAPLINK Select "Import Nugget" and locate your nugg file, check overwrite originals only if you have a previous installation of abap2xlsx and you want to update.
  
-![SAPlink Install](http://www.plinky.it/images/github/saplinkinstall1.png)
-
 Execute the report.
 If you have checked overwrite originals a popup could appears in order to confirm the overwrite; press Yes to all.
 You should get this result (all green light)
  
-![SAPlink Install](http://www.plinky.it/images/github/saplinkinstall2.png)
-  
 SAPLinks puts the objects into $tmp space and all the objects are inactive. So we need to activate now.
 From SE80, select inactive objects
- 
-![SAPlink Install](http://www.plinky.it/images/github/saplinkinstall3.png)
  
 Activate objects in the following order:
 I tried a new nugg import on a new system here the detailed steps I performed:
