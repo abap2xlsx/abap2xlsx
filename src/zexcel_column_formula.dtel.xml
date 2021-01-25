@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZEXCEL_COLUMN_FORMULA</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <HEADLEN>19</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Cell Shared Formula</DDTEXT>
+    <REPTEXT>Column Formula</REPTEXT>
+    <SCRTEXT_S>Co.Formula</SCRTEXT_S>
+    <SCRTEXT_M>Column Formula</SCRTEXT_M>
+    <SCRTEXT_L>Column Formula</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <DATATYPE>STRG</DATATYPE>
+    <LENG>000256</LENG>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

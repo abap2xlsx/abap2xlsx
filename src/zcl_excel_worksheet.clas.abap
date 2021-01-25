@@ -32,20 +32,30 @@ CLASS zcl_excel_worksheet DEFINITION
     TYPES:
       mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
     TYPES:
-      BEGIN OF mty_s_shared_formula,
-        id            TYPE zexcel_cell_sformula,
-        table         TYPE REF TO zcl_excel_table,
-        column        TYPE zexcel_cell_column_alpha,
-        formula       TYPE zexcel_cell_formula,
-        ref           TYPE zexcel_cell_coords,
-        ref_row_start TYPE zexcel_cell_row,
-        ref_row_end   TYPE zexcel_cell_row,
-        from_row      TYPE zexcel_cell_row,
-      END OF mty_s_shared_formula .
+      BEGIN OF mty_s_column_formula,
+        id      TYPE zexcel_column_formula_id,
+        table   TYPE REF TO zcl_excel_table,
+        column  TYPE zexcel_cell_column_alpha,
+        formula TYPE zexcel_column_formula,
+      END OF mty_s_column_formula .
     TYPES:
-      mty_th_shared_formula
-             TYPE HASHED TABLE OF mty_s_shared_formula
+      mty_th_column_formula
+             TYPE HASHED TABLE OF mty_s_column_formula
              WITH UNIQUE KEY id .
+    TYPES:
+      BEGIN OF mty_s_ignored_errors,
+        cell_coords           TYPE zexcel_cell_coords,
+        eval_error            TYPE abap_bool,
+        two_digit_text_year   TYPE abap_bool,
+        number_stored_as_text TYPE abap_bool,
+        formula               TYPE abap_bool,
+        formula_range         TYPE abap_bool,
+        unlocked_formula      TYPE abap_bool,
+        empty_cell_reference  TYPE abap_bool,
+        list_data_validation  TYPE abap_bool,
+        calculated_column     TYPE abap_bool,
+      END OF mty_s_ignored_errors,
+      mty_th_ignored_errors type hashed TABLE OF mty_s_ignored_errors with unique key cell_coords.
 
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
@@ -58,7 +68,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true. "#EC NOTEXT
     DATA styles TYPE zexcel_t_sheet_style .
     DATA tabcolor TYPE zexcel_s_tabcolor READ-ONLY .
-    DATA shared_formulas TYPE mty_th_shared_formula READ-ONLY .
+    DATA column_formulas TYPE mty_th_column_formula READ-ONLY .
 
     METHODS add_comment
       IMPORTING
@@ -419,15 +429,16 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS set_cell
       IMPORTING
-        !ip_column      TYPE simple
-        !ip_row         TYPE zexcel_cell_row
-        !ip_value       TYPE simple OPTIONAL
-        !ip_formula     TYPE zexcel_cell_formula OPTIONAL
-        !ip_sformula_id TYPE mty_s_shared_formula-id OPTIONAL
-        !ip_style       TYPE zexcel_cell_style OPTIONAL
-        !ip_hyperlink   TYPE REF TO zcl_excel_hyperlink OPTIONAL
-        !ip_data_type   TYPE zexcel_cell_data_type OPTIONAL
-        !ip_abap_type   TYPE abap_typekind OPTIONAL
+        !ip_column            TYPE simple
+        !ip_row               TYPE zexcel_cell_row
+        !ip_value             TYPE simple OPTIONAL
+        !ip_formula           TYPE zexcel_cell_formula OPTIONAL
+        !ip_column_formula_id TYPE mty_s_column_formula-id OPTIONAL
+        !ip_style             TYPE zexcel_cell_style OPTIONAL
+        !ip_hyperlink         TYPE REF TO zcl_excel_hyperlink OPTIONAL
+        !ip_data_type         TYPE zexcel_cell_data_type OPTIONAL
+        !ip_abap_type         TYPE abap_typekind OPTIONAL
+        !is_ignored_errors    TYPE mty_s_ignored_errors OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_cell_formula
@@ -562,6 +573,13 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS get_header_footer_drawings
       RETURNING
         VALUE(rt_drawings) TYPE zexcel_t_drawings .
+    METHODS set_ignored_errors
+      IMPORTING
+        it_ignored_errors TYPE mty_th_ignored_errors.
+    METHODS get_ignored_errors
+      RETURNING
+        VALUE(rt_ignored_errors) TYPE mty_th_ignored_errors.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -629,6 +647,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA tables TYPE REF TO cl_object_collection .
     DATA title TYPE zexcel_sheet_title VALUE 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     DATA upper_cell TYPE zexcel_s_cell_data .
+    DATA mt_ignored_errors TYPE mty_th_ignored_errors.
 
     METHODS calculate_cell_width
       IMPORTING
@@ -2813,36 +2832,31 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lc_top_left_row    TYPE zexcel_cell_row VALUE 1.
 
     DATA:
-      lv_row_int                TYPE zexcel_cell_row,
-      lv_first_row              TYPE zexcel_cell_row,
-      lv_last_row               TYPE zexcel_cell_row,
-      lv_column_int             TYPE zexcel_cell_column,
-      lv_column_alpha           TYPE zexcel_cell_column_alpha,
-      lt_field_catalog          TYPE zexcel_t_fieldcatalog,
-      lv_id                     TYPE i,
-      lv_rows                   TYPE i,
-      lv_formula                TYPE string,
-      ls_settings               TYPE zexcel_s_table_settings,
-      lo_table                  TYPE REF TO zcl_excel_table,
-      lt_column_name_buffer     TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
-      lv_value                  TYPE string,
-      lv_value_lowercase        TYPE string,
-      lv_syindex                TYPE char3,
-      lv_errormessage           TYPE string,                                            "ins issue #237
+      lv_row_int            TYPE zexcel_cell_row,
+      lv_first_row          TYPE zexcel_cell_row,
+      lv_last_row           TYPE zexcel_cell_row,
+      lv_column_int         TYPE zexcel_cell_column,
+      lv_column_alpha       TYPE zexcel_cell_column_alpha,
+      lt_field_catalog      TYPE zexcel_t_fieldcatalog,
+      lv_id                 TYPE i,
+      lv_rows               TYPE i,
+      lv_formula            TYPE string,
+      ls_settings           TYPE zexcel_s_table_settings,
+      lo_table              TYPE REF TO zcl_excel_table,
+      lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
+      lv_value              TYPE string,
+      lv_value_lowercase    TYPE string,
+      lv_syindex            TYPE char3,
+      lv_errormessage       TYPE string,                                            "ins issue #237
 
-      lv_columns                TYPE i,
-      lt_columns                TYPE zexcel_t_fieldcatalog,
-      lv_maxcol                 TYPE i,
-      lv_maxrow                 TYPE i,
-      lo_iterator               TYPE REF TO cl_object_collection_iterator,
-      lo_style_cond             TYPE REF TO zcl_excel_style_cond,
-      lo_curtable               TYPE REF TO zcl_excel_table,
-      lv_column_start           TYPE zexcel_cell_column_alpha,
-      lv_column_end             TYPE zexcel_cell_column_alpha,
-      lv_sformula_ref_row_start TYPE zexcel_cell_row,
-      lv_sformula_ref_row_end   TYPE zexcel_cell_row,
-      ls_shared_formula         TYPE zcl_excel_worksheet=>mty_s_shared_formula,
-      lv_sformula_from_row      TYPE i.
+      lv_columns            TYPE i,
+      lt_columns            TYPE zexcel_t_fieldcatalog,
+      lv_maxcol             TYPE i,
+      lv_maxrow             TYPE i,
+      lo_iterator           TYPE REF TO cl_object_collection_iterator,
+      lo_style_cond         TYPE REF TO zcl_excel_style_cond,
+      lo_curtable           TYPE REF TO zcl_excel_table,
+      ls_column_formula     TYPE zcl_excel_worksheet=>mty_s_column_formula.
 
     FIELD-SYMBOLS:
       <ls_field_catalog>        TYPE zexcel_s_fieldcatalog,
@@ -2998,66 +3012,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                       ip_value  = lv_value ).
       ENDIF.
 
-      IF <ls_field_catalog>-formula EQ abap_true AND <ls_field_catalog>-sformula IS NOT INITIAL.
-        lv_errormessage = 'Formula and Shared Formula cannot be selected both at the same time'.
-        zcx_excel=>raise_text( lv_errormessage ).
-      ENDIF.
-
-      IF <ls_field_catalog>-sformula IS NOT INITIAL.
-
-        IF <ls_field_catalog>-sformula_ref IS INITIAL.
-          lv_errormessage = 'Reference of Shared Formula is mandatory'.
-          zcx_excel=>raise_text( lv_errormessage ).
-        ENDIF.
-
-        zcl_excel_common=>convert_range2column_a_row(
-          EXPORTING
-            i_range        = <ls_field_catalog>-sformula_ref
-          IMPORTING
-            e_column_start = lv_column_start
-            e_column_end   = lv_column_end
-            e_row_start    = lv_sformula_ref_row_start
-            e_row_end      = lv_sformula_ref_row_end ).
-        " sformula_ref must be exactly one column, the column which corresponds to it_field_catalog,
-        "       must be within the table range, and must not comprise the heading line.
-        IF lv_column_start <> lv_column_alpha OR lv_column_end <> lv_column_alpha.
-          lv_errormessage = 'The reference of Shared Formula must be in the same column as the Shared Formula'.
-          zcx_excel=>raise_text( lv_errormessage ).
-        ENDIF.
-        IF lv_sformula_ref_row_start > lv_sformula_ref_row_end
-            OR lv_sformula_ref_row_start < ls_settings-top_left_row + 1
-            OR lv_sformula_ref_row_end > ls_settings-bottom_right_row + 1.
-          lv_errormessage = 'The reference of Shared Formula must be within the rows of the Table'.
-          zcx_excel=>raise_text( lv_errormessage ).
-        ENDIF.
-
-        " sformula_from is defaulted to second line of table (would be 'B2' in code above) ; if it's B3, it means that the formula is not set in B2
-        IF <ls_field_catalog>-sformula_from IS INITIAL.
-          lv_sformula_from_row = ls_settings-top_left_row + 1.
-        ELSE.
-          zcl_excel_common=>convert_columnrow2column_a_row(
-            EXPORTING
-              i_columnrow = <ls_field_catalog>-sformula_from
-            IMPORTING
-              e_column    = DATA(lv_sformula_from_column)
-              e_row       = lv_sformula_from_row ).
-          IF lv_sformula_from_column <> lv_column_alpha.
-            lv_errormessage = 'The reference of Shared Formula must be within the rows of the Table'.
-            zcx_excel=>raise_text( lv_errormessage ).
-          ENDIF.
-        ENDIF.
-
-        ls_shared_formula-id            = lines( shared_formulas ) + 1.
-        ls_shared_formula-column        = lv_column_alpha.
-        ls_shared_formula-formula       = <ls_field_catalog>-sformula.
-        ls_shared_formula-ref           = <ls_field_catalog>-sformula_ref.
-        ls_shared_formula-ref_row_start = lv_sformula_ref_row_start.
-        ls_shared_formula-ref_row_end   = lv_sformula_ref_row_end.
-        ls_shared_formula-from_row      = lv_sformula_from_row.
-        ls_shared_formula-table         = lo_table.
-
-        INSERT ls_shared_formula INTO TABLE shared_formulas.
-
+      IF <ls_field_catalog>-column_formula IS NOT INITIAL.
+        ls_column_formula-id            = lines( column_formulas ) + 1.
+        ls_column_formula-column        = lv_column_alpha.
+        ls_column_formula-formula       = <ls_field_catalog>-column_formula.
+        ls_column_formula-table         = lo_table.
+        INSERT ls_column_formula INTO TABLE column_formulas.
       ENDIF.
 
       ADD 1 TO lv_row_int.
@@ -3089,34 +3049,30 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                           ip_row      = lv_row_int
                           ip_formula  = <fs_fldval> ).
           ENDIF.
-        ELSEIF <ls_field_catalog>-sformula IS NOT INITIAL.
-          " Shared formulas
-          IF <fs_fldval> IS NOT INITIAL.
-            lv_errormessage = 'The values in a column must be left initial if a Shared Formula is defined in the field catalog'.
-            zcx_excel=>raise_text( lv_errormessage ).
-          ENDIF.
+        ELSEIF <ls_field_catalog>-column_formula IS NOT INITIAL. "AND lv_row_int >= <ls_field_catalog>-column_formula_from_row.
+          " Calculated column formulas
           IF <ls_field_catalog>-style IS NOT INITIAL.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
               me->set_cell( ip_column      = lv_column_alpha
                             ip_row         = lv_row_int
-                            ip_sformula_id = ls_shared_formula-id
+                            ip_column_formula_id = ls_column_formula-id
                             ip_abap_type   = <ls_field_catalog>-abap_type
                             ip_style       = <ls_field_catalog>-style ).
             ELSE.
               me->set_cell( ip_column      = lv_column_alpha
                             ip_row         = lv_row_int
-                            ip_sformula_id = ls_shared_formula-id
+                            ip_column_formula_id = ls_column_formula-id
                             ip_style       = <ls_field_catalog>-style ).
             ENDIF.
           ELSEIF <ls_field_catalog>-abap_type IS NOT INITIAL.
             me->set_cell( ip_column       = lv_column_alpha
                           ip_row          = lv_row_int
-                          ip_sformula_id  = ls_shared_formula-id
+                          ip_column_formula_id  = ls_column_formula-id
                           ip_abap_type    = <ls_field_catalog>-abap_type ).
           ELSE.
             me->set_cell( ip_column      = lv_column_alpha
                           ip_row         = lv_row_int
-                          ip_sformula_id = ls_shared_formula-id ).
+                          ip_column_formula_id = ls_column_formula-id ).
           ENDIF.
         ELSE.
           IF <ls_field_catalog>-style IS NOT INITIAL.
@@ -4953,32 +4909,29 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <fs_time>           TYPE t,
                    <fs_value>          TYPE simple,
                    <fs_typekind_int8>  TYPE abap_typekind,
-                   <fs_shared_formula> TYPE mty_s_shared_formula.
+                   <fs_column_formula> TYPE mty_s_column_formula.
 
 
-    IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED AND ip_sformula_id = 0.
+    IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED AND ip_column_formula_id = 0.
       zcx_excel=>raise_text( 'Please provide the value or formula' ).
     ENDIF.
 
-    IF ip_sformula_id <> 0.
+    IF ip_column_formula_id <> 0.
       IF ip_value IS NOT INITIAL OR ip_formula IS NOT INITIAL.
         zcx_excel=>raise_text( 'Please provide the value or formula' ).
       ENDIF.
-      READ TABLE shared_formulas WITH TABLE KEY id = ip_sformula_id ASSIGNING <fs_shared_formula>.
+      READ TABLE column_formulas WITH TABLE KEY id = ip_column_formula_id ASSIGNING <fs_column_formula>.
       IF sy-subrc <> 0.
         zcx_excel=>raise_text( 'The Shared Formula does not exist' ).
       ENDIF.
-      IF ip_row < <fs_shared_formula>-table->settings-top_left_row + 1
-            OR ip_row > <fs_shared_formula>-table->settings-bottom_right_row + 1
-            OR ip_column < <fs_shared_formula>-table->settings-top_left_column
-            OR ip_column > <fs_shared_formula>-table->settings-bottom_right_column.
+      IF ip_row < <fs_column_formula>-table->settings-top_left_row + 1
+            OR ip_row > <fs_column_formula>-table->settings-bottom_right_row + 1
+            OR ip_column < <fs_column_formula>-table->settings-top_left_column
+            OR ip_column > <fs_column_formula>-table->settings-bottom_right_column.
         zcx_excel=>raise_text( 'The cell uses a Shared Formula which should be part of the same table' ).
       ENDIF.
-      IF ip_column <> <fs_shared_formula>-column.
+      IF ip_column <> <fs_column_formula>-column.
         zcx_excel=>raise_text( 'The cell uses a Shared Formula which is in a different column' ).
-      ENDIF.
-      IF ip_row < <fs_shared_formula>-from_row.
-        zcx_excel=>raise_text( 'The cell uses a Shared Formula which starts from an upper row' ).
       ENDIF.
     ENDIF.
 
@@ -5113,7 +5066,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * End of change issue #152 - don't touch exisiting style if only value is passed
       <fs_sheet_content>-cell_value   = lv_value.
       <fs_sheet_content>-cell_formula = ip_formula.
-      <fs_sheet_content>-cell_sformula_id = ip_sformula_id.
+      <fs_sheet_content>-column_formula_id = ip_column_formula_id.
       <fs_sheet_content>-cell_style   = lv_style_guid.
       <fs_sheet_content>-data_type    = lv_data_type.
     ELSE.
@@ -5121,7 +5074,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-cell_column  = lv_column.
       ls_sheet_content-cell_value   = lv_value.
       ls_sheet_content-cell_formula = ip_formula.
-      ls_sheet_content-cell_sformula_id = ip_sformula_id.
+      ls_sheet_content-column_formula_id = ip_column_formula_id.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
       lv_row_alpha = ip_row.
@@ -5857,4 +5810,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD zif_excel_sheet_vba_project~set_codename_pr.
     me->zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR
+
+
+  METHOD set_ignored_errors.
+    mt_ignored_errors = it_ignored_errors.
+  ENDMETHOD.
+
+
+  METHOD get_ignored_errors.
+    rt_ignored_errors = mt_ignored_errors.
+  ENDMETHOD.
 ENDCLASS.

@@ -41,7 +41,9 @@ CLASS zcl_excel_writer_2007 DEFINITION
         !io_document                   TYPE REF TO if_ixml_document
         !io_worksheet                  TYPE REF TO zcl_excel_worksheet
       RETURNING
-        VALUE(rv_ixml_sheet_data_root) TYPE REF TO if_ixml_element .
+        VALUE(rv_ixml_sheet_data_root) TYPE REF TO if_ixml_element
+      RAISING
+        zcx_excel .
     METHODS add_further_data_to_zip
       IMPORTING
         !io_zip TYPE REF TO cl_abap_zip .
@@ -198,13 +200,16 @@ CLASS zcl_excel_writer_2007 DEFINITION
 *"* do not include other source files here!!!
     CONSTANTS c_off TYPE string VALUE '0'.                  "#EC NOTEXT
     CONSTANTS c_on TYPE string VALUE '1'.                   "#EC NOTEXT
-    CONSTANTS c_xl_printersettings TYPE string VALUE 'xl/printerSettings/printerSettings#.bin'. "#EC NOTEXT
-
     METHODS flag2bool
       IMPORTING
-        !ip_flag          TYPE flag
+        ip_flag           TYPE flag
       RETURNING
         VALUE(ep_boolean) TYPE char5 .
+    METHODS create_xl_sheet_ignored_errors
+      IMPORTING
+        io_worksheet    TYPE REF TO zcl_excel_worksheet
+        io_document     TYPE REF TO if_ixml_document
+        io_element_root TYPE REF TO if_ixml_element.
 ENDCLASS.
 
 
@@ -233,7 +238,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_table            TYPE REF TO zcl_excel_table,
           lo_drawing          TYPE REF TO zcl_excel_drawing,
           lo_drawings         TYPE REF TO zcl_excel_drawings,
-          lo_comment          TYPE REF TO zcl_excel_comment,   " (+) Issue #180
           lo_comments         TYPE REF TO zcl_excel_comments.  " (+) Issue #180
 
     DATA: lv_content                TYPE xstring,
@@ -2279,8 +2283,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_iterator            TYPE REF TO cl_object_collection_iterator,
           lo_comments            TYPE REF TO zcl_excel_comments,
           lo_comment             TYPE REF TO zcl_excel_comment.
-    DATA: lv_rel_id TYPE i,
-          lv_author TYPE string.
+    DATA: lv_author TYPE string.
 
     DEFINE add_1_val_child_node.
 *   &1: parent element
@@ -2454,12 +2457,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_attr_target        TYPE string VALUE 'Target',
           " Node namespace
           lc_xml_node_rels_ns       TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
-          lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-          lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
+          lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image'.
 
-    DATA: lo_iterator     TYPE REF TO cl_object_collection_iterator,
-          lo_drawing      TYPE REF TO zcl_excel_drawing,
-          lo_document     TYPE REF TO if_ixml_document,
+    DATA: lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           lv_value        TYPE string,
@@ -2658,8 +2658,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_attr_target        TYPE string VALUE 'Target',
           " Node namespace
           lc_xml_node_rels_ns       TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
-          lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-          lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
+          lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image'.
 
     DATA: lo_iterator     TYPE REF TO cl_object_collection_iterator,
           lo_drawing      TYPE REF TO zcl_excel_drawing,
@@ -3114,8 +3113,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_attr_id               TYPE string,
           lv_int_value             TYPE i,
           lv_int_value_string      TYPE string.
-    DATA: lv_rel_id            TYPE i.
-
     DEFINE add_1_val_child_node.
 *   &1: parent element
 *   &2: child element
@@ -3725,7 +3722,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_attr_collapsed          TYPE string VALUE 'collapsed',
           lc_xml_attr_defaultrowheight   TYPE string VALUE 'defaultRowHeight',
           lc_xml_attr_defaultcolwidth    TYPE string VALUE 'defaultColWidth',
-          lc_xml_attr_outlinelevelrow    TYPE string VALUE 'x14ac:outlineLevelRow',
           lc_xml_attr_outlinelevelcol    TYPE string VALUE 'x14ac:outlineLevelCol',
           lc_xml_attr_outlinelevel       TYPE string VALUE 'outlineLevel',
           lc_xml_attr_password           TYPE string VALUE 'password',
@@ -3847,15 +3843,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lt_condformating_ranges     TYPE ty_condformating_ranges,
           ls_condformating_range      TYPE ty_condformating_range.
 
-    FIELD-SYMBOLS: <ls_sheet_content>       TYPE zexcel_s_cell_data,
-                   <fs_range_merge>         LIKE LINE OF lt_range_merge,
-                   <ls_row_outline>         LIKE LINE OF lts_row_outlines,
+    FIELD-SYMBOLS: <fs_range_merge>         LIKE LINE OF lt_range_merge,
                    <ls_condformating_range> TYPE ty_condformating_range.
 
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 2 - start
 *--------------------------------------------------------------------*
-    DATA: lt_table_areas TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom.
 
 *--------------------------------------------------------------------*
 * issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 2 - end
@@ -5277,6 +5270,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDIF.
 *
 
+*******************************
+* ignoredErrors
+*******************************
+    create_xl_sheet_ignored_errors( io_worksheet = io_worksheet io_document = lo_document io_element_root = lo_element_root ).
+
 * tables
     DATA lv_table_count TYPE i.
 
@@ -5409,7 +5407,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           " Node namespace
           lc_xml_node_rels_ns            TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
           lc_xml_node_rid_table_tp       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/table',
-          lc_xml_node_rid_printer_tp     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
           lc_xml_node_rid_drawing_tp     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
           lc_xml_node_rid_comment_tp     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',        " (+) Issue #180
           lc_xml_node_rid_drawing_cmt_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing',      " (+) Issue #180
@@ -5642,11 +5639,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
              top    TYPE i,
              bottom TYPE i,
            END OF lty_table_area.
-    TYPES: BEGIN OF lty_shared_formula_used,
+    TYPES: BEGIN OF lty_column_formula_used,
              id TYPE zexcel_cell_sformula_id,
              si TYPE string,
-           END OF lty_shared_formula_used,
-           lty_shared_formulas_used TYPE HASHED TABLE OF lty_shared_formula_used WITH UNIQUE KEY id.
+           END OF lty_column_formula_used,
+           lty_column_formulas_used TYPE HASHED TABLE OF lty_column_formula_used WITH UNIQUE KEY id.
 
     CONSTANTS: lc_dummy_cell_content       TYPE zexcel_s_cell_data-cell_value VALUE '})~~~ This is a dummy value for ABAP2XLSX and you should never find this in a real excelsheet Ihope'.
 
@@ -5695,13 +5692,18 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
           lv_value                TYPE string,
           lv_style_guid           TYPE zexcel_cell_style,
-          lt_shared_formulas_used TYPE lty_shared_formulas_used,
-          ls_shared_formula_used  TYPE lty_shared_formula_used.
+          lt_column_formulas_used TYPE lty_column_formulas_used,
+          ls_column_formula_used  TYPE lty_column_formula_used,
+          lv_column_alpha         TYPE zexcel_cell_column_alpha,
+          lv_top_cell_coords      TYPE zexcel_cell_coords,
+          lv_bottom_cell_coords   TYPE zexcel_cell_coords,
+          lv_cell_coords          TYPE zexcel_cell_coords,
+          lv_ref_value            TYPE string.
 
     FIELD-SYMBOLS: <ls_sheet_content>       TYPE zexcel_s_cell_data,
                    <ls_row_outline>         LIKE LINE OF lts_row_outlines,
-                   <ls_shared_formula>      TYPE zcl_excel_worksheet=>mty_s_shared_formula,
-                   <ls_shared_formula_used> TYPE lty_shared_formula_used.
+                   <ls_column_formula>      TYPE zcl_excel_worksheet=>mty_s_column_formula,
+                   <ls_column_formula_used> TYPE lty_column_formula_used.
 
 
     " sheetData node
@@ -5960,26 +5962,44 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         CONDENSE lv_value.
         lo_element_4->set_value( value = lv_value ).
         lo_element_3->append_child( new_child = lo_element_4 ). " fomula node
-      ELSEIF <ls_sheet_content>-cell_sformula_id <> 0.
-        " shared formula node
-        " <c r="B3"><f t="shared" ref="B2:B40" si="0">IF(A1="ROW2","ROW2","X")</c>
+      ELSEIF <ls_sheet_content>-column_formula_id <> 0.
+        " Calculated column formulas
+        "-----------------------------
+        " That will generate these formulas, only the first one stores the formula, the next ones refer to it
+        " <c r="B2"><f t="shared" ref="B2:B4" si="0">IF(A2="ROW2","ROW2","X")</c>
+        " <c r="B3"><f t="shared" si="0"/></c>
         " <c r="B4"><f t="shared" si="0"/></c>
-        READ TABLE io_worksheet->shared_formulas WITH TABLE KEY id = <ls_sheet_content>-cell_sformula_id ASSIGNING <ls_shared_formula>.
+        READ TABLE io_worksheet->column_formulas WITH TABLE KEY id = <ls_sheet_content>-column_formula_id ASSIGNING <ls_column_formula>.
+        ASSERT sy-subrc = 0.
         lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_f
                                                            parent = io_document ).
         lo_element_4->set_attribute( name = 't' value = 'shared' ).
-        READ TABLE lt_shared_formulas_used WITH TABLE KEY id = <ls_sheet_content>-cell_sformula_id ASSIGNING <ls_shared_formula_used>.
+        READ TABLE lt_column_formulas_used WITH TABLE KEY id = <ls_sheet_content>-column_formula_id ASSIGNING <ls_column_formula_used>.
         IF sy-subrc <> 0.
-          ls_shared_formula_used-id = <ls_sheet_content>-cell_sformula_id.
-          ls_shared_formula_used-si = lines( lt_shared_formulas_used ).
-          CONDENSE ls_shared_formula_used-si.
-          INSERT ls_shared_formula_used INTO TABLE lt_shared_formulas_used ASSIGNING <ls_shared_formula_used>.
-          lo_element_4->set_attribute( name = 'ref' value = <ls_shared_formula>-ref ).
-          lv_value = <ls_shared_formula>-formula.
-          CONDENSE lv_value.
+          ls_column_formula_used-id = <ls_sheet_content>-column_formula_id.
+          ls_column_formula_used-si = lines( lt_column_formulas_used ).
+          CONDENSE ls_column_formula_used-si.
+          INSERT ls_column_formula_used INTO TABLE lt_column_formulas_used ASSIGNING <ls_column_formula_used>.
+          lv_column_alpha = zcl_excel_common=>convert_column2alpha( ip_column = <ls_sheet_content>-cell_column ).
+          lv_top_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table->settings-top_left_row + 1 }|.
+          lv_bottom_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table->settings-bottom_right_row + 1 }|.
+
+          lv_cell_coords = |{ lv_column_alpha }{ <ls_sheet_content>-cell_row }|.
+          IF lv_top_cell_coords = lv_cell_coords.
+            lv_ref_value = |{ lv_top_cell_coords }:{ lv_bottom_cell_coords }|.
+            lv_value = <ls_column_formula>-formula.
+          ELSE.
+            lv_ref_value = |{ lv_cell_coords }:{ lv_bottom_cell_coords }|.
+            lv_value = zcl_excel_common=>shift_formula(
+                iv_reference_formula = <ls_column_formula>-formula
+                iv_shift_cols        = 0
+                iv_shift_rows        = <ls_sheet_content>-cell_row - <ls_column_formula>-table->settings-top_left_row - 1 ).
+          ENDIF.
+            lo_element_4->set_attribute( name  = 'ref'
+                                         value = lv_ref_value ).
           lo_element_4->set_value( value = lv_value ).
         ENDIF.
-        lo_element_4->set_attribute( name = 'si' value = <ls_shared_formula_used>-si ).
+        lo_element_4->set_attribute( name = 'si' value = <ls_column_formula_used>-si ).
         lo_element_3->append_child( new_child = lo_element_4 ).
 
       ELSEIF <ls_sheet_content>-cell_value IS NOT INITIAL           "cell can have just style or formula
@@ -6096,7 +6116,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_colors            TYPE string VALUE 'colors',
                lc_xml_node_indexedcolors     TYPE string VALUE 'indexedColors',
                lc_xml_node_rgbcolor          TYPE string VALUE 'rgbColor',
-               lc_xml_node_mrucolors         TYPE string VALUE 'mruColors',
                " Alignment
                lc_xml_node_alignment         TYPE string VALUE 'alignment',
                " Protection
@@ -6104,10 +6123,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                " Node attributes
                lc_xml_attr_count             TYPE string VALUE 'count',
                lc_xml_attr_val               TYPE string VALUE 'val',
-               lc_xml_attr_theme             TYPE string VALUE 'theme',
                lc_xml_attr_rgb               TYPE string VALUE 'rgb',
-               lc_xml_attr_indexed           TYPE string VALUE 'indexed',
-               lc_xml_attr_tint              TYPE string VALUE 'tint',
                lc_xml_attr_style             TYPE string VALUE 'style',
                lc_xml_attr_position          TYPE string VALUE 'position',
                lc_xml_attr_degree            TYPE string VALUE 'degree',
@@ -7066,7 +7082,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   METHOD create_xl_table.
 
     DATA: lc_xml_node_table        TYPE string VALUE 'table',
-          lc_xml_node_relationship TYPE string VALUE 'Relationship',
           " Node attributes
           lc_xml_attr_id           TYPE string VALUE 'id',
           lc_xml_attr_name         TYPE string VALUE 'name',
@@ -7074,9 +7089,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_attr_ref          TYPE string VALUE 'ref',
           lc_xml_attr_totals       TYPE string VALUE 'totalsRowShown',
           " Node namespace
-          lc_xml_node_table_ns     TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-          " Node id
-          lc_xml_node_ridx_id      TYPE string VALUE 'rId#'.
+          lc_xml_node_table_ns     TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'.
 
     DATA: lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
@@ -7180,10 +7193,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                           value = ls_fieldcat-totals_function ).
       ENDIF.
 
-      IF ls_fieldcat-sformula IS NOT INITIAL.
+      IF ls_fieldcat-column_formula IS NOT INITIAL.
         lo_element3 = lo_document->create_simple_element_ns( name   = 'calculatedColumnFormula'
                                                              parent = lo_element2 ).
-        lo_element3->set_value( value = ls_fieldcat-sformula ).
+        lo_element3->set_value( value = ls_fieldcat-column_formula ).
         lo_element2->append_child( new_child = lo_element3 ).
       ENDIF.
 
@@ -7579,9 +7592,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CONSTANTS: lc_shape               TYPE string VALUE '<v:shape id="{ID}" o:spid="_x0000_s1025" type="#_x0000_t75" style=''position:absolute;margin-left:0;margin-top:0;width:{WIDTH}pt;height:{HEIGHT}pt; z-index:1''>',
                lc_shape_image         TYPE string VALUE '<v:imagedata o:relid="{RID}" o:title="Logo Title"/><o:lock v:ext="edit" rotation="t"/></v:shape>',
-               lc_shape_header_center TYPE string VALUE 'CH',
-               lc_shape_header_left   TYPE string VALUE 'LH',
-               lc_shape_header_right  TYPE string VALUE 'RH',
                lc_shape_footer_center TYPE string VALUE 'CF',
                lc_shape_footer_left   TYPE string VALUE 'LF',
                lc_shape_footer_right  TYPE string VALUE 'RF'.
@@ -7686,10 +7696,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_shape_image         TYPE string VALUE '<v:imagedata o:relid="{RID}" o:title="Logo Title"/><o:lock v:ext="edit" rotation="t"/></v:shape>',
                lc_shape_header_center TYPE string VALUE 'CH',
                lc_shape_header_left   TYPE string VALUE 'LH',
-               lc_shape_header_right  TYPE string VALUE 'RH',
-               lc_shape_footer_center TYPE string VALUE 'CF',
-               lc_shape_footer_left   TYPE string VALUE 'LF',
-               lc_shape_footer_right  TYPE string VALUE 'RF'.
+               lc_shape_header_right  TYPE string VALUE 'RH'.
 
     DATA: lv_content_left         TYPE string,
           lv_content_center       TYPE string,
@@ -7895,4 +7902,74 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     ep_file = me->create( ).
   ENDMETHOD.
+
+
+  METHOD create_xl_sheet_ignored_errors.
+    DATA: lo_element        TYPE REF TO if_ixml_element,
+          lo_element2       TYPE REF TO if_ixml_element,
+          lt_ignored_errors TYPE zcl_excel_worksheet=>mty_th_ignored_errors.
+    FIELD-SYMBOLS: <ls_ignored_errors> TYPE zcl_excel_worksheet=>mty_s_ignored_errors.
+
+    lt_ignored_errors = io_worksheet->get_ignored_errors( ).
+
+    IF lt_ignored_errors IS NOT INITIAL.
+      lo_element = io_document->create_simple_element( name   = 'ignoredErrors'
+                                                       parent = io_document ).
+
+
+      LOOP AT lt_ignored_errors ASSIGNING <ls_ignored_errors>.
+
+        lo_element2 = io_document->create_simple_element( name   = 'ignoredError'
+                                                          parent = io_document ).
+
+        lo_element2->set_attribute_ns( name  = 'sqref'
+                                      value = <ls_ignored_errors>-cell_coords ).
+
+        IF <ls_ignored_errors>-eval_error = abap_true.
+          lo_element2->set_attribute_ns( name  = 'evalError'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-two_digit_text_year = abap_true.
+          lo_element2->set_attribute_ns( name  = 'twoDigitTextYear'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-number_stored_as_text = abap_true.
+          lo_element2->set_attribute_ns( name  = 'numberStoredAsText'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-formula = abap_true.
+          lo_element2->set_attribute_ns( name  = 'formula'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-formula_range = abap_true.
+          lo_element2->set_attribute_ns( name  = 'formulaRange'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-unlocked_formula = abap_true.
+          lo_element2->set_attribute_ns( name  = 'unlockedFormula'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-empty_cell_reference = abap_true.
+          lo_element2->set_attribute_ns( name  = 'emptyCellReference'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-list_data_validation = abap_true.
+          lo_element2->set_attribute_ns( name  = 'listDataValidation'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-calculated_column = abap_true.
+          lo_element2->set_attribute_ns( name  = 'calculatedColumn'
+                                         value = '1' ).
+        ENDIF.
+
+        lo_element->append_child( lo_element2 ).
+
+      ENDLOOP.
+
+      io_element_root->append_child( lo_element ).
+
+    ENDIF.
+
+  ENDMETHOD.
+
 ENDCLASS.
