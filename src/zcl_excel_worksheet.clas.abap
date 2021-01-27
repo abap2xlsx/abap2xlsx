@@ -33,10 +33,12 @@ CLASS zcl_excel_worksheet DEFINITION
       mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
     TYPES:
       BEGIN OF mty_s_column_formula,
-        id      TYPE zexcel_column_formula_id,
-        table   TYPE REF TO zcl_excel_table,
-        column  TYPE zexcel_cell_column_alpha,
-        formula TYPE zexcel_column_formula,
+        id                     TYPE zexcel_column_formula_id,
+        column                 TYPE zexcel_cell_column_alpha,
+        formula                TYPE zexcel_column_formula,
+        table                  TYPE REF TO zcl_excel_table,
+        table_left_column_int  TYPE zexcel_cell_column,
+        table_right_column_int TYPE zexcel_cell_column,
       END OF mty_s_column_formula .
     TYPES:
       mty_th_column_formula
@@ -55,7 +57,7 @@ CLASS zcl_excel_worksheet DEFINITION
         list_data_validation  TYPE abap_bool,
         calculated_column     TYPE abap_bool,
       END OF mty_s_ignored_errors,
-      mty_th_ignored_errors type hashed TABLE OF mty_s_ignored_errors with unique key cell_coords.
+      mty_th_ignored_errors TYPE HASHED TABLE OF mty_s_ignored_errors WITH UNIQUE KEY cell_coords.
 
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
@@ -3013,10 +3015,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
 
       IF <ls_field_catalog>-column_formula IS NOT INITIAL.
-        ls_column_formula-id            = lines( column_formulas ) + 1.
-        ls_column_formula-column        = lv_column_alpha.
-        ls_column_formula-formula       = <ls_field_catalog>-column_formula.
-        ls_column_formula-table         = lo_table.
+        ls_column_formula-id                     = lines( column_formulas ) + 1.
+        ls_column_formula-column                 = lv_column_alpha.
+        ls_column_formula-formula                = <ls_field_catalog>-column_formula.
+        ls_column_formula-table                  = lo_table.
+        ls_column_formula-table_left_column_int  = lv_column_int.
+        ls_column_formula-table_right_column_int = lv_maxcol.
         INSERT ls_column_formula INTO TABLE column_formulas.
       ENDIF.
 
@@ -4916,6 +4920,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       zcx_excel=>raise_text( 'Please provide the value or formula' ).
     ENDIF.
 
+* Begin of change issue #152 - don't touch exisiting style if only value is passed
+*  lv_style_guid = ip_style.
+    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
     IF ip_column_formula_id <> 0.
       IF ip_value IS NOT INITIAL OR ip_formula IS NOT INITIAL.
         zcx_excel=>raise_text( 'Please provide the value or formula' ).
@@ -4926,8 +4933,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
       IF ip_row < <fs_column_formula>-table->settings-top_left_row + 1
             OR ip_row > <fs_column_formula>-table->settings-bottom_right_row + 1
-            OR ip_column < <fs_column_formula>-table->settings-top_left_column
-            OR ip_column > <fs_column_formula>-table->settings-bottom_right_column.
+            OR lv_column < <fs_column_formula>-table_left_column_int
+            OR lv_column > <fs_column_formula>-table_right_column_int.
         zcx_excel=>raise_text( 'The cell uses a Shared Formula which should be part of the same table' ).
       ENDIF.
       IF ip_column <> <fs_column_formula>-column.
@@ -4935,9 +4942,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
-* Begin of change issue #152 - don't touch exisiting style if only value is passed
-*  lv_style_guid = ip_style.
-    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
     READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = ip_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
                                                                          cell_column = lv_column.
     IF sy-subrc = 0.

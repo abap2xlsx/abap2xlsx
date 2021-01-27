@@ -5960,48 +5960,49 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                            parent = io_document ).
         lv_value = <ls_sheet_content>-cell_formula.
         CONDENSE lv_value.
-        lo_element_4->set_value( value = lv_value ).
+        lo_element_4->set_value( lv_value ).
         lo_element_3->append_child( new_child = lo_element_4 ). " fomula node
       ELSEIF <ls_sheet_content>-column_formula_id <> 0.
-        " Calculated column formulas
-        "-----------------------------
-        " That will generate these formulas, only the first one stores the formula, the next ones refer to it
-        " <c r="B2"><f t="shared" ref="B2:B4" si="0">IF(A2="ROW2","ROW2","X")</c>
-        " <c r="B3"><f t="shared" si="0"/></c>
-        " <c r="B4"><f t="shared" si="0"/></c>
         READ TABLE io_worksheet->column_formulas WITH TABLE KEY id = <ls_sheet_content>-column_formula_id ASSIGNING <ls_column_formula>.
         ASSERT sy-subrc = 0.
-        lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_f
-                                                           parent = io_document ).
-        lo_element_4->set_attribute( name = 't' value = 'shared' ).
-        READ TABLE lt_column_formulas_used WITH TABLE KEY id = <ls_sheet_content>-column_formula_id ASSIGNING <ls_column_formula_used>.
-        IF sy-subrc <> 0.
-          ls_column_formula_used-id = <ls_sheet_content>-column_formula_id.
-          ls_column_formula_used-si = lines( lt_column_formulas_used ).
-          CONDENSE ls_column_formula_used-si.
-          INSERT ls_column_formula_used INTO TABLE lt_column_formulas_used ASSIGNING <ls_column_formula_used>.
-          lv_column_alpha = zcl_excel_common=>convert_column2alpha( ip_column = <ls_sheet_content>-cell_column ).
-          lv_top_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table->settings-top_left_row + 1 }|.
-          lv_bottom_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table->settings-bottom_right_row + 1 }|.
+        lv_value = <ls_column_formula>-formula.
+          " Calculated column formulas
+          "-----------------------------
+          " That will generate these formulas, only the first one stores the formula, the next ones refer to it
+          " <c r="B2"><f t="shared" ref="B2:B4" si="0">IF(A2="ROW2","ROW2","X")</c>
+          " <c r="B3"><f t="shared" si="0"/></c>
+          " <c r="B4"><f t="shared" si="0"/></c>
+          lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_f
+                                                             parent = io_document ).
+          lo_element_4->set_attribute( name = 't' value = 'shared' ).
+          READ TABLE lt_column_formulas_used WITH TABLE KEY id = <ls_sheet_content>-column_formula_id ASSIGNING <ls_column_formula_used>.
+          IF sy-subrc <> 0.
+            ls_column_formula_used-id = <ls_sheet_content>-column_formula_id.
+            ls_column_formula_used-si = lines( lt_column_formulas_used ).
+            CONDENSE ls_column_formula_used-si.
+            INSERT ls_column_formula_used INTO TABLE lt_column_formulas_used ASSIGNING <ls_column_formula_used>.
+            lv_column_alpha = zcl_excel_common=>convert_column2alpha( ip_column = <ls_sheet_content>-cell_column ).
+            lv_top_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table->settings-top_left_row + 1 }|.
+            lv_bottom_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table->settings-bottom_right_row + 1 }|.
 
-          lv_cell_coords = |{ lv_column_alpha }{ <ls_sheet_content>-cell_row }|.
-          IF lv_top_cell_coords = lv_cell_coords.
-            lv_ref_value = |{ lv_top_cell_coords }:{ lv_bottom_cell_coords }|.
-            lv_value = <ls_column_formula>-formula.
-          ELSE.
-            lv_ref_value = |{ lv_cell_coords }:{ lv_bottom_cell_coords }|.
-            lv_value = zcl_excel_common=>shift_formula(
-                iv_reference_formula = <ls_column_formula>-formula
-                iv_shift_cols        = 0
-                iv_shift_rows        = <ls_sheet_content>-cell_row - <ls_column_formula>-table->settings-top_left_row - 1 ).
-          ENDIF.
+            lv_cell_coords = |{ lv_column_alpha }{ <ls_sheet_content>-cell_row }|.
+            IF lv_top_cell_coords = lv_cell_coords.
+              lv_ref_value = |{ lv_top_cell_coords }:{ lv_bottom_cell_coords }|.
+            ELSE.
+              lv_ref_value = |{ lv_cell_coords }:{ lv_bottom_cell_coords }|.
+              lv_value = zcl_excel_common=>shift_formula(
+                  iv_reference_formula = lv_value
+                  iv_shift_cols        = 0
+                  iv_shift_rows        = <ls_sheet_content>-cell_row - <ls_column_formula>-table->settings-top_left_row - 1 ).
+            ENDIF.
             lo_element_4->set_attribute( name  = 'ref'
                                          value = lv_ref_value ).
-          lo_element_4->set_value( value = lv_value ).
-        ENDIF.
-        lo_element_4->set_attribute( name = 'si' value = <ls_column_formula_used>-si ).
-        lo_element_3->append_child( new_child = lo_element_4 ).
+            lo_element_4->set_value( lv_value ).
 
+            lo_element_4->set_value( value = lv_value ).
+          ENDIF.
+          lo_element_4->set_attribute( name = 'si' value = <ls_column_formula_used>-si ).
+          lo_element_3->append_child( new_child = lo_element_4 ).
       ELSEIF <ls_sheet_content>-cell_value IS NOT INITIAL           "cell can have just style or formula
          AND <ls_sheet_content>-cell_value <> lc_dummy_cell_content.
         IF <ls_sheet_content>-data_type IS NOT INITIAL.
@@ -7194,9 +7195,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
 
       IF ls_fieldcat-column_formula IS NOT INITIAL.
+        lv_value = ls_fieldcat-column_formula.
+        CONDENSE lv_value.
         lo_element3 = lo_document->create_simple_element_ns( name   = 'calculatedColumnFormula'
                                                              parent = lo_element2 ).
-        lo_element3->set_value( value = ls_fieldcat-column_formula ).
+        lo_element3->set_value( lv_value ).
         lo_element2->append_child( new_child = lo_element3 ).
       ENDIF.
 
