@@ -29,7 +29,7 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD main.
 
-    TYPES: BEGIN OF helper_type,
+    TYPES: BEGIN OF ty_data,
              carrid               TYPE sflight-carrid,
              connid               TYPE sflight-connid,
              fldate               TYPE sflight-fldate,
@@ -39,29 +39,31 @@ CLASS lcl_app IMPLEMENTATION.
              calculated_formula_2 TYPE sflight-price,
              calculated_formula_3 TYPE sflight-price,
              calculated_formula_4 TYPE sflight-price,
-           END OF helper_type.
-    DATA: f1                TYPE string,
-          f2                TYPE string,
-          line              TYPE helper_type,
-          itab              TYPE STANDARD TABLE OF helper_type,
-          field_catalog     TYPE zexcel_t_fieldcatalog,
+           END OF ty_data.
+    DATA: lv_f1             TYPE string,
+          lv_f2             TYPE string,
+          ls_data           TYPE ty_data,
+          lt_data           TYPE STANDARD TABLE OF ty_data,
+          lt_field_catalog  TYPE zexcel_t_fieldcatalog,
           ls_catalog        TYPE zexcel_s_fieldcatalog,
           ls_table_settings TYPE zexcel_s_table_settings,
           ls_ignored_errors TYPE zcl_excel_worksheet=>mty_s_ignored_errors,
-          lt_ignored_errors TYPE zcl_excel_worksheet=>mty_th_ignored_errors.
+          lt_ignored_errors TYPE zcl_excel_worksheet=>mty_th_ignored_errors,
+          lo_range          TYPE REF TO zcl_excel_range.
+    .
     FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog.
 
     " Load data
-    f1 = 'TblFlights[[#This Row],[Airfare]]+100'. " [@Airfare]+100
-    f2 = 'TblFlights[[#This Row],[Airfare]]+222'. " [@Airfare]+222
-    line-carrid = `AA`. line-connid = '0017'. line-fldate = '20180116'. line-price = '422.94'. line-formula = f1. line-calculated_formula = f2.
-    APPEND line TO itab.
-    line-carrid = `AZ`. line-connid = '0555'. line-fldate = '20180116'. line-price = '185.00'. line-formula = f1. line-calculated_formula = f1.
-    APPEND line TO itab.
-    line-carrid = `LH`. line-connid = '0400'. line-fldate = '20180119'. line-price = '666.00'. line-formula = f1. line-calculated_formula = f2.
-    APPEND line TO itab.
-    line-carrid = `UA`. line-connid = '0941'. line-fldate = '20180117'. line-price = '879.82'. line-formula = f1. line-calculated_formula = f2.
-    APPEND line TO itab.
+    lv_f1 = 'TblFlights[[#This Row],[Airfare]]+100'. " [@Airfare]+100
+    lv_f2 = 'TblFlights[[#This Row],[Airfare]]+222'. " [@Airfare]+222
+    ls_data-carrid = `AA`. ls_data-connid = '0017'. ls_data-fldate = '20180116'. ls_data-price = '422.94'. ls_data-formula = lv_f1. ls_data-calculated_formula = lv_f2.
+    APPEND ls_data TO lt_data.
+    ls_data-carrid = `AZ`. ls_data-connid = '0555'. ls_data-fldate = '20180116'. ls_data-price = '185.00'. ls_data-formula = lv_f1. ls_data-calculated_formula = lv_f1.
+    APPEND ls_data TO lt_data.
+    ls_data-carrid = `LH`. ls_data-connid = '0400'. ls_data-fldate = '20180119'. ls_data-price = '666.00'. ls_data-formula = lv_f1. ls_data-calculated_formula = lv_f2.
+    APPEND ls_data TO lt_data.
+    ls_data-carrid = `UA`. ls_data-connid = '0941'. ls_data-fldate = '20180117'. ls_data-price = '879.82'. ls_data-formula = lv_f1. ls_data-calculated_formula = lv_f2.
+    APPEND ls_data TO lt_data.
 
     " Creates active sheet
     CREATE OBJECT lo_excel.
@@ -69,9 +71,9 @@ CLASS lcl_app IMPLEMENTATION.
     " Get active sheet
     lo_worksheet = lo_excel->get_active_worksheet( ).
 
-    field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = itab ).
+    lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = lt_data ).
 
-    LOOP AT field_catalog ASSIGNING <ls_field_catalog>.
+    LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog>.
       CASE <ls_field_catalog>-fieldname.
           " No formula
         WHEN 'PRICE'.
@@ -85,7 +87,7 @@ CLASS lcl_app IMPLEMENTATION.
         WHEN 'CALCULATED_FORMULA'.
           <ls_field_catalog>-scrtext_m       = 'Calculated formula except one and aggregate function'.
           <ls_field_catalog>-formula         = abap_true.
-          <ls_field_catalog>-column_formula  = f2.
+          <ls_field_catalog>-column_formula  = lv_f2.
           <ls_field_catalog>-totals_function = zcl_excel_table=>totals_function_min.
           " The column formula applies to all rows and to future new rows
         WHEN 'CALCULATED_FORMULA_2'.
@@ -109,8 +111,8 @@ CLASS lcl_app IMPLEMENTATION.
     ls_table_settings-show_row_stripes    = abap_true.
 
     lo_worksheet->bind_table(
-        ip_table          = itab
-        it_field_catalog  = field_catalog
+        ip_table          = lt_data
+        it_field_catalog  = lt_field_catalog
         is_table_settings = ls_table_settings ).
 
     " Give one cell of the calculated column a different value and ignore the error "inconsistent calculated column formula"
@@ -129,7 +131,7 @@ CLASS lcl_app IMPLEMENTATION.
     lo_worksheet->set_ignored_errors( lt_ignored_errors ).
 
     " Named range for formula 4
-    DATA(lo_range) = lo_excel->add_new_range( ).
+    lo_range = lo_excel->add_new_range( ).
     lo_range->name = 'NamedRange'.
     lo_range->set_value( ip_sheet_name    = lo_worksheet->get_title( )
                          ip_start_column  = 'B'
@@ -145,8 +147,11 @@ CLASS lcl_app IMPLEMENTATION.
 ENDCLASS.
 
 START-OF-SELECTION.
+  DATA: go_app   TYPE REF TO lcl_app,
+        go_error TYPE REF TO zcx_excel.
   TRY.
-      NEW lcl_app( )->main( ).
-    CATCH zcx_excel INTO DATA(lx).
-      MESSAGE lx TYPE 'I' DISPLAY LIKE 'E'.
+      CREATE OBJECT go_app.
+      go_app->main( ).
+    CATCH zcx_excel INTO go_error.
+      MESSAGE go_error TYPE 'I' DISPLAY LIKE 'E'.
   ENDTRY.
