@@ -953,6 +953,12 @@
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CLSNAME>ZCL_EXCEL_WORKSHEET</CLSNAME>
+     <CMPNAME>SET_IGNORED_ERRORS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Ignore errors on given cells, only last call is retained.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_WORKSHEET</CLSNAME>
      <CMPNAME>SET_MERGE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Set the merge range</DESCRIPT>

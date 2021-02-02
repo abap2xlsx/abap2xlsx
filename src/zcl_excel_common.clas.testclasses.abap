@@ -1024,7 +1024,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           ''                                     2   5       '',                          " Empty
           'A1+$A1+A$1+$A$1+B2'                  -1   0       '#REF!+$A1+#REF!+$A$1+A2',   " Referencing error , column only    , underflow
           'A1+$A1+A$1+$A$1+B2'                   0  -1       '#REF!+#REF!+A$1+$A$1+B1',   " Referencing error , row only       , underflow
-          'A1+$A1+A$1+$A$1+B2'                  -1  -1       '#REF!+#REF!+#REF!+$A$1+A1'. " Referencing error , row and column , underflow
+          'A1+$A1+A$1+$A$1+B2'                  -1  -1       '#REF!+#REF!+#REF!+$A$1+A1', " Referencing error , row and column , underflow
+          'Fl[[#This Row],[Air fare]]'           0   1       'Fl[[#This Row],[Air fare]]'," Do not delete spaces
+          'Fl[[#This Row],[Air]]+2'              0   1       'Fl[[#This Row],[Air]]+2'.   " Do not delete spaces
   ENDMETHOD.                    "SHIFT_FORMULA
 
   METHOD is_cell_in_range.
