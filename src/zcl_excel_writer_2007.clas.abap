@@ -199,7 +199,7 @@ public section.
 *"* private components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
     TYPES: BEGIN OF mty_column_formula_used,
-             id TYPE zexcel_cell_sformula_id,
+             id TYPE zexcel_s_cell_data-column_formula_id,
              si TYPE string,
              "! type: shared, etc.
              t  TYPE string,
