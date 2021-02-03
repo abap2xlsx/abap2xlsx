@@ -5390,7 +5390,7 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
     IF sy-subrc <> 0.
       CLEAR ls_column_formula_used.
       ls_column_formula_used-id = is_sheet_content-column_formula_id.
-      IF is_formula_shareable( ip_formula = lv_value ).
+      IF is_formula_shareable( ip_formula = lv_value ) = abap_true.
         ls_column_formula_used-t = 'shared'.
         ls_column_formula_used-si = cv_si.
         CONDENSE ls_column_formula_used-si.
