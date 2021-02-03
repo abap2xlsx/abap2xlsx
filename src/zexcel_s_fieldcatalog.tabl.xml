@@ -140,7 +140,6 @@
      <INTTYPE>g</INTTYPE>
      <INTLEN>000008</INTLEN>
      <DATATYPE>STRG</DATATYPE>
-     <LENG>000256</LENG>
      <MASK>  STRG</MASK>
      <DDTEXT>Column Formula</DDTEXT>
     </DD03P>
