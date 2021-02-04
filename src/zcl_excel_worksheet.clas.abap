@@ -2907,6 +2907,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
       lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+      me->get_column( lv_column_int ).
 
       " Due restrinction of new table object we cannot have two column with the same name
       " Check if a column with the same name exists, if exists add a counter
