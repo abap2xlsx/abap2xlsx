@@ -846,7 +846,7 @@ METHOD get_fieldcatalog.
 
     <fcat>-dynpfld   = 'X'.  " What in the world would we exclude here?
     " except for the MANDT-field of most tables ( 1st column that is )
-    IF <fcat>-position = 1 AND lo_salv_column_table->get_ddic_datatype( ) = 'CLNT' AND iv_hide_mandt EQ abap_true.
+    IF <fcat>-position = 1 AND lo_salv_column_table->get_ddic_datatype( ) = 'CLNT' AND iv_hide_mandt = abap_true.
       CLEAR <fcat>-dynpfld.
     ENDIF.
 
