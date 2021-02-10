@@ -101,6 +101,7 @@ public section.
   class-methods GET_FIELDCATALOG
     importing
       !IP_TABLE type STANDARD TABLE
+      !IV_HIDE_MANDT type ABAP_BOOL default ABAP_TRUE
     returning
       value(EP_FIELDCATALOG) type ZEXCEL_T_FIELDCATALOG .
   class-methods NUMBER_TO_EXCEL_STRING
@@ -845,7 +846,7 @@ METHOD get_fieldcatalog.
 
     <fcat>-dynpfld   = 'X'.  " What in the world would we exclude here?
     " except for the MANDT-field of most tables ( 1st column that is )
-    IF <fcat>-position = 1 AND lo_salv_column_table->get_ddic_datatype( ) = 'CLNT'.
+    IF <fcat>-position = 1 AND lo_salv_column_table->get_ddic_datatype( ) = 'CLNT' AND iv_hide_mandt = abap_true.
       CLEAR <fcat>-dynpfld.
     ENDIF.
 
