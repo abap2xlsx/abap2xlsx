@@ -1015,7 +1015,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           'RNGNAME1+C7'                         -1  -4       'RNGNAME1+B3',               " Operators and Rangename
           '"Date:"&TEXT(B2)'                     1   1       '"Date:"&TEXT(C3)',          " String literals and string concatenation
           '[TEST6.XLSX]SHEET1!A1'                1  11       '[TEST6.XLSX]SHEET1!B12',    " External sheet reference
-          `X(B13, "KK" )  `                      1   1       `X(C14,"KK")`,               " superflous blanks, multi-argument functions, literals in function, unknown functions
+*          `X(B13, "KK" )  `                      1   1       `X(C14,"KK")`,               " superflous blanks, multi-argument functions, literals in function, unknown functions
+          `X(B13, "KK" )  `                      1   1       `X(C14, "KK" )  `,           " Respecting blanks
+          `SUBTOTAL(109,Table1[SUM 1])`          1   1       `SUBTOTAL(109,Table1[SUM 1])`, " Respecting blanks
+          `B4 & C4`                              0   1       `B5 & C5`,                   " Respecting blanks
+          `SUM(F_1,F_2)`                         1   1       `SUM(F_1,F_2)`,              " F & RC are not columns
+          `INDIRECT("RC[4]",FALSE)`              1   1       `INDIRECT("RC[4]",FALSE)`,   " F & RC are not columns
+          `'A1'!$A$1`                            1   1       `'A1'!$A$1`,                 " A1 is a sheet name
 *          'SIN((((((B2))))))'                    1   1       'SIN((((((C3))))))',        " Deep nesting
 *          'SIN(SIN(SIN(SIN(E22))))'              0   1       'SIN(SIN(SIN(SIN(E23))))',   " Different type of deep nesting
           `SIN(SIN(SIN(SIN(E22))))`              0   1       'SIN(SIN(SIN(SIN(E23))))',   " same as above - but with string input instead of Char-input

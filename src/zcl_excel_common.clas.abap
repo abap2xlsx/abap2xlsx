@@ -1051,7 +1051,7 @@ METHOD shift_formula.
               lv_numchars                     TYPE i,         " Number of characters counter
               lv_tchar(1)                     TYPE c,         " Temp character
               lv_tchar2(1)                    TYPE c,         " Temp character
-              lv_cur_form(2000)               TYPE c,         " Formula for current cell
+              lv_cur_form                     TYPE string,    " Formula for current cell
               lv_ref_cell_addr                TYPE string,    " Reference cell address
               lv_tcol1                        TYPE string,    " Temp column letter
               lv_tcol2                        TYPE string,    " Temp column letter
@@ -1063,6 +1063,8 @@ METHOD shift_formula.
               lv_substr1                      TYPE string,    " Substring variable
               lv_abscol                       TYPE string,    " Absolute column symbol
               lv_absrow                       TYPE string,    " Absolute row symbol
+              lv_compare_1                    TYPE string,
+              lv_compare_2                    TYPE string,
 
               lv_errormessage                 TYPE string.
 
@@ -1220,6 +1222,19 @@ METHOD shift_formula.
             lv_tcnt = lv_tcnt + 1.
           ENDDO.
         ENDIF.
+
+        " Is valid column & row ?
+        IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
+          " COLUMN + ROW
+          CONCATENATE lv_tcol1 lv_trow1 INTO lv_compare_1.
+          " Original condensed string
+          lv_compare_2 = lv_ref_cell_addr.
+          CONDENSE lv_compare_2.
+          IF lv_compare_1 <> lv_compare_2.
+            CLEAR: lv_trow1, lv_tchar2.
+          ENDIF.
+        ENDIF.
+
 *--------------------------------------------------------------------*
 * Check for invalid cell address
 *--------------------------------------------------------------------*
@@ -1297,6 +1312,8 @@ METHOD shift_formula.
 * Check whether there is a referencing problem
 *--------------------------------------------------------------------*
         lv_trow2 = lv_trow1 + iv_shift_rows.
+        " Could contain spaces
+        CONDENSE lv_trow2.
         IF   ( lv_tcoln < 1 AND lv_abscol <> '$' )   " Maybe we should add here max-column and max row-tests as well.
           OR ( lv_trow2 < 1 AND lv_absrow <> '$' ).  " Check how EXCEL behaves in this case
 *--------------------------------------------------------------------*
@@ -1345,7 +1362,7 @@ METHOD shift_formula.
         lv_numchars = 0.
         IF   lv_tchar CA lcv_operators
           OR lv_tchar CA ':)'.
-          CONCATENATE lv_cur_form lv_tchar INTO lv_cur_form.
+          CONCATENATE lv_cur_form lv_tchar INTO lv_cur_form RESPECTING BLANKS.
         ENDIF.
         lv_offset1 = lv_cnt2.
       ENDIF.
