@@ -2410,31 +2410,31 @@ METHOD load_worksheet.
       lv_max_col = lv_index.
     ENDIF.
     lv_cell_row = ls_row-r.
-    lo_row = io_worksheet->get_row( lv_cell_row ).
-    IF ls_row-customheight = '1'.
-      lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_true ).
-    ELSE.
-      lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_false ).
-    ENDIF.
-
-    IF   ls_row-collapsed = lc_xml_attr_true
-      OR ls_row-collapsed = lc_xml_attr_true_int.
-      lo_row->set_collapsed( abap_true ).
-    ENDIF.
-
-    IF   ls_row-hidden = lc_xml_attr_true
-      OR ls_row-hidden = lc_xml_attr_true_int.
-      lo_row->set_visible( abap_false ).
-    ENDIF.
-
-    IF ls_row-outlinelevel > ''.
-*        outline_level = condense( row-outlineLevel ).  "For basis 7.02 and higher
-      CONDENSE  ls_row-outlinelevel.
-      lv_outline_level = ls_row-outlinelevel.
-      IF lv_outline_level > 0.
-        lo_row->set_outline_level( lv_outline_level ).
+      lo_row = io_worksheet->get_row( lv_cell_row ).
+      IF ls_row-customheight = '1'.
+        lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_true ).
+      ELSE.
+        lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_false ).
       ENDIF.
-    ENDIF.
+
+      IF   ls_row-collapsed = lc_xml_attr_true
+        OR ls_row-collapsed = lc_xml_attr_true_int.
+        lo_row->set_collapsed( abap_true ).
+      ENDIF.
+
+      IF   ls_row-hidden = lc_xml_attr_true
+        OR ls_row-hidden = lc_xml_attr_true_int.
+        lo_row->set_visible( abap_false ).
+      ENDIF.
+
+      IF ls_row-outlinelevel > ''.
+*        outline_level = condense( row-outlineLevel ).  "For basis 7.02 and higher
+        CONDENSE  ls_row-outlinelevel.
+        lv_outline_level = ls_row-outlinelevel.
+        IF lv_outline_level > 0.
+          lo_row->set_outline_level( lv_outline_level ).
+        ENDIF.
+      ENDIF.
 
     lo_ixml_cells = lo_ixml_row_elem->get_elements_by_tag_name( name = 'c' ).
     lo_ixml_iterator2 = lo_ixml_cells->create_iterator( ).
