@@ -5492,10 +5492,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     CHECK sheet_content IS NOT INITIAL.
 
-    upper_cell-cell_row = zcl_excel_common=>c_excel_sheet_max_row.
+    upper_cell-cell_row = rows->get_min_index( ).
+    IF upper_cell-cell_row = 0.
+      upper_cell-cell_row = zcl_excel_common=>c_excel_sheet_max_row.
+    ENDIF.
     upper_cell-cell_column = zcl_excel_common=>c_excel_sheet_max_col.
 
-    lower_cell-cell_row = zcl_excel_common=>c_excel_sheet_min_row.
+    lower_cell-cell_row = rows->get_max_index( ).
+    IF lower_cell-cell_row = 0.
+      lower_cell-cell_row = zcl_excel_common=>c_excel_sheet_min_row.
+    ENDIF.
     lower_cell-cell_column = zcl_excel_common=>c_excel_sheet_min_col.
 
     LOOP AT sheet_content INTO ls_sheet_content.

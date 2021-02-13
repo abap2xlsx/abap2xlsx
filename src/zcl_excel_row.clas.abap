@@ -24,6 +24,9 @@ public section.
   methods GET_ROW_HEIGHT
     returning
       value(R_ROW_HEIGHT) type FLOAT .
+  methods GET_CUSTOM_HEIGHT
+    returning
+      value(R_CUSTOM_HEIGHT) type ABAP_BOOL .
   methods GET_ROW_INDEX
     returning
       value(R_ROW_INDEX) type INT4 .
@@ -46,6 +49,7 @@ public section.
   methods SET_ROW_HEIGHT
     importing
       !IP_ROW_HEIGHT type SIMPLE
+      !IP_CUSTOM_HEIGHT type abap_bool default abap_true
     raising
       ZCX_EXCEL .
   methods SET_ROW_INDEX
@@ -70,6 +74,7 @@ private section.
   data OUTLINE_LEVEL type INT4 value 0. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
   data COLLAPSED type BOOLEAN .
   data XF_INDEX type INT4 .
+  data CUSTOM_HEIGHT type abap_bool .
 ENDCLASS.
 
 
@@ -87,6 +92,7 @@ method CONSTRUCTOR.
 
   " set row dimension as unformatted by default
   me->xf_index = 0.
+  me->custom_height = abap_false.
   endmethod.
 
 
@@ -150,6 +156,11 @@ method GET_ROW_HEIGHT.
   endmethod.
 
 
+  METHOD GET_CUSTOM_HEIGHT.
+    r_custom_height = me->custom_height.
+  ENDMETHOD.
+
+
 method GET_ROW_INDEX.
   r_row_index = me->row_index.
   endmethod.
@@ -203,6 +214,7 @@ method SET_ROW_HEIGHT.
     CATCH cx_sy_conversion_no_number.
       zcx_excel=>raise_text( 'Unable to interpret ip_row_height as number' ).
   ENDTRY.
+  me->custom_height = ip_custom_height.
   endmethod.
 
 
