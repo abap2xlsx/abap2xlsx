@@ -1,7 +1,7 @@
 
-CLASS LCL_EXCEL_WORKSHEET_TEST DEFINITION FOR TESTING
-  "#AU Risk_Level Harmless
-  "#AU Duration Short
+CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT
 .
 *?﻿<asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
 *?<asx:values>
