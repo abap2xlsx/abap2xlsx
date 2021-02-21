@@ -6,8 +6,9 @@ CLASS zcl_excel_common DEFINITION LOCAL FRIENDS lcl_excel_common_test.
 *----------------------------------------------------------------------*
 *
 *----------------------------------------------------------------------*
-CLASS lcl_excel_common_test DEFINITION FOR TESTING  "#AU Risk_Level Harmless
-                                 .                  "#AU Duration Short
+CLASS lcl_excel_common_test DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
 *?ï»¿<asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
 *?<asx:values>
 *?<TESTCLASS_OPTIONS>
