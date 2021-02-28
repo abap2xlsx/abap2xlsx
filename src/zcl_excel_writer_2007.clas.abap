@@ -7865,41 +7865,33 @@ method ZIF_EXCEL_WRITER~WRITE_FILE.
   endmethod.
 
 METHOD is_support_non_xml_characters.
-  DATA: unicode_character_10000 TYPE string,
-        lo_ixml                 TYPE REF TO if_ixml,
-        lo_document             TYPE REF TO if_ixml_document,
-        lo_root                 TYPE REF TO if_ixml_element,
-        lo_text                 TYPE REF TO if_ixml_text,
-        lo_stream_factory       TYPE REF TO if_ixml_stream_factory,
-        lo_ostream              TYPE REF TO if_ixml_ostream,
-        xstring                 TYPE xstring,
-        lo_renderer             TYPE REF TO if_ixml_renderer,
-        l_rc                    TYPE i,
-        lo_istream              TYPE REF TO if_ixml_istream,
-        lo_parser               TYPE REF TO if_ixml_parser.
-  CONSTANTS utf8_value_of_d800_dc00 TYPE xstring VALUE 'F0908080'.
+  DATA:
+    "! Unicode character U+10000
+    lv_u10000         TYPE string,
+    lo_ixml           TYPE REF TO if_ixml,
+    lo_document       TYPE REF TO if_ixml_document,
+    lo_root           TYPE REF TO if_ixml_element,
+    lo_text           TYPE REF TO if_ixml_text,
+    lo_stream_factory TYPE REF TO if_ixml_stream_factory,
+    lo_ostream        TYPE REF TO if_ixml_ostream,
+    lv_xstring        TYPE xstring,
+    lo_renderer       TYPE REF TO if_ixml_renderer,
+    lv_rc             TYPE i.
+  CONSTANTS lc_utf8_value_of_u10000 TYPE xstring VALUE 'F0908080'.
 
-  unicode_character_10000 = cl_abap_conv_in_ce=>uccp( 'D800' ) && cl_abap_conv_in_ce=>uccp( 'DC00' ).
+  lv_u10000 = cl_abap_conv_in_ce=>uccp( 'D800' ) && cl_abap_conv_in_ce=>uccp( 'DC00' ).
   lo_ixml = cl_ixml=>create( ).
   lo_document = lo_ixml->create_document( ).
   lo_root = lo_document->create_simple_element( name = 'ROOT' parent = lo_document ).
-  lo_text = lo_document->create_text( unicode_character_10000 ).
-  l_rc = lo_root->append_child( lo_text ).
+  lo_text = lo_document->create_text( lv_u10000 ).
+  lv_rc = lo_root->append_child( lo_text ).
   lo_stream_factory = lo_ixml->create_stream_factory( ).
-  lo_ostream = lo_stream_factory->create_ostream_xstring( string = xstring ).
+  lo_ostream = lo_stream_factory->create_ostream_xstring( string = lv_xstring ).
   lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream
                                           document = lo_document ).
-  l_rc = lo_renderer->render( ).
+  lv_rc = lo_renderer->render( ).
 
-  lo_ixml = cl_ixml=>create( ).
-  lo_document = lo_ixml->create_document( ).
-  lo_stream_factory = lo_ixml->create_stream_factory( ).
-  lo_istream = lo_stream_factory->create_istream_xstring( xstring ).
-  lo_parser = lo_ixml->create_parser( stream_factory = lo_stream_factory
-                                      istream        = lo_istream
-                                      document       = lo_document ).
-  lo_parser->parse( ).
-  FIND utf8_value_of_d800_dc00 IN xstring IN BYTE MODE.
+  FIND lc_utf8_value_of_u10000 IN lv_xstring IN BYTE MODE.
   IF sy-subrc = 0.
     r_result = abap_true.
   ELSE.
