@@ -63,12 +63,10 @@ ENDCLASS.                    "ZCL_DATE_CALCULATION IMPLEMENTATION
 *
 *----------------------------------------------------------------------*
 CLASS zcl_date_calculation_test DEFINITION FOR TESTING
-  " DURATION SHORT
-  " RISK LEVEL HARMLESS
-  "#AU Duration Medium
-  "#AU Risk_Level Harmless
+    DURATION SHORT
+    RISK LEVEL HARMLESS
   .
-  PUBLIC SECTION.
+  PRIVATE SECTION.
     METHODS:
       months_between_two_dates FOR TESTING.
 ENDCLASS.                    "zcl_date_calculation_test DEFINITION
