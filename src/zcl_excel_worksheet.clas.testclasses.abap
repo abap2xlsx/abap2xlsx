@@ -3,8 +3,8 @@ CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_check_cell_column_formula.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
-  "#AU Risk_Level Harmless
-  "#AU Duration Short
+    RISK LEVEL HARMLESS
+    DURATION SHORT
 .
 *?﻿<asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
 *?<asx:values>
@@ -30,15 +30,15 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
   PRIVATE SECTION.
 * ================
     DATA:
-      f_cut TYPE REF TO zcl_excel_worksheet.  "class under test
+      F_CUT TYPE REF TO ZCL_EXCEL_WORKSHEET.  "class under test
 
-    CLASS-METHODS: class_setup.
-    CLASS-METHODS: class_teardown.
-    METHODS: setup.
-    METHODS: teardown.
-    METHODS: set_merge FOR TESTING.
-    METHODS: delete_merge FOR TESTING.
-    METHODS: get_dimension_range FOR TESTING.
+    CLASS-METHODS: CLASS_SETUP.
+    CLASS-METHODS: CLASS_TEARDOWN.
+    METHODS: SETUP.
+    METHODS: TEARDOWN.
+    METHODS: SET_MERGE FOR TESTING.
+    METHODS: DELETE_MERGE FOR TESTING.
+    METHODS: GET_DIMENSION_RANGE FOR TESTING.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
 
 
@@ -79,383 +79,382 @@ ENDCLASS.
 CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 * ==============================================
 
-  METHOD class_setup.
+  METHOD CLASS_SETUP.
 * ===================
 
   ENDMETHOD.       "class_Setup
 
 
-  METHOD class_teardown.
+  METHOD CLASS_TEARDOWN.
 * ======================
 
 
   ENDMETHOD.       "class_Teardown
 
 
-  METHOD setup.
+  METHOD SETUP.
 * =============
 
-    DATA lo_excel TYPE REF TO zcl_excel.
+    DATA LO_EXCEL TYPE REF TO ZCL_EXCEL.
 
-    CREATE OBJECT lo_excel.
+    CREATE OBJECT LO_EXCEL.
 
-    CREATE OBJECT f_cut
-      EXPORTING
-        ip_excel = lo_excel.
+    CREATE OBJECT F_CUT
+      EXPORTING IP_EXCEL = LO_EXCEL.
 
   ENDMETHOD.       "setup
 
 
-  METHOD teardown.
+  METHOD TEARDOWN.
 * ================
 
 
   ENDMETHOD.       "teardown
 
-  METHOD set_merge.
+  METHOD SET_MERGE.
 * ====================
 
-    DATA lt_merge TYPE string_table.
-    DATA lv_merge TYPE string.
-    DATA lv_size TYPE i.
-    DATA lv_size_next TYPE i.
+    DATA LT_MERGE TYPE STRING_TABLE.
+    DATA LV_MERGE TYPE STRING.
+    DATA LV_SIZE TYPE I.
+    DATA LV_SIZE_NEXT TYPE I.
 
 
 *  Test 1. Simple test for initial value
 
-    lt_merge = f_cut->get_merge( ).
-    lv_size = lines( lt_merge ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size
-      exp   = 0
-      msg   = 'Initial state of merge table is not empty'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE
+      EXP   = 0
+      MSG   = 'Initial state of merge table is not empty'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 
 * Test 2. Add merge
 
-    f_cut->set_merge(
-      ip_column_start = 2
-      ip_column_end = 3
-      ip_row = 2
-      ip_row_to = 3
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 2
+      IP_COLUMN_END = 3
+      IP_ROW = 2
+      IP_ROW_TO = 3
     ).
 
-    lt_merge = f_cut->get_merge( ).
-    lv_size_next = lines( lt_merge ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE_NEXT = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size_next - lv_size
-      exp   = 1
-      msg   = 'Expect add 1 table line when 1 merge added'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE_NEXT - LV_SIZE
+      EXP   = 1
+      MSG   = 'Expect add 1 table line when 1 merge added'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 * Test 2. Add same merge
 
-    lv_size = lv_size_next.
+    LV_SIZE = LV_SIZE_NEXT.
 
     TRY.
-        f_cut->set_merge(
-          ip_column_start = 2
-          ip_column_end = 3
-          ip_row = 2
-          ip_row_to = 3
-        ).
-      CATCH zcx_excel.
+      F_CUT->SET_MERGE(
+        IP_COLUMN_START = 2
+        IP_COLUMN_END = 3
+        IP_ROW = 2
+        IP_ROW_TO = 3
+      ).
+    CATCH ZCX_EXCEL.
     ENDTRY.
 
-    lt_merge = f_cut->get_merge( ).
-    lv_size_next = lines( lt_merge ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE_NEXT = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size_next - lv_size
-      exp   = 0
-      msg   = 'Expect no change when add same merge'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE_NEXT - LV_SIZE
+      EXP   = 0
+      MSG   = 'Expect no change when add same merge'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 * Test 3. Add one different merge
 
-    lv_size = lv_size_next.
+    LV_SIZE = LV_SIZE_NEXT.
 
-    f_cut->set_merge(
-      ip_column_start = 4
-      ip_column_end = 5
-      ip_row = 2
-      ip_row_to = 3
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 4
+      IP_COLUMN_END = 5
+      IP_ROW = 2
+      IP_ROW_TO = 3
     ).
 
-    lt_merge = f_cut->get_merge( ).
-    lv_size_next = lines( lt_merge ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE_NEXT = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size_next - lv_size
-      exp   = 1
-      msg   = 'Expect 1 change when add different merge'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE_NEXT - LV_SIZE
+      EXP   = 1
+      MSG   = 'Expect 1 change when add different merge'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 * Test 4. Merge added with concrete value #1
 
-    f_cut->delete_merge( ).
+    F_CUT->DELETE_MERGE( ).
 
-    f_cut->set_merge(
-      ip_column_start = 2
-      ip_column_end = 3
-      ip_row = 2
-      ip_row_to = 3
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 2
+      IP_COLUMN_END = 3
+      IP_ROW = 2
+      IP_ROW_TO = 3
     ).
 
-    lt_merge = f_cut->get_merge( ).
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    READ TABLE LT_MERGE INTO LV_MERGE INDEX 1.
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_merge
-      exp   = 'B2:C3'
-      msg   = 'Expect B2:C3'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_MERGE
+      EXP   = 'B2:C3'
+      MSG   = 'Expect B2:C3'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 * Test 5. Merge added with concrete value #2
 
-    f_cut->delete_merge( ).
+    F_CUT->DELETE_MERGE( ).
 
-    f_cut->set_merge(
-      ip_column_start = 4
-      ip_column_end = 5
-      ip_row = 4
-      ip_row_to = 5
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 4
+      IP_COLUMN_END = 5
+      IP_ROW = 4
+      IP_ROW_TO = 5
     ).
 
-    lt_merge = f_cut->get_merge( ).
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    READ TABLE LT_MERGE INTO LV_MERGE INDEX 1.
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_merge
-      exp   = 'D4:E5'
-      msg   = 'Expect D4:E5'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_MERGE
+      EXP   = 'D4:E5'
+      MSG   = 'Expect D4:E5'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
   ENDMETHOD.
 
-  METHOD delete_merge.
+  METHOD DELETE_MERGE.
 * ====================
-    DATA lt_merge TYPE string_table.
-    DATA lv_merge TYPE string.
-    DATA lv_size TYPE i.
-    DATA lv_index TYPE i.
+    DATA LT_MERGE TYPE STRING_TABLE.
+    DATA LV_MERGE TYPE STRING.
+    DATA LV_SIZE TYPE I.
+    DATA LV_INDEX TYPE I.
 
 *  Test 1. Simple test delete all merges
 
-    f_cut->set_merge(
-      ip_column_start = 2
-      ip_column_end = 3
-      ip_row = 2
-      ip_row_to = 3
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 2
+      IP_COLUMN_END = 3
+      IP_ROW = 2
+      IP_ROW_TO = 3
     ).
 
-    f_cut->delete_merge( ).
-    lt_merge = f_cut->get_merge( ).
-    lv_size = lines( lt_merge ).
+    F_CUT->DELETE_MERGE( ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size
-      exp   = 0
-      msg   = 'Expect merge table with 1 line fully cleared'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE
+      EXP   = 0
+      MSG   = 'Expect merge table with 1 line fully cleared'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 *  Test 2. Simple test delete all merges
 
     DO 10 TIMES.
-      f_cut->set_merge(
-        ip_column_start = 2 + sy-index * 2
-        ip_column_end = 3 + sy-index * 2
-        ip_row = 2 + sy-index * 2
-        ip_row_to = 3 + sy-index * 2
+      F_CUT->SET_MERGE(
+        IP_COLUMN_START = 2 + SY-INDEX * 2
+        IP_COLUMN_END = 3 + SY-INDEX * 2
+        IP_ROW = 2 + SY-INDEX * 2
+        IP_ROW_TO = 3 + SY-INDEX * 2
       ).
     ENDDO.
 
-    f_cut->delete_merge( ).
-    lt_merge = f_cut->get_merge( ).
-    lv_size = lines( lt_merge ).
+    F_CUT->DELETE_MERGE( ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size
-      exp   = 0
-      msg   = 'Expect merge table with few lines fully cleared'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE
+      EXP   = 0
+      MSG   = 'Expect merge table with few lines fully cleared'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 *  Test 3. Delete concrete merge with success
 
     DO 4 TIMES.
-      lv_index = sy-index.
+      LV_INDEX = SY-INDEX.
 
-      f_cut->delete_merge( ).
+      F_CUT->DELETE_MERGE( ).
 
-      f_cut->set_merge(
-        ip_column_start = 2
-        ip_column_end = 3
-        ip_row = 2
-        ip_row_to = 3
+      F_CUT->SET_MERGE(
+        IP_COLUMN_START = 2
+        IP_COLUMN_END = 3
+        IP_ROW = 2
+        IP_ROW_TO = 3
       ).
 
-      CASE lv_index.
-        WHEN 1. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 2 ).
-        WHEN 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 3 ).
-        WHEN 3. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 2 ).
-        WHEN 4. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 3 ).
+      CASE LV_INDEX.
+        WHEN 1. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 2 IP_CELL_ROW = 2 ).
+        WHEN 2. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 2 IP_CELL_ROW = 3 ).
+        WHEN 3. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 3 IP_CELL_ROW = 2 ).
+        WHEN 4. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 3 IP_CELL_ROW = 3 ).
       ENDCASE.
 
-      lt_merge = f_cut->get_merge( ).
-      lv_size = lines( lt_merge ).
+      LT_MERGE = F_CUT->GET_MERGE( ).
+      LV_SIZE = LINES( LT_MERGE ).
 
-      zcl_excel_aunit=>assert_equals(
-        act   = lv_size
-        exp   = 0
-        msg   = 'Expect merge table with 1 line fully cleared'
-        level = if_aunit_constants=>critical
+      ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+        ACT   = LV_SIZE
+        EXP   = 0
+        MSG   = 'Expect merge table with 1 line fully cleared'
+        LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
       ).
     ENDDO.
 
 *  Test 4. Delete concrete merge with fail
 
     DO 4 TIMES.
-      lv_index = sy-index.
+      LV_INDEX = SY-INDEX.
 
-      f_cut->delete_merge( ).
+      F_CUT->DELETE_MERGE( ).
 
-      f_cut->set_merge(
-        ip_column_start = 2
-        ip_column_end = 3
-        ip_row = 2
-        ip_row_to = 3
+      F_CUT->SET_MERGE(
+        IP_COLUMN_START = 2
+        IP_COLUMN_END = 3
+        IP_ROW = 2
+        IP_ROW_TO = 3
       ).
 
-      CASE lv_index.
-        WHEN 1. f_cut->delete_merge( ip_cell_column = 1 ip_cell_row = 2 ).
-        WHEN 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 1 ).
-        WHEN 3. f_cut->delete_merge( ip_cell_column = 4 ip_cell_row = 2 ).
-        WHEN 4. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 4 ).
+      CASE LV_INDEX.
+        WHEN 1. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 1 IP_CELL_ROW = 2 ).
+        WHEN 2. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 2 IP_CELL_ROW = 1 ).
+        WHEN 3. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 4 IP_CELL_ROW = 2 ).
+        WHEN 4. F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 2 IP_CELL_ROW = 4 ).
       ENDCASE.
 
-      lt_merge = f_cut->get_merge( ).
-      lv_size = lines( lt_merge ).
+      LT_MERGE = F_CUT->GET_MERGE( ).
+      LV_SIZE = LINES( LT_MERGE ).
 
-      zcl_excel_aunit=>assert_equals(
-        act   = lv_size
-        exp   = 1
-        msg   = 'Expect no merge were deleted'
-        level = if_aunit_constants=>critical
+      ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+        ACT   = LV_SIZE
+        EXP   = 1
+        MSG   = 'Expect no merge were deleted'
+        LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
       ).
     ENDDO.
 
 *  Test 5. Delete concrete merge #1
 
-    f_cut->delete_merge( ).
+    F_CUT->DELETE_MERGE( ).
 
-    f_cut->set_merge(
-      ip_column_start = 2
-      ip_column_end = 3
-      ip_row = 2
-      ip_row_to = 3
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 2
+      IP_COLUMN_END = 3
+      IP_ROW = 2
+      IP_ROW_TO = 3
     ).
-    f_cut->set_merge(
-      ip_column_start = 4
-      ip_column_end = 5
-      ip_row = 4
-      ip_row_to = 5
-    ).
-
-    f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 2 ).
-    lt_merge = f_cut->get_merge( ).
-    lv_size = lines( lt_merge ).
-
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size
-      exp   = 1
-      msg   = 'Expect we have the one merge'
-      level = if_aunit_constants=>critical
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 4
+      IP_COLUMN_END = 5
+      IP_ROW = 4
+      IP_ROW_TO = 5
     ).
 
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 2 IP_CELL_ROW = 2 ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_merge
-      exp   = 'D4:E5'
-      msg   = 'Expect delete B2:C3 merge'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE
+      EXP   = 1
+      MSG   = 'Expect we have the one merge'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
+    ).
+
+    READ TABLE LT_MERGE INTO LV_MERGE INDEX 1.
+
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_MERGE
+      EXP   = 'D4:E5'
+      MSG   = 'Expect delete B2:C3 merge'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
 *  Test 6. Delete concrete merge #2
 
-    f_cut->delete_merge( ).
+    F_CUT->DELETE_MERGE( ).
 
-    f_cut->set_merge(
-      ip_column_start = 2
-      ip_column_end = 3
-      ip_row = 2
-      ip_row_to = 3
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 2
+      IP_COLUMN_END = 3
+      IP_ROW = 2
+      IP_ROW_TO = 3
     ).
-    f_cut->set_merge(
-      ip_column_start = 4
-      ip_column_end = 5
-      ip_row = 4
-      ip_row_to = 5
-    ).
-
-    f_cut->delete_merge( ip_cell_column = 4 ip_cell_row = 4 ).
-    lt_merge = f_cut->get_merge( ).
-    lv_size = lines( lt_merge ).
-
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_size
-      exp   = 1
-      msg   = 'Expect we have the one merge'
-      level = if_aunit_constants=>critical
+    F_CUT->SET_MERGE(
+      IP_COLUMN_START = 4
+      IP_COLUMN_END = 5
+      IP_ROW = 4
+      IP_ROW_TO = 5
     ).
 
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    F_CUT->DELETE_MERGE( IP_CELL_COLUMN = 4 IP_CELL_ROW = 4 ).
+    LT_MERGE = F_CUT->GET_MERGE( ).
+    LV_SIZE = LINES( LT_MERGE ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = lv_merge
-      exp   = 'B2:C3'
-      msg   = 'Expect delete D4:E5 merge'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_SIZE
+      EXP   = 1
+      MSG   = 'Expect we have the one merge'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
+    ).
+
+    READ TABLE LT_MERGE INTO LV_MERGE INDEX 1.
+
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = LV_MERGE
+      EXP   = 'B2:C3'
+      MSG   = 'Expect delete D4:E5 merge'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
   ENDMETHOD.       "delete_Merge
 
-  METHOD get_dimension_range.
-    zcl_excel_aunit=>assert_equals(
-      act   = f_cut->get_dimension_range( )
-      exp   = 'A1'
-      msg   = 'get_dimension_range inital value'
-      level = if_aunit_constants=>critical
+  METHOD GET_DIMENSION_RANGE.
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = F_CUT->GET_DIMENSION_RANGE( )
+      EXP   = 'A1'
+      MSG   = 'get_dimension_range inital value'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
 
-    f_cut->set_cell(
-      ip_row       = 2
-      ip_column    = 3
-      ip_value     = 'Dummy'
+    F_CUT->SET_CELL(
+      IP_ROW       = 2
+      IP_COLUMN    = 3
+      IP_VALUE     = 'Dummy'
     ).
 
-    f_cut->set_cell(
-      ip_row       = 5
-      ip_column    = 6
-      ip_value     = 'Dummy'
+    F_CUT->SET_CELL(
+      IP_ROW       = 5
+      IP_COLUMN    = 6
+      IP_VALUE     = 'Dummy'
     ).
 
-    zcl_excel_aunit=>assert_equals(
-      act   = f_cut->get_dimension_range( )
-      exp   = 'C2:F5'
-      msg   = 'get_dimension_range'
-      level = if_aunit_constants=>critical
+    ZCL_EXCEL_AUNIT=>ASSERT_EQUALS(
+      ACT   = F_CUT->GET_DIMENSION_RANGE( )
+      EXP   = 'C2:F5'
+      MSG   = 'get_dimension_range'
+      LEVEL = IF_AUNIT_CONSTANTS=>CRITICAL
     ).
   ENDMETHOD.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
@@ -555,4 +554,4 @@ CLASS ltc_check_cell_column_formula IMPLEMENTATION.
 
   ENDMETHOD.
 
-ENDCLASS.
+ENDCLASS. " ltc_check_cell_column_formula

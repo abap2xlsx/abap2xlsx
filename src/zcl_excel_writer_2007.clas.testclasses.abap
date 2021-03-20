@@ -7,8 +7,10 @@ ltc_column_formula
 ltc_is_formula_shareable
 .
 
-CLASS ltc_column_formula DEFINITION FOR TESTING. "#AU Risk_Level Harmless
-                                                 "#AU Duration   Short
+CLASS ltc_column_formula DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT
+.
   PRIVATE SECTION.
     METHODS one_column_formula FOR TESTING RAISING cx_static_check.
     METHODS two_column_formulas FOR TESTING RAISING cx_static_check.
