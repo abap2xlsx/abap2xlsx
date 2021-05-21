@@ -1428,7 +1428,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ASSIGN COMPONENT l_save_index OF STRUCTURE <f_excel_line>
       TO <f_excel_column>.
       IF sy-subrc NE 0.
-        MESSAGE e059(0k) WITH 'FATAL ERROR' RAISING fatal_error.
+        MESSAGE e801(ZABAP2XLSX) WITH 'FATAL ERROR' RAISING fatal_error.
       ENDIF.
 
       LOOP AT lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
@@ -2777,8 +2777,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     error_doi.
 
 * if save successfully -> raise successful message
-*  message i499(sy) with 'Document is Exported to ' p_path.
-    MESSAGE i499(sy) WITH 'Data has been exported successfully'.
+    MESSAGE i400(ZABAP2XLSX).
 
     CLEAR:
       ls_path,
