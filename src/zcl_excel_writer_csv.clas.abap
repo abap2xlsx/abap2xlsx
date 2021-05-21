@@ -11,10 +11,10 @@ public section.
 
   class-methods SET_DELIMITER
     importing
-      value(IP_VALUE) type CHAR01 default ';' .
+      value(IP_VALUE) type c default ';' .
   class-methods SET_ENCLOSURE
     importing
-      value(IP_VALUE) type CHAR01 default '"' .
+      value(IP_VALUE) type c default '"' .
   class-methods SET_ENDOFLINE
     importing
       value(IP_VALUE) type ANY default CL_ABAP_CHAR_UTILITIES=>CR_LF .
@@ -32,8 +32,8 @@ protected section.
 private section.
 
   data EXCEL type ref to ZCL_EXCEL .
-  class-data DELIMITER type CHAR01 value ';'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-  class-data ENCLOSURE type CHAR01 value '"'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+  class-data DELIMITER type c value ';'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+  class-data ENCLOSURE type c value '"'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
   class-data EOL type c LENGTH 2 value CL_ABAP_CHAR_UTILITIES=>CR_LF. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
   class-data WORKSHEET_NAME type ZEXCEL_WORKSHEETS_NAME .
   class-data WORKSHEET_INDEX type ZEXCEL_ACTIVE_WORKSHEET .
