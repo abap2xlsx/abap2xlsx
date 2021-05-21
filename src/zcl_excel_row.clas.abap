@@ -37,7 +37,7 @@ public section.
       value(R_XF_INDEX) type INT4 .
   methods SET_COLLAPSED
     importing
-      !IP_COLLAPSED type BOOLEAN .
+      !IP_COLLAPSED type abap_bool .
   methods SET_OUTLINE_LEVEL
     importing
       !IP_OUTLINE_LEVEL type INT4
@@ -53,7 +53,7 @@ public section.
       !IP_INDEX type INT4 .
   methods SET_VISIBLE
     importing
-      !IP_VISIBLE type BOOLEAN .
+      !IP_VISIBLE type abap_bool .
   methods SET_XF_INDEX
     importing
       !IP_XF_INDEX type INT4 .
@@ -66,9 +66,9 @@ private section.
 
   data ROW_INDEX type INT4 .
   data ROW_HEIGHT type FLOAT .
-  data VISIBLE type BOOLEAN .
+  data VISIBLE type abap_bool .
   data OUTLINE_LEVEL type INT4 value 0. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-  data COLLAPSED type BOOLEAN .
+  data COLLAPSED type abap_bool .
   data XF_INDEX type INT4 .
 ENDCLASS.
 
@@ -161,7 +161,7 @@ METHOD GET_VISIBLE.
   FIELD-SYMBOLS: <ls_row_outline> LIKE LINE OF lt_row_outlines.
 
   r_visible = me->visible.
-  CHECK r_visible = 'X'.        " Currently visible --> but maybe the new outline methodology will hide it implicitly
+  CHECK r_visible = abap_true.  " Currently visible --> but maybe the new outline methodology will hide it implicitly
   CHECK io_worksheet IS BOUND.  " But we have to see the worksheet to make sure
 
   lt_row_outlines = io_worksheet->get_row_outlines( ).
