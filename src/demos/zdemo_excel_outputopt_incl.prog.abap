@@ -104,7 +104,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->download_frontend( ).
         ELSE.
-          MESSAGE e001(00) WITH 'Frontenddownload impossible in background processing'.
+          MESSAGE e802(ZABAP2XLSX).
         ENDIF.
 
       WHEN rb_back.
@@ -114,7 +114,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->display_online( ).
         ELSE.
-          MESSAGE e001(00) WITH 'Online display absurd in background processing'.
+          MESSAGE e803(ZABAP2XLSX).
         ENDIF.
 
       WHEN rb_send.
@@ -352,9 +352,9 @@ CLASS lcl_output IMPLEMENTATION.
         COMMIT WORK.
 
         IF sent IS INITIAL.
-          MESSAGE i500(sbcoms) WITH p_email.
+          MESSAGE i804(ZABAP2XLSX) WITH p_email.
         ELSE.
-          MESSAGE s022(so).
+          MESSAGE s805(ZABAP2XLSX).
           MESSAGE 'Document ready to be sent - Check SOST or SCOT' TYPE 'I'.
         ENDIF.
 
