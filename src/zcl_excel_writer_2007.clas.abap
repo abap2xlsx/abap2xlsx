@@ -7145,6 +7145,8 @@ METHOD create_xl_table.
     lo_element2->set_attribute_ns( name  = 'id'
                                   value = lv_value ).
     lv_value = ls_fieldcat-scrtext_l.
+    replace all occurrences of cl_abap_char_utilities=>cr_lf(1) in lv_value with '_x000d_'.
+    replace all occurrences of cl_abap_char_utilities=>newline in lv_value with '_x000a_'.
     lo_element2->set_attribute_ns( name  = 'name'
                                   value = lv_value ).
 
