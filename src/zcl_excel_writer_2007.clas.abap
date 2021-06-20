@@ -7145,35 +7145,31 @@ METHOD create_xl_table.
     lo_element2->set_attribute_ns( name  = 'id'
                                   value = lv_value ).
     lv_value = ls_fieldcat-scrtext_l.
-    " XML chapter 2.2: Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
-    " NB: although Excel supports _x0009_, it's not rendered except if you edit the text.
-    " Excel doesn't support _x000d_ (_x000a_ is sufficient and rendered).
-    DATA table_special_characters type STRING.
-    DATA lv_special_character_replacemt type STRING.
-    DATA lv_i TYPE i.
-    IF lv_value CS '_x'. " only _x in lower case is concerned (_X has no special meaning)
-      " _x...._ with exactly 4 . only, each being 0-9 a-f or A-F (case insensitive)
-      " in that case, the first _ is to be replaced with _x005f_ so that _x...._ is not interpreted as one Unicode character
+
+    " The text "_x...._", with "_x" not "_X", with exactly 4 ".", each being 0-9 a-f or A-F (case insensitive), is interpreted
+    " like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.
+    " To not interpret it, Excel replaces the first "_" is to be replaced with "_x005f_".
+    IF lv_value CS '_x'.
       REPLACE ALL OCCURRENCES OF REGEX '_(x[0-9a-fA-F]{4}_)' IN lv_value WITH '_x005f_$1' RESPECTING CASE.
     ENDIF.
-    lv_i = 0.
-    WHILE lv_i <= 31.
-      table_special_characters = table_special_characters && cl_abap_conv_in_ce=>uccpi( lv_i ).
-      ADD 1 TO lv_i.
-    ENDWHILE.
-    IF lv_value CA table_special_characters.
-      sy-fdpos = 0.
-      WHILE sy-fdpos < strlen( lv_value ).
-        IF lv_value CA table_special_characters.
-          lv_special_character_replacemt = '_x' && to_lower( cl_abap_conv_out_ce=>uccp( substring( val = lv_value off = sy-fdpos len = 1 ) ) ) && '_'.
-          IF lv_special_character_replacemt = '_x000d_'.
+
+    " XML chapter 2.2: Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+    " NB: although Excel supports _x0009_, it's not rendered except if you edit the text.
+    " Excel considers _x000d_ as being an error (_x000a_ is sufficient and rendered).
+    sy-fdpos = 0.
+    WHILE sy-fdpos < strlen( lv_value ).
+      IF lv_value CA |\r\n\t|. "table_special_characters.
+        CASE lv_value+sy-fdpos(1).
+          WHEN cl_abap_char_utilities=>newline.
+            REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH '_x000a_'.
+          WHEN cl_abap_char_utilities=>cr_lf(1).
             REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH ``.
-          ELSE.
-            REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH lv_special_character_replacemt.
-          ENDIF.
-        ENDIF.
-      ENDWHILE.
-    ENDIF.
+          WHEN cl_abap_char_utilities=>horizontal_tab.
+            REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH '_x0009_'.
+        ENDCASE.
+      ENDIF.
+    ENDWHILE.
+
     lo_element2->set_attribute_ns( name  = 'name'
                                   value = lv_value ).
 
