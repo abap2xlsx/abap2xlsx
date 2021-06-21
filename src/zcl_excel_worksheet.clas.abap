@@ -5019,6 +5019,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       me->hyperlinks->add( ip_hyperlink ).
     ENDIF.
 
+    IF lv_value CS '_x'.
+      " Issue #761 value "_x0041_" rendered as "A".
+      " "_x...._", where "." is 0-9 a-f or A-F (case insensitive), is an internal value in sharedStrings.xml
+      " that Excel uses to store special characters, it's interpreted like Unicode character U+....
+      " for instance "_x0041_" is U+0041 which is "A".
+      " To not interpret such text, the first underscore is replaced with "_x005f_".
+      " The value "_x0041_" is to be stored internally "_x005f_x0041_" so that it's rendered like "_x0041_".
+      " Note that REGEX is time consuming, it's why "CS" is used above to improve the performance.
+      REPLACE ALL OCCURRENCES OF REGEX '_(x[0-9a-fA-F]{4}_)' IN lv_value WITH '_x005f_$1' RESPECTING CASE.
+    ENDIF.
+
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * Read table moved up, so that current style may be evaluated
 *  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
