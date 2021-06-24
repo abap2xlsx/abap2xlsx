@@ -199,12 +199,16 @@ private section.
   constants C_OFF type STRING value '0'. "#EC NOTEXT
   constants C_ON type STRING value '1'. "#EC NOTEXT
   constants C_XL_PRINTERSETTINGS type STRING value 'xl/printerSettings/printerSettings#.bin'. "#EC NOTEXT
+  DATA support_non_xml_characters TYPE abap_bool.
 
   methods FLAG2BOOL
     importing
       !IP_FLAG type FLAG
     returning
       value(EP_BOOLEAN) type CHAR5 .
+  METHODS is_support_non_xml_characters
+    RETURNING
+      VALUE(r_result) TYPE abap_bool.
 ENDCLASS.
 
 
@@ -213,6 +217,7 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
 
   METHOD CONSTRUCTOR.
     me->ixml = cl_ixml=>create( ).
+    me->support_non_xml_characters = is_support_non_xml_characters( ).
   ENDMETHOD.
 
 
@@ -7135,6 +7140,31 @@ METHOD create_xl_table.
     lo_element2->set_attribute_ns( name  = 'id'
                                   value = lv_value ).
     lv_value = ls_fieldcat-scrtext_l.
+
+    " The text "_x...._", with "_x" not "_X", with exactly 4 ".", each being 0-9 a-f or A-F (case insensitive), is interpreted
+    " like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.
+    " To not interpret it, Excel replaces the first "_" is to be replaced with "_x005f_".
+    IF lv_value CS '_x'.
+      REPLACE ALL OCCURRENCES OF REGEX '_(x[0-9a-fA-F]{4}_)' IN lv_value WITH '_x005f_$1' RESPECTING CASE.
+    ENDIF.
+
+    " XML chapter 2.2: Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+    " NB: although Excel supports _x0009_, it's not rendered except if you edit the text.
+    " Excel considers _x000d_ as being an error (_x000a_ is sufficient and rendered).
+    sy-fdpos = 0.
+    WHILE sy-fdpos < strlen( lv_value ).
+      IF lv_value CA |\r\n\t|. "table_special_characters.
+        CASE lv_value+sy-fdpos(1).
+          WHEN cl_abap_char_utilities=>newline.
+            REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH '_x000a_'.
+          WHEN cl_abap_char_utilities=>cr_lf(1).
+            REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH ``.
+          WHEN cl_abap_char_utilities=>horizontal_tab.
+            REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH '_x0009_'.
+        ENDCASE.
+      ENDIF.
+    ENDWHILE.
+
     lo_element2->set_attribute_ns( name  = 'name'
                                   value = lv_value ).
 
@@ -7831,6 +7861,7 @@ METHOD render_xml_document.
   lo_streamfactory = me->ixml->create_stream_factory( ).
   lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
 
+  IF support_non_xml_characters = abap_false.
   " remove illegal characters in the XML according to the note 1750204
   " the following method is only available if the corresponding kernel is used
   TRY.
@@ -7840,6 +7871,7 @@ METHOD render_xml_document.
     CATCH cx_sy_dyn_call_illegal_method.
 
   ENDTRY.
+  ENDIF.
 
   lo_renderer = me->ixml->create_renderer( ostream  = lo_ostream document = io_document ).
   lo_renderer->render( ).
@@ -7851,4 +7883,39 @@ method ZIF_EXCEL_WRITER~WRITE_FILE.
 
   ep_file = me->create( ).
   endmethod.
+
+METHOD is_support_non_xml_characters.
+  DATA:
+    "! Unicode character U+10000
+    lv_u10000         TYPE string,
+    lo_ixml           TYPE REF TO if_ixml,
+    lo_document       TYPE REF TO if_ixml_document,
+    lo_root           TYPE REF TO if_ixml_element,
+    lo_text           TYPE REF TO if_ixml_text,
+    lo_stream_factory TYPE REF TO if_ixml_stream_factory,
+    lo_ostream        TYPE REF TO if_ixml_ostream,
+    lv_xstring        TYPE xstring,
+    lo_renderer       TYPE REF TO if_ixml_renderer,
+    lv_rc             TYPE i.
+  CONSTANTS lc_utf8_value_of_u10000 TYPE xstring VALUE 'F0908080'.
+
+  lv_u10000 = cl_abap_conv_in_ce=>uccp( 'D800' ) && cl_abap_conv_in_ce=>uccp( 'DC00' ).
+  lo_ixml = cl_ixml=>create( ).
+  lo_document = lo_ixml->create_document( ).
+  lo_root = lo_document->create_simple_element( name = 'ROOT' parent = lo_document ).
+  lo_text = lo_document->create_text( lv_u10000 ).
+  lv_rc = lo_root->append_child( lo_text ).
+  lo_stream_factory = lo_ixml->create_stream_factory( ).
+  lo_ostream = lo_stream_factory->create_ostream_xstring( string = lv_xstring ).
+  lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream
+                                          document = lo_document ).
+  lv_rc = lo_renderer->render( ).
+
+  FIND lc_utf8_value_of_u10000 IN lv_xstring IN BYTE MODE.
+  IF sy-subrc = 0.
+    r_result = abap_true.
+  ELSE.
+    r_result = abap_false.
+  ENDIF.
+ENDMETHOD.
 ENDCLASS.

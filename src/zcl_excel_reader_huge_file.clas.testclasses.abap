@@ -3,8 +3,10 @@ class lcl_test definition deferred.
 class zcl_excel_reader_huge_file definition local friends lcl_test.
 
 *
-class lcl_test definition for testing  " #AU Risk_Level Harmless
-      inheriting from cl_aunit_assert. " #AU Duration Short
+class lcl_test definition for testing
+      inheriting from cl_aunit_assert
+      risk level harmless
+      duration short.
 
   private section.
     data:

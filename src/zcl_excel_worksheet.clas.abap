@@ -545,6 +545,16 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS get_header_footer_drawings
       RETURNING
         VALUE(rt_drawings) TYPE zexcel_t_drawings .
+    METHODS set_area_hyperlink
+      IMPORTING
+        !ip_column_start TYPE simple
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_url          TYPE string
+        !ip_is_internal  TYPE abap_bool
+      RAISING
+        zcx_excel .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -1418,7 +1428,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ASSIGN COMPONENT l_save_index OF STRUCTURE <f_excel_line>
       TO <f_excel_column>.
       IF sy-subrc NE 0.
-        MESSAGE e059(0k) WITH 'FATAL ERROR' RAISING fatal_error.
+        MESSAGE e801(ZABAP2XLSX) WITH 'FATAL ERROR' RAISING fatal_error.
       ENDIF.
 
       LOOP AT lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
@@ -2767,8 +2777,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     error_doi.
 
 * if save successfully -> raise successful message
-*  message i499(sy) with 'Document is Exported to ' p_path.
-    MESSAGE i499(sy) WITH 'Data has been exported successfully'.
+    MESSAGE i400(ZABAP2XLSX).
 
     CLEAR:
       ls_path,
@@ -4819,6 +4828,52 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "SET_AREA_STYLE
 
 
+  METHOD set_area_hyperlink.
+    DATA: ld_row_start        TYPE zexcel_cell_row,
+          ld_row_end          TYPE zexcel_cell_row,
+          ld_column_start_int TYPE zexcel_cell_column,
+          ld_column_end_int   TYPE zexcel_cell_column,
+          ld_current_column   TYPE zexcel_cell_column_alpha,
+          ld_current_row      TYPE zexcel_cell_row,
+          ld_value            TYPE string.
+    DATA: lv_column    TYPE zexcel_cell_column,
+          lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
+
+    MOVE: ip_row_to TO ld_row_end,
+          ip_row    TO ld_row_start.
+    IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+      ld_row_end = ld_row_start.
+    ENDIF.
+    ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
+    ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
+    IF ld_column_end_int IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+      ld_column_end_int = ld_column_start_int.
+    ENDIF.
+
+    WHILE ld_column_start_int <= ld_column_end_int.
+      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
+      ld_current_row = ld_row_start.
+      WHILE ld_current_row <= ld_row_end.
+
+        me->get_cell( EXPORTING ip_column = ld_current_column ip_row = ld_current_row
+                      IMPORTING ep_value  = ld_value ).
+
+        IF ip_is_internal = abap_true.
+          lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = ip_url ).
+        ELSE.
+          lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = ip_url ).
+        ENDIF.
+
+        me->set_cell( ip_column = ld_current_column ip_row = ld_current_row ip_value = ld_value ip_hyperlink = lo_hyperlink ).
+
+        ADD 1 TO ld_current_row.
+      ENDWHILE.
+      ADD 1 TO ld_column_start_int.
+    ENDWHILE.
+
+  ENDMETHOD.                    "SET_AREA_HYPERLINK
+
+
   METHOD set_cell.
 
     DATA: lv_column        TYPE zexcel_cell_column,
@@ -4962,6 +5017,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ip_hyperlink->set_cell_reference( ip_column = ip_column
                                         ip_row = ip_row ).
       me->hyperlinks->add( ip_hyperlink ).
+    ENDIF.
+
+    IF lv_value CS '_x'.
+      " Issue #761 value "_x0041_" rendered as "A".
+      " "_x...._", where "." is 0-9 a-f or A-F (case insensitive), is an internal value in sharedStrings.xml
+      " that Excel uses to store special characters, it's interpreted like Unicode character U+....
+      " for instance "_x0041_" is U+0041 which is "A".
+      " To not interpret such text, the first underscore is replaced with "_x005f_".
+      " The value "_x0041_" is to be stored internally "_x005f_x0041_" so that it's rendered like "_x0041_".
+      " Note that REGEX is time consuming, it's why "CS" is used above to improve the performance.
+      REPLACE ALL OCCURRENCES OF REGEX '_(x[0-9a-fA-F]{4}_)' IN lv_value WITH '_x005f_$1' RESPECTING CASE.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed

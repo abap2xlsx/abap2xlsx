@@ -3409,9 +3409,12 @@ METHOD load_worksheet_hyperlinks.
   DATA: lo_ixml_hyperlinks TYPE REF TO if_ixml_node_collection,
         lo_ixml_hyperlink  TYPE REF TO if_ixml_element,
         lo_ixml_iterator   TYPE REF TO if_ixml_node_iterator,
-        lv_row             TYPE zexcel_cell_row,
-        lv_column          TYPE zexcel_cell_column_alpha,
-        lo_hyperlink       TYPE REF TO zcl_excel_hyperlink,
+        lv_row_start       TYPE zexcel_cell_row,
+        lv_row_end         TYPE zexcel_cell_row,
+        lv_column_start    TYPE zexcel_cell_column_alpha,
+        lv_column_end      TYPE zexcel_cell_column_alpha,
+        lv_is_internal     TYPE abap_bool,
+        lv_url             TYPE string,
         lv_value           TYPE zexcel_cell_value.
 
   DATA: BEGIN OF ls_hyperlink,
@@ -3430,7 +3433,7 @@ METHOD load_worksheet_hyperlinks.
   WHILE lo_ixml_hyperlink IS BOUND.
 
     CLEAR ls_hyperlink.
-    CLEAR lo_hyperlink.
+    CLEAR lv_url.
 
     ls_hyperlink-ref      = lo_ixml_hyperlink->get_attribute_ns( 'ref' ).
     ls_hyperlink-display  = lo_ixml_hyperlink->get_attribute_ns( 'display' ).
@@ -3439,31 +3442,36 @@ METHOD load_worksheet_hyperlinks.
     ls_hyperlink-r_id     = lo_ixml_hyperlink->get_attribute( name      = 'id'
                                                               namespace = 'r' ).
     IF ls_hyperlink-r_id IS INITIAL.  " Internal link
-      lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = ls_hyperlink-location ).
+      lv_is_internal = abap_true.
+      lv_url = ls_hyperlink-location.
     ELSE.                             " External link
       READ TABLE it_external_hyperlinks ASSIGNING <ls_external_hyperlink> WITH TABLE KEY id = ls_hyperlink-r_id.
       IF sy-subrc = 0.
-        lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = <ls_external_hyperlink>-target ).
+        lv_is_internal = abap_false.
+        lv_url = <ls_external_hyperlink>-target.
       ENDIF.
     ENDIF.
-    IF lo_hyperlink IS BOUND.  " because of unsupported external links
 
-      zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
-                                                          i_columnrow = ls_hyperlink-ref
-                                                        IMPORTING
-                                                          e_row       = lv_row
-                                                          e_column    = lv_column ).
-* Currently it is not allowed to pass a hyperlink w/o text, but text has already been read.
-* So just reread it and be done with it
-      io_worksheet->get_cell( EXPORTING
-                                ip_column     = lv_column
-                                 ip_row       = lv_row
-                               IMPORTING
-                                 ep_value     = lv_value ).
-      io_worksheet->set_cell( ip_column     = lv_column
-                              ip_row        = lv_row
-                              ip_value      = lv_value
-                              ip_hyperlink  = lo_hyperlink ).
+    IF lv_url IS NOT INITIAL.  " because of unsupported external links
+
+      zcl_excel_common=>convert_range2column_a_row(
+        EXPORTING
+          i_range        = ls_hyperlink-ref
+        IMPORTING
+          e_column_start = lv_column_start
+          e_column_end   = lv_column_end
+          e_row_start    = lv_row_start
+          e_row_end      = lv_row_end ).
+
+      io_worksheet->set_area_hyperlink(
+        EXPORTING
+          ip_column_start = lv_column_start
+          ip_column_end   = lv_column_end
+          ip_row          = lv_row_start
+          ip_row_to       = lv_row_end
+          ip_url          = lv_url
+          ip_is_internal  = lv_is_internal ).
+
     ENDIF.
 
     lo_ixml_hyperlink ?= lo_ixml_iterator->get_next( ).

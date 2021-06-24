@@ -95,8 +95,44 @@
     <T100>
      <SPRSL>E</SPRSL>
      <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>400</MSGNR>
+     <TEXT>Data has been exported successfully</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
      <MSGNR>800</MSGNR>
      <TEXT>Unable to interpret input as column</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>801</MSGNR>
+     <TEXT>Spreadsheet cannot be called (return code &amp;1)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>802</MSGNR>
+     <TEXT>Frontend download impossible in background processing</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>803</MSGNR>
+     <TEXT>Online display absurd in background processing</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>804</MSGNR>
+     <TEXT>Document not sent to &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABAP2XLSX</ARBGB>
+     <MSGNR>805</MSGNR>
+     <TEXT>Document sent</TEXT>
     </T100>
    </T100>
   </asx:values>
