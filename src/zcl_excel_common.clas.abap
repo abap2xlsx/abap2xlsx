@@ -687,7 +687,7 @@ method ENCRYPT_PASSWORD.
 
   DATA lv_pwd            TYPE zexcel_aes_password.
 
-  lv_pwd = i_pwd(15).
+  lv_pwd = i_pwd.
 
   lv_pwd_len = STRLEN( lv_pwd ).
   lv_curr_offset = lv_pwd_len - 1.

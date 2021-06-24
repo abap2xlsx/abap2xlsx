@@ -84,6 +84,7 @@ START-OF-SELECTION.
         <fs_field_catalog>-position   = 1.
         <fs_field_catalog>-dynpfld    = abap_true.
         <fs_field_catalog>-style      = lo_style->get_guid( ).
+        <fs_field_catalog>-scrtext_m  = |Flight\r\nNumber|. " Demonstrates header on 2 lines
       WHEN 'FLDATE'.
         <fs_field_catalog>-position   = 2.
         <fs_field_catalog>-dynpfld    = abap_true.
