@@ -945,49 +945,49 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *-------------------------------------------
 
     DEFINE close_document.
-      clear: l_is_closed.
-      if lo_proxy is not initial.
+      CLEAR: l_is_closed.
+      IF lo_proxy IS NOT INITIAL.
 
 * check proxy detroyed adi
 
-        call method lo_proxy->is_destroyed
-          importing
+        CALL METHOD lo_proxy->is_destroyed
+          IMPORTING
             ret_value = l_is_closed.
 
 * if dun detroyed yet: close -> release proxy
 
-        if l_is_closed is initial.
-          call method lo_proxy->close_document
+        IF l_is_closed IS INITIAL.
+          CALL METHOD lo_proxy->close_document
 *        EXPORTING
 *          do_save = do_save
-            importing
+            IMPORTING
               error       = lo_error
               retcode     = lc_retcode.
-        endif.
+        ENDIF.
 
-        call method lo_proxy->release_document
-          importing
+        CALL METHOD lo_proxy->release_document
+          IMPORTING
             error   = lo_error
             retcode = lc_retcode.
 
-      else.
+      ELSE.
         lc_retcode = c_oi_errors=>ret_document_not_open.
-      endif.
+      ENDIF.
 
 * Detroy control container
 
-      if lo_control is not initial.
-        call method lo_control->destroy_control.
-      endif.
+      IF lo_control IS NOT INITIAL.
+        CALL METHOD lo_control->destroy_control.
+      ENDIF.
 
-      clear:
+      CLEAR:
         lo_spreadsheet,
         lo_proxy,
         lo_control.
 
 * free local
 
-      clear: l_is_closed.
+      CLEAR: l_is_closed.
 
     END-OF-DEFINITION.
 
@@ -995,13 +995,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *-------------------------------------------
 
     DEFINE error_doi.
-      if lc_retcode ne c_oi_errors=>ret_ok.
+      IF lc_retcode NE c_oi_errors=>ret_ok.
         close_document.
-        call method lo_error->raise_message
-          exporting
+        CALL METHOD lo_error->raise_message
+          EXPORTING
             type = 'E'.
-        clear: lo_error.
-      endif.
+        CLEAR: lo_error.
+      ENDIF.
     END-OF-DEFINITION.
 
 *--------------------------------------------------------------------*
@@ -1428,7 +1428,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ASSIGN COMPONENT l_save_index OF STRUCTURE <f_excel_line>
       TO <f_excel_column>.
       IF sy-subrc NE 0.
-        MESSAGE e801(ZABAP2XLSX) WITH 'FATAL ERROR' RAISING fatal_error.
+        MESSAGE e801(zabap2xlsx) WITH 'FATAL ERROR' RAISING fatal_error.
       ENDIF.
 
       LOOP AT lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
@@ -2777,7 +2777,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     error_doi.
 
 * if save successfully -> raise successful message
-    MESSAGE i400(ZABAP2XLSX).
+    MESSAGE i400(zabap2xlsx).
 
     CLEAR:
       ls_path,
@@ -3423,35 +3423,35 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * We have a lot of parameters.  Use some macros to make the coding more structured
 
     DEFINE clear_initial_colorxfields.
-      if &1-rgb is initial.
-        clear &2-rgb.
-      endif.
-      if &1-indexed is initial.
-        clear &2-indexed.
-      endif.
-      if &1-theme is initial.
-        clear &2-theme.
-      endif.
-      if &1-tint is initial.
-        clear &2-tint.
-      endif.
+      IF &1-rgb IS INITIAL.
+        CLEAR &2-rgb.
+      ENDIF.
+      IF &1-indexed IS INITIAL.
+        CLEAR &2-indexed.
+      ENDIF.
+      IF &1-theme IS INITIAL.
+        CLEAR &2-theme.
+      ENDIF.
+      IF &1-tint IS INITIAL.
+        CLEAR &2-tint.
+      ENDIF.
     END-OF-DEFINITION.
 
     DEFINE move_supplied_borders.
-      if ip_&1 is supplied.  " only act if parameter was supplied
-        if ip_x&1 is supplied.  "
+      IF ip_&1 IS SUPPLIED.  " only act if parameter was supplied
+        IF ip_x&1 IS SUPPLIED.  "
           borderx = ip_x&1.          " use supplied x-parameter
-        else.
-          clear borderx with 'X'.
+        ELSE.
+          CLEAR borderx WITH 'X'.
 * clear in a way that would be expected to work easily
-          if ip_&1-border_style is  initial.
-            clear borderx-border_style.
-          endif.
+          IF ip_&1-border_style IS  INITIAL.
+            CLEAR borderx-border_style.
+          ENDIF.
           clear_initial_colorxfields ip_&1-border_color borderx-border_color.
-        endif.
-        move-corresponding ip_&1   to complete_style-&2.
-        move-corresponding borderx to complete_stylex-&2.
-      endif.
+        ENDIF.
+        MOVE-CORRESPONDING ip_&1   TO complete_style-&2.
+        MOVE-CORRESPONDING borderx TO complete_stylex-&2.
+      ENDIF.
     END-OF-DEFINITION.
 
 * First get current stylsettings
@@ -3606,10 +3606,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                                borders_top        borders-top       .
 
     DEFINE move_supplied_singlestyles.
-      if ip_&1 is supplied.
+      IF ip_&1 IS SUPPLIED.
         complete_style-&2 = ip_&1.
         complete_stylex-&2 = 'X'.
-      endif.
+      ENDIF.
     END-OF-DEFINITION.
 
     move_supplied_singlestyles: number_format_format_code  number_format-format_code,
@@ -4427,10 +4427,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                 ENDIF.
 
                 TRY.
-                    <lv_value> = lv_value. "Will raise exception if data type of <lv_value> is not float (or decfloat16/34) and excel delivers exponential number e.g. -2.9398924194538267E-2
+                    DESCRIBE FIELD <lv_value> TYPE lv_type.
+                    IF lv_type = 'D'.
+                      <lv_value> = zcl_excel_common=>excel_string_to_date( ip_value = lv_value ).
+                    ELSE.
+                      <lv_value> = lv_value. "Will raise exception if data type of <lv_value> is not float (or decfloat16/34) and excel delivers exponential number e.g. -2.9398924194538267E-2
+                    ENDIF.
                   CATCH cx_sy_conversion_error INTO lx_conversion_error.
                     "Another try with conversion to float...
-                    DESCRIBE FIELD <lv_value> TYPE lv_type.
                     IF lv_type = 'P'.
                       <lv_value> = lv_float = lv_value.
                     ELSE.
