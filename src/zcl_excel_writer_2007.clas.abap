@@ -5846,15 +5846,11 @@ METHOD create_xl_sheet_sheet_data.
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_spans
                                         value = lv_value ).
         lo_row = io_worksheet->get_row( <ls_sheet_content>-cell_row ).
-        " Do we need the row dimension attributes?
-        IF lo_row->get_row_height( )   >= 0 OR
-           lo_row->get_collapsed( io_worksheet )     = abap_true OR
-           lo_row->get_outline_level( io_worksheet ) > 0 OR
-           lo_row->get_xf_index( )     <> 0 OR
-           l_autofilter_hidden = abap_true.
-          " Row dimensions
-          IF lo_row->get_row_height( ) >= 0.
+        " Row dimensions
+          IF lo_row->get_custom_height( ) = abap_true.
             lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1' ).
+          ENDIF.
+          IF lo_row->get_row_height( ) >= 0.
             lv_value = lo_row->get_row_height( ).
             lo_element_2->set_attribute_ns( name  = 'ht' value = lv_value ).
           ENDIF.
@@ -5875,7 +5871,6 @@ METHOD create_xl_sheet_sheet_data.
             lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
             lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
           ENDIF.
-        ENDIF.
         IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
           CLEAR l_autofilter_hidden.
         ELSE.
