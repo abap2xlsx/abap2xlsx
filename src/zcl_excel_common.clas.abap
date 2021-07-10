@@ -127,13 +127,14 @@ public section.
     returning
       value(EP_VALUE) type ZEXCEL_CELL_VALUE .
   type-pools ABAP .
+  types: t_char10 type c length 10.
   class-methods SPLIT_FILE
     importing
       !IP_FILE type TEXT255
     exporting
       !EP_FILE type TEXT255
-      !EP_EXTENSION type CHAR10
-      !EP_DOTEXTENSION type CHAR10 .
+      !EP_EXTENSION type t_char10
+      !EP_DOTEXTENSION type t_char10 .
   class-methods CALCULATE_CELL_DISTANCE
     importing
       !IV_REFERENCE_CELL type CLIKE
