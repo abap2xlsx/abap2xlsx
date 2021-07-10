@@ -70,7 +70,7 @@ method CREATE_CSV.
         ls_format LIKE LINE OF lt_format,
         lv_date   TYPE DATS,
         lv_tmp    TYPE string,
-        lv_time   TYPE CHAR08.
+        lv_time   TYPE C LENGTH 8.
 
   DATA: lo_iterator       TYPE REF TO cl_object_collection_iterator,
         lo_worksheet      TYPE REF TO zcl_excel_worksheet.
