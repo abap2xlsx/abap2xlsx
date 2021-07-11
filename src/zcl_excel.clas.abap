@@ -151,7 +151,7 @@ protected section.
   data WORKSHEETS type ref to ZCL_EXCEL_WORKSHEETS .
 private section.
 
-  constants VERSION type CHAR10 value '7.2.0'. "#EC NOTEXT
+  constants VERSION type C length 10 value '7.2.0'. "#EC NOTEXT
   data AUTOFILTERS type ref to ZCL_EXCEL_AUTOFILTERS .
   data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
   data DEFAULT_STYLE type ZEXCEL_CELL_STYLE .
