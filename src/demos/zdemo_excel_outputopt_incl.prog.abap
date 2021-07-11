@@ -302,7 +302,7 @@ CLASS lcl_output IMPLEMENTATION.
           t_mailtext           TYPE soli_tab,
           wa_mailtext          LIKE LINE OF t_mailtext,
           send_to              TYPE adr6-smtp_addr,
-          sent                 TYPE os_boolean.
+          sent                 TYPE abap_bool.
 
 
     mail_title     = 'Mail title'.
@@ -351,11 +351,11 @@ CLASS lcl_output IMPLEMENTATION.
 
         COMMIT WORK.
 
-        IF sent IS INITIAL.
-          MESSAGE i804(ZABAP2XLSX) WITH p_email.
-        ELSE.
+        IF sent = abap_true.
           MESSAGE s805(ZABAP2XLSX).
           MESSAGE 'Document ready to be sent - Check SOST or SCOT' TYPE 'I'.
+        ELSE.
+          MESSAGE i804(ZABAP2XLSX) WITH p_email.
         ENDIF.
 
       CATCH cx_bcs INTO bcs_exception.
