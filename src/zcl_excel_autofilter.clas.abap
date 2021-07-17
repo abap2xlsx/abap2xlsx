@@ -33,7 +33,9 @@ public section.
       !IO_SHEET type ref to ZCL_EXCEL_WORKSHEET .
   methods GET_FILTER_AREA
     returning
-      value(RS_AREA) type ZEXCEL_S_AUTOFILTER_AREA .
+      value(RS_AREA) type ZEXCEL_S_AUTOFILTER_AREA
+    RAISING
+      zcx_excel .
   methods GET_FILTER_RANGE
     returning
       value(R_RANGE) type ZEXCEL_CELL_VALUE

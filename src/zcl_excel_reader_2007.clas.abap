@@ -253,7 +253,9 @@ protected section.
   methods LOAD_THEME
     importing
       value(IV_PATH) type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL .
+      !IP_EXCEL type ref to ZCL_EXCEL
+    RAISING
+      zcx_excel .
 private section.
 
   data ZIP type ref to LCL_ZIP_ARCHIVE .

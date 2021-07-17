@@ -12,7 +12,9 @@ public section.
     importing
       !IP_INDEX type ZEXCEL_CELL_COLUMN_ALPHA
       !IP_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IP_EXCEL type ref to ZCL_EXCEL .
+      !IP_EXCEL type ref to ZCL_EXCEL
+    RAISING
+      zcx_excel .
   methods GET_AUTO_SIZE
     returning
       value(R_AUTO_SIZE) type ABAP_BOOL .
@@ -48,7 +50,9 @@ public section.
     importing
       !IP_INDEX type ZEXCEL_CELL_COLUMN_ALPHA
     returning
-      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
+      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN
+    RAISING
+      zcx_excel .
   methods SET_OUTLINE_LEVEL
     importing
       !IP_OUTLINE_LEVEL type INT4 .
