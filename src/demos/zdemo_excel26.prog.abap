@@ -161,7 +161,7 @@ ENDFORM.                    "EXPORT_TO_EXCEL
 *  -->  p1        text
 *  <--  p2        text
 *----------------------------------------------------------------------*
-FORM write_file .
+FORM write_file RAISING zcx_excel.
   DATA: lt_file     TYPE solix_tab,
         l_bytecount TYPE i,
         l_file      TYPE xstring.

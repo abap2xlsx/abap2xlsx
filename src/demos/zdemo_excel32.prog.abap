@@ -194,17 +194,22 @@ ENDFORM.                    "EXPORT_TO_EXCEL_BIND
 *  -->  p1        text
 *  <--  p2        text
 *----------------------------------------------------------------------*
-FORM write_file .
+FORM write_file.
   DATA: lt_file     TYPE solix_tab,
         l_bytecount TYPE i,
         l_file      TYPE xstring.
 
   DATA: lo_excel_writer         TYPE REF TO zif_excel_writer.
 
-  DATA: ls_seoclass TYPE seoclass.
+  DATA: ls_seoclass TYPE seoclass,
+        lo_error    TYPE REF TO zcx_excel.
 
-  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-  l_file = lo_excel_writer->write_file( lo_excel ).
+  TRY.
+      CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+      l_file = lo_excel_writer->write_file( lo_excel ).
+    CATCH zcx_excel INTO lo_error.
+      MESSAGE lo_error->get_text( ) TYPE 'E'.
+  ENDTRY.
 
   SELECT SINGLE * INTO ls_seoclass
     FROM seoclass
