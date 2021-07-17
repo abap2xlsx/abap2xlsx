@@ -1,29 +1,31 @@
-interface ZIF_EXCEL_SHEET_PROTECTION
-  public .
+INTERFACE zif_excel_sheet_protection
+  PUBLIC .
 
+  TYPES tv_sheet_protection TYPE c LENGTH 1.
+  TYPES tv_sheet_protection_bool TYPE c LENGTH 1.
 
-  data AUTO_FILTER type ZEXCEL_SHEET_PROTECTION_BOOL .
-  constants C_ACTIVE type ZEXCEL_SHEET_PROTECTION_BOOL value '1'. "#EC NOTEXT
-  constants C_NOACTIVE type ZEXCEL_SHEET_PROTECTION_BOOL value '0'. "#EC NOTEXT
-  constants C_PROTECTED type ZEXCEL_SHEET_PROTECTION value 'X'. "#EC NOTEXT
-  constants C_UNPROTECTED type ZEXCEL_SHEET_PROTECTION value ''. "#EC NOTEXT
-  data DELETE_COLUMNS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data DELETE_ROWS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data FORMAT_CELLS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data FORMAT_COLUMNS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data FORMAT_ROWS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data INSERT_COLUMNS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data INSERT_HYPERLINKS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data INSERT_ROWS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data OBJECTS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data PASSWORD type ZEXCEL_AES_PASSWORD .
-  data PIVOT_TABLES type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data PROTECTED type ZEXCEL_SHEET_PROTECTION .
-  data SCENARIOS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data SELECT_LOCKED_CELLS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data SELECT_UNLOCKED_CELLS type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data SHEET type ZEXCEL_SHEET_PROTECTION_BOOL .
-  data SORT type ZEXCEL_SHEET_PROTECTION_BOOL .
+  DATA auto_filter TYPE tv_sheet_protection_bool .
+  CONSTANTS c_active TYPE tv_sheet_protection_bool VALUE '1'. "#EC NOTEXT
+  CONSTANTS c_noactive TYPE tv_sheet_protection_bool VALUE '0'. "#EC NOTEXT
+  CONSTANTS c_protected TYPE tv_sheet_protection VALUE 'X'. "#EC NOTEXT
+  CONSTANTS c_unprotected TYPE tv_sheet_protection VALUE ''. "#EC NOTEXT
+  DATA delete_columns TYPE tv_sheet_protection_bool .
+  DATA delete_rows TYPE tv_sheet_protection_bool .
+  DATA format_cells TYPE tv_sheet_protection_bool .
+  DATA format_columns TYPE tv_sheet_protection_bool .
+  DATA format_rows TYPE tv_sheet_protection_bool .
+  DATA insert_columns TYPE tv_sheet_protection_bool .
+  DATA insert_hyperlinks TYPE tv_sheet_protection_bool .
+  DATA insert_rows TYPE tv_sheet_protection_bool .
+  DATA objects TYPE tv_sheet_protection_bool .
+  DATA password TYPE zexcel_aes_password .
+  DATA pivot_tables TYPE tv_sheet_protection_bool .
+  DATA protected TYPE tv_sheet_protection .
+  DATA scenarios TYPE tv_sheet_protection_bool .
+  DATA select_locked_cells TYPE tv_sheet_protection_bool .
+  DATA select_unlocked_cells TYPE tv_sheet_protection_bool .
+  DATA sheet TYPE tv_sheet_protection_bool .
+  DATA sort TYPE tv_sheet_protection_bool .
 
-  methods INITIALIZE .
-endinterface.
+  METHODS initialize .
+ENDINTERFACE.

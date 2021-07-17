@@ -84,6 +84,11 @@ protected section.
 *"* private components of class ZCL_EXCEL_CONVERTER
 *"* do not include other source files here!!!
 private section.
+  CLASS-METHODS get_subclasses
+    IMPORTING
+      is_clskey  TYPE seoclskey
+    CHANGING
+      ct_classes TYPE seor_implementing_keys.
 
   data WO_EXCEL type ref to ZCL_EXCEL .
   data WO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
@@ -109,6 +114,7 @@ private section.
   class-data WS_INDX type INDX .
 
   class-methods INIT_OPTION .
+  class-methods GET_ALV_CONVERTERS.
   methods BIND_TABLE
     importing
       !I_STYLE_TABLE type ZEXCEL_TABLE_STYLE
@@ -404,24 +410,7 @@ method CLASS_CONSTRUCTOR.
     l_uname = sy-uname.
   ENDIF.
 
-* Object CL_GUI_ALV_GRID
-  ls_objects-seoclass  = 'CL_GUI_ALV_GRID'.
-  ls_objects-clsname   = 'ZCL_EXCEL_CONVERTER_ALV_GRID'.
-  INSERT ls_objects INTO TABLE wt_objects.
-
-* Object CL_SALV_TABLE
-  ls_objects-seoclass  = 'CL_SALV_TABLE'.
-  ls_objects-clsname   = 'ZCL_EXCEL_CONVERTER_SALV_TABLE'.
-  INSERT ls_objects INTO TABLE wt_objects.
-
-* Object CL_SALV_RESULT
-  ls_objects-seoclass  = 'CL_SALV_EX_RESULT_DATA_TABLE '.
-  ls_objects-clsname   = 'ZCL_EXCEL_CONVERTER_RESULT_EX'.
-  INSERT ls_objects INTO TABLE wt_objects.
-* Object CL_SALV_WD_RESULT
-  ls_objects-seoclass  = 'CL_SALV_WD_RESULT_DATA_TABLE '.
-  ls_objects-clsname   = 'ZCL_EXCEL_CONVERTER_RESULT_WD'.
-  INSERT ls_objects INTO TABLE wt_objects.
+  get_alv_converters( ).
 
   CONCATENATE 'EXCEL_' sy-uname INTO ws_indx-srtfd.
 
@@ -437,7 +426,7 @@ method CLASS_CONSTRUCTOR.
 
 
 method CLEAN_FIELDCATALOG.
-  DATA: l_position TYPE int1.
+  DATA: l_position TYPE tabfdpos.
 
   FIELD-SYMBOLS: <fs_sfcat>   TYPE zexcel_s_converter_fcat.
 
@@ -941,6 +930,54 @@ method EXECUTE_CONVERTER.
 endmethod.
 
 
+  METHOD get_alv_converters.
+    DATA:
+      lt_direct_implementations TYPE seor_implementing_keys,
+      lt_all_implementations    TYPE seor_implementing_keys,
+      ls_impkey                 TYPE seor_implementing_key,
+      ls_classkey               TYPE seoclskey,
+      lr_implementation         TYPE REF TO zif_excel_converter,
+      ls_object                 TYPE ts_alv_types,
+      lr_classdescr             TYPE REF TO cl_abap_classdescr.
+
+    ls_classkey-clsname = 'ZIF_EXCEL_CONVERTER'.
+
+    CALL FUNCTION 'SEO_INTERFACE_IMPLEM_GET_ALL'
+      EXPORTING
+        intkey  = ls_classkey
+      IMPORTING
+        impkeys = lt_direct_implementations
+      EXCEPTIONS
+        OTHERS  = 2.
+
+    CHECK sy-subrc = 0.
+
+    LOOP AT lt_direct_implementations INTO ls_impkey.
+      lr_classdescr ?= cl_abap_classdescr=>describe_by_name( ls_impkey-clsname ).
+      IF lr_classdescr->is_instantiatable( ) = abap_true.
+        APPEND ls_impkey TO lt_all_implementations.
+      ENDIF.
+
+      ls_classkey-clsname = ls_impkey-clsname.
+      get_subclasses( EXPORTING is_clskey = ls_classkey CHANGING ct_classes = lt_all_implementations ).
+    ENDLOOP.
+
+    SORT lt_all_implementations BY clsname.
+    DELETE ADJACENT DUPLICATES FROM lt_all_implementations COMPARING clsname.
+
+    LOOP AT lt_all_implementations into ls_impkey.
+      CLEAR ls_object.
+      CREATE OBJECT lr_implementation TYPE (ls_impkey-clsname).
+      ls_object-seoclass = lr_implementation->get_supported_class( ).
+
+      IF ls_object-seoclass IS NOT INITIAL.
+        ls_object-clsname  = ls_impkey-clsname.
+        INSERT ls_object INTO TABLE wt_objects.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+
 method GET_COLOR_STYLE.
   DATA: ls_colors         TYPE zexcel_s_converter_col,
         ls_color_styles   TYPE ts_color_styles,
@@ -1036,7 +1073,7 @@ method GET_FILE.
 
 
 method GET_FUNCTION_NUMBER.
-*Number	Function
+*Number    Function
 *1  AVERAGE
 *2  COUNT
 *3  COUNTA
@@ -1118,6 +1155,32 @@ method GET_STYLE.
     ENDIF.
   ENDIF.
   endmethod.
+
+
+  METHOD get_subclasses.
+    DATA:
+      lt_subclasses TYPE seor_inheritance_keys,
+      ls_subclass   TYPE seor_inheritance_key,
+      lr_classdescr TYPE REF TO cl_abap_classdescr.
+
+    CALL FUNCTION 'SEO_CLASS_GET_ALL_SUBS'
+      EXPORTING
+        clskey             = is_clskey
+      IMPORTING
+        inhkeys            = lt_subclasses
+      EXCEPTIONS
+        class_not_existing = 1
+        OTHERS             = 2.
+
+    CHECK sy-subrc = 0.
+
+    LOOP AT lt_subclasses INTO ls_subclass.
+      lr_classdescr ?= cl_abap_classdescr=>describe_by_name( ls_subclass-clsname ).
+      IF lr_classdescr->is_instantiatable( ) = abap_true.
+        APPEND ls_subclass TO ct_classes.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
 
 
 method INIT_OPTION.

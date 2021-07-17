@@ -101,6 +101,7 @@ public section.
   class-methods GET_FIELDCATALOG
     importing
       !IP_TABLE type STANDARD TABLE
+      !IV_HIDE_MANDT type ABAP_BOOL default ABAP_TRUE
     returning
       value(EP_FIELDCATALOG) type ZEXCEL_T_FIELDCATALOG .
   class-methods NUMBER_TO_EXCEL_STRING
@@ -126,40 +127,14 @@ public section.
     returning
       value(EP_VALUE) type ZEXCEL_CELL_VALUE .
   type-pools ABAP .
-  class-methods ASSERT_EQUALS
-    importing
-      !EXP type ANY
-      !ACT type ANY
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=>CRITICAL
-      !TOL type F optional
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=>METHOD
-      !IGNORE_HASH_SEQUENCE type ABAP_BOOL default ABAP_FALSE
-    returning
-      value(ASSERTION_FAILED) type ABAP_BOOL .
-  class-methods FAIL
-    importing
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=>CRITICAL
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=>METHOD
-      !DETAIL type CSEQUENCE optional .
-  class-methods ASSERT_DIFFERS
-    importing
-      !EXP type SIMPLE
-      !ACT type SIMPLE
-      !MSG type CSEQUENCE optional
-      !LEVEL type AUNIT_LEVEL default IF_AUNIT_CONSTANTS=>CRITICAL
-      !TOL type F optional
-      !QUIT type AUNIT_FLOWCTRL default IF_AUNIT_CONSTANTS=>METHOD
-    returning
-      value(ASSERTION_FAILED) type ABAP_BOOL .
+  types: t_char10 type c length 10.
   class-methods SPLIT_FILE
     importing
       !IP_FILE type TEXT255
     exporting
       !EP_FILE type TEXT255
-      !EP_EXTENSION type CHAR10
-      !EP_DOTEXTENSION type CHAR10 .
+      !EP_EXTENSION type t_char10
+      !EP_DOTEXTENSION type t_char10 .
   class-methods CALCULATE_CELL_DISTANCE
     importing
       !IV_REFERENCE_CELL type CLIKE
@@ -235,95 +210,6 @@ ENDCLASS.
 
 
 CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
-
-
-method ASSERT_DIFFERS.
-  DATA: ls_seoclass TYPE seoclass.
-
-" Let see >=7.02
-  SELECT SINGLE * INTO ls_seoclass
-    FROM seoclass
-    WHERE clsname = 'CL_ABAP_UNIT_ASSERT'.
-
-  IF sy-subrc = 0.
-    CALL METHOD (ls_seoclass-clsname)=>assert_differs
-      EXPORTING
-        exp              = exp
-        act              = act
-        msg              = msg
-        level            = level
-        tol              = tol
-        quit             = quit
-      RECEIVING
-        assertion_failed = assertion_failed.
-  ELSE.
-" Let see >=7.00 or even lower
-    SELECT SINGLE * INTO ls_seoclass
-      FROM seoclass
-      WHERE clsname = 'CL_AUNIT_ASSERT'.
-
-    IF sy-subrc = 0.
-      CALL METHOD (ls_seoclass-clsname)=>assert_differs
-        EXPORTING
-          exp              = exp
-          act              = act
-          msg              = msg
-          level            = level
-          tol              = tol
-          quit             = quit
-        RECEIVING
-          assertion_failed = assertion_failed.
-    ELSE.
-* We do nothing for now not supported
-    ENDIF.
-  ENDIF.
-endmethod.
-
-
-METHOD assert_equals.
-  DATA: ls_seoclass TYPE seoclass.
-
-  " Let see >=7.02
-  SELECT SINGLE * INTO ls_seoclass
-    FROM seoclass
-    WHERE clsname = 'CL_ABAP_UNIT_ASSERT'.
-
-  IF sy-subrc = 0.
-    CALL METHOD (ls_seoclass-clsname)=>assert_equals
-      EXPORTING
-        exp                  = exp
-        act                  = act
-        msg                  = msg
-        level                = level
-        tol                  = tol
-        quit                 = quit
-        ignore_hash_sequence = ignore_hash_sequence
-      RECEIVING
-        assertion_failed     = assertion_failed.
-  ELSE.
-    " Let see >=7.00 or even lower
-    SELECT SINGLE * INTO ls_seoclass
-      FROM seoclass
-      WHERE clsname = 'CL_AUNIT_ASSERT'.
-
-    IF sy-subrc = 0.
-      CALL METHOD (ls_seoclass-clsname)=>assert_equals
-        EXPORTING
-          exp                  = exp
-          act                  = act
-          msg                  = msg
-          level                = level
-          tol                  = tol
-          quit                 = quit
-          ignore_hash_sequence = ignore_hash_sequence
-        RECEIVING
-          assertion_failed     = assertion_failed.
-    ELSE.
-* We do nothing for now not supported
-    ENDIF.
-  ENDIF.
-ENDMETHOD.
-
 
 METHOD calculate_cell_distance.
 
@@ -669,7 +555,12 @@ method CONVERT_RANGE2COLUMN_A_ROW.
 
   ELSEIF i_range CS '!'.                                " c) sheetname existing - does not start with '
     SPLIT i_range AT '!' INTO lv_sheet lv_range.
-
+      " begin Dennis Schaaf
+      IF lv_range CP '*#REF*'.
+        lv_errormessage = 'Invalid range'(001).
+        zcx_excel=>raise_text( lv_errormessage ).
+      ENDIF.
+      " end Dennis Schaaf
   ELSE.                                                 " d) no sheetname - just area
     lv_range = i_range.
   ENDIF.
@@ -797,7 +688,7 @@ method ENCRYPT_PASSWORD.
 
   DATA lv_pwd            TYPE zexcel_aes_password.
 
-  lv_pwd = i_pwd(15).
+  lv_pwd = i_pwd.
 
   lv_pwd_len = STRLEN( lv_pwd ).
   lv_curr_offset = lv_pwd_len - 1.
@@ -916,43 +807,6 @@ method EXCEL_STRING_TO_TIME.
   ENDTRY.
 endmethod.
 
-
-method FAIL.
-  DATA: ls_seoclass TYPE seoclass.
-
-  " Let see >=7.02
-  SELECT SINGLE * INTO ls_seoclass
-    FROM seoclass
-    WHERE clsname = 'CL_ABAP_UNIT_ASSERT'.
-
-  IF sy-subrc = 0.
-    CALL METHOD (ls_seoclass-clsname)=>fail
-      EXPORTING
-        msg    = msg
-        level  = level
-        quit   = quit
-        detail = detail.
-  ELSE.
-    " Let see >=7.00 or even lower
-    SELECT SINGLE * INTO ls_seoclass
-      FROM seoclass
-      WHERE clsname = 'CL_AUNIT_ASSERT'.
-
-    IF sy-subrc = 0.
-      CALL METHOD (ls_seoclass-clsname)=>fail
-        EXPORTING
-          msg    = msg
-          level  = level
-          quit   = quit
-          detail = detail.
-    ELSE.
-* We do nothing for now not supported
-    ENDIF.
-  ENDIF.
-
-endmethod.
-
-
 METHOD get_fieldcatalog.
   DATA: lr_dref_tab           TYPE REF TO data,
         lo_salv_table         TYPE REF TO cl_salv_table,
@@ -993,7 +847,7 @@ METHOD get_fieldcatalog.
 
     <fcat>-dynpfld   = 'X'.  " What in the world would we exclude here?
     " except for the MANDT-field of most tables ( 1st column that is )
-    IF <fcat>-position = 1 AND lo_salv_column_table->get_ddic_datatype( ) = 'CLNT'.
+    IF <fcat>-position = 1 AND lo_salv_column_table->get_ddic_datatype( ) = 'CLNT' AND iv_hide_mandt = abap_true.
       CLEAR <fcat>-dynpfld.
     ENDIF.
 

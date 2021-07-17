@@ -8,6 +8,7 @@ public section.
 
 *"* public components of class ZCL_EXCEL_STYLE_COND
 *"* do not include other source files here!!!
+  types tv_conditional_show_value type c length 1.
   constants C_CFVO_TYPE_FORMULA type ZEXCEL_CONDITIONAL_TYPE value 'formula'. "#EC NOTEXT
   constants C_CFVO_TYPE_MAX type ZEXCEL_CONDITIONAL_TYPE value 'max'. "#EC NOTEXT
   constants C_CFVO_TYPE_MIN type ZEXCEL_CONDITIONAL_TYPE value 'min'. "#EC NOTEXT
@@ -52,8 +53,8 @@ public section.
   constants C_RULE_NONE type ZEXCEL_CONDITION_RULE value 'none'. "#EC NOTEXT
   constants C_RULE_TOP10 type ZEXCEL_CONDITION_RULE value 'top10'. "#EC NOTEXT
   constants C_RULE_ABOVE_AVERAGE type ZEXCEL_CONDITION_RULE value 'aboveAverage'. "#EC NOTEXT
-  constants C_SHOWVALUE_FALSE type ZEXCEL_CONDITIONAL_SHOW_VALUE value 0. "#EC NOTEXT
-  constants C_SHOWVALUE_TRUE type ZEXCEL_CONDITIONAL_SHOW_VALUE value 1. "#EC NOTEXT
+  constants C_SHOWVALUE_FALSE type TV_CONDITIONAL_SHOW_VALUE value 0. "#EC NOTEXT
+  constants C_SHOWVALUE_TRUE type TV_CONDITIONAL_SHOW_VALUE value 1. "#EC NOTEXT
   data MODE_CELLIS type ZEXCEL_CONDITIONAL_CELLIS .
   data MODE_COLORSCALE type ZEXCEL_CONDITIONAL_COLORSCALE .
   data MODE_DATABAR type ZEXCEL_CONDITIONAL_DATABAR .
@@ -64,9 +65,10 @@ public section.
   data PRIORITY type ZEXCEL_STYLE_PRIORITY value 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
   data RULE type ZEXCEL_CONDITION_RULE .
 
-  methods CONSTRUCTOR
-    importing
-      !IP_GUID type ZEXCEL_CELL_STYLE optional .
+  METHODS constructor
+    IMPORTING
+      !ip_guid            TYPE zexcel_cell_style OPTIONAL
+      !ip_dimension_range TYPE string.
   methods GET_DIMENSION_RANGE
     returning
       value(EP_DIMENSION_RANGE) type STRING .
@@ -100,7 +102,7 @@ public section.
       !IV_CFVO4_VALUE type ZEXCEL_CONDITIONAL_VALUE optional
       !IV_CFVO5_TYPE type ZEXCEL_CONDITIONAL_TYPE default C_CFVO_TYPE_PERCENT
       !IV_CFVO5_VALUE type ZEXCEL_CONDITIONAL_VALUE optional
-      !IV_SHOWVALUE type ZEXCEL_CONDITIONAL_SHOW_VALUE default ZCL_EXCEL_STYLE_COND=>C_SHOWVALUE_TRUE
+      !IV_SHOWVALUE type TV_CONDITIONAL_SHOW_VALUE default ZCL_EXCEL_STYLE_COND=>C_SHOWVALUE_TRUE
     returning
       value(EO_STYLE_COND) type ref to ZCL_EXCEL_STYLE_COND .
   methods GET_GUID
@@ -191,7 +193,7 @@ METHOD constructor.
   me->priority      = 1.
 
 * inizialize dimension range
-  me->mv_rule_range     = 'A1'.
+  me->mv_rule_range     = ip_dimension_range.
 
   IF ip_guid IS NOT INITIAL.
     me->guid = ip_guid.

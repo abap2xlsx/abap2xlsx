@@ -67,7 +67,8 @@ method CREATE.
         lv_xl_drawing_rels TYPE string,
         lv_syindex         TYPE string,
         lv_value           TYPE string,
-        lv_drawing_index   TYPE i.
+        lv_drawing_index   TYPE i,
+        lv_comment_index   TYPE i. " (+) Issue 588
 
 **********************************************************************
 * Start of insertion # issue 139 - Dateretention of cellstyles
@@ -139,8 +140,8 @@ method CREATE.
   lo_active_worksheet = me->excel->get_active_worksheet( ).
   lv_drawing_index = 1.
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
     IF lo_active_worksheet->get_guid( ) EQ lo_worksheet->get_guid( ).
       lv_active = abap_true.
     ELSE.
@@ -150,7 +151,8 @@ method CREATE.
     lv_content = me->create_xl_sheet( io_worksheet = lo_worksheet
                                       iv_active    = lv_active ).
     lv_xl_sheet = me->c_xl_sheet.
-    MOVE sy-index TO lv_syindex.
+    MOVE sy-index TO: lv_syindex,
+                      lv_comment_index. " (+) Issue 588
     SHIFT lv_syindex RIGHT DELETING TRAILING space.
     SHIFT lv_syindex LEFT DELETING LEADING space.
     REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet WITH lv_syindex.
@@ -159,15 +161,16 @@ method CREATE.
 
     lv_xl_sheet_rels = me->c_xl_sheet_rels.
     lv_content = me->create_xl_sheet_rels( io_worksheet = lo_worksheet
-                                           iv_drawing_index = lv_drawing_index ).
+                                           iv_drawing_index = lv_drawing_index
+                                           iv_comment_index = lv_comment_index ). " (+) Issue 588
     REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet_rels WITH lv_syindex.
     lo_zip->add( name    = lv_xl_sheet_rels
                  content = lv_content ).
 
     lo_nested_iterator = lo_worksheet->get_tables_iterator( ).
 
-    WHILE lo_nested_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_table ?= lo_nested_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_nested_iterator->has_next( ) EQ abap_true.
+      lo_table ?= lo_nested_iterator->get_next( ).
       lv_content = me->create_xl_table( lo_table ).
 
       lv_value = lo_table->get_name( ).
@@ -201,8 +204,8 @@ method CREATE.
 **********************************************************************
 * STEP 11: Add media
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     lv_content = lo_drawing->get_media( ).
     lv_value = lo_drawing->get_media_name( ).
@@ -214,8 +217,8 @@ method CREATE.
 **********************************************************************
 * STEP 12: Add charts
   lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_chart ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_drawing ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_drawing ?= lo_iterator->get_next( ).
 
     lv_content = lo_drawing->get_media( ).
     lv_value = lo_drawing->get_media_name( ).

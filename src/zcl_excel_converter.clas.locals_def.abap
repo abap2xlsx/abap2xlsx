@@ -28,9 +28,9 @@ TYPES:   BEGIN OF ts_subtotal_rows,
 
 TYPES:   BEGIN OF ts_styles,
             type         TYPE char1,
-            alignment	   TYPE	zexcel_alignment,
-            inttype	     TYPE	inttype,
-            decimals     TYPE	int1,
+            alignment    TYPE zexcel_alignment,
+            inttype      TYPE inttype,
+            decimals     TYPE int1,
             style        TYPE REF TO zcl_excel_style,
             guid         TYPE zexcel_cell_style,
          END OF ts_styles,
@@ -38,10 +38,10 @@ TYPES:   BEGIN OF ts_styles,
          tt_styles TYPE HASHED TABLE OF ts_styles  WITH UNIQUE KEY type alignment inttype decimals.
 
 TYPES:   BEGIN OF ts_color_styles,
-            guid_old         TYPE zexcel_cell_style,
-            fontcolor	       TYPE zexcel_style_color_argb,
-            fillcolor	       TYPE zexcel_style_color_argb,
-            style_new        TYPE REF TO zcl_excel_style,
+            guid_old  TYPE zexcel_cell_style,
+            fontcolor TYPE zexcel_style_color_argb,
+            fillcolor TYPE zexcel_style_color_argb,
+            style_new TYPE REF TO zcl_excel_style,
          END OF ts_color_styles,
 
          tt_color_styles TYPE HASHED TABLE OF ts_color_styles  WITH UNIQUE KEY guid_old fontcolor fillcolor.

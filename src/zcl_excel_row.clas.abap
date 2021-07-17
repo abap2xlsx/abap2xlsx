@@ -15,7 +15,7 @@ public section.
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
     returning
-      value(R_COLLAPSED) type BOOLEAN .
+      value(R_COLLAPSED) type abap_bool .
   methods GET_OUTLINE_LEVEL
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
@@ -24,6 +24,9 @@ public section.
   methods GET_ROW_HEIGHT
     returning
       value(R_ROW_HEIGHT) type FLOAT .
+  methods GET_CUSTOM_HEIGHT
+    returning
+      value(R_CUSTOM_HEIGHT) type ABAP_BOOL .
   methods GET_ROW_INDEX
     returning
       value(R_ROW_INDEX) type INT4 .
@@ -31,13 +34,13 @@ public section.
     importing
       !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
     returning
-      value(R_VISIBLE) type BOOLEAN .
+      value(R_VISIBLE) type abap_bool .
   methods GET_XF_INDEX
     returning
       value(R_XF_INDEX) type INT4 .
   methods SET_COLLAPSED
     importing
-      !IP_COLLAPSED type BOOLEAN .
+      !IP_COLLAPSED type abap_bool .
   methods SET_OUTLINE_LEVEL
     importing
       !IP_OUTLINE_LEVEL type INT4
@@ -46,6 +49,7 @@ public section.
   methods SET_ROW_HEIGHT
     importing
       !IP_ROW_HEIGHT type SIMPLE
+      !IP_CUSTOM_HEIGHT type abap_bool default abap_true
     raising
       ZCX_EXCEL .
   methods SET_ROW_INDEX
@@ -53,7 +57,7 @@ public section.
       !IP_INDEX type INT4 .
   methods SET_VISIBLE
     importing
-      !IP_VISIBLE type BOOLEAN .
+      !IP_VISIBLE type abap_bool .
   methods SET_XF_INDEX
     importing
       !IP_XF_INDEX type INT4 .
@@ -66,10 +70,11 @@ private section.
 
   data ROW_INDEX type INT4 .
   data ROW_HEIGHT type FLOAT .
-  data VISIBLE type BOOLEAN .
+  data VISIBLE type abap_bool .
   data OUTLINE_LEVEL type INT4 value 0. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-  data COLLAPSED type BOOLEAN .
+  data COLLAPSED type abap_bool .
   data XF_INDEX type INT4 .
+  data CUSTOM_HEIGHT type abap_bool .
 ENDCLASS.
 
 
@@ -87,6 +92,7 @@ method CONSTRUCTOR.
 
   " set row dimension as unformatted by default
   me->xf_index = 0.
+  me->custom_height = abap_false.
   endmethod.
 
 
@@ -150,6 +156,11 @@ method GET_ROW_HEIGHT.
   endmethod.
 
 
+  METHOD GET_CUSTOM_HEIGHT.
+    r_custom_height = me->custom_height.
+  ENDMETHOD.
+
+
 method GET_ROW_INDEX.
   r_row_index = me->row_index.
   endmethod.
@@ -161,7 +172,7 @@ METHOD GET_VISIBLE.
   FIELD-SYMBOLS: <ls_row_outline> LIKE LINE OF lt_row_outlines.
 
   r_visible = me->visible.
-  CHECK r_visible = 'X'.        " Currently visible --> but maybe the new outline methodology will hide it implicitly
+  CHECK r_visible = abap_true.  " Currently visible --> but maybe the new outline methodology will hide it implicitly
   CHECK io_worksheet IS BOUND.  " But we have to see the worksheet to make sure
 
   lt_row_outlines = io_worksheet->get_row_outlines( ).
@@ -203,6 +214,7 @@ method SET_ROW_HEIGHT.
     CATCH cx_sy_conversion_no_number.
       zcx_excel=>raise_text( 'Unable to interpret ip_row_height as number' ).
   ENDTRY.
+  me->custom_height = ip_custom_height.
   endmethod.
 
 

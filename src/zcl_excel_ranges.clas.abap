@@ -63,17 +63,17 @@ method CONSTRUCTOR.
 
 
 method GET.
-  eo_range ?= ranges->if_object_collection~get( ip_index ).
+  eo_range ?= ranges->get( ip_index ).
   endmethod.
 
 
 method GET_ITERATOR.
-  eo_iterator ?= ranges->if_object_collection~get_iterator( ).
+  eo_iterator ?= ranges->get_iterator( ).
   endmethod.
 
 
 method IS_EMPTY.
-  is_empty = ranges->if_object_collection~is_empty( ).
+  is_empty = ranges->is_empty( ).
   endmethod.
 
 
@@ -83,6 +83,6 @@ method REMOVE.
 
 
 method SIZE.
-  ep_size = ranges->if_object_collection~size( ).
+  ep_size = ranges->size( ).
   endmethod.
 ENDCLASS.

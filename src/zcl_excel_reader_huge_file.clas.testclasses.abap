@@ -3,8 +3,10 @@ class lcl_test definition deferred.
 class zcl_excel_reader_huge_file definition local friends lcl_test.
 
 *
-class lcl_test definition for testing  " #AU Risk_Level Harmless
-      inheriting from cl_aunit_assert. " #AU Duration Short
+class lcl_test definition for testing
+      inheriting from cl_aunit_assert
+      risk level harmless
+      duration short.
 
   private section.
     data:
@@ -72,7 +74,7 @@ class lcl_test implementation.
 
     try.
         out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-        fail(`Index to non-existent shared string should give an error`).
+        fail( `Index to non-existent shared string should give an error` ).
       catch lcx_not_found into lo_ex.
         lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
     endtry.
@@ -166,7 +168,7 @@ class lcl_test implementation.
 
     try.
         out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-        fail(`Reference to non-existent style should throw an lcx_not_found exception`).
+        fail( `Reference to non-existent style should throw an lcx_not_found exception` ).
       catch lcx_not_found into lo_ex.
         lv_text = lo_ex->get_text( ).  " >>> May inspect the message in the debugger
     endtry.
@@ -236,7 +238,7 @@ class lcl_test implementation.
     lo_reader = cl_sxml_string_reader=>create( lv_xstring ).
     try.
         out->skip_to( iv_element_name = `nonExistingElement` io_reader = lo_reader ).
-        fail(`Skipping to non-existing element must raise lcx_not_found exception`).
+        fail( `Skipping to non-existing element must raise lcx_not_found exception` ).
       catch lcx_not_found into lo_ex.
         lv_text = lo_ex->get_text( ). " May inspect exception text in debugger
     endtry.

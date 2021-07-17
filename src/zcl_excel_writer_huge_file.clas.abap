@@ -80,8 +80,8 @@ METHOD create_xl_sharedstrings.
 
   lo_iterator = excel->get_worksheets_iterator( ).
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
     APPEND LINES OF lo_worksheet->sheet_content TO lt_cell_data.
   ENDWHILE.
 
@@ -135,7 +135,6 @@ METHOD create_xl_sheet.
     lty_bool TYPE c LENGTH 5.
 
   CONSTANTS:
-    lc_false              TYPE lty_bool   VALUE 'false',    "#EC NEEDED
     lc_true               TYPE lty_bool   VALUE 'true',
     lc_zero               TYPE c LENGTH 1 VALUE '0',
     lc_one                TYPE c LENGTH 1 VALUE '1',
@@ -539,8 +538,8 @@ METHOD create_xl_sheet.
 * Build table to hold all table-areas attached to this sheet
 *
   lo_iterator = io_worksheet->get_tables_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_table ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_table ?= lo_iterator->get_next( ).
     ls_table_area-left   = zcl_excel_common=>convert_column2int( lo_table->settings-top_left_column ).
     ls_table_area-right  = lo_table->get_right_column_integer( ).
     ls_table_area-top    = lo_table->settings-top_left_row.
@@ -628,8 +627,8 @@ METHOD create_xl_sheet.
   l_worksheet-hyperlinks_count = io_worksheet->get_hyperlinks_size( ).
   IF l_worksheet-hyperlinks_count > 0.
     lo_iterator = io_worksheet->get_hyperlinks_iterator( ).
-    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_link ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
+      lo_link ?= lo_iterator->get_next( ).
 
       APPEND INITIAL LINE TO l_worksheet-hyperlinks ASSIGNING <hyperlink>.
       <hyperlink>-ref = lo_link->get_ref( ).
@@ -736,8 +735,8 @@ METHOD create_xl_sheet.
   l_worksheet-tables_count = io_worksheet->get_tables_size( ).
   IF l_worksheet-tables_count > 0.
     lo_iterator = io_worksheet->get_tables_iterator( ).
-    WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-      lo_table ?= lo_iterator->if_object_collection_iterator~get_next( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
+      lo_table ?= lo_iterator->get_next( ).
       APPEND INITIAL LINE TO l_worksheet-tables ASSIGNING <table>.
       ADD 1 TO lv_relation_id.
       lv_value = lv_relation_id.

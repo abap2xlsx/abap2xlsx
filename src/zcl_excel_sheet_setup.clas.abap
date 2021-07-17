@@ -144,6 +144,12 @@ public section.
       !EP_ODD_FOOTER type STRING
       !EP_EVEN_HEADER type STRING
       !EP_EVEN_FOOTER type STRING .
+  methods GET_HEADER_FOOTER
+    exporting
+      !EP_ODD_HEADER type ZEXCEL_S_WORKSHEET_HEAD_FOOT
+      !EP_ODD_FOOTER type ZEXCEL_S_WORKSHEET_HEAD_FOOT
+      !EP_EVEN_HEADER type ZEXCEL_S_WORKSHEET_HEAD_FOOT
+      !EP_EVEN_FOOTER type ZEXCEL_S_WORKSHEET_HEAD_FOOT .
 protected section.
 
 *"* protected components of class ZCL_EXCEL_SHEET_SETUP
@@ -198,7 +204,34 @@ method CONSTRUCTOR.
   endmethod.
 
 
-method GET_HEADER_FOOTER_STRING.
+METHOD get_header_footer.
+
+* Only Basic font/text formatting possible:
+* Bold (yes / no), Font Type, Font Size
+*
+* usefull placeholders, which can be used in header/footer value strings
+* '&P' - page number
+* '&N' - total number of pages
+* '&D' - Date
+* '&T' - Time
+* '&F' - File Name
+* '&Z' - Path
+* '&A' - Sheet name
+* new line via class constant CL_ABAP_CHAR_UTILITIES=>newline
+*
+* Example Value String 'page &P of &N'
+*
+* DO NOT USE &L , &C or &R which automatically created as position markers
+
+  ep_odd_header = me->odd_header.
+  ep_odd_footer = me->odd_footer.
+  ep_even_header = me->even_header.
+  ep_even_footer = me->even_footer.
+
+ENDMETHOD.
+
+
+METHOD get_header_footer_string.
 * ----------------------------------------------------------------------
   DATA:   lc_marker_left(2)   TYPE c VALUE '&L'
         , lc_marker_right(2)  TYPE c VALUE '&R'
@@ -223,6 +256,19 @@ method GET_HEADER_FOOTER_STRING.
       CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_odd_header.
     ENDIF.
 
+    IF me->odd_header-left_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_odd_header.
+    ENDIF.
+    IF me->odd_header-center_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_odd_header.
+    ENDIF.
+    IF me->odd_header-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_odd_header.
+    ENDIF.
+
   ENDIF.
 * ----------------------------------------------------------------------
   IF ep_odd_footer IS SUPPLIED.
@@ -240,6 +286,19 @@ method GET_HEADER_FOOTER_STRING.
     IF me->odd_footer-right_value IS NOT INITIAL.
       lv_value = me->process_header_footer( ip_header = me->odd_footer ip_side = 'RIGHT' ).
       CONCATENATE ep_odd_footer lc_marker_right lv_value INTO ep_odd_footer.
+    ENDIF.
+
+    IF me->odd_footer-left_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_odd_footer.
+    ENDIF.
+    IF me->odd_footer-center_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_odd_footer.
+    ENDIF.
+    IF me->odd_footer-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_odd_footer.
     ENDIF.
 
   ENDIF.
@@ -261,6 +320,19 @@ method GET_HEADER_FOOTER_STRING.
       CONCATENATE ep_even_header lc_marker_right lv_value INTO ep_even_header.
     ENDIF.
 
+    IF me->even_header-left_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_even_header.
+    ENDIF.
+    IF me->even_header-center_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_even_header.
+    ENDIF.
+    IF me->even_header-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_even_header.
+    ENDIF.
+
   ENDIF.
 * ----------------------------------------------------------------------
   IF ep_even_footer IS SUPPLIED.
@@ -280,12 +352,25 @@ method GET_HEADER_FOOTER_STRING.
       CONCATENATE ep_even_footer lc_marker_right lv_value INTO ep_even_footer.
     ENDIF.
 
+    IF me->even_footer-left_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_left lv_value INTO ep_even_footer.
+    ENDIF.
+    IF me->even_footer-center_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_center lv_value INTO ep_even_footer.
+    ENDIF.
+    IF me->even_footer-right_image IS NOT INITIAL.
+      lv_value = '&G'.
+      CONCATENATE ep_odd_header lc_marker_right lv_value INTO ep_even_footer.
+    ENDIF.
+
   ENDIF.
 * ----------------------------------------------------------------------
-  endmethod.
+ENDMETHOD.
 
 
-method PROCESS_HEADER_FOOTER.
+METHOD process_header_footer.
 
 * ----------------------------------------------------------------------
 * Only Basic font/text formatting possible:
@@ -308,29 +393,34 @@ method PROCESS_HEADER_FOOTER.
 
   IF <ls_font> IS ASSIGNED AND <lv_value> IS ASSIGNED.
 
-    IF <ls_font>-name IS NOT INITIAL.
-      CONCATENATE '&"' <ls_font>-name ',' INTO rv_processed_string.
+    IF <lv_value> = '&G'. "image header
+      rv_processed_string = <lv_value>.
     ELSE.
-      rv_processed_string = '&"-,'.
+
+      IF <ls_font>-name IS NOT INITIAL.
+        CONCATENATE '&"' <ls_font>-name ',' INTO rv_processed_string.
+      ELSE.
+        rv_processed_string = '&"-,'.
+      ENDIF.
+
+      IF <ls_font>-bold = abap_true.
+        CONCATENATE rv_processed_string 'Bold"' INTO rv_processed_string.
+      ELSE.
+        CONCATENATE rv_processed_string 'Standard"' INTO rv_processed_string.
+      ENDIF.
+
+      IF <ls_font>-size IS NOT INITIAL.
+        lv_string = <ls_font>-size.
+        CONCATENATE rv_processed_string '&' lv_string INTO rv_processed_string.
+        CONDENSE rv_processed_string NO-GAPS.
+      ENDIF.
+
+      CONCATENATE rv_processed_string <lv_value> INTO rv_processed_string.
     ENDIF.
-
-    IF <ls_font>-bold = abap_true.
-      CONCATENATE rv_processed_string 'Bold"' INTO rv_processed_string.
-    ELSE.
-      CONCATENATE rv_processed_string 'Standard"' INTO rv_processed_string.
-    ENDIF.
-
-    IF <ls_font>-size IS NOT INITIAL.
-      lv_string = <ls_font>-size.
-      CONCATENATE rv_processed_string '&' lv_string INTO rv_processed_string.
-    ENDIF.
-
-    CONCATENATE rv_processed_string <lv_value> INTO rv_processed_string.
-
   ENDIF.
 * ----------------------------------------------------------------------
 
-  endmethod.
+ENDMETHOD.
 
 
 method SET_HEADER_FOOTER.

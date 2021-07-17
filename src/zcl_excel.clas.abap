@@ -12,7 +12,7 @@ public section.
 
   data LEGACY_PALETTE type ref to ZCL_EXCEL_LEGACY_PALETTE read-only .
   data SECURITY type ref to ZCL_EXCEL_SECURITY .
-  data USE_TEMPLATE type XFELD .
+  data USE_TEMPLATE type ABAP_BOOL .
 
   methods ADD_NEW_AUTOFILTER
     importing
@@ -21,6 +21,9 @@ public section.
       value(RO_AUTOFILTER) type ref to ZCL_EXCEL_AUTOFILTER
     raising
       ZCX_EXCEL .
+  methods ADD_NEW_COMMENT
+    returning
+      value(EO_COMMENT) type ref to ZCL_EXCEL_COMMENT .
   methods ADD_NEW_DRAWING
     importing
       !IP_TYPE type ZEXCEL_DRAWING_TYPE default ZCL_EXCEL_DRAWING=>TYPE_IMAGE
@@ -148,7 +151,7 @@ protected section.
   data WORKSHEETS type ref to ZCL_EXCEL_WORKSHEETS .
 private section.
 
-  constants VERSION type CHAR10 value '7.0.6'. "#EC NOTEXT
+  constants VERSION type C length 10 value '7.2.0'. "#EC NOTEXT
   data AUTOFILTERS type ref to ZCL_EXCEL_AUTOFILTERS .
   data CHARTS type ref to ZCL_EXCEL_DRAWINGS .
   data DEFAULT_STYLE type ZEXCEL_CELL_STYLE .
@@ -160,6 +163,7 @@ private section.
   data T_STYLEMAPPING1 type ZEXCEL_T_STYLEMAPPING1 .
   data T_STYLEMAPPING2 type ZEXCEL_T_STYLEMAPPING2 .
   data THEME type ref to ZCL_EXCEL_THEME .
+  data COMMENTS type ref to ZCL_EXCEL_COMMENTS .
 
   methods GET_STYLE_FROM_GUID
     importing
@@ -184,6 +188,13 @@ METHOD add_new_autofilter.
 ENDMETHOD.
 
 
+METHOD add_new_comment.
+  CREATE OBJECT eo_comment.
+
+  comments->add( eo_comment ).
+ENDMETHOD.
+
+
 method ADD_NEW_DRAWING.
 * Create default blank worksheet
   CREATE OBJECT eo_drawing
@@ -193,6 +204,8 @@ method ADD_NEW_DRAWING.
 
   CASE ip_type.
     WHEN 'image'.
+      drawings->add( eo_drawing ).
+    WHEN 'hd_ft'.
       drawings->add( eo_drawing ).
     WHEN 'chart'.
       charts->add( eo_drawing ).
@@ -276,6 +289,7 @@ method CONSTRUCTOR.
   CREATE OBJECT charts
     EXPORTING
       ip_type = zcl_excel_drawing=>type_chart.
+  CREATE OBJECT comments.
   CREATE OBJECT legacy_palette.
   CREATE OBJECT autofilters.
 
@@ -388,8 +402,8 @@ method GET_NEXT_TABLE_ID.
         lv_tables_count   TYPE i.
 
   lo_iterator = me->get_worksheets_iterator( ).
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
 
     lv_tables_count = lo_worksheet->get_tables_size( ).
     ADD lv_tables_count TO ep_id.
@@ -583,8 +597,8 @@ METHOD set_active_sheet_index_by_name.
 
   ws_it = me->worksheets->get_iterator( ).
 
-  WHILE ws_it->if_object_collection_iterator~has_next( ) = abap_true.
-    ws ?= ws_it->if_object_collection_iterator~get_next( ).
+  WHILE ws_it->has_next( ) = abap_true.
+    ws ?= ws_it->get_next( ).
     lv_title = ws->get_title( ).
     IF lv_title = i_worksheet_name.
       me->worksheets->active_worksheet = count.

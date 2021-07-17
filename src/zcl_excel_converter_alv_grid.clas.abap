@@ -12,6 +12,8 @@ public section.
 *"* do not include other source files here!!!
   methods ZIF_EXCEL_CONVERTER~CREATE_FIELDCATALOG
     redefinition .
+  methods ZIF_EXCEL_CONVERTER~GET_SUPPORTED_CLASS
+    redefinition .
 protected section.
 *"* protected components of class ZCL_EXCEL_CONVERTER_ALV_GRID
 *"* do not include other source files here!!!
@@ -24,6 +26,10 @@ ENDCLASS.
 
 CLASS ZCL_EXCEL_CONVERTER_ALV_GRID IMPLEMENTATION.
 
+
+METHOD zif_excel_converter~get_supported_class.
+  rv_supported_class = 'CL_GUI_ALV_GRID'.
+ENDMETHOD.
 
 method ZIF_EXCEL_CONVERTER~CAN_CONVERT_OBJECT.
   data: lo_alv type REF TO cl_gui_alv_grid.

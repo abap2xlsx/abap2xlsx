@@ -1,23 +1,26 @@
-interface ZIF_EXCEL_CONVERTER
-  public .
+INTERFACE zif_excel_converter
+  PUBLIC .
 
 
-  methods CAN_CONVERT_OBJECT
-    importing
-      !IO_OBJECT type ref to OBJECT
-    raising
-      ZCX_EXCEL .
-  methods CREATE_FIELDCATALOG
-    importing
-      !IS_OPTION type ZEXCEL_S_CONVERTER_OPTION
-      !IO_OBJECT type ref to OBJECT
-      !IT_TABLE type STANDARD TABLE
-    exporting
-      !ES_LAYOUT type ZEXCEL_S_CONVERTER_LAYO
-      !ET_FIELDCATALOG type ZEXCEL_T_CONVERTER_FCAT
-      !EO_TABLE type ref to DATA
-      !ET_COLORS type ZEXCEL_T_CONVERTER_COL
-      !ET_FILTER type ZEXCEL_T_CONVERTER_FIL
-    raising
-      ZCX_EXCEL .
-endinterface.
+  METHODS can_convert_object
+    IMPORTING
+      !io_object TYPE REF TO object
+    RAISING
+      zcx_excel .
+  METHODS create_fieldcatalog
+    IMPORTING
+      !is_option       TYPE zexcel_s_converter_option
+      !io_object       TYPE REF TO object
+      !it_table        TYPE STANDARD TABLE
+    EXPORTING
+      !es_layout       TYPE zexcel_s_converter_layo
+      !et_fieldcatalog TYPE zexcel_t_converter_fcat
+      !eo_table        TYPE REF TO data
+      !et_colors       TYPE zexcel_t_converter_col
+      !et_filter       TYPE zexcel_t_converter_fil
+    RAISING
+      zcx_excel .
+
+   METHODS get_supported_class
+     RETURNING VALUE(rv_supported_class) TYPE seoclsname.
+ENDINTERFACE.

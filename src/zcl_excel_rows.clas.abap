@@ -42,6 +42,12 @@ class ZCL_EXCEL_ROWS definition
     methods SIZE
       returning
         value(EP_SIZE) type I .
+    methods GET_MIN_INDEX
+      returning
+        value(EP_INDEX) type I .
+    methods GET_MAX_INDEX
+      returning
+        value(EP_INDEX) type I .
   protected section.
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
@@ -93,12 +99,12 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 
 
   method GET_ITERATOR.
-    EO_ITERATOR ?= ROWS->IF_OBJECT_COLLECTION~GET_ITERATOR( ).
+    EO_ITERATOR ?= ROWS->GET_ITERATOR( ).
   endmethod.                    "GET_ITERATOR
 
 
   method IS_EMPTY.
-    IS_EMPTY = ROWS->IF_OBJECT_COLLECTION~IS_EMPTY( ).
+    IS_EMPTY = ROWS->IS_EMPTY( ).
   endmethod.                    "IS_EMPTY
 
 
@@ -109,6 +115,27 @@ CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 
 
   method SIZE.
-    EP_SIZE = ROWS->IF_OBJECT_COLLECTION~SIZE( ).
+    EP_SIZE = ROWS->SIZE( ).
   endmethod.                    "SIZE
+
+  METHOD get_min_index.
+    FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
+
+    LOOP AT rows_hasehd ASSIGNING <ls_hashed_row>.
+      IF ep_index = 0 OR <ls_hashed_row>-row_index < ep_index.
+        ep_index = <ls_hashed_row>-row_index.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD get_max_index.
+    FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
+
+    LOOP AT rows_hasehd ASSIGNING <ls_hashed_row>.
+      IF <ls_hashed_row>-row_index > ep_index.
+        ep_index = <ls_hashed_row>-row_index.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
 ENDCLASS.

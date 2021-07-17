@@ -1,18 +1,18 @@
-interface ZIF_EXCEL_BOOK_VBA_PROJECT
-  public .
+INTERFACE zif_excel_book_vba_project
+  PUBLIC .
 
 
-  data VBAPROJECT type XSTRING read-only .
-  data CODENAME type STRING read-only .
-  data CODENAME_PR type STRING read-only .
+  DATA vbaproject TYPE xstring READ-ONLY .
+  DATA codename TYPE string READ-ONLY .
+  DATA codename_pr TYPE string READ-ONLY .
 
-  methods SET_VBAPROJECT
-    importing
-      !IP_VBAPROJECT type XSTRING .
-  methods SET_CODENAME
-    importing
-      !IP_CODENAME type STRING .
-  methods SET_CODENAME_PR
-    importing
-      !IP_CODENAME_PR type STRING .
-endinterface.
+  METHODS set_vbaproject
+    IMPORTING
+      !ip_vbaproject TYPE xstring .
+  METHODS set_codename
+    IMPORTING
+      !ip_codename TYPE string .
+  METHODS set_codename_pr
+    IMPORTING
+      !ip_codename_pr TYPE string .
+ENDINTERFACE.

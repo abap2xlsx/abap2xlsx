@@ -1,29 +1,29 @@
-interface ZIF_EXCEL_SHEET_PRINTSETTINGS
-  public .
+INTERFACE zif_excel_sheet_printsettings
+  PUBLIC .
 
 
-  constants GCV_PRINT_TITLE_NAME type STRING value '_xlnm.Print_Titles'. "#EC NOTEXT
+  CONSTANTS gcv_print_title_name TYPE string VALUE '_xlnm.Print_Titles'. "#EC NOTEXT
 
-  methods SET_PRINT_REPEAT_COLUMNS
-    importing
-      !IV_COLUMNS_FROM type ZEXCEL_CELL_COLUMN_ALPHA
-      !IV_COLUMNS_TO type ZEXCEL_CELL_COLUMN_ALPHA
-    raising
-      ZCX_EXCEL .
-  methods SET_PRINT_REPEAT_ROWS
-    importing
-      !IV_ROWS_FROM type ZEXCEL_CELL_ROW
-      !IV_ROWS_TO type ZEXCEL_CELL_ROW
-    raising
-      ZCX_EXCEL .
-  methods GET_PRINT_REPEAT_COLUMNS
-    exporting
-      !EV_COLUMNS_FROM type ZEXCEL_CELL_COLUMN_ALPHA
-      !EV_COLUMNS_TO type ZEXCEL_CELL_COLUMN_ALPHA .
-  methods GET_PRINT_REPEAT_ROWS
-    exporting
-      !EV_ROWS_FROM type ZEXCEL_CELL_ROW
-      !EV_ROWS_TO type ZEXCEL_CELL_ROW .
-  methods CLEAR_PRINT_REPEAT_COLUMNS .
-  methods CLEAR_PRINT_REPEAT_ROWS .
-endinterface.
+  METHODS set_print_repeat_columns
+    IMPORTING
+      !iv_columns_from TYPE zexcel_cell_column_alpha
+      !iv_columns_to   TYPE zexcel_cell_column_alpha
+    RAISING
+      zcx_excel .
+  METHODS set_print_repeat_rows
+    IMPORTING
+      !iv_rows_from TYPE zexcel_cell_row
+      !iv_rows_to   TYPE zexcel_cell_row
+    RAISING
+      zcx_excel .
+  METHODS get_print_repeat_columns
+    EXPORTING
+      !ev_columns_from TYPE zexcel_cell_column_alpha
+      !ev_columns_to   TYPE zexcel_cell_column_alpha .
+  METHODS get_print_repeat_rows
+    EXPORTING
+      !ev_rows_from TYPE zexcel_cell_row
+      !ev_rows_to   TYPE zexcel_cell_row .
+  METHODS clear_print_repeat_columns .
+  METHODS clear_print_repeat_rows .
+ENDINTERFACE.

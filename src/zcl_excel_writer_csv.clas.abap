@@ -11,10 +11,10 @@ public section.
 
   class-methods SET_DELIMITER
     importing
-      value(IP_VALUE) type CHAR01 default ';' .
+      value(IP_VALUE) type c default ';' .
   class-methods SET_ENCLOSURE
     importing
-      value(IP_VALUE) type CHAR01 default '"' .
+      value(IP_VALUE) type c default '"' .
   class-methods SET_ENDOFLINE
     importing
       value(IP_VALUE) type ANY default CL_ABAP_CHAR_UTILITIES=>CR_LF .
@@ -32,9 +32,9 @@ protected section.
 private section.
 
   data EXCEL type ref to ZCL_EXCEL .
-  class-data DELIMITER type CHAR01 value ';'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-  class-data ENCLOSURE type CHAR01 value '"'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-  class-data EOL type CHAR_02 value CL_ABAP_CHAR_UTILITIES=>CR_LF. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+  class-data DELIMITER type c value ';'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+  class-data ENCLOSURE type c value '"'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+  class-data EOL type c LENGTH 2 value CL_ABAP_CHAR_UTILITIES=>CR_LF. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
   class-data WORKSHEET_NAME type ZEXCEL_WORKSHEETS_NAME .
   class-data WORKSHEET_INDEX type ZEXCEL_ACTIVE_WORKSHEET .
 
@@ -70,7 +70,7 @@ method CREATE_CSV.
         ls_format LIKE LINE OF lt_format,
         lv_date   TYPE DATS,
         lv_tmp    TYPE string,
-        lv_time   TYPE CHAR08.
+        lv_time   TYPE C LENGTH 8.
 
   DATA: lo_iterator       TYPE REF TO cl_object_collection_iterator,
         lo_worksheet      TYPE REF TO zcl_excel_worksheet.
@@ -116,8 +116,8 @@ method CREATE_CSV.
   lo_iterator = excel->get_worksheets_iterator( ).
   data: current_worksheet_title type ZEXCEL_SHEET_TITLE.
 
-  WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-    lo_worksheet ?= lo_iterator->if_object_collection_iterator~get_next( ).
+  WHILE lo_iterator->has_next( ) EQ abap_true.
+    lo_worksheet ?= lo_iterator->get_next( ).
 
     IF worksheet_name IS NOT INITIAL.
       current_worksheet_title = lo_worksheet->get_title( ).
@@ -145,8 +145,8 @@ method CREATE_CSV.
     CLEAR ls_numfmt.
     IF <fs_sheet_content>-data_type IS INITIAL AND <fs_sheet_content>-cell_style IS NOT INITIAL.
       lo_iterator = excel->get_styles_iterator( ).
-      WHILE lo_iterator->if_object_collection_iterator~has_next( ) EQ abap_true.
-        lo_style ?= lo_iterator->if_object_collection_iterator~get_next( ).
+      WHILE lo_iterator->has_next( ) EQ abap_true.
+        lo_style ?= lo_iterator->get_next( ).
         CHECK lo_style->get_guid( ) = <fs_sheet_content>-cell_style.
         ls_numfmt     = lo_style->number_format->get_structure( ).
         EXIT.

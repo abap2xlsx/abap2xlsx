@@ -58,12 +58,12 @@ method CONSTRUCTOR.
 
 
 method GET_ITERATOR.
-  eo_iterator ?= data_validations->if_object_collection~get_iterator( ).
+  eo_iterator ?= data_validations->get_iterator( ).
   endmethod.
 
 
 method IS_EMPTY.
-  is_empty = data_validations->if_object_collection~is_empty( ).
+  is_empty = data_validations->is_empty( ).
   endmethod.
 
 
@@ -73,6 +73,6 @@ method REMOVE.
 
 
 method SIZE.
-  ep_size = data_validations->if_object_collection~size( ).
+  ep_size = data_validations->size( ).
   endmethod.
 ENDCLASS.

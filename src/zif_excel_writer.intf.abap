@@ -1,10 +1,10 @@
-interface ZIF_EXCEL_WRITER
-  public .
+INTERFACE zif_excel_writer
+  PUBLIC .
 
 
-  methods WRITE_FILE
-    importing
-      !IO_EXCEL type ref to ZCL_EXCEL
-    returning
-      value(EP_FILE) type XSTRING .
-endinterface.
+  METHODS write_file
+    IMPORTING
+      !io_excel      TYPE REF TO zcl_excel
+    RETURNING
+      VALUE(ep_file) TYPE xstring .
+ENDINTERFACE.

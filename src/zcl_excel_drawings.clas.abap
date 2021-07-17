@@ -60,7 +60,7 @@ method ADD.
   DATA: lv_index TYPE i.
 
   drawings->add( ip_drawing ).
-  lv_index = drawings->if_object_collection~size( ).
+  lv_index = drawings->size( ).
   ip_drawing->create_media_name(
     ip_index = lv_index ).
   endmethod.
@@ -84,13 +84,13 @@ method GET.
 
   DATA lv_index TYPE i.
   lv_index = ip_index.
-  eo_drawing ?= drawings->if_object_collection~get( lv_index ).
+  eo_drawing ?= drawings->get( lv_index ).
   endmethod.
 
 
 method GET_ITERATOR.
 
-  eo_iterator ?= drawings->if_object_collection~get_iterator( ).
+  eo_iterator ?= drawings->get_iterator( ).
   endmethod.
 
 
@@ -106,7 +106,7 @@ method INCLUDE.
 
 method IS_EMPTY.
 
-  is_empty = drawings->if_object_collection~is_empty( ).
+  is_empty = drawings->is_empty( ).
   endmethod.
 
 
@@ -118,6 +118,6 @@ method REMOVE.
 
 method SIZE.
 
-  ep_size = drawings->if_object_collection~size( ).
+  ep_size = drawings->size( ).
   endmethod.
 ENDCLASS.

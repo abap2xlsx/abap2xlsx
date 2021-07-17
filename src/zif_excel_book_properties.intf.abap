@@ -1,24 +1,24 @@
-interface ZIF_EXCEL_BOOK_PROPERTIES
-  public .
+INTERFACE zif_excel_book_properties
+  PUBLIC .
 
 
-  data CREATOR type ZEXCEL_CREATOR .
-  data LASTMODIFIEDBY type ZEXCEL_CREATOR .
-  data CREATED type TIMESTAMPL .
-  data MODIFIED type TIMESTAMPL .
-  data TITLE type ZEXCEL_TITLE .
-  data SUBJECT type ZEXCEL_SUBJECT .
-  data DESCRIPTION type ZEXCEL_DESCRIPTION .
-  data KEYWORDS type ZEXCEL_KEYWORDS .
-  data CATEGORY type ZEXCEL_CATEGORY .
-  data COMPANY type ZEXCEL_COMPANY .
-  data APPLICATION type ZEXCEL_APPLICATION .
-  data DOCSECURITY type ZEXCEL_DOCSECURITY .
-  data SCALECROP type ZEXCEL_SCALECROP .
-  data LINKSUPTODATE type FLAG .
-  data SHAREDDOC type FLAG .
-  data HYPERLINKSCHANGED type FLAG .
-  data APPVERSION type ZEXCEL_APPVERSION .
+  DATA creator TYPE zexcel_creator .
+  DATA lastmodifiedby TYPE zexcel_creator .
+  DATA created TYPE timestampl .
+  DATA modified TYPE timestampl .
+  DATA title TYPE zexcel_title .
+  DATA subject TYPE zexcel_subject .
+  DATA description TYPE zexcel_description .
+  DATA keywords TYPE zexcel_keywords .
+  DATA category TYPE zexcel_category .
+  DATA company TYPE zexcel_company .
+  DATA application TYPE zexcel_application .
+  DATA docsecurity TYPE zexcel_docsecurity .
+  DATA scalecrop TYPE zexcel_scalecrop .
+  DATA linksuptodate TYPE flag .
+  DATA shareddoc TYPE flag .
+  DATA hyperlinkschanged TYPE flag .
+  DATA appversion TYPE zexcel_appversion .
 
-  methods INITIALIZE .
-endinterface.
+  METHODS initialize .
+ENDINTERFACE.

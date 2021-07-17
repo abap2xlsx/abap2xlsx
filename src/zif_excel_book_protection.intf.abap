@@ -1,17 +1,18 @@
-interface ZIF_EXCEL_BOOK_PROTECTION
-  public .
+INTERFACE zif_excel_book_protection
+  PUBLIC .
 
+  TYPES tv_book_protection TYPE c LENGTH 1.
 
-  constants C_LOCKED type ZEXCEL_BOOK_PROTECTION value '1'. "#EC NOTEXT
-  constants C_PROTECTED type ZEXCEL_BOOK_PROTECTION value 'X'. "#EC NOTEXT
-  constants C_UNLOCKED type ZEXCEL_BOOK_PROTECTION value '0'. "#EC NOTEXT
-  constants C_UNPROTECTED type ZEXCEL_BOOK_PROTECTION value ''. "#EC NOTEXT
-  data LOCKREVISION type ZEXCEL_BOOK_PROTECTION .
-  data LOCKSTRUCTURE type ZEXCEL_BOOK_PROTECTION .
-  data LOCKWINDOWS type ZEXCEL_BOOK_PROTECTION .
-  data PROTECTED type ZEXCEL_BOOK_PROTECTION .
-  data REVISIONSPASSWORD type ZEXCEL_AES_PASSWORD .
-  data WORKBOOKPASSWORD type ZEXCEL_AES_PASSWORD .
+  CONSTANTS c_locked TYPE tv_book_protection VALUE '1'. "#EC NOTEXT
+  CONSTANTS c_protected TYPE tv_book_protection VALUE 'X'.  "#EC NOTEXT
+  CONSTANTS c_unlocked TYPE tv_book_protection VALUE '0'. "#EC NOTEXT
+  CONSTANTS c_unprotected TYPE tv_book_protection VALUE ''. "#EC NOTEXT
+  DATA lockrevision TYPE tv_book_protection .
+  DATA lockstructure TYPE tv_book_protection .
+  DATA lockwindows TYPE tv_book_protection .
+  DATA protected TYPE tv_book_protection .
+  DATA revisionspassword TYPE zexcel_aes_password .
+  DATA workbookpassword TYPE zexcel_aes_password .
 
-  methods INITIALIZE .
-endinterface.
+  METHODS initialize .
+ENDINTERFACE.
