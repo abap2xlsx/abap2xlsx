@@ -13,10 +13,10 @@ CONSTANTS: c_fruits     TYPE string VALUE 'Fruits',
            c_meat       TYPE string VALUE 'Meat',
            c_fish       TYPE string VALUE 'Fish'.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_range                TYPE REF TO zcl_excel_range,
-      lo_data_validation      TYPE REF TO zcl_excel_data_validation.
+DATA: lo_excel           TYPE REF TO zcl_excel,
+      lo_worksheet       TYPE REF TO zcl_excel_worksheet,
+      lo_range           TYPE REF TO zcl_excel_range,
+      lo_data_validation TYPE REF TO zcl_excel_data_validation.
 
 DATA: row TYPE zexcel_cell_row.
 
@@ -154,21 +154,21 @@ START-OF-SELECTION.
     lo_data_validation->cell_row    = row.
     lo_data_validation->cell_column = 'A'.
     lo_worksheet->set_cell( ip_row = row ip_column = 'A' ip_value = 'Select a value' ).
-                                                            " 2nd
+    " 2nd
     lo_data_validation              = lo_worksheet->add_new_data_validation( ).
     lo_data_validation->type        = zcl_excel_data_validation=>c_type_list.
     lo_data_validation->formula1    = c_vegetables.
     lo_data_validation->cell_row    = row.
     lo_data_validation->cell_column = 'B'.
     lo_worksheet->set_cell( ip_row = row ip_column = 'B' ip_value = 'Select a value' ).
-                                                            " 3rd
+    " 3rd
     lo_data_validation              = lo_worksheet->add_new_data_validation( ).
     lo_data_validation->type        = zcl_excel_data_validation=>c_type_list.
     lo_data_validation->formula1    = c_meat.
     lo_data_validation->cell_row    = row.
     lo_data_validation->cell_column = 'C'.
     lo_worksheet->set_cell( ip_row = row ip_column = 'C' ip_value = 'Select a value' ).
-                                                            " 4th
+    " 4th
     lo_data_validation              = lo_worksheet->add_new_data_validation( ).
     lo_data_validation->type        = zcl_excel_data_validation=>c_type_list.
     lo_data_validation->formula1    = c_fish.
@@ -180,13 +180,13 @@ START-OF-SELECTION.
   ENDWHILE.
 
   IF p_sbook = abap_true.
-    DATA: bookings type TABLE OF sbook.
+    DATA: bookings TYPE TABLE OF sbook.
 
     lo_worksheet        = lo_excel->add_new_worksheet( ).
     lv_title = 'SBOOK'.
     lo_worksheet->set_title( lv_title ).
 
-    SELECT * from sbook INTO TABLE bookings UP TO 4000 ROWS.
+    SELECT * FROM sbook INTO TABLE bookings UP TO 4000 ROWS.
 
     lo_worksheet->bind_table(
       EXPORTING

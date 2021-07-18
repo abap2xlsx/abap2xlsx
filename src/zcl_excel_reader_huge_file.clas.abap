@@ -1,314 +1,314 @@
-class ZCL_EXCEL_READER_HUGE_FILE definition
-  public
-  inheriting from ZCL_EXCEL_READER_2007
-  create public .
+CLASS zcl_excel_reader_huge_file DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_excel_reader_2007
+  CREATE PUBLIC .
 
-public section.
-protected section.
+  PUBLIC SECTION.
+  PROTECTED SECTION.
 
-  methods LOAD_SHARED_STRINGS
-    redefinition .
-  methods LOAD_WORKSHEET
-    redefinition .
-private section.
+    METHODS load_shared_strings
+        REDEFINITION .
+    METHODS load_worksheet
+        REDEFINITION .
+  PRIVATE SECTION.
 
-  types:
-    begin of t_cell_content,
-      datatype type zexcel_cell_data_type,
-      value    type zexcel_cell_value,
-      formula  type zexcel_cell_formula,
-      style    type zexcel_cell_style,
-    end of t_cell_content .
-  types:
-    begin of t_cell_coord,
-      row      type zexcel_cell_row,
-      column   type zexcel_cell_column_alpha,
-    end of t_cell_coord .
-  types:
-    begin of t_cell.
-          include type t_cell_coord as coord.
-          include type t_cell_content as content.
-  types: end of t_cell .
+    TYPES:
+      BEGIN OF t_cell_content,
+        datatype TYPE zexcel_cell_data_type,
+        value    TYPE zexcel_cell_value,
+        formula  TYPE zexcel_cell_formula,
+        style    TYPE zexcel_cell_style,
+      END OF t_cell_content .
+    TYPES:
+      BEGIN OF t_cell_coord,
+        row    TYPE zexcel_cell_row,
+        column TYPE zexcel_cell_column_alpha,
+      END OF t_cell_coord .
+    TYPES:
+      BEGIN OF t_cell.
+        INCLUDE TYPE t_cell_coord AS coord.
+        INCLUDE TYPE t_cell_content AS content.
+      TYPES: END OF t_cell .
 
-  interface IF_SXML_NODE load .
-  constants C_END_OF_STREAM type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_FINAL. "#EC NOTEXT
-  constants C_ELEMENT_OPEN type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_ELEMENT_OPEN. "#EC NOTEXT
-  constants C_ELEMENT_CLOSE type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_ELEMENT_CLOSE. "#EC NOTEXT
-  data:
-    begin of gs_buffer_style,
-    index type i value -1,
-    guid type zexcel_cell_style,
-    end of gs_buffer_style .
-  constants C_ATTRIBUTE type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_ATTRIBUTE. "#EC NOTEXT
-  constants C_NODE_VALUE type IF_SXML_NODE=>NODE_TYPE value IF_SXML_NODE=>CO_NT_VALUE. "#EC NOTEXT
+    INTERFACE if_sxml_node LOAD .
+    CONSTANTS c_end_of_stream TYPE if_sxml_node=>node_type VALUE if_sxml_node=>co_nt_final. "#EC NOTEXT
+    CONSTANTS c_element_open TYPE if_sxml_node=>node_type VALUE if_sxml_node=>co_nt_element_open. "#EC NOTEXT
+    CONSTANTS c_element_close TYPE if_sxml_node=>node_type VALUE if_sxml_node=>co_nt_element_close. "#EC NOTEXT
+    DATA:
+      BEGIN OF gs_buffer_style,
+        index TYPE i VALUE -1,
+        guid  TYPE zexcel_cell_style,
+      END OF gs_buffer_style .
+    CONSTANTS c_attribute TYPE if_sxml_node=>node_type VALUE if_sxml_node=>co_nt_attribute. "#EC NOTEXT
+    CONSTANTS c_node_value TYPE if_sxml_node=>node_type VALUE if_sxml_node=>co_nt_value. "#EC NOTEXT
 
-  methods SKIP_TO
-    importing
-      !IV_ELEMENT_NAME type STRING
-      !IO_READER type ref to IF_SXML_READER
-    raising
-      LCX_NOT_FOUND .
-  methods FILL_CELL_FROM_ATTRIBUTES
-    importing
-      !IO_READER type ref to IF_SXML_READER
-    returning
-      value(ES_CELL) type T_CELL
-    raising
-      LCX_NOT_FOUND .
-  methods READ_SHARED_STRINGS
-    importing
-      !IO_READER type ref to IF_SXML_READER
-    returning
-      value(ET_SHARED_STRINGS) type STRINGTAB .
-  methods GET_CELL_COORD
-    importing
-      !IV_COORD type STRING
-    returning
-      value(ES_COORD) type T_CELL_COORD .
-  methods PUT_CELL_TO_WORKSHEET
-    importing
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IS_CELL type T_CELL .
-  methods GET_SHARED_STRING
-    importing
-      !IV_INDEX type ANY
-    returning
-      value(EV_VALUE) type STRING
-    raising
-      LCX_NOT_FOUND .
-  methods GET_STYLE
-    importing
-      !IV_INDEX type ANY
-    returning
-      value(EV_STYLE_GUID) type ZEXCEL_CELL_STYLE
-    raising
-      LCX_NOT_FOUND .
-  methods READ_WORKSHEET_DATA
-    importing
-      !IO_READER type ref to IF_SXML_READER
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      LCX_NOT_FOUND .
-  methods GET_SXML_READER
-    importing
-      !IV_PATH type STRING
-    returning
-      value(EO_READER) type ref to IF_SXML_READER
-    raising
-      ZCX_EXCEL .
+    METHODS skip_to
+      IMPORTING
+        !iv_element_name TYPE string
+        !io_reader       TYPE REF TO if_sxml_reader
+      RAISING
+        lcx_not_found .
+    METHODS fill_cell_from_attributes
+      IMPORTING
+        !io_reader     TYPE REF TO if_sxml_reader
+      RETURNING
+        VALUE(es_cell) TYPE t_cell
+      RAISING
+        lcx_not_found .
+    METHODS read_shared_strings
+      IMPORTING
+        !io_reader               TYPE REF TO if_sxml_reader
+      RETURNING
+        VALUE(et_shared_strings) TYPE stringtab .
+    METHODS get_cell_coord
+      IMPORTING
+        !iv_coord       TYPE string
+      RETURNING
+        VALUE(es_coord) TYPE t_cell_coord .
+    METHODS put_cell_to_worksheet
+      IMPORTING
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+        !is_cell      TYPE t_cell .
+    METHODS get_shared_string
+      IMPORTING
+        !iv_index       TYPE any
+      RETURNING
+        VALUE(ev_value) TYPE string
+      RAISING
+        lcx_not_found .
+    METHODS get_style
+      IMPORTING
+        !iv_index            TYPE any
+      RETURNING
+        VALUE(ev_style_guid) TYPE zexcel_cell_style
+      RAISING
+        lcx_not_found .
+    METHODS read_worksheet_data
+      IMPORTING
+        !io_reader    TYPE REF TO if_sxml_reader
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        lcx_not_found .
+    METHODS get_sxml_reader
+      IMPORTING
+        !iv_path         TYPE string
+      RETURNING
+        VALUE(eo_reader) TYPE REF TO if_sxml_reader
+      RAISING
+        zcx_excel .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_READER_HUGE_FILE IMPLEMENTATION.
+CLASS zcl_excel_reader_huge_file IMPLEMENTATION.
 
 
-method FILL_CELL_FROM_ATTRIBUTES.
+  METHOD fill_cell_from_attributes.
 
-  while io_reader->node_type ne c_end_of_stream.
-    io_reader->next_attribute( ).
-    if io_reader->node_type ne c_attribute.
-      exit.
-    endif.
-    case io_reader->name.
-      when `t`.
-        es_cell-datatype = io_reader->value.
-      when `s`.
-        if io_reader->value is not initial.
-          es_cell-style = get_style( io_reader->value ).
-        endif.
-      when `r`.
-        es_cell-coord = get_cell_coord( io_reader->value ).
-    endcase.
-  endwhile.
+    WHILE io_reader->node_type NE c_end_of_stream.
+      io_reader->next_attribute( ).
+      IF io_reader->node_type NE c_attribute.
+        EXIT.
+      ENDIF.
+      CASE io_reader->name.
+        WHEN `t`.
+          es_cell-datatype = io_reader->value.
+        WHEN `s`.
+          IF io_reader->value IS NOT INITIAL.
+            es_cell-style = get_style( io_reader->value ).
+          ENDIF.
+        WHEN `r`.
+          es_cell-coord = get_cell_coord( io_reader->value ).
+      ENDCASE.
+    ENDWHILE.
 
-endmethod.
-
-
-method GET_CELL_COORD.
-
-  zcl_excel_common=>convert_columnrow2column_a_row(
-    exporting
-      i_columnrow = iv_coord
-    importing
-      e_column    = es_coord-column
-      e_row       = es_coord-row
-    ).
-
-endmethod.
+  ENDMETHOD.
 
 
-method GET_SHARED_STRING.
-  data: lv_tabix type i,
-        lv_error type string.
-  lv_tabix = iv_index + 1.
-  read table shared_strings into ev_value index lv_tabix.
-  if sy-subrc ne 0.
-    concatenate 'Entry ' iv_index ' not found in Shared String Table' into lv_error.
-    raise exception type lcx_not_found
-      exporting
-        error = lv_error.
-  endif.
-endmethod.
+  METHOD get_cell_coord.
+
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow = iv_coord
+      IMPORTING
+        e_column    = es_coord-column
+        e_row       = es_coord-row
+      ).
+
+  ENDMETHOD.
 
 
-method GET_STYLE.
-
-  data: lv_tabix type i,
-        lo_style type ref to zcl_excel_style,
-        lv_error type string.
-
-  if gs_buffer_style-index ne iv_index.
+  METHOD get_shared_string.
+    DATA: lv_tabix TYPE i,
+          lv_error TYPE string.
     lv_tabix = iv_index + 1.
-    read table styles into lo_style index lv_tabix.
-    if sy-subrc ne 0.
-      concatenate 'Entry ' iv_index ' not found in Style Table' into lv_error.
-      raise exception type lcx_not_found
-        exporting
+    READ TABLE shared_strings INTO ev_value INDEX lv_tabix.
+    IF sy-subrc NE 0.
+      CONCATENATE 'Entry ' iv_index ' not found in Shared String Table' INTO lv_error.
+      RAISE EXCEPTION TYPE lcx_not_found
+        EXPORTING
           error = lv_error.
-    else.
-      gs_buffer_style-index = iv_index.
-      gs_buffer_style-guid  = lo_style->get_guid( ).
-    endif.
-  endif.
-
-  ev_style_guid = gs_buffer_style-guid.
-
-endmethod.
+    ENDIF.
+  ENDMETHOD.
 
 
-method GET_SXML_READER.
+  METHOD get_style.
 
-  data: lv_xml type xstring.
+    DATA: lv_tabix TYPE i,
+          lo_style TYPE REF TO zcl_excel_style,
+          lv_error TYPE string.
 
-  lv_xml = get_from_zip_archive( iv_path ).
-  eo_reader = cl_sxml_string_reader=>create( lv_xml ).
+    IF gs_buffer_style-index NE iv_index.
+      lv_tabix = iv_index + 1.
+      READ TABLE styles INTO lo_style INDEX lv_tabix.
+      IF sy-subrc NE 0.
+        CONCATENATE 'Entry ' iv_index ' not found in Style Table' INTO lv_error.
+        RAISE EXCEPTION TYPE lcx_not_found
+          EXPORTING
+            error = lv_error.
+      ELSE.
+        gs_buffer_style-index = iv_index.
+        gs_buffer_style-guid  = lo_style->get_guid( ).
+      ENDIF.
+    ENDIF.
 
-endmethod.
+    ev_style_guid = gs_buffer_style-guid.
 
-
-method LOAD_SHARED_STRINGS.
-
-  data: lo_reader type ref to if_sxml_reader.
-
-  lo_reader = get_sxml_reader( ip_path ).
-
-  shared_strings = read_shared_strings( lo_reader ).
-
-endmethod.
-
-
-method LOAD_WORKSHEET.
-
-  data: lo_reader type ref to if_sxml_reader.
-  data: lx_not_found type ref to lcx_not_found.
-
-  lo_reader = get_sxml_reader( ip_path ).
-
-  try.
-
-      read_worksheet_data( io_reader    = lo_reader
-                           io_worksheet = io_worksheet ).
-
-    catch lcx_not_found into lx_not_found.
-      zcx_excel=>raise_text( lx_not_found->error ).
-  endtry.
-endmethod.
+  ENDMETHOD.
 
 
-method PUT_CELL_TO_WORKSHEET.
-  check is_cell-value is not initial
-     or is_cell-formula is not initial
-     or is_cell-style is not initial.
-  call method io_worksheet->set_cell
-    exporting
-      ip_column    = is_cell-column
-      ip_row       = is_cell-row
-      ip_value     = is_cell-value
-      ip_formula   = is_cell-formula
-      ip_data_type = is_cell-datatype
-      ip_style     = is_cell-style.
-endmethod.
+  METHOD get_sxml_reader.
+
+    DATA: lv_xml TYPE xstring.
+
+    lv_xml = get_from_zip_archive( iv_path ).
+    eo_reader = cl_sxml_string_reader=>create( lv_xml ).
+
+  ENDMETHOD.
 
 
-method read_shared_strings.
+  METHOD load_shared_strings.
 
-  data lv_value type string.
+    DATA: lo_reader TYPE REF TO if_sxml_reader.
 
-  while io_reader->node_type ne c_end_of_stream.
-    io_reader->next_node( ).
-    if io_reader->name eq `t`.
-      case io_reader->node_type .
-        when c_element_open .
-          clear lv_value .
-        when c_node_value .
-          lv_value = lv_value && io_reader->value .
-        when c_element_close .
-          append lv_value to et_shared_strings.
-      endcase .
-    endif.
-  endwhile.
+    lo_reader = get_sxml_reader( ip_path ).
 
-endmethod.
+    shared_strings = read_shared_strings( lo_reader ).
+
+  ENDMETHOD.
 
 
-method READ_WORKSHEET_DATA.
+  METHOD load_worksheet.
 
-  data: ls_cell   type t_cell.
+    DATA: lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lx_not_found TYPE REF TO lcx_not_found.
+
+    lo_reader = get_sxml_reader( ip_path ).
+
+    TRY.
+
+        read_worksheet_data( io_reader    = lo_reader
+                             io_worksheet = io_worksheet ).
+
+      CATCH lcx_not_found INTO lx_not_found.
+        zcx_excel=>raise_text( lx_not_found->error ).
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD put_cell_to_worksheet.
+    CHECK is_cell-value IS NOT INITIAL
+       OR is_cell-formula IS NOT INITIAL
+       OR is_cell-style IS NOT INITIAL.
+    CALL METHOD io_worksheet->set_cell
+      EXPORTING
+        ip_column    = is_cell-column
+        ip_row       = is_cell-row
+        ip_value     = is_cell-value
+        ip_formula   = is_cell-formula
+        ip_data_type = is_cell-datatype
+        ip_style     = is_cell-style.
+  ENDMETHOD.
+
+
+  METHOD read_shared_strings.
+
+    DATA lv_value TYPE string.
+
+    WHILE io_reader->node_type NE c_end_of_stream.
+      io_reader->next_node( ).
+      IF io_reader->name EQ `t`.
+        CASE io_reader->node_type .
+          WHEN c_element_open .
+            CLEAR lv_value .
+          WHEN c_node_value .
+            lv_value = lv_value && io_reader->value .
+          WHEN c_element_close .
+            APPEND lv_value TO et_shared_strings.
+        ENDCASE .
+      ENDIF.
+    ENDWHILE.
+
+  ENDMETHOD.
+
+
+  METHOD read_worksheet_data.
+
+    DATA: ls_cell   TYPE t_cell.
 
 * Skip to <sheetData> element
-  skip_to(  iv_element_name = `sheetData`  io_reader = io_reader ).
+    skip_to(  iv_element_name = `sheetData`  io_reader = io_reader ).
 
 * Main loop: Evaluate the <c> elements and its children
-  while io_reader->node_type ne c_end_of_stream.
-    io_reader->next_node( ).
-    case io_reader->node_type.
-      when c_element_open.
-        if io_reader->name eq `c`.
-          ls_cell = fill_cell_from_attributes( io_reader ).
-        endif.
-      when c_node_value.
-        case io_reader->name.
-          when `f`.
-            ls_cell-formula = io_reader->value.
-          when `v`.
-            if ls_cell-datatype eq `s`.
-              ls_cell-value = get_shared_string( io_reader->value ).
-            else.
+    WHILE io_reader->node_type NE c_end_of_stream.
+      io_reader->next_node( ).
+      CASE io_reader->node_type.
+        WHEN c_element_open.
+          IF io_reader->name EQ `c`.
+            ls_cell = fill_cell_from_attributes( io_reader ).
+          ENDIF.
+        WHEN c_node_value.
+          CASE io_reader->name.
+            WHEN `f`.
+              ls_cell-formula = io_reader->value.
+            WHEN `v`.
+              IF ls_cell-datatype EQ `s`.
+                ls_cell-value = get_shared_string( io_reader->value ).
+              ELSE.
+                ls_cell-value = io_reader->value.
+              ENDIF.
+            WHEN `t` OR `is`.
               ls_cell-value = io_reader->value.
-            endif.
-          when `t` or `is`.
-            ls_cell-value = io_reader->value.
-        endcase.
-      when c_element_close.
-        case io_reader->name.
-          when `c`.
-            put_cell_to_worksheet( is_cell = ls_cell io_worksheet = io_worksheet ).
-          when `sheetData`.
-            exit.
-        endcase.
-    endcase.
-  endwhile.
+          ENDCASE.
+        WHEN c_element_close.
+          CASE io_reader->name.
+            WHEN `c`.
+              put_cell_to_worksheet( is_cell = ls_cell io_worksheet = io_worksheet ).
+            WHEN `sheetData`.
+              EXIT.
+          ENDCASE.
+      ENDCASE.
+    ENDWHILE.
 
-endmethod.
+  ENDMETHOD.
 
 
-method SKIP_TO.
+  METHOD skip_to.
 
-  data: lv_error type string.
+    DATA: lv_error TYPE string.
 
 * Skip forward to given element
-  while io_reader->name ne iv_element_name or
-        io_reader->node_type ne c_element_open.
-    io_reader->next_node( ).
-    if io_reader->node_type = c_end_of_stream.
-      concatenate 'XML error: Didn''t find element <' iv_element_name '>' into lv_error.
-      raise exception type lcx_not_found
-        exporting
-          error = lv_error.
-    endif.
-  endwhile.
+    WHILE io_reader->name NE iv_element_name OR
+          io_reader->node_type NE c_element_open.
+      io_reader->next_node( ).
+      IF io_reader->node_type = c_end_of_stream.
+        CONCATENATE 'XML error: Didn''t find element <' iv_element_name '>' INTO lv_error.
+        RAISE EXCEPTION TYPE lcx_not_found
+          EXPORTING
+            error = lv_error.
+      ENDIF.
+    ENDWHILE.
 
 
-endmethod.
+  ENDMETHOD.
 ENDCLASS.

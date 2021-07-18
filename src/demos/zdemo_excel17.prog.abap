@@ -8,12 +8,12 @@
 
 REPORT zdemo_excel17.
 
-DATA: lo_excel                  TYPE REF TO zcl_excel,
-      lo_worksheet              TYPE REF TO zcl_excel_worksheet,
-      lo_style_protection       TYPE REF TO zcl_excel_style,
-      lv_style_protection_guid  TYPE zexcel_cell_style,
-      lo_style                  TYPE REF TO zcl_excel_style,
-      lv_style                  TYPE zexcel_cell_style.
+DATA: lo_excel                 TYPE REF TO zcl_excel,
+      lo_worksheet             TYPE REF TO zcl_excel_worksheet,
+      lo_style_protection      TYPE REF TO zcl_excel_style,
+      lv_style_protection_guid TYPE zexcel_cell_style,
+      lo_style                 TYPE REF TO zcl_excel_style,
+      lv_style                 TYPE zexcel_cell_style.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '17_SheetProtection.xlsx'.

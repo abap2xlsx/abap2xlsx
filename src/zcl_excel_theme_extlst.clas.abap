@@ -1,47 +1,47 @@
-class ZCL_EXCEL_THEME_EXTLST definition
-  public
-  final
-  create public .
+CLASS zcl_excel_theme_extlst DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods LOAD
-    importing
-      !IO_EXTLST type ref to IF_IXML_ELEMENT .
-  methods BUILD_XML
-    importing
-      !IO_DOCUMENT type ref to IF_IXML_DOCUMENT .
-protected section.
-private section.
+    METHODS load
+      IMPORTING
+        !io_extlst TYPE REF TO if_ixml_element .
+    METHODS build_xml
+      IMPORTING
+        !io_document TYPE REF TO if_ixml_document .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  data EXTLST type ref to IF_IXML_ELEMENT .
+    DATA extlst TYPE REF TO if_ixml_element .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_THEME_EXTLST IMPLEMENTATION.
+CLASS zcl_excel_theme_extlst IMPLEMENTATION.
 
 
-method build_xml.
-    data: lo_theme type ref to if_ixml_element.
-    data: lo_theme_objdef type ref to if_ixml_element.
-    check io_document is bound.
+  METHOD build_xml.
+    DATA: lo_theme TYPE REF TO if_ixml_element.
+    DATA: lo_theme_objdef TYPE REF TO if_ixml_element.
+    CHECK io_document IS BOUND.
 
     lo_theme ?= io_document->get_root_element( ).
-    check lo_theme is bound.
-    if extlst is initial.
+    CHECK lo_theme IS BOUND.
+    IF extlst IS INITIAL.
       lo_theme_objdef ?= io_document->create_simple_element_ns( prefix = zcl_excel_theme=>c_theme_prefix
                                                                 name   = zcl_excel_theme=>c_theme_extlst
                                                                 parent = lo_theme ).
 
-    else.
+    ELSE.
       lo_theme->append_child( new_child = extlst ).
-    endif.
-  endmethod.                    "build_xml
+    ENDIF.
+  ENDMETHOD.                    "build_xml
 
 
-method load.
+  METHOD load.
     "! so far copy only existing values
     extlst ?= io_extlst.
-  endmethod.                    "load
+  ENDMETHOD.                    "load
 ENDCLASS.
