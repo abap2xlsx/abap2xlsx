@@ -1,100 +1,100 @@
-class zcl_excel_aunit definition
-  public
-  final
-  create private.
+CLASS zcl_excel_aunit DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PRIVATE.
 
-  public section.
+  PUBLIC SECTION.
 
-    class-methods class_constructor.
+    CLASS-METHODS class_constructor.
 
-    class-methods assert_differs
-      importing
-        !exp                    type simple
-        !act                    type simple
-        !msg                    type csequence optional
-        !level                  type aunit_level default if_aunit_constants=>critical
-        !tol                    type f optional
-        !quit                   type aunit_flowctrl default if_aunit_constants=>method
-      returning
-        value(assertion_failed) type abap_bool.
+    CLASS-METHODS assert_differs
+      IMPORTING
+        !exp                    TYPE simple
+        !act                    TYPE simple
+        !msg                    TYPE csequence OPTIONAL
+        !level                  TYPE aunit_level DEFAULT if_aunit_constants=>critical
+        !tol                    TYPE f OPTIONAL
+        !quit                   TYPE aunit_flowctrl DEFAULT if_aunit_constants=>method
+      RETURNING
+        VALUE(assertion_failed) TYPE abap_bool.
 
-    class-methods assert_equals
-      importing
-        !exp                    type any
-        !act                    type any
-        !msg                    type csequence optional
-        !level                  type aunit_level default if_aunit_constants=>critical
-        !tol                    type f optional
-        !quit                   type aunit_flowctrl default if_aunit_constants=>method
-        !ignore_hash_sequence   type abap_bool default abap_false
-      returning
-        value(assertion_failed) type abap_bool.
+    CLASS-METHODS assert_equals
+      IMPORTING
+        !exp                    TYPE any
+        !act                    TYPE any
+        !msg                    TYPE csequence OPTIONAL
+        !level                  TYPE aunit_level DEFAULT if_aunit_constants=>critical
+        !tol                    TYPE f OPTIONAL
+        !quit                   TYPE aunit_flowctrl DEFAULT if_aunit_constants=>method
+        !ignore_hash_sequence   TYPE abap_bool DEFAULT abap_false
+      RETURNING
+        VALUE(assertion_failed) TYPE abap_bool.
 
-    class-methods fail
-      importing
-        msg    type csequence optional
-        level  type aunit_level default if_aunit_constants=>critical
-        quit   type aunit_flowctrl default if_aunit_constants=>method
-        detail type csequence optional.
+    CLASS-METHODS fail
+      IMPORTING
+        msg    TYPE csequence OPTIONAL
+        level  TYPE aunit_level DEFAULT if_aunit_constants=>critical
+        quit   TYPE aunit_flowctrl DEFAULT if_aunit_constants=>method
+        detail TYPE csequence OPTIONAL.
 
-  protected section.
-  private section.
-    types tv_clsname type seoclass-clsname.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+    TYPES tv_clsname TYPE seoclass-clsname.
 
-    constants:
-      begin of en_clsname,
-        new  type tv_clsname value 'CL_ABAP_UNIT_ASSERT',
-        old  type tv_clsname value 'CL_AUNIT_ASSERT',
-        none type tv_clsname value '',
-      end of en_clsname.
+    CONSTANTS:
+      BEGIN OF en_clsname,
+        new  TYPE tv_clsname VALUE 'CL_ABAP_UNIT_ASSERT',
+        old  TYPE tv_clsname VALUE 'CL_AUNIT_ASSERT',
+        none TYPE tv_clsname VALUE '',
+      END OF en_clsname.
 
-    class-data clsname type tv_clsname.
-endclass.
+    CLASS-DATA clsname TYPE tv_clsname.
+ENDCLASS.
 
 
 
-class zcl_excel_aunit implementation.
+CLASS zcl_excel_aunit IMPLEMENTATION.
 
-  method class_constructor.
+  METHOD class_constructor.
     " Let see >=7.02
-    select single clsname into clsname
-      from seoclass
-      where clsname = en_clsname-new.
+    SELECT SINGLE clsname INTO clsname
+      FROM seoclass
+      WHERE clsname = en_clsname-new.
 
-    check sy-subrc <> 0.
+    CHECK sy-subrc <> 0.
 
     " Let see >=7.00 or even lower
-    select single clsname into clsname
-      from seoclass
-      where clsname = en_clsname-old.
+    SELECT SINGLE clsname INTO clsname
+      FROM seoclass
+      WHERE clsname = en_clsname-old.
 
-    check sy-subrc <> 0.
+    CHECK sy-subrc <> 0.
 
     " We do nothing for now not supported
 
-  endmethod.
+  ENDMETHOD.
 
-  method assert_differs.
-    check clsname = en_clsname-new or clsname = en_clsname-old.
+  METHOD assert_differs.
+    CHECK clsname = en_clsname-new OR clsname = en_clsname-old.
 
-    call method (clsname)=>assert_differs
-      exporting
+    CALL METHOD (clsname)=>assert_differs
+      EXPORTING
         exp              = exp
         act              = act
         msg              = msg
         level            = level
         tol              = tol
         quit             = quit
-      receiving
+      RECEIVING
         assertion_failed = assertion_failed.
 
-  endmethod.
+  ENDMETHOD.
 
-  method assert_equals.
-    check clsname = en_clsname-new or clsname = en_clsname-old.
+  METHOD assert_equals.
+    CHECK clsname = en_clsname-new OR clsname = en_clsname-old.
 
-    call method (clsname)=>assert_equals
-      exporting
+    CALL METHOD (clsname)=>assert_equals
+      EXPORTING
         exp                  = exp
         act                  = act
         msg                  = msg
@@ -102,19 +102,19 @@ class zcl_excel_aunit implementation.
         tol                  = tol
         quit                 = quit
         ignore_hash_sequence = ignore_hash_sequence
-      receiving
+      RECEIVING
         assertion_failed     = assertion_failed.
-  endmethod.
+  ENDMETHOD.
 
-  method fail.
-    check clsname = en_clsname-new or clsname = en_clsname-old.
+  METHOD fail.
+    CHECK clsname = en_clsname-new OR clsname = en_clsname-old.
 
-    call method (clsname)=>fail
-      exporting
+    CALL METHOD (clsname)=>fail
+      EXPORTING
         msg    = msg
         level  = level
         quit   = quit
         detail = detail.
 
-  endmethod.
-endclass.
+  ENDMETHOD.
+ENDCLASS.

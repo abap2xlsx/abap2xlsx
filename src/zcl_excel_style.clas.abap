@@ -1,62 +1,62 @@
-class ZCL_EXCEL_STYLE definition
-  public
-  final
-  create public .
+CLASS zcl_excel_style DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_STYLE
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  data FONT type ref to ZCL_EXCEL_STYLE_FONT .
-  data FILL type ref to ZCL_EXCEL_STYLE_FILL .
-  data BORDERS type ref to ZCL_EXCEL_STYLE_BORDERS .
-  data ALIGNMENT type ref to ZCL_EXCEL_STYLE_ALIGNMENT .
-  data NUMBER_FORMAT type ref to ZCL_EXCEL_STYLE_NUMBER_FORMAT .
-  data PROTECTION type ref to ZCL_EXCEL_STYLE_PROTECTION .
+    DATA font TYPE REF TO zcl_excel_style_font .
+    DATA fill TYPE REF TO zcl_excel_style_fill .
+    DATA borders TYPE REF TO zcl_excel_style_borders .
+    DATA alignment TYPE REF TO zcl_excel_style_alignment .
+    DATA number_format TYPE REF TO zcl_excel_style_number_format .
+    DATA protection TYPE REF TO zcl_excel_style_protection .
 
-  methods CONSTRUCTOR
-    importing
-      !IP_GUID type ZEXCEL_CELL_STYLE optional .
-  methods GET_GUID
-    returning
-      value(EP_GUID) type ZEXCEL_CELL_STYLE .
+    METHODS constructor
+      IMPORTING
+        !ip_guid TYPE zexcel_cell_style OPTIONAL .
+    METHODS get_guid
+      RETURNING
+        VALUE(ep_guid) TYPE zexcel_cell_style .
 *"* protected components of class ZABAP_EXCEL_STYLE
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_STYLE
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data GUID type ZEXCEL_CELL_STYLE .
+    DATA guid TYPE zexcel_cell_style .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_STYLE IMPLEMENTATION.
+CLASS zcl_excel_style IMPLEMENTATION.
 
 
-METHOD constructor.
+  METHOD constructor.
 
 
-  CREATE OBJECT font.
-  CREATE OBJECT fill.
-  CREATE OBJECT borders.
-  CREATE OBJECT alignment.
-  CREATE OBJECT number_format.
-  CREATE OBJECT protection.
+    CREATE OBJECT font.
+    CREATE OBJECT fill.
+    CREATE OBJECT borders.
+    CREATE OBJECT alignment.
+    CREATE OBJECT number_format.
+    CREATE OBJECT protection.
 
-  IF ip_guid IS NOT INITIAL.
-    me->guid = ip_guid.
-  ELSE.
-    me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).
-  ENDIF.
+    IF ip_guid IS NOT INITIAL.
+      me->guid = ip_guid.
+    ELSE.
+      me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).
+    ENDIF.
 
-ENDMETHOD.
-
-
-method GET_GUID.
+  ENDMETHOD.
 
 
-  ep_guid = me->guid.
-  endmethod.
+  METHOD get_guid.
+
+
+    ep_guid = me->guid.
+  ENDMETHOD.
 ENDCLASS.

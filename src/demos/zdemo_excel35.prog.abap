@@ -8,28 +8,28 @@
 
 REPORT zdemo_excel35.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style_bold           TYPE REF TO zcl_excel_style,
-      lo_style_underline      TYPE REF TO zcl_excel_style,
-      lo_style_filled         TYPE REF TO zcl_excel_style,
-      lo_style_border         TYPE REF TO zcl_excel_style,
-      lo_style_button         TYPE REF TO zcl_excel_style,
-      lo_border_dark          TYPE REF TO zcl_excel_style_border,
-      lo_border_light         TYPE REF TO zcl_excel_style_border.
+DATA: lo_excel           TYPE REF TO zcl_excel,
+      lo_excel_writer    TYPE REF TO zif_excel_writer,
+      lo_worksheet       TYPE REF TO zcl_excel_worksheet,
+      lo_style_bold      TYPE REF TO zcl_excel_style,
+      lo_style_underline TYPE REF TO zcl_excel_style,
+      lo_style_filled    TYPE REF TO zcl_excel_style,
+      lo_style_border    TYPE REF TO zcl_excel_style,
+      lo_style_button    TYPE REF TO zcl_excel_style,
+      lo_border_dark     TYPE REF TO zcl_excel_style_border,
+      lo_border_light    TYPE REF TO zcl_excel_style_border.
 
-DATA: lv_style_bold_guid         TYPE zexcel_cell_style,
-      lv_style_underline_guid    TYPE zexcel_cell_style,
-      lv_style_filled_guid       TYPE zexcel_cell_style,
-      lv_style_filled_green_guid TYPE zexcel_cell_style,
-      lv_style_border_guid       TYPE zexcel_cell_style,
-      lv_style_button_guid       TYPE zexcel_cell_style,
+DATA: lv_style_bold_guid             TYPE zexcel_cell_style,
+      lv_style_underline_guid        TYPE zexcel_cell_style,
+      lv_style_filled_guid           TYPE zexcel_cell_style,
+      lv_style_filled_green_guid     TYPE zexcel_cell_style,
+      lv_style_border_guid           TYPE zexcel_cell_style,
+      lv_style_button_guid           TYPE zexcel_cell_style,
       lv_style_filled_turquoise_guid TYPE zexcel_cell_style.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+DATA: lv_file      TYPE xstring,
+      lv_bytecount TYPE i,
+      lt_file_tab  TYPE solix_tab.
 
 DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
@@ -46,7 +46,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
   p_path = lv_workdir.
 
 INITIALIZATION.
-  cl_gui_frontend_services=>GET_DESKTOP_DIRECTORY( CHANGING DESKTOP_DIRECTORY = lv_workdir ).
+  cl_gui_frontend_services=>get_desktop_directory( CHANGING desktop_directory = lv_workdir ).
   cl_gui_cfw=>flush( ).
   p_path = lv_workdir.
 

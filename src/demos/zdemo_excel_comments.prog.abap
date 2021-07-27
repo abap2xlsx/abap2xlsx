@@ -7,11 +7,11 @@
 *&---------------------------------------------------------------------*
 REPORT  zdemo_excel_comments.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_comment              TYPE REF TO zcl_excel_comment,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-      lv_comment              TYPE string.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_comment   TYPE REF TO zcl_excel_comment,
+      lo_hyperlink TYPE REF TO zcl_excel_hyperlink,
+      lv_comment   TYPE string.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE 'Comments.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.

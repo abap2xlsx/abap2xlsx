@@ -9,10 +9,10 @@
 REPORT zdemo_excel1.
 
 
-DATA: lo_excel      TYPE REF TO zcl_excel,
-      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
-      lo_hyperlink  TYPE REF TO zcl_excel_hyperlink,
-      lo_column     TYPE REF TO zcl_excel_column.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_hyperlink TYPE REF TO zcl_excel_hyperlink,
+      lo_column    TYPE REF TO zcl_excel_column.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '01_HelloWorld.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.

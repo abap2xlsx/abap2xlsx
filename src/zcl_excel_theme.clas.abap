@@ -1,206 +1,206 @@
-class ZCL_EXCEL_THEME definition
-  public
-  create public .
+CLASS zcl_excel_theme DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  constants C_THEME_ELEMENTS type STRING value 'themeElements'. "#EC NOTEXT
-  constants C_THEME_OBJECT_DEF type STRING value 'objectDefaults'. "#EC NOTEXT
-  constants C_THEME_EXTRA_COLOR type STRING value 'extraClrSchemeLst'. "#EC NOTEXT
-  constants C_THEME_EXTLST type STRING value 'extLst'. "#EC NOTEXT
-  constants C_THEME type STRING value 'theme'. "#EC NOTEXT
-  constants C_THEME_NAME type STRING value 'name'. "#EC NOTEXT
-  constants C_THEME_XMLNS type STRING value 'xmlns:a'. "#EC NOTEXT
-  constants C_THEME_PREFIX type STRING value 'a'. "#EC NOTEXT
-  constants C_THEME_PREFIX_WRITE type STRING value 'a:'. "#EC NOTEXT
-  constants C_THEME_XMLNS_VAL type STRING value 'http://schemas.openxmlformats.org/drawingml/2006/main'. "#EC NOTEXT
+    CONSTANTS c_theme_elements TYPE string VALUE 'themeElements'. "#EC NOTEXT
+    CONSTANTS c_theme_object_def TYPE string VALUE 'objectDefaults'. "#EC NOTEXT
+    CONSTANTS c_theme_extra_color TYPE string VALUE 'extraClrSchemeLst'. "#EC NOTEXT
+    CONSTANTS c_theme_extlst TYPE string VALUE 'extLst'.    "#EC NOTEXT
+    CONSTANTS c_theme TYPE string VALUE 'theme'.            "#EC NOTEXT
+    CONSTANTS c_theme_name TYPE string VALUE 'name'.        "#EC NOTEXT
+    CONSTANTS c_theme_xmlns TYPE string VALUE 'xmlns:a'.    "#EC NOTEXT
+    CONSTANTS c_theme_prefix TYPE string VALUE 'a'.         "#EC NOTEXT
+    CONSTANTS c_theme_prefix_write TYPE string VALUE 'a:'.  "#EC NOTEXT
+    CONSTANTS c_theme_xmlns_val TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main'. "#EC NOTEXT
 
-  methods CONSTRUCTOR .
-  methods READ_THEME
-    importing
-      value(IO_THEME_XML) type ref to IF_IXML_DOCUMENT .
-  methods WRITE_THEME
-    returning
-      value(RV_XSTRING) type XSTRING .
-  methods SET_COLOR
-    importing
-      value(IV_TYPE) type STRING
-      value(IV_SRGB) type ZCL_EXCEL_THEME_COLOR_SCHEME=>T_SRGB optional
-      value(IV_SYSCOLORNAME) type STRING optional
-      value(IV_SYSCOLORLAST) type ZCL_EXCEL_THEME_COLOR_SCHEME=>T_SRGB optional .
-  methods SET_COLOR_SCHEME_NAME
-    importing
-      value(IV_NAME) type STRING .
-  methods SET_FONT
-    importing
-      value(IV_TYPE) type STRING
-      value(IV_SCRIPT) type STRING
-      value(IV_TYPEFACE) type STRING .
-  methods SET_LATIN_FONT
-    importing
-      value(IV_TYPE) type STRING
-      value(IV_TYPEFACE) type STRING
-      value(IV_PANOSE) type STRING optional
-      value(IV_PITCHFAMILY) type STRING optional
-      value(IV_CHARSET) type STRING optional .
-  methods SET_EA_FONT
-    importing
-      value(IV_TYPE) type STRING
-      value(IV_TYPEFACE) type STRING
-      value(IV_PANOSE) type STRING optional
-      value(IV_PITCHFAMILY) type STRING optional
-      value(IV_CHARSET) type STRING optional .
-  methods SET_CS_FONT
-    importing
-      value(IV_TYPE) type STRING
-      value(IV_TYPEFACE) type STRING
-      value(IV_PANOSE) type STRING optional
-      value(IV_PITCHFAMILY) type STRING optional
-      value(IV_CHARSET) type STRING optional .
-  methods SET_FONT_SCHEME_NAME
-    importing
-      value(IV_NAME) type STRING .
-  methods SET_THEME_NAME
-    importing
-      value(IV_NAME) type STRING .
-protected section.
+    METHODS constructor .
+    METHODS read_theme
+      IMPORTING
+        VALUE(io_theme_xml) TYPE REF TO if_ixml_document .
+    METHODS write_theme
+      RETURNING
+        VALUE(rv_xstring) TYPE xstring .
+    METHODS set_color
+      IMPORTING
+        VALUE(iv_type)         TYPE string
+        VALUE(iv_srgb)         TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL
+        VALUE(iv_syscolorname) TYPE string OPTIONAL
+        VALUE(iv_syscolorlast) TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL .
+    METHODS set_color_scheme_name
+      IMPORTING
+        VALUE(iv_name) TYPE string .
+    METHODS set_font
+      IMPORTING
+        VALUE(iv_type)     TYPE string
+        VALUE(iv_script)   TYPE string
+        VALUE(iv_typeface) TYPE string .
+    METHODS set_latin_font
+      IMPORTING
+        VALUE(iv_type)        TYPE string
+        VALUE(iv_typeface)    TYPE string
+        VALUE(iv_panose)      TYPE string OPTIONAL
+        VALUE(iv_pitchfamily) TYPE string OPTIONAL
+        VALUE(iv_charset)     TYPE string OPTIONAL .
+    METHODS set_ea_font
+      IMPORTING
+        VALUE(iv_type)        TYPE string
+        VALUE(iv_typeface)    TYPE string
+        VALUE(iv_panose)      TYPE string OPTIONAL
+        VALUE(iv_pitchfamily) TYPE string OPTIONAL
+        VALUE(iv_charset)     TYPE string OPTIONAL .
+    METHODS set_cs_font
+      IMPORTING
+        VALUE(iv_type)        TYPE string
+        VALUE(iv_typeface)    TYPE string
+        VALUE(iv_panose)      TYPE string OPTIONAL
+        VALUE(iv_pitchfamily) TYPE string OPTIONAL
+        VALUE(iv_charset)     TYPE string OPTIONAL .
+    METHODS set_font_scheme_name
+      IMPORTING
+        VALUE(iv_name) TYPE string .
+    METHODS set_theme_name
+      IMPORTING
+        VALUE(iv_name) TYPE string .
+  PROTECTED SECTION.
 
-  data ELEMENTS type ref to ZCL_EXCEL_THEME_ELEMENTS .
-  data OBJECTDEFAULTS type ref to ZCL_EXCEL_THEME_OBJECTDEFAULTS .
-  data EXTCLRSCHEMELST type ref to ZCL_EXCEL_THEME_ECLRSCHEMELST .
-  data EXTLST type ref to ZCL_EXCEL_THEME_EXTLST .
-private section.
+    DATA elements TYPE REF TO zcl_excel_theme_elements .
+    DATA objectdefaults TYPE REF TO zcl_excel_theme_objectdefaults .
+    DATA extclrschemelst TYPE REF TO zcl_excel_theme_eclrschemelst .
+    DATA extlst TYPE REF TO zcl_excel_theme_extlst .
+  PRIVATE SECTION.
 
-  data THEME_CHANGED type ABAP_BOOL .
-  data THEME_READ type ABAP_BOOL .
-  data NAME type STRING .
-  data XMLS_A type STRING .
+    DATA theme_changed TYPE abap_bool .
+    DATA theme_read TYPE abap_bool .
+    DATA name TYPE string .
+    DATA xmls_a TYPE string .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_THEME IMPLEMENTATION.
+CLASS zcl_excel_theme IMPLEMENTATION.
 
 
-method constructor.
-    create object elements.
-    create object objectdefaults.
-    create object extclrschemelst.
-    create object extlst.
-  endmethod.                    "class_constructor
+  METHOD constructor.
+    CREATE OBJECT elements.
+    CREATE OBJECT objectdefaults.
+    CREATE OBJECT extclrschemelst.
+    CREATE OBJECT extlst.
+  ENDMETHOD.                    "class_constructor
 
 
-method read_theme.
-    data: lo_node_theme type ref to if_ixml_element.
-    data: lo_theme_children type ref to if_ixml_node_list.
-    data: lo_theme_iterator type ref to if_ixml_node_iterator.
-    data: lo_theme_element type ref to if_ixml_element.
-    check io_theme_xml is not initial.
+  METHOD read_theme.
+    DATA: lo_node_theme TYPE REF TO if_ixml_element.
+    DATA: lo_theme_children TYPE REF TO if_ixml_node_list.
+    DATA: lo_theme_iterator TYPE REF TO if_ixml_node_iterator.
+    DATA: lo_theme_element TYPE REF TO if_ixml_element.
+    CHECK io_theme_xml IS NOT INITIAL.
 
     lo_node_theme  = io_theme_xml->get_root_element( )."   find_from_name( name = c_theme ).
-    if lo_node_theme is bound.
+    IF lo_node_theme IS BOUND.
       name = lo_node_theme->get_attribute( name = c_theme_name ).
       xmls_a = lo_node_theme->get_attribute( name = c_theme_xmlns ).
       lo_theme_children = lo_node_theme->get_children( ).
       lo_theme_iterator = lo_theme_children->create_iterator( ).
       lo_theme_element ?= lo_theme_iterator->get_next( ).
-      while lo_theme_element is bound.
-        case lo_theme_element->get_name( ).
-          when c_theme_elements.
+      WHILE lo_theme_element IS BOUND.
+        CASE lo_theme_element->get_name( ).
+          WHEN c_theme_elements.
             elements->load( io_elements = lo_theme_element ).
-          when c_theme_object_def.
+          WHEN c_theme_object_def.
             objectdefaults->load( io_object_def = lo_theme_element ).
-          when c_theme_extra_color.
+          WHEN c_theme_extra_color.
             extclrschemelst->load( io_extra_color = lo_theme_element ).
-          when c_theme_extlst.
+          WHEN c_theme_extlst.
             extlst->load( io_extlst = lo_theme_element ).
-        endcase.
+        ENDCASE.
         lo_theme_element ?= lo_theme_iterator->get_next( ).
-      endwhile.
-    endif.
-  endmethod.                    "read_theme
+      ENDWHILE.
+    ENDIF.
+  ENDMETHOD.                    "read_theme
 
 
-method set_color.
+  METHOD set_color.
     elements->color_scheme->set_color(
-      exporting
+      EXPORTING
         iv_type         = iv_type
         iv_srgb         = iv_srgb
         iv_syscolorname = iv_syscolorname
         iv_syscolorlast = iv_syscolorlast
     ).
-  endmethod.                    "set_color
+  ENDMETHOD.                    "set_color
 
 
-method set_color_scheme_name.
+  METHOD set_color_scheme_name.
     elements->color_scheme->set_name( iv_name = iv_name ).
-  endmethod.                    "set_color_scheme_name
+  ENDMETHOD.                    "set_color_scheme_name
 
 
-method set_cs_font.
+  METHOD set_cs_font.
     elements->font_scheme->modify_cs_font(
-      exporting
+      EXPORTING
         iv_type        = iv_type
         iv_typeface    = iv_typeface
         iv_panose      = iv_panose
         iv_pitchfamily = iv_pitchfamily
         iv_charset     = iv_charset
     ).
-  endmethod.                    "set_cs_font
+  ENDMETHOD.                    "set_cs_font
 
 
-method set_ea_font.
+  METHOD set_ea_font.
     elements->font_scheme->modify_ea_font(
-      exporting
+      EXPORTING
         iv_type        = iv_type
         iv_typeface    = iv_typeface
         iv_panose      = iv_panose
         iv_pitchfamily = iv_pitchfamily
         iv_charset     = iv_charset
     ).
-  endmethod.                    "set_ea_font
+  ENDMETHOD.                    "set_ea_font
 
 
-method set_font.
+  METHOD set_font.
     elements->font_scheme->modify_font(
-      exporting
+      EXPORTING
         iv_type     = iv_type
         iv_script   = iv_script
         iv_typeface = iv_typeface
     ).
-  endmethod.                    "set_font
+  ENDMETHOD.                    "set_font
 
 
-method set_font_scheme_name.
+  METHOD set_font_scheme_name.
     elements->font_scheme->set_name( iv_name = iv_name ).
-  endmethod.                    "set_font_scheme_name
+  ENDMETHOD.                    "set_font_scheme_name
 
 
-method set_latin_font.
+  METHOD set_latin_font.
     elements->font_scheme->modify_latin_font(
-      exporting
+      EXPORTING
         iv_type        = iv_type
         iv_typeface    = iv_typeface
         iv_panose      = iv_panose
         iv_pitchfamily = iv_pitchfamily
         iv_charset     = iv_charset
     ).
-  endmethod.                    "set_latin_font
+  ENDMETHOD.                    "set_latin_font
 
 
-method set_theme_name.
+  METHOD set_theme_name.
     name = iv_name.
-  endmethod.
+  ENDMETHOD.
 
 
-method write_theme.
-    data:   lo_ixml           type ref to if_ixml,
-            lo_element_root   type ref to if_ixml_element,
-            lo_encoding       type ref to if_ixml_encoding.
-    data: lo_streamfactory  TYPE REF TO if_ixml_stream_factory.
-    data: lo_ostream TYPE REF TO if_ixml_ostream.
-    data: lo_renderer TYPE REF TO if_ixml_renderer.
-    data: lo_document type ref to if_ixml_document.
+  METHOD write_theme.
+    DATA: lo_ixml         TYPE REF TO if_ixml,
+          lo_element_root TYPE REF TO if_ixml_element,
+          lo_encoding     TYPE REF TO if_ixml_encoding.
+    DATA: lo_streamfactory  TYPE REF TO if_ixml_stream_factory.
+    DATA: lo_ostream TYPE REF TO if_ixml_ostream.
+    DATA: lo_renderer TYPE REF TO if_ixml_renderer.
+    DATA: lo_document TYPE REF TO if_ixml_document.
     lo_ixml = cl_ixml=>create( ).
 
     lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
@@ -229,5 +229,5 @@ method write_theme.
     lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
     lo_renderer->render( ).
 
-  endmethod.                    "write_theme
+  ENDMETHOD.                    "write_theme
 ENDCLASS.

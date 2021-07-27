@@ -1,48 +1,48 @@
-class ZCL_EXCEL_STYLE_BORDER definition
-  public
-  final
-  create public .
+CLASS zcl_excel_style_border DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
 *"* public components of class ZCL_EXCEL_STYLE_BORDER
 *"* do not include other source files here!!!
-  data BORDER_STYLE type ZEXCEL_BORDER .
-  data BORDER_COLOR type ZEXCEL_S_STYLE_COLOR .
-  constants C_BORDER_NONE type ZEXCEL_BORDER value 'none'. "#EC NOTEXT
-  constants C_BORDER_DASHDOT type ZEXCEL_BORDER value 'dashDot'. "#EC NOTEXT
-  constants C_BORDER_DASHDOTDOT type ZEXCEL_BORDER value 'dashDotDot'. "#EC NOTEXT
-  constants C_BORDER_DASHED type ZEXCEL_BORDER value 'dashed'. "#EC NOTEXT
-  constants C_BORDER_DOTTED type ZEXCEL_BORDER value 'dotted'. "#EC NOTEXT
-  constants C_BORDER_DOUBLE type ZEXCEL_BORDER value 'double'. "#EC NOTEXT
-  constants C_BORDER_HAIR type ZEXCEL_BORDER value 'hair'. "#EC NOTEXT
-  constants C_BORDER_MEDIUM type ZEXCEL_BORDER value 'medium'. "#EC NOTEXT
-  constants C_BORDER_MEDIUMDASHDOT type ZEXCEL_BORDER value 'mediumDashDot'. "#EC NOTEXT
-  constants C_BORDER_MEDIUMDASHDOTDOT type ZEXCEL_BORDER value 'mediumDashDotDot'. "#EC NOTEXT
-  constants C_BORDER_MEDIUMDASHED type ZEXCEL_BORDER value 'mediumDashed'. "#EC NOTEXT
-  constants C_BORDER_SLANTDASHDOT type ZEXCEL_BORDER value 'slantDashDot'. "#EC NOTEXT
-  constants C_BORDER_THICK type ZEXCEL_BORDER value 'thick'. "#EC NOTEXT
-  constants C_BORDER_THIN type ZEXCEL_BORDER value 'thin'. "#EC NOTEXT
+    DATA border_style TYPE zexcel_border .
+    DATA border_color TYPE zexcel_s_style_color .
+    CONSTANTS c_border_none TYPE zexcel_border VALUE 'none'. "#EC NOTEXT
+    CONSTANTS c_border_dashdot TYPE zexcel_border VALUE 'dashDot'. "#EC NOTEXT
+    CONSTANTS c_border_dashdotdot TYPE zexcel_border VALUE 'dashDotDot'. "#EC NOTEXT
+    CONSTANTS c_border_dashed TYPE zexcel_border VALUE 'dashed'. "#EC NOTEXT
+    CONSTANTS c_border_dotted TYPE zexcel_border VALUE 'dotted'. "#EC NOTEXT
+    CONSTANTS c_border_double TYPE zexcel_border VALUE 'double'. "#EC NOTEXT
+    CONSTANTS c_border_hair TYPE zexcel_border VALUE 'hair'. "#EC NOTEXT
+    CONSTANTS c_border_medium TYPE zexcel_border VALUE 'medium'. "#EC NOTEXT
+    CONSTANTS c_border_mediumdashdot TYPE zexcel_border VALUE 'mediumDashDot'. "#EC NOTEXT
+    CONSTANTS c_border_mediumdashdotdot TYPE zexcel_border VALUE 'mediumDashDotDot'. "#EC NOTEXT
+    CONSTANTS c_border_mediumdashed TYPE zexcel_border VALUE 'mediumDashed'. "#EC NOTEXT
+    CONSTANTS c_border_slantdashdot TYPE zexcel_border VALUE 'slantDashDot'. "#EC NOTEXT
+    CONSTANTS c_border_thick TYPE zexcel_border VALUE 'thick'. "#EC NOTEXT
+    CONSTANTS c_border_thin TYPE zexcel_border VALUE 'thin'. "#EC NOTEXT
 
-  methods CONSTRUCTOR .
+    METHODS constructor .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_STYLE_BORDER
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_STYLE_BORDER IMPLEMENTATION.
+CLASS zcl_excel_style_border IMPLEMENTATION.
 
 
-method CONSTRUCTOR.
-  border_style = zcl_excel_style_border=>c_border_none.
-  border_color-theme     = zcl_excel_style_color=>c_theme_not_set.
-  border_color-indexed   = zcl_excel_style_color=>c_indexed_not_set.
-  endmethod.
+  METHOD constructor.
+    border_style = zcl_excel_style_border=>c_border_none.
+    border_color-theme     = zcl_excel_style_color=>c_theme_not_set.
+    border_color-indexed   = zcl_excel_style_color=>c_indexed_not_set.
+  ENDMETHOD.
 ENDCLASS.

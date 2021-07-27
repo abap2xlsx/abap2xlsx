@@ -1,108 +1,108 @@
-class ZCL_EXCEL_COLUMNS definition
-  public
-  final
-  create public .
+CLASS zcl_excel_columns DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_COLUMNS
 *"* do not include other source files here!!!
-  public section.
-    types:
-      begin of MTY_S_HASHED_COLUMN,
-        COLUMN_INDEX type INT4,
-        COLUMN       type ref to ZCL_EXCEL_COLUMN,
-      end of MTY_S_HASHED_COLUMN ,
-      MTY_TS_HASEHD_COLUMN type hashed table of MTY_S_HASHED_COLUMN with unique key COLUMN_INDEX.
+  PUBLIC SECTION.
+    TYPES:
+      BEGIN OF mty_s_hashed_column,
+        column_index TYPE int4,
+        column       TYPE REF TO zcl_excel_column,
+      END OF mty_s_hashed_column ,
+      mty_ts_hasehd_column TYPE HASHED TABLE OF mty_s_hashed_column WITH UNIQUE KEY column_index.
 
-    methods ADD
-      importing
-        !IO_COLUMN type ref to ZCL_EXCEL_COLUMN .
-    methods CLEAR .
-    methods CONSTRUCTOR .
-    methods GET
-      importing
-        !IP_INDEX        type I
-      returning
-        value(EO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-    methods GET_ITERATOR
-      returning
-        value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-    methods IS_EMPTY
-      returning
-        value(IS_EMPTY) type FLAG .
-    methods REMOVE
-      importing
-        !IO_COLUMN type ref to ZCL_EXCEL_COLUMN .
-    methods SIZE
-      returning
-        value(EP_SIZE) type I .
+    METHODS add
+      IMPORTING
+        !io_column TYPE REF TO zcl_excel_column .
+    METHODS clear .
+    METHODS constructor .
+    METHODS get
+      IMPORTING
+        !ip_index        TYPE i
+      RETURNING
+        VALUE(eo_column) TYPE REF TO zcl_excel_column .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !io_column TYPE REF TO zcl_excel_column .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-  protected section.
+  PROTECTED SECTION.
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
-  private section.
+  PRIVATE SECTION.
 
-    data COLUMNS type ref to CL_OBJECT_COLLECTION .
-    data COLUMNS_HASEHD type MTY_TS_HASEHD_COLUMN .
+    DATA columns TYPE REF TO cl_object_collection .
+    DATA columns_hasehd TYPE mty_ts_hasehd_column .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COLUMNS IMPLEMENTATION.
+CLASS zcl_excel_columns IMPLEMENTATION.
 
 
-  method ADD.
-    data: LS_HASHED_COLUMN type MTY_S_HASHED_COLUMN.
+  METHOD add.
+    DATA: ls_hashed_column TYPE mty_s_hashed_column.
 
-    LS_HASHED_COLUMN-COLUMN_INDEX = IO_COLUMN->GET_COLUMN_INDEX( ).
-    LS_HASHED_COLUMN-COLUMN = IO_COLUMN.
+    ls_hashed_column-column_index = io_column->get_column_index( ).
+    ls_hashed_column-column = io_column.
 
-    insert LS_HASHED_COLUMN into table COLUMNS_HASEHD .
+    INSERT ls_hashed_column INTO TABLE columns_hasehd .
 
-    COLUMNS->ADD( IO_COLUMN ).
-  endmethod.
-
-
-  method CLEAR.
-    clear COLUMNS_HASEHD.
-    COLUMNS->CLEAR( ).
-  endmethod.
+    columns->add( io_column ).
+  ENDMETHOD.
 
 
-  method CONSTRUCTOR.
-
-    create object COLUMNS.
-
-  endmethod.
-
-
-  method GET.
-    field-symbols: <LS_HASHED_COLUMN> type MTY_S_HASHED_COLUMN.
-
-    read table COLUMNS_HASEHD with key COLUMN_INDEX = IP_INDEX assigning <LS_HASHED_COLUMN>.
-    if SY-SUBRC = 0.
-      EO_COLUMN = <LS_HASHED_COLUMN>-COLUMN.
-    endif.
-  endmethod.
+  METHOD clear.
+    CLEAR columns_hasehd.
+    columns->clear( ).
+  ENDMETHOD.
 
 
-  method GET_ITERATOR.
-    EO_ITERATOR ?= COLUMNS->GET_ITERATOR( ).
-  endmethod.
+  METHOD constructor.
+
+    CREATE OBJECT columns.
+
+  ENDMETHOD.
 
 
-  method IS_EMPTY.
-    IS_EMPTY = COLUMNS->IS_EMPTY( ).
-  endmethod.
+  METHOD get.
+    FIELD-SYMBOLS: <ls_hashed_column> TYPE mty_s_hashed_column.
+
+    READ TABLE columns_hasehd WITH KEY column_index = ip_index ASSIGNING <ls_hashed_column>.
+    IF sy-subrc = 0.
+      eo_column = <ls_hashed_column>-column.
+    ENDIF.
+  ENDMETHOD.
 
 
-  method REMOVE.
-    delete table COLUMNS_HASEHD with table key COLUMN_INDEX = IO_COLUMN->GET_COLUMN_INDEX( ) .
-    COLUMNS->REMOVE( IO_COLUMN ).
-  endmethod.
+  METHOD get_iterator.
+    eo_iterator ?= columns->get_iterator( ).
+  ENDMETHOD.
 
 
-  method SIZE.
-    EP_SIZE = COLUMNS->SIZE( ).
-  endmethod.
+  METHOD is_empty.
+    is_empty = columns->is_empty( ).
+  ENDMETHOD.
+
+
+  METHOD remove.
+    DELETE TABLE columns_hasehd WITH TABLE KEY column_index = io_column->get_column_index( ) .
+    columns->remove( io_column ).
+  ENDMETHOD.
+
+
+  METHOD size.
+    ep_size = columns->size( ).
+  ENDMETHOD.
 ENDCLASS.
