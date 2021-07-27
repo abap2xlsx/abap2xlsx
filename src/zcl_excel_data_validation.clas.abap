@@ -1,83 +1,83 @@
-class ZCL_EXCEL_DATA_VALIDATION definition
-  public
-  final
-  create public .
+CLASS zcl_excel_data_validation DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
-  type-pools ABAP .
+    TYPE-POOLS abap .
 
-  data ERRORSTYLE type ZEXCEL_DATA_VAL_ERROR_STYLE .
-  data OPERATOR type ZEXCEL_DATA_VAL_OPERATOR .
-  data ALLOWBLANK type FLAG value 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data CELL_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA .
-  data CELL_COLUMN_TO type ZEXCEL_CELL_COLUMN_ALPHA .
-  data CELL_ROW type ZEXCEL_CELL_ROW .
-  data CELL_ROW_TO type ZEXCEL_CELL_ROW .
-  constants C_TYPE_CUSTOM type ZEXCEL_DATA_VAL_TYPE value 'custom'. "#EC NOTEXT
-  constants C_TYPE_LIST type ZEXCEL_DATA_VAL_TYPE value 'list'. "#EC NOTEXT
-  data SHOWERRORMESSAGE type FLAG value 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data SHOWINPUTMESSAGE type FLAG value 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-  data TYPE type ZEXCEL_DATA_VAL_TYPE .
-  data FORMULA1 type ZEXCEL_VALIDATION_FORMULA1 .
-  data FORMULA2 type ZEXCEL_VALIDATION_FORMULA1 .
-  constants C_TYPE_NONE type ZEXCEL_DATA_VAL_TYPE value 'none'. "#EC NOTEXT
-  constants C_TYPE_DATE type ZEXCEL_DATA_VAL_TYPE value 'date'. "#EC NOTEXT
-  constants C_TYPE_DECIMAL type ZEXCEL_DATA_VAL_TYPE value 'decimal'. "#EC NOTEXT
-  constants C_TYPE_TEXTLENGTH type ZEXCEL_DATA_VAL_TYPE value 'textLength'. "#EC NOTEXT
-  constants C_TYPE_TIME type ZEXCEL_DATA_VAL_TYPE value 'time'. "#EC NOTEXT
-  constants C_TYPE_WHOLE type ZEXCEL_DATA_VAL_TYPE value 'whole'. "#EC NOTEXT
-  constants C_STYLE_STOP type ZEXCEL_DATA_VAL_ERROR_STYLE value 'stop'. "#EC NOTEXT
-  constants C_STYLE_WARNING type ZEXCEL_DATA_VAL_ERROR_STYLE value 'warning'. "#EC NOTEXT
-  constants C_STYLE_INFORMATION type ZEXCEL_DATA_VAL_ERROR_STYLE value 'information'. "#EC NOTEXT
-  constants C_OPERATOR_BETWEEN type ZEXCEL_DATA_VAL_OPERATOR value 'between'. "#EC NOTEXT
-  constants C_OPERATOR_EQUAL type ZEXCEL_DATA_VAL_OPERATOR value 'equal'. "#EC NOTEXT
-  constants C_OPERATOR_GREATERTHAN type ZEXCEL_DATA_VAL_OPERATOR value 'greaterThan'. "#EC NOTEXT
-  constants C_OPERATOR_GREATERTHANOREQUAL type ZEXCEL_DATA_VAL_OPERATOR value 'greaterThanOrEqual'. "#EC NOTEXT
-  constants C_OPERATOR_LESSTHAN type ZEXCEL_DATA_VAL_OPERATOR value 'lessThan'. "#EC NOTEXT
-  constants C_OPERATOR_LESSTHANOREQUAL type ZEXCEL_DATA_VAL_OPERATOR value 'lessThanOrEqual'. "#EC NOTEXT
-  constants C_OPERATOR_NOTBETWEEN type ZEXCEL_DATA_VAL_OPERATOR value 'notBetween'. "#EC NOTEXT
-  constants C_OPERATOR_NOTEQUAL type ZEXCEL_DATA_VAL_OPERATOR value 'notEqual'. "#EC NOTEXT
-  data SHOWDROPDOWN type FLAG .
-  data ERRORTITLE type STRING .
-  data ERROR type STRING .
-  data PROMPTTITLE type STRING .
-  data PROMPT type STRING .
+    DATA errorstyle TYPE zexcel_data_val_error_style .
+    DATA operator TYPE zexcel_data_val_operator .
+    DATA allowblank TYPE flag VALUE 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+    DATA cell_column TYPE zexcel_cell_column_alpha .
+    DATA cell_column_to TYPE zexcel_cell_column_alpha .
+    DATA cell_row TYPE zexcel_cell_row .
+    DATA cell_row_to TYPE zexcel_cell_row .
+    CONSTANTS c_type_custom TYPE zexcel_data_val_type VALUE 'custom'. "#EC NOTEXT
+    CONSTANTS c_type_list TYPE zexcel_data_val_type VALUE 'list'. "#EC NOTEXT
+    DATA showerrormessage TYPE flag VALUE 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+    DATA showinputmessage TYPE flag VALUE 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+    DATA type TYPE zexcel_data_val_type .
+    DATA formula1 TYPE zexcel_validation_formula1 .
+    DATA formula2 TYPE zexcel_validation_formula1 .
+    CONSTANTS c_type_none TYPE zexcel_data_val_type VALUE 'none'. "#EC NOTEXT
+    CONSTANTS c_type_date TYPE zexcel_data_val_type VALUE 'date'. "#EC NOTEXT
+    CONSTANTS c_type_decimal TYPE zexcel_data_val_type VALUE 'decimal'. "#EC NOTEXT
+    CONSTANTS c_type_textlength TYPE zexcel_data_val_type VALUE 'textLength'. "#EC NOTEXT
+    CONSTANTS c_type_time TYPE zexcel_data_val_type VALUE 'time'. "#EC NOTEXT
+    CONSTANTS c_type_whole TYPE zexcel_data_val_type VALUE 'whole'. "#EC NOTEXT
+    CONSTANTS c_style_stop TYPE zexcel_data_val_error_style VALUE 'stop'. "#EC NOTEXT
+    CONSTANTS c_style_warning TYPE zexcel_data_val_error_style VALUE 'warning'. "#EC NOTEXT
+    CONSTANTS c_style_information TYPE zexcel_data_val_error_style VALUE 'information'. "#EC NOTEXT
+    CONSTANTS c_operator_between TYPE zexcel_data_val_operator VALUE 'between'. "#EC NOTEXT
+    CONSTANTS c_operator_equal TYPE zexcel_data_val_operator VALUE 'equal'. "#EC NOTEXT
+    CONSTANTS c_operator_greaterthan TYPE zexcel_data_val_operator VALUE 'greaterThan'. "#EC NOTEXT
+    CONSTANTS c_operator_greaterthanorequal TYPE zexcel_data_val_operator VALUE 'greaterThanOrEqual'. "#EC NOTEXT
+    CONSTANTS c_operator_lessthan TYPE zexcel_data_val_operator VALUE 'lessThan'. "#EC NOTEXT
+    CONSTANTS c_operator_lessthanorequal TYPE zexcel_data_val_operator VALUE 'lessThanOrEqual'. "#EC NOTEXT
+    CONSTANTS c_operator_notbetween TYPE zexcel_data_val_operator VALUE 'notBetween'. "#EC NOTEXT
+    CONSTANTS c_operator_notequal TYPE zexcel_data_val_operator VALUE 'notEqual'. "#EC NOTEXT
+    DATA showdropdown TYPE flag .
+    DATA errortitle TYPE string .
+    DATA error TYPE string .
+    DATA prompttitle TYPE string .
+    DATA prompt TYPE string .
 
-  methods CONSTRUCTOR .
+    METHODS constructor .
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
-protected section.
-private section.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 *"* private components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_DATA_VALIDATION IMPLEMENTATION.
+CLASS zcl_excel_data_validation IMPLEMENTATION.
 
 
-method CONSTRUCTOR.
-  " Initialise instance variables
-  formula1          = ''.
-  formula2          = ''.
-  type              = me->c_type_none.
-  errorstyle        = me->c_style_stop.
-  operator          = ''.
-  allowblank        = abap_false.
-  showdropdown      = abap_false.
-  showinputmessage  = abap_true.
-  showerrormessage  = abap_true.
-  errortitle        = ''.
-  error             = ''.
-  prompttitle       = ''.
-  prompt            = ''.
+  METHOD constructor.
+    " Initialise instance variables
+    formula1          = ''.
+    formula2          = ''.
+    type              = me->c_type_none.
+    errorstyle        = me->c_style_stop.
+    operator          = ''.
+    allowblank        = abap_false.
+    showdropdown      = abap_false.
+    showinputmessage  = abap_true.
+    showerrormessage  = abap_true.
+    errortitle        = ''.
+    error             = ''.
+    prompttitle       = ''.
+    prompt            = ''.
 * inizialize dimension range
-  cell_row     = 1.
-  cell_column  = 'A'.
-  endmethod.
+    cell_row     = 1.
+    cell_column  = 'A'.
+  ENDMETHOD.
 ENDCLASS.

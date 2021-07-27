@@ -1,108 +1,108 @@
-class ZCL_EXCEL_HYPERLINK definition
-  public
-  final
-  create private .
+CLASS zcl_excel_hyperlink DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PRIVATE .
 
 *"* public components of class ZCL_EXCEL_HYPERLINK
 *"* do not include other source files here!!!
-public section.
-  type-pools ABAP .
+  PUBLIC SECTION.
+    TYPE-POOLS abap .
 
-  class-methods CREATE_EXTERNAL_LINK
-    importing
-      !IV_URL type STRING
-    returning
-      value(OV_LINK) type ref to ZCL_EXCEL_HYPERLINK .
-  class-methods CREATE_INTERNAL_LINK
-    importing
-      !IV_LOCATION type STRING
-    returning
-      value(OV_LINK) type ref to ZCL_EXCEL_HYPERLINK .
-  methods IS_INTERNAL
-    returning
-      value(EV_RET) type ABAP_BOOL .
-  methods SET_CELL_REFERENCE
-    importing
-      !IP_COLUMN type SIMPLE
-      !IP_ROW type ZEXCEL_CELL_ROW
-    raising
-      ZCX_EXCEL .
-  methods GET_REF
-    returning
-      value(EV_REF) type STRING .
-  methods GET_URL
-    returning
-      value(EV_URL) type STRING .
+    CLASS-METHODS create_external_link
+      IMPORTING
+        !iv_url        TYPE string
+      RETURNING
+        VALUE(ov_link) TYPE REF TO zcl_excel_hyperlink .
+    CLASS-METHODS create_internal_link
+      IMPORTING
+        !iv_location   TYPE string
+      RETURNING
+        VALUE(ov_link) TYPE REF TO zcl_excel_hyperlink .
+    METHODS is_internal
+      RETURNING
+        VALUE(ev_ret) TYPE abap_bool .
+    METHODS set_cell_reference
+      IMPORTING
+        !ip_column TYPE simple
+        !ip_row    TYPE zexcel_cell_row
+      RAISING
+        zcx_excel .
+    METHODS get_ref
+      RETURNING
+        VALUE(ev_ref) TYPE string .
+    METHODS get_url
+      RETURNING
+        VALUE(ev_url) TYPE string .
 *"* protected components of class ZCL_EXCEL_HYPERLINK
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_HYPERLINK
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data LOCATION type STRING .
-  data CELL_REFERENCE type STRING .
-  data INTERNAL type ABAP_BOOL .
-  data COLUMN type ZEXCEL_CELL_COLUMN_ALPHA .
-  data ROW type ZEXCEL_CELL_ROW .
+    DATA location TYPE string .
+    DATA cell_reference TYPE string .
+    DATA internal TYPE abap_bool .
+    DATA column TYPE zexcel_cell_column_alpha .
+    DATA row TYPE zexcel_cell_row .
 
-  class-methods CREATE
-    importing
-      !IV_URL type STRING
-      !IV_INTERNAL type ABAP_BOOL
-    returning
-      value(OV_LINK) type ref to ZCL_EXCEL_HYPERLINK .
+    CLASS-METHODS create
+      IMPORTING
+        !iv_url        TYPE string
+        !iv_internal   TYPE abap_bool
+      RETURNING
+        VALUE(ov_link) TYPE REF TO zcl_excel_hyperlink .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_HYPERLINK IMPLEMENTATION.
+CLASS zcl_excel_hyperlink IMPLEMENTATION.
 
 
-method CREATE.
-  data: lo_hyperlink type REF TO zcl_excel_hyperlink.
+  METHOD create.
+    DATA: lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
 
-  create OBJECT lo_hyperlink.
+    CREATE OBJECT lo_hyperlink.
 
-  lo_hyperlink->location = iv_url.
-  lo_hyperlink->internal = iv_internal.
+    lo_hyperlink->location = iv_url.
+    lo_hyperlink->internal = iv_internal.
 
-  ov_link = lo_hyperlink.
-  endmethod.
-
-
-method CREATE_EXTERNAL_LINK.
-
-  ov_link = zcl_excel_hyperlink=>create( iv_url = iv_url
-                                         iv_internal = abap_false ).
-  endmethod.
+    ov_link = lo_hyperlink.
+  ENDMETHOD.
 
 
-method CREATE_INTERNAL_LINK.
-  ov_link = zcl_excel_hyperlink=>create( iv_url = iv_location
-                                         iv_internal = abap_true ).
-  endmethod.
+  METHOD create_external_link.
+
+    ov_link = zcl_excel_hyperlink=>create( iv_url = iv_url
+                                           iv_internal = abap_false ).
+  ENDMETHOD.
 
 
-method GET_REF.
-  ev_ref = row.
-  CONDENSE ev_ref.
-  CONCATENATE column ev_ref INTO ev_ref.
-  endmethod.
+  METHOD create_internal_link.
+    ov_link = zcl_excel_hyperlink=>create( iv_url = iv_location
+                                           iv_internal = abap_true ).
+  ENDMETHOD.
 
 
-method GET_URL.
-  ev_url = me->location.
-  endmethod.
+  METHOD get_ref.
+    ev_ref = row.
+    CONDENSE ev_ref.
+    CONCATENATE column ev_ref INTO ev_ref.
+  ENDMETHOD.
 
 
-method IS_INTERNAL.
-  ev_ret = me->internal.
-  endmethod.
+  METHOD get_url.
+    ev_url = me->location.
+  ENDMETHOD.
 
 
-method SET_CELL_REFERENCE.
-  me->column = zcl_excel_common=>convert_column2alpha( ip_column ). " issue #155 - less restrictive typing for ip_column
-  me->row = ip_row.
-  endmethod.
+  METHOD is_internal.
+    ev_ret = me->internal.
+  ENDMETHOD.
+
+
+  METHOD set_cell_reference.
+    me->column = zcl_excel_common=>convert_column2alpha( ip_column ). " issue #155 - less restrictive typing for ip_column
+    me->row = ip_row.
+  ENDMETHOD.
 ENDCLASS.

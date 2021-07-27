@@ -1,78 +1,78 @@
-class ZCL_EXCEL_DATA_VALIDATIONS definition
-  public
-  final
-  create public .
+CLASS zcl_excel_data_validations DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_DATA_VALIDATIONS
 *"* do not include other source files here!!!
-public section.
-  type-pools ABAP .
+  PUBLIC SECTION.
+    TYPE-POOLS abap .
 
-  methods ADD
-    importing
-      !IP_DATA_VALIDATION type ref to ZCL_EXCEL_DATA_VALIDATION .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IP_DATA_VALIDATION type ref to ZCL_EXCEL_DATA_VALIDATION .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
+    METHODS add
+      IMPORTING
+        !ip_data_validation TYPE REF TO zcl_excel_data_validation .
+    METHODS clear .
+    METHODS constructor .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !ip_data_validation TYPE REF TO zcl_excel_data_validation .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATIONS
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_DATA_VALIDATIONS
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data DATA_VALIDATIONS type ref to CL_OBJECT_COLLECTION .
+    DATA data_validations TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_DATA_VALIDATIONS IMPLEMENTATION.
+CLASS zcl_excel_data_validations IMPLEMENTATION.
 
 
-method ADD.
-  data_validations->add( ip_data_validation ).
-  endmethod.
+  METHOD add.
+    data_validations->add( ip_data_validation ).
+  ENDMETHOD.
 
 
-method CLEAR.
-  data_validations->clear( ).
-  endmethod.
+  METHOD clear.
+    data_validations->clear( ).
+  ENDMETHOD.
 
 
-method CONSTRUCTOR.
+  METHOD constructor.
 
-  CREATE OBJECT data_validations.
+    CREATE OBJECT data_validations.
 
-  endmethod.
-
-
-method GET_ITERATOR.
-  eo_iterator ?= data_validations->get_iterator( ).
-  endmethod.
+  ENDMETHOD.
 
 
-method IS_EMPTY.
-  is_empty = data_validations->is_empty( ).
-  endmethod.
+  METHOD get_iterator.
+    eo_iterator ?= data_validations->get_iterator( ).
+  ENDMETHOD.
 
 
-method REMOVE.
-  data_validations->remove( ip_data_validation ).
-  endmethod.
+  METHOD is_empty.
+    is_empty = data_validations->is_empty( ).
+  ENDMETHOD.
 
 
-method SIZE.
-  ep_size = data_validations->size( ).
-  endmethod.
+  METHOD remove.
+    data_validations->remove( ip_data_validation ).
+  ENDMETHOD.
+
+
+  METHOD size.
+    ep_size = data_validations->size( ).
+  ENDMETHOD.
 ENDCLASS.

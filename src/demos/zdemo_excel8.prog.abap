@@ -8,9 +8,9 @@
 
 REPORT zdemo_excel8.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_range                TYPE REF TO zcl_excel_range.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_range     TYPE REF TO zcl_excel_range.
 
 DATA: lv_title          TYPE zexcel_sheet_title.
 
