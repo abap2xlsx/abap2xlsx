@@ -10,12 +10,12 @@
 CLASS zcl_date_calculation DEFINITION.
   PUBLIC SECTION.
     CLASS-METHODS: months_between_two_dates
-    IMPORTING
-      i_date_from TYPE datum
-      i_date_to   TYPE datum
-      i_incl_to   TYPE flag
-    EXPORTING
-      e_month     TYPE i.
+      IMPORTING
+        i_date_from TYPE datum
+        i_date_to   TYPE datum
+        i_incl_to   TYPE flag
+      EXPORTING
+        e_month     TYPE i.
 ENDCLASS.               "ZCL_DATE_CALCULATION
 
 
@@ -29,14 +29,14 @@ CLASS zcl_date_calculation IMPLEMENTATION.
     DATA: date_to TYPE datum.
     DATA: BEGIN OF datum_von,
             jjjj(4) TYPE n,
-              mm(2) TYPE n,
-              tt(2) TYPE n,
+            mm(2)   TYPE n,
+            tt(2)   TYPE n,
           END OF datum_von.
 
     DATA: BEGIN OF datum_bis,
             jjjj(4) TYPE n,
-              mm(2) TYPE n,
-              tt(2) TYPE n,
+            mm(2)   TYPE n,
+            tt(2)   TYPE n,
           END OF datum_bis.
 
     e_month = 0.
@@ -107,52 +107,52 @@ ENDCLASS.                    "zcl_date_calculation_test IMPLEMENTATION
 CLASS zcl_helper DEFINITION.
   PUBLIC SECTION.
     CLASS-METHODS:
-    load_image
-      IMPORTING
-        filename TYPE string
-      RETURNING value(r_image) TYPE xstring,
-    add_calendar
-      IMPORTING
-        i_date_from TYPE datum
-        i_date_to   TYPE datum
-        i_from_row  TYPE zexcel_cell_row
-        i_from_col  TYPE zexcel_cell_column_alpha
-        i_day_style TYPE zexcel_cell_style
-        i_cw_style  TYPE zexcel_cell_style
-      CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet
-      RAISING
-        zcx_excel,
-    add_calendar_landscape
-      IMPORTING
-        i_date_from TYPE datum
-        i_date_to   TYPE datum
-        i_from_row  TYPE zexcel_cell_row
-        i_from_col  TYPE zexcel_cell_column_alpha
-        i_day_style TYPE zexcel_cell_style
-        i_cw_style  TYPE zexcel_cell_style
-      CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet
-      RAISING
-        zcx_excel,
-    add_a2x_footer
-      IMPORTING
-        i_from_row  TYPE zexcel_cell_row
-        i_from_col  TYPE zexcel_cell_column_alpha
-      CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet
-      RAISING
-        zcx_excel,
-    add_calender_week
-      IMPORTING
-        i_date  TYPE datum
-        i_row   TYPE zexcel_cell_row
-        i_col   TYPE zexcel_cell_column_alpha
-        i_style TYPE zexcel_cell_style
-      CHANGING
-        c_worksheet TYPE REF TO zcl_excel_worksheet
-      RAISING
-        zcx_excel.
+      load_image
+        IMPORTING
+                  filename       TYPE string
+        RETURNING VALUE(r_image) TYPE xstring,
+      add_calendar
+        IMPORTING
+          i_date_from TYPE datum
+          i_date_to   TYPE datum
+          i_from_row  TYPE zexcel_cell_row
+          i_from_col  TYPE zexcel_cell_column_alpha
+          i_day_style TYPE zexcel_cell_style
+          i_cw_style  TYPE zexcel_cell_style
+        CHANGING
+          c_worksheet TYPE REF TO zcl_excel_worksheet
+        RAISING
+          zcx_excel,
+      add_calendar_landscape
+        IMPORTING
+          i_date_from TYPE datum
+          i_date_to   TYPE datum
+          i_from_row  TYPE zexcel_cell_row
+          i_from_col  TYPE zexcel_cell_column_alpha
+          i_day_style TYPE zexcel_cell_style
+          i_cw_style  TYPE zexcel_cell_style
+        CHANGING
+          c_worksheet TYPE REF TO zcl_excel_worksheet
+        RAISING
+          zcx_excel,
+      add_a2x_footer
+        IMPORTING
+          i_from_row  TYPE zexcel_cell_row
+          i_from_col  TYPE zexcel_cell_column_alpha
+        CHANGING
+          c_worksheet TYPE REF TO zcl_excel_worksheet
+        RAISING
+          zcx_excel,
+      add_calender_week
+        IMPORTING
+          i_date      TYPE datum
+          i_row       TYPE zexcel_cell_row
+          i_col       TYPE zexcel_cell_column_alpha
+          i_style     TYPE zexcel_cell_style
+        CHANGING
+          c_worksheet TYPE REF TO zcl_excel_worksheet
+        RAISING
+          zcx_excel.
 ENDCLASS.                    "zcl_helper DEFINITION
 
 *----------------------------------------------------------------------*
@@ -216,21 +216,21 @@ CLASS zcl_helper IMPLEMENTATION.
   ENDMETHOD.                    "load_image
   METHOD add_calendar.
     DATA: day_names     TYPE TABLE OF t246.
-    DATA: row           TYPE zexcel_cell_row,
-          row_max       TYPE i,
-          col_int       TYPE zexcel_cell_column,
-          col_max       TYPE i,
-          from_col_int  TYPE zexcel_cell_column,
-          col           TYPE zexcel_cell_column_alpha,
-          lo_column     TYPE REF TO zcl_excel_column,
-          lo_row        TYPE REF TO zcl_excel_row.
-    DATA: lv_date          TYPE datum,
-          value            TYPE string,
-          weekday          TYPE wotnr,
-          weekrow          TYPE wotnr VALUE 1,
-          day              TYPE i,
-          width            TYPE f,
-          height           TYPE f.
+    DATA: row          TYPE zexcel_cell_row,
+          row_max      TYPE i,
+          col_int      TYPE zexcel_cell_column,
+          col_max      TYPE i,
+          from_col_int TYPE zexcel_cell_column,
+          col          TYPE zexcel_cell_column_alpha,
+          lo_column    TYPE REF TO zcl_excel_column,
+          lo_row       TYPE REF TO zcl_excel_row.
+    DATA: lv_date TYPE datum,
+          value   TYPE string,
+          weekday TYPE wotnr,
+          weekrow TYPE wotnr VALUE 1,
+          day     TYPE i,
+          width   TYPE f,
+          height  TYPE f.
     DATA: hyperlink TYPE REF TO zcl_excel_hyperlink.
 
     FIELD-SYMBOLS: <day_name> LIKE LINE OF day_names.
@@ -345,7 +345,7 @@ CLASS zcl_helper IMPLEMENTATION.
     ENDWHILE.
   ENDMETHOD.                    "add_calendar
   METHOD add_a2x_footer.
-    DATA: value TYPE string,
+    DATA: value     TYPE string,
           hyperlink TYPE REF TO zcl_excel_hyperlink.
 
     value = 'Created with abap2xlsx. Find more information at https://github.com/sapmentors/abap2xlsx.'(002).
@@ -362,16 +362,16 @@ CLASS zcl_helper IMPLEMENTATION.
   METHOD add_calendar_landscape.
     DATA: day_names TYPE TABLE OF t246.
 
-    DATA: lv_date          TYPE datum,
-          day              TYPE i,
-          value            TYPE string,
-          weekday          TYPE wotnr.
-    DATA: row               TYPE zexcel_cell_row,
-          from_col_int      TYPE zexcel_cell_column,
-          col_int           TYPE zexcel_cell_column,
-          col               TYPE zexcel_cell_column_alpha.
-    DATA: lo_column         TYPE REF TO zcl_excel_column,
-          lo_row            TYPE REF TO zcl_excel_row.
+    DATA: lv_date TYPE datum,
+          day     TYPE i,
+          value   TYPE string,
+          weekday TYPE wotnr.
+    DATA: row          TYPE zexcel_cell_row,
+          from_col_int TYPE zexcel_cell_column,
+          col_int      TYPE zexcel_cell_column,
+          col          TYPE zexcel_cell_column_alpha.
+    DATA: lo_column TYPE REF TO zcl_excel_column,
+          lo_row    TYPE REF TO zcl_excel_row.
 
     FIELD-SYMBOLS: <day_name> LIKE LINE OF day_names.
 

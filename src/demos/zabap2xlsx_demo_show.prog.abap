@@ -10,28 +10,28 @@ REPORT zabap2xlsx_demo_show.
 CLASS lcl_perform DEFINITION CREATE PRIVATE.
   PUBLIC SECTION.
     CLASS-METHODS: setup_objects,
-                   collect_reports,
+      collect_reports,
 
-                   handle_nav FOR EVENT double_click OF cl_gui_alv_grid
-                              IMPORTING e_row.
+      handle_nav FOR EVENT double_click OF cl_gui_alv_grid
+        IMPORTING e_row.
 
   PRIVATE SECTION.
     TYPES: BEGIN OF ty_reports,
-             progname TYPE reposrc-progname,
-             sort     TYPE reposrc-progname,
+             progname    TYPE reposrc-progname,
+             sort        TYPE reposrc-progname,
              description TYPE repti,
-             filename TYPE string,
+             filename    TYPE string,
            END OF ty_reports.
 
     CLASS-DATA:
-            lo_grid       TYPE REF TO cl_gui_alv_grid,
-            lo_text       TYPE REF TO cl_gui_textedit,
-            cl_document   TYPE REF TO i_oi_document_proxy,
+      lo_grid     TYPE REF TO cl_gui_alv_grid,
+      lo_text     TYPE REF TO cl_gui_textedit,
+      cl_document TYPE REF TO i_oi_document_proxy,
 
-            t_reports     TYPE STANDARD TABLE OF ty_reports WITH NON-UNIQUE DEFAULT KEY.
-    CLASS-DATA:error         TYPE REF TO i_oi_error,
-         t_errors      TYPE STANDARD TABLE OF REF TO i_oi_error WITH NON-UNIQUE DEFAULT KEY,
-         cl_control    TYPE REF TO i_oi_container_control.   "Office Dokument
+      t_reports   TYPE STANDARD TABLE OF ty_reports WITH NON-UNIQUE DEFAULT KEY.
+    CLASS-DATA:error      TYPE REF TO i_oi_error,
+               t_errors   TYPE STANDARD TABLE OF REF TO i_oi_error WITH NON-UNIQUE DEFAULT KEY,
+               cl_control TYPE REF TO i_oi_container_control.   "Office Dokument
 
 ENDCLASS.                    "lcl_perform DEFINITION
 
@@ -50,8 +50,8 @@ END-OF-SELECTION.
 *----------------------------------------------------------------------*
 CLASS lcl_perform IMPLEMENTATION.
   METHOD setup_objects.
-    DATA: lo_split      TYPE REF TO cl_gui_splitter_container,
-          lo_container  TYPE REF TO cl_gui_container.
+    DATA: lo_split     TYPE REF TO cl_gui_splitter_container,
+          lo_container TYPE REF TO cl_gui_container.
 
     DATA: it_fieldcat TYPE lvc_t_fcat,
           is_layout   TYPE lvc_s_layo,
@@ -202,13 +202,13 @@ CLASS lcl_perform IMPLEMENTATION.
 
   METHOD handle_nav.
     CONSTANTS: filename TYPE text80 VALUE 'ZABAP2XLSX_DEMO_SHOW.xlsx'.
-    DATA: wa_report   LIKE LINE OF t_reports,
-          t_source    TYPE STANDARD TABLE OF text255,
-          t_rawdata   TYPE solix_tab,
-          wa_rawdata  LIKE LINE OF t_rawdata,
-          bytecount   TYPE i,
-          length      TYPE i,
-          add_selopt  TYPE flag.
+    DATA: wa_report  LIKE LINE OF t_reports,
+          t_source   TYPE STANDARD TABLE OF text255,
+          t_rawdata  TYPE solix_tab,
+          wa_rawdata LIKE LINE OF t_rawdata,
+          bytecount  TYPE i,
+          length     TYPE i,
+          add_selopt TYPE flag.
 
 
     READ TABLE t_reports INTO wa_report INDEX e_row-index.
@@ -235,14 +235,14 @@ CLASS lcl_perform IMPLEMENTATION.
       ENDIF.
     ENDIF.
     IF add_selopt IS INITIAL.
-      SUBMIT (wa_report-progname) AND RETURN                        "#EC CI_SUBMIT
+      SUBMIT (wa_report-progname) AND RETURN             "#EC CI_SUBMIT
               WITH p_backfn = filename
               WITH rb_back  = 'X'
               WITH rb_down  = ' '
               WITH rb_send  = ' '
               WITH rb_show  = ' '.
     ELSE.
-      SUBMIT (wa_report-progname) VIA SELECTION-SCREEN AND RETURN   "#EC CI_SUBMIT
+      SUBMIT (wa_report-progname) VIA SELECTION-SCREEN AND RETURN "#EC CI_SUBMIT
               WITH p_backfn = filename
               WITH rb_back  = 'X'
               WITH rb_down  = ' '

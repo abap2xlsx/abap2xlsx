@@ -910,7 +910,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA l_error           TYPE REF TO c_oi_proxy_error.
     DATA count              TYPE i.
     DATA datac              TYPE i.
-    DATA datareal           TYPE i. " exporting column number
+    DATA datareal TYPE i. " exporting column number
     DATA vkeycount          TYPE i.
     DATA all TYPE i.
     DATA mit TYPE i         VALUE 1.  " index of recent row?

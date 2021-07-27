@@ -12,18 +12,18 @@ REPORT zdemo_teched10.
 *   Data Object declaration   *
 *******************************
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_reader         TYPE REF TO zif_excel_reader,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet.
+DATA: lo_excel        TYPE REF TO zcl_excel,
+      lo_excel_reader TYPE REF TO zif_excel_reader,
+      lo_worksheet    TYPE REF TO zcl_excel_worksheet.
 
 DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
-DATA: lt_files          TYPE filetable,
-      ls_file           TYPE file_table,
-      lv_rc             TYPE i,
-      lv_value          TYPE zexcel_cell_value.
+DATA: lt_files TYPE filetable,
+      ls_file  TYPE file_table,
+      lv_rc    TYPE i,
+      lv_value TYPE zexcel_cell_value.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE 'TechEd01.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.

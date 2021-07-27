@@ -1,226 +1,226 @@
-class ZCL_EXCEL_COLUMN definition
-  public
-  final
-  create public .
+CLASS zcl_excel_column DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
-public section.
-  type-pools ABAP .
+  PUBLIC SECTION.
+    TYPE-POOLS abap .
 
-  methods CONSTRUCTOR
-    importing
-      !IP_INDEX type ZEXCEL_CELL_COLUMN_ALPHA
-      !IP_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IP_EXCEL type ref to ZCL_EXCEL .
-  methods GET_AUTO_SIZE
-    returning
-      value(R_AUTO_SIZE) type ABAP_BOOL .
-  methods GET_COLLAPSED
-    returning
-      value(R_COLLAPSED) type ABAP_BOOL .
-  methods GET_COLUMN_INDEX
-    returning
-      value(R_COLUMN_INDEX) type INT4 .
-  methods GET_OUTLINE_LEVEL
-    returning
-      value(R_OUTLINE_LEVEL) type INT4 .
-  methods GET_VISIBLE
-    returning
-      value(R_VISIBLE) type ABAP_BOOL .
-  methods GET_WIDTH
-    returning
-      value(R_WIDTH) type FLOAT .
-  methods GET_XF_INDEX
-    returning
-      value(R_XF_INDEX) type INT4 .
-  methods SET_AUTO_SIZE
-    importing
-      !IP_AUTO_SIZE type ABAP_BOOL
-    returning
-      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-  methods SET_COLLAPSED
-    importing
-      !IP_COLLAPSED type ABAP_BOOL
-    returning
-      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-  methods SET_COLUMN_INDEX
-    importing
-      !IP_INDEX type ZEXCEL_CELL_COLUMN_ALPHA
-    returning
-      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-  methods SET_OUTLINE_LEVEL
-    importing
-      !IP_OUTLINE_LEVEL type INT4 .
-  methods SET_VISIBLE
-    importing
-      !IP_VISIBLE type ABAP_BOOL
-    returning
-      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-  methods SET_WIDTH
-    importing
-      !IP_WIDTH type SIMPLE
-    returning
-      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN
-    raising
-      ZCX_EXCEL .
-  methods SET_XF_INDEX
-    importing
-      !IP_XF_INDEX type INT4
-    returning
-      value(IO_COLUMN) type ref to ZCL_EXCEL_COLUMN .
-  methods SET_COLUMN_STYLE_BY_GUID
-    importing
-      !IP_STYLE_GUID type ZEXCEL_CELL_STYLE
-    raising
-      ZCX_EXCEL .
-  methods GET_COLUMN_STYLE_GUID
-    returning
-      value(EP_STYLE_GUID) type ZEXCEL_CELL_STYLE
-    raising
-      ZCX_EXCEL .
+    METHODS constructor
+      IMPORTING
+        !ip_index     TYPE zexcel_cell_column_alpha
+        !ip_worksheet TYPE REF TO zcl_excel_worksheet
+        !ip_excel     TYPE REF TO zcl_excel .
+    METHODS get_auto_size
+      RETURNING
+        VALUE(r_auto_size) TYPE abap_bool .
+    METHODS get_collapsed
+      RETURNING
+        VALUE(r_collapsed) TYPE abap_bool .
+    METHODS get_column_index
+      RETURNING
+        VALUE(r_column_index) TYPE int4 .
+    METHODS get_outline_level
+      RETURNING
+        VALUE(r_outline_level) TYPE int4 .
+    METHODS get_visible
+      RETURNING
+        VALUE(r_visible) TYPE abap_bool .
+    METHODS get_width
+      RETURNING
+        VALUE(r_width) TYPE float .
+    METHODS get_xf_index
+      RETURNING
+        VALUE(r_xf_index) TYPE int4 .
+    METHODS set_auto_size
+      IMPORTING
+        !ip_auto_size    TYPE abap_bool
+      RETURNING
+        VALUE(io_column) TYPE REF TO zcl_excel_column .
+    METHODS set_collapsed
+      IMPORTING
+        !ip_collapsed    TYPE abap_bool
+      RETURNING
+        VALUE(io_column) TYPE REF TO zcl_excel_column .
+    METHODS set_column_index
+      IMPORTING
+        !ip_index        TYPE zexcel_cell_column_alpha
+      RETURNING
+        VALUE(io_column) TYPE REF TO zcl_excel_column .
+    METHODS set_outline_level
+      IMPORTING
+        !ip_outline_level TYPE int4 .
+    METHODS set_visible
+      IMPORTING
+        !ip_visible      TYPE abap_bool
+      RETURNING
+        VALUE(io_column) TYPE REF TO zcl_excel_column .
+    METHODS set_width
+      IMPORTING
+        !ip_width        TYPE simple
+      RETURNING
+        VALUE(io_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel .
+    METHODS set_xf_index
+      IMPORTING
+        !ip_xf_index     TYPE int4
+      RETURNING
+        VALUE(io_column) TYPE REF TO zcl_excel_column .
+    METHODS set_column_style_by_guid
+      IMPORTING
+        !ip_style_guid TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
+    METHODS get_column_style_guid
+      RETURNING
+        VALUE(ep_style_guid) TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
 *"* protected components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data COLUMN_INDEX type INT4 .
-  data WIDTH type FLOAT .
-  data AUTO_SIZE type ABAP_BOOL .
-  data VISIBLE type ABAP_BOOL .
-  data OUTLINE_LEVEL type INT4 .
-  data COLLAPSED type ABAP_BOOL .
-  data XF_INDEX type INT4 .
-  data STYLE_GUID type ZEXCEL_CELL_STYLE .
-  data EXCEL type ref to ZCL_EXCEL .
-  data WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
+    DATA column_index TYPE int4 .
+    DATA width TYPE float .
+    DATA auto_size TYPE abap_bool .
+    DATA visible TYPE abap_bool .
+    DATA outline_level TYPE int4 .
+    DATA collapsed TYPE abap_bool .
+    DATA xf_index TYPE int4 .
+    DATA style_guid TYPE zexcel_cell_style .
+    DATA excel TYPE REF TO zcl_excel .
+    DATA worksheet TYPE REF TO zcl_excel_worksheet .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COLUMN IMPLEMENTATION.
+CLASS zcl_excel_column IMPLEMENTATION.
 
 
-method CONSTRUCTOR.
-  me->column_index = zcl_excel_common=>convert_column2int( ip_index ).
-  me->width         = -1.
-  me->auto_size     = abap_false.
-  me->visible       = abap_true.
-  me->outline_level = 0.
-  me->collapsed     = abap_false.
-  me->excel         = ip_excel.        "ins issue #157 - Allow Style for columns
-  me->worksheet     = ip_worksheet.    "ins issue #157 - Allow Style for columns
+  METHOD constructor.
+    me->column_index = zcl_excel_common=>convert_column2int( ip_index ).
+    me->width         = -1.
+    me->auto_size     = abap_false.
+    me->visible       = abap_true.
+    me->outline_level = 0.
+    me->collapsed     = abap_false.
+    me->excel         = ip_excel.        "ins issue #157 - Allow Style for columns
+    me->worksheet     = ip_worksheet.    "ins issue #157 - Allow Style for columns
 
-  " set default index to cellXf
-  me->xf_index = 0.
+    " set default index to cellXf
+    me->xf_index = 0.
 
-  endmethod.
-
-
-method GET_AUTO_SIZE.
-  r_auto_size = me->auto_size.
-  endmethod.
+  ENDMETHOD.
 
 
-method GET_COLLAPSED.
-  r_Collapsed = me->Collapsed.
-  endmethod.
+  METHOD get_auto_size.
+    r_auto_size = me->auto_size.
+  ENDMETHOD.
 
 
-method GET_COLUMN_INDEX.
-  r_column_index = me->column_index.
-  endmethod.
+  METHOD get_collapsed.
+    r_collapsed = me->collapsed.
+  ENDMETHOD.
 
 
-method GET_COLUMN_STYLE_GUID.
-  IF me->style_guid IS NOT INITIAL.
-    ep_style_guid = me->style_guid.
-  ELSE.
-    ep_style_guid = me->worksheet->zif_excel_sheet_properties~get_style( ).
-  ENDIF.
-  endmethod.
+  METHOD get_column_index.
+    r_column_index = me->column_index.
+  ENDMETHOD.
 
 
-method GET_OUTLINE_LEVEL.
-  r_outline_level = me->outline_level.
-  endmethod.
+  METHOD get_column_style_guid.
+    IF me->style_guid IS NOT INITIAL.
+      ep_style_guid = me->style_guid.
+    ELSE.
+      ep_style_guid = me->worksheet->zif_excel_sheet_properties~get_style( ).
+    ENDIF.
+  ENDMETHOD.
 
 
-method GET_VISIBLE.
-  r_Visible = me->Visible.
-  endmethod.
+  METHOD get_outline_level.
+    r_outline_level = me->outline_level.
+  ENDMETHOD.
 
 
-method GET_WIDTH.
-  r_WIDTH = me->WIDTH.
-  endmethod.
+  METHOD get_visible.
+    r_visible = me->visible.
+  ENDMETHOD.
 
 
-method GET_XF_INDEX.
-  r_xf_index = me->xf_index.
-  endmethod.
+  METHOD get_width.
+    r_width = me->width.
+  ENDMETHOD.
 
 
-METHOD set_auto_size.
-  me->auto_size = ip_auto_size.
-  io_column = me.
-ENDMETHOD.
+  METHOD get_xf_index.
+    r_xf_index = me->xf_index.
+  ENDMETHOD.
 
 
-METHOD set_collapsed.
-  me->collapsed = ip_collapsed.
-  io_column = me.
-ENDMETHOD.
+  METHOD set_auto_size.
+    me->auto_size = ip_auto_size.
+    io_column = me.
+  ENDMETHOD.
 
 
-METHOD set_column_index.
-  me->column_index = zcl_excel_common=>convert_column2int( ip_index ).
-  io_column = me.
-ENDMETHOD.
+  METHOD set_collapsed.
+    me->collapsed = ip_collapsed.
+    io_column = me.
+  ENDMETHOD.
 
 
-method SET_COLUMN_STYLE_BY_GUID.
-  DATA: stylemapping TYPE zexcel_s_stylemapping.
-
-  IF me->excel IS NOT BOUND.
-    zcx_excel=>raise_text( 'Internal error - reference to ZCL_EXCEL not bound' ).
-  ENDIF.
-  TRY.
-      stylemapping = me->excel->get_style_to_guid( ip_style_guid ).
-      me->style_guid = stylemapping-guid.
-
-    CATCH zcx_excel .
-      EXIT.  " leave as is in case of error
-  ENDTRY.
-
-  endmethod.
+  METHOD set_column_index.
+    me->column_index = zcl_excel_common=>convert_column2int( ip_index ).
+    io_column = me.
+  ENDMETHOD.
 
 
-method SET_OUTLINE_LEVEL.
-  me->outline_level = ip_outline_level.
-  endmethod.
+  METHOD set_column_style_by_guid.
+    DATA: stylemapping TYPE zexcel_s_stylemapping.
+
+    IF me->excel IS NOT BOUND.
+      zcx_excel=>raise_text( 'Internal error - reference to ZCL_EXCEL not bound' ).
+    ENDIF.
+    TRY.
+        stylemapping = me->excel->get_style_to_guid( ip_style_guid ).
+        me->style_guid = stylemapping-guid.
+
+      CATCH zcx_excel .
+        EXIT.  " leave as is in case of error
+    ENDTRY.
+
+  ENDMETHOD.
 
 
-METHOD set_visible.
-  me->visible = ip_visible.
-  io_column = me.
-ENDMETHOD.
+  METHOD set_outline_level.
+    me->outline_level = ip_outline_level.
+  ENDMETHOD.
 
 
-METHOD set_width.
-  TRY.
-      me->width = ip_width.
-      io_column = me.
-    CATCH cx_sy_conversion_no_number.
-      zcx_excel=>raise_text( 'Unable to interpret width as number' ).
-  ENDTRY.
-ENDMETHOD.
+  METHOD set_visible.
+    me->visible = ip_visible.
+    io_column = me.
+  ENDMETHOD.
 
 
-METHOD set_xf_index.
-  me->xf_index = ip_xf_index.
-  io_column = me.
-ENDMETHOD.
+  METHOD set_width.
+    TRY.
+        me->width = ip_width.
+        io_column = me.
+      CATCH cx_sy_conversion_no_number.
+        zcx_excel=>raise_text( 'Unable to interpret width as number' ).
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD set_xf_index.
+    me->xf_index = ip_xf_index.
+    io_column = me.
+  ENDMETHOD.
 ENDCLASS.

@@ -1,116 +1,116 @@
-class ZCL_EXCEL_STYLES definition
-  public
-  final
-  create public .
+CLASS zcl_excel_styles DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_STYLES
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  methods ADD
-    importing
-      !IP_STYLE type ref to ZCL_EXCEL_STYLE .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET
-    importing
-      !IP_INDEX type I
-    returning
-      value(EO_STYLE) type ref to ZCL_EXCEL_STYLE .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IP_STYLE type ref to ZCL_EXCEL_STYLE .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
-  methods REGISTER_NEW_STYLE
-    importing
-      !IO_STYLE type ref to ZCL_EXCEL_STYLE
-    returning
-      value(EP_STYLE_CODE) type I .
+    METHODS add
+      IMPORTING
+        !ip_style TYPE REF TO zcl_excel_style .
+    METHODS clear .
+    METHODS constructor .
+    METHODS get
+      IMPORTING
+        !ip_index       TYPE i
+      RETURNING
+        VALUE(eo_style) TYPE REF TO zcl_excel_style .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !ip_style TYPE REF TO zcl_excel_style .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
+    METHODS register_new_style
+      IMPORTING
+        !io_style            TYPE REF TO zcl_excel_style
+      RETURNING
+        VALUE(ep_style_code) TYPE i .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
-private section.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  data STYLES type ref to CL_OBJECT_COLLECTION .
+    DATA styles TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_STYLES IMPLEMENTATION.
+CLASS zcl_excel_styles IMPLEMENTATION.
 
 
-method ADD.
+  METHOD add.
 
 
-  styles->add( ip_style ).
-  endmethod.
+    styles->add( ip_style ).
+  ENDMETHOD.
 
 
-method CLEAR.
+  METHOD clear.
 
 
-  styles->clear( ).
-  endmethod.
+    styles->clear( ).
+  ENDMETHOD.
 
 
-method CONSTRUCTOR.
+  METHOD constructor.
 
 
-  CREATE OBJECT styles.
-  endmethod.
+    CREATE OBJECT styles.
+  ENDMETHOD.
 
 
-method GET.
+  METHOD get.
 
 
-  eo_style ?= styles->get( ip_index ).
-  endmethod.
+    eo_style ?= styles->get( ip_index ).
+  ENDMETHOD.
 
 
-method GET_ITERATOR.
+  METHOD get_iterator.
 
 
-  eo_iterator ?= styles->get_iterator( ).
-  endmethod.
+    eo_iterator ?= styles->get_iterator( ).
+  ENDMETHOD.
 
 
-method IS_EMPTY.
+  METHOD is_empty.
 
 
-  is_empty = styles->is_empty( ).
-  endmethod.
+    is_empty = styles->is_empty( ).
+  ENDMETHOD.
 
 
-method REGISTER_NEW_STYLE.
+  METHOD register_new_style.
 
 
-  me->add( io_style ).
-  ep_style_code = me->size( ) - 1. "style count starts from 0
-  endmethod.
+    me->add( io_style ).
+    ep_style_code = me->size( ) - 1. "style count starts from 0
+  ENDMETHOD.
 
 
-method REMOVE.
+  METHOD remove.
 
 
-  styles->remove( ip_style ).
-  endmethod.
+    styles->remove( ip_style ).
+  ENDMETHOD.
 
 
-method SIZE.
+  METHOD size.
 
 
-  ep_size = styles->size( ).
-  endmethod.
+    ep_size = styles->size( ).
+  ENDMETHOD.
 ENDCLASS.
