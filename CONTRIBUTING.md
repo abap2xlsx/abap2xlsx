@@ -25,7 +25,7 @@ We have the channel [#abap2xlsx](https://sapmentors.slack.com/archives/CGG0UHDMG
 
 ## How to submit changes
 
-Changes are handled via the usual pull request mechanism; clear, short PRs for bugfixes are best because they're easy to review but sometimes, especially with new features, the changes are more substantial: in this case please provide an overview and pointers to the most relevant changes to be checked. If possible, a PR should not exist in a vacuum, rather it should address or even close an issue already filed. This way, the relevant context can be provided without cluttering the PR itself. Last but not least, there is a separate document dedicated to the [coding guidelines](./docs/coding-guidelines.md).
+Changes are handled via the usual pull request mechanism; clear, short PRs for bugfixes are best because they're easy to review but sometimes, especially with new features, the changes are more substantial: in this case please provide an overview and pointers to the most relevant changes to be checked. If possible, a PR should not exist in a vacuum, rather it should address or even close an issue already filed. This way, the relevant context can be provided without cluttering the PR itself. Last but not least, there is a separate document dedicated to the [coding guidelines](./docs/contributing/coding-guidelines.md).
 
 ### Review process
 
