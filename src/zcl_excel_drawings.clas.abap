@@ -1,123 +1,123 @@
-class ZCL_EXCEL_DRAWINGS definition
-  public
-  final
-  create public .
+CLASS zcl_excel_drawings DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
 *"* public components of class ZCL_EXCEL_DRAWINGS
 *"* do not include other source files here!!!
-  data TYPE type ZEXCEL_DRAWING_TYPE read-only value 'IMAGE'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+    DATA type TYPE zexcel_drawing_type READ-ONLY VALUE 'IMAGE'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
 
-  methods ADD
-    importing
-      !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
-  methods INCLUDE
-    importing
-      !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
-  methods CLEAR .
-  methods CONSTRUCTOR
-    importing
-      !IP_TYPE type ZEXCEL_DRAWING_TYPE .
-  methods GET
-    importing
-      !IP_INDEX type ZEXCEL_ACTIVE_WORKSHEET
-    returning
-      value(EO_DRAWING) type ref to ZCL_EXCEL_DRAWING .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IP_DRAWING type ref to ZCL_EXCEL_DRAWING .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
-  methods GET_TYPE
-    returning
-      value(RP_TYPE) type ZEXCEL_DRAWING_TYPE .
+    METHODS add
+      IMPORTING
+        !ip_drawing TYPE REF TO zcl_excel_drawing .
+    METHODS include
+      IMPORTING
+        !ip_drawing TYPE REF TO zcl_excel_drawing .
+    METHODS clear .
+    METHODS constructor
+      IMPORTING
+        !ip_type TYPE zexcel_drawing_type .
+    METHODS get
+      IMPORTING
+        !ip_index         TYPE zexcel_active_worksheet
+      RETURNING
+        VALUE(eo_drawing) TYPE REF TO zcl_excel_drawing .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !ip_drawing TYPE REF TO zcl_excel_drawing .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
+    METHODS get_type
+      RETURNING
+        VALUE(rp_type) TYPE zexcel_drawing_type .
 *"* protected components of class ZCL_EXCEL_DRAWINGS
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_DRAWINGS
 *"* do not include other source files here!!!
-protected section.
-private section.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
 *"* private components of class ZCL_EXCEL_DRAWINGS
 *"* do not include other source files here!!!
-  data DRAWINGS type ref to CL_OBJECT_COLLECTION .
+    DATA drawings TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_DRAWINGS IMPLEMENTATION.
+CLASS zcl_excel_drawings IMPLEMENTATION.
 
 
-method ADD.
-  DATA: lv_index TYPE i.
+  METHOD add.
+    DATA: lv_index TYPE i.
 
-  drawings->add( ip_drawing ).
-  lv_index = drawings->size( ).
-  ip_drawing->create_media_name(
-    ip_index = lv_index ).
-  endmethod.
-
-
-method CLEAR.
-
-  drawings->clear( ).
-  endmethod.
+    drawings->add( ip_drawing ).
+    lv_index = drawings->size( ).
+    ip_drawing->create_media_name(
+      ip_index = lv_index ).
+  ENDMETHOD.
 
 
-method CONSTRUCTOR.
+  METHOD clear.
 
-  CREATE OBJECT drawings.
-  type = ip_type.
-
-  endmethod.
+    drawings->clear( ).
+  ENDMETHOD.
 
 
-method GET.
+  METHOD constructor.
 
-  DATA lv_index TYPE i.
-  lv_index = ip_index.
-  eo_drawing ?= drawings->get( lv_index ).
-  endmethod.
+    CREATE OBJECT drawings.
+    type = ip_type.
 
-
-method GET_ITERATOR.
-
-  eo_iterator ?= drawings->get_iterator( ).
-  endmethod.
+  ENDMETHOD.
 
 
-method GET_TYPE.
-  rp_type = me->type.
-  endmethod.
+  METHOD get.
+
+    DATA lv_index TYPE i.
+    lv_index = ip_index.
+    eo_drawing ?= drawings->get( lv_index ).
+  ENDMETHOD.
 
 
-method INCLUDE.
-  drawings->add( ip_drawing ).
-  endmethod.
+  METHOD get_iterator.
+
+    eo_iterator ?= drawings->get_iterator( ).
+  ENDMETHOD.
 
 
-method IS_EMPTY.
-
-  is_empty = drawings->is_empty( ).
-  endmethod.
-
-
-method REMOVE.
-
-  drawings->remove( ip_drawing ).
-  endmethod.
+  METHOD get_type.
+    rp_type = me->type.
+  ENDMETHOD.
 
 
-method SIZE.
+  METHOD include.
+    drawings->add( ip_drawing ).
+  ENDMETHOD.
 
-  ep_size = drawings->size( ).
-  endmethod.
+
+  METHOD is_empty.
+
+    is_empty = drawings->is_empty( ).
+  ENDMETHOD.
+
+
+  METHOD remove.
+
+    drawings->remove( ip_drawing ).
+  ENDMETHOD.
+
+
+  METHOD size.
+
+    ep_size = drawings->size( ).
+  ENDMETHOD.
 ENDCLASS.

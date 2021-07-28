@@ -104,7 +104,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->download_frontend( ).
         ELSE.
-          MESSAGE e802(ZABAP2XLSX).
+          MESSAGE e802(zabap2xlsx).
         ENDIF.
 
       WHEN rb_back.
@@ -114,7 +114,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->display_online( ).
         ELSE.
-          MESSAGE e803(ZABAP2XLSX).
+          MESSAGE e803(zabap2xlsx).
         ENDIF.
 
       WHEN rb_send.
@@ -187,10 +187,10 @@ CLASS lcl_output IMPLEMENTATION.
 * If started in language w/o textelements translated set defaults
 * Furthermore I don't have to change the selectiontexts of all demoreports.
     DEFINE default_parametertext.
-      if %_&1_%_app_%-text = '&1' or
-         %_&1_%_app_%-text is initial.
+      IF %_&1_%_app_%-text = '&1' OR
+         %_&1_%_app_%-text IS INITIAL.
         %_&1_%_app_%-text = &2.
-      endif.
+      ENDIF.
     END-OF-DEFINITION.
 
     default_parametertext:  rb_down  'Save to frontend',
@@ -352,10 +352,10 @@ CLASS lcl_output IMPLEMENTATION.
         COMMIT WORK.
 
         IF sent = abap_true.
-          MESSAGE s805(ZABAP2XLSX).
+          MESSAGE s805(zabap2xlsx).
           MESSAGE 'Document ready to be sent - Check SOST or SCOT' TYPE 'I'.
         ELSE.
-          MESSAGE i804(ZABAP2XLSX) WITH p_email.
+          MESSAGE i804(zabap2xlsx) WITH p_email.
         ENDIF.
 
       CATCH cx_bcs INTO bcs_exception.

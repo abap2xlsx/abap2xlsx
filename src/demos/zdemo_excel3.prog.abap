@@ -10,16 +10,16 @@ REPORT zdemo_excel3.
 
 TYPE-POOLS: abap.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_column               TYPE REF TO zcl_excel_column.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_column    TYPE REF TO zcl_excel_column.
 
 DATA: ls_table_settings       TYPE zexcel_s_table_settings.
 
 
 DATA: lv_title TYPE zexcel_sheet_title,
       lt_carr  TYPE TABLE OF scarr,
-      row TYPE zexcel_cell_row VALUE 2,
+      row      TYPE zexcel_cell_row VALUE 2,
       lo_range TYPE REF TO zcl_excel_range.
 DATA: lo_data_validation  TYPE REF TO zcl_excel_data_validation.
 FIELD-SYMBOLS: <carr> LIKE LINE OF lt_carr.
@@ -43,7 +43,7 @@ START-OF-SELECTION.
   DATA lt_test TYPE TABLE OF sflight.
 
   IF p_empty <> abap_true.
-    SELECT * FROM sflight INTO TABLE lt_test. "#EC CI_NOWHERE
+    SELECT * FROM sflight INTO TABLE lt_test.           "#EC CI_NOWHERE
   ENDIF.
 
   ls_table_settings-table_style       = zcl_excel_table=>builtinstyle_medium2.
@@ -62,7 +62,7 @@ START-OF-SELECTION.
   lv_title = 'Data Validation'.
   lo_worksheet->set_title( lv_title ).
   lo_worksheet->set_cell( ip_row = 1 ip_column = 'A' ip_value = c_airlines ).
-  SELECT * FROM scarr INTO TABLE lt_carr. "#EC CI_NOWHERE
+  SELECT * FROM scarr INTO TABLE lt_carr.               "#EC CI_NOWHERE
   LOOP AT lt_carr ASSIGNING <carr>.
     lo_worksheet->set_cell( ip_row = row ip_column = 'A' ip_value = <carr>-carrid ).
     row = row + 1.

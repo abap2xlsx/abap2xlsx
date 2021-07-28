@@ -8,9 +8,9 @@
 
 REPORT zdemo_excel18.
 
-DATA: lo_excel                  TYPE REF TO zcl_excel,
-      lo_worksheet              TYPE REF TO zcl_excel_worksheet,
-      lv_style_protection_guid  TYPE zexcel_cell_style.
+DATA: lo_excel                 TYPE REF TO zcl_excel,
+      lo_worksheet             TYPE REF TO zcl_excel_worksheet,
+      lv_style_protection_guid TYPE zexcel_cell_style.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '18_BookProtection.xlsx'.

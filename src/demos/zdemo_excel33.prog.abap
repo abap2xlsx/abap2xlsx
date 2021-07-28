@@ -10,10 +10,10 @@ REPORT zdemo_excel33.
 
 TYPE-POOLS: abap.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_converter            TYPE REF TO zcl_excel_converter,
-      lo_autofilter           TYPE REF TO zcl_excel_autofilter.
+DATA: lo_excel      TYPE REF TO zcl_excel,
+      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
+      lo_converter  TYPE REF TO zcl_excel_converter,
+      lo_autofilter TYPE REF TO zcl_excel_autofilter.
 
 DATA lt_test TYPE TABLE OF t005t.
 

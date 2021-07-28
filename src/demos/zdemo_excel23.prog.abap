@@ -10,9 +10,9 @@ REPORT zdemo_excel23.
 
 TYPE-POOLS: abap.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '23_Sheets_with_and_without_grid_lines.xlsx'.
@@ -36,7 +36,7 @@ START-OF-SELECTION.
 
   lo_worksheet->zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=>c_protected.
   lo_worksheet->zif_excel_sheet_properties~zoomscale        = 150.
-  lo_worksheet->ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_NORMAL = 150.
+  lo_worksheet->zif_excel_sheet_properties~zoomscale_normal = 150.
 
   lo_worksheet->sheet_setup->vertical_centered   = abap_true.
   lo_worksheet->sheet_setup->horizontal_centered = abap_true.
@@ -53,7 +53,7 @@ START-OF-SELECTION.
 
   lo_worksheet->zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=>c_protected.
   lo_worksheet->zif_excel_sheet_properties~zoomscale                = 160.
-  lo_worksheet->ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_PAGELAYOUTVIEW = 200.
+  lo_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview = 200.
 
   " Third sheet
   lo_worksheet = lo_excel->add_new_worksheet( ).
@@ -67,7 +67,7 @@ START-OF-SELECTION.
 
   lo_worksheet->zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=>c_protected.
   lo_worksheet->zif_excel_sheet_properties~zoomscale                  = 170.
-  lo_worksheet->ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_SHEETLAYOUTVIEW  = 150.
+  lo_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview  = 150.
 
   " Fourth sheet
   lo_worksheet = lo_excel->add_new_worksheet( ).
@@ -80,9 +80,9 @@ START-OF-SELECTION.
 
   lo_worksheet->zif_excel_sheet_protection~protected  = zif_excel_sheet_protection=>c_protected.
   lo_worksheet->zif_excel_sheet_properties~zoomscale        = 150.
-  lo_worksheet->ZIF_EXCEL_SHEET_PROPERTIES~ZOOMSCALE_NORMAL = 150.
+  lo_worksheet->zif_excel_sheet_properties~zoomscale_normal = 150.
 
-"  lo_worksheet->sheet_setup->vertical_centered   = abap_true.
+  "  lo_worksheet->sheet_setup->vertical_centered   = abap_true.
   lo_worksheet->sheet_setup->horizontal_centered = abap_true.
 
 

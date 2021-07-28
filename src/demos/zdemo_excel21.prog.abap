@@ -14,9 +14,9 @@ TYPES:
     style TYPE zexcel_cell_style,
   END OF t_color_style.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style_filled         TYPE REF TO zcl_excel_style.
+DATA: lo_excel        TYPE REF TO zcl_excel,
+      lo_worksheet    TYPE REF TO zcl_excel_worksheet,
+      lo_style_filled TYPE REF TO zcl_excel_style.
 
 DATA: color_styles TYPE TABLE OF t_color_style.
 
@@ -36,7 +36,7 @@ DATA: red          TYPE i,
       blue_str     TYPE string.
 
 DATA: color TYPE zexcel_style_color_argb,
-      tint TYPE zexcel_style_color_tint.
+      tint  TYPE zexcel_style_color_tint.
 
 DATA: row     TYPE i,
       row_tmp TYPE i,

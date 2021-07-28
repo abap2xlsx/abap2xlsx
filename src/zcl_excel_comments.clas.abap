@@ -1,100 +1,100 @@
-class ZCL_EXCEL_COMMENTS definition
-  public
-  final
-  create public .
+CLASS zcl_excel_comments DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods ADD
-    importing
-      !IP_COMMENT type ref to ZCL_EXCEL_COMMENT .
-  methods INCLUDE
-    importing
-      !IP_COMMENT type ref to ZCL_EXCEL_COMMENT .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET
-    importing
-      !IP_INDEX type ZEXCEL_ACTIVE_WORKSHEET
-    returning
-      value(EO_COMMENT) type ref to ZCL_EXCEL_COMMENT .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IP_COMMENT type ref to ZCL_EXCEL_COMMENT .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
-protected section.
-private section.
+    METHODS add
+      IMPORTING
+        !ip_comment TYPE REF TO zcl_excel_comment .
+    METHODS include
+      IMPORTING
+        !ip_comment TYPE REF TO zcl_excel_comment .
+    METHODS clear .
+    METHODS constructor .
+    METHODS get
+      IMPORTING
+        !ip_index         TYPE zexcel_active_worksheet
+      RETURNING
+        VALUE(eo_comment) TYPE REF TO zcl_excel_comment .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !ip_comment TYPE REF TO zcl_excel_comment .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  data COMMENTS type ref to CL_OBJECT_COLLECTION .
+    DATA comments TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COMMENTS IMPLEMENTATION.
+CLASS zcl_excel_comments IMPLEMENTATION.
 
 
-METHOD add.
-  DATA: lv_index TYPE i.
+  METHOD add.
+    DATA: lv_index TYPE i.
 
-  comments->add( ip_comment ).
-  lv_index = comments->size( ).
+    comments->add( ip_comment ).
+    lv_index = comments->size( ).
 
-ENDMETHOD.
-
-
-METHOD clear.
-  comments->clear( ).
-
-ENDMETHOD.
+  ENDMETHOD.
 
 
-METHOD constructor.
-  CREATE OBJECT comments.
+  METHOD clear.
+    comments->clear( ).
 
-ENDMETHOD.
-
-
-method GET.
-  DATA lv_index TYPE i.
-  lv_index = ip_index.
-  eo_comment ?= comments->get( lv_index ).
-
-endmethod.
+  ENDMETHOD.
 
 
-method GET_ITERATOR.
+  METHOD constructor.
+    CREATE OBJECT comments.
 
-  eo_iterator ?= comments->get_iterator( ).
-  endmethod.
-
-
-METHOD include.
-  comments->add( ip_comment ).
-ENDMETHOD.
+  ENDMETHOD.
 
 
-method IS_EMPTY.
+  METHOD get.
+    DATA lv_index TYPE i.
+    lv_index = ip_index.
+    eo_comment ?= comments->get( lv_index ).
 
-  is_empty = comments->is_empty( ).
-  endmethod.
-
-
-method REMOVE.
-
-  comments->remove( ip_comment ).
-  endmethod.
+  ENDMETHOD.
 
 
-method SIZE.
+  METHOD get_iterator.
 
-  ep_size = comments->size( ).
-  endmethod.
+    eo_iterator ?= comments->get_iterator( ).
+  ENDMETHOD.
+
+
+  METHOD include.
+    comments->add( ip_comment ).
+  ENDMETHOD.
+
+
+  METHOD is_empty.
+
+    is_empty = comments->is_empty( ).
+  ENDMETHOD.
+
+
+  METHOD remove.
+
+    comments->remove( ip_comment ).
+  ENDMETHOD.
+
+
+  METHOD size.
+
+    ep_size = comments->size( ).
+  ENDMETHOD.
 ENDCLASS.

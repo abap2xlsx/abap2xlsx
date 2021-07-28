@@ -1,43 +1,43 @@
-class ZCL_EXCEL_THEME_ELEMENTS definition
-  public
-  final
-  create public
+CLASS zcl_excel_theme_elements DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC
 
-  global friends ZCL_EXCEL_THEME .
+  GLOBAL FRIENDS zcl_excel_theme .
 
-public section.
+  PUBLIC SECTION.
 
-  constants C_COLOR_SCHEME type STRING value 'clrScheme'. "#EC NOTEXT
-  constants C_FONT_SCHEME type STRING value 'fontScheme'. "#EC NOTEXT
-  constants C_FMT_SCHEME type STRING value 'fmtScheme'. "#EC NOTEXT
-  constants C_THEME_ELEMENTS type STRING value 'themeElements'. "#EC NOTEXT
+    CONSTANTS c_color_scheme TYPE string VALUE 'clrScheme'. "#EC NOTEXT
+    CONSTANTS c_font_scheme TYPE string VALUE 'fontScheme'. "#EC NOTEXT
+    CONSTANTS c_fmt_scheme TYPE string VALUE 'fmtScheme'.   "#EC NOTEXT
+    CONSTANTS c_theme_elements TYPE string VALUE 'themeElements'. "#EC NOTEXT
 
-  methods CONSTRUCTOR .
-  methods LOAD
-    importing
-      !IO_ELEMENTS type ref to IF_IXML_ELEMENT .
-  methods BUILD_XML
-    importing
-      !IO_DOCUMENT type ref to IF_IXML_DOCUMENT .
-protected section.
+    METHODS constructor .
+    METHODS load
+      IMPORTING
+        !io_elements TYPE REF TO if_ixml_element .
+    METHODS build_xml
+      IMPORTING
+        !io_document TYPE REF TO if_ixml_document .
+  PROTECTED SECTION.
 
-  data COLOR_SCHEME type ref to ZCL_EXCEL_THEME_COLOR_SCHEME .
-  data FONT_SCHEME type ref to ZCL_EXCEL_THEME_FONT_SCHEME .
-  data FMT_SCHEME type ref to ZCL_EXCEL_THEME_FMT_SCHEME .
-private section.
+    DATA color_scheme TYPE REF TO zcl_excel_theme_color_scheme .
+    DATA font_scheme TYPE REF TO zcl_excel_theme_font_scheme .
+    DATA fmt_scheme TYPE REF TO zcl_excel_theme_fmt_scheme .
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_THEME_ELEMENTS IMPLEMENTATION.
+CLASS zcl_excel_theme_elements IMPLEMENTATION.
 
 
-method build_xml.
-    data: lo_theme_element type ref to if_ixml_element.
-    data: lo_theme type ref to if_ixml_element.
-    check io_document is bound.
+  METHOD build_xml.
+    DATA: lo_theme_element TYPE REF TO if_ixml_element.
+    DATA: lo_theme TYPE REF TO if_ixml_element.
+    CHECK io_document IS BOUND.
     lo_theme ?= io_document->get_root_element( ).
-    if lo_theme is bound.
+    IF lo_theme IS BOUND.
       lo_theme_element ?= io_document->create_simple_element_ns( prefix = zcl_excel_theme=>c_theme_prefix
                                                                  name   = c_theme_elements
                                                               parent = lo_theme ).
@@ -45,36 +45,36 @@ method build_xml.
       color_scheme->build_xml( io_document = io_document ).
       font_scheme->build_xml( io_document = io_document ).
       fmt_scheme->build_xml( io_document = io_document ).
-    endif.
-  endmethod.
+    ENDIF.
+  ENDMETHOD.
 
 
-method constructor.
-    create object color_scheme.
-    create object font_scheme.
-    create object fmt_scheme.
-  endmethod.                    "constructor
+  METHOD constructor.
+    CREATE OBJECT color_scheme.
+    CREATE OBJECT font_scheme.
+    CREATE OBJECT fmt_scheme.
+  ENDMETHOD.                    "constructor
 
 
-method load.
-    data: lo_elements_children type ref to if_ixml_node_list.
-    data: lo_elements_iterator type ref to if_ixml_node_iterator.
-    data: lo_elements_element type ref to if_ixml_element.
-    check io_elements is not initial.
+  METHOD load.
+    DATA: lo_elements_children TYPE REF TO if_ixml_node_list.
+    DATA: lo_elements_iterator TYPE REF TO if_ixml_node_iterator.
+    DATA: lo_elements_element TYPE REF TO if_ixml_element.
+    CHECK io_elements IS NOT INITIAL.
 
     lo_elements_children = io_elements->get_children( ).
     lo_elements_iterator = lo_elements_children->create_iterator( ).
     lo_elements_element ?= lo_elements_iterator->get_next( ).
-    while lo_elements_element is bound.
-      case lo_elements_element->get_name( ).
-        when c_color_scheme.
-            color_scheme->load( io_color_scheme = lo_elements_element ).
-        when c_font_scheme.
-            font_scheme->load( io_font_scheme = lo_elements_element ).
-        when c_fmt_scheme.
-            fmt_scheme->load( io_fmt_scheme = lo_elements_element ).
-      endcase.
+    WHILE lo_elements_element IS BOUND.
+      CASE lo_elements_element->get_name( ).
+        WHEN c_color_scheme.
+          color_scheme->load( io_color_scheme = lo_elements_element ).
+        WHEN c_font_scheme.
+          font_scheme->load( io_font_scheme = lo_elements_element ).
+        WHEN c_fmt_scheme.
+          fmt_scheme->load( io_fmt_scheme = lo_elements_element ).
+      ENDCASE.
       lo_elements_element ?= lo_elements_iterator->get_next( ).
-    endwhile.
-  endmethod.                    "load
+    ENDWHILE.
+  ENDMETHOD.                    "load
 ENDCLASS.

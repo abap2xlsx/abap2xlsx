@@ -9,7 +9,7 @@ CONSTANTS: gc_save_file_name TYPE string VALUE 'ABAP2XLSX Inheritance.xlsx'.
 CLASS lcl_my_zcl_excel1 DEFINITION INHERITING FROM zcl_excel.
   PUBLIC SECTION.
     METHODS: constructor IMPORTING iv_sheetcount TYPE i DEFAULT 5
-      RAISING zcx_excel.
+                         RAISING   zcx_excel.
 ENDCLASS.
 
 CLASS lcl_my_zcl_excel1 IMPLEMENTATION.
@@ -77,7 +77,7 @@ DATA: go_excel1 TYPE REF TO lcl_my_zcl_excel1.
 DATA: go_excel2 TYPE REF TO lcl_my_zcl_excel2.
 
 
-SELECTION-SCREEN BEGIN OF BLOCK bli WITH FRAME TITLE text-bli.
+SELECTION-SCREEN BEGIN OF BLOCK bli WITH FRAME TITLE TEXT-bli.
 PARAMETERS: rbi_1 RADIOBUTTON GROUP rbi DEFAULT 'X' , " Simple inheritance
             rbi_2 RADIOBUTTON GROUP rbi.
 SELECTION-SCREEN END OF BLOCK bli.

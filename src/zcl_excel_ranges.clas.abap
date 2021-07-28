@@ -1,88 +1,88 @@
-class ZCL_EXCEL_RANGES definition
-  public
-  final
-  create public .
+CLASS zcl_excel_ranges DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_RANGES
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  methods ADD
-    importing
-      !IP_RANGE type ref to ZCL_EXCEL_RANGE .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET
-    importing
-      !IP_INDEX type I
-    returning
-      value(EO_RANGE) type ref to ZCL_EXCEL_RANGE .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IP_RANGE type ref to ZCL_EXCEL_RANGE .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
+    METHODS add
+      IMPORTING
+        !ip_range TYPE REF TO zcl_excel_range .
+    METHODS clear .
+    METHODS constructor .
+    METHODS get
+      IMPORTING
+        !ip_index       TYPE i
+      RETURNING
+        VALUE(eo_range) TYPE REF TO zcl_excel_range .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !ip_range TYPE REF TO zcl_excel_range .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data RANGES type ref to CL_OBJECT_COLLECTION .
+    DATA ranges TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_RANGES IMPLEMENTATION.
+CLASS zcl_excel_ranges IMPLEMENTATION.
 
 
-method ADD.
-  ranges->add( ip_range ).
-  endmethod.
+  METHOD add.
+    ranges->add( ip_range ).
+  ENDMETHOD.
 
 
-method CLEAR.
-  ranges->clear( ).
-  endmethod.
+  METHOD clear.
+    ranges->clear( ).
+  ENDMETHOD.
 
 
-method CONSTRUCTOR.
+  METHOD constructor.
 
 
-  CREATE OBJECT ranges.
+    CREATE OBJECT ranges.
 
-  endmethod.
-
-
-method GET.
-  eo_range ?= ranges->get( ip_index ).
-  endmethod.
+  ENDMETHOD.
 
 
-method GET_ITERATOR.
-  eo_iterator ?= ranges->get_iterator( ).
-  endmethod.
+  METHOD get.
+    eo_range ?= ranges->get( ip_index ).
+  ENDMETHOD.
 
 
-method IS_EMPTY.
-  is_empty = ranges->is_empty( ).
-  endmethod.
+  METHOD get_iterator.
+    eo_iterator ?= ranges->get_iterator( ).
+  ENDMETHOD.
 
 
-method REMOVE.
-  ranges->remove( ip_range ).
-  endmethod.
+  METHOD is_empty.
+    is_empty = ranges->is_empty( ).
+  ENDMETHOD.
 
 
-method SIZE.
-  ep_size = ranges->size( ).
-  endmethod.
+  METHOD remove.
+    ranges->remove( ip_range ).
+  ENDMETHOD.
+
+
+  METHOD size.
+    ep_size = ranges->size( ).
+  ENDMETHOD.
 ENDCLASS.

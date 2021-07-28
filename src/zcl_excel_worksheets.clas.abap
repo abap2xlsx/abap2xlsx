@@ -1,106 +1,106 @@
-class ZCL_EXCEL_WORKSHEETS definition
-  public
-  final
-  create public .
+CLASS zcl_excel_worksheets DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  data ACTIVE_WORKSHEET type ZEXCEL_ACTIVE_WORKSHEET value 1. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-  data NAME type ZEXCEL_WORKSHEETS_NAME value 'Worksheets'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+    DATA active_worksheet TYPE zexcel_active_worksheet VALUE 1. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+    DATA name TYPE zexcel_worksheets_name VALUE 'Worksheets'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
 
-  methods ADD
-    importing
-      !IP_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET
-    importing
-      !IP_INDEX type ZEXCEL_ACTIVE_WORKSHEET
-    returning
-      value(EO_WORKSHEET) type ref to ZCL_EXCEL_WORKSHEET .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IP_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
+    METHODS add
+      IMPORTING
+        !ip_worksheet TYPE REF TO zcl_excel_worksheet .
+    METHODS clear .
+    METHODS constructor .
+    METHODS get
+      IMPORTING
+        !ip_index           TYPE zexcel_active_worksheet
+      RETURNING
+        VALUE(eo_worksheet) TYPE REF TO zcl_excel_worksheet .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !ip_worksheet TYPE REF TO zcl_excel_worksheet .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
 *"* protected components of class ZCL_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data WORKSHEETS type ref to CL_OBJECT_COLLECTION .
+    DATA worksheets TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEETS IMPLEMENTATION.
+CLASS zcl_excel_worksheets IMPLEMENTATION.
 
 
-method ADD.
+  METHOD add.
 
-  worksheets->add( ip_worksheet ).
+    worksheets->add( ip_worksheet ).
 
-  endmethod.
-
-
-method CLEAR.
-
-  worksheets->clear( ).
-
-  endmethod.
+  ENDMETHOD.
 
 
-method CONSTRUCTOR.
+  METHOD clear.
 
-  CREATE OBJECT worksheets.
+    worksheets->clear( ).
 
-  endmethod.
-
-
-method GET.
-
-  DATA lv_index TYPE i.
-  lv_index = ip_index.
-  eo_worksheet ?= worksheets->get( lv_index ).
-
-  endmethod.
+  ENDMETHOD.
 
 
-method GET_ITERATOR.
+  METHOD constructor.
 
-  eo_iterator ?= worksheets->get_iterator( ).
+    CREATE OBJECT worksheets.
 
-  endmethod.
-
-
-method IS_EMPTY.
-
-  is_empty = worksheets->is_empty( ).
-
-  endmethod.
+  ENDMETHOD.
 
 
-method REMOVE.
+  METHOD get.
 
-  worksheets->remove( ip_worksheet ).
+    DATA lv_index TYPE i.
+    lv_index = ip_index.
+    eo_worksheet ?= worksheets->get( lv_index ).
 
-  endmethod.
+  ENDMETHOD.
 
 
-method SIZE.
+  METHOD get_iterator.
 
-  ep_size = worksheets->size( ).
+    eo_iterator ?= worksheets->get_iterator( ).
 
-  endmethod.
+  ENDMETHOD.
+
+
+  METHOD is_empty.
+
+    is_empty = worksheets->is_empty( ).
+
+  ENDMETHOD.
+
+
+  METHOD remove.
+
+    worksheets->remove( ip_worksheet ).
+
+  ENDMETHOD.
+
+
+  METHOD size.
+
+    ep_size = worksheets->size( ).
+
+  ENDMETHOD.
 ENDCLASS.
