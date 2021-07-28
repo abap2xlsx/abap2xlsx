@@ -10,11 +10,11 @@ REPORT zdemo_excel11.
 
 TYPE-POOLS: abap.
 
-DATA: central_search TYPE bapibus1006_central_search,
+DATA: central_search     TYPE bapibus1006_central_search,
       addressdata_search TYPE bapibus1006_addr_search,
-      others_search TYPE bapibus1006_other_data.
+      others_search      TYPE bapibus1006_other_data.
 DATA: searchresult TYPE TABLE OF bapibus1006_bp_addr,
-      return TYPE TABLE OF bapiret2.
+      return       TYPE TABLE OF bapiret2.
 DATA: lines TYPE i.
 FIELD-SYMBOLS: <searchresult_line> LIKE LINE OF searchresult.
 DATA: centraldata             TYPE bapibus1006_central,
@@ -36,7 +36,7 @@ INCLUDE zdemo_excel_outputopt_incl.
 
 PARAMETERS: md TYPE flag RADIOBUTTON GROUP act.
 
-SELECTION-SCREEN BEGIN OF BLOCK a WITH FRAME TITLE text-00a.
+SELECTION-SCREEN BEGIN OF BLOCK a WITH FRAME TITLE TEXT-00a.
 PARAMETERS: partnerc TYPE bu_type   DEFAULT 2, " Organizations
             postlcod TYPE ad_pstcd1 DEFAULT '8334*',
             country  TYPE land1     DEFAULT 'DE',
@@ -45,8 +45,8 @@ SELECTION-SCREEN END OF BLOCK a.
 
 PARAMETERS: rel TYPE flag RADIOBUTTON GROUP act DEFAULT 'X'.
 
-SELECTION-SCREEN BEGIN OF BLOCK b WITH FRAME TITLE text-00b.
-PARAMETERS: reltyp TYPE bu_reltyp DEFAULT 'BUR011',
+SELECTION-SCREEN BEGIN OF BLOCK b WITH FRAME TITLE TEXT-00b.
+PARAMETERS: reltyp  TYPE bu_reltyp DEFAULT 'BUR011',
             partner TYPE bu_partner DEFAULT '191'.
 SELECTION-SCREEN END OF BLOCK b.
 
@@ -63,7 +63,7 @@ START-OF-SELECTION.
       EXPORTING
         centraldata  = central_search
         addressdata  = addressdata_search
-        OTHERS       = others_search
+        others       = others_search
       TABLES
         searchresult = searchresult
         return       = return.
@@ -187,20 +187,20 @@ START-OF-SELECTION.
 
   ENDLOOP.
 
-  DATA: lo_excel                TYPE REF TO zcl_excel,
-        lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-        lo_style_body           TYPE REF TO zcl_excel_style,
-        lo_border_dark          TYPE REF TO zcl_excel_style_border,
-        lo_column               TYPE REF TO zcl_excel_column,
-        lo_row                  TYPE REF TO zcl_excel_row.
+  DATA: lo_excel       TYPE REF TO zcl_excel,
+        lo_worksheet   TYPE REF TO zcl_excel_worksheet,
+        lo_style_body  TYPE REF TO zcl_excel_style,
+        lo_border_dark TYPE REF TO zcl_excel_style_border,
+        lo_column      TYPE REF TO zcl_excel_column,
+        lo_row         TYPE REF TO zcl_excel_row.
 
-  DATA: lv_style_body_even_guid   TYPE zexcel_cell_style,
-        lv_style_body_green       TYPE zexcel_cell_style.
+  DATA: lv_style_body_even_guid TYPE zexcel_cell_style,
+        lv_style_body_green     TYPE zexcel_cell_style.
 
   DATA: row TYPE zexcel_cell_row.
 
-  DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
-        ls_table_settings       TYPE zexcel_s_table_settings.
+  DATA: lt_field_catalog  TYPE zexcel_t_fieldcatalog,
+        ls_table_settings TYPE zexcel_s_table_settings.
 
   DATA: column       TYPE zexcel_cell_column,
         column_alpha TYPE zexcel_cell_column_alpha,
@@ -358,8 +358,8 @@ START-OF-SELECTION.
   lo_row->set_visible( abap_false ).
 
   DATA: highest_column TYPE zexcel_cell_column,
-        count TYPE int4,
-        col_alpha TYPE zexcel_cell_column_alpha.
+        count          TYPE int4,
+        col_alpha      TYPE zexcel_cell_column_alpha.
 
   highest_column = lo_worksheet->get_highest_column( ).
   count = 1.

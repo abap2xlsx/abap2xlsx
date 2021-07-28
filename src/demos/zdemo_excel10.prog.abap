@@ -8,14 +8,14 @@
 
 REPORT zdemo_excel10.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style_cond           TYPE REF TO zcl_excel_style_cond,
-      lo_column               TYPE REF TO zcl_excel_column.
+DATA: lo_excel      TYPE REF TO zcl_excel,
+      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
+      lo_style_cond TYPE REF TO zcl_excel_style_cond,
+      lo_column     TYPE REF TO zcl_excel_column.
 
-DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
-      ls_table_settings       TYPE zexcel_s_table_settings,
-      ls_iconset              TYPE zexcel_conditional_iconset.
+DATA: lt_field_catalog  TYPE zexcel_t_fieldcatalog,
+      ls_table_settings TYPE zexcel_s_table_settings,
+      ls_iconset        TYPE zexcel_conditional_iconset.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '10_iTabFieldCatalog.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -52,7 +52,7 @@ START-OF-SELECTION.
   lo_style_cond->priority     = 1.
 
   DATA lt_test TYPE TABLE OF sflight.
-  SELECT * FROM sflight INTO TABLE lt_test. "#EC CI_NOWHERE
+  SELECT * FROM sflight INTO TABLE lt_test.             "#EC CI_NOWHERE
 
   lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = lt_test ).
 

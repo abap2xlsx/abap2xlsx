@@ -8,11 +8,11 @@
 
 REPORT zdemo_excel5.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style_cond           TYPE REF TO zcl_excel_style_cond.
+DATA: lo_excel      TYPE REF TO zcl_excel,
+      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
+      lo_style_cond TYPE REF TO zcl_excel_style_cond.
 
-DATA: ls_iconset              TYPE zexcel_conditional_iconset.
+DATA: ls_iconset    TYPE zexcel_conditional_iconset.
 
 
 

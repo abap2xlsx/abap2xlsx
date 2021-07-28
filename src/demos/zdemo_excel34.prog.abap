@@ -11,24 +11,24 @@ REPORT zdemo_excel34.
 CONSTANTS: width            TYPE f VALUE '10.14'.
 CONSTANTS: height           TYPE f VALUE '57.75'.
 
-DATA:      current_row      TYPE i,
-           col              TYPE i,
-           col_alpha        TYPE zexcel_cell_column_alpha,
-           row              TYPE i,
-           row_board        TYPE i,
-           colorflag        TYPE i,
-           color            TYPE zexcel_style_color_argb,
+DATA: current_row TYPE i,
+      col         TYPE i,
+      col_alpha   TYPE zexcel_cell_column_alpha,
+      row         TYPE i,
+      row_board   TYPE i,
+      colorflag   TYPE i,
+      color       TYPE zexcel_style_color_argb,
 
-           lo_column        TYPE REF TO zcl_excel_column,
-           lo_row           TYPE REF TO zcl_excel_row,
+      lo_column   TYPE REF TO zcl_excel_column,
+      lo_row      TYPE REF TO zcl_excel_row,
 
-           writing1         TYPE string,
-           writing2         TYPE string.
+      writing1    TYPE string,
+      writing2    TYPE string.
 
 
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '34_Static Styles_Chess.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.

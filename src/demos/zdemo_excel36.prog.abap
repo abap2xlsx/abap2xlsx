@@ -2,14 +2,14 @@
 *& Report  ZDEMO_EXCEL36
 REPORT zdemo_excel36.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_column               TYPE REF TO zcl_excel_column,
-      col                     TYPE i.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_column    TYPE REF TO zcl_excel_column,
+      col          TYPE i.
 
-DATA: lo_style_arial20      TYPE REF TO zcl_excel_style,
-      lo_style_times11      TYPE REF TO zcl_excel_style,
-      lo_style_cambria8red  TYPE REF TO zcl_excel_style.
+DATA: lo_style_arial20     TYPE REF TO zcl_excel_style,
+      lo_style_times11     TYPE REF TO zcl_excel_style,
+      lo_style_cambria8red TYPE REF TO zcl_excel_style.
 
 DATA: lv_style_arial20_guid     TYPE zexcel_cell_style,
       lv_style_times11_guid     TYPE zexcel_cell_style,

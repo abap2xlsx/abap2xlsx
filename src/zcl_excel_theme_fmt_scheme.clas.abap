@@ -1,53 +1,53 @@
-class ZCL_EXCEL_THEME_FMT_SCHEME definition
-  public
-  final
-  create public .
+CLASS zcl_excel_theme_fmt_scheme DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods LOAD
-    importing
-      !IO_FMT_SCHEME type ref to IF_IXML_ELEMENT .
-  methods BUILD_XML
-    importing
-      !IO_DOCUMENT type ref to IF_IXML_DOCUMENT .
-protected section.
-private section.
+    METHODS load
+      IMPORTING
+        !io_fmt_scheme TYPE REF TO if_ixml_element .
+    METHODS build_xml
+      IMPORTING
+        !io_document TYPE REF TO if_ixml_document .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  data FMT_SCHEME type ref to IF_IXML_ELEMENT .
+    DATA fmt_scheme TYPE REF TO if_ixml_element .
 
-  methods GET_DEFAULT_FMT
-    returning
-      value(RV_STRING) type STRING .
+    METHODS get_default_fmt
+      RETURNING
+        VALUE(rv_string) TYPE string .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_THEME_FMT_SCHEME IMPLEMENTATION.
+CLASS zcl_excel_theme_fmt_scheme IMPLEMENTATION.
 
 
-method build_xml.
-    data: lo_xml type ref to cl_xml_document.
-    data: lo_node type ref to if_ixml_node.
-    data: lo_elements type ref to if_ixml_element.
-    check io_document is bound.
+  METHOD build_xml.
+    DATA: lo_xml TYPE REF TO cl_xml_document.
+    DATA: lo_node TYPE REF TO if_ixml_node.
+    DATA: lo_elements TYPE REF TO if_ixml_element.
+    CHECK io_document IS BOUND.
     lo_elements ?= io_document->find_from_name_ns( name = zcl_excel_theme=>c_theme_elements ).
-    if lo_elements is bound.
+    IF lo_elements IS BOUND.
 
-      if fmt_scheme is initial.
-        create object lo_xml.
+      IF fmt_scheme IS INITIAL.
+        CREATE OBJECT lo_xml.
         lo_xml->parse_string( get_default_fmt( ) ).
         lo_node = lo_xml->get_first_node( ).
         lo_elements->append_child( new_child = lo_node ).
-      else.
+      ELSE.
         lo_elements->append_child( new_child = fmt_scheme ).
-      endif.
-    endif.
-  endmethod.                    "build_xml
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.                    "build_xml
 
 
-method get_default_fmt.
-    concatenate    '<a:fmtScheme name="Office">'
+  METHOD get_default_fmt.
+    CONCATENATE    '<a:fmtScheme name="Office">'
     '      <a:fillStyleLst>'
     '        <a:solidFill>'
     '          <a:schemeClr val="phClr"/>'
@@ -184,12 +184,12 @@ method get_default_fmt.
     '        </a:gradFill>'
     '      </a:bgFillStyleLst>'
     '    </a:fmtScheme>'
-    into rv_string .
-  endmethod.                    "get_default_fmt
+    INTO rv_string .
+  ENDMETHOD.                    "get_default_fmt
 
 
-method load.
+  METHOD load.
     "! so far copy only existing values
     fmt_scheme ?= io_fmt_scheme.
-  endmethod.                    "load
+  ENDMETHOD.                    "load
 ENDCLASS.

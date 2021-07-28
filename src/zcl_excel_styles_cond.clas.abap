@@ -1,89 +1,89 @@
-class ZCL_EXCEL_STYLES_COND definition
-  public
-  final
-  create public .
+CLASS zcl_excel_styles_cond DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_STYLES_COND
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  methods ADD
-    importing
-      !IP_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods CLEAR .
-  methods CONSTRUCTOR .
-  methods GET
-    importing
-      !IP_INDEX type ZEXCEL_ACTIVE_WORKSHEET
-    returning
-      value(EO_STYLE_COND) type ref to ZCL_EXCEL_STYLE_COND .
-  methods GET_ITERATOR
-    returning
-      value(EO_ITERATOR) type ref to CL_OBJECT_COLLECTION_ITERATOR .
-  methods IS_EMPTY
-    returning
-      value(IS_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IP_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods SIZE
-    returning
-      value(EP_SIZE) type I .
+    METHODS add
+      IMPORTING
+        !ip_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS clear .
+    METHODS constructor .
+    METHODS get
+      IMPORTING
+        !ip_index            TYPE zexcel_active_worksheet
+      RETURNING
+        VALUE(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
+    METHODS get_iterator
+      RETURNING
+        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+    METHODS is_empty
+      RETURNING
+        VALUE(is_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !ip_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS size
+      RETURNING
+        VALUE(ep_size) TYPE i .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_STYLES_COND
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data STYLES_COND type ref to CL_OBJECT_COLLECTION .
+    DATA styles_cond TYPE REF TO cl_object_collection .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_STYLES_COND IMPLEMENTATION.
+CLASS zcl_excel_styles_cond IMPLEMENTATION.
 
 
-METHOD ADD.
-  styles_cond->add( ip_style_cond ).
-ENDMETHOD.
+  METHOD add.
+    styles_cond->add( ip_style_cond ).
+  ENDMETHOD.
 
 
-METHOD CLEAR.
-  styles_cond->clear( ).
-ENDMETHOD.
+  METHOD clear.
+    styles_cond->clear( ).
+  ENDMETHOD.
 
 
-METHOD constructor.
+  METHOD constructor.
 
-  CREATE OBJECT styles_cond.
+    CREATE OBJECT styles_cond.
 
-ENDMETHOD.
-
-
-METHOD get.
-  DATA lv_index TYPE i.
-  lv_index = ip_index.
-  eo_style_cond ?= styles_cond->get( lv_index ).
-ENDMETHOD.
+  ENDMETHOD.
 
 
-METHOD get_iterator.
-  eo_iterator ?= styles_cond->get_iterator( ).
-ENDMETHOD.
+  METHOD get.
+    DATA lv_index TYPE i.
+    lv_index = ip_index.
+    eo_style_cond ?= styles_cond->get( lv_index ).
+  ENDMETHOD.
 
 
-METHOD is_empty.
-  is_empty = styles_cond->is_empty( ).
-ENDMETHOD.
+  METHOD get_iterator.
+    eo_iterator ?= styles_cond->get_iterator( ).
+  ENDMETHOD.
 
 
-METHOD remove.
-  styles_cond->remove( ip_style_cond ).
-ENDMETHOD.
+  METHOD is_empty.
+    is_empty = styles_cond->is_empty( ).
+  ENDMETHOD.
 
 
-METHOD size.
-  ep_size = styles_cond->size( ).
-ENDMETHOD.
+  METHOD remove.
+    styles_cond->remove( ip_style_cond ).
+  ENDMETHOD.
+
+
+  METHOD size.
+    ep_size = styles_cond->size( ).
+  ENDMETHOD.
 ENDCLASS.
