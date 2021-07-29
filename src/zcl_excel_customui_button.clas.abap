@@ -1,22 +1,22 @@
-class ZCL_EXCEL_CUSTOMUI_BUTTON definition
-  public
-  final
-  create public .
+CLASS zcl_excel_customui_button DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
 *"* public components of class ZCL_EXCEL_CUSTOMUI_BUTTON
 *"* do not include other source files here!!!
-  interfaces ZIF_EXCEL_CUSTOMUI_ELEMENT .
-protected section.
+    INTERFACES zif_excel_customui_element .
+  PROTECTED SECTION.
 *"* protected components of class ZCL_EXCEL_CUSTOMUI_BUTTON
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 *"* private components of class ZCL_EXCEL_CUSTOMUI_BUTTON
 *"* do not include other source files here!!!
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_CUSTOMUI_BUTTON IMPLEMENTATION.
+CLASS zcl_excel_customui_button IMPLEMENTATION.
 ENDCLASS.

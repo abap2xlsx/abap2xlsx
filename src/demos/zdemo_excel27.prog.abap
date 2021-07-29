@@ -10,16 +10,16 @@ REPORT zdemo_excel27.
 
 CONSTANTS: c_fish       TYPE string VALUE 'Fish'.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_range                TYPE REF TO zcl_excel_range,
-      lo_data_validation      TYPE REF TO zcl_excel_data_validation,
-      lo_style_cond           TYPE REF TO zcl_excel_style_cond,
-      lo_style_1              TYPE REF TO zcl_excel_style,
-      lo_style_2              TYPE REF TO zcl_excel_style,
-      lv_style_1_guid         TYPE zexcel_cell_style,
-      lv_style_2_guid         TYPE zexcel_cell_style,
-      ls_cellis               TYPE zexcel_conditional_cellis.
+DATA: lo_excel           TYPE REF TO zcl_excel,
+      lo_worksheet       TYPE REF TO zcl_excel_worksheet,
+      lo_range           TYPE REF TO zcl_excel_range,
+      lo_data_validation TYPE REF TO zcl_excel_data_validation,
+      lo_style_cond      TYPE REF TO zcl_excel_style_cond,
+      lo_style_1         TYPE REF TO zcl_excel_style,
+      lo_style_2         TYPE REF TO zcl_excel_style,
+      lv_style_1_guid    TYPE zexcel_cell_style,
+      lv_style_2_guid    TYPE zexcel_cell_style,
+      ls_cellis          TYPE zexcel_conditional_cellis.
 
 
 DATA: lv_title          TYPE zexcel_sheet_title.

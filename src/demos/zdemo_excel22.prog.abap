@@ -8,16 +8,16 @@
 
 REPORT zdemo_excel22.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style                TYPE REF TO zcl_excel_style,
-      lo_style_date           TYPE REF TO zcl_excel_style,
-      lo_style_editable       TYPE REF TO zcl_excel_style,
-      lo_data_validation      TYPE REF TO zcl_excel_data_validation.
+DATA: lo_excel           TYPE REF TO zcl_excel,
+      lo_worksheet       TYPE REF TO zcl_excel_worksheet,
+      lo_style           TYPE REF TO zcl_excel_style,
+      lo_style_date      TYPE REF TO zcl_excel_style,
+      lo_style_editable  TYPE REF TO zcl_excel_style,
+      lo_data_validation TYPE REF TO zcl_excel_data_validation.
 
-DATA: lt_field_catalog        TYPE zexcel_t_fieldcatalog,
-      ls_table_settings       TYPE zexcel_s_table_settings,
-      ls_table_settings_out   TYPE zexcel_s_table_settings.
+DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
+      ls_table_settings     TYPE zexcel_s_table_settings,
+      ls_table_settings_out TYPE zexcel_s_table_settings.
 
 DATA: lv_style_guid           TYPE zexcel_cell_style.
 
@@ -39,7 +39,7 @@ START-OF-SELECTION.
   lo_worksheet->set_title( ip_title = 'PN_MASSIVE' ).
 
   DATA lt_test TYPE TABLE OF sflight.
-  SELECT * FROM sflight INTO TABLE lt_test. "#EC CI_NOWHERE
+  SELECT * FROM sflight INTO TABLE lt_test.             "#EC CI_NOWHERE
 
   " sheet style (white background)
   lo_style = lo_excel->add_new_style( ).

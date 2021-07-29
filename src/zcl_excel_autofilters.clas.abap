@@ -1,122 +1,122 @@
-class ZCL_EXCEL_AUTOFILTERS definition
-  public
-  final
-  create public .
+CLASS zcl_excel_autofilters DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_AUTOFILTERS
 *"* do not include other source files here!!!
-  type-pools ABAP .
+    TYPE-POOLS abap .
 
-  constants C_AUTOFILTER type STRING value '_xlnm._FilterDatabase'. "#EC NOTEXT
+    CONSTANTS c_autofilter TYPE string VALUE '_xlnm._FilterDatabase'. "#EC NOTEXT
 
-  methods ADD
-    importing
-      !IO_SHEET type ref to ZCL_EXCEL_WORKSHEET
-    returning
-      value(RO_AUTOFILTER) type ref to ZCL_EXCEL_AUTOFILTER
-    raising
-      ZCX_EXCEL .
-  methods CLEAR .
-  methods GET
-    importing
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET optional
-      !I_SHEET_GUID type sysuuid_x16 optional
-    returning
-      value(RO_AUTOFILTER) type ref to ZCL_EXCEL_AUTOFILTER .
-  methods IS_EMPTY
-    returning
-      value(R_EMPTY) type FLAG .
-  methods REMOVE
-    importing
-      !IO_SHEET type ANY .
-  methods SIZE
-    returning
-      value(R_SIZE) type I .
+    METHODS add
+      IMPORTING
+        !io_sheet            TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(ro_autofilter) TYPE REF TO zcl_excel_autofilter
+      RAISING
+        zcx_excel .
+    METHODS clear .
+    METHODS get
+      IMPORTING
+        !io_worksheet        TYPE REF TO zcl_excel_worksheet OPTIONAL
+        !i_sheet_guid        TYPE sysuuid_x16 OPTIONAL
+      RETURNING
+        VALUE(ro_autofilter) TYPE REF TO zcl_excel_autofilter .
+    METHODS is_empty
+      RETURNING
+        VALUE(r_empty) TYPE flag .
+    METHODS remove
+      IMPORTING
+        !io_sheet TYPE any .
+    METHODS size
+      RETURNING
+        VALUE(r_size) TYPE i .
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
-protected section.
-private section.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  types:
-    BEGIN OF ts_autofilter,
-      worksheet  TYPE REF TO zcl_excel_worksheet,
-      autofilter TYPE REF TO zcl_excel_autofilter,
-    END OF ts_autofilter .
-  types:
-    tt_autofilters TYPE HASHED TABLE OF ts_autofilter WITH UNIQUE KEY worksheet .
+    TYPES:
+      BEGIN OF ts_autofilter,
+        worksheet  TYPE REF TO zcl_excel_worksheet,
+        autofilter TYPE REF TO zcl_excel_autofilter,
+      END OF ts_autofilter .
+    TYPES:
+      tt_autofilters TYPE HASHED TABLE OF ts_autofilter WITH UNIQUE KEY worksheet .
 
-  data MT_AUTOFILTERS type TT_AUTOFILTERS .
+    DATA mt_autofilters TYPE tt_autofilters .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_AUTOFILTERS IMPLEMENTATION.
+CLASS zcl_excel_autofilters IMPLEMENTATION.
 
 
-METHOD add.
+  METHOD add.
 
-  DATA: ls_autofilter LIKE LINE OF me->mt_autofilters.
+    DATA: ls_autofilter LIKE LINE OF me->mt_autofilters.
 
-  FIELD-SYMBOLS: <ls_autofilter> LIKE LINE OF me->mt_autofilters.
+    FIELD-SYMBOLS: <ls_autofilter> LIKE LINE OF me->mt_autofilters.
 
-  READ TABLE me->mt_autofilters ASSIGNING <ls_autofilter> WITH TABLE KEY worksheet = io_sheet.
-  IF sy-subrc = 0.
-    RAISE EXCEPTION TYPE zcx_excel. " adding another autofilter to sheet is not allowed
-  ENDIF.
+    READ TABLE me->mt_autofilters ASSIGNING <ls_autofilter> WITH TABLE KEY worksheet = io_sheet.
+    IF sy-subrc = 0.
+      RAISE EXCEPTION TYPE zcx_excel. " adding another autofilter to sheet is not allowed
+    ENDIF.
 
-  CREATE OBJECT ro_autofilter
-    EXPORTING
-      io_sheet = io_sheet.
+    CREATE OBJECT ro_autofilter
+      EXPORTING
+        io_sheet = io_sheet.
 
-  ls_autofilter-worksheet  = io_sheet.
-  ls_autofilter-autofilter = ro_autofilter.
-  INSERT ls_autofilter INTO TABLE me->mt_autofilters.
-
-
-ENDMETHOD.
+    ls_autofilter-worksheet  = io_sheet.
+    ls_autofilter-autofilter = ro_autofilter.
+    INSERT ls_autofilter INTO TABLE me->mt_autofilters.
 
 
-METHOD clear.
-
-  CLEAR me->mt_autofilters.
-
-ENDMETHOD.
+  ENDMETHOD.
 
 
-METHOD get.
+  METHOD clear.
 
-  FIELD-SYMBOLS: <ls_autofilter> LIKE LINE OF me->mt_autofilters.
+    CLEAR me->mt_autofilters.
 
-  READ TABLE me->mt_autofilters ASSIGNING <ls_autofilter> WITH TABLE KEY worksheet = io_worksheet.
-  IF sy-subrc = 0.
-    ro_autofilter = <ls_autofilter>-autofilter.
-  ELSE.
-    CLEAR ro_autofilter.
-  ENDIF.
-
-ENDMETHOD.
+  ENDMETHOD.
 
 
-METHOD is_empty.
-  IF me->mt_autofilters IS INITIAL.
-    r_empty = abap_true.
-  ENDIF.
-ENDMETHOD.
+  METHOD get.
+
+    FIELD-SYMBOLS: <ls_autofilter> LIKE LINE OF me->mt_autofilters.
+
+    READ TABLE me->mt_autofilters ASSIGNING <ls_autofilter> WITH TABLE KEY worksheet = io_worksheet.
+    IF sy-subrc = 0.
+      ro_autofilter = <ls_autofilter>-autofilter.
+    ELSE.
+      CLEAR ro_autofilter.
+    ENDIF.
+
+  ENDMETHOD.
 
 
-METHOD remove.
-
-  DATA: lo_worksheet  TYPE REF TO zcl_excel_worksheet.
-
-  DELETE TABLE me->mt_autofilters WITH TABLE KEY worksheet = lo_worksheet.
-
-ENDMETHOD.
+  METHOD is_empty.
+    IF me->mt_autofilters IS INITIAL.
+      r_empty = abap_true.
+    ENDIF.
+  ENDMETHOD.
 
 
-METHOD size.
-  DESCRIBE TABLE me->mt_autofilters LINES r_size.
-ENDMETHOD.
+  METHOD remove.
+
+    DATA: lo_worksheet  TYPE REF TO zcl_excel_worksheet.
+
+    DELETE TABLE me->mt_autofilters WITH TABLE KEY worksheet = lo_worksheet.
+
+  ENDMETHOD.
+
+
+  METHOD size.
+    DESCRIBE TABLE me->mt_autofilters LINES r_size.
+  ENDMETHOD.
 ENDCLASS.

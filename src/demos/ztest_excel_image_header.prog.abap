@@ -8,13 +8,13 @@
 
 REPORT ztest_excel_image_header.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_drawing              TYPE REF TO zcl_excel_drawing,
-      ls_key TYPE wwwdatatab,
-      ls_header TYPE zexcel_s_worksheet_head_foot,
-      ls_footer TYPE zexcel_s_worksheet_head_foot,
-      lv_content TYPE xstring.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_drawing   TYPE REF TO zcl_excel_drawing,
+      ls_key       TYPE wwwdatatab,
+      ls_header    TYPE zexcel_s_worksheet_head_foot,
+      ls_footer    TYPE zexcel_s_worksheet_head_foot,
+      lv_content   TYPE xstring.
 
 
 DATA: ls_io TYPE skwf_io.

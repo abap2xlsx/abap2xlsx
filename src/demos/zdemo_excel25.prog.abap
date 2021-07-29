@@ -8,10 +8,10 @@
 
 REPORT zdemo_excel25.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_exception            TYPE REF TO cx_root.
+DATA: lo_excel        TYPE REF TO zcl_excel,
+      lo_excel_writer TYPE REF TO zif_excel_writer,
+      lo_worksheet    TYPE REF TO zcl_excel_worksheet,
+      lo_exception    TYPE REF TO cx_root.
 
 DATA: lv_file                 TYPE xstring.
 

@@ -1,26 +1,26 @@
 REPORT zdemo_excel38.
 
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_column               TYPE REF TO zcl_excel_column,
-      lo_drawing              TYPE REF TO zcl_excel_drawing.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_column    TYPE REF TO zcl_excel_column,
+      lo_drawing   TYPE REF TO zcl_excel_drawing.
 
 TYPES: BEGIN OF gty_icon,
 *         name      TYPE icon_name, "Fix #228
-         name      TYPE iconname,   "Fix #228
-         objid     TYPE w3objid,
+         name  TYPE iconname,   "Fix #228
+         objid TYPE w3objid,
        END OF gty_icon,
        gtyt_icon TYPE STANDARD TABLE OF gty_icon WITH NON-UNIQUE DEFAULT KEY.
 
-DATA: lt_icon                 TYPE gtyt_icon,
-      lv_row                  TYPE sytabix,
-      ls_wwwdatatab           TYPE wwwdatatab,
-      lt_mimedata             TYPE STANDARD TABLE OF w3mime WITH NON-UNIQUE DEFAULT KEY,
-      lv_xstring              TYPE xstring.
+DATA: lt_icon       TYPE gtyt_icon,
+      lv_row        TYPE sytabix,
+      ls_wwwdatatab TYPE wwwdatatab,
+      lt_mimedata   TYPE STANDARD TABLE OF w3mime WITH NON-UNIQUE DEFAULT KEY,
+      lv_xstring    TYPE xstring.
 
-FIELD-SYMBOLS: <icon>         LIKE LINE OF lt_icon,
-               <mimedata>     LIKE LINE OF lt_mimedata.
+FIELD-SYMBOLS: <icon>     LIKE LINE OF lt_icon,
+               <mimedata> LIKE LINE OF lt_mimedata.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '38_SAP-Icons.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.

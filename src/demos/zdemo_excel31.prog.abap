@@ -8,10 +8,10 @@
 
 REPORT zdemo_excel31.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-      lo_column               TYPE REF TO zcl_excel_column.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_hyperlink TYPE REF TO zcl_excel_hyperlink,
+      lo_column    TYPE REF TO zcl_excel_column.
 
 
 DATA: fieldval            TYPE text80,

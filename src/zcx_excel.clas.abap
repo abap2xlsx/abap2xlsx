@@ -1,7 +1,7 @@
-class ZCX_EXCEL definition
-  public
-  inheriting from CX_STATIC_CHECK
-  create public .
+CLASS zcx_excel DEFINITION
+  PUBLIC
+  INHERITING FROM cx_static_check
+  CREATE PUBLIC .
 
 *"* public components of class ZCX_EXCEL
 *"* do not include other source files here!!!
@@ -9,108 +9,107 @@ class ZCX_EXCEL definition
 *"* do not include other source files here!!!
 *"* protected components of class ZCX_EXCEL
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  constants ZCX_EXCEL type SOTR_CONC value '028C0ED2B5601ED78EB6F3368B1E4F9B' ##NO_TEXT.
-  data ERROR type STRING .
-  data SYST_AT_RAISE type SYST .
+    CONSTANTS zcx_excel TYPE sotr_conc VALUE '028C0ED2B5601ED78EB6F3368B1E4F9B' ##NO_TEXT.
+    DATA error TYPE string .
+    DATA syst_at_raise TYPE syst .
 
-  methods CONSTRUCTOR
-    importing
-      !TEXTID like TEXTID optional
-      !PREVIOUS like PREVIOUS optional
-      !ERROR type STRING optional
-      !SYST_AT_RAISE type SYST optional .
-  class-methods RAISE_TEXT
-    importing
-      !IV_TEXT type CLIKE
-    raising
-      ZCX_EXCEL .
-  class-methods RAISE_SYMSG
-    raising
-      ZCX_EXCEL .
+    METHODS constructor
+      IMPORTING
+        !textid        LIKE textid OPTIONAL
+        !previous      LIKE previous OPTIONAL
+        !error         TYPE string OPTIONAL
+        !syst_at_raise TYPE syst OPTIONAL .
+    CLASS-METHODS raise_text
+      IMPORTING
+        !iv_text TYPE clike
+      RAISING
+        zcx_excel .
+    CLASS-METHODS raise_symsg
+      RAISING
+        zcx_excel .
 
-  methods IF_MESSAGE~GET_LONGTEXT
-    redefinition .
-  methods IF_MESSAGE~GET_TEXT
-    redefinition .
-protected section.
+    METHODS if_message~get_longtext
+        REDEFINITION .
+    METHODS if_message~get_text
+        REDEFINITION .
+  PROTECTED SECTION.
 *"* private components of class ZCX_EXCEL
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS ZCX_EXCEL IMPLEMENTATION.
+CLASS zcx_excel IMPLEMENTATION.
 
 
-  method CONSTRUCTOR.
-CALL METHOD SUPER->CONSTRUCTOR
-EXPORTING
-TEXTID = TEXTID
-PREVIOUS = PREVIOUS
-.
- IF textid IS INITIAL.
-   me->textid = ZCX_EXCEL .
- ENDIF.
-me->ERROR = ERROR .
-me->SYST_AT_RAISE = SYST_AT_RAISE .
-  endmethod.
+  METHOD constructor ##ADT_SUPPRESS_GENERATION.
+    CALL METHOD super->constructor
+      EXPORTING
+        textid   = textid
+        previous = previous.
+    IF textid IS INITIAL.
+      me->textid = zcx_excel .
+    ENDIF.
+    me->error = error .
+    me->syst_at_raise = syst_at_raise .
+  ENDMETHOD.
 
 
-method IF_MESSAGE~GET_LONGTEXT.
+  METHOD if_message~get_longtext.
 
-  IF   me->error         IS NOT INITIAL
-    OR me->syst_at_raise IS NOT INITIAL.
+    IF   me->error         IS NOT INITIAL
+      OR me->syst_at_raise IS NOT INITIAL.
 *--------------------------------------------------------------------*
 * If message was supplied explicitly use this as longtext as well
 *--------------------------------------------------------------------*
-    result = me->get_text( ).
-  ELSE.
+      result = me->get_text( ).
+    ELSE.
 *--------------------------------------------------------------------*
 * otherwise use standard method to derive text
 *--------------------------------------------------------------------*
-    result = super->if_message~get_longtext( preserve_newlines = preserve_newlines ).
-  ENDIF.
-  endmethod.
+      result = super->if_message~get_longtext( preserve_newlines = preserve_newlines ).
+    ENDIF.
+  ENDMETHOD.
 
 
-method IF_MESSAGE~GET_TEXT.
+  METHOD if_message~get_text.
 
-  IF me->error IS NOT INITIAL.
+    IF me->error IS NOT INITIAL.
 *--------------------------------------------------------------------*
 * If message was supplied explicitly use this
 *--------------------------------------------------------------------*
-    result = me->error .
-  ELSEIF me->syst_at_raise IS NOT INITIAL.
+      result = me->error .
+    ELSEIF me->syst_at_raise IS NOT INITIAL.
 *--------------------------------------------------------------------*
 * If message was supplied by syst create messagetext now
 *--------------------------------------------------------------------*
-    MESSAGE ID syst_at_raise-msgid TYPE syst_at_raise-msgty NUMBER syst_at_raise-msgno
-         WITH  syst_at_raise-msgv1 syst_at_raise-msgv2 syst_at_raise-msgv3 syst_at_raise-msgv4
-         INTO  result.
-  ELSE.
+      MESSAGE ID syst_at_raise-msgid TYPE syst_at_raise-msgty NUMBER syst_at_raise-msgno
+           WITH  syst_at_raise-msgv1 syst_at_raise-msgv2 syst_at_raise-msgv3 syst_at_raise-msgv4
+           INTO  result.
+    ELSE.
 *--------------------------------------------------------------------*
 * otherwise use standard method to derive text
 *--------------------------------------------------------------------*
-    CALL METHOD super->if_message~get_text
-      RECEIVING
-        result = result.
-  ENDIF.
-  endmethod.
+      CALL METHOD super->if_message~get_text
+        RECEIVING
+          result = result.
+    ENDIF.
+  ENDMETHOD.
 
 
-  method RAISE_SYMSG.
-    raise exception type zcx_excel
-      exporting
+  METHOD raise_symsg.
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
         syst_at_raise = syst.
-  endmethod.
+  ENDMETHOD.
 
 
-  method RAISE_TEXT.
-    raise exception type zcx_excel
-      exporting
+  METHOD raise_text.
+    RAISE EXCEPTION TYPE zcx_excel
+      EXPORTING
         error = iv_text.
-  endmethod.
+  ENDMETHOD.
 ENDCLASS.

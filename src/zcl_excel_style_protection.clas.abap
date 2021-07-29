@@ -1,46 +1,46 @@
-class ZCL_EXCEL_STYLE_PROTECTION definition
-  public
-  final
-  create public .
+CLASS zcl_excel_style_protection DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_STYLE_PROTECTION
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  constants C_PROTECTION_HIDDEN type ZEXCEL_CELL_PROTECTION value '1'. "#EC NOTEXT
-  constants C_PROTECTION_LOCKED type ZEXCEL_CELL_PROTECTION value '1'. "#EC NOTEXT
-  constants C_PROTECTION_UNHIDDEN type ZEXCEL_CELL_PROTECTION value '0'. "#EC NOTEXT
-  constants C_PROTECTION_UNLOCKED type ZEXCEL_CELL_PROTECTION value '0'. "#EC NOTEXT
-  data HIDDEN type ZEXCEL_CELL_PROTECTION .
-  data LOCKED type ZEXCEL_CELL_PROTECTION .
+    CONSTANTS c_protection_hidden TYPE zexcel_cell_protection VALUE '1'. "#EC NOTEXT
+    CONSTANTS c_protection_locked TYPE zexcel_cell_protection VALUE '1'. "#EC NOTEXT
+    CONSTANTS c_protection_unhidden TYPE zexcel_cell_protection VALUE '0'. "#EC NOTEXT
+    CONSTANTS c_protection_unlocked TYPE zexcel_cell_protection VALUE '0'. "#EC NOTEXT
+    DATA hidden TYPE zexcel_cell_protection .
+    DATA locked TYPE zexcel_cell_protection .
 
-  methods CONSTRUCTOR .
-  methods GET_STRUCTURE
-    returning
-      value(EP_PROTECTION) type ZEXCEL_S_STYLE_PROTECTION .
+    METHODS constructor .
+    METHODS get_structure
+      RETURNING
+        VALUE(ep_protection) TYPE zexcel_s_style_protection .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_STYLE_PROTECTION
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_STYLE_PROTECTION IMPLEMENTATION.
+CLASS zcl_excel_style_protection IMPLEMENTATION.
 
 
-method CONSTRUCTOR.
-  locked = me->c_protection_locked.
-  hidden = me->c_protection_unhidden.
-  endmethod.
+  METHOD constructor.
+    locked = me->c_protection_locked.
+    hidden = me->c_protection_unhidden.
+  ENDMETHOD.
 
 
-method GET_STRUCTURE.
-  ep_protection-locked = me->locked.
-  ep_protection-hidden = me->hidden.
-  endmethod.
+  METHOD get_structure.
+    ep_protection-locked = me->locked.
+    ep_protection-hidden = me->hidden.
+  ENDMETHOD.
 ENDCLASS.
