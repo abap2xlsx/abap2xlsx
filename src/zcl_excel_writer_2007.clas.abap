@@ -3845,7 +3845,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_autofilter               TYPE REF TO zcl_excel_autofilter,
           lv_ref                      TYPE string,
           lt_condformating_ranges     TYPE ty_condformating_ranges,
-          ls_condformating_range      TYPE ty_condformating_range.
+          ls_condformating_range      TYPE ty_condformating_range,
+          ld_first_half               TYPE string,
+          ld_second_half              TYPE string.
 
     FIELD-SYMBOLS: <ls_sheet_content>       TYPE zexcel_s_cell_data,
                    <fs_range_merge>         LIKE LINE OF lt_range_merge,
@@ -4769,6 +4771,38 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
             lo_element_3->set_value( value = lv_value ).
             lo_element_2->append_child( new_child = lo_element_3 ). " 2nd formula node
           ENDIF.
+*--------------------------------------------------------------------------------------*
+* The below code creates an EXM structure in the following format:
+* -<conditionalFormatting sqref="G6:G12">-
+*   <cfRule operator="beginsWith" priority="4" dxfId="4" type="beginsWith" text="1">
+*     <formula>LEFT(G6,LEN("1"))="1"</formula>
+*   </cfRule>
+* </conditionalFormatting>
+*--------------------------------------------------------------------------------------*
+        WHEN zcl_excel_style_cond=>c_operator_beginswith.
+          "1st level is the conditional formatting node. We add a new child to that node.
+          "cfRule Operator Node - 2nd Level
+          ls_cellis = lo_style_cond->mode_cellis.
+          READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_cellis-cell_style.
+          lv_value = ls_style_cond_mapping-dxf.
+          CONDENSE lv_value.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_dxfid
+                                          value = lv_value ).
+          lv_value = ls_cellis-operator.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_operator
+                                          value = lv_value ).
+          lv_value = ls_cellis-formula.
+          lo_element_2->set_attribute_ns( name  = 'text'
+                                          value = lv_value ).
+          "Formula Node - 3rd Level
+          lo_element_3 = lo_document->create_simple_element( name   = lc_xml_node_formula
+                                                             parent = lo_document ).
+          lv_value = lo_style_cond->get_dimension_range( ) .
+          SPLIT lv_value AT ':' INTO ld_first_half ld_second_half.
+          lv_value = 'LEFT(' && ld_first_half && ',LEN("' && ls_cellis-formula && '"))="' && ls_cellis-formula && '"'.
+          lo_element_3->set_value( value = lv_value ).
+          "Add Formula Node to cfRule Operator Node
+          lo_element_2->append_child( new_child = lo_element_3 ).
 
         WHEN zcl_excel_style_cond=>c_rule_expression.
           ls_expression = lo_style_cond->mode_expression.
