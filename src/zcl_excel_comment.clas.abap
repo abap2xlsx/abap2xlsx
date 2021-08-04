@@ -1,67 +1,67 @@
-class ZCL_EXCEL_COMMENT definition
-  public
-  final
-  create public .
+CLASS zcl_excel_comment DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
-  type-pools ABAP .
+  PUBLIC SECTION.
+    TYPE-POOLS abap .
 
-  methods CONSTRUCTOR .
-  methods GET_NAME
-    returning
-      value(R_NAME) type STRING .
-  methods GET_INDEX
-    returning
-      value(RP_INDEX) type STRING .
-  methods GET_REF
-    returning
-      value(RP_REF) type STRING .
-  methods GET_TEXT
-    returning
-      value(RP_TEXT) type STRING .
-  methods SET_TEXT
-    importing
-      !IP_TEXT type STRING
-      !IP_REF type STRING optional .
-protected section.
-private section.
+    METHODS constructor .
+    METHODS get_name
+      RETURNING
+        VALUE(r_name) TYPE string .
+    METHODS get_index
+      RETURNING
+        VALUE(rp_index) TYPE string .
+    METHODS get_ref
+      RETURNING
+        VALUE(rp_ref) TYPE string .
+    METHODS get_text
+      RETURNING
+        VALUE(rp_text) TYPE string .
+    METHODS set_text
+      IMPORTING
+        !ip_text TYPE string
+        !ip_ref  TYPE string OPTIONAL .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
-  data INDEX type STRING .
-  data REF type STRING .
-  data TEXT type STRING .
+    DATA index TYPE string .
+    DATA ref TYPE string .
+    DATA text TYPE string .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COMMENT IMPLEMENTATION.
+CLASS zcl_excel_comment IMPLEMENTATION.
 
 
-METHOD constructor.
+  METHOD constructor.
 
   ENDMETHOD.
 
 
-METHOD get_index.
+  METHOD get_index.
     rp_index = me->index.
   ENDMETHOD.
 
 
-METHOD get_name.
+  METHOD get_name.
 
   ENDMETHOD.
 
 
-METHOD get_ref.
-  rp_ref = me->ref.
-ENDMETHOD.
+  METHOD get_ref.
+    rp_ref = me->ref.
+  ENDMETHOD.
 
 
-method GET_TEXT.
-  rp_text = me->text.
-endmethod.
+  METHOD get_text.
+    rp_text = me->text.
+  ENDMETHOD.
 
 
-METHOD set_text.
+  METHOD set_text.
     me->text = ip_text.
 
     IF ip_ref IS SUPPLIED.

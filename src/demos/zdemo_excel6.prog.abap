@@ -8,10 +8,10 @@
 
 REPORT zdemo_excel6.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lv_row                  TYPE syindex,
-      lv_formula              TYPE string.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lv_row       TYPE syindex,
+      lv_formula   TYPE string.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '06_Formulas.xlsx'.

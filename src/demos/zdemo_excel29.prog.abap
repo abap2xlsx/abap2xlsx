@@ -8,24 +8,24 @@
 
 REPORT zdemo_excel29.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
-      lo_excel_reader         TYPE REF TO zif_excel_reader.
+DATA: lo_excel        TYPE REF TO zcl_excel,
+      lo_excel_writer TYPE REF TO zif_excel_writer,
+      lo_excel_reader TYPE REF TO zif_excel_reader.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+DATA: lv_file      TYPE xstring,
+      lv_bytecount TYPE i,
+      lt_file_tab  TYPE solix_tab.
 
-DATA: lv_full_path      TYPE string,
-      lv_filename       TYPE string,
-      lv_workdir        TYPE string.
+DATA: lv_full_path TYPE string,
+      lv_filename  TYPE string,
+      lv_workdir   TYPE string.
 
 PARAMETERS: p_path TYPE zexcel_export_dir OBLIGATORY.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
 
   DATA: lt_filetable TYPE filetable,
-        lv_rc TYPE i.
+        lv_rc        TYPE i.
 
   cl_gui_frontend_services=>get_sapgui_workdir( CHANGING sapworkdir = lv_workdir ).
   cl_gui_cfw=>flush( ).

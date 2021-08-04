@@ -12,16 +12,16 @@ REPORT zdemo_teched2.
 *   Data Object declaration   *
 *******************************
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet.
+DATA: lo_excel        TYPE REF TO zcl_excel,
+      lo_excel_writer TYPE REF TO zif_excel_writer,
+      lo_worksheet    TYPE REF TO zcl_excel_worksheet.
 
-DATA: lo_style_title           TYPE REF TO zcl_excel_style,
-      lv_style_title_guid      TYPE zexcel_cell_style.
+DATA: lo_style_title      TYPE REF TO zcl_excel_style,
+      lv_style_title_guid TYPE zexcel_cell_style.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+DATA: lv_file      TYPE xstring,
+      lv_bytecount TYPE i,
+      lt_file_tab  TYPE solix_tab.
 
 DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,

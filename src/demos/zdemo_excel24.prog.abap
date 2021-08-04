@@ -10,14 +10,14 @@ REPORT zdemo_excel24.
 
 TYPE-POOLS: abap.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_column               TYPE REF TO zcl_excel_column,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_column    TYPE REF TO zcl_excel_column,
+      lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+DATA: lv_file      TYPE xstring,
+      lv_bytecount TYPE i,
+      lt_file_tab  TYPE solix_tab.
 
 DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,
@@ -64,7 +64,7 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel->add_new_worksheet( ).
   " TODO: It seems that the zcl_excel_style_number_format=>c_format_date_yyyymmddslash
   " does not produce a valid output
-   lo_worksheet->set_default_excel_date_format( zcl_excel_style_number_format=>c_format_date_yyyymmddslash ).
+  lo_worksheet->set_default_excel_date_format( zcl_excel_style_number_format=>c_format_date_yyyymmddslash ).
   lo_worksheet->set_title( ip_title = 'Sheet3' ).
   lo_worksheet->set_cell( ip_column = 'A' ip_row = 1 ip_value = 'Date Format set to YYYY/MM/DD' ).
   " Insert current date
@@ -81,7 +81,7 @@ START-OF-SELECTION.
   " http://support.microsoft.com/kb/214326/en-us
   lo_worksheet->set_title( ip_title = 'Sheet4' ).
   " Loop from Start Date to the Max Date current data in daily steps
-  CONSTANTS: lv_max type d VALUE '19000302'.
+  CONSTANTS: lv_max TYPE d VALUE '19000302'.
 
   DATA: lv_date TYPE d VALUE '19000226',
         lv_row  TYPE i.
