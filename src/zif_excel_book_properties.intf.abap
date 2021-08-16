@@ -1,6 +1,7 @@
 INTERFACE zif_excel_book_properties
   PUBLIC .
 
+  TYPES tv_excel_appversion TYPE c LENGTH 7.
 
   DATA creator TYPE zexcel_creator .
   DATA lastmodifiedby TYPE zexcel_creator .
@@ -18,7 +19,7 @@ INTERFACE zif_excel_book_properties
   DATA linksuptodate TYPE flag .
   DATA shareddoc TYPE flag .
   DATA hyperlinkschanged TYPE flag .
-  DATA appversion TYPE zexcel_appversion .
+  DATA appversion TYPE tv_excel_appversion .
 
   METHODS initialize .
 ENDINTERFACE.
