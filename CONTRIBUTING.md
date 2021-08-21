@@ -8,6 +8,7 @@ This is a set of guidelines for contributing to abap2xlsx. Mostly guidelines, no
 
 1. [Important Resources](#important-resources)
     1. [Discussion Board](#discussion-board)
+    1. [GitHub](#github)
     1. [Slack](#slack)
 1. [How to submit changes](#how-to-submit-changes)
     1. [Review process](#review-process)
@@ -17,7 +18,11 @@ This is a set of guidelines for contributing to abap2xlsx. Mostly guidelines, no
 
 ### Discussion Board
 
-We use the [SAP Community Network](https://community.sap.com/) as our discussion board. You can [search for all content containing abap2xlsx](https://community.sap.com/search/?ct=all&q=abap2xlxs) before you post a new question. You also can limit the search [using the tag: abap2xlsx](https://answers.sap.com/topics/abap2xlsx.html). Please use this link when you want to [post a new question](https://answers.sap.com/questions/ask.html?primaryTagId=833755570260738661924709785639136&topics=abap2xlsx&question=%5Babap2xlsx%5D%20) the tag *abap2xlsx* will be prefilled).
+We use the [SAP Community Network](https://community.sap.com/) as our discussion board for general questions concerning the usage of the library. You can [search for all content containing abap2xlsx](https://community.sap.com/search/?ct=all&q=abap2xlxs) before you post a new question. You also can limit the search [using the tag: abap2xlsx](https://answers.sap.com/topics/abap2xlsx.html). Please use this link when you want to [post a new question](https://answers.sap.com/questions/ask.html?primaryTagId=833755570260738661924709785639136&topics=abap2xlsx&question=%5Babap2xlsx%5D%20) the tag *abap2xlsx* will be prefilled).
+
+### GitHub
+
+While the discussion board is meant for general how-to questions, if you have found a bug or simply wish to inquire about a new feature please file an issue on GitHub and provide as much relevant information as possible: a well-written bug report is truly helpful.
 
 ### Slack
 
