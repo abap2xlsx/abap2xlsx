@@ -12,29 +12,29 @@ REPORT zdemo_teched8.
 *   Data Object declaration   *
 *******************************
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_excel_writer         TYPE REF TO zif_excel_writer,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet.
+DATA: lo_excel        TYPE REF TO zcl_excel,
+      lo_excel_writer TYPE REF TO zif_excel_writer,
+      lo_worksheet    TYPE REF TO zcl_excel_worksheet.
 
-DATA: lo_style_title           TYPE REF TO zcl_excel_style,
-      lo_style_green           TYPE REF TO zcl_excel_style,
-      lo_style_yellow          TYPE REF TO zcl_excel_style,
-      lo_style_red             TYPE REF TO zcl_excel_style,
-      lo_drawing               TYPE REF TO zcl_excel_drawing,
-      lo_range                 TYPE REF TO zcl_excel_range,
-      lo_data_validation       TYPE REF TO zcl_excel_data_validation,
-      lo_column                TYPE REF TO zcl_excel_column,
-      lo_style_conditional     TYPE REF TO zcl_excel_style_cond,
-      lv_style_title_guid      TYPE zexcel_cell_style,
-      lv_style_green_guid      TYPE zexcel_cell_style,
-      lv_style_yellow_guid     TYPE zexcel_cell_style,
-      lv_style_red_guid        TYPE zexcel_cell_style,
-      ls_cellis                TYPE zexcel_conditional_cellis,
-      ls_key                   TYPE wwwdatatab.
+DATA: lo_style_title       TYPE REF TO zcl_excel_style,
+      lo_style_green       TYPE REF TO zcl_excel_style,
+      lo_style_yellow      TYPE REF TO zcl_excel_style,
+      lo_style_red         TYPE REF TO zcl_excel_style,
+      lo_drawing           TYPE REF TO zcl_excel_drawing,
+      lo_range             TYPE REF TO zcl_excel_range,
+      lo_data_validation   TYPE REF TO zcl_excel_data_validation,
+      lo_column            TYPE REF TO zcl_excel_column,
+      lo_style_conditional TYPE REF TO zcl_excel_style_cond,
+      lv_style_title_guid  TYPE zexcel_cell_style,
+      lv_style_green_guid  TYPE zexcel_cell_style,
+      lv_style_yellow_guid TYPE zexcel_cell_style,
+      lv_style_red_guid    TYPE zexcel_cell_style,
+      ls_cellis            TYPE zexcel_conditional_cellis,
+      ls_key               TYPE wwwdatatab.
 
-DATA: lv_file                 TYPE xstring,
-      lv_bytecount            TYPE i,
-      lt_file_tab             TYPE solix_tab.
+DATA: lv_file      TYPE xstring,
+      lv_bytecount TYPE i,
+      lt_file_tab  TYPE solix_tab.
 
 DATA: lv_full_path      TYPE string,
       lv_workdir        TYPE string,

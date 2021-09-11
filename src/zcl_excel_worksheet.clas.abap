@@ -545,6 +545,16 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS get_header_footer_drawings
       RETURNING
         VALUE(rt_drawings) TYPE zexcel_t_drawings .
+    METHODS set_area_hyperlink
+      IMPORTING
+        !ip_column_start TYPE simple
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_url          TYPE string
+        !ip_is_internal  TYPE abap_bool
+      RAISING
+        zcx_excel .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -900,7 +910,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA l_error           TYPE REF TO c_oi_proxy_error.
     DATA count              TYPE i.
     DATA datac              TYPE i.
-    DATA datareal           TYPE i. " exporting column number
+    DATA datareal TYPE i. " exporting column number
     DATA vkeycount          TYPE i.
     DATA all TYPE i.
     DATA mit TYPE i         VALUE 1.  " index of recent row?
@@ -935,49 +945,49 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *-------------------------------------------
 
     DEFINE close_document.
-      clear: l_is_closed.
-      if lo_proxy is not initial.
+      CLEAR: l_is_closed.
+      IF lo_proxy IS NOT INITIAL.
 
 * check proxy detroyed adi
 
-        call method lo_proxy->is_destroyed
-          importing
+        CALL METHOD lo_proxy->is_destroyed
+          IMPORTING
             ret_value = l_is_closed.
 
 * if dun detroyed yet: close -> release proxy
 
-        if l_is_closed is initial.
-          call method lo_proxy->close_document
+        IF l_is_closed IS INITIAL.
+          CALL METHOD lo_proxy->close_document
 *        EXPORTING
 *          do_save = do_save
-            importing
+            IMPORTING
               error       = lo_error
               retcode     = lc_retcode.
-        endif.
+        ENDIF.
 
-        call method lo_proxy->release_document
-          importing
+        CALL METHOD lo_proxy->release_document
+          IMPORTING
             error   = lo_error
             retcode = lc_retcode.
 
-      else.
+      ELSE.
         lc_retcode = c_oi_errors=>ret_document_not_open.
-      endif.
+      ENDIF.
 
 * Detroy control container
 
-      if lo_control is not initial.
-        call method lo_control->destroy_control.
-      endif.
+      IF lo_control IS NOT INITIAL.
+        CALL METHOD lo_control->destroy_control.
+      ENDIF.
 
-      clear:
+      CLEAR:
         lo_spreadsheet,
         lo_proxy,
         lo_control.
 
 * free local
 
-      clear: l_is_closed.
+      CLEAR: l_is_closed.
 
     END-OF-DEFINITION.
 
@@ -985,13 +995,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *-------------------------------------------
 
     DEFINE error_doi.
-      if lc_retcode ne c_oi_errors=>ret_ok.
+      IF lc_retcode NE c_oi_errors=>ret_ok.
         close_document.
-        call method lo_error->raise_message
-          exporting
+        CALL METHOD lo_error->raise_message
+          EXPORTING
             type = 'E'.
-        clear: lo_error.
-      endif.
+        CLEAR: lo_error.
+      ENDIF.
     END-OF-DEFINITION.
 
 *--------------------------------------------------------------------*
@@ -1418,7 +1428,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ASSIGN COMPONENT l_save_index OF STRUCTURE <f_excel_line>
       TO <f_excel_column>.
       IF sy-subrc NE 0.
-        MESSAGE e059(0k) WITH 'FATAL ERROR' RAISING fatal_error.
+        MESSAGE e801(zabap2xlsx) WITH 'FATAL ERROR' RAISING fatal_error.
       ENDIF.
 
       LOOP AT lt_fieldcat_kkblo ASSIGNING <f_fieldcat_line>
@@ -2767,8 +2777,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     error_doi.
 
 * if save successfully -> raise successful message
-*  message i499(sy) with 'Document is Exported to ' p_path.
-    MESSAGE i499(sy) WITH 'Data has been exported successfully'.
+    MESSAGE i400(zabap2xlsx).
 
     CLEAR:
       ls_path,
@@ -3414,35 +3423,35 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * We have a lot of parameters.  Use some macros to make the coding more structured
 
     DEFINE clear_initial_colorxfields.
-      if &1-rgb is initial.
-        clear &2-rgb.
-      endif.
-      if &1-indexed is initial.
-        clear &2-indexed.
-      endif.
-      if &1-theme is initial.
-        clear &2-theme.
-      endif.
-      if &1-tint is initial.
-        clear &2-tint.
-      endif.
+      IF &1-rgb IS INITIAL.
+        CLEAR &2-rgb.
+      ENDIF.
+      IF &1-indexed IS INITIAL.
+        CLEAR &2-indexed.
+      ENDIF.
+      IF &1-theme IS INITIAL.
+        CLEAR &2-theme.
+      ENDIF.
+      IF &1-tint IS INITIAL.
+        CLEAR &2-tint.
+      ENDIF.
     END-OF-DEFINITION.
 
     DEFINE move_supplied_borders.
-      if ip_&1 is supplied.  " only act if parameter was supplied
-        if ip_x&1 is supplied.  "
+      IF ip_&1 IS SUPPLIED.  " only act if parameter was supplied
+        IF ip_x&1 IS SUPPLIED.  "
           borderx = ip_x&1.          " use supplied x-parameter
-        else.
-          clear borderx with 'X'.
+        ELSE.
+          CLEAR borderx WITH 'X'.
 * clear in a way that would be expected to work easily
-          if ip_&1-border_style is  initial.
-            clear borderx-border_style.
-          endif.
+          IF ip_&1-border_style IS  INITIAL.
+            CLEAR borderx-border_style.
+          ENDIF.
           clear_initial_colorxfields ip_&1-border_color borderx-border_color.
-        endif.
-        move-corresponding ip_&1   to complete_style-&2.
-        move-corresponding borderx to complete_stylex-&2.
-      endif.
+        ENDIF.
+        MOVE-CORRESPONDING ip_&1   TO complete_style-&2.
+        MOVE-CORRESPONDING borderx TO complete_stylex-&2.
+      ENDIF.
     END-OF-DEFINITION.
 
 * First get current stylsettings
@@ -3597,10 +3606,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                                borders_top        borders-top       .
 
     DEFINE move_supplied_singlestyles.
-      if ip_&1 is supplied.
+      IF ip_&1 IS SUPPLIED.
         complete_style-&2 = ip_&1.
         complete_stylex-&2 = 'X'.
-      endif.
+      ENDIF.
     END-OF-DEFINITION.
 
     move_supplied_singlestyles: number_format_format_code  number_format-format_code,
@@ -4418,10 +4427,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                 ENDIF.
 
                 TRY.
-                    <lv_value> = lv_value. "Will raise exception if data type of <lv_value> is not float (or decfloat16/34) and excel delivers exponential number e.g. -2.9398924194538267E-2
+                    DESCRIBE FIELD <lv_value> TYPE lv_type.
+                    IF lv_type = 'D'.
+                      <lv_value> = zcl_excel_common=>excel_string_to_date( ip_value = lv_value ).
+                    ELSE.
+                      <lv_value> = lv_value. "Will raise exception if data type of <lv_value> is not float (or decfloat16/34) and excel delivers exponential number e.g. -2.9398924194538267E-2
+                    ENDIF.
                   CATCH cx_sy_conversion_error INTO lx_conversion_error.
                     "Another try with conversion to float...
-                    DESCRIBE FIELD <lv_value> TYPE lv_type.
                     IF lv_type = 'P'.
                       <lv_value> = lv_float = lv_value.
                     ELSE.
@@ -4819,6 +4832,52 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "SET_AREA_STYLE
 
 
+  METHOD set_area_hyperlink.
+    DATA: ld_row_start        TYPE zexcel_cell_row,
+          ld_row_end          TYPE zexcel_cell_row,
+          ld_column_start_int TYPE zexcel_cell_column,
+          ld_column_end_int   TYPE zexcel_cell_column,
+          ld_current_column   TYPE zexcel_cell_column_alpha,
+          ld_current_row      TYPE zexcel_cell_row,
+          ld_value            TYPE string.
+    DATA: lv_column    TYPE zexcel_cell_column,
+          lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
+
+    MOVE: ip_row_to TO ld_row_end,
+          ip_row    TO ld_row_start.
+    IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+      ld_row_end = ld_row_start.
+    ENDIF.
+    ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
+    ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
+    IF ld_column_end_int IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+      ld_column_end_int = ld_column_start_int.
+    ENDIF.
+
+    WHILE ld_column_start_int <= ld_column_end_int.
+      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
+      ld_current_row = ld_row_start.
+      WHILE ld_current_row <= ld_row_end.
+
+        me->get_cell( EXPORTING ip_column = ld_current_column ip_row = ld_current_row
+                      IMPORTING ep_value  = ld_value ).
+
+        IF ip_is_internal = abap_true.
+          lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = ip_url ).
+        ELSE.
+          lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = ip_url ).
+        ENDIF.
+
+        me->set_cell( ip_column = ld_current_column ip_row = ld_current_row ip_value = ld_value ip_hyperlink = lo_hyperlink ).
+
+        ADD 1 TO ld_current_row.
+      ENDWHILE.
+      ADD 1 TO ld_column_start_int.
+    ENDWHILE.
+
+  ENDMETHOD.                    "SET_AREA_HYPERLINK
+
+
   METHOD set_cell.
 
     DATA: lv_column        TYPE zexcel_cell_column,
@@ -4962,6 +5021,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ip_hyperlink->set_cell_reference( ip_column = ip_column
                                         ip_row = ip_row ).
       me->hyperlinks->add( ip_hyperlink ).
+    ENDIF.
+
+    IF lv_value CS '_x'.
+      " Issue #761 value "_x0041_" rendered as "A".
+      " "_x...._", where "." is 0-9 a-f or A-F (case insensitive), is an internal value in sharedStrings.xml
+      " that Excel uses to store special characters, it's interpreted like Unicode character U+....
+      " for instance "_x0041_" is U+0041 which is "A".
+      " To not interpret such text, the first underscore is replaced with "_x005f_".
+      " The value "_x0041_" is to be stored internally "_x005f_x0041_" so that it's rendered like "_x0041_".
+      " Note that REGEX is time consuming, it's why "CS" is used above to improve the performance.
+      REPLACE ALL OCCURRENCES OF REGEX '_(x[0-9a-fA-F]{4}_)' IN lv_value WITH '_x005f_$1' RESPECTING CASE.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
@@ -5492,10 +5562,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     CHECK sheet_content IS NOT INITIAL.
 
-    upper_cell-cell_row = zcl_excel_common=>c_excel_sheet_max_row.
+    upper_cell-cell_row = rows->get_min_index( ).
+    IF upper_cell-cell_row = 0.
+      upper_cell-cell_row = zcl_excel_common=>c_excel_sheet_max_row.
+    ENDIF.
     upper_cell-cell_column = zcl_excel_common=>c_excel_sheet_max_col.
 
-    lower_cell-cell_row = zcl_excel_common=>c_excel_sheet_min_row.
+    lower_cell-cell_row = rows->get_max_index( ).
+    IF lower_cell-cell_row = 0.
+      lower_cell-cell_row = zcl_excel_common=>c_excel_sheet_min_row.
+    ENDIF.
     lower_cell-cell_column = zcl_excel_common=>c_excel_sheet_min_col.
 
     LOOP AT sheet_content INTO ls_sheet_content.

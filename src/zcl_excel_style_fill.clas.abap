@@ -1,96 +1,96 @@
-class ZCL_EXCEL_STYLE_FILL definition
-  public
-  final
-  create public .
+CLASS zcl_excel_style_fill DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
-  type-pools ABAP .
+  PUBLIC SECTION.
+    TYPE-POOLS abap .
 
 *"* public components of class ZCL_EXCEL_STYLE_FILL
 *"* do not include other source files here!!!
-  constants C_FILL_NONE type ZEXCEL_FILL_TYPE value 'none'. "#EC NOTEXT
-  constants C_FILL_SOLID type ZEXCEL_FILL_TYPE value 'solid'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_LINEAR type ZEXCEL_FILL_TYPE value 'linear'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_PATH type ZEXCEL_FILL_TYPE value 'path'. "#EC NOTEXT
-  constants C_FILL_PATTERN_DARKDOWN type ZEXCEL_FILL_TYPE value 'darkDown'. "#EC NOTEXT
-  constants C_FILL_PATTERN_DARKGRAY type ZEXCEL_FILL_TYPE value 'darkGray'. "#EC NOTEXT
-  constants C_FILL_PATTERN_DARKGRID type ZEXCEL_FILL_TYPE value 'darkGrid'. "#EC NOTEXT
-  constants C_FILL_PATTERN_DARKHORIZONTAL type ZEXCEL_FILL_TYPE value 'darkHorizontal'. "#EC NOTEXT
-  constants C_FILL_PATTERN_DARKTRELLIS type ZEXCEL_FILL_TYPE value 'darkTrellis'. "#EC NOTEXT
-  constants C_FILL_PATTERN_DARKUP type ZEXCEL_FILL_TYPE value 'darkUp'. "#EC NOTEXT
-  constants C_FILL_PATTERN_DARKVERTICAL type ZEXCEL_FILL_TYPE value 'darkVertical'. "#EC NOTEXT
-  constants C_FILL_PATTERN_GRAY0625 type ZEXCEL_FILL_TYPE value 'gray0625'. "#EC NOTEXT
-  constants C_FILL_PATTERN_GRAY125 type ZEXCEL_FILL_TYPE value 'gray125'. "#EC NOTEXT
-  constants C_FILL_PATTERN_LIGHTDOWN type ZEXCEL_FILL_TYPE value 'lightDown'. "#EC NOTEXT
-  constants C_FILL_PATTERN_LIGHTGRAY type ZEXCEL_FILL_TYPE value 'lightGray'. "#EC NOTEXT
-  constants C_FILL_PATTERN_LIGHTGRID type ZEXCEL_FILL_TYPE value 'lightGrid'. "#EC NOTEXT
-  constants C_FILL_PATTERN_LIGHTHORIZONTAL type ZEXCEL_FILL_TYPE value 'lightHorizontal'. "#EC NOTEXT
-  constants C_FILL_PATTERN_LIGHTTRELLIS type ZEXCEL_FILL_TYPE value 'lightTrellis'. "#EC NOTEXT
-  constants C_FILL_PATTERN_LIGHTUP type ZEXCEL_FILL_TYPE value 'lightUp'. "#EC NOTEXT
-  constants C_FILL_PATTERN_LIGHTVERTICAL type ZEXCEL_FILL_TYPE value 'lightVertical'. "#EC NOTEXT
-  constants C_FILL_PATTERN_MEDIUMGRAY type ZEXCEL_FILL_TYPE value 'mediumGray'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_HORIZONTAL90 type ZEXCEL_FILL_TYPE value 'horizontal90'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_HORIZONTAL270 type ZEXCEL_FILL_TYPE value 'horizontal270'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_HORIZONTALB type ZEXCEL_FILL_TYPE value 'horizontalb'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_VERTICAL type ZEXCEL_FILL_TYPE value 'vertical'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_FROMCENTER type ZEXCEL_FILL_TYPE value 'fromCenter'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_DIAGONAL45 type ZEXCEL_FILL_TYPE value 'diagonal45'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_DIAGONAL45B type ZEXCEL_FILL_TYPE value 'diagonal45b'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_DIAGONAL135 type ZEXCEL_FILL_TYPE value 'diagonal135'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_DIAGONAL135B type ZEXCEL_FILL_TYPE value 'diagonal135b'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_CORNERLT type ZEXCEL_FILL_TYPE value 'cornerLT'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_CORNERLB type ZEXCEL_FILL_TYPE value 'cornerLB'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_CORNERRT type ZEXCEL_FILL_TYPE value 'cornerRT'. "#EC NOTEXT
-  constants C_FILL_GRADIENT_CORNERRB type ZEXCEL_FILL_TYPE value 'cornerRB'. "#EC NOTEXT
-  data GRADTYPE type ZEXCEL_S_GRADIENT_TYPE .
-  data FILLTYPE type ZEXCEL_FILL_TYPE .
-  data ROTATION type ZEXCEL_ROTATION .
-  data FGCOLOR type ZEXCEL_S_STYLE_COLOR .
-  data BGCOLOR type ZEXCEL_S_STYLE_COLOR .
+    CONSTANTS c_fill_none TYPE zexcel_fill_type VALUE 'none'. "#EC NOTEXT
+    CONSTANTS c_fill_solid TYPE zexcel_fill_type VALUE 'solid'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_linear TYPE zexcel_fill_type VALUE 'linear'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_path TYPE zexcel_fill_type VALUE 'path'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_darkdown TYPE zexcel_fill_type VALUE 'darkDown'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_darkgray TYPE zexcel_fill_type VALUE 'darkGray'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_darkgrid TYPE zexcel_fill_type VALUE 'darkGrid'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_darkhorizontal TYPE zexcel_fill_type VALUE 'darkHorizontal'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_darktrellis TYPE zexcel_fill_type VALUE 'darkTrellis'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_darkup TYPE zexcel_fill_type VALUE 'darkUp'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_darkvertical TYPE zexcel_fill_type VALUE 'darkVertical'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_gray0625 TYPE zexcel_fill_type VALUE 'gray0625'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_gray125 TYPE zexcel_fill_type VALUE 'gray125'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_lightdown TYPE zexcel_fill_type VALUE 'lightDown'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_lightgray TYPE zexcel_fill_type VALUE 'lightGray'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_lightgrid TYPE zexcel_fill_type VALUE 'lightGrid'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_lighthorizontal TYPE zexcel_fill_type VALUE 'lightHorizontal'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_lighttrellis TYPE zexcel_fill_type VALUE 'lightTrellis'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_lightup TYPE zexcel_fill_type VALUE 'lightUp'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_lightvertical TYPE zexcel_fill_type VALUE 'lightVertical'. "#EC NOTEXT
+    CONSTANTS c_fill_pattern_mediumgray TYPE zexcel_fill_type VALUE 'mediumGray'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_horizontal90 TYPE zexcel_fill_type VALUE 'horizontal90'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_horizontal270 TYPE zexcel_fill_type VALUE 'horizontal270'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_horizontalb TYPE zexcel_fill_type VALUE 'horizontalb'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_vertical TYPE zexcel_fill_type VALUE 'vertical'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_fromcenter TYPE zexcel_fill_type VALUE 'fromCenter'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_diagonal45 TYPE zexcel_fill_type VALUE 'diagonal45'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_diagonal45b TYPE zexcel_fill_type VALUE 'diagonal45b'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_diagonal135 TYPE zexcel_fill_type VALUE 'diagonal135'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_diagonal135b TYPE zexcel_fill_type VALUE 'diagonal135b'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_cornerlt TYPE zexcel_fill_type VALUE 'cornerLT'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_cornerlb TYPE zexcel_fill_type VALUE 'cornerLB'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_cornerrt TYPE zexcel_fill_type VALUE 'cornerRT'. "#EC NOTEXT
+    CONSTANTS c_fill_gradient_cornerrb TYPE zexcel_fill_type VALUE 'cornerRB'. "#EC NOTEXT
+    DATA gradtype TYPE zexcel_s_gradient_type .
+    DATA filltype TYPE zexcel_fill_type .
+    DATA rotation TYPE zexcel_rotation .
+    DATA fgcolor TYPE zexcel_s_style_color .
+    DATA bgcolor TYPE zexcel_s_style_color .
 
-  methods CONSTRUCTOR .
-  methods GET_STRUCTURE
-    returning
-      value(ES_FILL) type ZEXCEL_S_STYLE_FILL .
+    METHODS constructor .
+    METHODS get_structure
+      RETURNING
+        VALUE(es_fill) TYPE zexcel_s_style_fill .
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_STYLE_FILL
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  methods BUILD_GRADIENT .
-  methods CHECK_FILLTYPE_IS_GRADIENT
-    returning
-      value(RV_IS_GRADIENT) type ABAP_BOOL .
+    METHODS build_gradient .
+    METHODS check_filltype_is_gradient
+      RETURNING
+        VALUE(rv_is_gradient) TYPE abap_bool .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_STYLE_FILL IMPLEMENTATION.
+CLASS zcl_excel_style_fill IMPLEMENTATION.
 
 
-method build_gradient.
-    check check_filltype_is_gradient( ) eq abap_true.
-    clear gradtype.
-    case filltype.
-      when c_fill_gradient_horizontal90.
+  METHOD build_gradient.
+    CHECK check_filltype_is_gradient( ) EQ abap_true.
+    CLEAR gradtype.
+    CASE filltype.
+      WHEN c_fill_gradient_horizontal90.
         gradtype-degree = '90'.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
-      when c_fill_gradient_horizontal270.
+      WHEN c_fill_gradient_horizontal270.
         gradtype-degree = '270'.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
-      when c_fill_gradient_horizontalb.
+      WHEN c_fill_gradient_horizontalb.
         gradtype-degree = '90'.
         gradtype-position1 = '0'.
         gradtype-position2 = '0.5'.
         gradtype-position3 = '1'.
-      when c_fill_gradient_vertical.
+      WHEN c_fill_gradient_vertical.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
-      when c_fill_gradient_fromcenter.
+      WHEN c_fill_gradient_fromcenter.
         gradtype-type = c_fill_gradient_path.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
@@ -98,41 +98,41 @@ method build_gradient.
         gradtype-top = '0.5'.
         gradtype-left = '0.5'.
         gradtype-right = '0.5'.
-      when c_fill_gradient_diagonal45.
+      WHEN c_fill_gradient_diagonal45.
         gradtype-degree = '45'.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
-      when c_fill_gradient_diagonal45b.
+      WHEN c_fill_gradient_diagonal45b.
         gradtype-degree = '45'.
         gradtype-position1 = '0'.
         gradtype-position2 = '0.5'.
         gradtype-position3 = '1'.
-      when c_fill_gradient_diagonal135.
+      WHEN c_fill_gradient_diagonal135.
         gradtype-degree = '135'.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
-      when c_fill_gradient_diagonal135b.
+      WHEN c_fill_gradient_diagonal135b.
         gradtype-degree = '135'.
         gradtype-position1 = '0'.
         gradtype-position2 = '0.5'.
         gradtype-position3 = '1'.
-      when c_fill_gradient_cornerlt.
+      WHEN c_fill_gradient_cornerlt.
         gradtype-type = c_fill_gradient_path.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
-      when c_fill_gradient_cornerlb.
+      WHEN c_fill_gradient_cornerlb.
         gradtype-type = c_fill_gradient_path.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
         gradtype-bottom = '1'.
         gradtype-top = '1'.
-      when c_fill_gradient_cornerrt.
+      WHEN c_fill_gradient_cornerrt.
         gradtype-type = c_fill_gradient_path.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
         gradtype-left = '1'.
         gradtype-right = '1'.
-      when c_fill_gradient_cornerrb.
+      WHEN c_fill_gradient_cornerrb.
         gradtype-type = c_fill_gradient_path.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
@@ -140,32 +140,32 @@ method build_gradient.
         gradtype-top = '0.5'.
         gradtype-left = '0.5'.
         gradtype-right = '0.5'.
-    endcase.
+    ENDCASE.
 
-  endmethod.                    "build_gradient
+  ENDMETHOD.                    "build_gradient
 
 
-method check_filltype_is_gradient.
-    case filltype.
-      when c_fill_gradient_horizontal90 or
-           c_fill_gradient_horizontal270 or
-           c_fill_gradient_horizontalb or
-           c_fill_gradient_vertical or
-           c_fill_gradient_fromcenter or
-           c_fill_gradient_diagonal45 or
-           c_fill_gradient_diagonal45b or
-           c_fill_gradient_diagonal135 or
-           c_fill_gradient_diagonal135b or
-           c_fill_gradient_cornerlt or
-           c_fill_gradient_cornerlb or
-           c_fill_gradient_cornerrt or
+  METHOD check_filltype_is_gradient.
+    CASE filltype.
+      WHEN c_fill_gradient_horizontal90 OR
+           c_fill_gradient_horizontal270 OR
+           c_fill_gradient_horizontalb OR
+           c_fill_gradient_vertical OR
+           c_fill_gradient_fromcenter OR
+           c_fill_gradient_diagonal45 OR
+           c_fill_gradient_diagonal45b OR
+           c_fill_gradient_diagonal135 OR
+           c_fill_gradient_diagonal135b OR
+           c_fill_gradient_cornerlt OR
+           c_fill_gradient_cornerlb OR
+           c_fill_gradient_cornerrt OR
            c_fill_gradient_cornerrb.
         rv_is_gradient = abap_true.
-    endcase.
-  endmethod.                    "check_filltype_is_gradient
+    ENDCASE.
+  ENDMETHOD.                    "check_filltype_is_gradient
 
 
-method constructor.
+  METHOD constructor.
     filltype = zcl_excel_style_fill=>c_fill_none.
     fgcolor-theme     = zcl_excel_style_color=>c_theme_not_set.
     fgcolor-indexed   = zcl_excel_style_color=>c_indexed_not_set.
@@ -173,15 +173,15 @@ method constructor.
     bgcolor-indexed   = zcl_excel_style_color=>c_indexed_sys_foreground.
     rotation = 0.
 
-  endmethod.                    "CONSTRUCTOR
+  ENDMETHOD.                    "CONSTRUCTOR
 
 
-method get_structure.
+  METHOD get_structure.
     es_fill-rotation  = me->rotation.
     es_fill-filltype  = me->filltype.
     es_fill-fgcolor   = me->fgcolor.
     es_fill-bgcolor   = me->bgcolor.
     me->build_gradient( ).
     es_fill-gradtype = me->gradtype.
-  endmethod.                    "GET_STRUCTURE
+  ENDMETHOD.                    "GET_STRUCTURE
 ENDCLASS.

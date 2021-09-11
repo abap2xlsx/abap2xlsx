@@ -8,11 +8,11 @@
 
 REPORT zdemo_excel13.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
+DATA: lo_excel                  TYPE REF TO zcl_excel,
+      lo_worksheet              TYPE REF TO zcl_excel_worksheet,
       lv_style_bold_border_guid TYPE zexcel_cell_style,
-      lo_style_bold_border TYPE REF TO zcl_excel_style,
-      lo_border_dark TYPE REF TO zcl_excel_style_border.
+      lo_style_bold_border      TYPE REF TO zcl_excel_style,
+      lo_border_dark            TYPE REF TO zcl_excel_style_border.
 
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '13_MergedCells.xlsx'.

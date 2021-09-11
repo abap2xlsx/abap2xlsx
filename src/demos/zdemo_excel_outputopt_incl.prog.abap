@@ -104,7 +104,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->download_frontend( ).
         ELSE.
-          MESSAGE e001(00) WITH 'Frontenddownload impossible in background processing'.
+          MESSAGE e802(zabap2xlsx).
         ENDIF.
 
       WHEN rb_back.
@@ -114,7 +114,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->display_online( ).
         ELSE.
-          MESSAGE e001(00) WITH 'Online display absurd in background processing'.
+          MESSAGE e803(zabap2xlsx).
         ENDIF.
 
       WHEN rb_send.
@@ -187,10 +187,10 @@ CLASS lcl_output IMPLEMENTATION.
 * If started in language w/o textelements translated set defaults
 * Furthermore I don't have to change the selectiontexts of all demoreports.
     DEFINE default_parametertext.
-      if %_&1_%_app_%-text = '&1' or
-         %_&1_%_app_%-text is initial.
+      IF %_&1_%_app_%-text = '&1' OR
+         %_&1_%_app_%-text IS INITIAL.
         %_&1_%_app_%-text = &2.
-      endif.
+      ENDIF.
     END-OF-DEFINITION.
 
     default_parametertext:  rb_down  'Save to frontend',
@@ -302,7 +302,7 @@ CLASS lcl_output IMPLEMENTATION.
           t_mailtext           TYPE soli_tab,
           wa_mailtext          LIKE LINE OF t_mailtext,
           send_to              TYPE adr6-smtp_addr,
-          sent                 TYPE os_boolean.
+          sent                 TYPE abap_bool.
 
 
     mail_title     = 'Mail title'.
@@ -351,11 +351,11 @@ CLASS lcl_output IMPLEMENTATION.
 
         COMMIT WORK.
 
-        IF sent IS INITIAL.
-          MESSAGE i500(sbcoms) WITH p_email.
-        ELSE.
-          MESSAGE s022(so).
+        IF sent = abap_true.
+          MESSAGE s805(zabap2xlsx).
           MESSAGE 'Document ready to be sent - Check SOST or SCOT' TYPE 'I'.
+        ELSE.
+          MESSAGE i804(zabap2xlsx) WITH p_email.
         ENDIF.
 
       CATCH cx_bcs INTO bcs_exception.

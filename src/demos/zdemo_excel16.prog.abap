@@ -8,9 +8,9 @@
 
 REPORT zdemo_excel16.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_drawing              TYPE REF TO zcl_excel_drawing.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_drawing   TYPE REF TO zcl_excel_drawing.
 
 
 DATA: ls_io TYPE skwf_io.
@@ -18,9 +18,9 @@ DATA: ls_io TYPE skwf_io.
 CONSTANTS: gc_save_file_name TYPE string VALUE '16_Drawings.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
 
-PARAMETERS: p_objid   TYPE sdok_docid DEFAULT '456694429165174BE10000000A1550C0', " Question mark in standard Web Dynpro WDT_QUIZ
-            p_class   TYPE sdok_class DEFAULT 'M_IMAGE_P',
-            pobjtype  TYPE skwf_ioty  DEFAULT 'P'.
+PARAMETERS: p_objid  TYPE sdok_docid DEFAULT '456694429165174BE10000000A1550C0', " Question mark in standard Web Dynpro WDT_QUIZ
+            p_class  TYPE sdok_class DEFAULT 'M_IMAGE_P',
+            pobjtype TYPE skwf_ioty  DEFAULT 'P'.
 
 
 START-OF-SELECTION.
@@ -29,10 +29,10 @@ START-OF-SELECTION.
   CREATE OBJECT lo_excel.
 
   "Load samle image
-  DATA: lt_bin TYPE solix_tab,
-        lv_len TYPE i,
+  DATA: lt_bin     TYPE solix_tab,
+        lv_len     TYPE i,
         lv_content TYPE xstring,
-        ls_key TYPE wwwdatatab.
+        ls_key     TYPE wwwdatatab.
 
   CALL METHOD cl_gui_frontend_services=>gui_upload
     EXPORTING
