@@ -392,9 +392,57 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
         zcl_excel_aunit=>assert_equals(
           act   = ep_value
-          exp   = '18991231'
+          exp   = '00000000'
           msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>tolerable
+          level = if_aunit_constants=>critical
+        ).
+      CATCH zcx_excel INTO lx_excel.
+        zcl_excel_aunit=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical    " Error Severity
+        ).
+    ENDTRY.
+* Check empty content
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( '' ).
+
+        zcl_excel_aunit=>assert_equals(
+          act   = ep_value
+          exp   = '00000000'
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical
+        ).
+      CATCH zcx_excel INTO lx_excel.
+        zcl_excel_aunit=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical    " Error Severity
+        ).
+    ENDTRY.
+* Check space character
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ` ` ).
+
+        zcl_excel_aunit=>assert_equals(
+          act   = ep_value
+          exp   = '00000000'
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical
+        ).
+      CATCH zcx_excel INTO lx_excel.
+        zcl_excel_aunit=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical    " Error Severity
+        ).
+    ENDTRY.
+* Check first Excel date 1/1/1900
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( '1' ).
+
+        zcl_excel_aunit=>assert_equals(
+          act   = ep_value
+          exp   = '19000101'
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
         zcl_excel_aunit=>fail(
@@ -451,13 +499,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         ).
     ENDTRY.
 
-* Test 3. Index 0 is out of bounds
+* Test 3. Last possible date
     TRY.
-        ep_value = zcl_excel_common=>excel_string_to_date( '2958446' ).
+        ep_value = zcl_excel_common=>excel_string_to_date( '2958465' ).
 
         zcl_excel_aunit=>assert_equals(
           act   = ep_value
-          exp   = '99991212'
+          exp   = '99991231'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
@@ -470,28 +518,19 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 4. Exception should be thrown index out of bounds
     TRY.
-        ep_value = zcl_excel_common=>excel_string_to_date( '2958447' ).
+        ep_value = zcl_excel_common=>excel_string_to_date( '2958466' ).
 
-        zcl_excel_aunit=>assert_differs(
-          act   = ep_value
-          exp   = '99991212'
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>fatal
-        ).
-
-        zcl_excel_aunit=>assert_differs(
-          act   = ep_value
-          exp   = '00000000'
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>fatal
+        zcl_excel_aunit=>fail(
+          msg   = |Unexpected result '{ ep_value }'|
+          level = if_aunit_constants=>critical
         ).
 
       CATCH zcx_excel INTO lx_excel.
         zcl_excel_aunit=>assert_equals(
           act   = lx_excel->error
-          exp   = 'Index out of bounds'
-          msg   = 'Wrong exception is thrown'
-          level = if_aunit_constants=>tolerable
+          exp   = 'Unable to interpret date'
+          msg   = 'Time should be a valid date'
+          level = if_aunit_constants=>fatal
         ).
     ENDTRY.
   ENDMETHOD.       "excel_String_To_Date
