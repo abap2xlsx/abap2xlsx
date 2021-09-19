@@ -41,8 +41,7 @@ CLASS zcl_date_calculation IMPLEMENTATION.
 
     e_month = 0.
 
-    CHECK NOT ( i_date_from IS INITIAL )
-      AND NOT ( i_date_to IS INITIAL ).
+    CHECK i_date_from IS NOT INITIAL AND i_date_to IS NOT INITIAL.
 
     date_to = i_date_to.
     IF i_incl_to = abap_true.

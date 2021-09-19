@@ -19,6 +19,11 @@
     "globalMacros": []
   },
   "rules": {
+    "constant_classes": true,
+    "cyclic_oo": false,
+    "many_parentheses": true,
+    "pragma_placement": true,
+    "unused_ddic": false,
     "dangerous_statement": true,
     "db_operation_in_loop": false,
     "identical_descriptions": false,
@@ -37,7 +42,6 @@
     "call_transaction_authority_check": true,
     "function_module_recommendations": false,
     "identical_contents": false,
-    "many_parenthesis": false,
     "method_overwrites_builtin": true,
     "omit_parameter_name": false,
     "omit_receiving": true,
