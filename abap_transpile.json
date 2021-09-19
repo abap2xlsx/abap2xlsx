@@ -32,8 +32,8 @@
     "zexcel_style_color_argb",
     "zexcel_style_font_family",
     "zif_excel_converter",
-    "zif_excel_writer",
-    "zif_excel_reader"
+    "zif_excel_reader",
+    "zif_excel_writer"
   ],
   "output_folder": "output",
   "lib": "https://github.com/open-abap/open-abap",
