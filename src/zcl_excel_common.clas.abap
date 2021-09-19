@@ -521,6 +521,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
           lv_range           TYPE string,
           lv_columnrow_start TYPE string,
           lv_columnrow_end   TYPE string,
+          lv_position        TYPE i,
           lv_errormessage    TYPE string.                          " Can't pass '...'(abc) to exception-class
 
 
@@ -542,12 +543,12 @@ CLASS zcl_excel_common IMPLEMENTATION.
       EXIT.
 
     ELSEIF i_range(1) = `'`.                              " b) sheetname existing - starts with '
-      FIND REGEX '\![^\!]*$' IN i_range MATCH OFFSET sy-fdpos.  " Find last !
+      FIND REGEX '\![^\!]*$' IN i_range MATCH OFFSET lv_position.  " Find last !
       IF sy-subrc = 0.
-        lv_sheet = i_range(sy-fdpos).
-        ADD 1 TO sy-fdpos.
+        lv_sheet = i_range(lv_position).
+        ADD 1 TO lv_position.
         lv_range = i_range.
-        SHIFT lv_range LEFT BY sy-fdpos PLACES.
+        SHIFT lv_range LEFT BY lv_position PLACES.
       ELSE.
         lv_errormessage = 'Invalid range'(001).
         zcx_excel=>raise_text( lv_errormessage ).
@@ -765,8 +766,13 @@ CLASS zcl_excel_common IMPLEMENTATION.
   METHOD excel_string_to_date.
     DATA: lv_date_int TYPE i.
 
+    CHECK ip_value IS NOT INITIAL AND ip_value CN ' 0'.
+
     TRY.
         lv_date_int = ip_value.
+        IF lv_date_int NOT BETWEEN 1 AND 2958465.
+          zcx_excel=>raise_text( 'Unable to interpret date' ).
+        ENDIF.
         ep_value = lv_date_int + c_excel_baseline_date - 2.
         " Needed hack caused by the problem that:
         " Excel 2000 incorrectly assumes that the year 1900 is a leap year

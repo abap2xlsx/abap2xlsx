@@ -87,6 +87,7 @@ FORM f4_p_upfile  CHANGING p_upfile TYPE string.
         lt_fields      TYPE dynpread_tabtype,
         ls_field       LIKE LINE OF lt_fields,
         lt_files       TYPE filetable,
+        lv_rc          TYPE i,
         lv_file_filter TYPE string.
 
   lv_repid = sy-repid.
@@ -115,7 +116,7 @@ FORM f4_p_upfile  CHANGING p_upfile TYPE string.
                                                 file_filter             = lv_file_filter
                                               CHANGING
                                                 file_table              = lt_files
-                                                rc                      = sy-tabix
+                                                rc                      = lv_rc
                                               EXCEPTIONS
                                                 OTHERS                  = 1 ).
   READ TABLE lt_files INDEX 1 INTO p_upfile.
