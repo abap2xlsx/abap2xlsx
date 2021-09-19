@@ -1,6 +1,6 @@
-*"* local class implementation for public class
-*"* use this source file for the implementation part of
-*"* local helper classes
+*"* use this source file for the definition and implementation of
+*"* local helper classes, interface definitions and type
+*"* declarations
 
 *&---------------------------------------------------------------------*
 *&       Class (Implementation)  C_OI_PROXY_ERROR
