@@ -1,6 +1,6 @@
-*"* use this source file for any type declarations (class
-*"* definitions, interfaces or data types) you need for method
-*"* implementation or private method's signature
+*"* use this source file for any type of declarations (class
+*"* definitions, interfaces or type declarations) you need for
+*"* components in the private section
 TYPE-POOLS: sydes.
 TYPE-POOLS: slis.
 *--------------------------------------------------------------------*
