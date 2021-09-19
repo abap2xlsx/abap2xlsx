@@ -25,7 +25,11 @@
     "zexcel_diagonal",
     "zexcel_style_color_argb",
     "zexcel_conditional_type",
-    "zexcel_style_font_family"
+    "zexcel_style_font_family",
+    "zexcel_cell_protection",
+    "zcl_excel_style_protection",
+    "zcl_excel_styles_cond",
+    "zcl_excel_styles"
   ],
   "output_folder": "output",
   "lib": "https://github.com/open-abap/open-abap",
