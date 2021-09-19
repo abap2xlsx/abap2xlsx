@@ -3593,8 +3593,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                        parent = lo_document ).
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
                                                            parent = lo_document ).
-*    if <fs_sheet_string>-string_type EQ 's_leading_blanks'.
-      IF <fs_sheet_string>-string_value IS NOT INITIAL AND <fs_sheet_string>-string_value(1) EQ ` `.
+      IF contains( val = <fs_sheet_string>-string_value start = ` ` )
+            OR contains( val = <fs_sheet_string>-string_value end = ` ` ).
         lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
       ENDIF.
       lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
