@@ -60,7 +60,6 @@ INITIALIZATION.
     cl_gui_cfw=>flush( ).
   ENDIF.
   lcl_output=>parametertexts( ).  " If started in language w/o textelements translated set defaults
-  sy-title = gc_save_file_name.
   txt_bl1 = 'Output options'(bl1).
   p_backfn = gc_save_file_name.  " Use as default if nothing else is supplied by submit
 

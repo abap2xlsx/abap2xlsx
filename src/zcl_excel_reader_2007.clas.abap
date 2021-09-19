@@ -1737,6 +1737,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
       ls_range                   TYPE t_range,
       lv_range_value             TYPE zexcel_range_value,
+      lv_position_temp           TYPE i,
 *--------------------------------------------------------------------*
 * #229: Set active worksheet - begin data declarations
 *--------------------------------------------------------------------*
@@ -2039,11 +2040,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                   lv_regex = `^[^!]*![^,]*,`.
                 ENDIF.
 * Split into two ranges if necessary
-                FIND REGEX lv_regex IN lv_range_value MATCH LENGTH sy-fdpos.
-                IF sy-subrc = 0 AND sy-fdpos > 0.
-                  lv_range_value_2 = lv_range_value+sy-fdpos.
-                  SUBTRACT 1 FROM sy-fdpos.
-                  lv_range_value_1 = lv_range_value(sy-fdpos).
+                FIND REGEX lv_regex IN lv_range_value MATCH LENGTH lv_position_temp.
+                IF sy-subrc = 0 AND lv_position_temp > 0.
+                  lv_range_value_2 = lv_range_value+lv_position_temp.
+                  SUBTRACT 1 FROM lv_position_temp.
+                  lv_range_value_1 = lv_range_value(lv_position_temp).
                 ELSE.
                   lv_range_value_1 = lv_range_value.
                 ENDIF.
@@ -2229,6 +2230,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_cell_elem           TYPE REF TO if_ixml_element,
           ls_cell                     TYPE lty_cell,
           lv_index                    TYPE i,
+          lv_index_temp               TYPE i,
           lo_ixml_value_elem          TYPE REF TO if_ixml_element,
           lo_ixml_formula_elem        TYPE REF TO if_ixml_element,
           lv_cell_value               TYPE zexcel_cell_value,
@@ -2613,8 +2615,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           ENDIF.
 
           IF ls_column-style > ''.
-            sy-index = ls_column-style + 1.
-            READ TABLE styles INTO lo_excel_style INDEX sy-index.
+            lv_index_temp = ls_column-style + 1.
+            READ TABLE styles INTO lo_excel_style INDEX lv_index_temp.
             DATA: dummy_zexcel_cell_style TYPE zexcel_cell_style.
             dummy_zexcel_cell_style = lo_excel_style->get_guid( ).
             lo_column->set_column_style_by_guid( dummy_zexcel_cell_style ).
@@ -2630,8 +2632,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           AND ls_column-min > 0.
           io_worksheet->zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=>convert_column2alpha( ls_column-min ).
         ELSEIF ls_column-style > ''.
-          sy-index = ls_column-style + 1.
-          READ TABLE styles INTO lo_excel_style INDEX sy-index.
+          lv_index_temp = ls_column-style + 1.
+          READ TABLE styles INTO lo_excel_style INDEX lv_index_temp.
           dummy_zexcel_cell_style = lo_excel_style->get_guid( ).
 * Set style for remaining columns
           io_worksheet->zif_excel_sheet_properties~set_style( dummy_zexcel_cell_style ).

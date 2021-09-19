@@ -9,6 +9,7 @@
 REPORT zdemo_excel.
 
 DATA: lv_workdir TYPE string,
+      lv_filesep TYPE c LENGTH 1,
       lv_upfile  TYPE string.
 
 
@@ -31,8 +32,8 @@ START-OF-SELECTION.
     p_path = lv_workdir.
   ENDIF.
 
-  cl_gui_frontend_services=>get_file_separator( CHANGING file_separator = sy-lisel ).
-  CONCATENATE p_path sy-lisel '01_HelloWorld.xlsx' INTO lv_upfile.
+  cl_gui_frontend_services=>get_file_separator( CHANGING file_separator = lv_filesep ).
+  CONCATENATE p_path lv_filesep '01_HelloWorld.xlsx' INTO lv_upfile.
 
   SUBMIT zdemo_excel1 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Hello world
   SUBMIT zdemo_excel2 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Styles

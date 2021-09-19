@@ -893,7 +893,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           FREE lo_addit_superclass.
           lo_addit_superclass = lo_addit->get_super_class_type( ).
           IF lo_addit_superclass IS INITIAL.
-            sy-subrc = '4'.
+            CLEAR ls_types-clsname.
             EXIT.
           ENDIF.
           lo_addit = lo_addit_superclass.
@@ -904,7 +904,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           ENDIF.
         ENDDO.
       ENDIF.
-      IF sy-subrc = 0.
+      IF ls_types-clsname IS NOT INITIAL.
         CREATE OBJECT lo_if TYPE (ls_types-clsname).
         lo_if->create_fieldcatalog(
           EXPORTING
