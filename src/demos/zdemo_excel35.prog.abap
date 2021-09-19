@@ -50,8 +50,6 @@ INITIALIZATION.
   cl_gui_cfw=>flush( ).
   p_path = lv_workdir.
 
-  sy-title = 'ZDEMO_EXCEL2;Issue 139: Change cellstyle retroactivly'.
-
 START-OF-SELECTION.
 
   IF p_path IS INITIAL.

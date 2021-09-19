@@ -104,14 +104,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2alpha( 1 ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_column
           exp   = 'A'
           msg   = 'Wrong column conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -121,14 +121,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2alpha( 16384 ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_column
           exp   = 'XFD'
           msg   = 'Wrong column conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -138,12 +138,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2alpha( 0 ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_column
           exp   = 'A'
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = lx_excel->error
           exp   = 'Index out of bounds'
           msg   = 'Colum index 0 is out of bounds, min column index is 1'
@@ -155,14 +155,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2alpha( 16385 ).
 
-        zcl_excel_aunit=>assert_differs(
+        cl_abap_unit_assert=>assert_differs(
           act   = ep_column
           exp   = 'XFE'
           msg   = 'Colum index 16385 is out of bounds, max column index is 16384'
           level = if_aunit_constants=>fatal
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = lx_excel->error
           exp   = 'Index out of bounds'
           msg   = 'Wrong exception is thrown'
@@ -180,14 +180,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'A' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_column
           exp   = 1
           msg   = 'Wrong column conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -197,14 +197,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'XFD' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_column
           exp   = 16384
           msg   = 'Wrong column conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -214,7 +214,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( '' ).
 
-        zcl_excel_aunit=>assert_differs( act   = ep_column
+        cl_abap_unit_assert=>assert_differs( act   = ep_column
                                           exp   = '0'
                                           msg   = 'Wrong column conversion'
                                           level = if_aunit_constants=>critical ).
@@ -225,7 +225,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         ls_symsg_exp-msgno = '800'.
         ls_symsg_act-msgid = lx_excel->syst_at_raise-msgid.
         ls_symsg_act-msgno = lx_excel->syst_at_raise-msgno.
-        zcl_excel_aunit=>assert_equals( act   = ls_symsg_act
+        cl_abap_unit_assert=>assert_equals( act   = ls_symsg_act
                                          exp   = ls_symsg_exp
                                          msg   = 'Colum name should be a valid string'
                                          level = if_aunit_constants=>fatal ).
@@ -235,12 +235,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'XFE' ).
 
-        zcl_excel_aunit=>assert_differs( act   = ep_column
+        cl_abap_unit_assert=>assert_differs( act   = ep_column
                                           exp   = 16385
                                           msg   = 'Wrong column conversion'
                                           level = if_aunit_constants=>critical ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>assert_equals( act   = lx_excel->error
+        cl_abap_unit_assert=>assert_equals( act   = lx_excel->error
                                          exp   = 'Index out of bounds'
                                          msg   = 'Colum XFE is out of range'
                                          level = if_aunit_constants=>fatal ).
@@ -256,14 +256,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>date_to_excel_string( '19000101' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = 1
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -272,14 +272,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>date_to_excel_string( '19000228' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = 59
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -287,14 +287,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>date_to_excel_string( '19000301' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = 61
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -305,14 +305,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>date_to_excel_string( '99991212' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = 2958446
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -323,14 +323,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         DATA: lv_date TYPE d.
         ep_value = zcl_excel_common=>date_to_excel_string( lv_date ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = ''
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -341,14 +341,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         DATA exp_value TYPE zexcel_cell_value VALUE 0.
         ep_value = zcl_excel_common=>date_to_excel_string( '18991231' ).
 
-        zcl_excel_aunit=>assert_differs(
+        cl_abap_unit_assert=>assert_differs(
               act   = ep_value
               exp   = exp_value
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = lx_excel->error
           exp   = 'Index out of bounds'
           msg   = 'Dates prior of 1900 are not available in excel'
@@ -366,14 +366,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         lv_encrypted_pwd = zcl_excel_common=>encrypt_password( 'test' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = lv_encrypted_pwd
               exp   = 'CBEB'
               msg   = 'Wrong password encryption'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -390,14 +390,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '0' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '00000000'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -406,14 +406,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '00000000'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -422,14 +422,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( ` ` ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '00000000'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -438,14 +438,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '1' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '19000101'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -454,14 +454,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '59' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = '19000228'
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -469,14 +469,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '61' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = '19000301'
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -486,14 +486,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '1' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '19000101'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -503,14 +503,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '2958465' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '99991231'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -520,13 +520,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_date( '2958466' ).
 
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
           msg   = |Unexpected result '{ ep_value }'|
           level = if_aunit_constants=>critical
         ).
 
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = lx_excel->error
           exp   = 'Unable to interpret date'
           msg   = 'Time should be a valid date'
@@ -544,14 +544,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_time( '0' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '000000'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>tolerable
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -561,14 +561,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_time( '1' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '000000'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -578,14 +578,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_time( '0.99999' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '235959'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -595,14 +595,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_time( '4.1' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '022400'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -612,14 +612,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_time( 'NaN' ).
 
-        zcl_excel_aunit=>assert_differs(
+        cl_abap_unit_assert=>assert_differs(
           act   = ep_value
           exp   = '000000'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = lx_excel->error
           exp   = 'Unable to interpret time'
           msg   = 'Time should be a valid string'
@@ -637,14 +637,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>time_to_excel_string( '000001' ).
         " A test directly in Excel returns the value 0.0000115740740740741000
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = '0.0000115740740741'
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -654,14 +654,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>time_to_excel_string( '235959' ).
         " A test directly in Excel returns the value 0.9999884259259260000000
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = '0.9999884259259260'
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
             ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -671,14 +671,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>time_to_excel_string( '000000' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
           act   = ep_value
           exp   = '0'
           msg   = 'Wrong date conversion'
           level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -688,14 +688,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     TRY.
         ep_value = zcl_excel_common=>time_to_excel_string( '022400' ).
 
-        zcl_excel_aunit=>assert_equals(
+        cl_abap_unit_assert=>assert_equals(
               act   = ep_value
               exp   = '0.1000000000000000'
               msg   = 'Wrong date conversion'
               level = if_aunit_constants=>critical
         ).
       CATCH zcx_excel INTO lx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'unexpected exception'
             level  = if_aunit_constants=>critical    " Error Severity
         ).
@@ -717,19 +717,19 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                             ep_extension    = ep_extension
                                             ep_dotextension = ep_dotextension ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = ep_file
           exp   = 'filename'
           msg   = 'Split filename failed'
           level = if_aunit_constants=>critical ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = ep_extension
           exp   = 'xml'
           msg   = 'Split extension failed'
           level = if_aunit_constants=>critical ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = ep_dotextension
           exp   = '.xml'
           msg   = 'Split extension failed'
@@ -741,19 +741,19 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                             ep_extension    = ep_extension
                                             ep_dotextension = ep_dotextension ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = ep_file
           exp   = 'filename'
           msg   = 'Split filename failed'
           level = if_aunit_constants=>critical ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = ep_extension
           exp   = ''
           msg   = 'Split extension failed'
           level = if_aunit_constants=>critical ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = ep_dotextension
           exp   = ''
           msg   = 'Split extension failed'
@@ -781,27 +781,27 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         e_sheet        = lv_sheet    " Title
     ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_start
           exp   = ''
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_end
           exp   = ''
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_start
           exp   = ''
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_end
           exp   = ''
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_sheet
           exp   = ''
           msg   = 'Conversion of range failed'
@@ -819,27 +819,27 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         e_sheet        = lv_sheet    " Title
     ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_start
           exp   = 'B'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_end
           exp   = 'D'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_start
           exp   = '6'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_end
           exp   = '13'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_sheet
           exp   = 'Sheet 1'
           msg   = 'Conversion of range failed'
@@ -857,27 +857,27 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         e_sheet        = lv_sheet    " Title
     ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_start
           exp   = 'B'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_end
           exp   = 'D'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_start
           exp   = '6'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_end
           exp   = '13'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_sheet
           exp   = 'Sheet1'
           msg   = 'Conversion of range failed'
@@ -895,27 +895,27 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
         e_sheet        = lv_sheet    " Title
     ).
 
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_start
           exp   = 'B'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_column_end
           exp   = 'D'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_start
           exp   = '6'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_row_end
           exp   = '13'
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = lv_sheet
           exp   = ''
           msg   = 'Conversion of range failed'
@@ -933,7 +933,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     lo_structdescr ?= cl_abap_structdescr=>describe_by_data( p_data = ls_test ).
     lt_structure = zcl_excel_common=>describe_structure( io_struct = lo_structdescr ).
     READ TABLE lt_structure ASSIGNING <line> INDEX 1.
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = <line>-fieldname
           exp   = 'MANDT'
           msg   = 'Describe structure failed'
@@ -951,7 +951,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     lo_structdescr ?= cl_abap_structdescr=>describe_by_data( p_data = ls_ttest ).
     lt_structure = zcl_excel_common=>describe_structure( io_struct = lo_structdescr ).
     READ TABLE lt_structure ASSIGNING <line> INDEX 1.
-    zcl_excel_aunit=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
           act   = <line>-fieldname
           exp   = 'CARRID'
           msg   = 'Describe structure failed'
@@ -976,7 +976,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                   '->'
                   &2
            into lv_message separated by space.
-      zcl_excel_aunit=>assert_equals(  act   = lv_offset_cols
+      cl_abap_unit_assert=>assert_equals(  act   = lv_offset_cols
                                         exp   = &3
                                         msg   = lv_message
                                         quit  = 0  " continue tests
@@ -987,7 +987,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                   '->'
                   &2
            into lv_message separated by space.
-      zcl_excel_aunit=>assert_equals(  act   = lv_offset_rows
+      cl_abap_unit_assert=>assert_equals(  act   = lv_offset_rows
                                         exp   = &4
                                         msg   = lv_message
                                         quit  = 0  " continue tests
@@ -1026,7 +1026,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                       'shifting formula '
                       &1
                into lv_message separated by space.
-          zcl_excel_aunit=>assert_equals(  act   = lv_resulting_formula
+          cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
                                             exp   = &4
                                             msg   = lv_message
                                             quit  = 0  " continue tests
@@ -1037,7 +1037,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                       'shifting formula '
                       &1
                into lv_message separated by space.
-          zcl_excel_aunit=>assert_equals(  act   = lv_resulting_formula
+          cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
                                             exp   = &4
                                             msg   = lv_message
                                             quit  = 0  " continue tests
@@ -1077,13 +1077,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           ip_row      = 2
           ip_range    = 'B2:D4' ).
 
-      zcl_excel_aunit=>assert_equals(
+      cl_abap_unit_assert=>assert_equals(
           act   = ep_cell_in_range
           exp   = abap_true
           msg   = 'Check cell in range failed'
           level = if_aunit_constants=>critical ).
      CATCH zcx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
@@ -1095,13 +1095,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           ip_row      = 4
           ip_range    = 'B2:D4' ).
 
-      zcl_excel_aunit=>assert_equals(
+      cl_abap_unit_assert=>assert_equals(
           act   = ep_cell_in_range
           exp   = abap_true
           msg   = 'Check cell in range failed'
           level = if_aunit_constants=>critical ).
      CATCH zcx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
@@ -1113,13 +1113,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           ip_row      = 3
           ip_range    = 'B2:D4' ).
 
-      zcl_excel_aunit=>assert_equals(
+      cl_abap_unit_assert=>assert_equals(
           act   = ep_cell_in_range
           exp   = abap_false
           msg   = 'Check cell in range failed'
           level = if_aunit_constants=>critical ).
      CATCH zcx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
@@ -1131,13 +1131,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           ip_row      = 1
           ip_range    = 'B2:D4' ).
 
-      zcl_excel_aunit=>assert_equals(
+      cl_abap_unit_assert=>assert_equals(
           act   = ep_cell_in_range
           exp   = abap_false
           msg   = 'Check cell in range failed'
           level = if_aunit_constants=>critical ).
      CATCH zcx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
@@ -1149,13 +1149,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           ip_row      = 3
           ip_range    = 'B2:D4' ).
 
-      zcl_excel_aunit=>assert_equals(
+      cl_abap_unit_assert=>assert_equals(
           act   = ep_cell_in_range
           exp   = abap_false
           msg   = 'Check cell in range failed'
           level = if_aunit_constants=>critical ).
      CATCH zcx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
@@ -1167,13 +1167,13 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           ip_row      = 5
           ip_range    = 'B2:D4' ).
 
-      zcl_excel_aunit=>assert_equals(
+      cl_abap_unit_assert=>assert_equals(
           act   = ep_cell_in_range
           exp   = abap_false
           msg   = 'Check cell in range failed'
           level = if_aunit_constants=>critical ).
      CATCH zcx_excel.
-        zcl_excel_aunit=>fail(
+        cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
