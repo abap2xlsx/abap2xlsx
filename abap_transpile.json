@@ -20,6 +20,7 @@
     "zcl_excel_styles_cond",
     "zcl_excel_styles",
     "zcl_excel_worksheet_pagebreaks",
+    "zcl_excel_worksheets",
     "zexcel_alignment",
     "zexcel_border",
     "zexcel_break",
@@ -31,6 +32,7 @@
     "zexcel_style_color_argb",
     "zexcel_style_font_family",
     "zif_excel_converter",
+    "zif_excel_writer",
     "zif_excel_reader"
   ],
   "output_folder": "output",
