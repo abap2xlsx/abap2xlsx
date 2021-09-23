@@ -40,6 +40,13 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
       RAISING
         cx_static_check.
     METHODS: calculate_cell_distance FOR TESTING RAISING cx_static_check.
+
+    METHODS macro_shift_formula
+      IMPORTING
+        iv_reference_formula TYPE clike
+        iv_shift_cols        TYPE i
+        iv_shift_rows        TYPE i
+        iv_expected          TYPE string.
     METHODS: shift_formula FOR TESTING.
     METHODS: is_cell_in_range FOR TESTING.
 ENDCLASS.
@@ -1032,63 +1039,158 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD shift_formula.
+  METHOD macro_shift_formula.
+
     DATA: lv_resulting_formula TYPE string,
           lv_message           TYPE string,
           lv_counter           TYPE num8.
 
-    DEFINE macro_shift_formula.
-      ADD 1 TO lv_counter.
-      CLEAR lv_resulting_formula.
-      TRY.
-          lv_resulting_formula = zcl_excel_common=>shift_formula( iv_reference_formula = &1
-                                                                  iv_shift_cols        = &2
-                                                                  iv_shift_rows        = &3 ).
-          CONCATENATE 'Wrong result in test'
-                      lv_counter
-                      'shifting formula '
-                      &1
-               INTO lv_message SEPARATED BY space.
-          cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
-                                            exp   = &4
-                                            msg   = lv_message
-                                            quit  = 0  " continue tests
-                                            level = if_aunit_constants=>critical ).
-        CATCH zcx_excel.
-          CONCATENATE 'Unexpected exception occurred in test'
-                      lv_counter
-                      'shifting formula '
-                      &1
-               INTO lv_message SEPARATED BY space.
-          cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
-                                            exp   = &4
-                                            msg   = lv_message
-                                            quit  = 0  " continue tests
-                                            level = if_aunit_constants=>critical ).
-      ENDTRY.
-    END-OF-DEFINITION.
+    ADD 1 TO lv_counter.
+    CLEAR lv_resulting_formula.
+    TRY.
+        lv_resulting_formula = zcl_excel_common=>shift_formula( iv_reference_formula = iv_reference_formula
+                                                                iv_shift_cols        = iv_shift_cols
+                                                                iv_shift_rows        = iv_shift_rows ).
+        CONCATENATE 'Wrong result in test'
+                    lv_counter
+                    'shifting formula '
+                    iv_reference_formula
+             INTO lv_message SEPARATED BY space.
+        cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
+                                          exp   = iv_expected
+                                          msg   = lv_message
+                                          quit  = 0  " continue tests
+                                          level = if_aunit_constants=>critical ).
+      CATCH zcx_excel.
+        CONCATENATE 'Unexpected exception occurred in test'
+                    lv_counter
+                    'shifting formula '
+                    iv_reference_formula
+             INTO lv_message SEPARATED BY space.
+        cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
+                                          exp   = iv_expected
+                                          msg   = lv_message
+                                          quit  = 0  " continue tests
+                                          level = if_aunit_constants=>critical ).
+    ENDTRY.
 
-* Test shifts that should result in a valid output
-    macro_shift_formula:
-          'C17'                                  0   0       'C17',                       " Very basic check
-          'C17'                                  2   3       'E20',                       " Check shift right and down
-          'C17'                                 -2  -3       'A14',                       " Check shift left and up
-          '$C$17'                                1   1       '$C$17',                     " Fixed columns/rows
-          'SUM($C17:C$23)+C30'                   1  11       'SUM($C28:D$23)+D41',        " Operators and Ranges, mixed fixed rows or columns
-          'RNGNAME1+C7'                         -1  -4       'RNGNAME1+B3',               " Operators and Rangename
-          '"Date:"&TEXT(B2)'                     1   1       '"Date:"&TEXT(C3)',          " String literals and string concatenation
-          '[TEST6.XLSX]SHEET1!A1'                1  11       '[TEST6.XLSX]SHEET1!B12',    " External sheet reference
-          `X(B13, "KK" )  `                      1   1       `X(C14,"KK")`,               " superflous blanks, multi-argument functions, literals in function, unknown functions
-*          'SIN((((((B2))))))'                    1   1       'SIN((((((C3))))))',        " Deep nesting
-*          'SIN(SIN(SIN(SIN(E22))))'              0   1       'SIN(SIN(SIN(SIN(E23))))',   " Different type of deep nesting
-          `SIN(SIN(SIN(SIN(E22))))`              0   1       'SIN(SIN(SIN(SIN(E23))))',   " same as above - but with string input instead of Char-input
-          'HEUTE()'                              2   5       'HEUTE()',                   " Functions w/o arguments, No cellreferences
-          '"B2"'                                 2   5       '"B2"',                      " No cellreferences
-          ''                                     2   5       '',                          " Empty
-          'A1+$A1+A$1+$A$1+B2'                  -1   0       '#REF!+$A1+#REF!+$A$1+A2',   " Referencing error , column only    , underflow
-          'A1+$A1+A$1+$A$1+B2'                   0  -1       '#REF!+#REF!+A$1+$A$1+B1',   " Referencing error , row only       , underflow
-          'A1+$A1+A$1+$A$1+B2'                  -1  -1       '#REF!+#REF!+#REF!+$A$1+A1'. " Referencing error , row and column , underflow
-  ENDMETHOD.                    "SHIFT_FORMULA
+  ENDMETHOD.
+
+  METHOD shift_formula.
+
+    " Very basic check
+    macro_shift_formula(
+      iv_reference_formula = 'C17'
+      iv_shift_cols        = 0
+      iv_shift_rows        = 0
+      iv_expected          = 'C17' ).
+
+" Check shift right and down
+    macro_shift_formula(
+      iv_reference_formula = 'C17'
+      iv_shift_cols        = 2
+      iv_shift_rows        = 3
+      iv_expected          = 'E20' ).
+
+" Check shift left and up
+    macro_shift_formula(
+      iv_reference_formula = 'C17'
+      iv_shift_cols        = -2
+      iv_shift_rows        = -3
+      iv_expected          = 'A14' ).
+
+" Fixed columns/rows
+    macro_shift_formula(
+      iv_reference_formula = '$C$17'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = '$C$17' ).
+
+" Operators and Ranges, mixed fixed rows or columns
+    macro_shift_formula(
+      iv_reference_formula = 'SUM($C17:C$23)+C30'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 11
+      iv_expected          = 'SUM($C28:D$23)+D41' ).
+
+" Operators and Rangename
+    macro_shift_formula(
+      iv_reference_formula = 'RNGNAME1+C7'
+      iv_shift_cols        = -1
+      iv_shift_rows        = -4
+      iv_expected          = 'RNGNAME1+B3' ).
+
+" String literals and string concatenation
+    macro_shift_formula(
+      iv_reference_formula = '"Date:"&TEXT(B2)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = '"Date:"&TEXT(C3)' ).
+
+" External sheet reference
+    macro_shift_formula(
+      iv_reference_formula = '[TEST6.XLSX]SHEET1!A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 11
+      iv_expected          = '[TEST6.XLSX]SHEET1!B12' ).
+
+" superflous blanks, multi-argument functions, literals in function, unknown functions
+    macro_shift_formula(
+      iv_reference_formula = `X(B13, "KK" )  `
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = `X(C14,"KK")` ).
+
+" same as above - but with string input instead of Char-input
+    macro_shift_formula(
+      iv_reference_formula = `SIN(SIN(SIN(SIN(E22))))`
+      iv_shift_cols        = 0
+      iv_shift_rows        = 1
+      iv_expected          = 'SIN(SIN(SIN(SIN(E23))))' ).
+
+" Functions w/o arguments, No cellreferences
+    macro_shift_formula(
+      iv_reference_formula = 'HEUTE()'
+      iv_shift_cols        = 2
+      iv_shift_rows        = 5
+      iv_expected          = 'HEUTE()' ).
+
+" No cellreferences
+    macro_shift_formula(
+      iv_reference_formula = '"B2"'
+      iv_shift_cols        = 2
+      iv_shift_rows        = 5
+      iv_expected          = '"B2"' ).
+
+" Empty
+    macro_shift_formula(
+      iv_reference_formula = ''
+      iv_shift_cols        = 2
+      iv_shift_rows        = 5
+      iv_expected          = '' ).
+
+" Referencing error , column only    , underflow
+    macro_shift_formula(
+      iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
+      iv_shift_cols        = -1
+      iv_shift_rows        = 0
+      iv_expected          = '#REF!+$A1+#REF!+$A$1+A2' ).
+
+" Referencing error , row only       , underflow
+    macro_shift_formula(
+      iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
+      iv_shift_cols        = 0
+      iv_shift_rows        = -1
+      iv_expected          = '#REF!+#REF!+A$1+$A$1+B1' ).
+
+" Referencing error , row and column , underflow
+    macro_shift_formula(
+      iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
+      iv_shift_cols        = -1
+      iv_shift_rows        = -1
+      iv_expected          = '#REF!+#REF!+#REF!+$A$1+A1' ).
+
+  ENDMETHOD.
 
   METHOD is_cell_in_range.
     DATA ep_cell_in_range TYPE abap_bool.
