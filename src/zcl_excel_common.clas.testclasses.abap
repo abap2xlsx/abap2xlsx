@@ -31,6 +31,14 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS: split_file FOR TESTING.
     METHODS: convert_range2column_a_row FOR TESTING RAISING cx_static_check.
     METHODS: describe_structure FOR TESTING.
+    METHODS macro_calculate_cell_distance
+      IMPORTING
+        iv_reference_cell  TYPE clike
+        iv_current_cell    TYPE clike
+        iv_expected_column TYPE i
+        iv_expected_row    TYPE i
+      RAISING
+        cx_static_check.
     METHODS: calculate_cell_distance FOR TESTING RAISING cx_static_check.
     METHODS: shift_formula FOR TESTING.
     METHODS: is_cell_in_range FOR TESTING.
@@ -915,55 +923,114 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.                    "describe_structure
 
+  METHOD macro_calculate_cell_distance.
 
-  METHOD calculate_cell_distance.
     DATA: lv_offset_rows TYPE i,
           lv_offset_cols TYPE i,
           lv_message     TYPE string.
 
-    DEFINE macro_calculate_cell_distance.
-      zcl_excel_common=>calculate_cell_distance( EXPORTING iv_reference_cell = &1
-                                                           iv_current_cell   = &2
-                                                 IMPORTING ev_row_difference = lv_offset_rows
-                                                           ev_col_difference = lv_offset_cols ).
+    zcl_excel_common=>calculate_cell_distance( EXPORTING iv_reference_cell = iv_reference_cell
+                                                         iv_current_cell   = iv_current_cell
+                                               IMPORTING ev_row_difference = lv_offset_rows
+                                                         ev_col_difference = lv_offset_cols ).
 * Check delta columns
-      CONCATENATE 'Error calculating column difference in test:'
-                  &1
-                  '->'
-                  &2
-           INTO lv_message SEPARATED BY space.
-      cl_abap_unit_assert=>assert_equals(  act   = lv_offset_cols
-                                        exp   = &3
-                                        msg   = lv_message
-                                        quit  = 0  " continue tests
-                                        level = if_aunit_constants=>critical ).
+    CONCATENATE 'Error calculating column difference in test:'
+                iv_reference_cell
+                '->'
+                iv_current_cell
+         INTO lv_message SEPARATED BY space.
+    cl_abap_unit_assert=>assert_equals(  act   = lv_offset_cols
+                                      exp   = iv_expected_column
+                                      msg   = lv_message
+                                      quit  = 0  " continue tests
+                                      level = if_aunit_constants=>critical ).
 * Check delta rows
-      CONCATENATE 'Error calculating row difference in test:'
-                  &1
-                  '->'
-                  &2
-           INTO lv_message SEPARATED BY space.
-      cl_abap_unit_assert=>assert_equals(  act   = lv_offset_rows
-                                        exp   = &4
-                                        msg   = lv_message
-                                        quit  = 0  " continue tests
-                                        level = if_aunit_constants=>critical ).
-    END-OF-DEFINITION.
+    CONCATENATE 'Error calculating row difference in test:'
+                iv_reference_cell
+                '->'
+                iv_current_cell
+         INTO lv_message SEPARATED BY space.
+    cl_abap_unit_assert=>assert_equals(  act   = lv_offset_rows
+                                      exp   = iv_expected_row
+                                      msg   = lv_message
+                                      quit  = 0  " continue tests
+                                      level = if_aunit_constants=>critical ).
 
+  ENDMETHOD.
 
-    macro_calculate_cell_distance:
-          'C12'        'C12'          0           0        ,  " Same cell
-          'C12'        'C13'          0           1        ,  " Shift down 1 place
-          'C12'        'C25'          0          13        ,  " Shift down some places
-          'C12'        'C11'          0          -1        ,  " Shift up 1 place
-          'C12'        'C1'           0         -11        ,  " Shift up some place
-          'C12'        'D12'          1           0        ,  " Shift right 1 place
-          'C12'        'AA12'        24           0        ,  " Shift right some places
-          'C12'        'B12'         -1           0        ,  " Shift left 1 place
-          'AA12'       'C12'        -24           0        ,  " Shift left some place
-          'AA121'      'C12'        -24        -109        .  " The full package.
+  METHOD calculate_cell_distance.
 
-  ENDMETHOD.                    "CALCULATE_CELL_DISTANCE
+    " Same cell
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'C12'
+      iv_expected_column = 0
+      iv_expected_row    = 0 ).
+
+    " Shift down 1 place
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'C13'
+      iv_expected_column = 0
+      iv_expected_row    = 1 ).
+
+    " Shift down some places
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'C25'
+      iv_expected_column = 0
+      iv_expected_row    = 13 ).
+
+    " Shift up 1 place
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'C11'
+      iv_expected_column = 0
+      iv_expected_row    = -1 ).
+
+    " Shift up some place
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'C1'
+      iv_expected_column = 0
+      iv_expected_row    = -11 ).
+
+    " Shift right 1 place
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'D12'
+      iv_expected_column = 1
+      iv_expected_row    = 0 ).
+
+    " Shift right some places
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'AA12'
+      iv_expected_column = 24
+      iv_expected_row    = 0 ).
+
+    " Shift left 1 place
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'C12'
+      iv_current_cell    = 'B12'
+      iv_expected_column = -1
+      iv_expected_row    = 0 ).
+
+    " Shift left some place
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'AA12'
+      iv_current_cell    = 'C12'
+      iv_expected_column = -24
+      iv_expected_row    = 0 ).
+
+    " The full package.
+    macro_calculate_cell_distance(
+      iv_reference_cell  = 'AA121'
+      iv_current_cell    = 'C12'
+      iv_expected_column = -24
+      iv_expected_row    = -109 ).
+
+  ENDMETHOD.
 
   METHOD shift_formula.
     DATA: lv_resulting_formula TYPE string,
