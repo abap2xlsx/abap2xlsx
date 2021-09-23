@@ -47,7 +47,7 @@
     "omit_receiving": true,
     "prefer_is_not": false,
     "prefer_xsdbool": true,
-    "sy_modification": false,
+    "sy_modification": true,
     "unused_methods": false,
     "use_bool_expression": false,
     "begin_single_include": true,
