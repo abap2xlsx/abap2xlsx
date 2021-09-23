@@ -9,39 +9,16 @@ CLASS zcl_excel_common DEFINITION LOCAL FRIENDS lcl_excel_common_test.
 CLASS lcl_excel_common_test DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
     DURATION SHORT.
-*?ï»¿<asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
-*?<asx:values>
-*?<TESTCLASS_OPTIONS>
-*?<TEST_CLASS>lcl_Excel_Common_Test
-*?</TEST_CLASS>
-*?<TEST_MEMBER>f_Cut
-*?</TEST_MEMBER>
-*?<OBJECT_UNDER_TEST>ZCL_EXCEL_COMMON
-*?</OBJECT_UNDER_TEST>
-*?<OBJECT_IS_LOCAL/>
-*?<GENERATE_FIXTURE>X
-*?</GENERATE_FIXTURE>
-*?<GENERATE_CLASS_FIXTURE>X
-*?</GENERATE_CLASS_FIXTURE>
-*?<GENERATE_INVOCATION>X
-*?</GENERATE_INVOCATION>
-*?<GENERATE_ASSERT_EQUAL>X
-*?</GENERATE_ASSERT_EQUAL>
-*?</TESTCLASS_OPTIONS>
-*?</asx:values>
-*?</asx:abap>
+
   PRIVATE SECTION.
 * ================
     DATA:
-      lx_excel      TYPE REF TO zcx_excel,
-      ls_symsg_act  TYPE symsg,                    " actual   messageinformation of exception
-      ls_symsg_exp  TYPE symsg,                    " expected messageinformation of exception
-      f_cut         TYPE REF TO zcl_excel_common.  "class under test
+      lx_excel     TYPE REF TO zcx_excel,
+      ls_symsg_act TYPE symsg,                    " actual   messageinformation of exception
+      ls_symsg_exp TYPE symsg,                    " expected messageinformation of exception
+      f_cut        TYPE REF TO zcl_excel_common.  "class under test
 
-    CLASS-METHODS: class_setup.
-    CLASS-METHODS: class_teardown.
     METHODS: setup.
-    METHODS: teardown.
 *    METHODS: char2hex FOR TESTING.
     METHODS: convert_column2alpha FOR TESTING.
     METHODS: convert_column2int FOR TESTING.
@@ -52,12 +29,12 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
 *    METHODS: number_to_excel_string FOR TESTING.
     METHODS: time_to_excel_string FOR TESTING.
     METHODS: split_file FOR TESTING.
-    METHODS: convert_range2column_a_row FOR TESTING.
+    METHODS: convert_range2column_a_row FOR TESTING RAISING cx_static_check.
     METHODS: describe_structure FOR TESTING.
-    METHODS: calculate_cell_distance FOR TESTING.
+    METHODS: calculate_cell_distance FOR TESTING RAISING cx_static_check.
     METHODS: shift_formula FOR TESTING.
     METHODS: is_cell_in_range FOR TESTING.
-ENDCLASS.       "lcl_Excel_Common_Test
+ENDCLASS.
 
 
 *----------------------------------------------------------------------*
@@ -68,32 +45,11 @@ ENDCLASS.       "lcl_Excel_Common_Test
 CLASS lcl_excel_common_test IMPLEMENTATION.
 * ===========================================
 
-  METHOD class_setup.
-* ===================
-
-
-  ENDMETHOD.       "class_Setup
-
-
-  METHOD class_teardown.
-* ======================
-
-
-  ENDMETHOD.       "class_Teardown
-
-
   METHOD setup.
 * =============
 
     CREATE OBJECT f_cut.
   ENDMETHOD.       "setup
-
-
-  METHOD teardown.
-* ================
-
-
-  ENDMETHOD.       "teardown
 
 
   METHOD convert_column2alpha.
@@ -706,9 +662,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   METHOD split_file.
 * ============================
 
-    DATA: ep_file TYPE text255,
-    ep_extension  TYPE char10,
-    ep_dotextension TYPE char10.
+    DATA: ep_file         TYPE text255,
+          ep_extension    TYPE char10,
+          ep_dotextension TYPE char10.
 
 
 * Test 1. Basic conversion
@@ -961,32 +917,32 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 
   METHOD calculate_cell_distance.
-    DATA: lv_offset_rows             TYPE i,
-          lv_offset_cols             TYPE i,
-          lv_message                 TYPE string.
+    DATA: lv_offset_rows TYPE i,
+          lv_offset_cols TYPE i,
+          lv_message     TYPE string.
 
     DEFINE macro_calculate_cell_distance.
-      zcl_excel_common=>calculate_cell_distance( exporting iv_reference_cell = &1
+      zcl_excel_common=>calculate_cell_distance( EXPORTING iv_reference_cell = &1
                                                            iv_current_cell   = &2
-                                                 importing ev_row_difference = lv_offset_rows
+                                                 IMPORTING ev_row_difference = lv_offset_rows
                                                            ev_col_difference = lv_offset_cols ).
 * Check delta columns
-      concatenate 'Error calculating column difference in test:'
+      CONCATENATE 'Error calculating column difference in test:'
                   &1
                   '->'
                   &2
-           into lv_message separated by space.
+           INTO lv_message SEPARATED BY space.
       cl_abap_unit_assert=>assert_equals(  act   = lv_offset_cols
                                         exp   = &3
                                         msg   = lv_message
                                         quit  = 0  " continue tests
                                         level = if_aunit_constants=>critical ).
 * Check delta rows
-      concatenate 'Error calculating row difference in test:'
+      CONCATENATE 'Error calculating row difference in test:'
                   &1
                   '->'
                   &2
-           into lv_message separated by space.
+           INTO lv_message SEPARATED BY space.
       cl_abap_unit_assert=>assert_equals(  act   = lv_offset_rows
                                         exp   = &4
                                         msg   = lv_message
@@ -1010,39 +966,39 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.                    "CALCULATE_CELL_DISTANCE
 
   METHOD shift_formula.
-    DATA: lv_resulting_formula       TYPE string,
-          lv_message                 TYPE string,
-          lv_counter                 TYPE num8.
+    DATA: lv_resulting_formula TYPE string,
+          lv_message           TYPE string,
+          lv_counter           TYPE num8.
 
     DEFINE macro_shift_formula.
-      add 1 to lv_counter.
-      clear lv_resulting_formula.
-      try.
+      ADD 1 TO lv_counter.
+      CLEAR lv_resulting_formula.
+      TRY.
           lv_resulting_formula = zcl_excel_common=>shift_formula( iv_reference_formula = &1
                                                                   iv_shift_cols        = &2
                                                                   iv_shift_rows        = &3 ).
-          concatenate 'Wrong result in test'
+          CONCATENATE 'Wrong result in test'
                       lv_counter
                       'shifting formula '
                       &1
-               into lv_message separated by space.
+               INTO lv_message SEPARATED BY space.
           cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
                                             exp   = &4
                                             msg   = lv_message
                                             quit  = 0  " continue tests
                                             level = if_aunit_constants=>critical ).
-        catch zcx_excel.
-          concatenate 'Unexpected exception occurred in test'
+        CATCH zcx_excel.
+          CONCATENATE 'Unexpected exception occurred in test'
                       lv_counter
                       'shifting formula '
                       &1
-               into lv_message separated by space.
+               INTO lv_message SEPARATED BY space.
           cl_abap_unit_assert=>assert_equals(  act   = lv_resulting_formula
                                             exp   = &4
                                             msg   = lv_message
                                             quit  = 0  " continue tests
                                             level = if_aunit_constants=>critical ).
-      endtry.
+      ENDTRY.
     END-OF-DEFINITION.
 
 * Test shifts that should result in a valid output
@@ -1072,17 +1028,17 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 1: upper left corner (in range)
     TRY.
-      ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
-          ip_column   = 'B'
-          ip_row      = 2
-          ip_range    = 'B2:D4' ).
+        ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
+            ip_column   = 'B'
+            ip_row      = 2
+            ip_range    = 'B2:D4' ).
 
-      cl_abap_unit_assert=>assert_equals(
-          act   = ep_cell_in_range
-          exp   = abap_true
-          msg   = 'Check cell in range failed'
-          level = if_aunit_constants=>critical ).
-     CATCH zcx_excel.
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_cell_in_range
+            exp   = abap_true
+            msg   = 'Check cell in range failed'
+            level = if_aunit_constants=>critical ).
+      CATCH zcx_excel.
         cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
@@ -1090,17 +1046,17 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 2: lower right corner (in range)
     TRY.
-      ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
-          ip_column   = 'D'
-          ip_row      = 4
-          ip_range    = 'B2:D4' ).
+        ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
+            ip_column   = 'D'
+            ip_row      = 4
+            ip_range    = 'B2:D4' ).
 
-      cl_abap_unit_assert=>assert_equals(
-          act   = ep_cell_in_range
-          exp   = abap_true
-          msg   = 'Check cell in range failed'
-          level = if_aunit_constants=>critical ).
-     CATCH zcx_excel.
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_cell_in_range
+            exp   = abap_true
+            msg   = 'Check cell in range failed'
+            level = if_aunit_constants=>critical ).
+      CATCH zcx_excel.
         cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
@@ -1108,17 +1064,17 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 3: left side (out of range)
     TRY.
-      ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
-          ip_column   = 'A'
-          ip_row      = 3
-          ip_range    = 'B2:D4' ).
+        ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
+            ip_column   = 'A'
+            ip_row      = 3
+            ip_range    = 'B2:D4' ).
 
-      cl_abap_unit_assert=>assert_equals(
-          act   = ep_cell_in_range
-          exp   = abap_false
-          msg   = 'Check cell in range failed'
-          level = if_aunit_constants=>critical ).
-     CATCH zcx_excel.
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_cell_in_range
+            exp   = abap_false
+            msg   = 'Check cell in range failed'
+            level = if_aunit_constants=>critical ).
+      CATCH zcx_excel.
         cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
@@ -1126,17 +1082,17 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 4: upper side (out of range)
     TRY.
-      ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
-          ip_column   = 'C'
-          ip_row      = 1
-          ip_range    = 'B2:D4' ).
+        ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
+            ip_column   = 'C'
+            ip_row      = 1
+            ip_range    = 'B2:D4' ).
 
-      cl_abap_unit_assert=>assert_equals(
-          act   = ep_cell_in_range
-          exp   = abap_false
-          msg   = 'Check cell in range failed'
-          level = if_aunit_constants=>critical ).
-     CATCH zcx_excel.
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_cell_in_range
+            exp   = abap_false
+            msg   = 'Check cell in range failed'
+            level = if_aunit_constants=>critical ).
+      CATCH zcx_excel.
         cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
@@ -1144,17 +1100,17 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 5: right side (out of range)
     TRY.
-      ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
-          ip_column   = 'E'
-          ip_row      = 3
-          ip_range    = 'B2:D4' ).
+        ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
+            ip_column   = 'E'
+            ip_row      = 3
+            ip_range    = 'B2:D4' ).
 
-      cl_abap_unit_assert=>assert_equals(
-          act   = ep_cell_in_range
-          exp   = abap_false
-          msg   = 'Check cell in range failed'
-          level = if_aunit_constants=>critical ).
-     CATCH zcx_excel.
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_cell_in_range
+            exp   = abap_false
+            msg   = 'Check cell in range failed'
+            level = if_aunit_constants=>critical ).
+      CATCH zcx_excel.
         cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
@@ -1162,21 +1118,21 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 * Test 6: lower side (out of range)
     TRY.
-      ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
-          ip_column   = 'C'
-          ip_row      = 5
-          ip_range    = 'B2:D4' ).
+        ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
+            ip_column   = 'C'
+            ip_row      = 5
+            ip_range    = 'B2:D4' ).
 
-      cl_abap_unit_assert=>assert_equals(
-          act   = ep_cell_in_range
-          exp   = abap_false
-          msg   = 'Check cell in range failed'
-          level = if_aunit_constants=>critical ).
-     CATCH zcx_excel.
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_cell_in_range
+            exp   = abap_false
+            msg   = 'Check cell in range failed'
+            level = if_aunit_constants=>critical ).
+      CATCH zcx_excel.
         cl_abap_unit_assert=>fail(
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
   ENDMETHOD.
 
-ENDCLASS.       "lcl_Excel_Common_Test
+ENDCLASS.
