@@ -19,14 +19,12 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
       f_cut        TYPE REF TO zcl_excel_common.  "class under test
 
     METHODS: setup.
-*    METHODS: char2hex FOR TESTING.
     METHODS: convert_column2alpha FOR TESTING.
     METHODS: convert_column2int FOR TESTING.
     METHODS: date_to_excel_string FOR TESTING.
     METHODS: encrypt_password FOR TESTING.
     METHODS: excel_string_to_date FOR TESTING.
     METHODS: excel_string_to_time FOR TESTING.
-*    METHODS: number_to_excel_string FOR TESTING.
     METHODS: time_to_excel_string FOR TESTING.
     METHODS: split_file FOR TESTING.
     METHODS: convert_range2column_a_row FOR TESTING RAISING cx_static_check.
