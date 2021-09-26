@@ -147,7 +147,10 @@
     "parser_error": true,
     "space_before_colon": false,
     "colon_missing_space": false,
-    "exit_or_check": false,
+    "exit_or_check": {
+      "allowCheck": true,
+      "allowExit": false
+    },
     "line_only_punc": false,
     "obsolete_statement": false,
     "start_at_tab": false,
