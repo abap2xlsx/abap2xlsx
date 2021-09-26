@@ -90,7 +90,7 @@ CLASS zcl_date_calculation_test IMPLEMENTATION.
         e_month     = month
     ).
 
-    cl_aunit_assert=>assert_equals(
+    cl_abap_unit_assert=>assert_equals(
         exp                  = 12    " Data Object with Expected Type
         act                  = month    " Data Object with Current Value
         msg                  = 'Calculated date is wrong'    " Message in Case of Error
