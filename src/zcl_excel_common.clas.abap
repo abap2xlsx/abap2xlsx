@@ -179,7 +179,10 @@ CLASS zcl_excel_common DEFINITION
   PRIVATE SECTION.
 
     CLASS-DATA c_excel_col_module TYPE int2 VALUE 64. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
-
+    CLASS-DATA sv_prev_in1  TYPE zexcel_cell_column.
+    CLASS-DATA sv_prev_out1 TYPE zexcel_cell_column_alpha.
+    CLASS-DATA sv_prev_in2  TYPE char10.
+    CLASS-DATA sv_prev_out2 TYPE zexcel_cell_column.
     CLASS-METHODS structure_case
       IMPORTING
         !is_component  TYPE abap_componentdescr
@@ -209,7 +212,8 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_common IMPLEMENTATION.
+CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
+
 
   METHOD calculate_cell_distance.
 
@@ -280,9 +284,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
           lv_module TYPE int4,
           lv_column TYPE zexcel_cell_column.
 
-    STATICS: sv_prev_in  LIKE lv_column,
-             sv_prev_out LIKE ep_column.
-
 * Propagate zcx_excel if error occurs           " issue #155 - less restrictive typing for ip_column
     lv_column = convert_column2int( ip_column ).  " issue #155 - less restrictive typing for ip_column
 
@@ -297,12 +298,12 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Look up for previous succesfull cached result
 *--------------------------------------------------------------------*
-    IF lv_column = sv_prev_in AND sv_prev_out IS NOT INITIAL.
-      ep_column = sv_prev_out.
+    IF lv_column = sv_prev_in1 AND sv_prev_out1 IS NOT INITIAL.
+      ep_column = sv_prev_out1.
       RETURN.
     ELSE.
-      CLEAR sv_prev_out.
-      sv_prev_in  = lv_column.
+      CLEAR sv_prev_out1.
+      sv_prev_in1 = lv_column.
     ENDIF.
 
 *--------------------------------------------------------------------*
@@ -323,7 +324,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Save succesfull output into cache
 *--------------------------------------------------------------------*
-    sv_prev_out = ep_column.
+    sv_prev_out1 = ep_column.
 
   ENDMETHOD.
 
@@ -355,8 +356,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
           lv_errormessage TYPE string,                          " Can't pass '...'(abc) to exception-class
           lv_modulo       TYPE i.
 
-    STATICS: sv_prev_in  LIKE lv_column_c,
-             sv_prev_out LIKE ep_column.
 *--------------------------------------------------------------------*
 * This module tries to identify which column a user wants to access
 * Numbers as input are just passed back, anything else will be converted
@@ -379,12 +378,12 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Look up for previous succesfull cached result
 *--------------------------------------------------------------------*
-    IF lv_column_c = sv_prev_in AND sv_prev_out IS NOT INITIAL.
-      ep_column = sv_prev_out.
+    IF lv_column_c = sv_prev_in2 AND sv_prev_out2 IS NOT INITIAL.
+      ep_column = sv_prev_out2.
       RETURN.
     ELSE.
-      CLEAR sv_prev_out.
-      sv_prev_in  = lv_column_c.
+      CLEAR sv_prev_out2.
+      sv_prev_in2 = lv_column_c.
     ENDIF.
 
 *--------------------------------------------------------------------*
@@ -469,7 +468,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Save succesfull output into cache
 *--------------------------------------------------------------------*
-    sv_prev_out = ep_column.
+    sv_prev_out2 = ep_column.
 
   ENDMETHOD.
 
@@ -812,6 +811,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
         zcx_excel=>raise_text( 'Unable to interpret time' ).
     ENDTRY.
   ENDMETHOD.
+
 
   METHOD get_fieldcatalog.
     DATA: lr_dref_tab           TYPE REF TO data,

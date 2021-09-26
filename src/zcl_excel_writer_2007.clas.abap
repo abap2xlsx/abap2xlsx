@@ -3593,8 +3593,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                        parent = lo_document ).
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
                                                            parent = lo_document ).
-*    if <fs_sheet_string>-string_type EQ 's_leading_blanks'.
-      IF <fs_sheet_string>-string_value IS NOT INITIAL AND <fs_sheet_string>-string_value(1) EQ ` `.
+      IF boolc( contains( val = <fs_sheet_string>-string_value start = ` ` ) ) = abap_true
+            OR boolc( contains( val = <fs_sheet_string>-string_value end = ` ` ) ) = abap_true.
         lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
       ENDIF.
       lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
@@ -7157,19 +7157,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " XML chapter 2.2: Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
       " NB: although Excel supports _x0009_, it's not rendered except if you edit the text.
       " Excel considers _x000d_ as being an error (_x000a_ is sufficient and rendered).
-      sy-fdpos = 0.
-      WHILE sy-fdpos < strlen( lv_value ).
-        IF lv_value CA |\r\n\t|. "table_special_characters.
-          CASE lv_value+sy-fdpos(1).
-            WHEN cl_abap_char_utilities=>newline.
-              REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH '_x000a_'.
-            WHEN cl_abap_char_utilities=>cr_lf(1).
-              REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH ``.
-            WHEN cl_abap_char_utilities=>horizontal_tab.
-              REPLACE SECTION OFFSET sy-fdpos LENGTH 1 OF lv_value WITH '_x0009_'.
-          ENDCASE.
-        ENDIF.
-      ENDWHILE.
+      REPLACE ALL OCCURRENCES OF cl_abap_char_utilities=>newline IN lv_value WITH '_x000a_'.
+      REPLACE ALL OCCURRENCES OF cl_abap_char_utilities=>cr_lf(1) IN lv_value WITH ``.
+      REPLACE ALL OCCURRENCES OF cl_abap_char_utilities=>horizontal_tab IN lv_value WITH '_x0009_'.
 
       lo_element2->set_attribute_ns( name  = 'name'
                                     value = lv_value ).
