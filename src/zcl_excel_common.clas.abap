@@ -18,11 +18,6 @@ CLASS zcl_excel_common DEFINITION
     CONSTANTS c_excel_1900_leap_year TYPE d VALUE '19000228'. "#EC NOTEXT
     CLASS-DATA c_xlsx_file_filter TYPE string VALUE 'Excel Workbook (*.xlsx)|*.xlsx|'. "#EC NOTEXT .  .  .  .  .  .  . " .
 
-    CLASS-DATA sv_prev_in1  TYPE zexcel_cell_column.
-    CLASS-DATA sv_prev_out1 TYPE zexcel_cell_column_alpha.
-    CLASS-DATA sv_prev_in2  TYPE char10.
-    CLASS-DATA sv_prev_out2 TYPE zexcel_cell_column.
-
     CLASS-METHODS class_constructor .
     CLASS-METHODS describe_structure
       IMPORTING
@@ -184,7 +179,11 @@ CLASS zcl_excel_common DEFINITION
   PRIVATE SECTION.
 
     CLASS-DATA c_excel_col_module TYPE int2 VALUE 64. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
-
+    CLASS-DATA sv_prev_in1  TYPE zexcel_cell_column.
+    CLASS-DATA sv_prev_out1 TYPE zexcel_cell_column_alpha.
+    CLASS-DATA sv_prev_in2  TYPE char10.
+    CLASS-DATA sv_prev_out2 TYPE zexcel_cell_column.
+    
     CLASS-METHODS structure_case
       IMPORTING
         !is_component  TYPE abap_componentdescr
