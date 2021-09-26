@@ -400,7 +400,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
             lv_errormessage = 'Index out of bounds'(004).
             zcx_excel=>raise_text( lv_errormessage ).
           ENDIF.
-          EXIT.
+          RETURN.
         ENDIF.
       CATCH cx_sy_conversion_no_number.                 "#EC NO_HANDLER
         " Try the character-approach if approach via number has failed
@@ -539,7 +539,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
            e_sheet.
 
     IF i_range IS INITIAL.                                " a) input empty --> nothing to do
-      EXIT.
+      RETURN.
 
     ELSEIF i_range(1) = `'`.                              " b) sheetname existing - starts with '
       FIND REGEX '\![^\!]*$' IN i_range MATCH OFFSET lv_position.  " Find last !
@@ -1091,7 +1091,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
     IF    iv_shift_cols = 0
       AND iv_shift_rows = 0.
       ev_resulting_formula = iv_reference_formula.
-      EXIT. " done
+      RETURN. " done
     ENDIF.
 
 
@@ -1442,7 +1442,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
     DESCRIBE TABLE lt_hlp LINES lf_anz.
     IF lf_anz <= 1.
       ep_file = ip_file.
-      EXIT.
+      RETURN.
     ENDIF.
 
     READ TABLE lt_hlp INTO ls_hlp INDEX lf_anz.

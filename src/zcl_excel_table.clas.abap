@@ -141,7 +141,7 @@ CLASS zcl_excel_table IMPLEMENTATION.
     IF settings-bottom_right_row IS NOT INITIAL.
 *    ev_row =  zcl_excel_common=>convert_column2int( settings-bottom_right_row ). " del issue #246
       ev_row =  settings-bottom_right_row .                                         " ins issue #246
-      EXIT.
+      RETURN.
     ENDIF.
 
     ASSIGN table_data->* TO <fs_table>.
@@ -221,7 +221,7 @@ CLASS zcl_excel_table IMPLEMENTATION.
 
     IF settings-bottom_right_column IS NOT INITIAL.
       ev_column =  zcl_excel_common=>convert_column2int( settings-bottom_right_column ).
-      EXIT.
+      RETURN.
     ENDIF.
 
     ev_column =  zcl_excel_common=>convert_column2int( settings-top_left_column ).
