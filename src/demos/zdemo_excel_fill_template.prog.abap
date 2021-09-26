@@ -11,8 +11,8 @@ REPORT zdemo_excel_fill_template.
 *=================
 * Start of generated code.
 * All these types were generated
-* by ZDEMO_EXCEL_GET_TYPES based
-* on the Excel file ZEXCEL_DEMO_TEMPLATE
+* by ZEXCEL_TEMPLATE_GET_TYPES based
+* on the Excel file ZDEMO_EXCEL_TEMPLATE
 * from SMW0.
 *=================
 TYPES t_number TYPE p length 16 decimals 4.
@@ -102,7 +102,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_fpath.
 AT SELECTION-SCREEN.
   CASE sscrfields-ucomm.
     WHEN 'GET_TYPES'.
-      SUBMIT zdemo_excel_get_types
+      SUBMIT zexcel_template_get_types
         WITH p_smw0  = p_smw0
         WITH p_objid = p_objid
         WITH p_file  = p_file

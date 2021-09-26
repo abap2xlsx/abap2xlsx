@@ -341,7 +341,11 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
         ENDLOOP.
 
         IF lines( lt_matches ) = 1.
-          <ls_cell>-data_type = io_sheet->sheet_content[ cell_column = <ls_cell>-cell_column cell_row = <ls_cell>-cell_row - cv_diff ]-data_type.
+          lv_cell_row = <ls_cell>-cell_row - cv_diff.
+          READ TABLE io_sheet->sheet_content INTO ls_cell
+            WITH KEY cell_column = <ls_cell>-cell_column
+                     cell_row    = lv_cell_row.
+          <ls_cell>-data_type = ls_cell-data_type.
         ENDIF.
 
       ENDLOOP.
