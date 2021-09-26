@@ -1,20 +1,20 @@
-class ZCL_EXCEL_CUSTOMUI definition
-  public
-  final
-  create public .
+CLASS zcl_excel_customui DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_CUSTOMUI
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* protected components of class ZCL_EXCEL_CUSTOMUI
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 *"* private components of class ZCL_EXCEL_CUSTOMUI
 *"* do not include other source files here!!!
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_CUSTOMUI IMPLEMENTATION.
+CLASS zcl_excel_customui IMPLEMENTATION.
 ENDCLASS.

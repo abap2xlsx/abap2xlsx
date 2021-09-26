@@ -20,4 +20,7 @@ INTERFACE zif_excel_converter
       !et_filter       TYPE zexcel_t_converter_fil
     RAISING
       zcx_excel .
+
+   METHODS get_supported_class
+     RETURNING VALUE(rv_supported_class) TYPE seoclsname.
 ENDINTERFACE.
