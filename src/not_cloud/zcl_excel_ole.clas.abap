@@ -948,7 +948,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
           no_flush = no_flush
         IMPORTING
           error    = lo_error_w.
-      EXIT.
+      RETURN.
     ENDIF.
 
     CREATE OBJECT l_error

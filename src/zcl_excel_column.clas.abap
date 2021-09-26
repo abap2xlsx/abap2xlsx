@@ -192,7 +192,7 @@ CLASS zcl_excel_column IMPLEMENTATION.
         me->style_guid = stylemapping-guid.
 
       CATCH zcx_excel .
-        EXIT.  " leave as is in case of error
+        RETURN.  " leave as is in case of error
     ENDTRY.
 
   ENDMETHOD.

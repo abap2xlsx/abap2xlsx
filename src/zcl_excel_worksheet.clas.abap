@@ -3171,7 +3171,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             zcx_excel=>raise_text( 'Please supply a positive number as column-width' ).
           ENDIF.
           lo_column->set_width( width ).
-          EXIT.
+          RETURN.
         CATCH cx_sy_conversion_no_number.
 * Strange stuff passed --> raise error
           zcx_excel=>raise_text( 'Unable to interpret supplied input as number' ).
@@ -3316,7 +3316,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           zcx_excel=>raise_text( 'Please supply a positive number as row-height' ).
         ENDIF.
         lo_row->set_row_height( height ).
-        EXIT.
+        RETURN.
       CATCH cx_sy_conversion_no_number.
 * Strange stuff passed --> raise error
         zcx_excel=>raise_text( 'Unable to interpret supplied input as number' ).
