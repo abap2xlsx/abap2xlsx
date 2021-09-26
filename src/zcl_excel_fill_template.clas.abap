@@ -57,7 +57,7 @@ CLASS zcl_excel_fill_template DEFINITION
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    TYPES: tt_cell_data_no_key TYPE STANDARD TABLE OF zexcel_s_cell_data WITH EMPTY KEY.
+    TYPES: tt_cell_data_no_key TYPE STANDARD TABLE OF zexcel_s_cell_data WITH DEFAULT KEY.
 
     METHODS fill_range
       IMPORTING
@@ -145,12 +145,12 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
           ls_merged_cell               LIKE LINE OF lt_tmp_merged_cells,
           lv_start_row                 TYPE i,
           lv_stop_row                  TYPE i,
+          lv_cell_row                  TYPE i,
           lv_column_alpha              TYPE string,
           lt_matches                   TYPE match_result_tab,
           lv_search                    TYPE string,
           lv_var_name                  TYPE string,
-          lv_cell_value                TYPE string,
-          lv_var_value                 TYPE string.
+          lv_cell_value                TYPE string.
 
     FIELD-SYMBOLS:
       <table>     TYPE ANY TABLE,
@@ -333,9 +333,11 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
 
           " Use SET_CELL to format correctly
           io_sheet->set_cell( ip_column = <ls_cell>-cell_column ip_row = <ls_cell>-cell_row - cv_diff ip_value = <var_value> ).
-          lv_var_value = io_sheet->sheet_content[ cell_column = <ls_cell>-cell_column cell_row = <ls_cell>-cell_row - cv_diff ]-cell_value.
-          REPLACE ALL OCCURRENCES OF lv_search IN <ls_cell>-cell_value WITH lv_var_value.
-
+          lv_cell_row = <ls_cell>-cell_row - cv_diff.
+          READ TABLE io_sheet->sheet_content INTO ls_cell
+            WITH KEY cell_column = <ls_cell>-cell_column
+                     cell_row    = lv_cell_row.
+          REPLACE ALL OCCURRENCES OF lv_search IN <ls_cell>-cell_value WITH ls_cell-cell_value.
         ENDLOOP.
 
         IF lines( lt_matches ) = 1.
