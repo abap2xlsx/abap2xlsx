@@ -4,7 +4,6 @@ class zcl_excel_reader_huge_file definition local friends lcl_test.
 
 *
 class lcl_test definition for testing
-      inheriting from cl_aunit_assert
       risk level harmless
       duration short.
 
@@ -14,19 +13,19 @@ class lcl_test definition for testing
       excel type ref to zcl_excel,
       worksheet type ref to zcl_excel_worksheet.
     methods:
-      setup,
-      test_number for testing,
-      test_shared_string for testing,
-      test_shared_string_missing for testing,
-      test_inline_string for testing,
-      test_empty_cells for testing,
-      test_boolean for testing,
-      test_style for testing,
-      test_style_missing for testing,
-      test_formula for testing,
-      test_read_shared_strings for testing,
-      test_shared_string_some_empty for testing,
-      test_skip_to_inexistent for testing,
+      setup raising cx_static_check,
+      test_number for testing raising cx_static_check,
+      test_shared_string for testing raising cx_static_check,
+      test_shared_string_missing for testing raising cx_static_check,
+      test_inline_string for testing raising cx_static_check,
+      test_empty_cells for testing raising cx_static_check,
+      test_boolean for testing raising cx_static_check,
+      test_style for testing raising cx_static_check,
+      test_style_missing for testing raising cx_static_check,
+      test_formula for testing raising cx_static_check,
+      test_read_shared_strings for testing raising cx_static_check,
+      test_shared_string_some_empty for testing raising cx_static_check,
+      test_skip_to_inexistent for testing raising cx_static_check,
       get_reader importing iv_xml type string returning value(eo_reader) type ref to if_sxml_reader,
       assert_value_equals importing iv_row type i default 1 iv_col type i default 1 iv_value type string,
       assert_formula_equals importing iv_row type i default 1 iv_col type i default 1 iv_formula type string,
@@ -74,7 +73,7 @@ class lcl_test implementation.
 
     try.
         out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-        fail( `Index to non-existent shared string should give an error` ).
+        CL_ABAP_UNIT_ASSERT=>fail( `Index to non-existent shared string should give an error` ).
       catch lcx_not_found into lo_ex.
         lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
     endtry.
@@ -168,7 +167,7 @@ class lcl_test implementation.
 
     try.
         out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-        fail( `Reference to non-existent style should throw an lcx_not_found exception` ).
+        CL_ABAP_UNIT_ASSERT=>fail( `Reference to non-existent style should throw an lcx_not_found exception` ).
       catch lcx_not_found into lo_ex.
         lv_text = lo_ex->get_text( ).  " >>> May inspect the message in the debugger
     endtry.
@@ -194,7 +193,7 @@ class lcl_test implementation.
 
     lt_act = out->read_shared_strings( lo_reader ).
 
-    assert_equals( act = lt_act
+    CL_ABAP_UNIT_ASSERT=>assert_equals( act = lt_act
                    exp = lt_exp ).
 
   endmethod.
@@ -218,7 +217,7 @@ class lcl_test implementation.
 
     lt_act = out->read_shared_strings( lo_reader ).
 
-    assert_equals( act = lt_act
+    CL_ABAP_UNIT_ASSERT=>assert_equals( act = lt_act
                    exp = lt_exp ).
 
   endmethod.
@@ -238,7 +237,7 @@ class lcl_test implementation.
     lo_reader = cl_sxml_string_reader=>create( lv_xstring ).
     try.
         out->skip_to( iv_element_name = `nonExistingElement` io_reader = lo_reader ).
-        fail( `Skipping to non-existing element must raise lcx_not_found exception` ).
+        CL_ABAP_UNIT_ASSERT=>fail( `Skipping to non-existing element must raise lcx_not_found exception` ).
       catch lcx_not_found into lo_ex.
         lv_text = lo_ex->get_text( ). " May inspect exception text in debugger
     endtry.
@@ -271,7 +270,7 @@ class lcl_test implementation.
       assign lc_empty_string to <lv_value>.
     endif.
 
-    assert_equals( act = <lv_value>
+    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <lv_value>
                    exp = iv_value ).
 
   endmethod.                    "assert_value_equals
@@ -282,9 +281,9 @@ class lcl_test implementation.
 
     read table worksheet->sheet_content assigning <ls_cell_data>
       with table key cell_row = iv_row cell_column = iv_col.
-    assert_subrc( sy-subrc ).
+    CL_ABAP_UNIT_ASSERT=>assert_subrc( sy-subrc ).
 
-    assert_equals( act = <ls_cell_data>-cell_formula
+    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <ls_cell_data>-cell_formula
                    exp = iv_formula ).
 
   endmethod.                    "assert_formula_equals
@@ -295,9 +294,9 @@ class lcl_test implementation.
 
     read table worksheet->sheet_content assigning <ls_cell_data>
       with table key cell_row = iv_row cell_column = iv_col.
-    assert_subrc( sy-subrc ).
+    CL_ABAP_UNIT_ASSERT=>assert_subrc( sy-subrc ).
 
-    assert_equals( act = <ls_cell_data>-cell_style
+    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <ls_cell_data>-cell_style
                    exp = iv_style ).
 
   endmethod.
@@ -308,9 +307,9 @@ class lcl_test implementation.
 
     read table worksheet->sheet_content assigning <ls_cell_data>
       with table key cell_row = iv_row cell_column = iv_col.
-    assert_subrc( sy-subrc ).
+    CL_ABAP_UNIT_ASSERT=>assert_subrc( sy-subrc ).
 
-    assert_equals( act = <ls_cell_data>-data_type
+    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <ls_cell_data>-data_type
                    exp = iv_datatype ).
 
   endmethod.                    "assert_datatype_equals
