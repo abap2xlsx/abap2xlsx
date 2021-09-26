@@ -18,6 +18,11 @@ CLASS zcl_excel_common DEFINITION
     CONSTANTS c_excel_1900_leap_year TYPE d VALUE '19000228'. "#EC NOTEXT
     CLASS-DATA c_xlsx_file_filter TYPE string VALUE 'Excel Workbook (*.xlsx)|*.xlsx|'. "#EC NOTEXT .  .  .  .  .  .  . " .
 
+    CLASS-DATA sv_prev_in1  TYPE zexcel_cell_column.
+    CLASS-DATA sv_prev_out1 TYPE zexcel_cell_column_alpha.
+    CLASS-DATA sv_prev_in2  TYPE char10.
+    CLASS-DATA sv_prev_out2 TYPE zexcel_cell_column.
+
     CLASS-METHODS class_constructor .
     CLASS-METHODS describe_structure
       IMPORTING
@@ -281,9 +286,6 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
           lv_module TYPE int4,
           lv_column TYPE zexcel_cell_column.
 
-    STATICS: sv_prev_in1  LIKE lv_column,
-             sv_prev_out1 LIKE ep_column.
-
 * Propagate zcx_excel if error occurs           " issue #155 - less restrictive typing for ip_column
     lv_column = convert_column2int( ip_column ).  " issue #155 - less restrictive typing for ip_column
 
@@ -356,8 +358,6 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
           lv_errormessage TYPE string,                          " Can't pass '...'(abc) to exception-class
           lv_modulo       TYPE i.
 
-    STATICS: sv_prev_in2  LIKE lv_column_c,
-             sv_prev_out2 LIKE ep_column.
 *--------------------------------------------------------------------*
 * This module tries to identify which column a user wants to access
 * Numbers as input are just passed back, anything else will be converted
