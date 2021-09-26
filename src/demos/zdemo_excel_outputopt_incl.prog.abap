@@ -156,7 +156,7 @@ CLASS lcl_output IMPLEMENTATION.
     IF sy-subrc <> 0.
       MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
               WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
-      EXIT.
+      RETURN.
     ENDIF.
 
     READ TABLE lt_dynpfields INTO ls_dynpfields INDEX 1.
