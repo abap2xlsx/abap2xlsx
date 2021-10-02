@@ -7485,8 +7485,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
         lo_worksheet ?= lo_iterator->get_next( ).
         lv_syindex = sy-index - 1 .
-        l_guid = lo_worksheet->get_guid( ).
-        lo_autofilter = lo_autofilters->get( i_sheet_guid = l_guid ) .
+        lo_autofilter = lo_autofilters->get( io_worksheet = lo_worksheet ).
         IF lo_autofilter IS BOUND.
           lo_sub_element = lo_document->create_simple_element_ns( name   = lc_xml_node_definedname
                                                                   parent = lo_document ).
