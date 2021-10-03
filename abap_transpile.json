@@ -9,6 +9,7 @@
     "zcl_excel_graph_bars",
     "zcl_excel_graph_line",
     "zcl_excel_graph_pie",
+    "zcl_excel_common",
     "zcl_excel_graph",
     "zcl_excel_hyperlink",
     "zcl_excel_legacy_palette",
