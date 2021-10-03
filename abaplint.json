@@ -23,7 +23,7 @@
     "cyclic_oo": false,
     "many_parentheses": true,
     "pragma_placement": true,
-    "unused_ddic": false,
+    "unused_ddic": true,
     "dangerous_statement": true,
     "db_operation_in_loop": false,
     "identical_descriptions": false,
@@ -163,7 +163,10 @@
     "parser_error": true,
     "space_before_colon": false,
     "colon_missing_space": false,
-    "exit_or_check": false,
+    "exit_or_check": {
+      "allowCheck": true,
+      "allowExit": false
+    },
     "line_only_punc": false,
     "obsolete_statement": false,
     "start_at_tab": false,
