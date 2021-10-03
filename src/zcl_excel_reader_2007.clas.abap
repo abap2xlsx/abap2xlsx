@@ -26,6 +26,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
         targetmode TYPE string,
         worksheet  TYPE REF TO zcl_excel_worksheet,
         sheetid    TYPE string,     "ins #235 - repeat rows/cols - needed to identify correct sheet
+        localsheetid TYPE string,
       END OF t_relationship .
     TYPES:
       BEGIN OF t_fileversion,
@@ -1931,6 +1932,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY id = ls_sheet-id.
       IF sy-subrc = 0.
         <worksheet>-sheetid = ls_sheet-sheetid.                                "ins #235 - repeat rows/cols - needed to identify correct sheet
+        <worksheet>-localsheetid = |{ lv_workbook_index - 1 }|.
         CONCATENATE lv_path <worksheet>-target
             INTO lv_worksheet_path.
         me->load_worksheet( ip_path      = lv_worksheet_path
@@ -1994,8 +1996,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns - begin
 *--------------------------------------------------------------------*
-        lv_tabix = ls_range-localsheetid + 1.
-        READ TABLE lt_worksheets ASSIGNING <worksheet> INDEX lv_tabix.
+        READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY localsheetid = ls_range-localsheetid.
         IF sy-subrc = 0.
           CASE ls_range-name.
 
