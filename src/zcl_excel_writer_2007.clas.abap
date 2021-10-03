@@ -7284,7 +7284,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lv_xml_node_ridx_id TYPE string,
           lv_value            TYPE string,
           lv_syindex          TYPE string,
-          l_guid              TYPE sysuuid_x16,
           lv_active_sheet     TYPE zexcel_active_worksheet.
 
 **********************************************************************
