@@ -23,7 +23,7 @@
     "cyclic_oo": false,
     "many_parentheses": true,
     "pragma_placement": true,
-    "unused_ddic": false,
+    "unused_ddic": true,
     "dangerous_statement": true,
     "db_operation_in_loop": false,
     "identical_descriptions": false,
