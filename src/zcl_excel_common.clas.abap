@@ -128,11 +128,12 @@ CLASS zcl_excel_common DEFINITION
         VALUE(ep_value) TYPE zexcel_cell_value .
     TYPE-POOLS abap .
     TYPES: t_char10 TYPE c LENGTH 10.
+    TYPES: t_char255 TYPE c LENGTH 255.
     CLASS-METHODS split_file
       IMPORTING
-        !ip_file         TYPE text255
+        !ip_file         TYPE t_char255
       EXPORTING
-        !ep_file         TYPE text255
+        !ep_file         TYPE t_char255
         !ep_extension    TYPE t_char10
         !ep_dotextension TYPE t_char10 .
     CLASS-METHODS calculate_cell_distance
@@ -181,7 +182,7 @@ CLASS zcl_excel_common DEFINITION
     CLASS-DATA c_excel_col_module TYPE int2 VALUE 64. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     CLASS-DATA sv_prev_in1  TYPE zexcel_cell_column.
     CLASS-DATA sv_prev_out1 TYPE zexcel_cell_column_alpha.
-    CLASS-DATA sv_prev_in2  TYPE char10.
+    CLASS-DATA sv_prev_in2  TYPE c LENGTH 10.
     CLASS-DATA sv_prev_out2 TYPE zexcel_cell_column.
     CLASS-METHODS structure_case
       IMPORTING
@@ -193,9 +194,10 @@ CLASS zcl_excel_common DEFINITION
         !is_component        TYPE abap_componentdescr
       RETURNING
         VALUE(rt_components) TYPE abap_component_tab .
+    TYPES ty_char1 TYPE c LENGTH 1.
     CLASS-METHODS char2hex
       IMPORTING
-        !i_char      TYPE char1
+        !i_char      TYPE ty_char1
       RETURNING
         VALUE(r_hex) TYPE zexcel_pwd_hash .
     CLASS-METHODS shl01
@@ -280,7 +282,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
   METHOD convert_column2alpha.
 
     DATA: lv_uccpi  TYPE i,
-          lv_text   TYPE sychar02,
+          lv_text   TYPE c LENGTH 2,
           lv_module TYPE int4,
           lv_column TYPE zexcel_cell_column.
 
@@ -351,7 +353,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 *--------------------------------------------------------------------*
 
     DATA: lv_column       TYPE zexcel_cell_column_alpha,
-          lv_column_c     TYPE char10,
+          lv_column_c     TYPE c LENGTH 10,
           lv_column_s     TYPE string,
           lv_errormessage TYPE string,                          " Can't pass '...'(abc) to exception-class
           lv_modulo       TYPE i.
