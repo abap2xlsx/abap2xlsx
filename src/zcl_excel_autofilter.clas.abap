@@ -400,6 +400,7 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
 
   METHOD validate_area.
     DATA: l_col TYPE zexcel_cell_column,
+          ls_original_filter_area TYPE zexcel_s_autofilter_area,
           l_row TYPE zexcel_cell_row.
 
     l_row = worksheet->get_highest_row( ) .
@@ -412,6 +413,11 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
       filter_area-col_end   = l_col .
     ENDIF.
 
+    IF filter_area-row_start > filter_area-row_end.
+      ls_original_filter_area = filter_area.
+      filter_area-row_start = ls_original_filter_area-row_end.
+      filter_area-row_end = ls_original_filter_area-row_start.
+    ENDIF.
     IF filter_area-row_start < 1.
       filter_area-row_start = 1.
     ENDIF.
@@ -425,13 +431,6 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
     IF filter_area-col_end > l_col OR
        filter_area-col_end < 1.
       filter_area-col_end = l_col.
-    ENDIF.
-    IF filter_area-row_start >= filter_area-row_end.
-      filter_area-row_start = filter_area-row_end - 1.
-      IF filter_area-row_start < 1.
-        filter_area-row_start = 1.
-        filter_area-row_end = 2.
-      ENDIF.
     ENDIF.
     IF filter_area-col_start > filter_area-col_end.
       filter_area-col_start = filter_area-col_end.
