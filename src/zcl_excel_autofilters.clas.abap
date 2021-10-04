@@ -20,8 +20,7 @@ CLASS zcl_excel_autofilters DEFINITION
     METHODS clear .
     METHODS get
       IMPORTING
-        !io_worksheet        TYPE REF TO zcl_excel_worksheet OPTIONAL
-        !i_sheet_guid        TYPE sysuuid_x16 OPTIONAL
+        !io_worksheet        TYPE REF TO zcl_excel_worksheet
       RETURNING
         VALUE(ro_autofilter) TYPE REF TO zcl_excel_autofilter .
     METHODS is_empty
