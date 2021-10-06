@@ -21,6 +21,7 @@
     "zcl_excel_security",
     "zcl_excel_style_protection",
     "zcl_excel_styles_cond",
+    "zcl_excel_theme_color_scheme",
     "zcl_excel_styles",
     "zcl_excel_table",
     "zcl_excel_worksheet_pagebreaks",
