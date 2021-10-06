@@ -7,6 +7,7 @@
     "zcl_excel_comments",
     "zcl_excel_common",
     "zcl_excel_data_validations",
+    "zcl_excel_drawings",
     "zcl_excel_graph_bars",
     "zcl_excel_graph_line",
     "zcl_excel_graph_pie",
