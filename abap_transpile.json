@@ -71,14 +71,14 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string", "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "excel_string_to_time", "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string", "note": "??"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calculate_cell_distance", "note": "Cannot read property 'get' of undefined in CO"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "is_cell_in_range", "note": "Cannot read property 'get' of undefined in CO"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int", "note": "Cannot read property 'get' of undefined in CO"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calculate_cell_distance", "note": "fails in uccpi()"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "is_cell_in_range",        "note": "fails in uccpi()"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2alpha",    "note": "fails in uccpi()"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int",      "note": "fails in uccpi()"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "infinite loop"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "https://github.com/sapmentors/abap2xlsx/pull/828"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula", "note": "https://github.com/sapmentors/abap2xlsx/pull/828"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file", "note": "Void type: TEXT255"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2alpha", "note": "fails in uccpi()"}
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula",      "note": "https://github.com/sapmentors/abap2xlsx/pull/828"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file", "note": "Void type: TEXT255"}
     ]
   }
 }
