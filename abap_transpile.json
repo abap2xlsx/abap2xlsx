@@ -11,6 +11,7 @@
     "zcl_excel_graph_pie",
     "zcl_excel_common",
     "zcl_excel_graph",
+    "zcx_excel",
     "zcl_excel_hyperlink",
     "zcl_excel_legacy_palette",
     "zcl_excel_range",
