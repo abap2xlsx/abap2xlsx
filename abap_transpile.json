@@ -16,6 +16,7 @@
     "zcl_excel_legacy_palette",
     "zcl_excel_range",
     "zcl_excel_ranges",
+    "zcl_excel_row",
     "zcl_excel_rows",
     "zcl_excel_security",
     "zcl_excel_style_protection",
