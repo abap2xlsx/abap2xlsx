@@ -37,6 +37,7 @@
     "zexcel_data_val_type",
     "zexcel_diagonal",
     "zexcel_pwd_hash",
+    "zexcel_fill_type",
     "zexcel_sheet_hidden",
     "zexcel_style_color_argb",
     "zexcel_style_font_family",
