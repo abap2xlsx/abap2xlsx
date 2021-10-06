@@ -8,8 +8,8 @@
     "url": "git+https://github.com/sapmentors/abap2xlsx.git"
   },
   "devDependencies": {
-    "@abaplint/cli": "^2.79.15",
-    "@abaplint/transpiler-cli": "^1.6.34",
-    "@abaplint/runtime": "^1.6.34"
+    "@abaplint/cli": "^2.79.18",
+    "@abaplint/transpiler-cli": "^1.6.35",
+    "@abaplint/runtime": "^1.6.35"
   }
 }
