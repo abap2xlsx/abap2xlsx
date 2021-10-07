@@ -1879,7 +1879,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     IF ep_style IS SUPPLIED.
       CLEAR ep_style.
       style_iterator = me->excel->get_styles_iterator( ).
-      WHILE style_iterator->has_next( ).
+      WHILE style_iterator->has_next( ) = abap_true.
         style ?= style_iterator->get_next( ).
         IF style->get_guid( ) = ls_sheet_content-cell_style.
           ep_style = style.
