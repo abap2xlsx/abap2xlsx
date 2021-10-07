@@ -1868,7 +1868,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = ip_row
                                                                   cell_column  = lv_column.
 
-    ep_rc = sy-subrc.
+    ep_rc       = sy-subrc.
     ep_value    = ls_sheet_content-cell_value.
     ep_guid     = ls_sheet_content-cell_style.       " issue 139 - added this to be used for columnwidth calculation
     ep_formula  = ls_sheet_content-cell_formula.
@@ -1883,7 +1883,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         style ?= style_iterator->get_next( ).
         IF style->get_guid( ) = ls_sheet_content-cell_style.
           ep_style = style.
-          EXIT. "WHILE
+          EXIT.
         ENDIF.
       ENDWHILE.
     ENDIF.
