@@ -54,6 +54,11 @@ START-OF-SELECTION.
                             is_table_settings = ls_table_settings ).
 
   lo_worksheet->freeze_panes( ip_num_rows = 3 ). "freeze column headers when scrolling
+  IF lines( lt_test ) >= 1.
+    lo_worksheet->set_ignored_errors( VALUE #( (
+        cell_coords           = |B2:B{ lines( lt_test ) + 1 }|
+        number_stored_as_text = abap_true ) ) ).
+  ENDIF.
 
   lo_column = lo_worksheet->get_column( ip_column = 'E' ). "make date field a bit wider
   lo_column->set_width( ip_width = 11 ).
