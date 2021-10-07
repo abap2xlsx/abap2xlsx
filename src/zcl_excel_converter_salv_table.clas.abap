@@ -49,6 +49,9 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
     DATA ls_kkblo_layout   TYPE kkblo_layout.
     DATA lt_kkblo_filter   TYPE kkblo_t_filter.
     DATA lt_kkblo_sort     TYPE kkblo_t_sortinfo.
+    DATA: lv_runtime_info_intercept_data TYPE abap_bool,
+          ls_salv_bs_runtime_info        TYPE cl_salv_bs_runtime_info=>s_type_runtime_info,
+          ls_layout_key                  TYPE salv_s_layout_key.
 
     lo_layout               = io_salv->get_layout( ) .
     lo_columns              = io_salv->get_columns( ).
@@ -62,9 +65,26 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
              wt_sort,
              wt_filt.
 
+    TRY.
+        ls_salv_bs_runtime_info = cl_salv_bs_runtime_info=>get( ).
+        IF ls_salv_bs_runtime_info-display = abap_false AND ls_salv_bs_runtime_info-data = abap_true.
+          lv_runtime_info_intercept_data = abap_true.
+        ELSE.
+          lv_runtime_info_intercept_data = abap_false.
+        ENDIF.
+      CATCH cx_salv_bs_sc_runtime_info.
+    ENDTRY.
+
 * First update metadata if we can.
     IF io_salv->is_offline( ) = abap_false.
-      io_salv->get_metadata( ) .
+      IF lv_runtime_info_intercept_data = abap_true.
+        ls_layout_key = lo_layout->get_key( ).
+        ls_vari-report    = ls_layout_key-report.
+        ls_vari-handle    = ls_layout_key-handle.
+        ls_vari-log_group = ls_layout_key-logical_group.
+      ELSE.
+        io_salv->get_metadata( ) .
+      ENDIF.
     ELSE.
 * If we are offline we need to build this.
       cl_salv_controller_metadata=>get_variant(
@@ -104,7 +124,9 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
       CHANGING
         ct_fieldcat      = wt_fcat.
 
-    IF ls_vari IS NOT INITIAL AND io_salv->is_offline( ) = abap_true.
+    IF ls_vari IS NOT INITIAL AND
+        ( io_salv->is_offline( ) = abap_true
+          OR lv_runtime_info_intercept_data = abap_true ).
       CALL FUNCTION 'LVC_TRANSFER_TO_KKBLO'
         EXPORTING
           it_fieldcat_lvc         = wt_fcat
