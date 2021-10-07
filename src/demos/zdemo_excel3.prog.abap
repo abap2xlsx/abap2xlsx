@@ -20,6 +20,7 @@ DATA: ls_table_settings       TYPE zexcel_s_table_settings.
 DATA: lv_title TYPE zexcel_sheet_title,
       lt_carr  TYPE TABLE OF scarr,
       row      TYPE zexcel_cell_row VALUE 2,
+      lv_range TYPE string,
       lo_range TYPE REF TO zcl_excel_range.
 DATA: lo_data_validation  TYPE REF TO zcl_excel_data_validation.
 FIELD-SYMBOLS: <carr> LIKE LINE OF lt_carr.
@@ -55,8 +56,9 @@ START-OF-SELECTION.
 
   lo_worksheet->freeze_panes( ip_num_rows = 3 ). "freeze column headers when scrolling
   IF lines( lt_test ) >= 1.
+    lv_range = |B2:B{ lines( lt_test ) + 1 }|.
     lo_worksheet->set_ignored_errors( VALUE #( (
-        cell_coords           = |B2:B{ lines( lt_test ) + 1 }|
+        cell_coords           = lv_range
         number_stored_as_text = abap_true ) ) ).
   ENDIF.
 
