@@ -73,7 +73,7 @@
     "unknownTypes": "runtimeError",
     "skip": [
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "infinite loop"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "encrypt_password", "note": "zcl_excel_common.o_conv.get(...).reset"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "encrypt_password",           "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string", "note": "todo: split the unit test method into 6 methods, https://github.com/sapmentors/abap2xlsx/pull/833"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "excel_string_to_time", "note": "todo: split the unit test method into 5 methods, https://github.com/sapmentors/abap2xlsx/pull/833"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string", "note": "todo: split the unit test method into 4 methods, https://github.com/sapmentors/abap2xlsx/pull/833"},
