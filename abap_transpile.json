@@ -56,6 +56,7 @@
     "zexcel_table_totals_function",
     "zif_excel_book_properties",
     "zif_excel_book_protection",
+    "zif_excel_book_vba_project",
     "zif_excel_converter",
     "zif_excel_reader",
     "zif_excel_sheet_printsettings",
