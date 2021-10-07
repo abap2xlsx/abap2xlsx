@@ -3542,15 +3542,15 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
       CLEAR ls_ignored_error.
       ls_ignored_error-cell_coords = ls_raw_ignored_error-sqref.
-      ls_ignored_error-eval_error = xsdbool( ls_raw_ignored_error-evalerror = '1' ).
-      ls_ignored_error-two_digit_text_year = xsdbool( ls_raw_ignored_error-twodigittextyear = '1' ).
-      ls_ignored_error-number_stored_as_text = xsdbool( ls_raw_ignored_error-numberstoredastext = '1' ).
-      ls_ignored_error-formula = xsdbool( ls_raw_ignored_error-formula = '1' ).
-      ls_ignored_error-formula_range = xsdbool( ls_raw_ignored_error-formularange = '1' ).
-      ls_ignored_error-unlocked_formula = xsdbool( ls_raw_ignored_error-unlockedformula = '1' ).
-      ls_ignored_error-empty_cell_reference = xsdbool( ls_raw_ignored_error-emptycellreference = '1' ).
-      ls_ignored_error-list_data_validation = xsdbool( ls_raw_ignored_error-listdatavalidation = '1' ).
-      ls_ignored_error-calculated_column  = xsdbool( ls_raw_ignored_error-calculatedcolumn = '1' ).
+      ls_ignored_error-eval_error = boolc( ls_raw_ignored_error-evalerror = '1' ).
+      ls_ignored_error-two_digit_text_year = boolc( ls_raw_ignored_error-twodigittextyear = '1' ).
+      ls_ignored_error-number_stored_as_text = boolc( ls_raw_ignored_error-numberstoredastext = '1' ).
+      ls_ignored_error-formula = boolc( ls_raw_ignored_error-formula = '1' ).
+      ls_ignored_error-formula_range = boolc( ls_raw_ignored_error-formularange = '1' ).
+      ls_ignored_error-unlocked_formula = boolc( ls_raw_ignored_error-unlockedformula = '1' ).
+      ls_ignored_error-empty_cell_reference = boolc( ls_raw_ignored_error-emptycellreference = '1' ).
+      ls_ignored_error-list_data_validation = boolc( ls_raw_ignored_error-listdatavalidation = '1' ).
+      ls_ignored_error-calculated_column  = boolc( ls_raw_ignored_error-calculatedcolumn = '1' ).
 
       INSERT ls_ignored_error INTO TABLE lt_ignored_errors.
 
