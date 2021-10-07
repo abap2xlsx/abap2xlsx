@@ -69,16 +69,14 @@
     "unknownTypes": "runtimeError",
     "skip": [
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "infinite loop"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "encrypt_password", "note": "fails in cl_abap_conv_out_ce, missing default fallback"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "excel_string_to_date", "note": "cx_sy_conversion_error missing, Right-hand side of 'instanceof' is not an object"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "encrypt_password", "note": "zcl_excel_common.o_conv.get(...).reset"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string", "note": "todo: split the unit test method into 6 methods"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "excel_string_to_time", "note": "todo: split the unit test method into 5 methods"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string", "note": "todo: split the unit test method into 4 methods"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calculate_cell_distance", "note": "fails in uccpi()"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "is_cell_in_range",        "note": "fails in uccpi()"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2alpha",    "note": "fails in uccpi()"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int",      "note": "fails in uccpi()"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula",           "note": "fails in uccpi()"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calculate_cell_distance", "note": "??"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "is_cell_in_range",        "note": "??"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int",      "note": "??"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula",           "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "Void type: STRING"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file",         "note": "Void type: TEXT255"}
     ]
