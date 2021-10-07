@@ -21,7 +21,12 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS: setup.
     METHODS: convert_column2alpha FOR TESTING.
     METHODS: convert_column2int FOR TESTING.
-    METHODS: date_to_excel_string FOR TESTING.
+    METHODS date_to_excel_string1 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string2 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string3 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string4 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string5 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string6 FOR TESTING RAISING cx_static_check.
     METHODS: encrypt_password FOR TESTING.
     METHODS: excel_string_to_date FOR TESTING.
     METHODS: excel_string_to_time FOR TESTING.
@@ -217,115 +222,90 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.       "convert_Column2int
 
 
-  METHOD date_to_excel_string.
-* ============================
+  METHOD date_to_excel_string1.
     DATA ep_value TYPE zexcel_cell_value.
 
 * Test 1. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '19000101' ).
+    ep_value = zcl_excel_common=>date_to_excel_string( '19000101' ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 1
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 1
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string2.
+    DATA ep_value TYPE zexcel_cell_value.
+
 * Check around the "Excel Leap Year" 1900
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '19000228' ).
+    ep_value = zcl_excel_common=>date_to_excel_string( '19000228' ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 59
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '19000301' ).
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 59
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 61
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+  ENDMETHOD.
 
+  METHOD date_to_excel_string3.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>date_to_excel_string( '19000301' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 61
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string4.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 2. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '99991212' ).
+    ep_value = zcl_excel_common=>date_to_excel_string( '99991212' ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 2958446
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 2958446
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string5.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 3. Initial date
-    TRY.
-        DATA: lv_date TYPE d.
-        ep_value = zcl_excel_common=>date_to_excel_string( lv_date ).
+    DATA: lv_date TYPE d.
+    ep_value = zcl_excel_common=>date_to_excel_string( lv_date ).
 
-        cl_abap_unit_assert=>assert_equals(
-          act   = ep_value
-          exp   = ''
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+      act   = ep_value
+      exp   = ''
+      msg   = 'Wrong date conversion'
+      level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string6.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 2. Basic conversion
-    TRY.
-        DATA exp_value TYPE zexcel_cell_value VALUE 0.
-        ep_value = zcl_excel_common=>date_to_excel_string( '18991231' ).
+    DATA exp_value TYPE zexcel_cell_value VALUE 0.
+    ep_value = zcl_excel_common=>date_to_excel_string( '18991231' ).
 
-        cl_abap_unit_assert=>assert_differs(
-              act   = ep_value
-              exp   = exp_value
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>assert_equals(
-          act   = lx_excel->error
-          exp   = 'Index out of bounds'
-          msg   = 'Dates prior of 1900 are not available in excel'
-          level = if_aunit_constants=>critical
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_differs(
+          act   = ep_value
+          exp   = exp_value
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
 
-  ENDMETHOD.       "date_To_Excel_String
+  ENDMETHOD.
 
 
   METHOD encrypt_password.
