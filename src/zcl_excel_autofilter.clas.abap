@@ -8,7 +8,7 @@ CLASS zcl_excel_autofilter DEFINITION
   PUBLIC SECTION.
 
     TYPES tv_filter_rule TYPE string .
-    TYPES tv_logical_operator TYPE char3 .
+    TYPES tv_logical_operator TYPE c LENGTH 3 .
     TYPES:
       BEGIN OF ts_filter,
         column           TYPE zexcel_cell_column,
