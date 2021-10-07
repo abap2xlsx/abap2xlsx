@@ -1876,13 +1876,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     " Addition to solve issue #120, contribution by Stefan Schmöcker
     DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
           style          TYPE REF TO zcl_excel_style.
-    IF ep_style IS REQUESTED.
+    IF ep_style IS SUPPLIED.
+      CLEAR ep_style.
       style_iterator = me->excel->get_styles_iterator( ).
-      WHILE style_iterator->has_next( ) = 'X'.
+      WHILE style_iterator->has_next( ).
         style ?= style_iterator->get_next( ).
         IF style->get_guid( ) = ls_sheet_content-cell_style.
           ep_style = style.
-          EXIT.
+          EXIT. "WHILE
         ENDIF.
       ENDWHILE.
     ENDIF.
