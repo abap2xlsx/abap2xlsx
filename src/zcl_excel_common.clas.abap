@@ -128,11 +128,12 @@ CLASS zcl_excel_common DEFINITION
         VALUE(ep_value) TYPE zexcel_cell_value .
     TYPE-POOLS abap .
     TYPES: t_char10 TYPE c LENGTH 10.
+    TYPES: t_char255 TYPE c LENGTH 255.
     CLASS-METHODS split_file
       IMPORTING
-        !ip_file         TYPE text255
+        !ip_file         TYPE t_char255
       EXPORTING
-        !ep_file         TYPE text255
+        !ep_file         TYPE t_char255
         !ep_extension    TYPE t_char10
         !ep_dotextension TYPE t_char10 .
     CLASS-METHODS calculate_cell_distance
@@ -181,7 +182,7 @@ CLASS zcl_excel_common DEFINITION
     CLASS-DATA c_excel_col_module TYPE int2 VALUE 64. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     CLASS-DATA sv_prev_in1  TYPE zexcel_cell_column.
     CLASS-DATA sv_prev_out1 TYPE zexcel_cell_column_alpha.
-    CLASS-DATA sv_prev_in2  TYPE char10.
+    CLASS-DATA sv_prev_in2  TYPE c LENGTH 10.
     CLASS-DATA sv_prev_out2 TYPE zexcel_cell_column.
     CLASS-METHODS structure_case
       IMPORTING
@@ -193,9 +194,10 @@ CLASS zcl_excel_common DEFINITION
         !is_component        TYPE abap_componentdescr
       RETURNING
         VALUE(rt_components) TYPE abap_component_tab .
+    TYPES ty_char1 TYPE c LENGTH 1.
     CLASS-METHODS char2hex
       IMPORTING
-        !i_char      TYPE char1
+        !i_char      TYPE ty_char1
       RETURNING
         VALUE(r_hex) TYPE zexcel_pwd_hash .
     CLASS-METHODS shl01
@@ -280,7 +282,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
   METHOD convert_column2alpha.
 
     DATA: lv_uccpi  TYPE i,
-          lv_text   TYPE sychar02,
+          lv_text   TYPE c LENGTH 2,
           lv_module TYPE int4,
           lv_column TYPE zexcel_cell_column.
 
@@ -351,7 +353,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 *--------------------------------------------------------------------*
 
     DATA: lv_column       TYPE zexcel_cell_column_alpha,
-          lv_column_c     TYPE char10,
+          lv_column_c     TYPE c LENGTH 10,
           lv_column_s     TYPE string,
           lv_errormessage TYPE string,                          " Can't pass '...'(abc) to exception-class
           lv_modulo       TYPE i.
@@ -931,8 +933,8 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 * This is private an no one using it so far except me, so no need to hurry
     DATA: descr          TYPE REF TO cl_abap_structdescr,
           wa_component   LIKE LINE OF descr->components,
-          attribute_name TYPE fieldname,
-          flag_class     TYPE flag.
+          attribute_name LIKE wa_component-name,
+          flag_class     TYPE abap_bool.
 
     FIELD-SYMBOLS: <field>     TYPE any,
                    <fieldx>    TYPE any,
@@ -985,8 +987,8 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 * This is private an no one using it so far except me, so no need to hurry
     DATA: descr          TYPE REF TO cl_abap_structdescr,
           wa_component   LIKE LINE OF descr->components,
-          attribute_name TYPE fieldname,
-          flag_class     TYPE flag,
+          attribute_name LIKE wa_component-name,
+          flag_class     TYPE abap_bool,
           o_border       TYPE REF TO zcl_excel_style_border.
 
     FIELD-SYMBOLS: <field>     TYPE any,
@@ -1059,7 +1061,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
           lv_numchars       TYPE i,         " Number of characters counter
           lv_tchar(1)       TYPE c,         " Temp character
           lv_tchar2(1)      TYPE c,         " Temp character
-          lv_cur_form(2000) TYPE c,         " Formula for current cell
+          lv_cur_form       TYPE string,    " Formula for current cell
           lv_ref_cell_addr  TYPE string,    " Reference cell address
           lv_tcol1          TYPE string,    " Temp column letter
           lv_tcol2          TYPE string,    " Temp column letter
@@ -1071,6 +1073,9 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
           lv_substr1        TYPE string,    " Substring variable
           lv_abscol         TYPE string,    " Absolute column symbol
           lv_absrow         TYPE string,    " Absolute row symbol
+          lv_ref_formula    TYPE string,
+          lv_compare_1      TYPE string,
+          lv_compare_2      TYPE string,
 
           lv_errormessage   TYPE string.
 
@@ -1085,17 +1090,18 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 * §4 Build resulting formula
 *--------------------------------------------------------------------*
 
+    lv_ref_formula = iv_reference_formula.
 *--------------------------------------------------------------------*
 * No distance --> Reference = resulting cell/formula
 *--------------------------------------------------------------------*
     IF    iv_shift_cols = 0
       AND iv_shift_rows = 0.
-      ev_resulting_formula = iv_reference_formula.
+      ev_resulting_formula = lv_ref_formula.
       RETURN. " done
     ENDIF.
 
 
-    lv_flen     = strlen( iv_reference_formula ).
+    lv_flen     = strlen( lv_ref_formula ).
     lv_numchars = 1.
 
 *--------------------------------------------------------------------*
@@ -1114,7 +1120,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Here we have the current character in the formula
 *--------------------------------------------------------------------*
-      lv_tchar = iv_reference_formula+lv_cnt(1).
+      lv_tchar = lv_ref_formula+lv_cnt(1).
 
 *--------------------------------------------------------------------*
 * Operators or opening parenthesis will separate possible cellreferences
@@ -1122,7 +1128,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
       IF    (    lv_tchar CA lcv_operators
               OR lv_tchar CA '(' )
         AND lv_cnt2 = 1.
-        lv_substr1  = iv_reference_formula+lv_offset1(1).
+        lv_substr1  = lv_ref_formula+lv_offset1(1).
         CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
         lv_cnt      = lv_cnt + 1.
         lv_offset1  = lv_cnt.
@@ -1136,16 +1142,16 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
       IF lv_tchar EQ '"'.
         lv_cnt      = lv_cnt + 1.
         lv_numchars = lv_numchars + 1.
-        lv_tchar     = iv_reference_formula+lv_cnt(1).
+        lv_tchar     = lv_ref_formula+lv_cnt(1).
         WHILE lv_tchar NE '"'.
 
           lv_cnt      = lv_cnt + 1.
           lv_numchars = lv_numchars + 1.
-          lv_tchar    = iv_reference_formula+lv_cnt(1).
+          lv_tchar    = lv_ref_formula+lv_cnt(1).
 
         ENDWHILE.
         lv_cnt2    = lv_cnt + 1.
-        lv_substr1 = iv_reference_formula+lv_offset1(lv_numchars).
+        lv_substr1 = lv_ref_formula+lv_offset1(lv_numchars).
         CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
         lv_cnt     = lv_cnt + 1.
         IF lv_cnt = lv_flen.
@@ -1153,7 +1159,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
         ENDIF.
         lv_offset1  = lv_cnt.
         lv_numchars = 1.
-        lv_tchar    = iv_reference_formula+lv_cnt(1).
+        lv_tchar    = lv_ref_formula+lv_cnt(1).
         lv_cnt2     = lv_cnt + 1.
         CONTINUE.       " --> next character in formula can be analyzed
       ENDIF.
@@ -1166,7 +1172,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
         OR lv_tchar CA '():'
         OR lv_cnt2  =  lv_flen.
         IF lv_cnt > 0.
-          lv_substr1 = iv_reference_formula+lv_offset1(lv_numchars).
+          lv_substr1 = lv_ref_formula+lv_offset1(lv_numchars).
 *--------------------------------------------------------------------*
 * Check for text concatenation and functions
 *--------------------------------------------------------------------*
@@ -1201,7 +1207,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 * Capture reference cell address
 *--------------------------------------------------------------------*
           TRY.
-              MOVE: iv_reference_formula+lv_offset1(lv_tlen) TO lv_ref_cell_addr. "Ref cell address
+              MOVE: lv_ref_formula+lv_offset1(lv_tlen) TO lv_ref_cell_addr. "Ref cell address
             CATCH cx_root.
               lv_errormessage = 'Internal error in Class ZCL_EXCEL_COMMON Method SHIFT_FORMULA Spot 1 '.  " Change to messageclass if possible
               zcx_excel=>raise_text( lv_errormessage ).
@@ -1228,6 +1234,19 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
               lv_tcnt = lv_tcnt + 1.
             ENDDO.
           ENDIF.
+
+        " Is valid column & row ?
+        IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
+          " COLUMN + ROW
+          CONCATENATE lv_tcol1 lv_trow1 INTO lv_compare_1.
+          " Original condensed string
+          lv_compare_2 = lv_ref_cell_addr.
+          CONDENSE lv_compare_2.
+          IF lv_compare_1 <> lv_compare_2.
+            CLEAR: lv_trow1, lv_tchar2.
+          ENDIF.
+        ENDIF.
+
 *--------------------------------------------------------------------*
 * Check for invalid cell address
 *--------------------------------------------------------------------*
@@ -1305,6 +1324,8 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 * Check whether there is a referencing problem
 *--------------------------------------------------------------------*
           lv_trow2 = lv_trow1 + iv_shift_rows.
+          " Remove the space used for the sign
+          CONDENSE lv_trow2.
           IF   ( lv_tcoln < 1 AND lv_abscol <> '$' )   " Maybe we should add here max-column and max row-tests as well.
             OR ( lv_trow2 < 1 AND lv_absrow <> '$' ).  " Check how EXCEL behaves in this case
 *--------------------------------------------------------------------*
@@ -1353,7 +1374,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
           lv_numchars = 0.
           IF   lv_tchar CA lcv_operators
             OR lv_tchar CA ':)'.
-            CONCATENATE lv_cur_form lv_tchar INTO lv_cur_form.
+            CONCATENATE lv_cur_form lv_tchar INTO lv_cur_form RESPECTING BLANKS.
           ENDIF.
           lv_offset1 = lv_cnt2.
         ENDIF.
