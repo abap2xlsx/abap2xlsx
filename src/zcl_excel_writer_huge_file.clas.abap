@@ -51,7 +51,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       END OF ts_root.
 
     DATA:
-      lv_last_allowed_char TYPE char1,
+      lv_last_allowed_char TYPE c LENGTH 2,
       lv_invalid           TYPE string.
 
     DATA:

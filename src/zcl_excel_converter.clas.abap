@@ -104,11 +104,11 @@ CLASS zcl_excel_converter DEFINITION
     DATA wt_sort_values TYPE tt_sort_values .
     DATA wt_subtotal_rows TYPE tt_subtotal_rows .
     DATA wt_styles TYPE tt_styles .
-    CONSTANTS c_type_hdr TYPE char1 VALUE 'H'.              "#EC NOTEXT
-    CONSTANTS c_type_str TYPE char1 VALUE 'P'.              "#EC NOTEXT
-    CONSTANTS c_type_nor TYPE char1 VALUE 'N'.              "#EC NOTEXT
-    CONSTANTS c_type_sub TYPE char1 VALUE 'S'.              "#EC NOTEXT
-    CONSTANTS c_type_tot TYPE char1 VALUE 'T'.              "#EC NOTEXT
+    CONSTANTS c_type_hdr TYPE c VALUE 'H'.              "#EC NOTEXT
+    CONSTANTS c_type_str TYPE c VALUE 'P'.              "#EC NOTEXT
+    CONSTANTS c_type_nor TYPE c VALUE 'N'.              "#EC NOTEXT
+    CONSTANTS c_type_sub TYPE c VALUE 'S'.              "#EC NOTEXT
+    CONSTANTS c_type_tot TYPE c VALUE 'T'.              "#EC NOTEXT
     DATA wt_color_styles TYPE tt_color_styles .
     CLASS-DATA ws_option TYPE zexcel_s_converter_option .
     CLASS-DATA ws_indx TYPE indx .
@@ -215,7 +215,7 @@ CLASS zcl_excel_converter DEFINITION
         VALUE(r_function_number) TYPE int1 .
     METHODS get_style
       IMPORTING
-        !i_type        TYPE char1
+        !i_type        TYPE c
         !i_alignment   TYPE zexcel_alignment DEFAULT space
         !i_inttype     TYPE inttype DEFAULT space
         !i_decimals    TYPE int1 DEFAULT 0
