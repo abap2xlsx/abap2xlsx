@@ -1090,7 +1090,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_reference_formula = `X(B13, "KK" )  `
       iv_shift_cols        = 1
       iv_shift_rows        = 1
-      iv_expected          = `X(C14,"KK")` ).
+      iv_expected          = `X(C14, "KK" )  ` ).
 
     " same as above - but with string input instead of Char-input
     macro_shift_formula(
@@ -1140,6 +1140,62 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_cols        = -1
       iv_shift_rows        = -1
       iv_expected          = '#REF!+#REF!+#REF!+$A$1+A1' ).
+
+" Sheet name not ending with digit
+    macro_shift_formula(
+      iv_reference_formula = 'Sheet!A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Sheet!B2' ).
+
+" Sheet name ending with digit
+    macro_shift_formula(
+      iv_reference_formula = 'Sheet2!A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Sheet2!B2' ).
+
+" Sheet name with special characters
+    macro_shift_formula(
+      iv_reference_formula = |'Sheet name'!A1|
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = |'Sheet name'!B2| ).
+
+" Respecting blanks
+    macro_shift_formula(
+      iv_reference_formula = 'SUBTOTAL(109,Table1[SUM 1])'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'SUBTOTAL(109,Table1[SUM 1])' ).
+
+" Respecting blanks
+    macro_shift_formula(
+      iv_reference_formula = 'B4 & C4'
+      iv_shift_cols        = 0
+      iv_shift_rows        = 1
+      iv_expected          = 'B5 & C5' ).
+
+" F_1 is a range name, not a cell address
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(F_1,F_2)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'SUM(F_1,F_2)' ).
+
+" RC are not columns
+    macro_shift_formula(
+      iv_reference_formula = 'INDIRECT("RC[4]",FALSE)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'INDIRECT("RC[4]",FALSE)' ).
+
+" A1 is a sheet name
+    macro_shift_formula(
+      iv_reference_formula = |'A1'!$A$1|
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = |'A1'!$A$1| ).
 
   ENDMETHOD.
 
