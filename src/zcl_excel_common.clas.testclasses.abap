@@ -14,8 +14,8 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
 * ================
     DATA:
       lx_excel     TYPE REF TO zcx_excel,
-      ls_symsg_act TYPE symsg,                    " actual   messageinformation of exception
-      ls_symsg_exp TYPE symsg,                    " expected messageinformation of exception
+      ls_symsg_act LIKE sy,                    " actual   messageinformation of exception
+      ls_symsg_exp LIKE sy,                    " expected messageinformation of exception
       f_cut        TYPE REF TO zcl_excel_common.  "class under test
 
     METHODS: setup.
@@ -893,7 +893,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 
   METHOD describe_structure.
-    DATA: ls_test TYPE scarr.
+    DATA: ls_test TYPE zexcel_pane.
     DATA: lo_structdescr TYPE REF TO cl_abap_structdescr.
     DATA: lt_structure TYPE ddfields.
     FIELD-SYMBOLS: <line> LIKE LINE OF lt_structure.
@@ -904,15 +904,15 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     READ TABLE lt_structure ASSIGNING <line> INDEX 1.
     cl_abap_unit_assert=>assert_equals(
           act   = <line>-fieldname
-          exp   = 'MANDT'
+          exp   = 'YSPLIT'
           msg   = 'Describe structure failed'
           level = if_aunit_constants=>critical ).
 
     " Test with local defined structure having DDIC and non DDIC elements
     TYPES:
       BEGIN OF t_test,
-        carrid   TYPE s_carr_id,
-        carrname TYPE s_carrname,
+        carrid   TYPE string,
+        carrname TYPE string,
         carrdesc TYPE string,
       END OF t_test.
     DATA: ls_ttest TYPE t_test.
@@ -1041,7 +1041,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
     DATA: lv_resulting_formula TYPE string,
           lv_message           TYPE string,
-          lv_counter           TYPE num8.
+          lv_counter           TYPE n LENGTH 8.
 
     ADD 1 TO lv_counter.
     CLEAR lv_resulting_formula.
@@ -1083,110 +1083,166 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 0
       iv_expected          = 'C17' ).
 
-" Check shift right and down
+    " Check shift right and down
     macro_shift_formula(
       iv_reference_formula = 'C17'
       iv_shift_cols        = 2
       iv_shift_rows        = 3
       iv_expected          = 'E20' ).
 
-" Check shift left and up
+    " Check shift left and up
     macro_shift_formula(
       iv_reference_formula = 'C17'
       iv_shift_cols        = -2
       iv_shift_rows        = -3
       iv_expected          = 'A14' ).
 
-" Fixed columns/rows
+    " Fixed columns/rows
     macro_shift_formula(
       iv_reference_formula = '$C$17'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = '$C$17' ).
 
-" Operators and Ranges, mixed fixed rows or columns
+    " Operators and Ranges, mixed fixed rows or columns
     macro_shift_formula(
       iv_reference_formula = 'SUM($C17:C$23)+C30'
       iv_shift_cols        = 1
       iv_shift_rows        = 11
       iv_expected          = 'SUM($C28:D$23)+D41' ).
 
-" Operators and Rangename
+    " Operators and Rangename
     macro_shift_formula(
       iv_reference_formula = 'RNGNAME1+C7'
       iv_shift_cols        = -1
       iv_shift_rows        = -4
       iv_expected          = 'RNGNAME1+B3' ).
 
-" String literals and string concatenation
+    " String literals and string concatenation
     macro_shift_formula(
       iv_reference_formula = '"Date:"&TEXT(B2)'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = '"Date:"&TEXT(C3)' ).
 
-" External sheet reference
+    " External sheet reference
     macro_shift_formula(
       iv_reference_formula = '[TEST6.XLSX]SHEET1!A1'
       iv_shift_cols        = 1
       iv_shift_rows        = 11
       iv_expected          = '[TEST6.XLSX]SHEET1!B12' ).
 
-" superflous blanks, multi-argument functions, literals in function, unknown functions
+    " superflous blanks, multi-argument functions, literals in function, unknown functions
     macro_shift_formula(
       iv_reference_formula = `X(B13, "KK" )  `
       iv_shift_cols        = 1
       iv_shift_rows        = 1
-      iv_expected          = `X(C14,"KK")` ).
+      iv_expected          = `X(C14, "KK" )  ` ).
 
-" same as above - but with string input instead of Char-input
+    " same as above - but with string input instead of Char-input
     macro_shift_formula(
       iv_reference_formula = `SIN(SIN(SIN(SIN(E22))))`
       iv_shift_cols        = 0
       iv_shift_rows        = 1
       iv_expected          = 'SIN(SIN(SIN(SIN(E23))))' ).
 
-" Functions w/o arguments, No cellreferences
+    " Functions w/o arguments, No cellreferences
     macro_shift_formula(
       iv_reference_formula = 'HEUTE()'
       iv_shift_cols        = 2
       iv_shift_rows        = 5
       iv_expected          = 'HEUTE()' ).
 
-" No cellreferences
+    " No cellreferences
     macro_shift_formula(
       iv_reference_formula = '"B2"'
       iv_shift_cols        = 2
       iv_shift_rows        = 5
       iv_expected          = '"B2"' ).
 
-" Empty
+    " Empty
     macro_shift_formula(
       iv_reference_formula = ''
       iv_shift_cols        = 2
       iv_shift_rows        = 5
       iv_expected          = '' ).
 
-" Referencing error , column only    , underflow
+    " Referencing error , column only    , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = -1
       iv_shift_rows        = 0
       iv_expected          = '#REF!+$A1+#REF!+$A$1+A2' ).
 
-" Referencing error , row only       , underflow
+    " Referencing error , row only       , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = 0
       iv_shift_rows        = -1
       iv_expected          = '#REF!+#REF!+A$1+$A$1+B1' ).
 
-" Referencing error , row and column , underflow
+    " Referencing error , row and column , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = -1
       iv_shift_rows        = -1
       iv_expected          = '#REF!+#REF!+#REF!+$A$1+A1' ).
+
+" Sheet name not ending with digit
+    macro_shift_formula(
+      iv_reference_formula = 'Sheet!A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Sheet!B2' ).
+
+" Sheet name ending with digit
+    macro_shift_formula(
+      iv_reference_formula = 'Sheet2!A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Sheet2!B2' ).
+
+" Sheet name with special characters
+    macro_shift_formula(
+      iv_reference_formula = |'Sheet name'!A1|
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = |'Sheet name'!B2| ).
+
+" Respecting blanks
+    macro_shift_formula(
+      iv_reference_formula = 'SUBTOTAL(109,Table1[SUM 1])'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'SUBTOTAL(109,Table1[SUM 1])' ).
+
+" Respecting blanks
+    macro_shift_formula(
+      iv_reference_formula = 'B4 & C4'
+      iv_shift_cols        = 0
+      iv_shift_rows        = 1
+      iv_expected          = 'B5 & C5' ).
+
+" F_1 is a range name, not a cell address
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(F_1,F_2)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'SUM(F_1,F_2)' ).
+
+" RC are not columns
+    macro_shift_formula(
+      iv_reference_formula = 'INDIRECT("RC[4]",FALSE)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'INDIRECT("RC[4]",FALSE)' ).
+
+" A1 is a sheet name
+    macro_shift_formula(
+      iv_reference_formula = |'A1'!$A$1|
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = |'A1'!$A$1| ).
 
   ENDMETHOD.
 

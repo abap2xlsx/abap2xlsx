@@ -26,6 +26,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
         targetmode TYPE string,
         worksheet  TYPE REF TO zcl_excel_worksheet,
         sheetid    TYPE string,     "ins #235 - repeat rows/cols - needed to identify correct sheet
+        localsheetid TYPE string,
       END OF t_relationship .
     TYPES:
       BEGIN OF t_fileversion,
@@ -232,6 +233,10 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !io_worksheet      TYPE REF TO zcl_excel_worksheet
       RAISING
         zcx_excel .
+    METHODS load_worksheet_autofilter
+      IMPORTING
+        io_ixml_worksheet TYPE REF TO if_ixml_document
+        io_worksheet      TYPE REF TO zcl_excel_worksheet.
     METHODS load_worksheet_pagemargins
       IMPORTING
         !io_ixml_worksheet TYPE REF TO if_ixml_document
@@ -1931,6 +1936,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY id = ls_sheet-id.
       IF sy-subrc = 0.
         <worksheet>-sheetid = ls_sheet-sheetid.                                "ins #235 - repeat rows/cols - needed to identify correct sheet
+        <worksheet>-localsheetid = |{ lv_workbook_index - 1 }|.
         CONCATENATE lv_path <worksheet>-target
             INTO lv_worksheet_path.
         me->load_worksheet( ip_path      = lv_worksheet_path
@@ -1994,8 +2000,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns - begin
 *--------------------------------------------------------------------*
-        lv_tabix = ls_range-localsheetid + 1.
-        READ TABLE lt_worksheets ASSIGNING <worksheet> INDEX lv_tabix.
+        READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY localsheetid = ls_range-localsheetid.
         IF sy-subrc = 0.
           CASE ls_range-name.
 
@@ -2872,6 +2877,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       CATCH zcx_excel. " Ignore pagebreak reading errors - pass everything we were able to identify
     ENDTRY.
 
+    TRY.
+        me->load_worksheet_autofilter( io_ixml_worksheet      = lo_ixml_worksheet
+                                       io_worksheet           = io_worksheet ).
+      CATCH zcx_excel. " Ignore autofilter reading errors - pass everything we were able to identify
+    ENDTRY.
 
   ENDMETHOD.
 
@@ -3546,6 +3556,74 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                     ip_row    = <ls_pagebreak_row>-cell_row ).
     ENDLOOP.
 
+
+  ENDMETHOD.
+
+
+  METHOD load_worksheet_autofilter.
+
+    TYPES: BEGIN OF lty_autofilter,
+             ref TYPE string,
+           END OF lty_autofilter.
+
+    DATA: lo_ixml_autofilter_elem    TYPE REF TO if_ixml_element,
+          lv_ref                     TYPE string,
+          lo_ixml_filter_column_coll TYPE REF TO if_ixml_node_collection,
+          lo_ixml_filter_column_iter TYPE REF TO if_ixml_node_iterator,
+          lo_ixml_filter_column      TYPE REF TO if_ixml_element,
+          lv_col_id                  TYPE i,
+          lv_column                  TYPE zexcel_cell_column,
+          lo_ixml_filters_coll       TYPE REF TO if_ixml_node_collection,
+          lo_ixml_filters_iter       TYPE REF TO if_ixml_node_iterator,
+          lo_ixml_filters            TYPE REF TO if_ixml_element,
+          lo_ixml_filter_coll        TYPE REF TO if_ixml_node_collection,
+          lo_ixml_filter_iter        TYPE REF TO if_ixml_node_iterator,
+          lo_ixml_filter             TYPE REF TO if_ixml_element,
+          lv_val                     TYPE string,
+          lo_autofilters             TYPE REF TO zcl_excel_autofilters,
+          lo_autofilter              TYPE REF TO zcl_excel_autofilter.
+
+    lo_autofilters = io_worksheet->excel->get_autofilters_reference( ).
+
+    lo_ixml_autofilter_elem = io_ixml_worksheet->find_from_name( 'autoFilter' ).
+    IF lo_ixml_autofilter_elem IS BOUND.
+      lv_ref = lo_ixml_autofilter_elem->get_attribute_ns( 'ref' ).
+
+      lo_ixml_filter_column_coll = lo_ixml_autofilter_elem->get_elements_by_tag_name( name = 'filterColumn' ).
+      lo_ixml_filter_column_iter = lo_ixml_filter_column_coll->create_iterator( ).
+      lo_ixml_filter_column ?= lo_ixml_filter_column_iter->get_next( ).
+      WHILE lo_ixml_filter_column IS BOUND.
+        lv_col_id = lo_ixml_filter_column->get_attribute_ns( 'colId' ).
+        lv_column = lv_col_id + 1.
+
+        lo_ixml_filters_coll = lo_ixml_filter_column->get_elements_by_tag_name( name = 'filters' ).
+        lo_ixml_filters_iter = lo_ixml_filters_coll->create_iterator( ).
+        lo_ixml_filters ?= lo_ixml_filters_iter->get_next( ).
+        WHILE lo_ixml_filters IS BOUND.
+
+          lo_ixml_filter_coll = lo_ixml_filter_column->get_elements_by_tag_name( name = 'filter' ).
+          lo_ixml_filter_iter = lo_ixml_filter_coll->create_iterator( ).
+          lo_ixml_filter ?= lo_ixml_filter_iter->get_next( ).
+          WHILE lo_ixml_filter IS BOUND.
+            lv_val = lo_ixml_filter->get_attribute_ns( 'val' ).
+
+            lo_autofilter = lo_autofilters->get( io_worksheet = io_worksheet ).
+            IF lo_autofilter IS NOT BOUND.
+              lo_autofilter = lo_autofilters->add( io_sheet = io_worksheet ).
+            ENDIF.
+            lo_autofilter->set_value(
+                    i_column = lv_column
+                    i_value  = lv_val ).
+
+            lo_ixml_filter ?= lo_ixml_filter_iter->get_next( ).
+          ENDWHILE.
+
+          lo_ixml_filters ?= lo_ixml_filters_iter->get_next( ).
+        ENDWHILE.
+
+        lo_ixml_filter_column ?= lo_ixml_filter_column_iter->get_next( ).
+      ENDWHILE.
+    ENDIF.
 
   ENDMETHOD.
 

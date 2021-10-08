@@ -17,8 +17,8 @@ CLASS zcl_excel_data_validation DEFINITION
     DATA cell_row_to TYPE zexcel_cell_row .
     CONSTANTS c_type_custom TYPE zexcel_data_val_type VALUE 'custom'. "#EC NOTEXT
     CONSTANTS c_type_list TYPE zexcel_data_val_type VALUE 'list'. "#EC NOTEXT
-    DATA showerrormessage TYPE flag VALUE 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
-    DATA showinputmessage TYPE flag VALUE 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+    DATA showerrormessage TYPE abap_bool VALUE 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
+    DATA showinputmessage TYPE abap_bool VALUE 'X'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
     DATA type TYPE zexcel_data_val_type .
     DATA formula1 TYPE zexcel_validation_formula1 .
     DATA formula2 TYPE zexcel_validation_formula1 .
@@ -39,7 +39,7 @@ CLASS zcl_excel_data_validation DEFINITION
     CONSTANTS c_operator_lessthanorequal TYPE zexcel_data_val_operator VALUE 'lessThanOrEqual'. "#EC NOTEXT
     CONSTANTS c_operator_notbetween TYPE zexcel_data_val_operator VALUE 'notBetween'. "#EC NOTEXT
     CONSTANTS c_operator_notequal TYPE zexcel_data_val_operator VALUE 'notEqual'. "#EC NOTEXT
-    DATA showdropdown TYPE flag .
+    DATA showdropdown TYPE abap_bool .
     DATA errortitle TYPE string .
     DATA error TYPE string .
     DATA prompttitle TYPE string .
