@@ -51,7 +51,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       END OF ts_root.
 
     DATA:
-      lv_last_allowed_char TYPE c LENGTH 2,
+      lv_last_allowed_char TYPE c,
       lv_invalid           TYPE string.
 
     DATA:
@@ -69,6 +69,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
 
 **********************************************************************
 * STEP 0: Build Regex for invalid characters
+" uccpi returns 2 chars but for this specific input 1 char is enough
     CASE cl_abap_char_utilities=>charsize.
       WHEN 1.lv_last_allowed_char = cl_abap_conv_in_ce=>uccpi( 255 ).  " FF     in non-Unicode
       WHEN 2.lv_last_allowed_char = cl_abap_conv_in_ce=>uccpi( 65533 )." FFFD   in Unicode

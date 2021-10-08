@@ -2,6 +2,8 @@
 *"* definitions, interfaces or data types) you need for method
 *"* implementation or private method's signature
 
+TYPES ty_style_type TYPE c LENGTH 1.
+
 TYPES:   BEGIN OF ts_alv_types,
            seoclass   TYPE seoclsname,
            clsname    TYPE seoclsname,
@@ -27,7 +29,7 @@ TYPES:   BEGIN OF ts_subtotal_rows,
          tt_subtotal_rows TYPE HASHED TABLE OF ts_subtotal_rows WITH UNIQUE KEY row_int.
 
 TYPES:   BEGIN OF ts_styles,
-            type         TYPE c LENGTH 1,
+            type         TYPE ty_style_type,
             alignment    TYPE zexcel_alignment,
             inttype      TYPE inttype,
             decimals     TYPE int1,

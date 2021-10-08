@@ -215,7 +215,7 @@ CLASS zcl_excel_converter DEFINITION
         VALUE(r_function_number) TYPE int1 .
     METHODS get_style
       IMPORTING
-        !i_type        TYPE c
+        !i_type        TYPE ty_style_type
         !i_alignment   TYPE zexcel_alignment DEFAULT space
         !i_inttype     TYPE inttype DEFAULT space
         !i_decimals    TYPE int1 DEFAULT 0
