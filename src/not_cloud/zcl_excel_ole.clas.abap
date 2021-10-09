@@ -29,6 +29,16 @@ CLASS zcl_excel_ole DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+
+    CLASS-METHODS close_document.
+    CLASS-METHODS error_doi.
+
+    CLASS-DATA: lo_spreadsheet TYPE REF TO i_oi_spreadsheet,
+                lo_control     TYPE REF TO i_oi_container_control,
+                lo_proxy       TYPE REF TO i_oi_document_proxy,
+                lo_error       TYPE REF TO i_oi_error,
+                lc_retcode     TYPE        soi_ret_string.
+
 ENDCLASS.
 
 
@@ -50,13 +60,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 * Data for session 0: DOI constructor
 * ------------------------------------------
 
-    DATA: lo_control  TYPE REF TO i_oi_container_control.
-    DATA: lo_proxy    TYPE REF TO i_oi_document_proxy.
-    DATA: lo_spreadsheet TYPE REF TO i_oi_spreadsheet.
-    DATA: lo_error    TYPE REF TO i_oi_error.
-    DATA: lc_retcode  TYPE soi_ret_string.
     DATA: li_has      TYPE i. "Proxy has spreadsheet interface?
-    DATA: l_is_closed TYPE i.
 
 * Data for session 1: Get LVC data from ALV object
 * ------------------------------------------
@@ -245,69 +249,6 @@ CLASS zcl_excel_ole IMPLEMENTATION.
     DATA: li_document_size   TYPE i.
     DATA: ls_path            TYPE rlgrap-filename.
 
-* MACRO: Close_document
-*-------------------------------------------
-
-    DEFINE close_document.
-      CLEAR: l_is_closed.
-      IF lo_proxy IS NOT INITIAL.
-
-* check proxy detroyed adi
-
-        CALL METHOD lo_proxy->is_destroyed
-          IMPORTING
-            ret_value = l_is_closed.
-
-* if dun detroyed yet: close -> release proxy
-
-        IF l_is_closed IS INITIAL.
-          CALL METHOD lo_proxy->close_document
-*        EXPORTING
-*          do_save = do_save
-            IMPORTING
-              error       = lo_error
-              retcode     = lc_retcode.
-        ENDIF.
-
-        CALL METHOD lo_proxy->release_document
-          IMPORTING
-            error   = lo_error
-            retcode = lc_retcode.
-
-      ELSE.
-        lc_retcode = c_oi_errors=>ret_document_not_open.
-      ENDIF.
-
-* Detroy control container
-
-      IF lo_control IS NOT INITIAL.
-        CALL METHOD lo_control->destroy_control.
-      ENDIF.
-
-      CLEAR:
-        lo_spreadsheet,
-        lo_proxy,
-        lo_control.
-
-* free local
-
-      CLEAR: l_is_closed.
-
-    END-OF-DEFINITION.
-
-* Macro to catch DOI error
-*-------------------------------------------
-
-    DEFINE error_doi.
-      IF lc_retcode NE c_oi_errors=>ret_ok.
-        close_document.
-        CALL METHOD lo_error->raise_message
-          EXPORTING
-            type = 'E'.
-        CLEAR: lo_error.
-      ENDIF.
-    END-OF-DEFINITION.
-
 *--------------------------------------------------------------------*
 * SESSION 0: DOI CONSTRUCTOR
 *--------------------------------------------------------------------*
@@ -329,7 +270,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         control = lo_control
         retcode = lc_retcode.
 
-    error_doi.
+    error_doi( ).
 
 * Initialize Container control
 
@@ -345,13 +286,13 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         error                    = lo_error
         retcode                  = lc_retcode.
 
-    error_doi.
+    error_doi( ).
 
 * Get Proxy Document:
 * check exist of document proxy, if exist -> close first
 
     IF NOT lo_proxy IS INITIAL.
-      close_document.
+      close_document( ).
     ENDIF.
 
     IF i_xls IS NOT INITIAL.
@@ -371,7 +312,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         error              = lo_error
         retcode            = lc_retcode.
 
-    error_doi.
+    error_doi( ).
 
     IF i_document_url IS INITIAL.
 
@@ -386,7 +327,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
           error            = lo_error
           retcode          = lc_retcode.
 
-      error_doi.
+      error_doi( ).
 
     ELSE.
 
@@ -402,7 +343,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
           error        = lo_error
           retcode      = lc_retcode.
 
-      error_doi.
+      error_doi( ).
 
     ENDIF.
 
@@ -414,7 +355,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         error        = lo_error
         retcode      = lc_retcode.
 
-    error_doi.
+    error_doi( ).
 
 * create Spreadsheet object
 
@@ -426,7 +367,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         error           = lo_error
         retcode         = lc_retcode.
 
-    error_doi.
+    error_doi( ).
 
 *--------------------------------------------------------------------*
 * SESSION 1: GET LVC DATA FROM ALV OBJECT
@@ -1938,7 +1879,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         error     = lo_error
         retcode   = lc_retcode.
 
-    error_doi.
+    error_doi( ).
 
 * reformat subtotal / total line after format wholw table
 
@@ -2078,7 +2019,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
       CHANGING
         document_size = li_document_size.
 
-    error_doi.
+    error_doi( ).
 
 * if save successfully -> raise successful message
     MESSAGE i400(zabap2xlsx).
@@ -2087,7 +2028,68 @@ CLASS zcl_excel_ole IMPLEMENTATION.
       ls_path,
       li_document_size.
 
-    close_document.
+    close_document( ).
   ENDMETHOD.                    "BIND_ALV_OLE2
+
+
+  METHOD close_document.
+
+    DATA: l_is_closed TYPE i.
+
+    CLEAR: l_is_closed.
+    IF lo_proxy IS NOT INITIAL.
+
+* check proxy detroyed adi
+
+      CALL METHOD lo_proxy->is_destroyed
+        IMPORTING
+          ret_value = l_is_closed.
+
+* if dun detroyed yet: close -> release proxy
+
+      IF l_is_closed IS INITIAL.
+        CALL METHOD lo_proxy->close_document
+*        EXPORTING
+*          do_save = do_save
+          IMPORTING
+            error   = lo_error
+            retcode = lc_retcode.
+      ENDIF.
+
+      CALL METHOD lo_proxy->release_document
+        IMPORTING
+          error   = lo_error
+          retcode = lc_retcode.
+
+    ELSE.
+      lc_retcode = c_oi_errors=>ret_document_not_open.
+    ENDIF.
+
+* Detroy control container
+
+    IF lo_control IS NOT INITIAL.
+      CALL METHOD lo_control->destroy_control.
+    ENDIF.
+
+    CLEAR:
+      lo_spreadsheet,
+      lo_proxy,
+      lo_control.
+
+  ENDMETHOD.
+
+
+  METHOD error_doi.
+
+    IF lc_retcode NE c_oi_errors=>ret_ok.
+      close_document( ).
+      CALL METHOD lo_error->raise_message
+        EXPORTING
+          type = 'E'.
+      CLEAR: lo_error.
+    ENDIF.
+
+  ENDMETHOD.
+
 
 ENDCLASS.

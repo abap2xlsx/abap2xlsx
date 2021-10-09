@@ -200,6 +200,13 @@ CLASS zcl_excel_writer_2007 DEFINITION
     CONSTANTS c_on TYPE string VALUE '1'.                   "#EC NOTEXT
     CONSTANTS c_xl_printersettings TYPE string VALUE 'xl/printerSettings/printerSettings#.bin'. "#EC NOTEXT
 
+    METHODS add_1_val_child_node
+      IMPORTING
+        io_document     TYPE REF TO if_ixml_document
+        io_parent       TYPE REF TO if_ixml_element
+        iv_elem_name    TYPE string
+        iv_attr_name    TYPE string
+        iv_attr_value   TYPE string.
     METHODS flag2bool
       IMPORTING
         !ip_flag          TYPE flag
@@ -213,6 +220,21 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
   METHOD constructor.
     me->ixml = cl_ixml=>create( ).
+  ENDMETHOD.
+
+
+  METHOD add_1_val_child_node.
+
+      DATA: lo_child TYPE REF TO if_ixml_element.
+
+      lo_child = io_document->create_simple_element( name   = iv_elem_name
+                                                     parent = io_document ).
+      IF iv_attr_name IS NOT INITIAL.
+        lo_child->set_attribute_ns( name  = iv_attr_name
+                                    value = iv_attr_value ).
+      ENDIF.
+      io_parent->append_child( new_child = lo_child ).
+
   ENDMETHOD.
 
 
@@ -2270,33 +2292,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_r           TYPE REF TO if_ixml_element,
           lo_element_rpr         TYPE REF TO if_ixml_element,
           lo_element_b           TYPE REF TO if_ixml_element,
-          lo_element_sz          TYPE REF TO if_ixml_element,
-          lo_element_color       TYPE REF TO if_ixml_element,
-          lo_element_rfont       TYPE REF TO if_ixml_element,
-*       lo_element_charset     TYPE REF TO if_ixml_element,
-          lo_element_family      TYPE REF TO if_ixml_element,
           lo_element_t           TYPE REF TO if_ixml_element,
           lo_iterator            TYPE REF TO cl_object_collection_iterator,
           lo_comments            TYPE REF TO zcl_excel_comments,
           lo_comment             TYPE REF TO zcl_excel_comment.
     DATA: lv_rel_id TYPE i,
           lv_author TYPE string.
-
-    DEFINE add_1_val_child_node.
-*   &1: parent element
-*   &2: child element
-*   &3: element name
-*   &4: attribute name
-*   &5: attribute value
-
-      &2 = lo_document->create_simple_element( name   = &3
-                                               parent = lo_document ).
-      IF &4 IS NOT INITIAL.
-        &2->set_attribute_ns( name  = &4
-                              value = &5 ).
-      ENDIF.
-      &1->append_child( new_child = &2 ).
-    END-OF-DEFINITION.
 
 
 **********************************************************************
@@ -2354,12 +2355,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                             parent = lo_document ).
       lo_element_rpr->append_child( new_child = lo_element_b ).
 
-      add_1_val_child_node lo_element_rpr: lo_element_sz       lc_xml_node_sz       lc_xml_attr_val      '9',
-                                           lo_element_color    lc_xml_node_color    lc_xml_attr_indexed  '81',
-                                           lo_element_rfont    lc_xml_node_rfont    lc_xml_attr_val      'Tahoma',
-                                           lo_element_family   lc_xml_node_family   lc_xml_attr_val      '2'
-*                                        lo_element_charset  lc_xml_node_charset  lc_xml_attr_val      '1'
-                                           .
+      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_sz     iv_attr_name = lc_xml_attr_val     iv_attr_value = '9' ).
+      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_color  iv_attr_name = lc_xml_attr_indexed iv_attr_value = '81' ).
+      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_rfont  iv_attr_name = lc_xml_attr_val     iv_attr_value = 'Tahoma' ).
+      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_family iv_attr_name = lc_xml_attr_val     iv_attr_value = '2' ).
 
       lo_element_r->append_child( new_child = lo_element_rpr ).
 
@@ -3115,22 +3114,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_int_value             TYPE i,
           lv_int_value_string      TYPE string.
     DATA: lv_rel_id            TYPE i.
-
-    DEFINE add_1_val_child_node.
-*   &1: parent element
-*   &2: child element
-*   &3: element name
-*   &4: attribute name
-*   &5: attribute value
-
-      &2 = lo_document->create_simple_element( name   = &3
-                                               parent = lo_document ).
-      IF &4 IS NOT INITIAL.
-        &2->set_attribute_ns( name  = &4
-                              value = &5 ).
-      ENDIF.
-      &1->append_child( new_child = &2 ).
-    END-OF-DEFINITION.
 
 
 **********************************************************************
