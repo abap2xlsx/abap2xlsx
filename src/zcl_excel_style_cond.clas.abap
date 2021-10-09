@@ -9,6 +9,12 @@ CLASS zcl_excel_style_cond DEFINITION
 *"* public components of class ZCL_EXCEL_STYLE_COND
 *"* do not include other source files here!!!
     TYPES tv_conditional_show_value TYPE c LENGTH 1.
+    TYPES tv_textfunction TYPE string.
+    TYPES: BEGIN OF ts_conditional_textfunction,
+             text         TYPE string,
+             textfunction TYPE tv_textfunction,
+             cell_style   TYPE zexcel_cell_style,
+           END OF ts_conditional_textfunction.
     CONSTANTS c_cfvo_type_formula TYPE zexcel_conditional_type VALUE 'formula'. "#EC NOTEXT
     CONSTANTS c_cfvo_type_max TYPE zexcel_conditional_type VALUE 'max'. "#EC NOTEXT
     CONSTANTS c_cfvo_type_min TYPE zexcel_conditional_type VALUE 'min'. "#EC NOTEXT
@@ -44,6 +50,10 @@ CLASS zcl_excel_style_cond DEFINITION
     CONSTANTS c_operator_none TYPE zexcel_condition_operator VALUE ''. "#EC NOTEXT
     CONSTANTS c_operator_notcontains TYPE zexcel_condition_operator VALUE 'notContains'. "#EC NOTEXT
     CONSTANTS c_operator_notequal TYPE zexcel_condition_operator VALUE 'notEqual'. "#EC NOTEXT
+    CONSTANTS c_textfunction_beginswith TYPE tv_textfunction VALUE 'beginsWith'. "#EC NOTEXT
+    CONSTANTS c_textfunction_containstext TYPE tv_textfunction VALUE 'containsText'. "#EC NOTEXT
+    CONSTANTS c_textfunction_endswith TYPE tv_textfunction VALUE 'endsWith'. "#EC NOTEXT
+    CONSTANTS c_textfunction_notcontains TYPE tv_textfunction VALUE 'notContains'. "#EC NOTEXT
     CONSTANTS c_rule_cellis TYPE zexcel_condition_rule VALUE 'cellIs'. "#EC NOTEXT
     CONSTANTS c_rule_containstext TYPE zexcel_condition_rule VALUE 'containsText'. "#EC NOTEXT
     CONSTANTS c_rule_databar TYPE zexcel_condition_rule VALUE 'dataBar'. "#EC NOTEXT
@@ -51,11 +61,13 @@ CLASS zcl_excel_style_cond DEFINITION
     CONSTANTS c_rule_iconset TYPE zexcel_condition_rule VALUE 'iconSet'. "#EC NOTEXT
     CONSTANTS c_rule_colorscale TYPE zexcel_condition_rule VALUE 'colorScale'. "#EC NOTEXT
     CONSTANTS c_rule_none TYPE zexcel_condition_rule VALUE 'none'. "#EC NOTEXT
+    CONSTANTS c_rule_textfunction TYPE zexcel_condition_rule VALUE '<textfunction>'. "#EC NOTEXT
     CONSTANTS c_rule_top10 TYPE zexcel_condition_rule VALUE 'top10'. "#EC NOTEXT
     CONSTANTS c_rule_above_average TYPE zexcel_condition_rule VALUE 'aboveAverage'. "#EC NOTEXT
     CONSTANTS c_showvalue_false TYPE tv_conditional_show_value VALUE 0. "#EC NOTEXT
     CONSTANTS c_showvalue_true TYPE tv_conditional_show_value VALUE 1. "#EC NOTEXT
     DATA mode_cellis TYPE zexcel_conditional_cellis .
+    DATA mode_textfunction TYPE ts_conditional_textfunction .
     DATA mode_colorscale TYPE zexcel_conditional_colorscale .
     DATA mode_databar TYPE zexcel_conditional_databar .
     DATA mode_expression TYPE zexcel_conditional_expression .
