@@ -12,9 +12,39 @@
    </PROGDIR>
    <TPOOL>
     <item>
+     <ID>I</ID>
+     <KEY>DUM</KEY>
+     <ENTRY>Enable dump creation</ENTRY>
+     <LENGTH>40</LENGTH>
+    </item>
+    <item>
      <ID>R</ID>
      <ENTRY>abap2xlsx Demo: Read xlsx-file and output = using templates</ENTRY>
      <LENGTH>59</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>CB_ERRL</KEY>
+     <ENTRY>Show error location</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>LB_READ</KEY>
+     <ENTRY>Reader class</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>LB_WRITE</KEY>
+     <ENTRY>Writer class</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_UPFILE</KEY>
+     <ENTRY>Input template</ENTRY>
+     <LENGTH>22</LENGTH>
     </item>
    </TPOOL>
    <I18N_TPOOL>
