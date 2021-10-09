@@ -2947,7 +2947,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
             ENDIF.
 
-          WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed.
+          WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed or
+               cl_abap_typedescr=>typekind_decfloat OR
+               cl_abap_typedescr=>typekind_decfloat16 OR
+               cl_abap_typedescr=>typekind_decfloat34.
             lo_addit = cl_abap_elemdescr=>get_f( ).
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
