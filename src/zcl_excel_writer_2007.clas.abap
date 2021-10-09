@@ -3763,6 +3763,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_attr_dxfid              TYPE string VALUE 'dxfId',
           lc_xml_attr_priority           TYPE string VALUE 'priority',
           lc_xml_attr_operator           TYPE string VALUE 'operator',
+          lc_xml_attr_text               TYPE string VALUE 'text',
+          lc_xml_attr_notContainsText    TYPE string VALUE 'notContainsText',
           lc_xml_attr_allowblank         TYPE string VALUE 'allowBlank',
           lc_xml_attr_showinputmessage   TYPE string VALUE 'showInputMessage',
           lc_xml_attr_showerrormessage   TYPE string VALUE 'showErrorMessage',
@@ -3824,6 +3826,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ls_colorscale               TYPE zexcel_conditional_colorscale,
           ls_iconset                  TYPE zexcel_conditional_iconset,
           ls_cellis                   TYPE zexcel_conditional_cellis,
+          ls_textfunction             TYPE zcl_excel_style_cond=>ts_conditional_textfunction,
+          lv_column_start             TYPE zexcel_cell_column_alpha,
+          lv_row_start                TYPE zexcel_cell_row,
+          lv_cell_coords              TYPE zexcel_cell_coords,
           ls_expression               TYPE zexcel_conditional_expression,
           ls_conditional_top10        TYPE zexcel_conditional_top10,
           ls_conditional_above_avg    TYPE zexcel_conditional_above_avg,
@@ -3850,7 +3856,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_autofilter               TYPE REF TO zcl_excel_autofilter,
           lv_ref                      TYPE string,
           lt_condformating_ranges     TYPE ty_condformating_ranges,
-          ls_condformating_range      TYPE ty_condformating_range.
+          ls_condformating_range      TYPE ty_condformating_range,
+          ld_first_half               TYPE string,
+          ld_second_half              TYPE string.
 
     FIELD-SYMBOLS: <ls_sheet_content>       TYPE zexcel_s_cell_data,
                    <fs_range_merge>         LIKE LINE OF lt_range_merge,
@@ -4548,7 +4556,15 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " cfRule node
       lo_element_2 = lo_document->create_simple_element( name   = lc_xml_node_cfrule
                                                        parent = lo_document ).
+      IF lo_style_cond->rule = zcl_excel_style_cond=>c_rule_textfunction.
+        IF lo_style_cond->mode_textfunction-textfunction = zcl_excel_style_cond=>c_textfunction_notcontains.
+          lv_value = `notContainsText`.
+        ELSE.
+          lv_value = lo_style_cond->mode_textfunction-textfunction.
+        ENDIF.
+      ELSE.
       lv_value = lo_style_cond->rule.
+      ENDIF.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_type
                                       value = lv_value ).
       lv_value = lo_style_cond->priority.
@@ -4774,6 +4790,55 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
             lo_element_3->set_value( value = lv_value ).
             lo_element_2->append_child( new_child = lo_element_3 ). " 2nd formula node
           ENDIF.
+*--------------------------------------------------------------------------------------*
+* The below code creates an EXM structure in the following format:
+* -<conditionalFormatting sqref="G6:G12">-
+*   <cfRule operator="beginsWith" priority="4" dxfId="4" type="beginsWith" text="1">
+*     <formula>LEFT(G6,LEN("1"))="1"</formula>
+*   </cfRule>
+* </conditionalFormatting>
+*--------------------------------------------------------------------------------------*
+        WHEN zcl_excel_style_cond=>c_rule_textfunction.
+          ls_textfunction = lo_style_cond->mode_textfunction.
+          READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_cellis-cell_style.
+          lv_value = ls_style_cond_mapping-dxf.
+          CONDENSE lv_value.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_dxfid
+                                          value = lv_value ).
+          lv_value = ls_textfunction-textfunction.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_operator
+                                          value = lv_value ).
+
+          " text
+          lv_value = ls_textfunction-text.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_text
+                                          value = lv_value ).
+
+          " formula node
+          zcl_excel_common=>convert_range2column_a_row(
+            EXPORTING
+              i_range        = lo_style_cond->get_dimension_range( )
+            IMPORTING
+              e_column_start = lv_column_start
+              e_row_start    = lv_row_start ).
+          lv_cell_coords = |{ lv_column_start }{ lv_row_start }|.
+          CASE ls_textfunction-textfunction.
+            WHEN zcl_excel_style_cond=>c_textfunction_beginswith.
+              lv_value = |LEFT({ lv_cell_coords },LEN("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"))=|
+                      && |"{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"|.
+            WHEN zcl_excel_style_cond=>c_textfunction_containstext.
+              lv_value = |NOT(ISERROR(SEARCH("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }",{ lv_cell_coords })))|.
+            WHEN zcl_excel_style_cond=>c_textfunction_endswith.
+              lv_value = |RIGHT({ lv_cell_coords },LEN("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"))=|
+                      && |"{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"|.
+            WHEN zcl_excel_style_cond=>c_textfunction_notcontains.
+              lv_value = |ISERROR(SEARCH("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }",{ lv_cell_coords }))|.
+            WHEN OTHERS.
+          ENDCASE.
+          lo_element_3 = lo_document->create_simple_element( name   = lc_xml_node_formula
+                                                             parent = lo_document ).
+          lo_element_3->set_value( value = lv_value ).
+          lo_element_2->append_child( new_child = lo_element_3 ). " formula node
 
         WHEN zcl_excel_style_cond=>c_rule_expression.
           ls_expression = lo_style_cond->mode_expression.
