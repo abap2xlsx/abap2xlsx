@@ -1729,7 +1729,10 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         r_format = wo_worksheet->get_default_excel_date_format( ).
       WHEN cl_abap_typedescr=>typekind_time.
         r_format = wo_worksheet->get_default_excel_time_format( ).
-      WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed.
+      WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed OR
+           cl_abap_typedescr=>typekind_decfloat OR
+           cl_abap_typedescr=>typekind_decfloat16 OR
+           cl_abap_typedescr=>typekind_decfloat34.
         IF i_decimals > 0 .
           l_format = '#,##0.'.
           DO i_decimals TIMES.
