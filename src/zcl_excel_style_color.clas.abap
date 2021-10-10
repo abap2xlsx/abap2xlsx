@@ -57,7 +57,7 @@ CLASS zcl_excel_style_color DEFINITION
 
 *"* private components of class ZCL_EXCEL_STYLE_COLOR
 *"* do not include other source files here!!!
-    CONSTANTS c_alpha TYPE char2 VALUE 'FF'.                "#EC NOTEXT
+    CONSTANTS c_alpha TYPE c LENGTH 2 VALUE 'FF'.                "#EC NOTEXT
 ENDCLASS.
 
 
