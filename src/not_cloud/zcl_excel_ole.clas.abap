@@ -4,9 +4,11 @@ CLASS zcl_excel_ole DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    class-METHODS bind_alv_ole2
+    TYPES ty_doc_url TYPE c LENGTH 255.
+
+    CLASS-METHODS bind_alv_ole2
       IMPORTING
-        !i_document_url      TYPE char255 DEFAULT space
+        !i_document_url      TYPE ty_doc_url DEFAULT space
         !i_xls               TYPE c DEFAULT space
         !i_save_path         TYPE string
         !io_alv              TYPE REF TO cl_gui_alv_grid
