@@ -31,6 +31,7 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_s_outline_row .
     TYPES:
       mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
+    TYPES ty_doc_url TYPE c LENGTH 255.
 
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
@@ -83,7 +84,7 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS bind_alv_ole2
       IMPORTING
-        !i_document_url      TYPE char255 DEFAULT space
+        !i_document_url      TYPE ty_doc_url DEFAULT space
         !i_xls               TYPE c DEFAULT space
         !i_save_path         TYPE string
         !io_alv              TYPE REF TO cl_gui_alv_grid
