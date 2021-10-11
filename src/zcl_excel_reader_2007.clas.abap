@@ -100,8 +100,15 @@ CLASS zcl_excel_reader_2007 DEFINITION
       END   OF ty_ref_formulae .
     TYPES:
       tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column .
+    TYPES:
+      BEGIN OF t_shared_string,
+        value TYPE string,
+        rtf   TYPE zexcel_t_rtf,
+      END OF t_shared_string .
+    TYPES:
+      t_shared_strings TYPE STANDARD TABLE OF t_shared_string WITH DEFAULT KEY .
 
-    DATA shared_strings TYPE stringtab .
+    DATA shared_strings TYPE t_shared_strings .
     DATA styles TYPE t_style_refs .
     DATA mt_ref_formulae TYPE tyt_ref_formulae .
     DATA mt_dxf_styles TYPE zexcel_t_styles_cond_mapping .
@@ -919,7 +926,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *   §1.1 - "simple" strings
 *                Example:  see above
 *--------------------------------------------------------------------*
-          <lv_shared_string> = lo_node_si_child->get_value( ).
+          <lv_shared_string>-value = lo_node_si_child->get_value( ).
         ELSE.
 *--------------------------------------------------------------------*
 *   §1.2 - rich text formatted strings
@@ -932,7 +939,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             lo_node_r_child_t ?= lo_node_si_child->find_from_name( 't' ).              " extract the <t>...</t> part of each <r>-tag
             IF lo_node_r_child_t IS BOUND.
               lv_node_value = lo_node_r_child_t->get_value( ).
-              CONCATENATE <lv_shared_string> lv_node_value INTO <lv_shared_string> RESPECTING BLANKS.
+              CONCATENATE <lv_shared_string>-value lv_node_value INTO <lv_shared_string>-value RESPECTING BLANKS.
             ENDIF.
 
             lo_node_si_child ?= lo_node_si_child->get_next( ).
@@ -2320,6 +2327,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lt_datavalidation_range     TYPE TABLE OF string,
           ex                          TYPE REF TO cx_root.
 
+    FIELD-SYMBOLS:
+      <ls_shared_string> TYPE t_shared_string.
+
 *--------------------------------------------------------------------*
 * §2  We need to read the the file "\\_rels\.rels" because it tells
 *     us where in this folder structure the data for the workbook
@@ -2459,7 +2469,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           WHEN 's'. " String values are stored as index in shared string table
             IF lo_ixml_value_elem IS BOUND.
               lv_index = lo_ixml_value_elem->get_value( ) + 1.
-              READ TABLE shared_strings INTO lv_cell_value INDEX lv_index.
+              READ TABLE shared_strings ASSIGNING <ls_shared_string> INDEX lv_index.
+              lv_cell_value = <ls_shared_string>-value.
             ENDIF.
           WHEN 'inlineStr'. " inlineStr values are kept in special node
             lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name( name = 'is' ).
