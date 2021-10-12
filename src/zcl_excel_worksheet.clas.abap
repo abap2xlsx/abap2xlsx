@@ -270,6 +270,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ep_style   TYPE REF TO zcl_excel_style
         !ep_guid    TYPE zexcel_cell_style
         !ep_formula TYPE zexcel_cell_formula
+        !et_rtf     TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
     METHODS get_column
@@ -412,6 +413,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_hyperlink TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type TYPE abap_typekind OPTIONAL
+        !it_rtf       TYPE zexcel_t_rtf OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_cell_formula
@@ -630,6 +632,12 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row         TYPE zexcel_cell_row
       RETURNING
         VALUE(ep_width) TYPE float
+      RAISING
+        zcx_excel .
+    METHODS check_rtf
+      IMPORTING
+        !ip_value TYPE simple
+        !it_rtf   TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
     METHODS generate_title
@@ -1704,6 +1712,36 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "CHANGE_CELL_STYLE
 
 
+  METHOD check_rtf.
+
+    DATA: lv_rtf_length TYPE i,
+          lv_value      TYPE string,
+          lv_val_length TYPE i.
+    FIELD-SYMBOLS: <rtf> LIKE LINE OF it_rtf.
+
+    CHECK it_rtf[] IS NOT INITIAL.
+
+    lv_rtf_length = 0.
+    LOOP AT it_rtf ASSIGNING <rtf>.
+      IF lv_rtf_length <> <rtf>-offset.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = 'Gaps or overlaps in RTF data offset/length specs'.
+      ENDIF.
+      lv_rtf_length = <rtf>-offset + <rtf>-length.
+    ENDLOOP.
+
+    lv_value = ip_value.
+    lv_val_length = strlen( lv_value ).
+    IF lv_val_length <> lv_rtf_length.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'RTF specs length is not equal to value length'.
+    ENDIF.
+
+  ENDMETHOD.
+
+
   METHOD constructor.
     DATA: lv_title TYPE zexcel_sheet_title.
 
@@ -1873,6 +1911,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ep_value    = ls_sheet_content-cell_value.
     ep_guid     = ls_sheet_content-cell_style.       " issue 139 - added this to be used for columnwidth calculation
     ep_formula  = ls_sheet_content-cell_formula.
+    IF et_rtf IS SUPPLIED AND ls_sheet_content-rtf_tab IS BOUND.
+      et_rtf = ls_sheet_content-rtf_tab->*.
+    ENDIF.
 
     " Addition to solve issue #120, contribution by Stefan Schmöcker
     DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
@@ -3055,6 +3096,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *    SORT sheet_content BY cell_row cell_column.
       " me->update_dimension_range( ).
 
+    ENDIF.
+
+    IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf IS NOT INITIAL.
+      check_rtf( ip_value = lv_value
+                 it_rtf   = it_rtf ).
+      CREATE DATA <fs_sheet_content>-rtf_tab.
+      <fs_sheet_content>-rtf_tab->* = it_rtf.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed

@@ -165,6 +165,11 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !ip_xml         TYPE REF TO if_ixml_document
       RETURNING
         VALUE(ep_fills) TYPE t_fills .
+    METHODS load_style_font
+      IMPORTING
+        !io_xml_element TYPE REF TO if_ixml_element
+      RETURNING
+        VALUE(ro_font)  TYPE REF TO zcl_excel_style_font .
     METHODS load_style_fonts
       IMPORTING
         !ip_xml         TYPE REF TO if_ixml_document
@@ -861,10 +866,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_node_si            TYPE REF TO if_ixml_element,
       lo_node_si_child      TYPE REF TO if_ixml_element,
       lo_node_r_child_t     TYPE REF TO if_ixml_element,
+      lo_node_r_child_rPr   TYPE REF TO if_ixml_element,
+      lo_font               TYPE REF TO zcl_excel_style_font,
+      ls_rtf                TYPE zexcel_s_rtf,
+      lv_current_offset     TYPE int2,
       lv_tag_name           TYPE string,
       lv_node_value         TYPE string.
 
-    FIELD-SYMBOLS: <lv_shared_string>           LIKE LINE OF me->shared_strings.
+    FIELD-SYMBOLS: <ls_shared_string>           LIKE LINE OF me->shared_strings.
 
 *--------------------------------------------------------------------*
 
@@ -917,7 +926,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_node_si ?= lo_shared_strings_xml->find_from_name( 'si' ).
     WHILE lo_node_si IS BOUND.
 
-      APPEND INITIAL LINE TO me->shared_strings ASSIGNING <lv_shared_string>.            " Each <si>-entry in the xml-file must lead to an entry in our stringtable
+      APPEND INITIAL LINE TO me->shared_strings ASSIGNING <ls_shared_string>.            " Each <si>-entry in the xml-file must lead to an entry in our stringtable
       lo_node_si_child ?= lo_node_si->get_first_child( ).
       IF lo_node_si_child IS BOUND.
         lv_tag_name = lo_node_si_child->get_name( ).
@@ -926,7 +935,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *   §1.1 - "simple" strings
 *                Example:  see above
 *--------------------------------------------------------------------*
-          <lv_shared_string>-value = lo_node_si_child->get_value( ).
+          <ls_shared_string>-value = lo_node_si_child->get_value( ).
         ELSE.
 *--------------------------------------------------------------------*
 *   §1.2 - rich text formatted strings
@@ -934,13 +943,25 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *       as long as rich text formatting is not supported (2do§1) ignore all info about formatting
 *                Example:  see above
 *--------------------------------------------------------------------*
+          CLEAR: lv_current_offset.
           WHILE lo_node_si_child IS BOUND.                                             " actually these children of <si> are <r>-tags
+            CLEAR: ls_rtf.
 
+            lo_node_r_child_rpr ?= lo_node_si_child->find_from_name( 'rPr' ).          " extracting rich text formating data
+            IF lo_node_r_child_rpr IS BOUND.
+              lo_font = load_style_font( lo_node_r_child_rpr ).
+              ls_rtf-font = lo_font->get_structure( ).
+            ENDIF.
+            ls_rtf-offset = lv_current_offset.
             lo_node_r_child_t ?= lo_node_si_child->find_from_name( 't' ).              " extract the <t>...</t> part of each <r>-tag
             IF lo_node_r_child_t IS BOUND.
               lv_node_value = lo_node_r_child_t->get_value( ).
-              CONCATENATE <lv_shared_string>-value lv_node_value INTO <lv_shared_string>-value RESPECTING BLANKS.
+              CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
+              ls_rtf-length = strlen( lv_node_value ).
             ENDIF.
+
+            lv_current_offset = strlen( <ls_shared_string>-value ).
+            APPEND ls_rtf TO <ls_shared_string>-rtf.
 
             lo_node_si_child ?= lo_node_si_child->get_next( ).
 
@@ -1488,36 +1509,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD load_style_fonts.
+  METHOD load_style_font.
 
-*--------------------------------------------------------------------*
-* issue #230   - Pimp my Code
-*              - Stefan Schmoecker,      (done)              2012-11-25
-*              - ...
-* changes: renaming variables and types to naming conventions
-*          aligning code
-*          removing unused variables
-*          adding comments to explain what we are trying to achieve
-*--------------------------------------------------------------------*
     DATA: lo_node_font TYPE REF TO if_ixml_element,
           lo_node2     TYPE REF TO if_ixml_element,
           lo_font      TYPE REF TO zcl_excel_style_font,
           ls_color     TYPE t_color.
 
-*--------------------------------------------------------------------*
-* We need a table of used fonts to build up our styles
-
-*          Following is an example how this part of a file could be set up
-*          <font>
-*              <sz val="11"/>
-*              <color theme="1"/>
-*              <name val="Calibri"/>
-*              <family val="2"/>
-*              <scheme val="minor"/>
-*          </font>
-*--------------------------------------------------------------------*
-    lo_node_font ?= ip_xml->find_from_name( 'font' ).
-    WHILE lo_node_font IS BOUND.
+    lo_node_font = io_xml_element.
 
       CREATE OBJECT lo_font.
 *--------------------------------------------------------------------*
@@ -1604,6 +1603,41 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         lo_font->color-tint = ls_color-tint.
       ENDIF.
 
+    ro_font = lo_font.
+
+  ENDMETHOD.
+
+
+  METHOD load_style_fonts.
+
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmoecker,      (done)              2012-11-25
+*              - ...
+* changes: renaming variables and types to naming conventions
+*          aligning code
+*          removing unused variables
+*          adding comments to explain what we are trying to achieve
+*--------------------------------------------------------------------*
+    DATA: lo_node_font TYPE REF TO if_ixml_element,
+          lo_font      TYPE REF TO zcl_excel_style_font.
+
+*--------------------------------------------------------------------*
+* We need a table of used fonts to build up our styles
+
+*          Following is an example how this part of a file could be set up
+*          <font>
+*              <sz val="11"/>
+*              <color theme="1"/>
+*              <name val="Calibri"/>
+*              <family val="2"/>
+*              <scheme val="minor"/>
+*          </font>
+*--------------------------------------------------------------------*
+    lo_node_font ?= ip_xml->find_from_name( 'font' ).
+    WHILE lo_node_font IS BOUND.
+
+      lo_font = load_style_font( lo_node_font ).
       INSERT lo_font INTO TABLE ep_fonts.
 
       lo_node_font ?= lo_node_font->get_next( ).
@@ -2325,6 +2359,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_data_validation          TYPE REF TO zcl_excel_data_validation,
           lv_datavalidation_range     TYPE string,
           lt_datavalidation_range     TYPE TABLE OF string,
+          lt_rtf                      TYPE zexcel_t_rtf,
           ex                          TYPE REF TO cx_root.
 
     FIELD-SYMBOLS:
@@ -2470,7 +2505,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             IF lo_ixml_value_elem IS BOUND.
               lv_index = lo_ixml_value_elem->get_value( ) + 1.
               READ TABLE shared_strings ASSIGNING <ls_shared_string> INDEX lv_index.
-              lv_cell_value = <ls_shared_string>-value.
+              IF sy-subrc = 0.
+                lv_cell_value = <ls_shared_string>-value.
+                lt_rtf = <ls_shared_string>-rtf.
+              ENDIF.
             ENDIF.
           WHEN 'inlineStr'. " inlineStr values are kept in special node
             lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name( name = 'is' ).
@@ -2547,7 +2585,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                   ip_value      = lv_cell_value   " cell_elem Value
                                   ip_formula    = lv_cell_formula
                                   ip_data_type  = ls_cell-t
-                                  ip_style      = lv_style_guid ).
+                                  ip_style      = lv_style_guid
+                                  it_rtf        = lt_rtf ).
         ENDIF.
         lo_ixml_cell_elem ?= lo_ixml_iterator2->get_next( ).
       ENDWHILE.
