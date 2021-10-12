@@ -3560,11 +3560,21 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DESCRIBE TABLE lt_cell_data LINES lv_count.
     MOVE lv_count TO lv_count_str.
 
+  APPEND LINES OF lt_cell_data TO lt_cell_data_rtf. "separating plain and rich text format stings
+  DELETE lt_cell_data WHERE RTF_TAB IS BOUND.
+  DELETE lt_cell_data_rtf WHERE RTF_TAB IS NOT BOUND.
+
     SHIFT lv_count_str RIGHT DELETING TRAILING space.
     SHIFT lv_count_str LEFT DELETING LEADING space.
 
     SORT lt_cell_data BY cell_value data_type.
     DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value data_type.
+
+  SORT lt_cell_data_rtf BY cell_value rtf_tab->*. " leave unique rich text format strings
+  DELETE ADJACENT DUPLICATES FROM lt_cell_data_rtf COMPARING cell_value rtf_tab->*.
+  APPEND LINES OF lt_cell_data_rtf TO lt_cell_data. " merge into single list
+  FREE lt_cell_data_rtf.
+  SORT lt_cell_data BY cell_value rtf_tab.
 
     DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
     MOVE lv_uniquecount TO lv_uniquecount_str.
@@ -3579,6 +3589,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       MOVE lv_sytabix                    TO ls_shared_string-string_no.
       MOVE <fs_sheet_content>-cell_value TO ls_shared_string-string_value.
       MOVE <fs_sheet_content>-data_type TO ls_shared_string-string_type.
+    IF <fs_sheet_content>-rtf_tab IS BOUND.
+      CREATE DATA ls_shared_string-rtf_tab.
+      ls_shared_string-rtf_tab->* = <fs_sheet_content>-rtf_tab->*.
+    ENDIF.
       INSERT ls_shared_string INTO TABLE shared_strings.
       ADD 1 TO lv_count.
     ENDLOOP.
@@ -3606,6 +3620,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                        parent = lo_document ).
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
                                                            parent = lo_document ).
+      IF <fs_sheet_string>-RTF_TAB IS NOT BOUND.
       IF boolc( contains( val = <fs_sheet_string>-string_value start = ` ` ) ) = abap_true
             OR boolc( contains( val = <fs_sheet_string>-string_value end = ` ` ) ) = abap_true.
         lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
@@ -3613,6 +3628,32 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
       lo_element->append_child( new_child = lo_sub_element ).
       lo_element_root->append_child( new_child = lo_element ).
+    ELSE.
+      LOOP AT <fs_sheet_string>-rtf_tab->* ASSIGNING <fs_rtf>.
+        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
+                                                             parent = lo_element ).
+        TRY.
+          lv_value = substring( val = <fs_sheet_string>-string_value
+                                off = <fs_rtf>-offset
+                                len = <fs_rtf>-length ).
+        CATCH CX_SY_RANGE_OUT_OF_BOUNDS.
+          EXIT.
+        ENDTRY.
+        IF <fs_rtf>-font IS NOT INITIAL.
+          lo_font_element = lo_document->create_simple_element( name   = lc_xml_node_rpr
+                                                                parent = lo_sub_element ).
+          create_xl_styles_font_node( io_document = lo_document
+                                      io_parent   = lo_font_element
+                                      is_font     = <fs_rtf>-font ).
+        ENDIF.
+        lo_sub2_element = lo_document->create_simple_element( name   = lc_xml_node_t
+                                                            parent = lo_sub_element ).
+        IF lv_value IS NOT INITIAL AND lv_value(1) EQ ` `.
+          lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+        ENDIF.
+        lo_sub2_element->set_value( lv_value ).
+      ENDLOOP.
+    ENDIF.
     ENDLOOP.
 
 **********************************************************************
@@ -6041,7 +6082,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                            parent = io_document ).
 
         IF <ls_sheet_content>-data_type EQ 's' OR <ls_sheet_content>-data_type EQ 's_leading_blanks'.
-          lv_value = me->get_shared_string_index( <ls_sheet_content>-cell_value ).
+          lv_value = me->get_shared_string_index( ip_cell_value = <ls_sheet_content>-cell_value
+                                                  ir_rtf        = <ls_sheet_content>-rtf_tab ).
           CONDENSE lv_value.
           lo_element_4->set_value( value = lv_value ).
         ELSE.
@@ -7638,8 +7680,18 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA ls_shared_string TYPE zexcel_s_shared_string.
 
 *  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
+    IF ir_rtf IS NOT BOUND.
     READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
     ep_index = ls_shared_string-string_no.
+    ELSE.
+      LOOP AT shared_strings INTO ls_shared_string WHERE string_value = ip_cell_value
+                                                     AND rtf_tab IS BOUND
+                                                     AND rtf_tab->* = ir_rtf->*.
+
+        ep_index = ls_shared_string-string_no.
+        EXIT.
+      ENDLOOP.
+    ENDIF.
 
   ENDMETHOD.
 
