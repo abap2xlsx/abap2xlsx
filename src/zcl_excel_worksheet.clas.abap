@@ -1939,8 +1939,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ep_value    = ls_sheet_content-cell_value.
     ep_guid     = ls_sheet_content-cell_style.       " issue 139 - added this to be used for columnwidth calculation
     ep_formula  = ls_sheet_content-cell_formula.
-    IF et_rtf IS SUPPLIED AND ls_sheet_content-rtf_tab IS BOUND.
-      et_rtf = ls_sheet_content-rtf_tab->*.
+    IF et_rtf IS SUPPLIED AND ls_sheet_content-rtf_tab IS NOT INITIAL.
+      et_rtf = ls_sheet_content-rtf_tab.
     ENDIF.
 
     " Addition to solve issue #120, contribution by Stefan Schmöcker
@@ -3132,8 +3132,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       check_rtf( EXPORTING ip_value = lv_value
                            ip_style = lv_style_guid
                  CHANGING  ct_rtf   = lt_rtf ).
-      CREATE DATA <fs_sheet_content>-rtf_tab.
-      <fs_sheet_content>-rtf_tab->* = lt_rtf.
+      <fs_sheet_content>-rtf_tab = lt_rtf.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed

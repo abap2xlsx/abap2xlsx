@@ -159,7 +159,7 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS get_shared_string_index
       IMPORTING
         !ip_cell_value  TYPE zexcel_cell_value
-        !ir_rtf         TYPE REF TO zexcel_t_rtf OPTIONAL
+        !it_rtf         TYPE zexcel_t_rtf OPTIONAL
       RETURNING
         VALUE(ep_index) TYPE int4 .
     METHODS create_xl_drawings_vml
@@ -3563,8 +3563,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     " separating plain and rich text format strings
     lt_cell_data_rtf = lt_cell_data.
-    DELETE lt_cell_data WHERE RTF_TAB IS BOUND.
-    DELETE lt_cell_data_rtf WHERE RTF_TAB IS NOT BOUND.
+    DELETE lt_cell_data WHERE rtf_tab IS NOT INITIAL.
+    DELETE lt_cell_data_rtf WHERE rtf_tab IS INITIAL.
 
     SHIFT lv_count_str RIGHT DELETING TRAILING space.
     SHIFT lv_count_str LEFT DELETING LEADING space.
@@ -3573,8 +3573,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value data_type.
 
     " leave unique rich text format strings
-    SORT lt_cell_data_rtf BY cell_value rtf_tab->*.
-    DELETE ADJACENT DUPLICATES FROM lt_cell_data_rtf COMPARING cell_value rtf_tab->*.
+    SORT lt_cell_data_rtf BY cell_value rtf_tab.
+    DELETE ADJACENT DUPLICATES FROM lt_cell_data_rtf COMPARING cell_value rtf_tab.
     " merge into single list
     APPEND LINES OF lt_cell_data_rtf TO lt_cell_data.
     SORT lt_cell_data BY cell_value rtf_tab.
@@ -3593,10 +3593,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       MOVE lv_sytabix                    TO ls_shared_string-string_no.
       MOVE <fs_sheet_content>-cell_value TO ls_shared_string-string_value.
       MOVE <fs_sheet_content>-data_type TO ls_shared_string-string_type.
-      IF <fs_sheet_content>-rtf_tab IS BOUND.
-        CREATE DATA ls_shared_string-rtf_tab.
-        ls_shared_string-rtf_tab->* = <fs_sheet_content>-rtf_tab->*.
-      ENDIF.
+      ls_shared_string-rtf_tab = <fs_sheet_content>-rtf_tab.
       INSERT ls_shared_string INTO TABLE shared_strings.
       ADD 1 TO lv_count.
     ENDLOOP.
@@ -3622,7 +3619,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     LOOP AT shared_strings ASSIGNING <fs_sheet_string>.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_si
                                                        parent = lo_document ).
-      IF <fs_sheet_string>-rtf_tab IS NOT BOUND.
+      IF <fs_sheet_string>-rtf_tab IS INITIAL.
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
                                                            parent = lo_document ).
       IF boolc( contains( val = <fs_sheet_string>-string_value start = ` ` ) ) = abap_true
@@ -3631,7 +3628,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
       lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
       ELSE.
-        LOOP AT <fs_sheet_string>-rtf_tab->* ASSIGNING <fs_rtf>.
+        LOOP AT <fs_sheet_string>-rtf_tab ASSIGNING <fs_rtf>.
           lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
                                                                parent = lo_element ).
           TRY.
@@ -6089,7 +6086,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
         IF <ls_sheet_content>-data_type EQ 's' OR <ls_sheet_content>-data_type EQ 's_leading_blanks'.
           lv_value = me->get_shared_string_index( ip_cell_value = <ls_sheet_content>-cell_value
-                                                  ir_rtf        = <ls_sheet_content>-rtf_tab ).
+                                                  it_rtf        = <ls_sheet_content>-rtf_tab ).
           CONDENSE lv_value.
           lo_element_4->set_value( value = lv_value ).
         ELSE.
@@ -7692,13 +7689,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA ls_shared_string TYPE zexcel_s_shared_string.
 
 *  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
-    IF ir_rtf IS NOT BOUND.
+    IF it_rtf IS INITIAL.
     READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
     ep_index = ls_shared_string-string_no.
     ELSE.
       LOOP AT shared_strings INTO ls_shared_string WHERE string_value = ip_cell_value
-                                                     AND rtf_tab IS BOUND
-                                                     AND rtf_tab->* = ir_rtf->*.
+                                                     AND rtf_tab = it_rtf.
 
         ep_index = ls_shared_string-string_no.
         EXIT.
