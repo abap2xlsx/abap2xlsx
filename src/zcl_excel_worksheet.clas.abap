@@ -637,7 +637,9 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS check_rtf
       IMPORTING
         !ip_value TYPE simple
-        !it_rtf   TYPE zexcel_t_rtf
+        VALUE(ip_style) TYPE zexcel_cell_style OPTIONAL
+      CHANGING
+        !ct_rtf   TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
     METHODS generate_title
@@ -1714,26 +1716,52 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD check_rtf.
 
-    DATA: lv_rtf_length TYPE i,
-          lv_value      TYPE string,
-          lv_val_length TYPE i.
-    FIELD-SYMBOLS: <rtf> LIKE LINE OF it_rtf.
+    DATA: lo_style           TYPE REF TO zcl_excel_style,
+          lo_iterator        TYPE REF TO cl_object_collection_iterator,
+          lv_next_rtf_offset TYPE i,
+          lv_tabix           TYPE i,
+          lv_value           TYPE string,
+          lv_val_length      TYPE i,
+          ls_rtf             LIKE LINE OF ct_rtf.
+    FIELD-SYMBOLS: <rtf> LIKE LINE OF ct_rtf.
 
-    CHECK it_rtf[] IS NOT INITIAL.
+    IF ip_style IS NOT SUPPLIED.
+      ip_style = excel->get_default_style( ).
+    ENDIF.
 
-    lv_rtf_length = 0.
-    LOOP AT it_rtf ASSIGNING <rtf>.
-      IF lv_rtf_length <> <rtf>-offset.
+    lo_iterator = excel->get_styles_iterator( ).
+    WHILE lo_iterator->has_next( ) = abap_true.
+      lo_style ?= lo_iterator->get_next( ).
+      IF lo_style->get_guid( ) = ip_style.
+        EXIT.
+      ENDIF.
+      CLEAR lo_style.
+    ENDWHILE.
+
+    lv_next_rtf_offset = 0.
+    LOOP AT ct_rtf ASSIGNING <rtf>.
+      lv_tabix = sy-tabix.
+      IF lv_next_rtf_offset < <rtf>-offset.
+        ls_rtf-offset = lv_next_rtf_offset.
+        ls_rtf-length = <rtf>-offset - lv_next_rtf_offset.
+        ls_rtf-font   = lo_style->font->get_structure( ).
+        INSERT ls_rtf INTO ct_rtf INDEX lv_tabix.
+      ELSEIF lv_next_rtf_offset > <rtf>-offset.
         RAISE EXCEPTION TYPE zcx_excel
           EXPORTING
             error = 'Gaps or overlaps in RTF data offset/length specs'.
       ENDIF.
-      lv_rtf_length = <rtf>-offset + <rtf>-length.
+      lv_next_rtf_offset = <rtf>-offset + <rtf>-length.
     ENDLOOP.
 
     lv_value = ip_value.
     lv_val_length = strlen( lv_value ).
-    IF lv_val_length <> lv_rtf_length.
+    IF lv_val_length > lv_next_rtf_offset.
+      ls_rtf-offset = lv_next_rtf_offset.
+      ls_rtf-length = lv_val_length - lv_next_rtf_offset.
+      ls_rtf-font   = lo_style->font->get_structure( ).
+      INSERT ls_rtf INTO TABLE ct_rtf.
+    ELSEIF lv_val_length > lv_next_rtf_offset.
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = 'RTF specs length is not equal to value length'.
@@ -2916,6 +2944,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_value_type    TYPE abap_typekind,
           lv_style_guid    TYPE zexcel_cell_style,
           lo_addit         TYPE REF TO cl_abap_elemdescr,
+          lt_rtf           TYPE zexcel_t_rtf,
           lo_value         TYPE REF TO data,
           lo_value_new     TYPE REF TO data.
 
@@ -3099,10 +3128,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf IS NOT INITIAL.
-      check_rtf( ip_value = lv_value
-                 it_rtf   = it_rtf ).
+      lt_rtf = it_rtf.
+      check_rtf( EXPORTING ip_value = lv_value
+                           ip_style = lv_style_guid
+                 CHANGING  ct_rtf   = lt_rtf ).
       CREATE DATA <fs_sheet_content>-rtf_tab.
-      <fs_sheet_content>-rtf_tab->* = it_rtf.
+      <fs_sheet_content>-rtf_tab->* = lt_rtf.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed

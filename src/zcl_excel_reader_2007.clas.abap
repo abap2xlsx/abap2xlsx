@@ -1563,6 +1563,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_node2 = lo_node_font->find_from_name( 'name' ).
       IF lo_node2 IS BOUND.
         lo_font->name = lo_node2->get_attribute( 'val' ).
+      ELSE.
+        lo_node2 = lo_node_font->find_from_name( 'rFont' ).
+        IF lo_node2 IS BOUND.
+          lo_font->name = lo_node2->get_attribute( 'val' ).
+        ENDIF.
       ENDIF.
 
 *--------------------------------------------------------------------*

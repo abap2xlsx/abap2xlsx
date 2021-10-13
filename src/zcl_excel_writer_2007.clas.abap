@@ -143,7 +143,8 @@ CLASS zcl_excel_writer_2007 DEFINITION
       IMPORTING
         !io_document TYPE REF TO if_ixml_document
         !io_parent   TYPE REF TO if_ixml_element
-        !is_font     TYPE zexcel_s_style_font .
+        !is_font     TYPE zexcel_s_style_font
+        !iv_use_rtf  TYPE abap_bool DEFAULT abap_false .
     METHODS create_xl_table
       IMPORTING
         !io_table         TYPE REF TO zcl_excel_table
@@ -3560,9 +3561,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DESCRIBE TABLE lt_cell_data LINES lv_count.
     MOVE lv_count TO lv_count_str.
 
-  APPEND LINES OF lt_cell_data TO lt_cell_data_rtf. "separating plain and rich text format stings
-  DELETE lt_cell_data WHERE RTF_TAB IS BOUND.
-  DELETE lt_cell_data_rtf WHERE RTF_TAB IS NOT BOUND.
+    " separating plain and rich text format strings
+    lt_cell_data_rtf = lt_cell_data.
+    DELETE lt_cell_data WHERE RTF_TAB IS BOUND.
+    DELETE lt_cell_data_rtf WHERE RTF_TAB IS NOT BOUND.
 
     SHIFT lv_count_str RIGHT DELETING TRAILING space.
     SHIFT lv_count_str LEFT DELETING LEADING space.
@@ -3570,11 +3572,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     SORT lt_cell_data BY cell_value data_type.
     DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value data_type.
 
-  SORT lt_cell_data_rtf BY cell_value rtf_tab->*. " leave unique rich text format strings
-  DELETE ADJACENT DUPLICATES FROM lt_cell_data_rtf COMPARING cell_value rtf_tab->*.
-  APPEND LINES OF lt_cell_data_rtf TO lt_cell_data. " merge into single list
-  FREE lt_cell_data_rtf.
-  SORT lt_cell_data BY cell_value rtf_tab.
+    " leave unique rich text format strings
+    SORT lt_cell_data_rtf BY cell_value rtf_tab->*.
+    DELETE ADJACENT DUPLICATES FROM lt_cell_data_rtf COMPARING cell_value rtf_tab->*.
+    " merge into single list
+    APPEND LINES OF lt_cell_data_rtf TO lt_cell_data.
+    SORT lt_cell_data BY cell_value rtf_tab.
+    FREE lt_cell_data_rtf.
 
     DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
     MOVE lv_uniquecount TO lv_uniquecount_str.
@@ -3589,10 +3593,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       MOVE lv_sytabix                    TO ls_shared_string-string_no.
       MOVE <fs_sheet_content>-cell_value TO ls_shared_string-string_value.
       MOVE <fs_sheet_content>-data_type TO ls_shared_string-string_type.
-    IF <fs_sheet_content>-rtf_tab IS BOUND.
-      CREATE DATA ls_shared_string-rtf_tab.
-      ls_shared_string-rtf_tab->* = <fs_sheet_content>-rtf_tab->*.
-    ENDIF.
+      IF <fs_sheet_content>-rtf_tab IS BOUND.
+        CREATE DATA ls_shared_string-rtf_tab.
+        ls_shared_string-rtf_tab->* = <fs_sheet_content>-rtf_tab->*.
+      ENDIF.
       INSERT ls_shared_string INTO TABLE shared_strings.
       ADD 1 TO lv_count.
     ENDLOOP.
@@ -3618,42 +3622,44 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     LOOP AT shared_strings ASSIGNING <fs_sheet_string>.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_si
                                                        parent = lo_document ).
+      IF <fs_sheet_string>-rtf_tab IS NOT BOUND.
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
                                                            parent = lo_document ).
-      IF <fs_sheet_string>-RTF_TAB IS NOT BOUND.
       IF boolc( contains( val = <fs_sheet_string>-string_value start = ` ` ) ) = abap_true
             OR boolc( contains( val = <fs_sheet_string>-string_value end = ` ` ) ) = abap_true.
         lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
       ENDIF.
       lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
+      ELSE.
+        LOOP AT <fs_sheet_string>-rtf_tab->* ASSIGNING <fs_rtf>.
+          lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
+                                                               parent = lo_element ).
+          TRY.
+              lv_value = substring( val = <fs_sheet_string>-string_value
+                                    off = <fs_rtf>-offset
+                                    len = <fs_rtf>-length ).
+            CATCH cx_sy_range_out_of_bounds.
+              EXIT.
+          ENDTRY.
+          IF <fs_rtf>-font IS NOT INITIAL.
+            lo_font_element = lo_document->create_simple_element( name   = lc_xml_node_rpr
+                                                                  parent = lo_sub_element ).
+            create_xl_styles_font_node( io_document = lo_document
+                                        io_parent   = lo_font_element
+                                        is_font     = <fs_rtf>-font
+                                        iv_use_rtf  = abap_true ).
+          ENDIF.
+          lo_sub2_element = lo_document->create_simple_element( name   = lc_xml_node_t
+                                                              parent = lo_sub_element ).
+          IF boolc( contains( val = lv_value start = ` ` ) ) = abap_true
+                OR boolc( contains( val = lv_value end = ` ` ) ) = abap_true.
+            lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+          ENDIF.
+          lo_sub2_element->set_value( lv_value ).
+        ENDLOOP.
+      ENDIF.
       lo_element->append_child( new_child = lo_sub_element ).
       lo_element_root->append_child( new_child = lo_element ).
-    ELSE.
-      LOOP AT <fs_sheet_string>-rtf_tab->* ASSIGNING <fs_rtf>.
-        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
-                                                             parent = lo_element ).
-        TRY.
-          lv_value = substring( val = <fs_sheet_string>-string_value
-                                off = <fs_rtf>-offset
-                                len = <fs_rtf>-length ).
-        CATCH CX_SY_RANGE_OUT_OF_BOUNDS.
-          EXIT.
-        ENDTRY.
-        IF <fs_rtf>-font IS NOT INITIAL.
-          lo_font_element = lo_document->create_simple_element( name   = lc_xml_node_rpr
-                                                                parent = lo_sub_element ).
-          create_xl_styles_font_node( io_document = lo_document
-                                      io_parent   = lo_font_element
-                                      is_font     = <fs_rtf>-font ).
-        ENDIF.
-        lo_sub2_element = lo_document->create_simple_element( name   = lc_xml_node_t
-                                                            parent = lo_sub_element ).
-        IF lv_value IS NOT INITIAL AND lv_value(1) EQ ` `.
-          lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
-        ENDIF.
-        lo_sub2_element->set_value( lv_value ).
-      ENDLOOP.
-    ENDIF.
     ENDLOOP.
 
 **********************************************************************
@@ -7087,6 +7093,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_strike            TYPE string VALUE 'strike',       "strikethrough
                lc_xml_node_sz                TYPE string VALUE 'sz',
                lc_xml_node_name              TYPE string VALUE 'name',
+               lc_xml_node_rfont             TYPE string VALUE 'rFont',
                lc_xml_node_family            TYPE string VALUE 'family',
                lc_xml_node_scheme            TYPE string VALUE 'scheme',
                lc_xml_attr_val               TYPE string VALUE 'val'.
@@ -7140,8 +7147,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           is_color           = ls_font-color ).
 
       "name
+      IF iv_use_rtf = abap_false.
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_name
                                                            parent = lo_document ).
+      ELSE.
+      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_rfont
+                                                           parent = lo_document ).
+      ENDIF.
       lv_value = ls_font-name.
       lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
                                         value = lv_value ).
