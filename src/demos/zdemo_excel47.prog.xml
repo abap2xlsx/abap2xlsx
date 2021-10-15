@@ -7,6 +7,7 @@
     <DBAPL>S</DBAPL>
     <DBNA>D$</DBNA>
     <SUBC>1</SUBC>
+    <RLOAD>E</RLOAD>
     <FIXPT>X</FIXPT>
     <LDBNAME>D$S</LDBNAME>
     <UCCHECK>X</UCCHECK>
@@ -14,8 +15,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>abap2xlsx Demo: Table Calculated Columns</ENTRY>
-     <LENGTH>40</LENGTH>
+     <ENTRY>abap2xlsx Demo: Table Calculated Columns (from Excel 365 or 2019)</ENTRY>
+     <LENGTH>65</LENGTH>
     </item>
    </TPOOL>
   </asx:values>
