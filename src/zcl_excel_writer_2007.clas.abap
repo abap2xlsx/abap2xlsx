@@ -13,6 +13,13 @@ CLASS zcl_excel_writer_2007 DEFINITION
 
 *"* protected components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
+    TYPES: BEGIN OF mty_column_formula_used,
+             id TYPE zexcel_s_cell_data-column_formula_id,
+             si TYPE string,
+             "! type: shared, etc.
+             t  TYPE string,
+           END OF mty_column_formula_used,
+           mty_column_formulas_used TYPE HASHED TABLE OF mty_column_formula_used WITH UNIQUE KEY id.
     CONSTANTS c_content_types TYPE string VALUE '[Content_Types].xml'. "#EC NOTEXT
     CONSTANTS c_docprops_app TYPE string VALUE 'docProps/app.xml'. "#EC NOTEXT
     CONSTANTS c_docprops_core TYPE string VALUE 'docProps/core.xml'. "#EC NOTEXT
@@ -144,6 +151,11 @@ CLASS zcl_excel_writer_2007 DEFINITION
         !io_parent          TYPE REF TO if_ixml_element
         !iv_color_elem_name TYPE string DEFAULT 'color'
         !is_color           TYPE zexcel_s_style_color .
+    METHODS create_xl_styles_font_node
+      IMPORTING
+        !io_document TYPE REF TO if_ixml_document
+        !io_parent   TYPE REF TO if_ixml_element
+        !is_font     TYPE zexcel_s_style_font .
     METHODS create_xl_table
       IMPORTING
         !io_table         TYPE REF TO zcl_excel_table
@@ -197,6 +209,25 @@ CLASS zcl_excel_writer_2007 DEFINITION
         io_document       TYPE REF TO if_ixml_document
       RETURNING
         VALUE(ep_content) TYPE xstring.
+    METHODS create_xl_sheet_column_formula
+      IMPORTING
+        io_document             TYPE REF TO if_ixml_document
+        it_column_formulas      TYPE zcl_excel_worksheet=>mty_th_column_formula
+        is_sheet_content        TYPE zexcel_s_cell_data
+      EXPORTING
+        eo_element              TYPE REF TO if_ixml_element
+      CHANGING
+        ct_column_formulas_used TYPE mty_column_formulas_used
+        cv_si                   TYPE i
+      RAISING
+        zcx_excel.
+    METHODS is_formula_shareable
+      IMPORTING
+        ip_formula          TYPE string
+      RETURNING
+        VALUE(ep_shareable) TYPE abap_bool
+      RAISING
+        zcx_excel.
   PRIVATE SECTION.
 
 *"* private components of class ZCL_EXCEL_WRITER_2007
@@ -5454,6 +5485,81 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       io_element_root->append_child( lo_element ).
 
+  ENDMETHOD.
+  
+  
+  METHOD create_xl_sheet_column_formula.
+
+    TYPES: ls_column_formula_used     TYPE mty_column_formula_used,
+           lv_column_alpha            TYPE zexcel_cell_column_alpha,
+           lv_top_cell_coords         TYPE zexcel_cell_coords,
+           lv_bottom_cell_coords      TYPE zexcel_cell_coords,
+           lv_cell_coords             TYPE zexcel_cell_coords,
+           lv_ref_value               TYPE string,
+           lv_test_shared             TYPE string,
+           lv_si                      TYPE i,
+           lv_1st_line_shared_formula TYPE abap_bool.
+    DATA: lv_value                   TYPE string,
+          ls_column_formula_used     TYPE mty_column_formula_used,
+          lv_column_alpha            TYPE zexcel_cell_column_alpha,
+          lv_top_cell_coords         TYPE zexcel_cell_coords,
+          lv_bottom_cell_coords      TYPE zexcel_cell_coords,
+          lv_cell_coords             TYPE zexcel_cell_coords,
+          lv_ref_value               TYPE string,
+          lv_1st_line_shared_formula TYPE abap_bool.
+    FIELD-SYMBOLS: <ls_column_formula>      TYPE zcl_excel_worksheet=>mty_s_column_formula,
+                   <ls_column_formula_used> TYPE mty_column_formula_used.
+
+
+    READ TABLE it_column_formulas WITH TABLE KEY id = is_sheet_content-column_formula_id ASSIGNING <ls_column_formula>.
+    ASSERT sy-subrc = 0.
+
+    lv_value = <ls_column_formula>-formula.
+    lv_1st_line_shared_formula = abap_false.
+    eo_element = io_document->create_simple_element( name   = 'f'
+                                                     parent = io_document ).
+    READ TABLE ct_column_formulas_used WITH TABLE KEY id = is_sheet_content-column_formula_id ASSIGNING <ls_column_formula_used>.
+    IF sy-subrc <> 0.
+      CLEAR ls_column_formula_used.
+      ls_column_formula_used-id = is_sheet_content-column_formula_id.
+      IF is_formula_shareable( ip_formula = lv_value ) = abap_true.
+        ls_column_formula_used-t = 'shared'.
+        ls_column_formula_used-si = cv_si.
+        CONDENSE ls_column_formula_used-si.
+        cv_si = cv_si + 1.
+        lv_1st_line_shared_formula = abap_true.
+      ENDIF.
+      INSERT ls_column_formula_used INTO TABLE ct_column_formulas_used ASSIGNING <ls_column_formula_used>.
+    ENDIF.
+
+    IF lv_1st_line_shared_formula = abap_true OR <ls_column_formula_used>-t <> 'shared'.
+      lv_column_alpha = zcl_excel_common=>convert_column2alpha( ip_column = is_sheet_content-cell_column ).
+      lv_top_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table_top_left_row + 1 }|.
+      lv_bottom_cell_coords = |{ lv_column_alpha }{ <ls_column_formula>-table_bottom_right_row + 1 }|.
+      lv_cell_coords = |{ lv_column_alpha }{ is_sheet_content-cell_row }|.
+      IF lv_top_cell_coords = lv_cell_coords.
+        lv_ref_value = |{ lv_top_cell_coords }:{ lv_bottom_cell_coords }|.
+      ELSE.
+        lv_ref_value = |{ lv_cell_coords }:{ lv_bottom_cell_coords }|.
+        lv_value = zcl_excel_common=>shift_formula(
+            iv_reference_formula = lv_value
+            iv_shift_cols        = 0
+            iv_shift_rows        = is_sheet_content-cell_row - <ls_column_formula>-table_top_left_row - 1 ).
+      ENDIF.
+    ENDIF.
+
+    IF <ls_column_formula_used>-t = 'shared'.
+      eo_element->set_attribute( name  = 't'
+                                 value = <ls_column_formula_used>-t ).
+      eo_element->set_attribute( name  = 'si'
+                                 value = <ls_column_formula_used>-si ).
+      IF lv_1st_line_shared_formula = abap_true.
+        eo_element->set_attribute( name  = 'ref'
+                                   value = lv_ref_value ).
+        eo_element->set_value( value = lv_value ).
+      ENDIF.
+    ELSE.
+      eo_element->set_value( value = lv_value ).
     ENDIF.
 
   ENDMETHOD.
@@ -5833,6 +5939,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
           lv_value               TYPE string,
           lv_style_guid          TYPE zexcel_cell_style.
+    DATA: lt_column_formulas_used TYPE mty_column_formulas_used,
+          lv_si                   TYPE i.
 
     FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data,
                    <ls_row_outline>   LIKE LINE OF lts_row_outlines.
@@ -6089,6 +6197,18 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         CONDENSE lv_value.
         lo_element_4->set_value( value = lv_value ).
         lo_element_3->append_child( new_child = lo_element_4 ). " fomula node
+      ELSEIF <ls_sheet_content>-column_formula_id <> 0.
+        create_xl_sheet_column_formula(
+          EXPORTING
+            io_document             = io_document
+            it_column_formulas      = io_worksheet->column_formulas
+            is_sheet_content        = <ls_sheet_content>
+          IMPORTING
+            eo_element              = lo_element_4
+          CHANGING
+            ct_column_formulas_used = lt_column_formulas_used
+            cv_si                   = lv_si ).
+        lo_element_3->append_child( new_child = lo_element_4 ).
       ELSEIF <ls_sheet_content>-cell_value IS NOT INITIAL           "cell can have just style or formula
          AND <ls_sheet_content>-cell_value <> lc_dummy_cell_content.
         IF <ls_sheet_content>-data_type IS NOT INITIAL.
@@ -6163,15 +6283,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                " font
                lc_xml_node_fonts             TYPE string VALUE 'fonts',
                lc_xml_node_font              TYPE string VALUE 'font',
-               lc_xml_node_b                 TYPE string VALUE 'b',            "bold
-               lc_xml_node_i                 TYPE string VALUE 'i',            "italic
-               lc_xml_node_u                 TYPE string VALUE 'u',            "underline
-               lc_xml_node_strike            TYPE string VALUE 'strike',       "strikethrough
-               lc_xml_node_sz                TYPE string VALUE 'sz',
                lc_xml_node_color             TYPE string VALUE 'color',
-               lc_xml_node_name              TYPE string VALUE 'name',
-               lc_xml_node_family            TYPE string VALUE 'family',
-               lc_xml_node_scheme            TYPE string VALUE 'scheme',
                " fill
                lc_xml_node_fills             TYPE string VALUE 'fills',
                lc_xml_node_fill              TYPE string VALUE 'fill',
@@ -6503,69 +6615,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     LOOP AT lt_fonts INTO ls_font.
       lo_element_font = lo_document->create_simple_element( name   = lc_xml_node_font
                                                             parent = lo_document ).
-      IF ls_font-bold EQ abap_true.
-        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_b
-                                                             parent = lo_document ).
-        lo_element_font->append_child( new_child = lo_sub_element ).
-      ENDIF.
-      IF ls_font-italic EQ abap_true.
-        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_i
-                                                             parent = lo_document ).
-        lo_element_font->append_child( new_child = lo_sub_element ).
-      ENDIF.
-      IF ls_font-underline EQ abap_true.
-        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_u
-                                                             parent = lo_document ).
-        lv_value = ls_font-underline_mode.
-        lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                          value = lv_value ).
-        lo_element_font->append_child( new_child = lo_sub_element ).
-      ENDIF.
-      IF ls_font-strikethrough EQ abap_true.
-        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_strike
-                                                             parent = lo_document ).
-        lo_element_font->append_child( new_child = lo_sub_element ).
-      ENDIF.
-      "size
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_sz
-                                                           parent = lo_document ).
-      lv_value = ls_font-size.
-      SHIFT lv_value RIGHT DELETING TRAILING space.
-      SHIFT lv_value LEFT DELETING LEADING space.
-      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                        value = lv_value ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-      "color
-      create_xl_styles_color_node(
-          io_document        = lo_document
-          io_parent          = lo_element_font
-          is_color           = ls_font-color ).
-
-      "name
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_name
-                                                           parent = lo_document ).
-      lv_value = ls_font-name.
-      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                        value = lv_value ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-      "family
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_family
-                                                           parent = lo_document ).
-      lv_value = ls_font-family.
-      SHIFT lv_value RIGHT DELETING TRAILING space.
-      SHIFT lv_value LEFT DELETING LEADING space.
-      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                        value = lv_value ).
-      lo_element_font->append_child( new_child = lo_sub_element ).
-      "scheme
-      IF ls_font-scheme IS NOT INITIAL.
-        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_scheme
-                                                             parent = lo_document ).
-        lv_value = ls_font-scheme.
-        lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
-                                          value = lv_value ).
-        lo_element_font->append_child( new_child = lo_sub_element ).
-      ENDIF.
+      create_xl_styles_font_node( io_document = lo_document
+                                  io_parent   = lo_element_font
+                                  is_font     = ls_font ).
       lo_element_fonts->append_child( new_child = lo_element_font ).
     ENDLOOP.
 
@@ -7170,6 +7222,95 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD create_xl_styles_font_node.
+
+    CONSTANTS: lc_xml_node_b                 TYPE string VALUE 'b',            "bold
+               lc_xml_node_i                 TYPE string VALUE 'i',            "italic
+               lc_xml_node_u                 TYPE string VALUE 'u',            "underline
+               lc_xml_node_strike            TYPE string VALUE 'strike',       "strikethrough
+               lc_xml_node_sz                TYPE string VALUE 'sz',
+               lc_xml_node_name              TYPE string VALUE 'name',
+               lc_xml_node_family            TYPE string VALUE 'family',
+               lc_xml_node_scheme            TYPE string VALUE 'scheme',
+               lc_xml_attr_val               TYPE string VALUE 'val'.
+
+    DATA: lo_document     TYPE REF TO if_ixml_document,
+          lo_element_font TYPE REF TO if_ixml_element,
+          ls_font         TYPE zexcel_s_style_font,
+          lo_sub_element  TYPE REF TO if_ixml_element,
+          lv_value        TYPE string.
+
+    lo_document = io_document.
+    lo_element_font = io_parent.
+    ls_font = is_font.
+
+      IF ls_font-bold EQ abap_true.
+        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_b
+                                                             parent = lo_document ).
+        lo_element_font->append_child( new_child = lo_sub_element ).
+      ENDIF.
+      IF ls_font-italic EQ abap_true.
+        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_i
+                                                             parent = lo_document ).
+        lo_element_font->append_child( new_child = lo_sub_element ).
+      ENDIF.
+      IF ls_font-underline EQ abap_true.
+        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_u
+                                                             parent = lo_document ).
+        lv_value = ls_font-underline_mode.
+        lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                          value = lv_value ).
+        lo_element_font->append_child( new_child = lo_sub_element ).
+      ENDIF.
+      IF ls_font-strikethrough EQ abap_true.
+        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_strike
+                                                             parent = lo_document ).
+        lo_element_font->append_child( new_child = lo_sub_element ).
+      ENDIF.
+      "size
+      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_sz
+                                                           parent = lo_document ).
+      lv_value = ls_font-size.
+      SHIFT lv_value RIGHT DELETING TRAILING space.
+      SHIFT lv_value LEFT DELETING LEADING space.
+      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                        value = lv_value ).
+      lo_element_font->append_child( new_child = lo_sub_element ).
+      "color
+      create_xl_styles_color_node(
+          io_document        = lo_document
+          io_parent          = lo_element_font
+          is_color           = ls_font-color ).
+
+      "name
+      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_name
+                                                           parent = lo_document ).
+      lv_value = ls_font-name.
+      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                        value = lv_value ).
+      lo_element_font->append_child( new_child = lo_sub_element ).
+      "family
+      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_family
+                                                           parent = lo_document ).
+      lv_value = ls_font-family.
+      SHIFT lv_value RIGHT DELETING TRAILING space.
+      SHIFT lv_value LEFT DELETING LEADING space.
+      lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                        value = lv_value ).
+      lo_element_font->append_child( new_child = lo_sub_element ).
+      "scheme
+      IF ls_font-scheme IS NOT INITIAL.
+        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_scheme
+                                                             parent = lo_document ).
+        lv_value = ls_font-scheme.
+        lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
+                                          value = lv_value ).
+        lo_element_font->append_child( new_child = lo_sub_element ).
+      ENDIF.
+
+  ENDMETHOD.
+
+
   METHOD create_xl_table.
 
     DATA: lc_xml_node_table        TYPE string VALUE 'table',
@@ -7189,6 +7330,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           lo_element2     TYPE REF TO if_ixml_element,
+          lo_element3     TYPE REF TO if_ixml_element,
           lv_table_name   TYPE string,
           lv_id           TYPE i,
           lv_match        TYPE i,
@@ -7299,6 +7441,15 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       IF ls_fieldcat-totals_function IS NOT INITIAL.
         lo_element2->set_attribute_ns( name  = 'totalsRowFunction'
                                           value = ls_fieldcat-totals_function ).
+      ENDIF.
+
+      IF ls_fieldcat-column_formula IS NOT INITIAL.
+        lv_value = ls_fieldcat-column_formula.
+        CONDENSE lv_value.
+        lo_element3 = lo_document->create_simple_element_ns( name   = 'calculatedColumnFormula'
+                                                             parent = lo_element2 ).
+        lo_element3->set_value( lv_value ).
+        lo_element2->append_child( new_child = lo_element3 ).
       ENDIF.
 
       lo_element->append_child( new_child = lo_element2 ).
@@ -7685,6 +7836,21 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
     ep_index = ls_shared_string-string_no.
 
+  ENDMETHOD.
+
+  METHOD is_formula_shareable.
+    DATA: lv_test_shared TYPE string.
+
+    ep_shareable = abap_false.
+    IF ip_formula NA '!'.
+      lv_test_shared = zcl_excel_common=>shift_formula(
+          iv_reference_formula = ip_formula
+          iv_shift_cols        = 1
+          iv_shift_rows        = 1 ).
+      IF lv_test_shared <> ip_formula.
+        ep_shareable = abap_true.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD set_vml_shape_footer.

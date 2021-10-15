@@ -158,6 +158,11 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !ip_xml         TYPE REF TO if_ixml_document
       RETURNING
         VALUE(ep_fills) TYPE t_fills .
+    METHODS load_style_font
+      IMPORTING
+        !io_xml_element TYPE REF TO if_ixml_element
+      RETURNING
+        VALUE(ro_font)  TYPE REF TO zcl_excel_style_font .
     METHODS load_style_fonts
       IMPORTING
         !ip_xml         TYPE REF TO if_ixml_document
@@ -1487,36 +1492,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD load_style_fonts.
+  METHOD load_style_font.
 
-*--------------------------------------------------------------------*
-* issue #230   - Pimp my Code
-*              - Stefan Schmoecker,      (done)              2012-11-25
-*              - ...
-* changes: renaming variables and types to naming conventions
-*          aligning code
-*          removing unused variables
-*          adding comments to explain what we are trying to achieve
-*--------------------------------------------------------------------*
     DATA: lo_node_font TYPE REF TO if_ixml_element,
           lo_node2     TYPE REF TO if_ixml_element,
           lo_font      TYPE REF TO zcl_excel_style_font,
           ls_color     TYPE t_color.
 
-*--------------------------------------------------------------------*
-* We need a table of used fonts to build up our styles
-
-*          Following is an example how this part of a file could be set up
-*          <font>
-*              <sz val="11"/>
-*              <color theme="1"/>
-*              <name val="Calibri"/>
-*              <family val="2"/>
-*              <scheme val="minor"/>
-*          </font>
-*--------------------------------------------------------------------*
-    lo_node_font ?= ip_xml->find_from_name( 'font' ).
-    WHILE lo_node_font IS BOUND.
+    lo_node_font = io_xml_element.
 
       CREATE OBJECT lo_font.
 *--------------------------------------------------------------------*
@@ -1603,6 +1586,41 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         lo_font->color-tint = ls_color-tint.
       ENDIF.
 
+    ro_font = lo_font.
+
+  ENDMETHOD.
+
+
+  METHOD load_style_fonts.
+
+*--------------------------------------------------------------------*
+* issue #230   - Pimp my Code
+*              - Stefan Schmoecker,      (done)              2012-11-25
+*              - ...
+* changes: renaming variables and types to naming conventions
+*          aligning code
+*          removing unused variables
+*          adding comments to explain what we are trying to achieve
+*--------------------------------------------------------------------*
+    DATA: lo_node_font TYPE REF TO if_ixml_element,
+          lo_font      TYPE REF TO zcl_excel_style_font.
+
+*--------------------------------------------------------------------*
+* We need a table of used fonts to build up our styles
+
+*          Following is an example how this part of a file could be set up
+*          <font>
+*              <sz val="11"/>
+*              <color theme="1"/>
+*              <name val="Calibri"/>
+*              <family val="2"/>
+*              <scheme val="minor"/>
+*          </font>
+*--------------------------------------------------------------------*
+    lo_node_font ?= ip_xml->find_from_name( 'font' ).
+    WHILE lo_node_font IS BOUND.
+
+      lo_font = load_style_font( lo_node_font ).
       INSERT lo_font INTO TABLE ep_fonts.
 
       lo_node_font ?= lo_node_font->get_next( ).
