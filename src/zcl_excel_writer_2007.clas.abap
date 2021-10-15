@@ -5486,7 +5486,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       io_element_root->append_child( lo_element ).
 
   ENDMETHOD.
-  
   METHOD create_xl_sheet_column_formula.
 
     TYPES: ls_column_formula_used     TYPE mty_column_formula_used,
