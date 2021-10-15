@@ -1197,6 +1197,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = |'A1'!$A$1| ).
 
+" Reference to another column in the same row of a Table, with a space in the column name
+    macro_shift_formula(
+      iv_reference_formula = 'Tbl[[#This Row],[Air fare]]'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Tbl[[#This Row],[Air fare]]' ).
+
+" Reference to another column in the same row of a Table, inside more complex expression
+    macro_shift_formula(
+      iv_reference_formula = 'Tbl[[#This Row],[Air]]+A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Tbl[[#This Row],[Air]]+B2' ).
+
   ENDMETHOD.
 
   METHOD is_cell_in_range.
