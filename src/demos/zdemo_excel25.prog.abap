@@ -8,23 +8,29 @@
 
 REPORT zdemo_excel25.
 
-DATA: lo_excel        TYPE REF TO zcl_excel,
-      lo_excel_writer TYPE REF TO zif_excel_writer,
-      lo_worksheet    TYPE REF TO zcl_excel_worksheet,
-      lo_exception    TYPE REF TO cx_root.
-
-DATA: lv_file                 TYPE xstring.
-
 CONSTANTS: lv_file_name TYPE string VALUE '25_HelloWorld.xlsx'.
+
+DATA: lo_excel             TYPE REF TO zcl_excel.
+DATA: lo_excel_writer      TYPE REF TO zif_excel_writer.
+DATA: lo_worksheet         TYPE REF TO zcl_excel_worksheet.
+DATA: lo_exception         TYPE REF TO cx_root.
+DATA: lv_file              TYPE xstring.
 DATA: lv_default_file_name TYPE string.
-DATA: lv_error TYPE string.
+DATA: lv_error             TYPE string.
 
 CALL FUNCTION 'FILE_GET_NAME_USING_PATH'
   EXPORTING
     logical_path        = 'LOCAL_TEMPORARY_FILES'  " Logical path'
     file_name           = lv_file_name    " File name
   IMPORTING
-    file_name_with_path = lv_default_file_name.    " File name with path
+    file_name_with_path = lv_default_file_name    " File name with path
+  EXCEPTIONS
+    other               = 1.
+IF sy-subrc <> 0.
+  MESSAGE ID sy-msgid TYPE 'I' NUMBER sy-msgno
+          WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+ENDIF.
+
 " Creates active sheet
 CREATE OBJECT lo_excel.
 
@@ -38,7 +44,15 @@ lv_file = lo_excel_writer->write_file( lo_excel ).
 
 TRY.
     OPEN DATASET lv_default_file_name FOR OUTPUT IN BINARY MODE.
+    IF sy-subrc <> 0.
+      RAISE EXCEPTION TYPE cx_sy_file_open
+        EXPORTING
+          filename  = lv_default_file_name
+          errorcode = sy-subrc
+          errortext = |Cannot create or open file - Check Tx FILE Logical Path 'LOCAL_TEMPORARY_FILES'|.
+    ENDIF.
     TRANSFER lv_file  TO lv_default_file_name.
+
     CLOSE DATASET lv_default_file_name.
   CATCH cx_root INTO lo_exception.
     lv_error = lo_exception->get_text( ).
