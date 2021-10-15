@@ -1,3 +1,6 @@
+CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
+CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
+    ltc_check_cell_column_formula.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
@@ -37,6 +40,40 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     METHODS: DELETE_MERGE FOR TESTING.
     METHODS: GET_DIMENSION_RANGE FOR TESTING.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
+
+
+CLASS ltc_check_cell_column_formula DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+
+    METHODS: success FOR TESTING RAISING cx_static_check.
+    METHODS: fails_both_formula_id_value FOR TESTING RAISING cx_static_check.
+    METHODS: fails_both_formula_id_formula FOR TESTING RAISING cx_static_check.
+    METHODS: formula_id_not_found FOR TESTING RAISING cx_static_check.
+    METHODS: outside_table_fails__above FOR TESTING RAISING cx_static_check.
+    METHODS: outside_table_fails__below FOR TESTING RAISING cx_static_check.
+    METHODS: outside_table_fails__left FOR TESTING RAISING cx_static_check.
+    METHODS: outside_table_fails__right FOR TESTING RAISING cx_static_check.
+    METHODS: must_be_in_same_column FOR TESTING RAISING cx_static_check.
+
+    METHODS: setup.
+    METHODS: should_fail
+      IMPORTING
+        ip_formula_id TYPE zexcel_s_cell_data-column_formula_id
+        ip_formula    TYPE zexcel_s_cell_data-cell_formula OPTIONAL
+        ip_value      TYPE zexcel_s_cell_data-cell_value OPTIONAL
+        ip_row        TYPE zexcel_s_cell_data-cell_row
+        ip_column     TYPE zexcel_s_cell_data-cell_column
+        ip_exp        TYPE string
+      RAISING
+        zcx_excel.
+
+    DATA: mt_column_formulas TYPE zcl_excel_worksheet=>mty_th_column_formula,
+          c_messages LIKE zcl_excel_worksheet=>c_messages.
+
+ENDCLASS.
 
 
 CLASS LCL_EXCEL_WORKSHEET_TEST IMPLEMENTATION.
@@ -422,3 +459,100 @@ CLASS LCL_EXCEL_WORKSHEET_TEST IMPLEMENTATION.
   ENDMETHOD.
 
 ENDCLASS.       "lcl_Excel_Worksheet_Test
+
+
+CLASS ltc_check_cell_column_formula IMPLEMENTATION.
+
+  METHOD setup.
+
+    DATA: ls_column_formula  TYPE zcl_excel_worksheet=>mty_s_column_formula.
+
+    c_messages = zcl_excel_worksheet=>c_messages.
+
+    " Column Formula in table A1:B4 (for unknown reason, bottom_right_row is last actual row minus 1)
+    CLEAR ls_column_formula.
+    ls_column_formula-id = 1.
+    ls_column_formula-column = 1.
+    ls_column_formula-table_top_left_row = 1.
+    ls_column_formula-table_bottom_right_row = 3.
+    ls_column_formula-table_left_column_int = 1.
+    ls_column_formula-table_right_column_int = 2.
+    INSERT ls_column_formula INTO TABLE mt_column_formulas.
+
+    " Column Formula in table D1:E4 (for unknown reason, bottom_right_row is last actual row minus 1)
+    CLEAR ls_column_formula.
+    ls_column_formula-id = 2.
+    ls_column_formula-column = 4.
+    ls_column_formula-table_top_left_row = 1.
+    ls_column_formula-table_bottom_right_row = 3.
+    ls_column_formula-table_left_column_int = 4.
+    ls_column_formula-table_right_column_int = 5.
+    INSERT ls_column_formula INTO TABLE mt_column_formulas.
+
+  ENDMETHOD.
+
+  METHOD success.
+
+    zcl_excel_worksheet=>check_cell_column_formula(
+        it_column_formulas   = mt_column_formulas
+        ip_column_formula_id = 1
+        ip_formula           = ''
+        ip_value             = ''
+        ip_row               = 2
+        ip_column            = 1 ).
+
+  ENDMETHOD.
+
+  METHOD fails_both_formula_id_value.
+    should_fail( ip_formula_id = 1 ip_formula = '' ip_value = '3.14' ip_row = 2 ip_column = 1 ip_exp = c_messages-formula_id_only_is_possible ).
+  ENDMETHOD.
+
+  METHOD fails_both_formula_id_formula.
+    should_fail( ip_formula_id = 1 ip_formula = 'A2' ip_value = '' ip_row = 2 ip_column = 1 ip_exp = c_messages-formula_id_only_is_possible ).
+  ENDMETHOD.
+
+  METHOD formula_id_not_found.
+    should_fail( ip_formula_id = 3 ip_row = 1 ip_column = 1 ip_exp = c_messages-column_formula_id_not_found ).
+  ENDMETHOD.
+
+  METHOD outside_table_fails__above.
+    should_fail( ip_formula_id = 2 ip_row = 1 ip_column = 1 ip_exp = c_messages-formula_not_in_this_table ).
+  ENDMETHOD.
+
+  METHOD outside_table_fails__below.
+    should_fail( ip_formula_id = 2 ip_row = 5 ip_column = 1 ip_exp = c_messages-formula_not_in_this_table ).
+  ENDMETHOD.
+
+  METHOD outside_table_fails__left.
+    should_fail( ip_formula_id = 2 ip_row = 2 ip_column = 0 ip_exp = c_messages-formula_not_in_this_table ).
+  ENDMETHOD.
+
+  METHOD outside_table_fails__right.
+    should_fail( ip_formula_id = 2 ip_row = 2 ip_column = 3 ip_exp = c_messages-formula_not_in_this_table ).
+  ENDMETHOD.
+
+  METHOD must_be_in_same_column.
+    should_fail( ip_formula_id = 1 ip_row = 2 ip_column = 2 ip_exp = c_messages-formula_in_other_column ).
+  ENDMETHOD.
+
+  METHOD should_fail.
+
+    DATA: lo_exception TYPE REF TO zcx_excel.
+
+    TRY.
+        zcl_excel_worksheet=>check_cell_column_formula(
+          EXPORTING
+            it_column_formulas   = mt_column_formulas
+            ip_column_formula_id = ip_formula_id
+            ip_formula           = ip_formula
+            ip_value             = ip_value
+            ip_row               = ip_row
+            ip_column            = ip_column ).
+        cl_abap_unit_assert=>fail( msg = |Should have failed with error "{ ip_exp }"| ).
+      CATCH zcx_excel INTO lo_exception.
+        cl_abap_unit_assert=>assert_equals( act = lo_exception->get_text( ) exp = ip_exp msg = ip_exp ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+ENDCLASS.

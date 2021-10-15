@@ -1076,6 +1076,7 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
           lv_ref_formula    TYPE string,
           lv_compare_1      TYPE string,
           lv_compare_2      TYPE string,
+          lv_level          TYPE i,         " Level of groups [..[..]..] or {..}
 
           lv_errormessage   TYPE string.
 
@@ -1164,6 +1165,30 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
         CONTINUE.       " --> next character in formula can be analyzed
       ENDIF.
 
+
+*--------------------------------------------------------------------*
+* Groups - Ignore values inside blocks [..[..]..] and {..}
+*     R1C1-Style Cell Reference: R[1]C[1]
+*     Cell References: 'C:\[Source.xlsx]Sheet1'!$A$1
+*     Array constants: {1,3.5,TRUE,"Hello"}
+*     "Intra table reference": Flights[[#This Row],[Air fare]]
+*--------------------------------------------------------------------*
+      IF lv_tchar CA '[]{}' OR lv_level > 0.
+        IF lv_tchar CA '[{'.
+          lv_level = lv_level + 1.
+        ELSEIF lv_tchar CA ']}'.
+          lv_level = lv_level - 1.
+        ENDIF.
+        IF lv_cnt2 = lv_flen.
+          lv_substr1 = iv_reference_formula+lv_offset1(lv_numchars).
+          CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+          EXIT.
+        ENDIF.
+        lv_numchars = lv_numchars + 1.
+        lv_cnt   = lv_cnt   + 1.
+        lv_cnt2  = lv_cnt   + 1.
+        CONTINUE.
+      ENDIF.
 
 *--------------------------------------------------------------------*
 * Operators or parenthesis or last character in formula will separate possible cellreferences
