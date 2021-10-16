@@ -7283,7 +7283,18 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     FIND ALL OCCURRENCES OF REGEX '[^_a-zA-Z0-9]' IN io_table->settings-table_name IGNORING CASE MATCH COUNT lv_match.
     IF io_table->settings-table_name IS NOT INITIAL AND lv_match EQ 0.
-      lv_table_name = io_table->settings-table_name.
+      " Name rules (https://support.microsoft.com/en-us/office/rename-an-excel-table-fbf49a4f-82a3-43eb-8ba2-44d21233b114)
+      "   - You can't use "C", "c", "R", or "r" for the name, because they're already designated as a shortcut for selecting the column or row for the active cell when you enter them in the Name or Go To box.
+      "   - Don't use cell references — Names can't be the same as a cell reference, such as Z$100 or R1C1
+      IF ( strlen( io_table->settings-table_name ) = 1 AND io_table->settings-table_name CO 'CcRr' )
+         OR zcl_excel_common=>shift_formula(
+              iv_reference_formula = io_table->settings-table_name
+              iv_shift_cols        = 0
+              iv_shift_rows        = 1 ) <> io_table->settings-table_name.
+        lv_table_name = io_table->get_name( ).
+      ELSE.
+        lv_table_name = io_table->settings-table_name.
+      ENDIF.
     ELSE.
       lv_table_name = io_table->get_name( ).
     ENDIF.
