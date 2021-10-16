@@ -240,7 +240,7 @@ CLASS zcl_excel_writer_2007 DEFINITION
       IMPORTING
         !ip_flag          TYPE flag
       RETURNING
-        VALUE(ep_boolean) TYPE char5 .
+        VALUE(ep_boolean) TYPE tv_charbool  .
 ENDCLASS.
 
 

@@ -9,9 +9,10 @@ CLASS zcl_excel_graph_bars DEFINITION
     TYPES:
 *"* public components of class ZCL_EXCEL_GRAPH_BARS
 *"* do not include other source files here!!!
+      tv_type TYPE c LENGTH 5,
       BEGIN OF s_ax,
         axid          TYPE string,
-        type          TYPE char5,
+        type          TYPE tv_type,
         orientation   TYPE string,
         delete        TYPE string,
         axpos         TYPE string,
@@ -56,7 +57,7 @@ CLASS zcl_excel_graph_bars DEFINITION
     METHODS create_ax
       IMPORTING
         !ip_axid          TYPE string OPTIONAL
-        !ip_type          TYPE char5
+        !ip_type          TYPE tv_type
         !ip_orientation   TYPE string OPTIONAL
         !ip_delete        TYPE string OPTIONAL
         !ip_axpos         TYPE string OPTIONAL
