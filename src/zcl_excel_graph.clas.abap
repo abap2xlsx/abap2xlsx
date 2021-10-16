@@ -348,8 +348,8 @@ CLASS zcl_excel_graph IMPLEMENTATION.
   METHOD create_serie.
     DATA ls_serie TYPE s_series.
 
-    DATA: lv_start_row_c TYPE char7,
-          lv_stop_row_c  TYPE char7.
+    DATA: lv_start_row_c TYPE c LENGTH 7,
+          lv_stop_row_c  TYPE c LENGTH 7.
 
 
     IF ip_lbl IS NOT SUPPLIED.
