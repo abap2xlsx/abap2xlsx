@@ -235,6 +235,7 @@ CLASS zcl_excel_writer_2007 DEFINITION
     CONSTANTS c_off TYPE string VALUE '0'.                  "#EC NOTEXT
     CONSTANTS c_on TYPE string VALUE '1'.                   "#EC NOTEXT
     CONSTANTS c_xl_printersettings TYPE string VALUE 'xl/printerSettings/printerSettings#.bin'. "#EC NOTEXT
+    TYPES: tv_charbool TYPE c LENGTH 5.
 
     METHODS flag2bool
       IMPORTING
