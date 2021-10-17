@@ -869,7 +869,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
       lv_value              TYPE string,
       lv_value_lowercase    TYPE string,
-      lv_syindex            TYPE char3,
+      lv_syindex            TYPE c LENGTH 3,
       lv_errormessage       TYPE string,                                            "ins issue #237
 
       lv_columns            TYPE i,
