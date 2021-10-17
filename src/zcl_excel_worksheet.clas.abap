@@ -32,6 +32,31 @@ CLASS zcl_excel_worksheet DEFINITION
     TYPES:
       mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
     TYPES:
+      BEGIN OF mty_s_ignored_errors,
+        "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
+        cell_coords           TYPE zexcel_cell_coords,
+        "! Ignore errors when cells contain formulas that result in an error.
+        eval_error            TYPE abap_bool,
+        "! Ignore errors when formulas contain text formatted cells with years represented as 2 digits.
+        two_digit_text_year   TYPE abap_bool,
+        "! Ignore errors when numbers are formatted as text or are preceded by an apostrophe.
+        number_stored_as_text TYPE abap_bool,
+        "! Ignore errors when a formula in a region of your WorkSheet differs from other formulas in the same region.
+        formula               TYPE abap_bool,
+        "! Ignore errors when formulas omit certain cells in a region.
+        formula_range         TYPE abap_bool,
+        "! Ignore errors when unlocked cells contain formulas.
+        unlocked_formula      TYPE abap_bool,
+        "! Ignore errors when formulas refer to empty cells.
+        empty_cell_reference  TYPE abap_bool,
+        "! Ignore errors when a cell's value in a Table does not comply with the Data Validation rules specified.
+        list_data_validation  TYPE abap_bool,
+        "! Ignore errors when cells contain a value different from a calculated column formula.
+        "! In other words, for a calculated column, a cell in that column is considered to have an error
+        "! if its formula is different from the calculated column formula, or doesn't contain a formula at all.
+        calculated_column     TYPE abap_bool,
+      END OF mty_s_ignored_errors,
+      mty_th_ignored_errors TYPE HASHED TABLE OF mty_s_ignored_errors WITH UNIQUE KEY cell_coords,
       BEGIN OF mty_s_column_formula,
         id                     TYPE i,
         column                 TYPE zexcel_cell_column,
@@ -370,6 +395,9 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS get_hyperlinks_size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS get_ignored_errors
+      RETURNING
+        VALUE(rt_ignored_errors) TYPE mty_th_ignored_errors.
     METHODS get_merge
       RETURNING
         VALUE(merge_range) TYPE string_table
@@ -463,6 +491,9 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_default_excel_date_format TYPE zexcel_number_format
       RAISING
         zcx_excel .
+    METHODS set_ignored_errors
+      IMPORTING
+        it_ignored_errors TYPE mty_th_ignored_errors.
     METHODS set_merge
       IMPORTING
         !ip_column_start TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_min_col
@@ -646,6 +677,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA tables TYPE REF TO cl_object_collection .
     DATA title TYPE zexcel_sheet_title VALUE 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     DATA upper_cell TYPE zexcel_s_cell_data .
+    DATA mt_ignored_errors TYPE mty_th_ignored_errors.
 
     METHODS calculate_cell_width
       IMPORTING
@@ -837,7 +869,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
       lv_value              TYPE string,
       lv_value_lowercase    TYPE string,
-      lv_syindex            TYPE char3,
+      lv_syindex            TYPE c LENGTH 3,
       lv_errormessage       TYPE string,                                            "ins issue #237
 
       lv_columns            TYPE i,
@@ -2311,6 +2343,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "GET_HYPERLINKS_SIZE
 
 
+  METHOD get_ignored_errors.
+    rt_ignored_errors = mt_ignored_errors.
+  ENDMETHOD.
+
+
   METHOD get_merge.
 
     FIELD-SYMBOLS: <ls_merged_cell> LIKE LINE OF me->mt_merged_cells.
@@ -3317,6 +3354,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     default_excel_date_format = ip_default_excel_date_format.
   ENDMETHOD.                    "SET_DEFAULT_EXCEL_DATE_FORMAT
+
+
+  METHOD set_ignored_errors.
+    mt_ignored_errors = it_ignored_errors.
+  ENDMETHOD.
 
 
   METHOD set_merge.
