@@ -62,8 +62,8 @@ CLASS zcl_excel_range IMPLEMENTATION.
 
 
   METHOD set_value.
-    DATA: lv_start_row_c TYPE char7,
-          lv_stop_row_c  TYPE char7,
+    DATA: lv_start_row_c TYPE c LENGTH 7,
+          lv_stop_row_c  TYPE c LENGTH 7,
           lv_value       TYPE string.
     lv_stop_row_c = ip_stop_row.
     SHIFT lv_stop_row_c RIGHT DELETING TRAILING space.
