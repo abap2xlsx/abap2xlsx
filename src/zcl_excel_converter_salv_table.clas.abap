@@ -27,6 +27,9 @@ CLASS zcl_excel_converter_salv_table DEFINITION
       IMPORTING
         !io_salv  TYPE REF TO cl_salv_table
         !it_table TYPE STANDARD TABLE .
+    METHODS is_intercept_data_active
+      RETURNING
+        VALUE(rv_result) TYPE abap_bool.
 ENDCLASS.
 
 
@@ -49,6 +52,8 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
     DATA ls_kkblo_layout   TYPE kkblo_layout.
     DATA lt_kkblo_filter   TYPE kkblo_t_filter.
     DATA lt_kkblo_sort     TYPE kkblo_t_sortinfo.
+    DATA: lv_intercept_data_active TYPE abap_bool,
+          ls_layout_key            TYPE salv_s_layout_key.
 
     lo_layout               = io_salv->get_layout( ) .
     lo_columns              = io_salv->get_columns( ).
@@ -62,9 +67,18 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
              wt_sort,
              wt_filt.
 
+    lv_intercept_data_active = is_intercept_data_active( ).
+
 * First update metadata if we can.
     IF io_salv->is_offline( ) = abap_false.
-      io_salv->get_metadata( ) .
+      IF lv_intercept_data_active = abap_true.
+        ls_layout_key = lo_layout->get_key( ).
+        ls_vari-report    = ls_layout_key-report.
+        ls_vari-handle    = ls_layout_key-handle.
+        ls_vari-log_group = ls_layout_key-logical_group.
+      ELSE.
+        io_salv->get_metadata( ) .
+      ENDIF.
     ELSE.
 * If we are offline we need to build this.
       cl_salv_controller_metadata=>get_variant(
@@ -104,7 +118,9 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
       CHANGING
         ct_fieldcat      = wt_fcat.
 
-    IF ls_vari IS NOT INITIAL AND io_salv->is_offline( ) = abap_true.
+    IF ls_vari IS NOT INITIAL AND
+        ( io_salv->is_offline( ) = abap_true
+          OR lv_intercept_data_active = abap_true ).
       CALL FUNCTION 'LVC_TRANSFER_TO_KKBLO'
         EXPORTING
           it_fieldcat_lvc         = wt_fcat
@@ -253,4 +269,32 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
                                 ct_fieldcatalog = et_fieldcatalog ).
     ENDIF.
   ENDMETHOD.
+
+  METHOD is_intercept_data_active.
+
+    DATA: lr_s_type_runtime_info TYPE REF TO data.
+    FIELD-SYMBOLS: <ls_type_runtime_info> TYPE any,
+                   <lv_display>           TYPE any,
+                   <lv_data>              TYPE any.
+
+    rv_result = abap_false.
+    TRY.
+        CREATE DATA lr_s_type_runtime_info TYPE ('CL_SALV_BS_RUNTIME_INFO=>S_TYPE_RUNTIME_INFO').
+        ASSIGN lr_s_type_runtime_info->* TO <ls_type_runtime_info>.
+        CALL METHOD ('CL_SALV_BS_RUNTIME_INFO')=>('GET')
+          RECEIVING
+            value = <ls_type_runtime_info>.
+        ASSIGN ('<LS_TYPE_RUNTIME_INFO>-DISPLAY') TO <lv_display>.
+        CHECK sy-subrc = 0.
+        ASSIGN ('<LS_TYPE_RUNTIME_INFO>-DATA') TO <lv_data>.
+        CHECK sy-subrc = 0.
+        IF <lv_display> = abap_false AND <lv_data> = abap_true.
+          rv_result = abap_true.
+        ENDIF.
+      CATCH cx_sy_create_data_error cx_sy_dyn_call_error.
+        rv_result = abap_false.
+    ENDTRY.
+
+  ENDMETHOD.
+
 ENDCLASS.
