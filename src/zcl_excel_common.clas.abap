@@ -912,9 +912,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
   METHOD number_to_excel_string.
     DATA: lv_value_c TYPE c LENGTH 100.
 
-    WRITE 'sdf'.
     WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
-    WRITE 'sdf'.
     REPLACE ALL OCCURRENCES OF ',' IN lv_value_c WITH '.'.
 
     ep_value = lv_value_c.
