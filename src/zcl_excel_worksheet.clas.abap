@@ -32,6 +32,46 @@ CLASS zcl_excel_worksheet DEFINITION
     TYPES:
       mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
     TYPES:
+      BEGIN OF mty_s_ignored_errors,
+        "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
+        cell_coords           TYPE zexcel_cell_coords,
+        "! Ignore errors when cells contain formulas that result in an error.
+        eval_error            TYPE abap_bool,
+        "! Ignore errors when formulas contain text formatted cells with years represented as 2 digits.
+        two_digit_text_year   TYPE abap_bool,
+        "! Ignore errors when numbers are formatted as text or are preceded by an apostrophe.
+        number_stored_as_text TYPE abap_bool,
+        "! Ignore errors when a formula in a region of your WorkSheet differs from other formulas in the same region.
+        formula               TYPE abap_bool,
+        "! Ignore errors when formulas omit certain cells in a region.
+        formula_range         TYPE abap_bool,
+        "! Ignore errors when unlocked cells contain formulas.
+        unlocked_formula      TYPE abap_bool,
+        "! Ignore errors when formulas refer to empty cells.
+        empty_cell_reference  TYPE abap_bool,
+        "! Ignore errors when a cell's value in a Table does not comply with the Data Validation rules specified.
+        list_data_validation  TYPE abap_bool,
+        "! Ignore errors when cells contain a value different from a calculated column formula.
+        "! In other words, for a calculated column, a cell in that column is considered to have an error
+        "! if its formula is different from the calculated column formula, or doesn't contain a formula at all.
+        calculated_column     TYPE abap_bool,
+      END OF mty_s_ignored_errors,
+      mty_th_ignored_errors TYPE HASHED TABLE OF mty_s_ignored_errors WITH UNIQUE KEY cell_coords,
+      BEGIN OF mty_s_column_formula,
+        id                     TYPE i,
+        column                 TYPE zexcel_cell_column,
+        formula                TYPE string,
+        table_top_left_row     TYPE zexcel_cell_row,
+        table_bottom_right_row TYPE zexcel_cell_row,
+        table_left_column_int  TYPE zexcel_cell_column,
+        table_right_column_int TYPE zexcel_cell_column,
+      END OF mty_s_column_formula .
+    TYPES:
+      mty_th_column_formula
+             TYPE HASHED TABLE OF mty_s_column_formula
+             WITH UNIQUE KEY id .
+    TYPES ty_doc_url TYPE c LENGTH 255.
+    TYPES:
       BEGIN OF mty_merge,
         row_from TYPE i,
         row_to   TYPE i,
@@ -52,6 +92,13 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true. "#EC NOTEXT
     DATA styles TYPE zexcel_t_sheet_style .
     DATA tabcolor TYPE zexcel_s_tabcolor READ-ONLY .
+    DATA column_formulas TYPE mty_th_column_formula READ-ONLY .
+    CLASS-DATA: BEGIN OF c_messages READ-ONLY,
+                  formula_id_only_is_possible TYPE string,
+                  column_formula_id_not_found TYPE string,
+                  formula_not_in_this_table   TYPE string,
+                  formula_in_other_column     TYPE string,
+                END OF c_messages.
     DATA mt_merged_cells TYPE mty_ts_merge READ-ONLY .
 
     METHODS add_comment
@@ -93,7 +140,7 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS bind_alv_ole2
       IMPORTING
-        !i_document_url      TYPE char255 DEFAULT space
+        !i_document_url      TYPE ty_doc_url DEFAULT space
         !i_xls               TYPE c DEFAULT space
         !i_save_path         TYPE string
         !io_alv              TYPE REF TO cl_gui_alv_grid
@@ -240,6 +287,7 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_guid)                  TYPE zexcel_cell_style
       RAISING
         zcx_excel .
+    CLASS-METHODS class_constructor.
     METHODS constructor
       IMPORTING
         !ip_excel TYPE REF TO zcl_excel
@@ -357,6 +405,9 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS get_hyperlinks_size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS get_ignored_errors
+      RETURNING
+        VALUE(rt_ignored_errors) TYPE mty_th_ignored_errors.
     METHODS get_merge
       RETURNING
         VALUE(merge_range) TYPE string_table
@@ -421,6 +472,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_hyperlink TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type TYPE abap_typekind OPTIONAL
+        !ip_column_formula_id TYPE mty_s_column_formula-id OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_cell_formula
@@ -449,6 +501,9 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_default_excel_date_format TYPE zexcel_number_format
       RAISING
         zcx_excel .
+    METHODS set_ignored_errors
+      IMPORTING
+        it_ignored_errors TYPE mty_th_ignored_errors.
     METHODS set_merge
       IMPORTING
         !ip_column_start TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_min_col
@@ -622,6 +677,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA tables TYPE REF TO cl_object_collection .
     DATA title TYPE zexcel_sheet_title VALUE 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     DATA upper_cell TYPE zexcel_s_cell_data .
+    DATA mt_ignored_errors TYPE mty_th_ignored_errors.
 
     METHODS calculate_cell_width
       IMPORTING
@@ -631,6 +687,16 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_width) TYPE float
       RAISING
         zcx_excel .
+    CLASS-METHODS check_cell_column_formula
+      IMPORTING
+        it_column_formulas   TYPE mty_th_column_formula
+        ip_column_formula_id TYPE mty_s_column_formula-id
+        ip_formula           TYPE zexcel_cell_formula
+        ip_value             TYPE simple
+        ip_row               TYPE zexcel_cell_row
+        ip_column            TYPE zexcel_cell_column
+      RAISING
+        zcx_excel.
     METHODS generate_title
       RETURNING
         VALUE(ep_title) TYPE zexcel_sheet_title .
@@ -803,7 +869,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
       lv_value              TYPE string,
       lv_value_lowercase    TYPE string,
-      lv_syindex            TYPE char3,
+      lv_syindex            TYPE c LENGTH 3,
       lv_errormessage       TYPE string,                                            "ins issue #237
 
       lv_columns            TYPE i,
@@ -813,6 +879,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lo_iterator           TYPE REF TO cl_object_collection_iterator,
       lo_style_cond         TYPE REF TO zcl_excel_style_cond,
       lo_curtable           TYPE REF TO zcl_excel_table.
+    DATA: ls_column_formula TYPE mty_s_column_formula,
+          lv_mincol         TYPE i.
 
     FIELD-SYMBOLS:
       <ls_field_catalog>        TYPE zexcel_s_fieldcatalog,
@@ -968,6 +1036,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                       ip_value  = lv_value ).
       ENDIF.
 
+      IF <ls_field_catalog>-column_formula IS NOT INITIAL.
+        ls_column_formula-id                     = lines( column_formulas ) + 1.
+        ls_column_formula-column                 = lv_column_int.
+        ls_column_formula-formula                = <ls_field_catalog>-column_formula.
+        ls_column_formula-table_top_left_row     = lo_table->settings-top_left_row.
+        ls_column_formula-table_bottom_right_row = lo_table->settings-bottom_right_row.
+        ls_column_formula-table_left_column_int  = lv_mincol.
+        ls_column_formula-table_right_column_int = lv_maxcol.
+        INSERT ls_column_formula INTO TABLE column_formulas.
+      ENDIF.
+
       ADD 1 TO lv_row_int.
       LOOP AT ip_table ASSIGNING <fs_table_line>.
 
@@ -996,6 +1075,31 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             me->set_cell( ip_column   = lv_column_alpha
                           ip_row      = lv_row_int
                           ip_formula  = <fs_fldval> ).
+          ENDIF.
+        ELSEIF <ls_field_catalog>-column_formula IS NOT INITIAL.
+          " Column formulas
+          IF <ls_field_catalog>-style IS NOT INITIAL.
+            IF <ls_field_catalog>-abap_type IS NOT INITIAL.
+              me->set_cell( ip_column            = lv_column_alpha
+                            ip_row               = lv_row_int
+                            ip_column_formula_id = ls_column_formula-id
+                            ip_abap_type         = <ls_field_catalog>-abap_type
+                            ip_style             = <ls_field_catalog>-style ).
+            ELSE.
+              me->set_cell( ip_column            = lv_column_alpha
+                            ip_row               = lv_row_int
+                            ip_column_formula_id = ls_column_formula-id
+                            ip_style             = <ls_field_catalog>-style ).
+            ENDIF.
+          ELSEIF <ls_field_catalog>-abap_type IS NOT INITIAL.
+            me->set_cell( ip_column             = lv_column_alpha
+                          ip_row                = lv_row_int
+                          ip_column_formula_id  = ls_column_formula-id
+                          ip_abap_type          = <ls_field_catalog>-abap_type ).
+          ELSE.
+            me->set_cell( ip_column            = lv_column_alpha
+                          ip_row               = lv_row_int
+                          ip_column_formula_id = ls_column_formula-id ).
           ENDIF.
         ELSE.
           IF <ls_field_catalog>-style IS NOT INITIAL.
@@ -1703,6 +1807,40 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "CHANGE_CELL_STYLE
 
 
+  METHOD check_cell_column_formula.
+
+    FIELD-SYMBOLS <fs_column_formula> TYPE zcl_excel_worksheet=>mty_s_column_formula.
+
+    IF ip_value IS NOT INITIAL OR ip_formula IS NOT INITIAL.
+      zcx_excel=>raise_text( c_messages-formula_id_only_is_possible ).
+    ENDIF.
+    READ TABLE it_column_formulas WITH TABLE KEY id = ip_column_formula_id ASSIGNING <fs_column_formula>.
+    IF sy-subrc <> 0.
+      zcx_excel=>raise_text( c_messages-column_formula_id_not_found ).
+    ENDIF.
+    IF ip_row < <fs_column_formula>-table_top_left_row + 1
+          OR ip_row > <fs_column_formula>-table_bottom_right_row + 1
+          OR ip_column < <fs_column_formula>-table_left_column_int
+          OR ip_column > <fs_column_formula>-table_right_column_int.
+      zcx_excel=>raise_text( c_messages-formula_not_in_this_table ).
+    ENDIF.
+    IF ip_column <> <fs_column_formula>-column.
+      zcx_excel=>raise_text( c_messages-formula_in_other_column ).
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD class_constructor.
+
+    c_messages-formula_id_only_is_possible = |{ 'If Formula ID is used, value and formula must be empty'(008) }|.
+    c_messages-column_formula_id_not_found = |{ 'The Column Formula does not exist'(009) }|.
+    c_messages-formula_not_in_this_table = |{ 'The cell uses a Column Formula which should be part of the same table'(010) }|.
+    c_messages-formula_in_other_column = |{ 'The cell uses a Column Formula which is in a different column'(011) }|.
+
+  ENDMETHOD.
+
+
   METHOD constructor.
     DATA: lv_title TYPE zexcel_sheet_title.
 
@@ -1868,7 +2006,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = ip_row
                                                                   cell_column  = lv_column.
 
-    ep_rc = sy-subrc.
+    ep_rc       = sy-subrc.
     ep_value    = ls_sheet_content-cell_value.
     ep_guid     = ls_sheet_content-cell_style.       " issue 139 - added this to be used for columnwidth calculation
     ep_formula  = ls_sheet_content-cell_formula.
@@ -1876,9 +2014,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     " Addition to solve issue #120, contribution by Stefan Schmöcker
     DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
           style          TYPE REF TO zcl_excel_style.
-    IF ep_style IS REQUESTED.
+    IF ep_style IS SUPPLIED.
+      CLEAR ep_style.
       style_iterator = me->excel->get_styles_iterator( ).
-      WHILE style_iterator->has_next( ) = 'X'.
+      WHILE style_iterator->has_next( ) = abap_true.
         style ?= style_iterator->get_next( ).
         IF style->get_guid( ) = ls_sheet_content-cell_style.
           ep_style = style.
@@ -2202,6 +2341,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD get_hyperlinks_size.
     ep_size = hyperlinks->size( ).
   ENDMETHOD.                    "GET_HYPERLINKS_SIZE
+
+
+  METHOD get_ignored_errors.
+    rt_ignored_errors = mt_ignored_errors.
+  ENDMETHOD.
 
 
   METHOD get_merge.
@@ -2882,15 +3026,27 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <fs_time>          TYPE t,
                    <fs_value>         TYPE simple,
                    <fs_typekind_int8> TYPE abap_typekind.
+    FIELD-SYMBOLS: <fs_column_formula> TYPE mty_s_column_formula.
 
 
-    IF ip_value  IS NOT SUPPLIED AND ip_formula IS NOT SUPPLIED.
+    IF ip_value  IS NOT SUPPLIED
+        AND ip_formula IS NOT SUPPLIED
+        AND ip_column_formula_id = 0.
       zcx_excel=>raise_text( 'Please provide the value or formula' ).
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 *  lv_style_guid = ip_style.
     lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+    IF ip_column_formula_id <> 0.
+      check_cell_column_formula(
+          it_column_formulas   = column_formulas
+          ip_column_formula_id = ip_column_formula_id
+          ip_formula           = ip_formula
+          ip_value             = ip_value
+          ip_row               = ip_row
+          ip_column            = lv_column ).
+    ENDIF.
     READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = ip_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
                                                                          cell_column = lv_column.
     IF sy-subrc = 0.
@@ -2946,7 +3102,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
             ENDIF.
 
-          WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed.
+          WHEN cl_abap_typedescr=>typekind_float OR cl_abap_typedescr=>typekind_packed or
+               cl_abap_typedescr=>typekind_decfloat OR
+               cl_abap_typedescr=>typekind_decfloat16 OR
+               cl_abap_typedescr=>typekind_decfloat34.
             lo_addit = cl_abap_elemdescr=>get_f( ).
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
@@ -3030,6 +3189,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * End of change issue #152 - don't touch exisiting style if only value is passed
       <fs_sheet_content>-cell_value   = lv_value.
       <fs_sheet_content>-cell_formula = ip_formula.
+      <fs_sheet_content>-column_formula_id = ip_column_formula_id.
       <fs_sheet_content>-cell_style   = lv_style_guid.
       <fs_sheet_content>-data_type    = lv_data_type.
     ELSE.
@@ -3037,6 +3197,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-cell_column  = lv_column.
       ls_sheet_content-cell_value   = lv_value.
       ls_sheet_content-cell_formula = ip_formula.
+      ls_sheet_content-column_formula_id = ip_column_formula_id.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
       lv_row_alpha = ip_row.
@@ -3193,6 +3354,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     default_excel_date_format = ip_default_excel_date_format.
   ENDMETHOD.                    "SET_DEFAULT_EXCEL_DATE_FORMAT
+
+
+  METHOD set_ignored_errors.
+    mt_ignored_errors = it_ignored_errors.
+  ENDMETHOD.
 
 
   METHOD set_merge.

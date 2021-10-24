@@ -14,18 +14,30 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
 * ================
     DATA:
       lx_excel     TYPE REF TO zcx_excel,
-      ls_symsg_act TYPE symsg,                    " actual   messageinformation of exception
-      ls_symsg_exp TYPE symsg,                    " expected messageinformation of exception
+      ls_symsg_act LIKE sy,                    " actual   messageinformation of exception
+      ls_symsg_exp LIKE sy,                    " expected messageinformation of exception
       f_cut        TYPE REF TO zcl_excel_common.  "class under test
 
     METHODS: setup.
     METHODS: convert_column2alpha FOR TESTING.
     METHODS: convert_column2int FOR TESTING.
-    METHODS: date_to_excel_string FOR TESTING.
+    METHODS date_to_excel_string1 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string2 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string3 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string4 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string5 FOR TESTING RAISING cx_static_check.
+    METHODS date_to_excel_string6 FOR TESTING RAISING cx_static_check.
     METHODS: encrypt_password FOR TESTING.
     METHODS: excel_string_to_date FOR TESTING.
-    METHODS: excel_string_to_time FOR TESTING.
-    METHODS: time_to_excel_string FOR TESTING.
+    METHODS excel_string_to_time1 FOR TESTING RAISING cx_static_check.
+    METHODS excel_string_to_time2 FOR TESTING RAISING cx_static_check.
+    METHODS excel_string_to_time3 FOR TESTING RAISING cx_static_check.
+    METHODS excel_string_to_time4 FOR TESTING RAISING cx_static_check.
+    METHODS excel_string_to_time5 FOR TESTING RAISING cx_static_check.
+    METHODS time_to_excel_string1 FOR TESTING RAISING cx_static_check.
+    METHODS time_to_excel_string2 FOR TESTING RAISING cx_static_check.
+    METHODS time_to_excel_string3 FOR TESTING RAISING cx_static_check.
+    METHODS time_to_excel_string4 FOR TESTING RAISING cx_static_check.
     METHODS: split_file FOR TESTING.
     METHODS: convert_range2column_a_row FOR TESTING RAISING cx_static_check.
     METHODS: describe_structure FOR TESTING.
@@ -217,115 +229,90 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.       "convert_Column2int
 
 
-  METHOD date_to_excel_string.
-* ============================
+  METHOD date_to_excel_string1.
     DATA ep_value TYPE zexcel_cell_value.
 
 * Test 1. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '19000101' ).
+    ep_value = zcl_excel_common=>date_to_excel_string( '19000101' ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 1
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 1
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string2.
+    DATA ep_value TYPE zexcel_cell_value.
+
 * Check around the "Excel Leap Year" 1900
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '19000228' ).
+    ep_value = zcl_excel_common=>date_to_excel_string( '19000228' ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 59
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '19000301' ).
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 59
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 61
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+  ENDMETHOD.
 
+  METHOD date_to_excel_string3.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>date_to_excel_string( '19000301' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 61
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string4.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 2. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=>date_to_excel_string( '99991212' ).
+    ep_value = zcl_excel_common=>date_to_excel_string( '99991212' ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = 2958446
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = 2958446
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string5.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 3. Initial date
-    TRY.
-        DATA: lv_date TYPE d.
-        ep_value = zcl_excel_common=>date_to_excel_string( lv_date ).
+    DATA: lv_date TYPE d.
+    ep_value = zcl_excel_common=>date_to_excel_string( lv_date ).
 
-        cl_abap_unit_assert=>assert_equals(
-          act   = ep_value
-          exp   = ''
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+      act   = ep_value
+      exp   = ''
+      msg   = 'Wrong date conversion'
+      level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD date_to_excel_string6.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 2. Basic conversion
-    TRY.
-        DATA exp_value TYPE zexcel_cell_value VALUE 0.
-        ep_value = zcl_excel_common=>date_to_excel_string( '18991231' ).
+    DATA exp_value TYPE zexcel_cell_value VALUE 0.
+    ep_value = zcl_excel_common=>date_to_excel_string( '18991231' ).
 
-        cl_abap_unit_assert=>assert_differs(
-              act   = ep_value
-              exp   = exp_value
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>assert_equals(
-          act   = lx_excel->error
-          exp   = 'Index out of bounds'
-          msg   = 'Dates prior of 1900 are not available in excel'
-          level = if_aunit_constants=>critical
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_differs(
+          act   = ep_value
+          exp   = exp_value
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
 
-  ENDMETHOD.       "date_To_Excel_String
+  ENDMETHOD.
 
 
   METHOD encrypt_password.
@@ -505,78 +492,64 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.       "excel_String_To_Date
 
 
-  METHOD excel_string_to_time.
-* ============================
+  METHOD excel_string_to_time1.
     DATA ep_value TYPE t.
 
 * Test 1. Simple test
-    TRY.
-        ep_value = zcl_excel_common=>excel_string_to_time( '0' ).
+    ep_value = zcl_excel_common=>excel_string_to_time( '0' ).
 
-        cl_abap_unit_assert=>assert_equals(
-          act   = ep_value
-          exp   = '000000'
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>tolerable
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+      act   = ep_value
+      exp   = '000000'
+      msg   = 'Wrong date conversion'
+      level = if_aunit_constants=>tolerable ).
 
+  ENDMETHOD.
+
+  METHOD excel_string_to_time2.
+    DATA ep_value TYPE t.
 * Test 2. Simple test
-    TRY.
-        ep_value = zcl_excel_common=>excel_string_to_time( '1' ).
 
-        cl_abap_unit_assert=>assert_equals(
-          act   = ep_value
-          exp   = '000000'
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    ep_value = zcl_excel_common=>excel_string_to_time( '1' ).
 
+    cl_abap_unit_assert=>assert_equals(
+      act   = ep_value
+      exp   = '000000'
+      msg   = 'Wrong date conversion'
+      level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD excel_string_to_time3.
+    DATA ep_value TYPE t.
 * Test 3. Simple test
-    TRY.
-        ep_value = zcl_excel_common=>excel_string_to_time( '0.99999' ).
 
-        cl_abap_unit_assert=>assert_equals(
-          act   = ep_value
-          exp   = '235959'
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    ep_value = zcl_excel_common=>excel_string_to_time( '0.99999' ).
 
+    cl_abap_unit_assert=>assert_equals(
+      act   = ep_value
+      exp   = '235959'
+      msg   = 'Wrong date conversion'
+      level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD excel_string_to_time4.
+    DATA ep_value TYPE t.
 * Test 4. Also string greater than 1 should be managed
-    TRY.
-        ep_value = zcl_excel_common=>excel_string_to_time( '4.1' ).
 
-        cl_abap_unit_assert=>assert_equals(
-          act   = ep_value
-          exp   = '022400'
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    ep_value = zcl_excel_common=>excel_string_to_time( '4.1' ).
 
+    cl_abap_unit_assert=>assert_equals(
+      act   = ep_value
+      exp   = '022400'
+      msg   = 'Wrong date conversion'
+      level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD excel_string_to_time5.
+    DATA ep_value TYPE t.
 * Test 4. string is not a number
     TRY.
         ep_value = zcl_excel_common=>excel_string_to_time( 'NaN' ).
@@ -585,92 +558,72 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           act   = ep_value
           exp   = '000000'
           msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>critical
-        ).
+          level = if_aunit_constants=>critical ).
       CATCH zcx_excel INTO lx_excel.
         cl_abap_unit_assert=>assert_equals(
           act   = lx_excel->error
           exp   = 'Unable to interpret time'
           msg   = 'Time should be a valid string'
-          level = if_aunit_constants=>fatal
-        ).
+          level = if_aunit_constants=>fatal ).
     ENDTRY.
-  ENDMETHOD.       "excel_String_To_Time
+  ENDMETHOD.
 
-
-  METHOD time_to_excel_string.
-* ============================
+  METHOD time_to_excel_string1.
     DATA ep_value TYPE zexcel_cell_value.
 
 * Test 1. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=>time_to_excel_string( '000001' ).
-        " A test directly in Excel returns the value 0.0000115740740740741000
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = '0.0000115740740741'
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    ep_value = zcl_excel_common=>time_to_excel_string( '000001' ).
+    " A test directly in Excel returns the value 0.0000115740740740741000
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '0.0000115740740741'
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD time_to_excel_string2.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 2. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=>time_to_excel_string( '235959' ).
-        " A test directly in Excel returns the value 0.9999884259259260000000
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = '0.9999884259259260'
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-            ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    ep_value = zcl_excel_common=>time_to_excel_string( '235959' ).
+    " A test directly in Excel returns the value 0.9999884259259260000000
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '0.9999884259259260'
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD time_to_excel_string3.
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 3. Initial date
-    TRY.
-        ep_value = zcl_excel_common=>time_to_excel_string( '000000' ).
+    ep_value = zcl_excel_common=>time_to_excel_string( '000000' ).
 
-        cl_abap_unit_assert=>assert_equals(
-          act   = ep_value
-          exp   = '0'
-          msg   = 'Wrong date conversion'
-          level = if_aunit_constants=>critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+      act   = ep_value
+      exp   = '0'
+      msg   = 'Wrong date conversion'
+      level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD time_to_excel_string4.
+
+    DATA ep_value TYPE zexcel_cell_value.
 
 * Test 2. Basic conversion
-    TRY.
-        ep_value = zcl_excel_common=>time_to_excel_string( '022400' ).
+    ep_value = zcl_excel_common=>time_to_excel_string( '022400' ).
 
-        cl_abap_unit_assert=>assert_equals(
-              act   = ep_value
-              exp   = '0.1000000000000000'
-              msg   = 'Wrong date conversion'
-              level = if_aunit_constants=>critical
-        ).
-      CATCH zcx_excel INTO lx_excel.
-        cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception'
-            level  = if_aunit_constants=>critical    " Error Severity
-        ).
-    ENDTRY.
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '0.1000000000000000'
+          msg   = 'Wrong date conversion'
+          level = if_aunit_constants=>critical ).
 
-  ENDMETHOD.       "time_To_Excel_String
+  ENDMETHOD.
 
   METHOD split_file.
 * ============================
@@ -893,7 +846,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
 
   METHOD describe_structure.
-    DATA: ls_test TYPE scarr.
+    DATA: ls_test TYPE zexcel_pane.
     DATA: lo_structdescr TYPE REF TO cl_abap_structdescr.
     DATA: lt_structure TYPE ddfields.
     FIELD-SYMBOLS: <line> LIKE LINE OF lt_structure.
@@ -904,15 +857,15 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     READ TABLE lt_structure ASSIGNING <line> INDEX 1.
     cl_abap_unit_assert=>assert_equals(
           act   = <line>-fieldname
-          exp   = 'MANDT'
+          exp   = 'YSPLIT'
           msg   = 'Describe structure failed'
           level = if_aunit_constants=>critical ).
 
     " Test with local defined structure having DDIC and non DDIC elements
     TYPES:
       BEGIN OF t_test,
-        carrid   TYPE s_carr_id,
-        carrname TYPE s_carrname,
+        carrid   TYPE string,
+        carrname TYPE string,
         carrdesc TYPE string,
       END OF t_test.
     DATA: ls_ttest TYPE t_test.
@@ -1041,7 +994,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
     DATA: lv_resulting_formula TYPE string,
           lv_message           TYPE string,
-          lv_counter           TYPE num8.
+          lv_counter           TYPE n LENGTH 8.
 
     ADD 1 TO lv_counter.
     CLEAR lv_resulting_formula.
@@ -1083,110 +1036,180 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 0
       iv_expected          = 'C17' ).
 
-" Check shift right and down
+    " Check shift right and down
     macro_shift_formula(
       iv_reference_formula = 'C17'
       iv_shift_cols        = 2
       iv_shift_rows        = 3
       iv_expected          = 'E20' ).
 
-" Check shift left and up
+    " Check shift left and up
     macro_shift_formula(
       iv_reference_formula = 'C17'
       iv_shift_cols        = -2
       iv_shift_rows        = -3
       iv_expected          = 'A14' ).
 
-" Fixed columns/rows
+    " Fixed columns/rows
     macro_shift_formula(
       iv_reference_formula = '$C$17'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = '$C$17' ).
 
-" Operators and Ranges, mixed fixed rows or columns
+    " Operators and Ranges, mixed fixed rows or columns
     macro_shift_formula(
       iv_reference_formula = 'SUM($C17:C$23)+C30'
       iv_shift_cols        = 1
       iv_shift_rows        = 11
       iv_expected          = 'SUM($C28:D$23)+D41' ).
 
-" Operators and Rangename
+    " Operators and Rangename
     macro_shift_formula(
       iv_reference_formula = 'RNGNAME1+C7'
       iv_shift_cols        = -1
       iv_shift_rows        = -4
       iv_expected          = 'RNGNAME1+B3' ).
 
-" String literals and string concatenation
+    " String literals and string concatenation
     macro_shift_formula(
       iv_reference_formula = '"Date:"&TEXT(B2)'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = '"Date:"&TEXT(C3)' ).
 
-" External sheet reference
+    " External sheet reference
     macro_shift_formula(
       iv_reference_formula = '[TEST6.XLSX]SHEET1!A1'
       iv_shift_cols        = 1
       iv_shift_rows        = 11
       iv_expected          = '[TEST6.XLSX]SHEET1!B12' ).
 
-" superflous blanks, multi-argument functions, literals in function, unknown functions
+    " superflous blanks, multi-argument functions, literals in function, unknown functions
     macro_shift_formula(
       iv_reference_formula = `X(B13, "KK" )  `
       iv_shift_cols        = 1
       iv_shift_rows        = 1
-      iv_expected          = `X(C14,"KK")` ).
+      iv_expected          = `X(C14, "KK" )  ` ).
 
-" same as above - but with string input instead of Char-input
+    " same as above - but with string input instead of Char-input
     macro_shift_formula(
       iv_reference_formula = `SIN(SIN(SIN(SIN(E22))))`
       iv_shift_cols        = 0
       iv_shift_rows        = 1
       iv_expected          = 'SIN(SIN(SIN(SIN(E23))))' ).
 
-" Functions w/o arguments, No cellreferences
+    " Functions w/o arguments, No cellreferences
     macro_shift_formula(
       iv_reference_formula = 'HEUTE()'
       iv_shift_cols        = 2
       iv_shift_rows        = 5
       iv_expected          = 'HEUTE()' ).
 
-" No cellreferences
+    " No cellreferences
     macro_shift_formula(
       iv_reference_formula = '"B2"'
       iv_shift_cols        = 2
       iv_shift_rows        = 5
       iv_expected          = '"B2"' ).
 
-" Empty
+    " Empty
     macro_shift_formula(
       iv_reference_formula = ''
       iv_shift_cols        = 2
       iv_shift_rows        = 5
       iv_expected          = '' ).
 
-" Referencing error , column only    , underflow
+    " Referencing error , column only    , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = -1
       iv_shift_rows        = 0
       iv_expected          = '#REF!+$A1+#REF!+$A$1+A2' ).
 
-" Referencing error , row only       , underflow
+    " Referencing error , row only       , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = 0
       iv_shift_rows        = -1
       iv_expected          = '#REF!+#REF!+A$1+$A$1+B1' ).
 
-" Referencing error , row and column , underflow
+    " Referencing error , row and column , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = -1
       iv_shift_rows        = -1
       iv_expected          = '#REF!+#REF!+#REF!+$A$1+A1' ).
+
+" Sheet name not ending with digit
+    macro_shift_formula(
+      iv_reference_formula = 'Sheet!A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Sheet!B2' ).
+
+" Sheet name ending with digit
+    macro_shift_formula(
+      iv_reference_formula = 'Sheet2!A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Sheet2!B2' ).
+
+" Sheet name with special characters
+    macro_shift_formula(
+      iv_reference_formula = |'Sheet name'!A1|
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = |'Sheet name'!B2| ).
+
+" Respecting blanks
+    macro_shift_formula(
+      iv_reference_formula = 'SUBTOTAL(109,Table1[SUM 1])'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'SUBTOTAL(109,Table1[SUM 1])' ).
+
+" Respecting blanks
+    macro_shift_formula(
+      iv_reference_formula = 'B4 & C4'
+      iv_shift_cols        = 0
+      iv_shift_rows        = 1
+      iv_expected          = 'B5 & C5' ).
+
+" F_1 is a range name, not a cell address
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(F_1,F_2)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'SUM(F_1,F_2)' ).
+
+" RC are not columns
+    macro_shift_formula(
+      iv_reference_formula = 'INDIRECT("RC[4]",FALSE)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'INDIRECT("RC[4]",FALSE)' ).
+
+" A1 is a sheet name
+    macro_shift_formula(
+      iv_reference_formula = |'A1'!$A$1|
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = |'A1'!$A$1| ).
+
+" Reference to another column in the same row of a Table, with a space in the column name
+    macro_shift_formula(
+      iv_reference_formula = 'Tbl[[#This Row],[Air fare]]'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Tbl[[#This Row],[Air fare]]' ).
+
+" Reference to another column in the same row of a Table, inside more complex expression
+    macro_shift_formula(
+      iv_reference_formula = 'Tbl[[#This Row],[Air]]+A1'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'Tbl[[#This Row],[Air]]+B2' ).
 
   ENDMETHOD.
 
