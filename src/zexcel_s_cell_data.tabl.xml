@@ -63,6 +63,14 @@
      <MASK>  INT4</MASK>
      <DDTEXT>Column Formula ID</DDTEXT>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>RTF_TAB</FIELDNAME>
+     <ROLLNAME>ZEXCEL_T_RTF</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <DATATYPE>TTYP</DATATYPE>
+     <MASK>  TTYPL</MASK>
+     <COMPTYPE>L</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
   </asx:values>
  </asx:abap>
