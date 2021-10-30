@@ -2081,6 +2081,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
             WHEN zif_excel_sheet_printsettings=>gcv_print_title_name.
               lo_range = <worksheet>-worksheet->add_new_range( ).
+              lo_range->name = zif_excel_sheet_printsettings=>gcv_print_title_name.
 *--------------------------------------------------------------------*
 * This might be a temporary solution.  Maybe ranges get be reworked
 * to support areas consisting of multiple rectangles
@@ -2107,11 +2108,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                 ENDIF.
               ENDIF.
 * 1st range
-              zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range        = lv_range_value_1
-                                                            IMPORTING e_column_start = lv_col_start_alpha
-                                                                      e_column_end   = lv_col_end_alpha
-                                                                      e_row_start    = lv_row_start
-                                                                      e_row_end      = lv_row_end ).
+              zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range_value_1
+                                                                      i_allow_1dim_range = abap_true
+                                                            IMPORTING e_column_start     = lv_col_start_alpha
+                                                                      e_column_end       = lv_col_end_alpha
+                                                                      e_row_start        = lv_row_start
+                                                                      e_row_end          = lv_row_end ).
               IF lv_col_start_alpha IS NOT INITIAL.
                 <worksheet>-worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
                                                                                       iv_columns_to   = lv_col_end_alpha ).
@@ -2122,11 +2124,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               ENDIF.
 
 * 2nd range
-              zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range        = lv_range_value_2
-                                                            IMPORTING e_column_start = lv_col_start_alpha
-                                                                      e_column_end   = lv_col_end_alpha
-                                                                      e_row_start    = lv_row_start
-                                                                      e_row_end      = lv_row_end ).
+              zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range_value_2
+                                                                      i_allow_1dim_range = abap_true
+                                                            IMPORTING e_column_start     = lv_col_start_alpha
+                                                                      e_column_end       = lv_col_end_alpha
+                                                                      e_row_start        = lv_row_start
+                                                                      e_row_end          = lv_row_end ).
               IF lv_col_start_alpha IS NOT INITIAL.
                 <worksheet>-worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
                                                                                       iv_columns_to   = lv_col_end_alpha ).
