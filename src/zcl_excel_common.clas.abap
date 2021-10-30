@@ -46,15 +46,22 @@ CLASS zcl_excel_common DEFINITION
         !e_row       TYPE zexcel_cell_row .
     CLASS-METHODS convert_range2column_a_row
       IMPORTING
-        !i_range        TYPE clike
+        !i_range            TYPE clike
+        !i_allow_1dim_range TYPE abap_bool DEFAULT abap_false
       EXPORTING
-        !e_column_start TYPE zexcel_cell_column_alpha
-        !e_column_end   TYPE zexcel_cell_column_alpha
-        !e_row_start    TYPE zexcel_cell_row
-        !e_row_end      TYPE zexcel_cell_row
-        !e_sheet        TYPE clike
+        !e_column_start     TYPE zexcel_cell_column_alpha
+        !e_column_end       TYPE zexcel_cell_column_alpha
+        !e_row_start        TYPE zexcel_cell_row
+        !e_row_end          TYPE zexcel_cell_row
+        !e_sheet            TYPE clike
       RAISING
         zcx_excel .
+    CLASS-METHODS convert_columnrow2column_o_row
+      IMPORTING
+        !i_columnrow TYPE clike
+      EXPORTING
+        !e_column    TYPE zexcel_cell_column_alpha
+        !e_row       TYPE zexcel_cell_row .
     CLASS-METHODS date_to_excel_string
       IMPORTING
         !ip_value       TYPE d
@@ -570,18 +577,40 @@ CLASS zcl_excel_common IMPLEMENTATION.
     REPLACE ALL OCCURRENCES OF '$' IN lv_range WITH ''.
     SPLIT lv_range AT ':' INTO lv_columnrow_start lv_columnrow_end.
 
-    convert_columnrow2column_a_row( EXPORTING
-                                      i_columnrow = lv_columnrow_start
-                                    IMPORTING
-                                      e_column    = e_column_start
-                                      e_row       = e_row_start ).
-    convert_columnrow2column_a_row( EXPORTING
-                                      i_columnrow = lv_columnrow_end
-                                    IMPORTING
-                                      e_column    = e_column_end
-                                      e_row       = e_row_end ).
+    IF i_allow_1dim_range = abap_true.
+      convert_columnrow2column_o_row( EXPORTING i_columnrow = lv_columnrow_start
+                                      IMPORTING e_column    = e_column_start
+                                                e_row       = e_row_start ).
+      convert_columnrow2column_o_row( EXPORTING i_columnrow = lv_columnrow_end
+                                      IMPORTING e_column    = e_column_end
+                                                e_row       = e_row_end ).
+    ELSE.
+      convert_columnrow2column_a_row( EXPORTING i_columnrow = lv_columnrow_start
+                                      IMPORTING e_column    = e_column_start
+                                                e_row       = e_row_start ).
+      convert_columnrow2column_a_row( EXPORTING i_columnrow = lv_columnrow_end
+                                      IMPORTING e_column    = e_column_end
+                                                e_row       = e_row_end ).
+    ENDIF.
 
     e_sheet = unescape_string( lv_sheet ).                  " Return in unescaped form
+  ENDMETHOD.
+
+
+  METHOD convert_columnrow2column_o_row.
+
+    DATA: row       TYPE string.
+    DATA: columnrow TYPE string.
+
+    CLEAR e_column.
+
+    columnrow = i_columnrow.
+
+    FIND REGEX '^(\D*)(\d*)$' IN columnrow SUBMATCHES e_column
+                                                      row.
+
+    e_row = row.
+
   ENDMETHOD.
 
 
