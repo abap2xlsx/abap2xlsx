@@ -41,7 +41,6 @@ CLASS zcl_excel_common DEFINITION
     CLASS-METHODS convert_columnrow2column_a_row
       IMPORTING
         !i_columnrow TYPE clike
-
       EXPORTING
         !e_column    TYPE zexcel_cell_column_alpha
         !e_row       TYPE zexcel_cell_row .
