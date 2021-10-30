@@ -141,14 +141,16 @@ CLASS zcl_excel_reader_huge_file IMPLEMENTATION.
   METHOD get_shared_string.
     DATA: lv_tabix TYPE i,
           lv_error TYPE string.
+    FIELD-SYMBOLS: <ls_shared_string> TYPE t_shared_string.
     lv_tabix = iv_index + 1.
-    READ TABLE shared_strings INTO ev_value INDEX lv_tabix.
+    READ TABLE shared_strings ASSIGNING <ls_shared_string> INDEX lv_tabix.
     IF sy-subrc NE 0.
       CONCATENATE 'Entry ' iv_index ' not found in Shared String Table' INTO lv_error.
       RAISE EXCEPTION TYPE lcx_not_found
         EXPORTING
           error = lv_error.
     ENDIF.
+    ev_value = <ls_shared_string>-value.
   ENDMETHOD.
 
 
@@ -190,10 +192,17 @@ CLASS zcl_excel_reader_huge_file IMPLEMENTATION.
   METHOD load_shared_strings.
 
     DATA: lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lt_shared_strings TYPE TABLE OF string,
+          ls_shared_string  TYPE t_shared_string.
+    FIELD-SYMBOLS: <lv_shared_string> TYPE string.
 
     lo_reader = get_sxml_reader( ip_path ).
 
-    shared_strings = read_shared_strings( lo_reader ).
+    lt_shared_strings = read_shared_strings( lo_reader ).
+    LOOP AT lt_shared_strings ASSIGNING <lv_shared_string>.
+      ls_shared_string-value = <lv_shared_string>.
+      APPEND ls_shared_string TO shared_strings.
+    ENDLOOP.
 
   ENDMETHOD.
 

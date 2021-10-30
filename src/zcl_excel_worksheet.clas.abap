@@ -317,6 +317,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ep_style   TYPE REF TO zcl_excel_style
         !ep_guid    TYPE zexcel_cell_style
         !ep_formula TYPE zexcel_cell_formula
+        !et_rtf     TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
     METHODS get_column
@@ -462,6 +463,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_hyperlink TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type TYPE abap_typekind OPTIONAL
+        !it_rtf       TYPE zexcel_t_rtf OPTIONAL
         !ip_column_formula_id TYPE mty_s_column_formula-id OPTIONAL
       RAISING
         zcx_excel .
@@ -697,6 +699,14 @@ CLASS zcl_excel_worksheet DEFINITION
         ip_column            TYPE zexcel_cell_column
       RAISING
         zcx_excel.
+    METHODS check_rtf
+      IMPORTING
+        !ip_value TYPE simple
+        VALUE(ip_style) TYPE zexcel_cell_style OPTIONAL
+      CHANGING
+        !ct_rtf   TYPE zexcel_t_rtf
+      RAISING
+        zcx_excel .
     METHODS generate_title
       RETURNING
         VALUE(ep_title) TYPE zexcel_sheet_title .
@@ -1831,6 +1841,62 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD check_rtf.
+
+    DATA: lo_style           TYPE REF TO zcl_excel_style,
+          lo_iterator        TYPE REF TO cl_object_collection_iterator,
+          lv_next_rtf_offset TYPE i,
+          lv_tabix           TYPE i,
+          lv_value           TYPE string,
+          lv_val_length      TYPE i,
+          ls_rtf             LIKE LINE OF ct_rtf.
+    FIELD-SYMBOLS: <rtf> LIKE LINE OF ct_rtf.
+
+    IF ip_style IS NOT SUPPLIED.
+      ip_style = excel->get_default_style( ).
+    ENDIF.
+
+    lo_iterator = excel->get_styles_iterator( ).
+    WHILE lo_iterator->has_next( ) = abap_true.
+      lo_style ?= lo_iterator->get_next( ).
+      IF lo_style->get_guid( ) = ip_style.
+        EXIT.
+      ENDIF.
+      CLEAR lo_style.
+    ENDWHILE.
+
+    lv_next_rtf_offset = 0.
+    LOOP AT ct_rtf ASSIGNING <rtf>.
+      lv_tabix = sy-tabix.
+      IF lv_next_rtf_offset < <rtf>-offset.
+        ls_rtf-offset = lv_next_rtf_offset.
+        ls_rtf-length = <rtf>-offset - lv_next_rtf_offset.
+        ls_rtf-font   = lo_style->font->get_structure( ).
+        INSERT ls_rtf INTO ct_rtf INDEX lv_tabix.
+      ELSEIF lv_next_rtf_offset > <rtf>-offset.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = 'Gaps or overlaps in RTF data offset/length specs'.
+      ENDIF.
+      lv_next_rtf_offset = <rtf>-offset + <rtf>-length.
+    ENDLOOP.
+
+    lv_value = ip_value.
+    lv_val_length = strlen( lv_value ).
+    IF lv_val_length > lv_next_rtf_offset.
+      ls_rtf-offset = lv_next_rtf_offset.
+      ls_rtf-length = lv_val_length - lv_next_rtf_offset.
+      ls_rtf-font   = lo_style->font->get_structure( ).
+      INSERT ls_rtf INTO TABLE ct_rtf.
+    ELSEIF lv_val_length > lv_next_rtf_offset.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'RTF specs length is not equal to value length'.
+    ENDIF.
+
+  ENDMETHOD.
+
+
   METHOD class_constructor.
 
     c_messages-formula_id_only_is_possible = |{ 'If Formula ID is used, value and formula must be empty'(008) }|.
@@ -2010,6 +2076,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ep_value    = ls_sheet_content-cell_value.
     ep_guid     = ls_sheet_content-cell_style.       " issue 139 - added this to be used for columnwidth calculation
     ep_formula  = ls_sheet_content-cell_formula.
+    IF et_rtf IS SUPPLIED AND ls_sheet_content-rtf_tab IS NOT INITIAL.
+      et_rtf = ls_sheet_content-rtf_tab.
+    ENDIF.
 
     " Addition to solve issue #120, contribution by Stefan Schmöcker
     DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
@@ -3017,6 +3086,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_value_type    TYPE abap_typekind,
           lv_style_guid    TYPE zexcel_cell_style,
           lo_addit         TYPE REF TO cl_abap_elemdescr,
+          lt_rtf           TYPE zexcel_t_rtf,
           lo_value         TYPE REF TO data,
           lo_value_new     TYPE REF TO data.
 
@@ -3211,6 +3281,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *    SORT sheet_content BY cell_row cell_column.
       " me->update_dimension_range( ).
 
+    ENDIF.
+
+    IF ip_formula IS INITIAL AND lv_value IS NOT INITIAL AND it_rtf IS NOT INITIAL.
+      lt_rtf = it_rtf.
+      check_rtf( EXPORTING ip_value = lv_value
+                           ip_style = lv_style_guid
+                 CHANGING  ct_rtf   = lt_rtf ).
+      <fs_sheet_content>-rtf_tab = lt_rtf.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
