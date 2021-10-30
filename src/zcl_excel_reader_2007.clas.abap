@@ -100,8 +100,15 @@ CLASS zcl_excel_reader_2007 DEFINITION
       END   OF ty_ref_formulae .
     TYPES:
       tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column .
+    TYPES:
+      BEGIN OF t_shared_string,
+        value TYPE string,
+        rtf   TYPE zexcel_t_rtf,
+      END OF t_shared_string .
+    TYPES:
+      t_shared_strings TYPE STANDARD TABLE OF t_shared_string WITH DEFAULT KEY .
 
-    DATA shared_strings TYPE stringtab .
+    DATA shared_strings TYPE t_shared_strings .
     DATA styles TYPE t_style_refs .
     DATA mt_ref_formulae TYPE tyt_ref_formulae .
     DATA mt_dxf_styles TYPE zexcel_t_styles_cond_mapping .
@@ -865,10 +872,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_node_si            TYPE REF TO if_ixml_element,
       lo_node_si_child      TYPE REF TO if_ixml_element,
       lo_node_r_child_t     TYPE REF TO if_ixml_element,
+      lo_node_r_child_rPr   TYPE REF TO if_ixml_element,
+      lo_font               TYPE REF TO zcl_excel_style_font,
+      ls_rtf                TYPE zexcel_s_rtf,
+      lv_current_offset     TYPE int2,
       lv_tag_name           TYPE string,
       lv_node_value         TYPE string.
 
-    FIELD-SYMBOLS: <lv_shared_string>           LIKE LINE OF me->shared_strings.
+    FIELD-SYMBOLS: <ls_shared_string>           LIKE LINE OF me->shared_strings.
 
 *--------------------------------------------------------------------*
 
@@ -921,7 +932,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_node_si ?= lo_shared_strings_xml->find_from_name( 'si' ).
     WHILE lo_node_si IS BOUND.
 
-      APPEND INITIAL LINE TO me->shared_strings ASSIGNING <lv_shared_string>.            " Each <si>-entry in the xml-file must lead to an entry in our stringtable
+      APPEND INITIAL LINE TO me->shared_strings ASSIGNING <ls_shared_string>.            " Each <si>-entry in the xml-file must lead to an entry in our stringtable
       lo_node_si_child ?= lo_node_si->get_first_child( ).
       IF lo_node_si_child IS BOUND.
         lv_tag_name = lo_node_si_child->get_name( ).
@@ -930,7 +941,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *   §1.1 - "simple" strings
 *                Example:  see above
 *--------------------------------------------------------------------*
-          <lv_shared_string> = lo_node_si_child->get_value( ).
+          <ls_shared_string>-value = lo_node_si_child->get_value( ).
         ELSE.
 *--------------------------------------------------------------------*
 *   §1.2 - rich text formatted strings
@@ -938,13 +949,25 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *       as long as rich text formatting is not supported (2do§1) ignore all info about formatting
 *                Example:  see above
 *--------------------------------------------------------------------*
+          CLEAR: lv_current_offset.
           WHILE lo_node_si_child IS BOUND.                                             " actually these children of <si> are <r>-tags
+            CLEAR: ls_rtf.
 
+            lo_node_r_child_rpr ?= lo_node_si_child->find_from_name( 'rPr' ).          " extracting rich text formating data
+            IF lo_node_r_child_rpr IS BOUND.
+              lo_font = load_style_font( lo_node_r_child_rpr ).
+              ls_rtf-font = lo_font->get_structure( ).
+            ENDIF.
+            ls_rtf-offset = lv_current_offset.
             lo_node_r_child_t ?= lo_node_si_child->find_from_name( 't' ).              " extract the <t>...</t> part of each <r>-tag
             IF lo_node_r_child_t IS BOUND.
               lv_node_value = lo_node_r_child_t->get_value( ).
-              CONCATENATE <lv_shared_string> lv_node_value INTO <lv_shared_string> RESPECTING BLANKS.
+              CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
+              ls_rtf-length = strlen( lv_node_value ).
             ENDIF.
+
+            lv_current_offset = strlen( <ls_shared_string>-value ).
+            APPEND ls_rtf TO <ls_shared_string>-rtf.
 
             lo_node_si_child ?= lo_node_si_child->get_next( ).
 
@@ -1546,6 +1569,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_node2 = lo_node_font->find_from_name( 'name' ).
       IF lo_node2 IS BOUND.
         lo_font->name = lo_node2->get_attribute( 'val' ).
+      ELSE.
+        lo_node2 = lo_node_font->find_from_name( 'rFont' ).
+        IF lo_node2 IS BOUND.
+          lo_font->name = lo_node2->get_attribute( 'val' ).
+        ENDIF.
       ENDIF.
 
 *--------------------------------------------------------------------*
@@ -2342,7 +2370,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_data_validation          TYPE REF TO zcl_excel_data_validation,
           lv_datavalidation_range     TYPE string,
           lt_datavalidation_range     TYPE TABLE OF string,
+          lt_rtf                      TYPE zexcel_t_rtf,
           ex                          TYPE REF TO cx_root.
+
+    FIELD-SYMBOLS:
+      <ls_shared_string> TYPE t_shared_string.
 
 *--------------------------------------------------------------------*
 * §2  We need to read the the file "\\_rels\.rels" because it tells
@@ -2483,7 +2515,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           WHEN 's'. " String values are stored as index in shared string table
             IF lo_ixml_value_elem IS BOUND.
               lv_index = lo_ixml_value_elem->get_value( ) + 1.
-              READ TABLE shared_strings INTO lv_cell_value INDEX lv_index.
+              READ TABLE shared_strings ASSIGNING <ls_shared_string> INDEX lv_index.
+              IF sy-subrc = 0.
+                lv_cell_value = <ls_shared_string>-value.
+                lt_rtf = <ls_shared_string>-rtf.
+              ENDIF.
             ENDIF.
           WHEN 'inlineStr'. " inlineStr values are kept in special node
             lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name( name = 'is' ).
@@ -2560,7 +2596,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                   ip_value      = lv_cell_value   " cell_elem Value
                                   ip_formula    = lv_cell_formula
                                   ip_data_type  = ls_cell-t
-                                  ip_style      = lv_style_guid ).
+                                  ip_style      = lv_style_guid
+                                  it_rtf        = lt_rtf ).
         ENDIF.
         lo_ixml_cell_elem ?= lo_ixml_iterator2->get_next( ).
       ENDWHILE.
