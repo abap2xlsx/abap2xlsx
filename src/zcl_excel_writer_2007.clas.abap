@@ -155,7 +155,8 @@ CLASS zcl_excel_writer_2007 DEFINITION
       IMPORTING
         !io_document TYPE REF TO if_ixml_document
         !io_parent   TYPE REF TO if_ixml_element
-        !is_font     TYPE zexcel_s_style_font .
+        !is_font     TYPE zexcel_s_style_font
+        !iv_use_rtf  TYPE abap_bool DEFAULT abap_false .
     METHODS create_xl_table
       IMPORTING
         !io_table         TYPE REF TO zcl_excel_table
@@ -170,6 +171,7 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS get_shared_string_index
       IMPORTING
         !ip_cell_value  TYPE zexcel_cell_value
+        !it_rtf         TYPE zexcel_t_rtf OPTIONAL
       RETURNING
         VALUE(ep_index) TYPE int4 .
     METHODS create_xl_drawings_vml
@@ -3546,6 +3548,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lc_xml_node_sst         TYPE string VALUE 'sst',
           lc_xml_node_si          TYPE string VALUE 'si',
           lc_xml_node_t           TYPE string VALUE 't',
+          lc_xml_node_r           TYPE string VALUE 'r',
+          lc_xml_node_rpr         TYPE string VALUE 'rPr',
           " Node attributes
           lc_xml_attr_count       TYPE string VALUE 'count',
           lc_xml_attr_uniquecount TYPE string VALUE 'uniqueCount',
@@ -3556,10 +3560,14 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           lo_sub_element  TYPE REF TO if_ixml_element,
+          lo_sub2_element TYPE REF TO if_ixml_element,
+          lo_font_element TYPE REF TO if_ixml_element,
           lo_iterator     TYPE REF TO cl_object_collection_iterator,
           lo_worksheet    TYPE REF TO zcl_excel_worksheet.
 
     DATA: lt_cell_data       TYPE zexcel_t_cell_data_unsorted,
+          lt_cell_data_rtf   TYPE zexcel_t_cell_data_unsorted,
+          lv_value           TYPE string,
           ls_shared_string   TYPE zexcel_s_shared_string,
           lv_count_str       TYPE string,
           lv_uniquecount_str TYPE string,
@@ -3568,6 +3576,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_uniquecount     TYPE i.
 
     FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data,
+                   <fs_rtf>           TYPE zexcel_s_rtf,
                    <fs_sheet_string>  TYPE zexcel_s_shared_string.
 
 **********************************************************************
@@ -3584,11 +3593,24 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DESCRIBE TABLE lt_cell_data LINES lv_count.
     MOVE lv_count TO lv_count_str.
 
+    " separating plain and rich text format strings
+    lt_cell_data_rtf = lt_cell_data.
+    DELETE lt_cell_data WHERE rtf_tab IS NOT INITIAL.
+    DELETE lt_cell_data_rtf WHERE rtf_tab IS INITIAL.
+
     SHIFT lv_count_str RIGHT DELETING TRAILING space.
     SHIFT lv_count_str LEFT DELETING LEADING space.
 
     SORT lt_cell_data BY cell_value data_type.
     DELETE ADJACENT DUPLICATES FROM lt_cell_data COMPARING cell_value data_type.
+
+    " leave unique rich text format strings
+    SORT lt_cell_data_rtf BY cell_value rtf_tab.
+    DELETE ADJACENT DUPLICATES FROM lt_cell_data_rtf COMPARING cell_value rtf_tab.
+    " merge into single list
+    APPEND LINES OF lt_cell_data_rtf TO lt_cell_data.
+    SORT lt_cell_data BY cell_value rtf_tab.
+    FREE lt_cell_data_rtf.
 
     DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
     MOVE lv_uniquecount TO lv_uniquecount_str.
@@ -3603,6 +3625,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       MOVE lv_sytabix                    TO ls_shared_string-string_no.
       MOVE <fs_sheet_content>-cell_value TO ls_shared_string-string_value.
       MOVE <fs_sheet_content>-data_type TO ls_shared_string-string_type.
+      ls_shared_string-rtf_tab = <fs_sheet_content>-rtf_tab.
       INSERT ls_shared_string INTO TABLE shared_strings.
       ADD 1 TO lv_count.
     ENDLOOP.
@@ -3628,6 +3651,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     LOOP AT shared_strings ASSIGNING <fs_sheet_string>.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_si
                                                        parent = lo_document ).
+      IF <fs_sheet_string>-rtf_tab IS INITIAL.
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
                                                            parent = lo_document ).
       IF boolc( contains( val = <fs_sheet_string>-string_value start = ` ` ) ) = abap_true
@@ -3635,6 +3659,34 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
       ENDIF.
       lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
+      ELSE.
+        LOOP AT <fs_sheet_string>-rtf_tab ASSIGNING <fs_rtf>.
+          lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
+                                                               parent = lo_element ).
+          TRY.
+              lv_value = substring( val = <fs_sheet_string>-string_value
+                                    off = <fs_rtf>-offset
+                                    len = <fs_rtf>-length ).
+            CATCH cx_sy_range_out_of_bounds.
+              EXIT.
+          ENDTRY.
+          IF <fs_rtf>-font IS NOT INITIAL.
+            lo_font_element = lo_document->create_simple_element( name   = lc_xml_node_rpr
+                                                                  parent = lo_sub_element ).
+            create_xl_styles_font_node( io_document = lo_document
+                                        io_parent   = lo_font_element
+                                        is_font     = <fs_rtf>-font
+                                        iv_use_rtf  = abap_true ).
+          ENDIF.
+          lo_sub2_element = lo_document->create_simple_element( name   = lc_xml_node_t
+                                                              parent = lo_sub_element ).
+          IF boolc( contains( val = lv_value start = ` ` ) ) = abap_true
+                OR boolc( contains( val = lv_value end = ` ` ) ) = abap_true.
+            lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+          ENDIF.
+          lo_sub2_element->set_value( lv_value ).
+        ENDLOOP.
+      ENDIF.
       lo_element->append_child( new_child = lo_sub_element ).
       lo_element_root->append_child( new_child = lo_element ).
     ENDLOOP.
@@ -6227,7 +6279,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                            parent = io_document ).
 
         IF <ls_sheet_content>-data_type EQ 's' OR <ls_sheet_content>-data_type EQ 's_leading_blanks'.
-          lv_value = me->get_shared_string_index( <ls_sheet_content>-cell_value ).
+          lv_value = me->get_shared_string_index( ip_cell_value = <ls_sheet_content>-cell_value
+                                                  it_rtf        = <ls_sheet_content>-rtf_tab ).
           CONDENSE lv_value.
           lo_element_4->set_value( value = lv_value ).
         ELSE.
@@ -7231,6 +7284,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_strike            TYPE string VALUE 'strike',       "strikethrough
                lc_xml_node_sz                TYPE string VALUE 'sz',
                lc_xml_node_name              TYPE string VALUE 'name',
+               lc_xml_node_rfont             TYPE string VALUE 'rFont',
                lc_xml_node_family            TYPE string VALUE 'family',
                lc_xml_node_scheme            TYPE string VALUE 'scheme',
                lc_xml_attr_val               TYPE string VALUE 'val'.
@@ -7284,8 +7338,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           is_color           = ls_font-color ).
 
       "name
+      IF iv_use_rtf = abap_false.
       lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_name
                                                            parent = lo_document ).
+      ELSE.
+      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_rfont
+                                                           parent = lo_document ).
+      ENDIF.
       lv_value = ls_font-name.
       lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
                                         value = lv_value ).
@@ -7845,8 +7904,17 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA ls_shared_string TYPE zexcel_s_shared_string.
 
 *  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
+    IF it_rtf IS INITIAL.
     READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
     ep_index = ls_shared_string-string_no.
+    ELSE.
+      LOOP AT shared_strings INTO ls_shared_string WHERE string_value = ip_cell_value
+                                                     AND rtf_tab = it_rtf.
+
+        ep_index = ls_shared_string-string_no.
+        EXIT.
+      ENDLOOP.
+    ENDIF.
 
   ENDMETHOD.
 

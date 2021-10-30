@@ -842,6 +842,100 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           exp   = ''
           msg   = 'Conversion of range failed'
           level = if_aunit_constants=>critical ).
+
+**********************************************************************
+* 1 Dimensional Ranges - Ros or Cols Only (eg Print Tiles)
+*
+    lv_range = `$2:$7`.
+    zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range
+                                                            i_allow_1dim_range = abap_false
+                                                  IMPORTING e_column_start     = lv_column_start
+                                                            e_column_end       = lv_column_end
+                                                            e_row_start        = lv_row_start
+                                                            e_row_end          = lv_row_end
+                                                            e_sheet            = lv_sheet ).
+
+    cl_abap_unit_assert=>assert_equals( act   = lv_column_start
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_column_end
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_row_start
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_row_end
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_sheet
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+
+***
+    lv_range = `$2:$7`.
+    zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range
+                                                            i_allow_1dim_range = abap_true
+                                                  IMPORTING e_column_start     = lv_column_start
+                                                            e_column_end       = lv_column_end
+                                                            e_row_start        = lv_row_start
+                                                            e_row_end          = lv_row_end
+                                                            e_sheet            = lv_sheet ).
+
+    cl_abap_unit_assert=>assert_equals( act   = lv_column_start
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_column_end
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_row_start
+                                        exp   = '2'
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_row_end
+                                        exp   = '7'
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_sheet
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+***
+    lv_range = `Sheet3!$D:$I`.
+    zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range
+                                                            i_allow_1dim_range = abap_true
+                                                  IMPORTING e_column_start     = lv_column_start
+                                                            e_column_end       = lv_column_end
+                                                            e_row_start        = lv_row_start
+                                                            e_row_end          = lv_row_end
+                                                            e_sheet            = lv_sheet ).
+
+    cl_abap_unit_assert=>assert_equals( act   = lv_column_start
+                                        exp   = 'D'
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_column_end
+                                        exp   = 'I'
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_row_start
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_row_end
+                                        exp   = ''
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
+    cl_abap_unit_assert=>assert_equals( act   = lv_sheet
+                                        exp   = 'Sheet3'
+                                        msg   = 'Conversion of range failed'
+                                        level = if_aunit_constants=>critical ).
   ENDMETHOD.                    "convert_range2column_a_row
 
 
