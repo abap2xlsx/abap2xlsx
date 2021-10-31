@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_EXCEL_FILL_TEMPLATE</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>poopulate excell template with data</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_FILL_TEMPLATE</CLSNAME>
+     <CMPNAME>MO_EXCEL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Excel creator</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_FILL_TEMPLATE</CLSNAME>
+     <CMPNAME>MT_RANGE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Range description</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_FILL_TEMPLATE</CLSNAME>
+     <CMPNAME>MT_SHEET</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>table of sheet title</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_EXCEL_FILL_TEMPLATE</CLSNAME>
+     <CMPNAME>MT_VAR</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>var description</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
