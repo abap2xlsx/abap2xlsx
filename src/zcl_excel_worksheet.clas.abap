@@ -1810,7 +1810,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_font_color IS SUPPLIED.
       complete_style-font-color = ip_font_color.
-      complete_stylex-font-color = 'X'. " <============================== BUG ?
+      complete_stylex-font-color-rgb = 'X'.
     ENDIF.
     IF ip_font_color_rgb IS SUPPLIED.
       complete_style-font-color-rgb = ip_font_color_rgb.
@@ -1871,7 +1871,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_fill_fgcolor IS SUPPLIED.
       complete_style-fill-fgcolor = ip_fill_fgcolor.
-      complete_stylex-fill-fgcolor = 'X'. " <============================== BUG ?
+      complete_stylex-fill-fgcolor-rgb = 'X'.
     ENDIF.
     IF ip_fill_fgcolor_rgb IS SUPPLIED.
       complete_style-fill-fgcolor-rgb = ip_fill_fgcolor_rgb.
@@ -1892,7 +1892,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     IF ip_fill_bgcolor IS SUPPLIED.
       complete_style-fill-bgcolor = ip_fill_bgcolor.
-      complete_stylex-fill-bgcolor = 'X'. " <============================== BUG ?
+      complete_stylex-fill-bgcolor-rgb = 'X'.
     ENDIF.
     IF ip_fill_bgcolor_rgb IS SUPPLIED.
       complete_style-fill-bgcolor-rgb = ip_fill_bgcolor_rgb.
@@ -1993,7 +1993,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_borders_allborders_color IS SUPPLIED.
       complete_style-borders-allborders-border_color = ip_borders_allborders_color.
-      complete_stylex-borders-allborders-border_color = 'X'. " <============================== BUG ?
+      complete_stylex-borders-allborders-border_color-rgb = 'X'.
     ENDIF.
     IF ip_borders_allbo_color_rgb IS SUPPLIED.
       complete_style-borders-allborders-border_color-rgb = ip_borders_allbo_color_rgb.
@@ -2018,7 +2018,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_borders_diagonal_color IS SUPPLIED.
       complete_style-borders-diagonal-border_color = ip_borders_diagonal_color.
-      complete_stylex-borders-diagonal-border_color = 'X'. " <============================== BUG ?
+      complete_stylex-borders-diagonal-border_color-rgb = 'X'.
     ENDIF.
     IF ip_borders_diagonal_color_rgb IS SUPPLIED.
       complete_style-borders-diagonal-border_color-rgb = ip_borders_diagonal_color_rgb.
@@ -2043,7 +2043,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_borders_down_color IS SUPPLIED.
       complete_style-borders-down-border_color = ip_borders_down_color.
-      complete_stylex-borders-down-border_color = 'X'. " <============================== BUG ?
+      complete_stylex-borders-down-border_color-rgb = 'X'.
     ENDIF.
     IF ip_borders_down_color_rgb IS SUPPLIED.
       complete_style-borders-down-border_color-rgb = ip_borders_down_color_rgb.
@@ -2068,7 +2068,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_borders_left_color IS SUPPLIED.
       complete_style-borders-left-border_color = ip_borders_left_color.
-      complete_stylex-borders-left-border_color = 'X'. " <============================== BUG ?
+      complete_stylex-borders-left-border_color-rgb = 'X'.
     ENDIF.
     IF ip_borders_left_color_rgb IS SUPPLIED.
       complete_style-borders-left-border_color-rgb = ip_borders_left_color_rgb.
@@ -2093,7 +2093,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_borders_right_color IS SUPPLIED.
       complete_style-borders-right-border_color = ip_borders_right_color.
-      complete_stylex-borders-right-border_color = 'X'. " <============================== BUG ?
+      complete_stylex-borders-right-border_color-rgb = 'X'.
     ENDIF.
     IF ip_borders_right_color_rgb IS SUPPLIED.
       complete_style-borders-right-border_color-rgb = ip_borders_right_color_rgb.
@@ -2118,7 +2118,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
     IF ip_borders_top_color IS SUPPLIED.
       complete_style-borders-top-border_color = ip_borders_top_color.
-      complete_stylex-borders-top-border_color = 'X'. " <============================== BUG ?
+      complete_stylex-borders-top-border_color-rgb = 'X'.
     ENDIF.
     IF ip_borders_top_color_rgb IS SUPPLIED.
       complete_style-borders-top-border_color-rgb = ip_borders_top_color_rgb.

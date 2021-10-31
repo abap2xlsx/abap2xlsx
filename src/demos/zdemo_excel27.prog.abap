@@ -37,10 +37,8 @@ DATA: lo_excel           TYPE REF TO zcl_excel,
       lo_worksheet       TYPE REF TO zcl_excel_worksheet,
       lo_range           TYPE REF TO zcl_excel_range,
       lo_data_validation TYPE REF TO zcl_excel_data_validation,
-*      lo_style_cond      TYPE REF TO zcl_excel_style_cond,
       lo_style_1         TYPE REF TO zcl_excel_style,
       lo_style_2         TYPE REF TO zcl_excel_style,
-*      lo_style           TYPE REF TO zcl_excel_style,
       lv_style_1_guid    TYPE zexcel_cell_style,
       lv_style_2_guid    TYPE zexcel_cell_style,
       lv_style_guid      TYPE zexcel_cell_style,
@@ -214,4 +212,4 @@ CLASS lcl_app IMPLEMENTATION.
   ENDMETHOD.
 
 
-endclass.
+ENDCLASS.
