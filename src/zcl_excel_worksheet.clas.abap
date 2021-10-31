@@ -728,7 +728,6 @@ CLASS zcl_excel_worksheet DEFINITION
         iv_xborder_supplied        TYPE abap_bool
         is_xborder                 TYPE zexcel_s_cstylex_border
       CHANGING
-        cs_borderx                 TYPE zexcel_s_cstylex_border
         cs_complete_style_border   TYPE zexcel_s_cstyle_border
         cs_complete_stylex_border  TYPE zexcel_s_cstylex_border.
     METHODS print_title_set_range .
@@ -1526,11 +1525,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD change_cell_style.
     " issue # 139
     DATA: stylemapping    TYPE zexcel_s_stylemapping,
-
           complete_style  TYPE zexcel_s_cstyle_complete,
           complete_stylex TYPE zexcel_s_cstylex_complete,
-
-          borderx         TYPE zexcel_s_cstylex_border,
           l_guid          TYPE zexcel_cell_style.   "issue # 177
     DATA: lv_border_supplied  TYPE abap_bool,
           lv_xborder_supplied TYPE abap_bool,
@@ -1729,9 +1725,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         iv_border_supplied        = lv_border_supplied
         is_border                 = ip_borders_allborders
         iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders-allborders
+        is_xborder                = ip_xborders_allborders
       CHANGING
-        cs_borderx                = borderx
         cs_complete_style_border  = complete_style-borders-allborders
         cs_complete_stylex_border = complete_stylex-borders-allborders ).
 
@@ -1742,9 +1737,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         iv_border_supplied        = lv_border_supplied
         is_border                 = ip_borders_diagonal
         iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders-diagonal
+        is_xborder                = ip_xborders_diagonal
       CHANGING
-        cs_borderx                = borderx
         cs_complete_style_border  = complete_style-borders-diagonal
         cs_complete_stylex_border = complete_stylex-borders-diagonal ).
 
@@ -1755,9 +1749,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         iv_border_supplied        = lv_border_supplied
         is_border                 = ip_borders_down
         iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders-down
+        is_xborder                = ip_xborders_down
       CHANGING
-        cs_borderx                = borderx
         cs_complete_style_border  = complete_style-borders-down
         cs_complete_stylex_border = complete_stylex-borders-down ).
 
@@ -1768,9 +1761,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         iv_border_supplied        = lv_border_supplied
         is_border                 = ip_borders_left
         iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders-left
+        is_xborder                = ip_xborders_left
       CHANGING
-        cs_borderx                = borderx
         cs_complete_style_border  = complete_style-borders-left
         cs_complete_stylex_border = complete_stylex-borders-left ).
 
@@ -1781,9 +1773,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         iv_border_supplied        = lv_border_supplied
         is_border                 = ip_borders_right
         iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders-right
+        is_xborder                = ip_xborders_right
       CHANGING
-        cs_borderx                = borderx
         cs_complete_style_border  = complete_style-borders-right
         cs_complete_stylex_border = complete_stylex-borders-right ).
 
@@ -1794,9 +1785,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         iv_border_supplied        = lv_border_supplied
         is_border                 = ip_borders_top
         iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders-top
+        is_xborder                = ip_xborders_top
       CHANGING
-        cs_borderx                = borderx
         cs_complete_style_border  = complete_style-borders-top
         cs_complete_stylex_border = complete_stylex-borders-top ).
 
@@ -3129,23 +3119,25 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD move_supplied_borders.
 
+    DATA: ls_borderx TYPE zexcel_s_cstylex_border.
+
     IF iv_border_supplied = abap_true.  " only act if parameter was supplied
       IF iv_xborder_supplied = abap_true. "
-        cs_borderx = is_xborder.             " use supplied x-parameter
+        ls_borderx = is_xborder.             " use supplied x-parameter
       ELSE.
-        CLEAR cs_borderx WITH 'X'. " <============================== DDIC structure enh. category to set?
+        CLEAR ls_borderx WITH 'X'. " <============================== DDIC structure enh. category to set?
         " clear in a way that would be expected to work easily
         IF is_border-border_style IS  INITIAL.
-          CLEAR cs_borderx-border_style.
+          CLEAR ls_borderx-border_style.
         ENDIF.
         clear_initial_colorxfields(
           EXPORTING
             is_color  = is_border-border_color
           CHANGING
-            cs_xcolor = cs_borderx-border_color ).
+            cs_xcolor = ls_borderx-border_color ).
       ENDIF.
       MOVE-CORRESPONDING is_border  TO cs_complete_style_border.
-      MOVE-CORRESPONDING cs_borderx TO cs_complete_stylex_border.
+      MOVE-CORRESPONDING ls_borderx TO cs_complete_stylex_border.
     ENDIF.
 
   ENDMETHOD.
