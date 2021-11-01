@@ -707,6 +707,11 @@ CLASS zcl_excel_worksheet DEFINITION
         !ct_rtf   TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
+    METHODS clear_initial_colorxfields
+      IMPORTING
+        is_color  TYPE zexcel_s_style_color
+      CHANGING
+        cs_xcolor TYPE zexcel_s_cstylex_color.
     METHODS generate_title
       RETURNING
         VALUE(ep_title) TYPE zexcel_sheet_title .
@@ -716,6 +721,15 @@ CLASS zcl_excel_worksheet DEFINITION
       EXPORTING
         !ep_value      TYPE simple
         !ep_value_type TYPE abap_typekind .
+    METHODS move_supplied_borders
+      IMPORTING
+        iv_border_supplied         TYPE abap_bool
+        is_border                  TYPE zexcel_s_cstyle_border
+        iv_xborder_supplied        TYPE abap_bool
+        is_xborder                 TYPE zexcel_s_cstylex_border
+      CHANGING
+        cs_complete_style_border   TYPE zexcel_s_cstyle_border
+        cs_complete_stylex_border  TYPE zexcel_s_cstylex_border.
     METHODS print_title_set_range .
     METHODS update_dimension_range
       RAISING
@@ -1511,46 +1525,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD change_cell_style.
     " issue # 139
     DATA: stylemapping    TYPE zexcel_s_stylemapping,
-
           complete_style  TYPE zexcel_s_cstyle_complete,
           complete_stylex TYPE zexcel_s_cstylex_complete,
-
-          borderx         TYPE zexcel_s_cstylex_border,
           l_guid          TYPE zexcel_cell_style.   "issue # 177
-
-* We have a lot of parameters.  Use some macros to make the coding more structured
-
-    DEFINE clear_initial_colorxfields.
-      IF &1-rgb IS INITIAL.
-        CLEAR &2-rgb.
-      ENDIF.
-      IF &1-indexed IS INITIAL.
-        CLEAR &2-indexed.
-      ENDIF.
-      IF &1-theme IS INITIAL.
-        CLEAR &2-theme.
-      ENDIF.
-      IF &1-tint IS INITIAL.
-        CLEAR &2-tint.
-      ENDIF.
-    END-OF-DEFINITION.
-
-    DEFINE move_supplied_borders.
-      IF ip_&1 IS SUPPLIED.  " only act if parameter was supplied
-        IF ip_x&1 IS SUPPLIED.  "
-          borderx = ip_x&1.          " use supplied x-parameter
-        ELSE.
-          CLEAR borderx WITH 'X'.
-* clear in a way that would be expected to work easily
-          IF ip_&1-border_style IS  INITIAL.
-            CLEAR borderx-border_style.
-          ENDIF.
-          clear_initial_colorxfields ip_&1-border_color borderx-border_color.
-        ENDIF.
-        MOVE-CORRESPONDING ip_&1   TO complete_style-&2.
-        MOVE-CORRESPONDING borderx TO complete_stylex-&2.
-      ENDIF.
-    END-OF-DEFINITION.
+    DATA: lv_border_supplied  TYPE abap_bool,
+          lv_xborder_supplied TYPE abap_bool,
+          lv_style_supplied   TYPE abap_bool.
 
 * First get current stylsettings
     TRY.
@@ -1588,7 +1568,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                      fontx-strikethrough,
                      fontx-underline_mode.
         CLEAR fontx-color WITH 'X'.
-        clear_initial_colorxfields ip_font-color fontx-color.
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_font-color
+          CHANGING
+            cs_xcolor = fontx-color ).
         IF ip_font-family IS NOT INITIAL.
           fontx-family = 'X'.
         ENDIF.
@@ -1619,8 +1603,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         IF ip_fill-filltype IS INITIAL.
           CLEAR fillx-filltype.
         ENDIF.
-        clear_initial_colorxfields ip_fill-fgcolor fillx-fgcolor.
-        clear_initial_colorxfields ip_fill-bgcolor fillx-bgcolor.
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_fill-fgcolor
+          CHANGING
+            cs_xcolor = fillx-fgcolor ).
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_fill-bgcolor
+          CHANGING
+            cs_xcolor = fillx-bgcolor ).
 
       ENDIF.
       MOVE-CORRESPONDING ip_fill  TO complete_style-fill.
@@ -1652,12 +1644,42 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         IF ip_borders-top-border_style IS INITIAL.
           CLEAR bordersx-top-border_style.
         ENDIF.
-        clear_initial_colorxfields ip_borders-allborders-border_color bordersx-allborders-border_color.
-        clear_initial_colorxfields ip_borders-diagonal-border_color   bordersx-diagonal-border_color.
-        clear_initial_colorxfields ip_borders-down-border_color       bordersx-down-border_color.
-        clear_initial_colorxfields ip_borders-left-border_color       bordersx-left-border_color.
-        clear_initial_colorxfields ip_borders-right-border_color      bordersx-right-border_color.
-        clear_initial_colorxfields ip_borders-top-border_color        bordersx-top-border_color.
+
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_borders-allborders-border_color
+          CHANGING
+            cs_xcolor = bordersx-allborders-border_color ).
+
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_borders-diagonal-border_color
+          CHANGING
+            cs_xcolor = bordersx-diagonal-border_color ).
+
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_borders-down-border_color
+          CHANGING
+            cs_xcolor = bordersx-down-border_color ).
+
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_borders-left-border_color
+          CHANGING
+            cs_xcolor = bordersx-left-border_color ).
+
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_borders-right-border_color
+          CHANGING
+            cs_xcolor = bordersx-right-border_color ).
+
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = ip_borders-top-border_color
+          CHANGING
+            cs_xcolor = bordersx-top-border_color ).
 
       ENDIF.
       MOVE-CORRESPONDING ip_borders  TO complete_style-borders.
@@ -1696,113 +1718,414 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
 
-    move_supplied_borders    : borders_allborders borders-allborders,
-                               borders_diagonal   borders-diagonal  ,
-                               borders_down       borders-down      ,
-                               borders_left       borders-left      ,
-                               borders_right      borders-right     ,
-                               borders_top        borders-top       .
+    lv_border_supplied = boolc( ip_borders_allborders IS SUPPLIED ).
+    lv_xborder_supplied = boolc( ip_xborders_allborders IS SUPPLIED ).
+    move_supplied_borders(
+      EXPORTING
+        iv_border_supplied        = lv_border_supplied
+        is_border                 = ip_borders_allborders
+        iv_xborder_supplied       = lv_xborder_supplied
+        is_xborder                = ip_xborders_allborders
+      CHANGING
+        cs_complete_style_border  = complete_style-borders-allborders
+        cs_complete_stylex_border = complete_stylex-borders-allborders ).
 
-    DEFINE move_supplied_singlestyles.
-      IF ip_&1 IS SUPPLIED.
-        complete_style-&2 = ip_&1.
-        complete_stylex-&2 = 'X'.
-      ENDIF.
-    END-OF-DEFINITION.
+    lv_border_supplied = boolc( ip_borders_diagonal IS SUPPLIED ).
+    lv_xborder_supplied = boolc( ip_xborders_diagonal IS SUPPLIED ).
+    move_supplied_borders(
+      EXPORTING
+        iv_border_supplied        = lv_border_supplied
+        is_border                 = ip_borders_diagonal
+        iv_xborder_supplied       = lv_xborder_supplied
+        is_xborder                = ip_xborders_diagonal
+      CHANGING
+        cs_complete_style_border  = complete_style-borders-diagonal
+        cs_complete_stylex_border = complete_stylex-borders-diagonal ).
 
-    move_supplied_singlestyles: number_format_format_code  number_format-format_code,
-                                font_bold                     font-bold,
-                                font_color                    font-color,
-                                font_color_rgb                font-color-rgb,
-                                font_color_indexed            font-color-indexed,
-                                font_color_theme              font-color-theme,
-                                font_color_tint               font-color-tint,
+    lv_border_supplied = boolc( ip_borders_down IS SUPPLIED ).
+    lv_xborder_supplied = boolc( ip_xborders_down IS SUPPLIED ).
+    move_supplied_borders(
+      EXPORTING
+        iv_border_supplied        = lv_border_supplied
+        is_border                 = ip_borders_down
+        iv_xborder_supplied       = lv_xborder_supplied
+        is_xborder                = ip_xborders_down
+      CHANGING
+        cs_complete_style_border  = complete_style-borders-down
+        cs_complete_stylex_border = complete_stylex-borders-down ).
 
-                                font_family                   font-family,
-                                font_italic                   font-italic,
-                                font_name                     font-name,
-                                font_scheme                   font-scheme,
-                                font_size                     font-size,
-                                font_strikethrough            font-strikethrough,
-                                font_underline                font-underline,
-                                font_underline_mode           font-underline_mode,
-                                fill_filltype                 fill-filltype,
-                                fill_rotation                 fill-rotation,
-                                fill_fgcolor                  fill-fgcolor,
-                                fill_fgcolor_rgb              fill-fgcolor-rgb,
-                                fill_fgcolor_indexed          fill-fgcolor-indexed,
-                                fill_fgcolor_theme            fill-fgcolor-theme,
-                                fill_fgcolor_tint             fill-fgcolor-tint,
+    lv_border_supplied = boolc( ip_borders_left IS SUPPLIED ).
+    lv_xborder_supplied = boolc( ip_xborders_left IS SUPPLIED ).
+    move_supplied_borders(
+      EXPORTING
+        iv_border_supplied        = lv_border_supplied
+        is_border                 = ip_borders_left
+        iv_xborder_supplied       = lv_xborder_supplied
+        is_xborder                = ip_xborders_left
+      CHANGING
+        cs_complete_style_border  = complete_style-borders-left
+        cs_complete_stylex_border = complete_stylex-borders-left ).
 
-                                fill_bgcolor                  fill-bgcolor,
-                                fill_bgcolor_rgb              fill-bgcolor-rgb,
-                                fill_bgcolor_indexed          fill-bgcolor-indexed,
-                                fill_bgcolor_theme            fill-bgcolor-theme,
-                                fill_bgcolor_tint             fill-bgcolor-tint,
+    lv_border_supplied = boolc( ip_borders_right IS SUPPLIED ).
+    lv_xborder_supplied = boolc( ip_xborders_right IS SUPPLIED ).
+    move_supplied_borders(
+      EXPORTING
+        iv_border_supplied        = lv_border_supplied
+        is_border                 = ip_borders_right
+        iv_xborder_supplied       = lv_xborder_supplied
+        is_xborder                = ip_xborders_right
+      CHANGING
+        cs_complete_style_border  = complete_style-borders-right
+        cs_complete_stylex_border = complete_stylex-borders-right ).
 
-                                fill_gradtype_type            fill-gradtype-type,
-                                fill_gradtype_degree          fill-gradtype-degree,
-                                fill_gradtype_bottom          fill-gradtype-bottom,
-                                fill_gradtype_left            fill-gradtype-left,
-                                fill_gradtype_top             fill-gradtype-top,
-                                fill_gradtype_right           fill-gradtype-right,
-                                fill_gradtype_position1       fill-gradtype-position1,
-                                fill_gradtype_position2       fill-gradtype-position2,
-                                fill_gradtype_position3       fill-gradtype-position3,
+    lv_border_supplied = boolc( ip_borders_top IS SUPPLIED ).
+    lv_xborder_supplied = boolc( ip_xborders_top IS SUPPLIED ).
+    move_supplied_borders(
+      EXPORTING
+        iv_border_supplied        = lv_border_supplied
+        is_border                 = ip_borders_top
+        iv_xborder_supplied       = lv_xborder_supplied
+        is_xborder                = ip_xborders_top
+      CHANGING
+        cs_complete_style_border  = complete_style-borders-top
+        cs_complete_stylex_border = complete_stylex-borders-top ).
+
+    IF ip_number_format_format_code IS SUPPLIED.
+      complete_style-number_format-format_code = ip_number_format_format_code.
+      complete_stylex-number_format-format_code = 'X'.
+    ENDIF.
+    IF ip_font_bold IS SUPPLIED.
+      complete_style-font-bold = ip_font_bold.
+      complete_stylex-font-bold = 'X'.
+    ENDIF.
+    IF ip_font_color IS SUPPLIED.
+      complete_style-font-color = ip_font_color.
+      complete_stylex-font-color-rgb = 'X'.
+    ENDIF.
+    IF ip_font_color_rgb IS SUPPLIED.
+      complete_style-font-color-rgb = ip_font_color_rgb.
+      complete_stylex-font-color-rgb = 'X'.
+    ENDIF.
+    IF ip_font_color_indexed IS SUPPLIED.
+      complete_style-font-color-indexed = ip_font_color_indexed.
+      complete_stylex-font-color-indexed = 'X'.
+    ENDIF.
+    IF ip_font_color_theme IS SUPPLIED.
+      complete_style-font-color-theme = ip_font_color_theme.
+      complete_stylex-font-color-theme = 'X'.
+    ENDIF.
+    IF ip_font_color_tint IS SUPPLIED.
+      complete_style-font-color-tint = ip_font_color_tint.
+      complete_stylex-font-color-tint = 'X'.
+    ENDIF.
+
+    IF ip_font_family IS SUPPLIED.
+      complete_style-font-family = ip_font_family.
+      complete_stylex-font-family = 'X'.
+    ENDIF.
+    IF ip_font_italic IS SUPPLIED.
+      complete_style-font-italic = ip_font_italic.
+      complete_stylex-font-italic = 'X'.
+    ENDIF.
+    IF ip_font_name IS SUPPLIED.
+      complete_style-font-name = ip_font_name.
+      complete_stylex-font-name = 'X'.
+    ENDIF.
+    IF ip_font_scheme IS SUPPLIED.
+      complete_style-font-scheme = ip_font_scheme.
+      complete_stylex-font-scheme = 'X'.
+    ENDIF.
+    IF ip_font_size IS SUPPLIED.
+      complete_style-font-size = ip_font_size.
+      complete_stylex-font-size = 'X'.
+    ENDIF.
+    IF ip_font_strikethrough IS SUPPLIED.
+      complete_style-font-strikethrough = ip_font_strikethrough.
+      complete_stylex-font-strikethrough = 'X'.
+    ENDIF.
+    IF ip_font_underline IS SUPPLIED.
+      complete_style-font-underline = ip_font_underline.
+      complete_stylex-font-underline = 'X'.
+    ENDIF.
+    IF ip_font_underline_mode IS SUPPLIED.
+      complete_style-font-underline_mode = ip_font_underline_mode.
+      complete_stylex-font-underline_mode = 'X'.
+    ENDIF.
+    IF ip_fill_filltype IS SUPPLIED.
+      complete_style-fill-filltype = ip_fill_filltype.
+      complete_stylex-fill-filltype = 'X'.
+    ENDIF.
+    IF ip_fill_rotation IS SUPPLIED.
+      complete_style-fill-rotation = ip_fill_rotation.
+      complete_stylex-fill-rotation = 'X'.
+    ENDIF.
+    IF ip_fill_fgcolor IS SUPPLIED.
+      complete_style-fill-fgcolor = ip_fill_fgcolor.
+      complete_stylex-fill-fgcolor-rgb = 'X'.
+    ENDIF.
+    IF ip_fill_fgcolor_rgb IS SUPPLIED.
+      complete_style-fill-fgcolor-rgb = ip_fill_fgcolor_rgb.
+      complete_stylex-fill-fgcolor-rgb = 'X'.
+    ENDIF.
+    IF ip_fill_fgcolor_indexed IS SUPPLIED.
+      complete_style-fill-fgcolor-indexed = ip_fill_fgcolor_indexed.
+      complete_stylex-fill-fgcolor-indexed = 'X'.
+    ENDIF.
+    IF ip_fill_fgcolor_theme IS SUPPLIED.
+      complete_style-fill-fgcolor-theme = ip_fill_fgcolor_theme.
+      complete_stylex-fill-fgcolor-theme = 'X'.
+    ENDIF.
+    IF ip_fill_fgcolor_tint IS SUPPLIED.
+      complete_style-fill-fgcolor-tint = ip_fill_fgcolor_tint.
+      complete_stylex-fill-fgcolor-tint = 'X'.
+    ENDIF.
+
+    IF ip_fill_bgcolor IS SUPPLIED.
+      complete_style-fill-bgcolor = ip_fill_bgcolor.
+      complete_stylex-fill-bgcolor-rgb = 'X'.
+    ENDIF.
+    IF ip_fill_bgcolor_rgb IS SUPPLIED.
+      complete_style-fill-bgcolor-rgb = ip_fill_bgcolor_rgb.
+      complete_stylex-fill-bgcolor-rgb = 'X'.
+    ENDIF.
+    IF ip_fill_bgcolor_indexed IS SUPPLIED.
+      complete_style-fill-bgcolor-indexed = ip_fill_bgcolor_indexed.
+      complete_stylex-fill-bgcolor-indexed = 'X'.
+    ENDIF.
+    IF ip_fill_bgcolor_theme IS SUPPLIED.
+      complete_style-fill-bgcolor-theme = ip_fill_bgcolor_theme.
+      complete_stylex-fill-bgcolor-theme = 'X'.
+    ENDIF.
+    IF ip_fill_bgcolor_tint IS SUPPLIED.
+      complete_style-fill-bgcolor-tint = ip_fill_bgcolor_tint.
+      complete_stylex-fill-bgcolor-tint = 'X'.
+    ENDIF.
+
+    IF ip_fill_gradtype_type IS SUPPLIED.
+      complete_style-fill-gradtype-type = ip_fill_gradtype_type.
+      complete_stylex-fill-gradtype-type = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_degree IS SUPPLIED.
+      complete_style-fill-gradtype-degree = ip_fill_gradtype_degree.
+      complete_stylex-fill-gradtype-degree = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_bottom IS SUPPLIED.
+      complete_style-fill-gradtype-bottom = ip_fill_gradtype_bottom.
+      complete_stylex-fill-gradtype-bottom = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_left IS SUPPLIED.
+      complete_style-fill-gradtype-left = ip_fill_gradtype_left.
+      complete_stylex-fill-gradtype-left = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_top IS SUPPLIED.
+      complete_style-fill-gradtype-top = ip_fill_gradtype_top.
+      complete_stylex-fill-gradtype-top = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_right IS SUPPLIED.
+      complete_style-fill-gradtype-right = ip_fill_gradtype_right.
+      complete_stylex-fill-gradtype-right = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_position1 IS SUPPLIED.
+      complete_style-fill-gradtype-position1 = ip_fill_gradtype_position1.
+      complete_stylex-fill-gradtype-position1 = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_position2 IS SUPPLIED.
+      complete_style-fill-gradtype-position2 = ip_fill_gradtype_position2.
+      complete_stylex-fill-gradtype-position2 = 'X'.
+    ENDIF.
+    IF ip_fill_gradtype_position3 IS SUPPLIED.
+      complete_style-fill-gradtype-position3 = ip_fill_gradtype_position3.
+      complete_stylex-fill-gradtype-position3 = 'X'.
+    ENDIF.
 
 
 
-                                borders_diagonal_mode         borders-diagonal_mode,
-                                alignment_horizontal          alignment-horizontal,
-                                alignment_vertical            alignment-vertical,
-                                alignment_textrotation        alignment-textrotation,
-                                alignment_wraptext            alignment-wraptext,
-                                alignment_shrinktofit         alignment-shrinktofit,
-                                alignment_indent              alignment-indent,
-                                protection_hidden             protection-hidden,
-                                protection_locked             protection-locked,
+    IF ip_borders_diagonal_mode IS SUPPLIED.
+      complete_style-borders-diagonal_mode = ip_borders_diagonal_mode.
+      complete_stylex-borders-diagonal_mode = 'X'.
+    ENDIF.
+    IF ip_alignment_horizontal IS SUPPLIED.
+      complete_style-alignment-horizontal = ip_alignment_horizontal.
+      complete_stylex-alignment-horizontal = 'X'.
+    ENDIF.
+    IF ip_alignment_vertical IS SUPPLIED.
+      complete_style-alignment-vertical = ip_alignment_vertical.
+      complete_stylex-alignment-vertical = 'X'.
+    ENDIF.
+    IF ip_alignment_textrotation IS SUPPLIED.
+      complete_style-alignment-textrotation = ip_alignment_textrotation.
+      complete_stylex-alignment-textrotation = 'X'.
+    ENDIF.
+    IF ip_alignment_wraptext IS SUPPLIED.
+      complete_style-alignment-wraptext = ip_alignment_wraptext.
+      complete_stylex-alignment-wraptext = 'X'.
+    ENDIF.
+    IF ip_alignment_shrinktofit IS SUPPLIED.
+      complete_style-alignment-shrinktofit = ip_alignment_shrinktofit.
+      complete_stylex-alignment-shrinktofit = 'X'.
+    ENDIF.
+    IF ip_alignment_indent IS SUPPLIED.
+      complete_style-alignment-indent = ip_alignment_indent.
+      complete_stylex-alignment-indent = 'X'.
+    ENDIF.
+    IF ip_protection_hidden IS SUPPLIED.
+      complete_style-protection-hidden = ip_protection_hidden.
+      complete_stylex-protection-hidden = 'X'.
+    ENDIF.
+    IF ip_protection_locked IS SUPPLIED.
+      complete_style-protection-locked = ip_protection_locked.
+      complete_stylex-protection-locked = 'X'.
+    ENDIF.
 
-                                borders_allborders_style      borders-allborders-border_style,
-                                borders_allborders_color      borders-allborders-border_color,
-                                borders_allbo_color_rgb       borders-allborders-border_color-rgb,
-                                borders_allbo_color_indexed   borders-allborders-border_color-indexed,
-                                borders_allbo_color_theme     borders-allborders-border_color-theme,
-                                borders_allbo_color_tint      borders-allborders-border_color-tint,
+    IF ip_borders_allborders_style IS SUPPLIED.
+      complete_style-borders-allborders-border_style = ip_borders_allborders_style.
+      complete_stylex-borders-allborders-border_style = 'X'.
+    ENDIF.
+    IF ip_borders_allborders_color IS SUPPLIED.
+      complete_style-borders-allborders-border_color = ip_borders_allborders_color.
+      complete_stylex-borders-allborders-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_allbo_color_rgb IS SUPPLIED.
+      complete_style-borders-allborders-border_color-rgb = ip_borders_allbo_color_rgb.
+      complete_stylex-borders-allborders-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_allbo_color_indexed IS SUPPLIED.
+      complete_style-borders-allborders-border_color-indexed = ip_borders_allbo_color_indexed.
+      complete_stylex-borders-allborders-border_color-indexed = 'X'.
+    ENDIF.
+    IF ip_borders_allbo_color_theme IS SUPPLIED.
+      complete_style-borders-allborders-border_color-theme = ip_borders_allbo_color_theme.
+      complete_stylex-borders-allborders-border_color-theme = 'X'.
+    ENDIF.
+    IF ip_borders_allbo_color_tint IS SUPPLIED.
+      complete_style-borders-allborders-border_color-tint = ip_borders_allbo_color_tint.
+      complete_stylex-borders-allborders-border_color-tint = 'X'.
+    ENDIF.
 
-                                borders_diagonal_style        borders-diagonal-border_style,
-                                borders_diagonal_color        borders-diagonal-border_color,
-                                borders_diagonal_color_rgb    borders-diagonal-border_color-rgb,
-                                borders_diagonal_color_inde   borders-diagonal-border_color-indexed,
-                                borders_diagonal_color_them   borders-diagonal-border_color-theme,
-                                borders_diagonal_color_tint   borders-diagonal-border_color-tint,
+    IF ip_borders_diagonal_style IS SUPPLIED.
+      complete_style-borders-diagonal-border_style = ip_borders_diagonal_style.
+      complete_stylex-borders-diagonal-border_style = 'X'.
+    ENDIF.
+    IF ip_borders_diagonal_color IS SUPPLIED.
+      complete_style-borders-diagonal-border_color = ip_borders_diagonal_color.
+      complete_stylex-borders-diagonal-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_diagonal_color_rgb IS SUPPLIED.
+      complete_style-borders-diagonal-border_color-rgb = ip_borders_diagonal_color_rgb.
+      complete_stylex-borders-diagonal-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_diagonal_color_inde IS SUPPLIED.
+      complete_style-borders-diagonal-border_color-indexed = ip_borders_diagonal_color_inde.
+      complete_stylex-borders-diagonal-border_color-indexed = 'X'.
+    ENDIF.
+    IF ip_borders_diagonal_color_them IS SUPPLIED.
+      complete_style-borders-diagonal-border_color-theme = ip_borders_diagonal_color_them.
+      complete_stylex-borders-diagonal-border_color-theme = 'X'.
+    ENDIF.
+    IF ip_borders_diagonal_color_tint IS SUPPLIED.
+      complete_style-borders-diagonal-border_color-tint = ip_borders_diagonal_color_tint.
+      complete_stylex-borders-diagonal-border_color-tint = 'X'.
+    ENDIF.
 
-                                borders_down_style            borders-down-border_style,
-                                borders_down_color            borders-down-border_color,
-                                borders_down_color_rgb        borders-down-border_color-rgb,
-                                borders_down_color_indexed    borders-down-border_color-indexed,
-                                borders_down_color_theme      borders-down-border_color-theme,
-                                borders_down_color_tint       borders-down-border_color-tint,
+    IF ip_borders_down_style IS SUPPLIED.
+      complete_style-borders-down-border_style = ip_borders_down_style.
+      complete_stylex-borders-down-border_style = 'X'.
+    ENDIF.
+    IF ip_borders_down_color IS SUPPLIED.
+      complete_style-borders-down-border_color = ip_borders_down_color.
+      complete_stylex-borders-down-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_down_color_rgb IS SUPPLIED.
+      complete_style-borders-down-border_color-rgb = ip_borders_down_color_rgb.
+      complete_stylex-borders-down-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_down_color_indexed IS SUPPLIED.
+      complete_style-borders-down-border_color-indexed = ip_borders_down_color_indexed.
+      complete_stylex-borders-down-border_color-indexed = 'X'.
+    ENDIF.
+    IF ip_borders_down_color_theme IS SUPPLIED.
+      complete_style-borders-down-border_color-theme = ip_borders_down_color_theme.
+      complete_stylex-borders-down-border_color-theme = 'X'.
+    ENDIF.
+    IF ip_borders_down_color_tint IS SUPPLIED.
+      complete_style-borders-down-border_color-tint = ip_borders_down_color_tint.
+      complete_stylex-borders-down-border_color-tint = 'X'.
+    ENDIF.
 
-                                borders_left_style            borders-left-border_style,
-                                borders_left_color            borders-left-border_color,
-                                borders_left_color_rgb        borders-left-border_color-rgb,
-                                borders_left_color_indexed    borders-left-border_color-indexed,
-                                borders_left_color_theme      borders-left-border_color-theme,
-                                borders_left_color_tint       borders-left-border_color-tint,
+    IF ip_borders_left_style IS SUPPLIED.
+      complete_style-borders-left-border_style = ip_borders_left_style.
+      complete_stylex-borders-left-border_style = 'X'.
+    ENDIF.
+    IF ip_borders_left_color IS SUPPLIED.
+      complete_style-borders-left-border_color = ip_borders_left_color.
+      complete_stylex-borders-left-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_left_color_rgb IS SUPPLIED.
+      complete_style-borders-left-border_color-rgb = ip_borders_left_color_rgb.
+      complete_stylex-borders-left-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_left_color_indexed IS SUPPLIED.
+      complete_style-borders-left-border_color-indexed = ip_borders_left_color_indexed.
+      complete_stylex-borders-left-border_color-indexed = 'X'.
+    ENDIF.
+    IF ip_borders_left_color_theme IS SUPPLIED.
+      complete_style-borders-left-border_color-theme = ip_borders_left_color_theme.
+      complete_stylex-borders-left-border_color-theme = 'X'.
+    ENDIF.
+    IF ip_borders_left_color_tint IS SUPPLIED.
+      complete_style-borders-left-border_color-tint = ip_borders_left_color_tint.
+      complete_stylex-borders-left-border_color-tint = 'X'.
+    ENDIF.
 
-                                borders_right_style           borders-right-border_style,
-                                borders_right_color           borders-right-border_color,
-                                borders_right_color_rgb       borders-right-border_color-rgb,
-                                borders_right_color_indexed   borders-right-border_color-indexed,
-                                borders_right_color_theme     borders-right-border_color-theme,
-                                borders_right_color_tint      borders-right-border_color-tint,
+    IF ip_borders_right_style IS SUPPLIED.
+      complete_style-borders-right-border_style = ip_borders_right_style.
+      complete_stylex-borders-right-border_style = 'X'.
+    ENDIF.
+    IF ip_borders_right_color IS SUPPLIED.
+      complete_style-borders-right-border_color = ip_borders_right_color.
+      complete_stylex-borders-right-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_right_color_rgb IS SUPPLIED.
+      complete_style-borders-right-border_color-rgb = ip_borders_right_color_rgb.
+      complete_stylex-borders-right-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_right_color_indexed IS SUPPLIED.
+      complete_style-borders-right-border_color-indexed = ip_borders_right_color_indexed.
+      complete_stylex-borders-right-border_color-indexed = 'X'.
+    ENDIF.
+    IF ip_borders_right_color_theme IS SUPPLIED.
+      complete_style-borders-right-border_color-theme = ip_borders_right_color_theme.
+      complete_stylex-borders-right-border_color-theme = 'X'.
+    ENDIF.
+    IF ip_borders_right_color_tint IS SUPPLIED.
+      complete_style-borders-right-border_color-tint = ip_borders_right_color_tint.
+      complete_stylex-borders-right-border_color-tint = 'X'.
+    ENDIF.
 
-                                borders_top_style             borders-top-border_style,
-                                borders_top_color             borders-top-border_color,
-                                borders_top_color_rgb         borders-top-border_color-rgb,
-                                borders_top_color_indexed     borders-top-border_color-indexed,
-                                borders_top_color_theme       borders-top-border_color-theme,
-                                borders_top_color_tint        borders-top-border_color-tint.
+    IF ip_borders_top_style IS SUPPLIED.
+      complete_style-borders-top-border_style = ip_borders_top_style.
+      complete_stylex-borders-top-border_style = 'X'.
+    ENDIF.
+    IF ip_borders_top_color IS SUPPLIED.
+      complete_style-borders-top-border_color = ip_borders_top_color.
+      complete_stylex-borders-top-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_top_color_rgb IS SUPPLIED.
+      complete_style-borders-top-border_color-rgb = ip_borders_top_color_rgb.
+      complete_stylex-borders-top-border_color-rgb = 'X'.
+    ENDIF.
+    IF ip_borders_top_color_indexed IS SUPPLIED.
+      complete_style-borders-top-border_color-indexed = ip_borders_top_color_indexed.
+      complete_stylex-borders-top-border_color-indexed = 'X'.
+    ENDIF.
+    IF ip_borders_top_color_theme IS SUPPLIED.
+      complete_style-borders-top-border_color-theme = ip_borders_top_color_theme.
+      complete_stylex-borders-top-border_color-theme = 'X'.
+    ENDIF.
+    IF ip_borders_top_color_tint IS SUPPLIED.
+      complete_style-borders-top-border_color-tint = ip_borders_top_color_tint.
+      complete_stylex-borders-top-border_color-tint = 'X'.
+    ENDIF.
 
 
 * Now we have a completly filled styles.
@@ -1903,6 +2226,24 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     c_messages-column_formula_id_not_found = |{ 'The Column Formula does not exist'(009) }|.
     c_messages-formula_not_in_this_table = |{ 'The cell uses a Column Formula which should be part of the same table'(010) }|.
     c_messages-formula_in_other_column = |{ 'The cell uses a Column Formula which is in a different column'(011) }|.
+
+  ENDMETHOD.
+
+
+  METHOD clear_initial_colorxfields.
+
+    IF is_color-rgb IS INITIAL.
+      CLEAR cs_xcolor-rgb.
+    ENDIF.
+    IF is_color-indexed IS INITIAL.
+      CLEAR cs_xcolor-indexed.
+    ENDIF.
+    IF is_color-theme IS INITIAL.
+      CLEAR cs_xcolor-theme.
+    ENDIF.
+    IF is_color-tint IS INITIAL.
+      CLEAR cs_xcolor-tint.
+    ENDIF.
 
   ENDMETHOD.
 
@@ -2774,6 +3115,32 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDLOOP.
 
   ENDMETHOD.                    "IS_CELL_MERGED
+
+
+  METHOD move_supplied_borders.
+
+    DATA: ls_borderx TYPE zexcel_s_cstylex_border.
+
+    IF iv_border_supplied = abap_true.  " only act if parameter was supplied
+      IF iv_xborder_supplied = abap_true. "
+        ls_borderx = is_xborder.             " use supplied x-parameter
+      ELSE.
+        CLEAR ls_borderx WITH 'X'. " <============================== DDIC structure enh. category to set?
+        " clear in a way that would be expected to work easily
+        IF is_border-border_style IS  INITIAL.
+          CLEAR ls_borderx-border_style.
+        ENDIF.
+        clear_initial_colorxfields(
+          EXPORTING
+            is_color  = is_border-border_color
+          CHANGING
+            cs_xcolor = ls_borderx-border_color ).
+      ENDIF.
+      MOVE-CORRESPONDING is_border  TO cs_complete_style_border.
+      MOVE-CORRESPONDING ls_borderx TO cs_complete_stylex_border.
+    ENDIF.
+
+  ENDMETHOD.
 
 
   METHOD print_title_set_range.
