@@ -75,7 +75,7 @@
     "allowed_object_types": false,
     "ambiguous_statement": false,
     "avoid_use": {
-      "define": false,
+      "define": true,
       "describeLines": false,
       "statics": false,
       "defaultKey": false,

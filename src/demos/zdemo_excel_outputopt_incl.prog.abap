@@ -185,20 +185,34 @@ CLASS lcl_output IMPLEMENTATION.
   METHOD parametertexts.
 * If started in language w/o textelements translated set defaults
 * Furthermore I don't have to change the selectiontexts of all demoreports.
-    DEFINE default_parametertext.
-      IF %_&1_%_app_%-text = '&1' OR
-         %_&1_%_app_%-text IS INITIAL.
-        %_&1_%_app_%-text = &2.
+
+    TYPES: BEGIN OF ty_parameter,
+             name TYPE string,
+             text TYPE string,
+           END OF ty_parameter.
+    DATA: parameters          TYPE TABLE OF ty_parameter,
+          parameter           TYPE ty_parameter,
+          parameter_text_name TYPE string.
+    FIELD-SYMBOLS: <parameter>      TYPE ty_parameter,
+                   <parameter_text> TYPE c.
+
+    parameter-name = 'RB_DOWN'. parameter-text = 'Save to frontend'.             APPEND parameter TO parameters.
+    parameter-name = 'RB_BACK'. parameter-text = 'Save to backend'.              APPEND parameter TO parameters.
+    parameter-name = 'RB_SHOW'. parameter-text = 'Direct display'.               APPEND parameter TO parameters.
+    parameter-name = 'RB_SEND'. parameter-text = 'Send via email'.               APPEND parameter TO parameters.
+    parameter-name = 'P_PATH'.  parameter-text = 'Frontend-path to download to'. APPEND parameter TO parameters.
+    parameter-name = 'P_EMAIL'. parameter-text = 'Email to send xlsx to'.        APPEND parameter TO parameters.
+
+    LOOP AT parameters ASSIGNING <parameter>.
+      parameter_text_name = |%_{ <parameter>-name }_%_APP_%-TEXT|.
+      ASSIGN (parameter_text_name) TO <parameter_text>.
+      IF sy-subrc = 0.
+        IF <parameter_text> = <parameter>-name OR
+           <parameter_text> IS INITIAL.
+          <parameter_text> = <parameter>-text.
+        ENDIF.
       ENDIF.
-    END-OF-DEFINITION.
-
-    default_parametertext:  rb_down  'Save to frontend',
-                            rb_back  'Save to backend',
-                            rb_show  'Direct display',
-                            rb_send  'Send via email',
-
-                            p_path   'Frontend-path to download to',
-                            p_email  'Email to send xlsx to'.
+    ENDLOOP.
 
   ENDMETHOD.                    "parametertexts
 
