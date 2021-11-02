@@ -3245,7 +3245,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD set_area.
 
     DATA: lv_row              TYPE zexcel_cell_row,
+          lv_row_start        TYPE zexcel_cell_row,
           lv_row_end          TYPE zexcel_cell_row,
+          lv_column_int       TYPE zexcel_cell_column_alpha,
+          lv_column           TYPE zexcel_cell_column_alpha,
           lv_column_start     TYPE zexcel_cell_column_alpha,
           lv_column_end       TYPE zexcel_cell_column_alpha,
           lv_column_start_int TYPE zexcel_cell_column_alpha,
@@ -3276,10 +3279,20 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     ENDIF.
 
+
+    lv_column_int = lv_column_start_int.
+    lv_row_start = lv_row.
+    WHILE lv_column_int <= lv_column_end_int.
+
+      lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+      lv_row = lv_row_start.
+
+      WHILE lv_row <= lv_row_end.
+
     IF ip_data_type IS SUPPLIED OR
        ip_abap_type IS SUPPLIED.
 
-      me->set_cell( ip_column    = lv_column_start
+      me->set_cell( ip_column    = lv_column
                     ip_row       = lv_row
                     ip_value     = ip_value
                     ip_formula   = ip_formula
@@ -3290,7 +3303,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     ELSE.
 
-      me->set_cell( ip_column    = lv_column_start
+      me->set_cell( ip_column    = lv_column
                     ip_row       = lv_row
                     ip_value     = ip_value
                     ip_formula   = ip_formula
@@ -3298,6 +3311,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                     ip_hyperlink = ip_hyperlink ).
 
     ENDIF.
+
+        ADD 1 TO lv_row.
+      ENDWHILE.
+
+      ADD 1 TO lv_column_int.
+    ENDWHILE.
 
     IF ip_style IS SUPPLIED.
 
@@ -3322,6 +3341,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD set_area_formula.
     DATA: ld_row            TYPE zexcel_cell_row,
+          ld_row_start      TYPE zexcel_cell_row,
           ld_row_end        TYPE zexcel_cell_row,
           ld_column         TYPE zexcel_cell_column_alpha,
           ld_column_end     TYPE zexcel_cell_column_alpha,
@@ -3350,8 +3370,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           error = 'Wrong Merging Parameters'.
     ENDIF.
 
+    ld_row_start = ld_row.
+    WHILE ld_column_int <= ld_column_end_int.
+      ld_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
+      ld_row = ld_row_start.
+      WHILE ld_row <= ld_row_end.
     me->set_cell_formula( ip_column = ld_column ip_row = ld_row
                           ip_formula = ip_formula ).
+        ADD 1 TO ld_row.
+      ENDWHILE.
+      ADD 1 TO ld_column_int.
+    ENDWHILE.
 
     IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
       me->set_merge( ip_column_start = ld_column ip_row = ld_row
