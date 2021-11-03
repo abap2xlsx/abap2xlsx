@@ -60,6 +60,7 @@
     "zif_excel_converter",
     "zif_excel_reader",
     "zif_excel_sheet_printsettings",
+    "zif_excel_sheet_vba_project",
     "zif_excel_writer"
   ],
   "output_folder": "output",
