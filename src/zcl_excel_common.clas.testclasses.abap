@@ -20,7 +20,10 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
 
     METHODS: setup.
     METHODS: convert_column2alpha FOR TESTING.
-    METHODS: convert_column2int FOR TESTING.
+    METHODS convert_column2int_basic FOR TESTING.
+    METHODS convert_column2int_maxcol FOR TESTING.
+    METHODS convert_column2int_oob_empty FOR TESTING.
+    METHODS convert_column2int_oob_invalid FOR TESTING.
     METHODS date_to_excel_string1 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string2 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string3 FOR TESTING RAISING cx_static_check.
@@ -58,7 +61,12 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
         iv_shift_rows        TYPE i
         iv_expected          TYPE string.
     METHODS: shift_formula FOR TESTING.
-    METHODS: is_cell_in_range FOR TESTING.
+    METHODS is_cell_in_range_ulc_in FOR TESTING.
+    METHODS is_cell_in_range_lrc_in FOR TESTING.
+    METHODS is_cell_in_range_leftside_out FOR TESTING.
+    METHODS is_cell_in_range_upperside_out FOR TESTING.
+    METHODS is_cell_in_range_rightside_out FOR TESTING.
+    METHODS is_cell_in_range_lowerside_out FOR TESTING.
 ENDCLASS.
 
 
@@ -153,11 +161,11 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.       "convert_Column2alpha
 
 
-  METHOD convert_column2int.
+  METHOD convert_column2int_basic.
 * ==========================
+* Test 1. Basic test
     DATA ep_column TYPE zexcel_cell_column.
 
-* Test 1. Basic test
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'A' ).
 
@@ -173,8 +181,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2int_basic.
 
+
+  METHOD convert_column2int_maxcol.
+* ==========================
 * Test 2. Max column
+    DATA ep_column TYPE zexcel_cell_column.
+
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'XFD' ).
 
@@ -190,8 +204,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2int_maxcol
 
+
+  METHOD convert_column2int_oob_empty.
+* ==========================
 * Test 3. Out of bounds
+    DATA ep_column TYPE zexcel_cell_column.
+
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( '' ).
 
@@ -211,8 +231,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                          msg   = 'Colum name should be a valid string'
                                          level = if_aunit_constants=>fatal ).
     ENDTRY.
+  ENDMETHOD. "convert_column2int_oob_empty.
 
+
+  METHOD convert_column2int_oob_invalid.
+* ==========================
 * Test 4. Out of bounds
+    DATA ep_column TYPE zexcel_cell_column.
+
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'XFE' ).
 
@@ -226,7 +252,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                          msg   = 'Colum XFE is out of range'
                                          level = if_aunit_constants=>fatal ).
     ENDTRY.
-  ENDMETHOD.       "convert_Column2int
+  ENDMETHOD.       "convert_column2int_oob_invalid.
 
 
   METHOD date_to_excel_string1.
@@ -1307,10 +1333,10 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD is_cell_in_range.
+  METHOD is_cell_in_range_ulc_in.
+* Test 1: upper left corner (in range)
     DATA ep_cell_in_range TYPE abap_bool.
 
-* Test 1: upper left corner (in range)
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'B'
@@ -1327,8 +1353,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_ulc_in
 
+  METHOD is_cell_in_range_lrc_in.
 * Test 2: lower right corner (in range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'D'
@@ -1345,8 +1375,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_lrc_in
 
+  METHOD is_cell_in_range_leftside_out.
 * Test 3: left side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'A'
@@ -1363,8 +1397,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_leftside_out
 
+  METHOD is_cell_in_range_upperside_out.
 * Test 4: upper side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'C'
@@ -1381,8 +1419,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_upperside_out
 
+  METHOD is_cell_in_range_rightside_out.
 * Test 5: right side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'E'
@@ -1399,8 +1441,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_rightside_out
 
+  METHOD is_cell_in_range_lowerside_out.
 * Test 6: lower side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'C'
@@ -1417,6 +1463,6 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
-  ENDMETHOD.
+  ENDMETHOD. "is_cell_in_range_lowerside_out.
 
 ENDCLASS.
