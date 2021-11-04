@@ -61,7 +61,12 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
         iv_shift_rows        TYPE i
         iv_expected          TYPE string.
     METHODS: shift_formula FOR TESTING.
-    METHODS: is_cell_in_range FOR TESTING.
+    METHODS is_cell_in_range_ulc_in FOR TESTING.
+    METHODS is_cell_in_range_lrc_in FOR TESTING.
+    METHODS is_cell_in_range_leftside_out FOR TESTING.
+    METHODS is_cell_in_range_upperside_out FOR TESTING.
+    METHODS is_cell_in_range_rightside_out FOR TESTING.
+    METHODS is_cell_in_range_lowerside_out FOR TESTING.
 ENDCLASS.
 
 
@@ -1328,10 +1333,10 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD is_cell_in_range.
+  METHOD is_cell_in_range_ulc_in.
+* Test 1: upper left corner (in range)
     DATA ep_cell_in_range TYPE abap_bool.
 
-* Test 1: upper left corner (in range)
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'B'
@@ -1348,8 +1353,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_ulc_in
 
+  METHOD is_cell_in_range_lrc_in.
 * Test 2: lower right corner (in range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'D'
@@ -1366,8 +1375,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_lrc_in
 
+  METHOD is_cell_in_range_leftside_out.
 * Test 3: left side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'A'
@@ -1384,8 +1397,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_leftside_out
 
+  METHOD is_cell_in_range_upperside_out.
 * Test 4: upper side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'C'
@@ -1402,8 +1419,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_upperside_out
 
+  METHOD is_cell_in_range_rightside_out.
 * Test 5: right side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'E'
@@ -1420,8 +1441,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
+  ENDMETHOD. "is_cell_in_range_rightside_out
 
+  METHOD is_cell_in_range_lowerside_out.
 * Test 6: lower side (out of range)
+    DATA ep_cell_in_range TYPE abap_bool.
+
     TRY.
         ep_cell_in_range = zcl_excel_common=>is_cell_in_range(
             ip_column   = 'C'
@@ -1438,6 +1463,6 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             msg    = 'Unexpected exception'
             level  = if_aunit_constants=>critical ).
     ENDTRY.
-  ENDMETHOD.
+  ENDMETHOD. "is_cell_in_range_lowerside_out.
 
 ENDCLASS.
