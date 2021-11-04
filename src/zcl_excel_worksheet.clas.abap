@@ -3725,7 +3725,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     READ TABLE me->sheet_content ASSIGNING <sheet_content> WITH TABLE KEY cell_row    = ip_row
                                                                           cell_column = lv_column.
     IF sy-subrc <> 0.                   " Create new entry in sheet_content if necessary
-      CHECK ip_formula IS NOT INITIAL.  " no need to create new entry in sheet_content when no formula is passed
+      CHECK ip_formula IS NOT INITIAL.  " only create new entry in sheet_content when a formula is passed
       ls_sheet_content-cell_row    = ip_row.
       ls_sheet_content-cell_column = lv_column.
       INSERT ls_sheet_content INTO TABLE me->sheet_content ASSIGNING <sheet_content>.
