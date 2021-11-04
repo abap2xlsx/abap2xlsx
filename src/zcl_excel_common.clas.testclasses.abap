@@ -20,7 +20,10 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
 
     METHODS: setup.
     METHODS: convert_column2alpha FOR TESTING.
-    METHODS: convert_column2int FOR TESTING.
+    METHODS convert_column2int_basic FOR TESTING.
+    METHODS convert_column2int_maxcol FOR TESTING.
+    METHODS convert_column2int_oob_empty FOR TESTING.
+    METHODS convert_column2int_oob_invalid FOR TESTING.
     METHODS date_to_excel_string1 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string2 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string3 FOR TESTING RAISING cx_static_check.
@@ -153,11 +156,11 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.       "convert_Column2alpha
 
 
-  METHOD convert_column2int.
+  METHOD convert_column2int_basic.
 * ==========================
+* Test 1. Basic test
     DATA ep_column TYPE zexcel_cell_column.
 
-* Test 1. Basic test
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'A' ).
 
@@ -173,8 +176,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2int_basic.
 
+
+  METHOD convert_column2int_maxcol.
+* ==========================
 * Test 2. Max column
+    DATA ep_column TYPE zexcel_cell_column.
+
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'XFD' ).
 
@@ -190,8 +199,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2int_maxcol
 
+
+  METHOD convert_column2int_oob_empty.
+* ==========================
 * Test 3. Out of bounds
+    DATA ep_column TYPE zexcel_cell_column.
+
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( '' ).
 
@@ -211,8 +226,14 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                          msg   = 'Colum name should be a valid string'
                                          level = if_aunit_constants=>fatal ).
     ENDTRY.
+  ENDMETHOD. "convert_column2int_oob_empty.
 
+
+  METHOD convert_column2int_oob_invalid.
+* ==========================
 * Test 4. Out of bounds
+    DATA ep_column TYPE zexcel_cell_column.
+
     TRY.
         ep_column = zcl_excel_common=>convert_column2int( 'XFE' ).
 
@@ -226,7 +247,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                          msg   = 'Colum XFE is out of range'
                                          level = if_aunit_constants=>fatal ).
     ENDTRY.
-  ENDMETHOD.       "convert_Column2int
+  ENDMETHOD.       "convert_column2int_oob_invalid.
 
 
   METHOD date_to_excel_string1.
