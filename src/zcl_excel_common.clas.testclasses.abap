@@ -52,8 +52,16 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
         iv_expected_row    TYPE i
       RAISING
         cx_static_check.
-    METHODS: calculate_cell_distance FOR TESTING RAISING cx_static_check.
-
+    METHODS: calc_cell_dist_samecell FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_down1pl FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_downsome FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_up1pl FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_upsome FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_right1pl FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_rightsome FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_left1pl FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_leftsome FOR TESTING RAISING cx_static_check,
+        calc_cell_dist_fullpack FOR TESTING RAISING cx_static_check.
     METHODS macro_shift_formula
       IMPORTING
         iv_reference_formula TYPE clike
@@ -1036,7 +1044,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD calculate_cell_distance.
+  METHOD calc_cell_dist_samecell.
 
     " Same cell
     macro_calculate_cell_distance(
@@ -1044,6 +1052,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'C12'
       iv_expected_column = 0
       iv_expected_row    = 0 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_down1pl.
 
     " Shift down 1 place
     macro_calculate_cell_distance(
@@ -1051,6 +1062,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'C13'
       iv_expected_column = 0
       iv_expected_row    = 1 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_downsome.
 
     " Shift down some places
     macro_calculate_cell_distance(
@@ -1058,6 +1072,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'C25'
       iv_expected_column = 0
       iv_expected_row    = 13 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_up1pl.
 
     " Shift up 1 place
     macro_calculate_cell_distance(
@@ -1065,6 +1082,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'C11'
       iv_expected_column = 0
       iv_expected_row    = -1 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_upsome.
 
     " Shift up some place
     macro_calculate_cell_distance(
@@ -1072,6 +1092,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'C1'
       iv_expected_column = 0
       iv_expected_row    = -11 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_right1pl.
 
     " Shift right 1 place
     macro_calculate_cell_distance(
@@ -1079,6 +1102,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'D12'
       iv_expected_column = 1
       iv_expected_row    = 0 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_rightsome.
 
     " Shift right some places
     macro_calculate_cell_distance(
@@ -1086,6 +1112,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'AA12'
       iv_expected_column = 24
       iv_expected_row    = 0 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_left1pl.
 
     " Shift left 1 place
     macro_calculate_cell_distance(
@@ -1093,6 +1122,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'B12'
       iv_expected_column = -1
       iv_expected_row    = 0 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_leftsome.
 
     " Shift left some place
     macro_calculate_cell_distance(
@@ -1100,6 +1132,9 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'C12'
       iv_expected_column = -24
       iv_expected_row    = 0 ).
+  ENDMETHOD.
+
+  METHOD calc_cell_dist_fullpack.
 
     " The full package.
     macro_calculate_cell_distance(
@@ -1107,7 +1142,6 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_current_cell    = 'C12'
       iv_expected_column = -24
       iv_expected_row    = -109 ).
-
   ENDMETHOD.
 
   METHOD macro_shift_formula.
