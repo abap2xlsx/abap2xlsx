@@ -132,7 +132,7 @@
     "space_before_dot": false,
     "sql_escape_host_variables": false,
     "superclass_final": false,
-    "tabl_enhancement_category": false,
+    "tabl_enhancement_category": true,
     "type_form_parameters": true,
     "types_naming": false,
     "unreachable_code": true,
