@@ -39,6 +39,7 @@
     "zexcel_border",
     "zexcel_break",
     "zexcel_cell_column",
+    "zexcel_cell_column_alpha",
     "zexcel_cell_coords",
     "zexcel_cell_protection",
     "zexcel_cell_row",
