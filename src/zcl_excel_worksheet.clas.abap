@@ -3987,7 +3987,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lo_tabdescr     TYPE REF TO cl_abap_structdescr,
           lr_data         TYPE REF TO data,
-          ls_header       TYPE x030l,
           lt_dfies        TYPE ddfields,
           lv_row_int      TYPE zexcel_cell_row,
           lv_column_int   TYPE zexcel_cell_column,
@@ -4005,8 +4004,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     CREATE DATA lr_data LIKE LINE OF ip_table.
 
     lo_tabdescr ?= cl_abap_structdescr=>describe_by_data_ref( lr_data ).
-
-    ls_header = lo_tabdescr->get_ddic_header( ).
 
     lt_dfies = lo_tabdescr->get_ddic_field_list( ).
 
