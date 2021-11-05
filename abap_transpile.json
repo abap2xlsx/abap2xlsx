@@ -50,6 +50,9 @@
     "zexcel_pane",
     "zexcel_pwd_hash",
     "zexcel_sheet_hidden",
+    "zexcel_sheet_selected",
+    "zexcel_sheet_showzeros",
+    "zexcel_sheet_summary",
     "zexcel_style_color_argb",
     "zexcel_style_font_family",
     "zexcel_table_style",
@@ -60,6 +63,7 @@
     "zif_excel_converter",
     "zif_excel_reader",
     "zif_excel_sheet_printsettings",
+    "zif_excel_sheet_properties",
     "zif_excel_sheet_vba_project",
     "zif_excel_writer"
   ],
