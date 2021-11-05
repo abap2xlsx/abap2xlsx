@@ -221,7 +221,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_common IMPLEMENTATION.
+CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
 
 
   METHOD calculate_cell_distance.
@@ -1290,16 +1290,16 @@ CLASS zcl_excel_common IMPLEMENTATION.
           ENDIF.
 
         " Is valid column & row ?
-          IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
+        IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
           " COLUMN + ROW
-            CONCATENATE lv_tcol1 lv_trow1 INTO lv_compare_1.
+          CONCATENATE lv_tcol1 lv_trow1 INTO lv_compare_1.
           " Original condensed string
-            lv_compare_2 = lv_ref_cell_addr.
-            CONDENSE lv_compare_2.
-            IF lv_compare_1 <> lv_compare_2.
-              CLEAR: lv_trow1, lv_tchar2.
-            ENDIF.
+          lv_compare_2 = lv_ref_cell_addr.
+          CONDENSE lv_compare_2.
+          IF lv_compare_1 <> lv_compare_2.
+            CLEAR: lv_trow1, lv_tchar2.
           ENDIF.
+        ENDIF.
 
 *--------------------------------------------------------------------*
 * Check for invalid cell address
