@@ -8,18 +8,42 @@
 
 REPORT zdemo_excel27.
 
+CLASS lcl_app DEFINITION.
+  PUBLIC SECTION.
+    METHODS main.
+  PRIVATE SECTION.
+    METHODS conditional_formatting_cellis
+      IMPORTING
+        column TYPE simple
+        row    TYPE zexcel_cell_row
+        rule   TYPE zexcel_condition_rule
+        op     TYPE zexcel_condition_operator
+        f      TYPE zexcel_style_formula
+        f2     TYPE zexcel_style_formula
+        numfmt TYPE string.
+    METHODS conditional_formatting_textfun
+      IMPORTING
+        column TYPE simple
+        row    TYPE zexcel_cell_row
+        txtfun TYPE zcl_excel_style_cond=>tv_textfunction
+        text   TYPE string
+        numfmt TYPE string.
+ENDCLASS.
+
 CONSTANTS: c_fish       TYPE string VALUE 'Fish'.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_range                TYPE REF TO zcl_excel_range,
-      lo_data_validation      TYPE REF TO zcl_excel_data_validation,
-      lo_style_cond           TYPE REF TO zcl_excel_style_cond,
-      lo_style_1              TYPE REF TO zcl_excel_style,
-      lo_style_2              TYPE REF TO zcl_excel_style,
-      lv_style_1_guid         TYPE zexcel_cell_style,
-      lv_style_2_guid         TYPE zexcel_cell_style,
-      ls_cellis               TYPE zexcel_conditional_cellis.
+DATA: lo_app             TYPE REF TO lcl_app.
+DATA: lo_excel           TYPE REF TO zcl_excel,
+      lo_worksheet       TYPE REF TO zcl_excel_worksheet,
+      lo_range           TYPE REF TO zcl_excel_range,
+      lo_data_validation TYPE REF TO zcl_excel_data_validation,
+      lo_style_1         TYPE REF TO zcl_excel_style,
+      lo_style_2         TYPE REF TO zcl_excel_style,
+      lv_style_1_guid    TYPE zexcel_cell_style,
+      lv_style_2_guid    TYPE zexcel_cell_style,
+      lv_style_guid      TYPE zexcel_cell_style,
+      ls_cellis          TYPE zexcel_conditional_cellis,
+      ls_textfunction    TYPE zcl_excel_style_cond=>ts_conditional_textfunction.
 
 
 DATA: lv_title          TYPE zexcel_sheet_title.
@@ -29,7 +53,17 @@ INCLUDE zdemo_excel_outputopt_incl.
 
 
 START-OF-SELECTION.
+  CREATE OBJECT lo_app.
+  lo_app->main( ).
 
+
+CLASS lcl_app IMPLEMENTATION.
+
+  METHOD main.
+
+  DATA:
+    lo_style_cond TYPE REF TO zcl_excel_style_cond,
+    lo_style      TYPE REF TO zcl_excel_style.
 
   " Creates active sheet
   CREATE OBJECT lo_excel.
@@ -46,7 +80,7 @@ START-OF-SELECTION.
 
   " Get active sheet
   lo_worksheet        = lo_excel->get_active_worksheet( ).
-  lv_title = 'Data Validation'.
+  lv_title = 'Conditional formatting'.
   lo_worksheet->set_title( lv_title ).
   " Set values for dropdown
   lo_worksheet->set_cell( ip_row = 2 ip_column = 'A' ip_value = c_fish ).
@@ -97,5 +131,85 @@ START-OF-SELECTION.
                             ip_stop_column   = 'C'
                             ip_stop_row      = 2 ).
 
+  " Conditional formatting for all operators
+  conditional_formatting_cellis( column = 'C' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_equal              f = '="Anchovy"' f2 = ''      numfmt = 'equal to Anchovy' ).
+  conditional_formatting_cellis( column = 'C' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_equal              f = '="Anchovy"' f2 = ''      numfmt = 'equal to Anchovy' ).
+  conditional_formatting_cellis( column = 'D' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_notequal           f = '="Anchovy"' f2 = ''      numfmt = 'not equal to Anchovy' ).
+  conditional_formatting_cellis( column = 'E' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_between            f = '="B"'       f2 = '="CC"' numfmt = 'between B and CC' ).
+  conditional_formatting_cellis( column = 'F' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_greaterthan        f = '="Catfish"' f2 = ''      numfmt = 'greater than Catfish' ).
+  conditional_formatting_cellis( column = 'G' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_greaterthanorequal f = '="Catfish"' f2 = ''      numfmt = 'greater than or equal to Catfish' ).
+  conditional_formatting_cellis( column = 'H' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_lessthan           f = '="Catfish"' f2 = ''      numfmt = 'less than Catfish' ).
+  conditional_formatting_cellis( column = 'I' row = 4 rule = zcl_excel_style_cond=>c_rule_cellis op = zcl_excel_style_cond=>c_operator_lessthanorequal    f = '="Catfish"' f2 = ''      numfmt = 'less than or equal to Catfish' ).
+
+  " Conditional formatting for all text functions
+  conditional_formatting_textfun( column = 'C' row = 6 txtfun = zcl_excel_style_cond=>c_textfunction_beginswith   text = 'A' numfmt = 'begins with A' ).
+  conditional_formatting_textfun( column = 'D' row = 6 txtfun = zcl_excel_style_cond=>c_textfunction_containstext text = 'h' numfmt = 'contains text h' ).
+  conditional_formatting_textfun( column = 'E' row = 6 txtfun = zcl_excel_style_cond=>c_textfunction_endswith     text = 'p' numfmt = 'ends with p' ).
+  conditional_formatting_textfun( column = 'F' row = 6 txtfun = zcl_excel_style_cond=>c_textfunction_notcontains  text = 'h' numfmt = 'not contains h' ).
+
 *** Create output
   lcl_output=>output( lo_excel ).
+
+  ENDMETHOD.
+
+
+  METHOD conditional_formatting_cellis.
+
+    DATA:
+      lo_style      TYPE REF TO zcl_excel_style,
+      lo_style_cond TYPE REF TO zcl_excel_style_cond.
+
+    lo_style                             = lo_excel->add_new_style( ).
+    lo_style->font->color-rgb            = zcl_excel_style_color=>c_white.
+    lo_style->number_format->format_code = '@\ "' && numfmt && '"'.
+    lo_style->alignment->wraptext        = abap_true.
+    lv_style_guid                        = lo_style->get_guid( ).
+
+    lo_worksheet->set_cell( ip_row = row ip_column = column ip_formula = '$C$2' ip_style = lv_style_guid ).
+
+    lo_style_cond = lo_worksheet->add_new_style_cond( ).
+    lo_style_cond->rule         = rule.
+    ls_cellis-operator          = op.
+    ls_cellis-formula           = f.
+    ls_cellis-formula2          = f2.
+    ls_cellis-cell_style        = lv_style_1_guid.
+    lo_style_cond->mode_cellis  = ls_cellis.
+    lo_style_cond->priority     = 1.
+    lo_style_cond->set_range( ip_start_column  = column
+                              ip_start_row     = row
+                              ip_stop_column   = column
+                              ip_stop_row      = row ).
+
+  ENDMETHOD.
+
+
+  METHOD conditional_formatting_textfun.
+
+    DATA:
+      lo_style      TYPE REF TO zcl_excel_style,
+      lo_style_cond TYPE REF TO zcl_excel_style_cond.
+
+    lo_style                             = lo_excel->add_new_style( ).
+    lo_style->font->color-rgb            = zcl_excel_style_color=>c_white.
+    lo_style->number_format->format_code = '@\ "' && numfmt && '"'.
+    lo_style->alignment->wraptext        = abap_true.
+    lv_style_guid                        = lo_style->get_guid( ).
+
+    lo_worksheet->set_cell( ip_row = row ip_column = column ip_formula = '$C$2' ip_style = lv_style_guid ).
+
+    lo_style_cond = lo_worksheet->add_new_style_cond( ).
+    lo_style_cond->rule              = zcl_excel_style_cond=>c_rule_textfunction.
+    ls_textfunction-textfunction     = txtfun.
+    ls_textfunction-text             = text.
+    ls_textfunction-cell_style       = lv_style_1_guid.
+    lo_style_cond->mode_textfunction = ls_textfunction.
+    lo_style_cond->priority          = 1.
+    lo_style_cond->set_range( ip_start_column  = column
+                              ip_start_row     = row
+                              ip_stop_column   = column
+                              ip_stop_row      = row ).
+
+  ENDMETHOD.
+
+
+ENDCLASS.

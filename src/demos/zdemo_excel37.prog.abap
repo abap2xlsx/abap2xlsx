@@ -20,12 +20,12 @@ SELECTION-SCREEN END OF BLOCK blx.
 
 INCLUDE zdemo_excel_outputopt_incl.
 
-SELECTION-SCREEN BEGIN OF BLOCK cls WITH FRAME TITLE text-cls.
+SELECTION-SCREEN BEGIN OF BLOCK cls WITH FRAME TITLE TEXT-cls.
 PARAMETERS: lb_read   TYPE seoclsname AS LISTBOX VISIBLE LENGTH 40 LOWER CASE OBLIGATORY DEFAULT 'Autodetect'(001).
 PARAMETERS: lb_write  TYPE seoclsname AS LISTBOX VISIBLE LENGTH 40 LOWER CASE OBLIGATORY DEFAULT 'Autodetect'(001).
 SELECTION-SCREEN END OF BLOCK cls.
 
-SELECTION-SCREEN BEGIN OF BLOCK bl_err WITH FRAME TITLE text-err.
+SELECTION-SCREEN BEGIN OF BLOCK bl_err WITH FRAME TITLE TEXT-err.
 PARAMETERS: cb_errl AS CHECKBOX DEFAULT 'X'.
 SELECTION-SCREEN BEGIN OF LINE.
 PARAMETERS: cb_dump AS CHECKBOX DEFAULT space.
@@ -35,7 +35,7 @@ SELECTION-SCREEN END OF BLOCK bl_err.
 
 INITIALIZATION.
   PERFORM setup_listboxes.
-  cmt_dump = text-dum.
+  cmt_dump = TEXT-dum.
   GET PARAMETER ID 'GR8' FIELD gv_memid_gr8.
   p_upfile = gv_memid_gr8.
 
@@ -87,6 +87,7 @@ FORM f4_p_upfile  CHANGING p_upfile TYPE string.
         lt_fields      TYPE dynpread_tabtype,
         ls_field       LIKE LINE OF lt_fields,
         lt_files       TYPE filetable,
+        lv_rc          TYPE i,
         lv_file_filter TYPE string.
 
   lv_repid = sy-repid.
@@ -115,7 +116,7 @@ FORM f4_p_upfile  CHANGING p_upfile TYPE string.
                                                 file_filter             = lv_file_filter
                                               CHANGING
                                                 file_table              = lt_files
-                                                rc                      = sy-tabix
+                                                rc                      = lv_rc
                                               EXCEPTIONS
                                                 OTHERS                  = 1 ).
   READ TABLE lt_files INDEX 1 INTO p_upfile.

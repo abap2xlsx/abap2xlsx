@@ -6,18 +6,18 @@
 *&
 *&---------------------------------------------------------------------*
 
-REPORT ZDEMO_EXCEL42.
-type-POOLS: vrm.
+REPORT zdemo_excel42.
+TYPE-POOLS: vrm.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_theme                TYPE REF TO zcl_excel_theme,
-      lo_style                type ref to zcl_excel_style,
-      lv_style_guid            type ZEXCEL_CELL_STYLE.
+DATA: lo_excel      TYPE REF TO zcl_excel,
+      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
+      lo_theme      TYPE REF TO zcl_excel_theme,
+      lo_style      TYPE REF TO zcl_excel_style,
+      lv_style_guid TYPE zexcel_cell_style.
 DATA: gc_save_file_name TYPE string VALUE '42 Theme Manipulation demo.&'.
-include zdemo_excel_outputopt_incl.
+INCLUDE zdemo_excel_outputopt_incl.
 
-initialization.
+INITIALIZATION.
 
 
 START-OF-SELECTION.
@@ -41,62 +41,62 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = 'Bold text'  ip_style = lv_style_guid ).
 
   "create theme
-  create object lo_theme.
+  CREATE OBJECT lo_theme.
   lo_theme->set_theme_name( iv_name = 'Theme Demo 42 A2X' ).
   lo_theme->set_color_scheme_name( iv_name = 'Demo 42 A2X' ).
 
   "set theme colors
   lo_theme->set_color(
-    exporting
+    EXPORTING
       iv_type         = zcl_excel_theme_color_scheme=>c_dark1
       iv_srgb         = '5F9EA0'
 *      iv_syscolorname =
 *      iv_syscolorlast =
   ).
-    lo_theme->set_color(
-    exporting
-      iv_type         = zcl_excel_theme_color_scheme=>c_dark2
-      iv_srgb         = 'FFA500'
+  lo_theme->set_color(
+  EXPORTING
+    iv_type         = zcl_excel_theme_color_scheme=>c_dark2
+    iv_srgb         = 'FFA500'
 *      iv_syscolorname =
 *      iv_syscolorlast =
-  ).
-     lo_theme->set_color(
-    exporting
-      iv_type         = zcl_excel_theme_color_scheme=>c_light1
-      iv_srgb         = '778899'
+).
+  lo_theme->set_color(
+ EXPORTING
+   iv_type         = zcl_excel_theme_color_scheme=>c_light1
+   iv_srgb         = '778899'
 *      iv_syscolorname =
 *      iv_syscolorlast =
-  ).
+).
 
-     lo_theme->set_color(
-    exporting
-      iv_type         = zcl_excel_theme_color_scheme=>c_light1
-      iv_srgb         = '9932CC'
+  lo_theme->set_color(
+ EXPORTING
+   iv_type         = zcl_excel_theme_color_scheme=>c_light1
+   iv_srgb         = '9932CC'
 *      iv_syscolorname =
 *      iv_syscolorlast =
-  ).
+).
   lo_theme->set_font_scheme_name( iv_name = 'Demo 42 A2X' ).
 
 
   "set theme latin fonts - major and minor
   lo_theme->set_latin_font(
-    exporting
+    EXPORTING
       iv_type        = zcl_excel_theme_font_scheme=>c_major
       iv_typeface    = 'Britannic Bold'
 *      iv_panose      =
 *      iv_pitchfamily =
 *      iv_charset     =
   ).
-   lo_theme->set_latin_font(
-    exporting
-      iv_type        = zcl_excel_theme_font_scheme=>c_minor
-      iv_typeface    = 'Broadway'
+  lo_theme->set_latin_font(
+   EXPORTING
+     iv_type        = zcl_excel_theme_font_scheme=>c_minor
+     iv_typeface    = 'Broadway'
 *      iv_panose      =
 *      iv_pitchfamily =
 *      iv_charset     =
-  ).
-    "push theme to file
-      lo_excel->set_theme( io_theme = lo_theme ).
+ ).
+  "push theme to file
+  lo_excel->set_theme( io_theme = lo_theme ).
 
-   "output
-      lcl_output=>output( cl_excel = lo_excel ).
+  "output
+  lcl_output=>output( cl_excel = lo_excel ).

@@ -139,7 +139,7 @@ START-OF-SELECTION.
 
   CALL METHOD lo_bar1_stacked->create_ax
     EXPORTING
-      ip_type = zcl_excel_graph_bars=>c_catax .
+      ip_type = zcl_excel_graph_bars=>c_catax.
 
   CALL METHOD lo_bar1_stacked->create_ax
     EXPORTING

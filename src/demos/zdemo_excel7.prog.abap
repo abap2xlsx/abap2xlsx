@@ -8,16 +8,16 @@
 
 REPORT zdemo_excel7.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_style_cond           TYPE REF TO zcl_excel_style_cond.
+DATA: lo_excel      TYPE REF TO zcl_excel,
+      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
+      lo_style_cond TYPE REF TO zcl_excel_style_cond.
 
-DATA: ls_iconset3             TYPE zexcel_conditional_iconset,
-      ls_iconset4             TYPE zexcel_conditional_iconset,
-      ls_iconset5             TYPE zexcel_conditional_iconset,
-      ls_databar              TYPE zexcel_conditional_databar,
-      ls_colorscale2          TYPE zexcel_conditional_colorscale,
-      ls_colorscale3          TYPE zexcel_conditional_colorscale.
+DATA: ls_iconset3    TYPE zexcel_conditional_iconset,
+      ls_iconset4    TYPE zexcel_conditional_iconset,
+      ls_iconset5    TYPE zexcel_conditional_iconset,
+      ls_databar     TYPE zexcel_conditional_databar,
+      ls_colorscale2 TYPE zexcel_conditional_colorscale,
+      ls_colorscale3 TYPE zexcel_conditional_colorscale.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '07_ConditionalAll.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.

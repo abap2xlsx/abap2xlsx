@@ -8,10 +8,10 @@
 
 REPORT zdemo_excel31.
 
-DATA: lo_excel                TYPE REF TO zcl_excel,
-      lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-      lo_hyperlink            TYPE REF TO zcl_excel_hyperlink,
-      lo_column               TYPE REF TO zcl_excel_column.
+DATA: lo_excel     TYPE REF TO zcl_excel,
+      lo_worksheet TYPE REF TO zcl_excel_worksheet,
+      lo_hyperlink TYPE REF TO zcl_excel_hyperlink,
+      lo_column    TYPE REF TO zcl_excel_column.
 
 
 DATA: fieldval            TYPE text80,
@@ -61,6 +61,7 @@ START-OF-SELECTION.
   lo_column->set_auto_size( ip_auto_size = abap_true ).
   lo_column = lo_worksheet->get_column( 'C' ).
   lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_worksheet->calculate_column_widths( ).
 
   " Add sheet
   lo_worksheet = lo_excel->add_new_worksheet( ).
@@ -97,6 +98,7 @@ START-OF-SELECTION.
   lo_column->set_auto_size( ip_auto_size = abap_true ).
   lo_column = lo_worksheet->get_column( 'C' ).
   lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_worksheet->calculate_column_widths( ).
 
   " Add sheet
   lo_worksheet = lo_excel->add_new_worksheet( ).
@@ -133,6 +135,7 @@ START-OF-SELECTION.
   lo_column->set_auto_size( ip_auto_size = abap_true ).
   lo_column = lo_worksheet->get_column( 'C' ).
   lo_column->set_auto_size( ip_auto_size = abap_true ).
+  lo_worksheet->calculate_column_widths( ).
 
   " Add sheet for merged cells
   lo_worksheet = lo_excel->add_new_worksheet( ).

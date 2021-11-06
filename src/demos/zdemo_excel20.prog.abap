@@ -32,15 +32,15 @@ ENDCLASS.                     "lcl_handle_events IMPLEMENTATION
 * DATA DECLARATION
 *--------------------------------------------------------------------*
 
-DATA: lo_excel          TYPE REF TO zcl_excel,
-      lo_worksheet      TYPE REF TO zcl_excel_worksheet,
-      lo_alv            TYPE REF TO cl_gui_alv_grid,
-      lo_salv           TYPE REF TO cl_salv_table,
-      gr_events         TYPE REF TO lcl_handle_events,
-      lr_events         TYPE REF TO cl_salv_events_table,
-      gt_sbook          TYPE TABLE OF sbook,
-      gt_listheader     TYPE slis_t_listheader,
-      wa_listheader     LIKE LINE OF gt_listheader.
+DATA: lo_excel      TYPE REF TO zcl_excel,
+      lo_worksheet  TYPE REF TO zcl_excel_worksheet,
+      lo_alv        TYPE REF TO cl_gui_alv_grid,
+      lo_salv       TYPE REF TO cl_salv_table,
+      gr_events     TYPE REF TO lcl_handle_events,
+      lr_events     TYPE REF TO cl_salv_events_table,
+      gt_sbook      TYPE TABLE OF sbook,
+      gt_listheader TYPE slis_t_listheader,
+      wa_listheader LIKE LINE OF gt_listheader.
 
 DATA: l_path            TYPE string,  " local dir
       lv_workdir        TYPE string,

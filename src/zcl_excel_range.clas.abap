@@ -1,83 +1,83 @@
-class ZCL_EXCEL_RANGE definition
-  public
-  final
-  create public .
+CLASS zcl_excel_range DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_RANGE
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  constants GCV_PRINT_TITLE_NAME type STRING value '_xlnm.Print_Titles'. "#EC NOTEXT
-  data NAME type ZEXCEL_RANGE_NAME .
-  data GUID type ZEXCEL_RANGE_GUID .
+    CONSTANTS gcv_print_title_name TYPE string VALUE '_xlnm.Print_Titles'. "#EC NOTEXT
+    DATA name TYPE zexcel_range_name .
+    DATA guid TYPE zexcel_range_guid .
 
-  methods GET_GUID
-    returning
-      value(EP_GUID) type ZEXCEL_RANGE_GUID .
-  methods SET_VALUE
-    importing
-      !IP_SHEET_NAME type ZEXCEL_SHEET_TITLE
-      !IP_START_ROW type ZEXCEL_CELL_ROW
-      !IP_START_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA
-      !IP_STOP_ROW type ZEXCEL_CELL_ROW
-      !IP_STOP_COLUMN type ZEXCEL_CELL_COLUMN_ALPHA .
-  methods GET_VALUE
-    returning
-      value(EP_VALUE) type ZEXCEL_RANGE_VALUE .
-  methods SET_RANGE_VALUE
-    importing
-      !IP_VALUE type ZEXCEL_RANGE_VALUE .
+    METHODS get_guid
+      RETURNING
+        VALUE(ep_guid) TYPE zexcel_range_guid .
+    METHODS set_value
+      IMPORTING
+        !ip_sheet_name   TYPE zexcel_sheet_title
+        !ip_start_row    TYPE zexcel_cell_row
+        !ip_start_column TYPE zexcel_cell_column_alpha
+        !ip_stop_row     TYPE zexcel_cell_row
+        !ip_stop_column  TYPE zexcel_cell_column_alpha .
+    METHODS get_value
+      RETURNING
+        VALUE(ep_value) TYPE zexcel_range_value .
+    METHODS set_range_value
+      IMPORTING
+        !ip_value TYPE zexcel_range_value .
 *"* protected components of class ZABAP_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_RANGE
 *"* do not include other source files here!!!
-private section.
+  PRIVATE SECTION.
 
-  data VALUE type ZEXCEL_RANGE_VALUE .
+    DATA value TYPE zexcel_range_value .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_RANGE IMPLEMENTATION.
+CLASS zcl_excel_range IMPLEMENTATION.
 
 
-method GET_GUID.
+  METHOD get_guid.
 
-  ep_guid = me->guid.
+    ep_guid = me->guid.
 
-  endmethod.
-
-
-method GET_VALUE.
-
-  ep_value = me->value.
-
-  endmethod.
+  ENDMETHOD.
 
 
-method SET_RANGE_VALUE.
-  me->value = ip_value.
-  endmethod.
+  METHOD get_value.
+
+    ep_value = me->value.
+
+  ENDMETHOD.
 
 
-method SET_VALUE.
-  DATA: lv_start_row_c  TYPE char7,
-        lv_stop_row_c   TYPE char7,
-        lv_value        TYPE string.
-  lv_stop_row_c = ip_stop_row.
-  SHIFT lv_stop_row_c RIGHT DELETING TRAILING space.
-  SHIFT lv_stop_row_c LEFT DELETING LEADING space.
-  lv_start_row_c = ip_start_row.
-  SHIFT lv_start_row_c RIGHT DELETING TRAILING space.
-  SHIFT lv_start_row_c LEFT DELETING LEADING space.
-  lv_value = ip_sheet_name.
-  me->value = zcl_excel_common=>escape_string( ip_value = lv_value ).
+  METHOD set_range_value.
+    me->value = ip_value.
+  ENDMETHOD.
 
-  IF ip_stop_column IS INITIAL AND ip_stop_row IS INITIAL.
-    CONCATENATE me->value '!$' ip_start_column '$' lv_start_row_c INTO me->value.
-  ELSE.
-    CONCATENATE me->value '!$' ip_start_column '$' lv_start_row_c ':$' ip_stop_column '$' lv_stop_row_c INTO me->value.
-  ENDIF.
-  endmethod.
+
+  METHOD set_value.
+    DATA: lv_start_row_c TYPE c LENGTH 7,
+          lv_stop_row_c  TYPE c LENGTH 7,
+          lv_value       TYPE string.
+    lv_stop_row_c = ip_stop_row.
+    SHIFT lv_stop_row_c RIGHT DELETING TRAILING space.
+    SHIFT lv_stop_row_c LEFT DELETING LEADING space.
+    lv_start_row_c = ip_start_row.
+    SHIFT lv_start_row_c RIGHT DELETING TRAILING space.
+    SHIFT lv_start_row_c LEFT DELETING LEADING space.
+    lv_value = ip_sheet_name.
+    me->value = zcl_excel_common=>escape_string( ip_value = lv_value ).
+
+    IF ip_stop_column IS INITIAL AND ip_stop_row IS INITIAL.
+      CONCATENATE me->value '!$' ip_start_column '$' lv_start_row_c INTO me->value.
+    ELSE.
+      CONCATENATE me->value '!$' ip_start_column '$' lv_start_row_c ':$' ip_stop_column '$' lv_stop_row_c INTO me->value.
+    ENDIF.
+  ENDMETHOD.
 ENDCLASS.

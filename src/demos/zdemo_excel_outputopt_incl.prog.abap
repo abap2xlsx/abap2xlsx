@@ -60,7 +60,6 @@ INITIALIZATION.
     cl_gui_cfw=>flush( ).
   ENDIF.
   lcl_output=>parametertexts( ).  " If started in language w/o textelements translated set defaults
-  sy-title = gc_save_file_name.
   txt_bl1 = 'Output options'(bl1).
   p_backfn = gc_save_file_name.  " Use as default if nothing else is supplied by submit
 
@@ -104,7 +103,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->download_frontend( ).
         ELSE.
-          MESSAGE e001(00) WITH 'Frontenddownload impossible in background processing'.
+          MESSAGE e802(zabap2xlsx).
         ENDIF.
 
       WHEN rb_back.
@@ -114,7 +113,7 @@ CLASS lcl_output IMPLEMENTATION.
         IF sy-batch IS INITIAL.
           cl_output->display_online( ).
         ELSE.
-          MESSAGE e001(00) WITH 'Online display absurd in background processing'.
+          MESSAGE e803(zabap2xlsx).
         ENDIF.
 
       WHEN rb_send.
@@ -157,7 +156,7 @@ CLASS lcl_output IMPLEMENTATION.
     IF sy-subrc <> 0.
       MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
               WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
-      EXIT.
+      RETURN.
     ENDIF.
 
     READ TABLE lt_dynpfields INTO ls_dynpfields INDEX 1.
@@ -186,20 +185,34 @@ CLASS lcl_output IMPLEMENTATION.
   METHOD parametertexts.
 * If started in language w/o textelements translated set defaults
 * Furthermore I don't have to change the selectiontexts of all demoreports.
-    DEFINE default_parametertext.
-      if %_&1_%_app_%-text = '&1' or
-         %_&1_%_app_%-text is initial.
-        %_&1_%_app_%-text = &2.
-      endif.
-    END-OF-DEFINITION.
 
-    default_parametertext:  rb_down  'Save to frontend',
-                            rb_back  'Save to backend',
-                            rb_show  'Direct display',
-                            rb_send  'Send via email',
+    TYPES: BEGIN OF ty_parameter,
+             name TYPE string,
+             text TYPE string,
+           END OF ty_parameter.
+    DATA: parameters          TYPE TABLE OF ty_parameter,
+          parameter           TYPE ty_parameter,
+          parameter_text_name TYPE string.
+    FIELD-SYMBOLS: <parameter>      TYPE ty_parameter,
+                   <parameter_text> TYPE c.
 
-                            p_path   'Frontend-path to download to',
-                            p_email  'Email to send xlsx to'.
+    parameter-name = 'RB_DOWN'. parameter-text = 'Save to frontend'.             APPEND parameter TO parameters.
+    parameter-name = 'RB_BACK'. parameter-text = 'Save to backend'.              APPEND parameter TO parameters.
+    parameter-name = 'RB_SHOW'. parameter-text = 'Direct display'.               APPEND parameter TO parameters.
+    parameter-name = 'RB_SEND'. parameter-text = 'Send via email'.               APPEND parameter TO parameters.
+    parameter-name = 'P_PATH'.  parameter-text = 'Frontend-path to download to'. APPEND parameter TO parameters.
+    parameter-name = 'P_EMAIL'. parameter-text = 'Email to send xlsx to'.        APPEND parameter TO parameters.
+
+    LOOP AT parameters ASSIGNING <parameter>.
+      parameter_text_name = |%_{ <parameter>-name }_%_APP_%-TEXT|.
+      ASSIGN (parameter_text_name) TO <parameter_text>.
+      IF sy-subrc = 0.
+        IF <parameter_text> = <parameter>-name OR
+           <parameter_text> IS INITIAL.
+          <parameter_text> = <parameter>-text.
+        ENDIF.
+      ENDIF.
+    ENDLOOP.
 
   ENDMETHOD.                    "parametertexts
 
@@ -302,7 +315,7 @@ CLASS lcl_output IMPLEMENTATION.
           t_mailtext           TYPE soli_tab,
           wa_mailtext          LIKE LINE OF t_mailtext,
           send_to              TYPE adr6-smtp_addr,
-          sent                 TYPE os_boolean.
+          sent                 TYPE abap_bool.
 
 
     mail_title     = 'Mail title'.
@@ -351,11 +364,11 @@ CLASS lcl_output IMPLEMENTATION.
 
         COMMIT WORK.
 
-        IF sent IS INITIAL.
-          MESSAGE i500(sbcoms) WITH p_email.
-        ELSE.
-          MESSAGE s022(so).
+        IF sent = abap_true.
+          MESSAGE s805(zabap2xlsx).
           MESSAGE 'Document ready to be sent - Check SOST or SCOT' TYPE 'I'.
+        ELSE.
+          MESSAGE i804(zabap2xlsx) WITH p_email.
         ENDIF.
 
       CATCH cx_bcs INTO bcs_exception.
