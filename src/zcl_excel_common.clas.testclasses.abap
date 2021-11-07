@@ -68,7 +68,32 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
         iv_shift_cols        TYPE i
         iv_shift_rows        TYPE i
         iv_expected          TYPE string.
-    METHODS: shift_formula FOR TESTING.
+    METHODS: shift_formula_basic FOR TESTING,
+        shift_formula_rightdown FOR TESTING,
+        shift_formula_leftup FOR TESTING,
+        shift_formula_fixedcolrows FOR TESTING,
+        shift_formula_mixedfixedrows FOR TESTING,
+        shift_formula_rangename FOR TESTING,
+        shift_formula_stringlitconc FOR TESTING,
+        shift_formula_extref FOR TESTING,
+        shift_formula_charblanks FOR TESTING,
+        shift_formula_stringblanks FOR TESTING,
+        shift_formula_funcnoargs FOR TESTING,
+        shift_formula_nocellref FOR TESTING,
+        shift_formula_empty FOR TESTING,
+        shift_formula_referr_colunder FOR TESTING,
+        shift_formula_referr_rowunder FOR TESTING,
+        shift_formula_referr_rowcolund FOR TESTING,
+        shift_formula_sheet_nodigit FOR TESTING,
+        shift_formula_sheet_nodig FOR TESTING,
+        shift_formula_sheet_special FOR TESTING,
+        shift_formula_resp_blanks_1 FOR TESTING,
+        shift_formula_resp_blanks_2 FOR TESTING,
+        shift_formula_range FOR TESTING,
+        shift_formula_notcols FOR TESTING,
+        shift_formula_name FOR TESTING,
+        shift_formula_refcolumn1 FOR TESTING,
+        shift_formula_refcolumn2 FOR TESTING.
     METHODS is_cell_in_range_ulc_in FOR TESTING.
     METHODS is_cell_in_range_lrc_in FOR TESTING.
     METHODS is_cell_in_range_leftside_out FOR TESTING.
@@ -1181,7 +1206,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD shift_formula.
+  METHOD shift_formula_basic.
 
     " Very basic check
     macro_shift_formula(
@@ -1190,12 +1215,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 0
       iv_expected          = 'C17' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_rightdown.
+
     " Check shift right and down
     macro_shift_formula(
       iv_reference_formula = 'C17'
       iv_shift_cols        = 2
       iv_shift_rows        = 3
       iv_expected          = 'E20' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_leftup.
 
     " Check shift left and up
     macro_shift_formula(
@@ -1204,12 +1237,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = -3
       iv_expected          = 'A14' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_fixedcolrows.
+
     " Fixed columns/rows
     macro_shift_formula(
       iv_reference_formula = '$C$17'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = '$C$17' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_mixedfixedrows.
 
     " Operators and Ranges, mixed fixed rows or columns
     macro_shift_formula(
@@ -1218,12 +1259,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 11
       iv_expected          = 'SUM($C28:D$23)+D41' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_rangename.
+
     " Operators and Rangename
     macro_shift_formula(
       iv_reference_formula = 'RNGNAME1+C7'
       iv_shift_cols        = -1
       iv_shift_rows        = -4
       iv_expected          = 'RNGNAME1+B3' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_stringlitconc.
 
     " String literals and string concatenation
     macro_shift_formula(
@@ -1232,12 +1281,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = '"Date:"&TEXT(C3)' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_extref.
+
     " External sheet reference
     macro_shift_formula(
       iv_reference_formula = '[TEST6.XLSX]SHEET1!A1'
       iv_shift_cols        = 1
       iv_shift_rows        = 11
       iv_expected          = '[TEST6.XLSX]SHEET1!B12' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_charblanks.
 
     " superflous blanks, multi-argument functions, literals in function, unknown functions
     macro_shift_formula(
@@ -1246,12 +1303,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = `X(C14, "KK" )  ` ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_stringblanks.
+
     " same as above - but with string input instead of Char-input
     macro_shift_formula(
       iv_reference_formula = `SIN(SIN(SIN(SIN(E22))))`
       iv_shift_cols        = 0
       iv_shift_rows        = 1
       iv_expected          = 'SIN(SIN(SIN(SIN(E23))))' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_funcnoargs.
 
     " Functions w/o arguments, No cellreferences
     macro_shift_formula(
@@ -1260,12 +1325,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 5
       iv_expected          = 'HEUTE()' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_nocellref.
+
     " No cellreferences
     macro_shift_formula(
       iv_reference_formula = '"B2"'
       iv_shift_cols        = 2
       iv_shift_rows        = 5
       iv_expected          = '"B2"' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_empty.
 
     " Empty
     macro_shift_formula(
@@ -1274,12 +1347,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 5
       iv_expected          = '' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_referr_colunder.
+
     " Referencing error , column only    , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = -1
       iv_shift_rows        = 0
       iv_expected          = '#REF!+$A1+#REF!+$A$1+A2' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_referr_rowunder.
 
     " Referencing error , row only       , underflow
     macro_shift_formula(
@@ -1288,12 +1369,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = -1
       iv_expected          = '#REF!+#REF!+A$1+$A$1+B1' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_referr_rowcolund.
+
     " Referencing error , row and column , underflow
     macro_shift_formula(
       iv_reference_formula = 'A1+$A1+A$1+$A$1+B2'
       iv_shift_cols        = -1
       iv_shift_rows        = -1
       iv_expected          = '#REF!+#REF!+#REF!+$A$1+A1' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_sheet_nodigit.
 
 " Sheet name not ending with digit
     macro_shift_formula(
@@ -1302,12 +1391,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = 'Sheet!B2' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_sheet_nodig.
+
 " Sheet name ending with digit
     macro_shift_formula(
       iv_reference_formula = 'Sheet2!A1'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = 'Sheet2!B2' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_sheet_special.
 
 " Sheet name with special characters
     macro_shift_formula(
@@ -1316,12 +1413,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = |'Sheet name'!B2| ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_resp_blanks_1.
+
 " Respecting blanks
     macro_shift_formula(
       iv_reference_formula = 'SUBTOTAL(109,Table1[SUM 1])'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = 'SUBTOTAL(109,Table1[SUM 1])' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_resp_blanks_2.
 
 " Respecting blanks
     macro_shift_formula(
@@ -1330,6 +1435,10 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = 'B5 & C5' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_range.
+
 " F_1 is a range name, not a cell address
     macro_shift_formula(
       iv_reference_formula = 'SUM(F_1,F_2)'
@@ -1337,12 +1446,19 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = 'SUM(F_1,F_2)' ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_notcols.
 " RC are not columns
     macro_shift_formula(
       iv_reference_formula = 'INDIRECT("RC[4]",FALSE)'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = 'INDIRECT("RC[4]",FALSE)' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_name.
 
 " A1 is a sheet name
     macro_shift_formula(
@@ -1351,12 +1467,20 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_rows        = 1
       iv_expected          = |'A1'!$A$1| ).
 
+  ENDMETHOD.
+
+  METHOD shift_formula_refcolumn1.
+
 " Reference to another column in the same row of a Table, with a space in the column name
     macro_shift_formula(
       iv_reference_formula = 'Tbl[[#This Row],[Air fare]]'
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = 'Tbl[[#This Row],[Air fare]]' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_refcolumn2.
 
 " Reference to another column in the same row of a Table, inside more complex expression
     macro_shift_formula(
