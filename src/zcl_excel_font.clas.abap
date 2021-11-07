@@ -39,7 +39,7 @@ CLASS zcl_excel_font DEFINITION
         !iv_flag_italic TYPE abap_bool
         !iv_cell_value  TYPE zexcel_cell_value
       RETURNING
-        VALUE(ep_width) TYPE float .
+        VALUE(rv_width) TYPE float .
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -143,7 +143,7 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
       " Font metrics are not available
       " -> Calculate the cell width using only the font size
       ld_length = strlen( iv_cell_value ).
-      ep_width = ld_length * iv_font_height / lc_default_font_height + lc_excel_cell_padding.
+      rv_width = ld_length * iv_font_height / lc_default_font_height + lc_excel_cell_padding.
 
     ELSE.
       " Font metrics are available
@@ -176,7 +176,7 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
       " Add cell padding (Excel makes columns a bit wider than the space
       " that is needed for the text itself) and convert unit
       " (division by 100)
-      ep_width = ld_width_from_font_metrics / 100 + lc_excel_cell_padding.
+      rv_width = ld_width_from_font_metrics / 100 + lc_excel_cell_padding.
     ENDIF.
 
   ENDMETHOD.

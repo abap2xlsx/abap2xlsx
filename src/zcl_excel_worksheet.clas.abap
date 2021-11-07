@@ -1297,11 +1297,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     ENDIF.
 
     ep_width = zcl_excel_font=>calculate(
-      ld_font_name   = ld_font_name
-      ld_font_height = ld_font_height
-      ld_flag_bold   = ld_flag_bold
-      ld_flag_italic = ld_flag_italic
-      ld_cell_value  = ld_cell_value ).
+      iv_font_name   = ld_font_name
+      iv_font_height = ld_font_height
+      iv_flag_bold   = ld_flag_bold
+      iv_flag_italic = ld_flag_italic
+      iv_cell_value  = ld_cell_value ).
 
     " If the current cell contains an auto filter, make it a bit wider.
     " The size used by the auto filter button does not depend on the font
