@@ -1075,8 +1075,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element      TYPE REF TO if_ixml_element.
 
     DATA: lv_value TYPE string,
-          lv_date  TYPE sydatum,
-          lv_time  TYPE syuzeit.
+          lv_date  TYPE d,
+          lv_time  TYPE t.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
