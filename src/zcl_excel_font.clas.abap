@@ -33,11 +33,11 @@ CLASS zcl_excel_font DEFINITION
 
     CLASS-METHODS calculate
       IMPORTING
-        !ld_font_name   TYPE zexcel_style_font_name
-        !ld_font_height TYPE tdfontsize
-        !ld_flag_bold   TYPE abap_bool
-        !ld_flag_italic TYPE abap_bool
-        !ld_cell_value  TYPE zexcel_cell_value
+        !iv_font_name   TYPE zexcel_style_font_name
+        !iv_font_height TYPE tdfontsize
+        !iv_flag_bold   TYPE abap_bool
+        !iv_flag_italic TYPE abap_bool
+        !iv_cell_value  TYPE zexcel_cell_value
       RETURNING
         VALUE(ep_width) TYPE float .
   PROTECTED SECTION.
@@ -51,8 +51,7 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
 
   METHOD calculate.
 
-    CONSTANTS:
-      lc_excel_cell_padding TYPE float VALUE '0.75'.
+    CONSTANTS lc_excel_cell_padding TYPE float VALUE '0.75'.
 
     DATA ld_font_family               TYPE itcfh-tdfamily.
     DATA ls_font_cache                TYPE mty_s_font_cache.
@@ -73,19 +72,19 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
     " used before
     READ TABLE mth_font_cache
       WITH TABLE KEY
-        font_name   = ld_font_name
-        font_height = ld_font_height
-        flag_bold   = ld_flag_bold
-        flag_italic = ld_flag_italic
+        font_name   = iv_font_name
+        font_height = iv_font_height
+        flag_bold   = iv_flag_bold
+        flag_italic = iv_flag_italic
       ASSIGNING <ls_font_cache>.
 
     IF sy-subrc <> 0.
       " Font is used for the first time
       " Add the font to our local font cache
-      ls_font_cache-font_name   = ld_font_name.
-      ls_font_cache-font_height = ld_font_height.
-      ls_font_cache-flag_bold   = ld_flag_bold.
-      ls_font_cache-flag_italic = ld_flag_italic.
+      ls_font_cache-font_name   = iv_font_name.
+      ls_font_cache-font_height = iv_font_height.
+      ls_font_cache-flag_bold   = iv_flag_bold.
+      ls_font_cache-flag_italic = iv_flag_italic.
       INSERT ls_font_cache INTO TABLE mth_font_cache
         ASSIGNING <ls_font_cache>.
 
@@ -95,7 +94,7 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
         FROM tfo01
         INTO TABLE lt_font_families
         UP TO 1 ROWS
-        WHERE tdtext = ld_font_name
+        WHERE tdtext = iv_font_name
         ORDER BY PRIMARY KEY.
 
       " Check if a matching font family was found
@@ -108,10 +107,10 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
         CALL FUNCTION 'LOAD_FONT'
           EXPORTING
             family      = ld_font_family
-            height      = ld_font_height
+            height      = iv_font_height
             printer     = 'SWIN'
-            bold        = ld_flag_bold
-            italic      = ld_flag_italic
+            bold        = iv_flag_bold
+            italic      = iv_flag_italic
           TABLES
             metric      = lt_itcfc
           EXCEPTIONS
@@ -143,21 +142,21 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
     IF lines( <ls_font_cache>-th_font_metrics ) = 0.
       " Font metrics are not available
       " -> Calculate the cell width using only the font size
-      ld_length = strlen( ld_cell_value ).
-      ep_width = ld_length * ld_font_height / lc_default_font_height + lc_excel_cell_padding.
+      ld_length = strlen( iv_cell_value ).
+      ep_width = ld_length * iv_font_height / lc_default_font_height + lc_excel_cell_padding.
 
     ELSE.
       " Font metrics are available
 
       " Calculate the size of the text by adding the sizes of each
       " letter
-      ld_length = strlen( ld_cell_value ).
+      ld_length = strlen( iv_cell_value ).
       DO ld_length TIMES.
         " Subtract 1, because the first character is at offset 0
         ld_offset = sy-index - 1.
 
         " Read the current character from the cell value
-        ld_current_character = ld_cell_value+ld_offset(1).
+        ld_current_character = iv_cell_value+ld_offset(1).
 
         " Look up the size of the current letter
         READ TABLE <ls_font_cache>-th_font_metrics
@@ -170,7 +169,7 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
         ELSE.
           " The size of the letter is unknown
           " -> Add the font height as the default letter size
-          ADD ld_font_height TO ld_width_from_font_metrics.
+          ADD iv_font_height TO ld_width_from_font_metrics.
         ENDIF.
       ENDDO.
 

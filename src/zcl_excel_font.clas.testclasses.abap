@@ -12,11 +12,11 @@ CLASS ltcl_Test IMPLEMENTATION.
     DATA lv_width TYPE f.
 
     lv_width = zcl_excel_font=>calculate(
-        ld_font_name   = 'foobar'
-        ld_font_height = 20
-        ld_flag_bold   = abap_false
-        ld_flag_italic = abap_false
-        ld_cell_value  = 'hello world' ).
+        iv_font_name   = 'foobar'
+        iv_font_height = 20
+        iv_flag_bold   = abap_false
+        iv_flag_italic = abap_false
+        iv_cell_value  = 'hello world' ).
 
     cl_abap_unit_assert=>assert_equals(
         act = lv_width
