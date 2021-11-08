@@ -11,7 +11,7 @@ CLASS ltcl_Test IMPLEMENTATION.
 
     DATA lv_width TYPE f.
 
-    lv_width = zcl_excel_font=>calculate(
+    lv_width = zcl_excel_font=>calculate_text_width(
         iv_font_name   = 'foobar'
         iv_font_height = 20
         iv_flag_bold   = abap_false
