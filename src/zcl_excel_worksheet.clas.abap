@@ -1296,7 +1296,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       ENDTRY.
     ENDIF.
 
-    ep_width = zcl_excel_font=>calculate(
+    ep_width = zcl_excel_font=>calculate_text_width(
       iv_font_name   = ld_font_name
       iv_font_height = ld_font_height
       iv_flag_bold   = ld_flag_bold
