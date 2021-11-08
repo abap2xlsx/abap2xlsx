@@ -6,5 +6,7 @@ INTERFACE zif_excel_writer
     IMPORTING
       !io_excel      TYPE REF TO zcl_excel
     RETURNING
-      VALUE(ep_file) TYPE xstring .
+      VALUE(ep_file) TYPE xstring
+    RAISING
+      zcx_excel.
 ENDINTERFACE.

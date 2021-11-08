@@ -100,15 +100,15 @@ CLASS zcl_excel_converter DEFINITION
     DATA wt_colors TYPE zexcel_t_converter_col .
     DATA wt_filter TYPE zexcel_t_converter_fil .
     CLASS-DATA wt_objects TYPE tt_alv_types .
-    CLASS-DATA w_fcount TYPE numc3 .
+    CLASS-DATA w_fcount TYPE n LENGTH 3 .
     DATA wt_sort_values TYPE tt_sort_values .
     DATA wt_subtotal_rows TYPE tt_subtotal_rows .
     DATA wt_styles TYPE tt_styles .
-    CONSTANTS c_type_hdr TYPE c VALUE 'H'.              "#EC NOTEXT
-    CONSTANTS c_type_str TYPE c VALUE 'P'.              "#EC NOTEXT
-    CONSTANTS c_type_nor TYPE c VALUE 'N'.              "#EC NOTEXT
-    CONSTANTS c_type_sub TYPE c VALUE 'S'.              "#EC NOTEXT
-    CONSTANTS c_type_tot TYPE c VALUE 'T'.              "#EC NOTEXT
+    CONSTANTS c_type_hdr TYPE c VALUE 'H'.                  "#EC NOTEXT
+    CONSTANTS c_type_str TYPE c VALUE 'P'.                  "#EC NOTEXT
+    CONSTANTS c_type_nor TYPE c VALUE 'N'.                  "#EC NOTEXT
+    CONSTANTS c_type_sub TYPE c VALUE 'S'.                  "#EC NOTEXT
+    CONSTANTS c_type_tot TYPE c VALUE 'T'.                  "#EC NOTEXT
     DATA wt_color_styles TYPE tt_color_styles .
     CLASS-DATA ws_option TYPE zexcel_s_converter_option .
     CLASS-DATA ws_indx TYPE indx .
@@ -249,7 +249,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_converter IMPLEMENTATION.
+CLASS ZCL_EXCEL_CONVERTER IMPLEMENTATION.
 
 
   METHOD ask_option.
