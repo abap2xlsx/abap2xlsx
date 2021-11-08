@@ -32,23 +32,28 @@ CLASS zcl_excel_writer_csv DEFINITION
   PRIVATE SECTION.
 
     DATA excel TYPE REF TO zcl_excel .
-    CLASS-DATA delimiter TYPE c VALUE ';'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-    CLASS-DATA enclosure TYPE c VALUE '"'. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
-    CLASS-DATA eol TYPE c LENGTH 2 VALUE cl_abap_char_utilities=>cr_lf. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
+    CLASS-DATA delimiter TYPE c VALUE ';' ##NO_TEXT.
+    CLASS-DATA enclosure TYPE c VALUE '"' ##NO_TEXT.
+    CLASS-DATA:
+      eol TYPE c LENGTH 2 VALUE cl_abap_char_utilities=>cr_lf ##NO_TEXT.
     CLASS-DATA worksheet_name TYPE zexcel_worksheets_name .
     CLASS-DATA worksheet_index TYPE zexcel_active_worksheet .
 
     METHODS create
       RETURNING
-        VALUE(ep_excel) TYPE xstring .
+        VALUE(ep_excel) TYPE xstring
+      RAISING
+        zcx_excel.
     METHODS create_csv
       RETURNING
-        VALUE(ep_content) TYPE xstring .
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
 ENDCLASS.
 
 
 
-CLASS zcl_excel_writer_csv IMPLEMENTATION.
+CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
 
 
   METHOD create.
@@ -68,7 +73,7 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
            END OF lty_format.
     DATA: lt_format TYPE STANDARD TABLE OF lty_format,
           ls_format LIKE LINE OF lt_format,
-          lv_date   TYPE dats,
+          lv_date   TYPE d,
           lv_tmp    TYPE string,
           lv_time   TYPE c LENGTH 8.
 
