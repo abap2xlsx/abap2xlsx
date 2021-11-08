@@ -49,7 +49,7 @@ ENDCLASS.
 CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
 
 
-  METHOD calculate.
+  METHOD calculate_text_width.
 
     CONSTANTS lc_excel_cell_padding TYPE float VALUE '0.75'.
 
