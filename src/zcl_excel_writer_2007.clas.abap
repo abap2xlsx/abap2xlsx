@@ -597,7 +597,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_table           TYPE REF TO zcl_excel_table.
 
     DATA: lv_worksheets_num        TYPE i,
-          lv_worksheets_numc       TYPE numc3,
+          lv_worksheets_numc       TYPE n LENGTH 3,
           lv_xml_node_worksheet_pn TYPE string,
           lv_value                 TYPE string,
           lv_comment_index         TYPE i VALUE 1,  " (+) GGAR
@@ -1075,8 +1075,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element      TYPE REF TO if_ixml_element.
 
     DATA: lv_value TYPE string,
-          lv_date  TYPE sydatum,
-          lv_time  TYPE syuzeit.
+          lv_date  TYPE d,
+          lv_time  TYPE t.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
