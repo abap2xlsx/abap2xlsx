@@ -581,17 +581,6 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_merge        TYPE abap_bool OPTIONAL
       RAISING
         zcx_excel .
-    METHODS set_area_formula_new
-      IMPORTING
-        !ip_column_start TYPE simple
-        !ip_column_end   TYPE simple OPTIONAL
-        !ip_row          TYPE zexcel_cell_row
-        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_formula      TYPE zexcel_cell_formula
-        !ip_merge        TYPE abap_bool OPTIONAL
-        !ip_old_behavior TYPE abap_bool DEFAULT abap_false
-      RAISING
-        zcx_excel .
     METHODS set_area_style
       IMPORTING
         !ip_column_start TYPE simple
@@ -613,22 +602,6 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type    TYPE abap_typekind OPTIONAL
         !ip_merge        TYPE abap_bool OPTIONAL
-      RAISING
-        zcx_excel .
-    METHODS set_area_new
-      IMPORTING
-        !ip_column_start TYPE simple
-        !ip_column_end   TYPE simple OPTIONAL
-        !ip_row          TYPE zexcel_cell_row
-        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_value        TYPE simple OPTIONAL
-        !ip_formula      TYPE zexcel_cell_formula OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL
-        !ip_hyperlink    TYPE REF TO zcl_excel_hyperlink OPTIONAL
-        !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
-        !ip_abap_type    TYPE abap_typekind OPTIONAL
-        !ip_merge        TYPE abap_bool OPTIONAL
-        !ip_old_behavior TYPE abap_bool DEFAULT abap_false
       RAISING
         zcx_excel .
     METHODS get_header_footer_drawings
@@ -3266,25 +3239,6 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
   METHOD set_area.
 
-    set_area_new(
-        ip_column_start = ip_column_start
-        ip_column_end   = ip_column_end
-        ip_row          = ip_row
-        ip_row_to       = ip_row_to
-        ip_value        = ip_value
-        ip_formula      = ip_formula
-        ip_style        = ip_style
-        ip_hyperlink    = ip_hyperlink
-        ip_data_type    = ip_data_type
-        ip_abap_type    = ip_abap_type
-        ip_merge        = ip_merge
-        ip_old_behavior = abap_true ).
-
-  ENDMETHOD.                    "set_area
-
-
-  METHOD set_area_new.
-
     DATA: lv_row              TYPE zexcel_cell_row,
           lv_row_start        TYPE zexcel_cell_row,
           lv_row_end          TYPE zexcel_cell_row,
@@ -3320,20 +3274,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     ENDIF.
 
-
-    lv_column_int = lv_column_start_int.
-    lv_row_start = lv_row.
-    WHILE lv_column_int <= lv_column_end_int.
-
-      lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
-      lv_row = lv_row_start.
-
-      WHILE lv_row <= lv_row_end.
+    IF ip_merge = abap_true.
 
     IF ip_data_type IS SUPPLIED OR
        ip_abap_type IS SUPPLIED.
 
-      me->set_cell( ip_column    = lv_column
+      me->set_cell( ip_column    = lv_column_start
                     ip_row       = lv_row
                     ip_value     = ip_value
                     ip_formula   = ip_formula
@@ -3344,7 +3290,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     ELSE.
 
-      me->set_cell( ip_column    = lv_column
+      me->set_cell( ip_column    = lv_column_start
                     ip_row       = lv_row
                     ip_value     = ip_value
                     ip_formula   = ip_formula
@@ -3353,19 +3299,47 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     ENDIF.
 
-        IF ip_old_behavior = abap_true.
-          EXIT.
-        ENDIF.
+    ELSE.
 
-        ADD 1 TO lv_row.
+      lv_column_int = lv_column_start_int.
+      lv_row_start = lv_row.
+      WHILE lv_column_int <= lv_column_end_int.
+
+        lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+        lv_row = lv_row_start.
+
+        WHILE lv_row <= lv_row_end.
+
+          IF ip_data_type IS SUPPLIED OR
+             ip_abap_type IS SUPPLIED.
+
+            me->set_cell( ip_column    = lv_column
+                          ip_row       = lv_row
+                          ip_value     = ip_value
+                          ip_formula   = ip_formula
+                          ip_style     = ip_style
+                          ip_hyperlink = ip_hyperlink
+                          ip_data_type = ip_data_type
+                          ip_abap_type = ip_abap_type ).
+
+          ELSE.
+
+            me->set_cell( ip_column    = lv_column
+                          ip_row       = lv_row
+                          ip_value     = ip_value
+                          ip_formula   = ip_formula
+                          ip_style     = ip_style
+                          ip_hyperlink = ip_hyperlink ).
+
+          ENDIF.
+
+          ADD 1 TO lv_row.
+        ENDWHILE.
+
+        ADD 1 TO lv_column_int.
       ENDWHILE.
 
-      IF ip_old_behavior = abap_true.
-        EXIT.
-      ENDIF.
-
-      ADD 1 TO lv_column_int.
-    ENDWHILE.
+    ENDIF.
 
     IF ip_style IS SUPPLIED.
 
@@ -3385,24 +3359,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     ENDIF.
 
-  ENDMETHOD.
+  ENDMETHOD.                    "set_area
 
 
   METHOD set_area_formula.
-
-    set_area_formula_new(
-        ip_column_start = ip_column_start
-        ip_column_end   = ip_column_end
-        ip_row          = ip_row
-        ip_row_to       = ip_row_to
-        ip_formula      = ip_formula
-        ip_merge        = ip_merge
-        ip_old_behavior = abap_true ).
-
-  ENDMETHOD.                    "set_area_formula
-
-
-  METHOD set_area_formula_new.
     DATA: ld_row            TYPE zexcel_cell_row,
           ld_row_start      TYPE zexcel_cell_row,
           ld_row_end        TYPE zexcel_cell_row,
@@ -3433,31 +3393,36 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           error = 'Wrong Merging Parameters'.
     ENDIF.
 
-    ld_row_start = ld_row.
-    WHILE ld_column_int <= ld_column_end_int.
-      ld_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
-      ld_row = ld_row_start.
-      WHILE ld_row <= ld_row_end.
+    IF ip_merge = abap_true.
 
     me->set_cell_formula( ip_column = ld_column ip_row = ld_row
                           ip_formula = ip_formula ).
 
-        IF ip_old_behavior = abap_true.
-          EXIT.
-        ENDIF.
-        ADD 1 TO ld_row.
+    ELSE.
+
+      ld_row_start = ld_row.
+      WHILE ld_column_int <= ld_column_end_int.
+
+        ld_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
+        ld_row = ld_row_start.
+        WHILE ld_row <= ld_row_end.
+
+          me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                                ip_formula = ip_formula ).
+
+          ADD 1 TO ld_row.
+        ENDWHILE.
+
+        ADD 1 TO ld_column_int.
       ENDWHILE.
-      IF ip_old_behavior = abap_true.
-        EXIT.
-      ENDIF.
-      ADD 1 TO ld_column_int.
-    ENDWHILE.
+
+    ENDIF.
 
     IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
       me->set_merge( ip_column_start = ld_column ip_row = ld_row
                      ip_column_end   = ld_column_end   ip_row_to = ld_row_end ).
     ENDIF.
-  ENDMETHOD.
+  ENDMETHOD.                    "set_area_formula
 
 
   METHOD set_area_hyperlink.
