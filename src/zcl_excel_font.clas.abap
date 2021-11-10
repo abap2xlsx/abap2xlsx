@@ -53,35 +53,20 @@ CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
 
     CONSTANTS lc_excel_cell_padding TYPE float VALUE '0.75'.
 
-    DATA: ld_cell_value                TYPE zexcel_cell_value,
-          ld_style_guid                TYPE zexcel_cell_style,
-          ls_stylemapping              TYPE zexcel_s_stylemapping,
-          lo_table_object              TYPE REF TO object,
-          lo_table                     TYPE REF TO zcl_excel_table,
-          ld_table_top_left_column     TYPE zexcel_cell_column,
-          ld_table_bottom_right_column TYPE zexcel_cell_column,
-          ld_flag_contains_auto_filter TYPE abap_bool VALUE abap_false,
-          ld_flag_bold                 TYPE abap_bool VALUE abap_false,
-          ld_flag_italic               TYPE abap_bool VALUE abap_false,
-          ld_date                      TYPE d,
-          ld_date_char                 TYPE c LENGTH 50,
-          ld_font_height               TYPE tdfontsize VALUE zcl_excel_font=>lc_default_font_height,
-          ld_font_name                 TYPE zexcel_style_font_name VALUE zcl_excel_font=>lc_default_font_name.
-    DATA ls_font_cache TYPE mty_s_font_cache.
-    DATA ld_font_family TYPE itcfh-tdfamily.
-    DATA lt_font_families LIKE STANDARD TABLE OF ld_font_family.
-    DATA lt_itcfc TYPE STANDARD TABLE OF itcfc.
-    DATA ld_uccp TYPE i.
-    DATA ls_font_metric TYPE mty_s_font_metric.
-    DATA ld_length TYPE i.
-    DATA ld_offset TYPE i.
-    DATA ld_current_character TYPE c LENGTH 1.
-    DATA ld_width_from_font_metrics TYPE i.
+    DATA: ld_current_character         TYPE c LENGTH 1,
+          lt_itcfc                     TYPE STANDARD TABLE OF itcfc,
+          ld_offset                    TYPE i,
+          ld_length                    TYPE i,
+          ld_uccp                      TYPE i,
+          ls_font_metric               TYPE mty_s_font_metric,
+          ld_width_from_font_metrics   TYPE i,
+          ld_font_family               TYPE itcfh-tdfamily,
+          lt_font_families             LIKE STANDARD TABLE OF ld_font_family,
+          ls_font_cache                TYPE mty_s_font_cache.
 
-
-    FIELD-SYMBOLS <ls_font_cache>  TYPE mty_s_font_cache.
-    FIELD-SYMBOLS <ls_itcfc>       TYPE itcfc.
-    FIELD-SYMBOLS <ls_font_metric> TYPE mty_s_font_metric.
+    FIELD-SYMBOLS: <ls_font_cache>  TYPE mty_s_font_cache,
+                   <ls_font_metric> TYPE mty_s_font_metric,
+                   <ls_itcfc>       TYPE itcfc.
 
     " Check if the same font (font name and font attributes) was already
     " used before
