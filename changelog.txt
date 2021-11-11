@@ -1,0 +1,28 @@
+abapGit changelog
+=================
+
+Legend
+------
+* : fixed
+! : changed
++ : added
+- : removed
+
+2021-11-11 v7.14.0
+------------------
++ changelog
+! Refactor ABAP Cloud: column width based on SAP font
+! Refactor ABAP Cloud: DDIC references changed
+! Refactor ABAP Cloud: collection classes
+! Refactor: split unit tests into one method per case
+! pretty print zcl_excel_worksheet
+* SET_CELL_FORMULA: set formula even if cell was uninitialized
+! Refactor: replace all macros with methods
++ Add ability to generate report from template
+* Read range of print titles
++ Multiple Styles in One Cell ("rich text format")
++ Bind ALV with non-displayed SALV data
++ new feature "Ignored Errors"
+* Ignore invalid Excel Table names
++ new feature "Calculated Columns"
+* better error message for ZDEMO_EXCEL25
