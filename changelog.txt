@@ -26,3 +26,97 @@ Legend
 * Ignore invalid Excel Table names
 + new feature "Calculated Columns"
 * better error message for ZDEMO_EXCEL25
+
+2021-10-11 v7.13.0
+------------------
+! zcl_excel_common: refactor unit tests
+! Refactor: replace zcl_excel_aunit with cl_abap_unit_assert
+! Refactor ABAP Cloud: DDIC references changed
+* clear Style exporting parameter in GET_CELL
++ Conditional Formatting for Cells that "Begin With" and more
+- Delete unused customui objects
+* ZDEMO_EXCEL37 incorrect screen field labels
+* SHIFT_FORMULA
+! Refactor: replace macro with method in zcl_excel_style_number_format
+* autofilter messed up if several sheets
+* autofilter + filtering value, then read it, the filtering value is lost
+* autofilter on row 2 is incorrectly set on row 1
+! Refactor: change EXIT to RETURN, where applicable
+! Refactor: zcl_excel_common: refactor STATICS to CLASS-DATA
+* Writer: trailing spaces of cell values lost
+! Refactor: move zexcel_s_org_rel to demos
+! update to latest abapGit format
+! abaplint to not change sy fields anymore
+! Refactor: Do not change sy fields anymore
+! abapGit diff says zdemo_calendar_classes has changed
+! update abaplint configuration to latest
+! Refactor: Move non-Cloud code to separate package (#795) …
+* Reader: empty Excel date -> ABAP 00000000
+
+2021-09-11 v7.12.0
+------------------
+! First draft of the contributing guidelines
+! Refactor: remove usage of CHAR07 domain
+
+2021-08-11 v7.11.0
+------------------
+! Pretty print on all source code
+! Create coding-guidelines.md
+! remove usage of CHAR08 DTEL
+! remove usage of CHAR10 domain
+! remove usage of OS_BOOLEAN
+  
+2021-07-11 v7.10.0
+------------------
+! remove unused DOMA
+! Reader: wrong worksheet dimension
+* GET_TABLE: support fields of type date
+* Vietnamese, Emoji and other characters not rendered in old SAP versions
+* SET_TABLE: support table headers with newline
+* SET_CELL: support values with wildcard format like `_x0041_`
+
+2021-06-11 v7.9.0
+------------------
+! update linter config to latest
++ Remove 15 chars. limit at encrypt password
++ Reader to read range of hyperlinks and new method SET_AREA_HYPERLINK
+* Vietnamese, Emoji and other characters not rendered
+* Update of ZDEMO_EXCEL31 to use CALCULATE_COLUMN_WIDTHS
+! remove CHAR01
+
+2021-05-11 v7.8.0
+------------------
+! remove "BOOLEAN" domain
+! replace messages with ones from ZABAP2XLSX message class
+
+2021-04-11 v7.7.0
+------------------
+! remove CHAR_02 domain
+! abapGit format update
+
+2021-03-11 v7.6.0
+------------------
+! AUnit warning zcl excel reader huge file "# au > "#au
+! Remove doma ZEXCEL_BOOLE01
+
+2021-02-11 v7.5.0
+------------------
++ Possibility to get the fieldcatalog with mandt
+! cleanup types in zif_excel_book_protection
+
+2021-01-11 v7.4.0
+------------------
+! warning about SAPLink in documentation, and replace obsolete links in zangry_birds and zdemo_excel1
+! remove XFELD usage
+! Dynamic prefill of date in zdemo_calendar
+
+2021-12-11 v7.3.0
+------------------
+* Fix in ZDEMO_EXCEL11: Field-symbol usage
+! Update abapGit-installation.md
+
+2021-11-11 v7.2.0
+------------------
+! Improve Documentaiton
+! Fix package errors
++ Feature: Enable custom converters
