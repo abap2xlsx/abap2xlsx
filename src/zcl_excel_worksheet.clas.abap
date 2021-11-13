@@ -75,10 +75,15 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_merge .
     TYPES:
       mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
+    TYPES ty_area TYPE c LENGTH 1.
 
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
     CONSTANTS c_break_row TYPE zexcel_break VALUE 1.        "#EC NOTEXT
+    CONSTANTS: BEGIN OF c_area,
+                 whole   TYPE ty_area VALUE 'W',            "#EC NOTEXT
+                 topleft TYPE ty_area VALUE 'T',            "#EC NOTEXT
+               END OF c_area.
     DATA excel TYPE REF TO zcl_excel READ-ONLY .
     DATA print_gridlines TYPE zexcel_print_gridlines READ-ONLY VALUE abap_false. "#EC NOTEXT
     DATA sheet_content TYPE zexcel_t_cell_data .
@@ -579,6 +584,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_formula      TYPE zexcel_cell_formula
         !ip_merge        TYPE abap_bool OPTIONAL
+        !ip_area         TYPE ty_area DEFAULT c_area-topleft
       RAISING
         zcx_excel .
     METHODS set_area_style
@@ -602,6 +608,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type    TYPE abap_typekind OPTIONAL
         !ip_merge        TYPE abap_bool OPTIONAL
+        !ip_area         TYPE ty_area DEFAULT c_area-topleft
       RAISING
         zcx_excel .
     METHODS get_header_footer_drawings
@@ -3126,30 +3133,31 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     ENDIF.
 
-    IF ip_merge = abap_true.
+    " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
+    IF ip_merge = abap_true OR ip_area = c_area-topleft.
 
-    IF ip_data_type IS SUPPLIED OR
-       ip_abap_type IS SUPPLIED.
+      IF ip_data_type IS SUPPLIED OR
+         ip_abap_type IS SUPPLIED.
 
-      me->set_cell( ip_column    = lv_column_start
-                    ip_row       = lv_row
-                    ip_value     = ip_value
-                    ip_formula   = ip_formula
-                    ip_style     = ip_style
-                    ip_hyperlink = ip_hyperlink
-                    ip_data_type = ip_data_type
-                    ip_abap_type = ip_abap_type ).
+        me->set_cell( ip_column    = lv_column_start
+                      ip_row       = lv_row
+                      ip_value     = ip_value
+                      ip_formula   = ip_formula
+                      ip_style     = ip_style
+                      ip_hyperlink = ip_hyperlink
+                      ip_data_type = ip_data_type
+                      ip_abap_type = ip_abap_type ).
 
-    ELSE.
+      ELSE.
 
-      me->set_cell( ip_column    = lv_column_start
-                    ip_row       = lv_row
-                    ip_value     = ip_value
-                    ip_formula   = ip_formula
-                    ip_style     = ip_style
-                    ip_hyperlink = ip_hyperlink ).
+        me->set_cell( ip_column    = lv_column_start
+                      ip_row       = lv_row
+                      ip_value     = ip_value
+                      ip_formula   = ip_formula
+                      ip_style     = ip_style
+                      ip_hyperlink = ip_hyperlink ).
 
-    ENDIF.
+      ENDIF.
 
     ELSE.
 
@@ -3245,10 +3253,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           error = 'Wrong Merging Parameters'.
     ENDIF.
 
-    IF ip_merge = abap_true.
+    " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
+    IF ip_merge = abap_true OR ip_area = c_area-topleft.
 
-    me->set_cell_formula( ip_column = ld_column ip_row = ld_row
-                          ip_formula = ip_formula ).
+      me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                            ip_formula = ip_formula ).
 
     ELSE.
 
