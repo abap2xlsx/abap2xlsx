@@ -156,7 +156,7 @@ CLASS zcl_excel DEFINITION
     DATA worksheets TYPE REF TO zcl_excel_worksheets .
   PRIVATE SECTION.
 
-    CONSTANTS version TYPE c LENGTH 10 VALUE '7.2.0'.       "#EC NOTEXT
+    CONSTANTS version TYPE c LENGTH 10 VALUE '7.14.0'.      "#EC NOTEXT
     DATA autofilters TYPE REF TO zcl_excel_autofilters .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA default_style TYPE zexcel_cell_style .
