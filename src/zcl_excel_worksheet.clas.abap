@@ -75,10 +75,15 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_merge .
     TYPES:
       mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
+    TYPES ty_area TYPE c LENGTH 1.
 
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
     CONSTANTS c_break_row TYPE zexcel_break VALUE 1.        "#EC NOTEXT
+    CONSTANTS: BEGIN OF c_area,
+                 whole   TYPE ty_area VALUE 'W',            "#EC NOTEXT
+                 topleft TYPE ty_area VALUE 'T',            "#EC NOTEXT
+               END OF c_area.
     DATA excel TYPE REF TO zcl_excel READ-ONLY .
     DATA print_gridlines TYPE zexcel_print_gridlines READ-ONLY VALUE abap_false. "#EC NOTEXT
     DATA sheet_content TYPE zexcel_t_cell_data .
@@ -579,6 +584,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_formula      TYPE zexcel_cell_formula
         !ip_merge        TYPE abap_bool OPTIONAL
+        !ip_area         TYPE ty_area DEFAULT c_area-topleft
       RAISING
         zcx_excel .
     METHODS set_area_style
@@ -602,6 +608,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type    TYPE abap_typekind OPTIONAL
         !ip_merge        TYPE abap_bool OPTIONAL
+        !ip_area         TYPE ty_area DEFAULT c_area-topleft
       RAISING
         zcx_excel .
     METHODS get_header_footer_drawings
@@ -619,30 +626,6 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
   PROTECTED SECTION.
   PRIVATE SECTION.
-
-    TYPES:
-      BEGIN OF mty_s_font_metric,
-        char       TYPE c LENGTH 1,
-        char_width TYPE tdcwidths,
-      END OF mty_s_font_metric .
-    TYPES:
-      mty_th_font_metrics
-             TYPE HASHED TABLE OF mty_s_font_metric
-             WITH UNIQUE KEY char .
-    TYPES:
-      BEGIN OF mty_s_font_cache,
-        font_name       TYPE zexcel_style_font_name,
-        font_height     TYPE tdfontsize,
-        flag_bold       TYPE abap_bool,
-        flag_italic     TYPE abap_bool,
-        th_font_metrics TYPE mty_th_font_metrics,
-      END OF mty_s_font_cache .
-    TYPES:
-      mty_th_font_cache
-             TYPE HASHED TABLE OF mty_s_font_cache
-             WITH UNIQUE KEY font_name font_height flag_bold flag_italic .
-*  types:
-*    mty_ts_row_dimension TYPE SORTED TABLE OF zexcel_s_worksheet_rowdimensio WITH UNIQUE KEY row .
 
 *"* private components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
@@ -663,7 +646,6 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA hyperlinks TYPE REF TO cl_object_collection .
     DATA lower_cell TYPE zexcel_s_cell_data .
     DATA mo_pagebreaks TYPE REF TO zcl_excel_worksheet_pagebreaks .
-    CLASS-DATA mth_font_cache TYPE mty_th_font_cache .
     DATA mt_row_outlines TYPE mty_ts_outlines_row .
     DATA print_title_col_from TYPE zexcel_cell_column_alpha .
     DATA print_title_col_to TYPE zexcel_cell_column_alpha .
@@ -1223,13 +1205,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 *          - Add cell padding to simulate Excel behavior
 *--------------------------------------------------------------------*
 
-    CONSTANTS:
-      lc_default_font_name   TYPE zexcel_style_font_name VALUE 'Calibri', "#EC NOTEXT
-      lc_default_font_height TYPE tdfontsize VALUE '110',
-      lc_excel_cell_padding  TYPE float VALUE '0.75'.
-
     DATA: ld_cell_value                TYPE zexcel_cell_value,
-          ld_current_character         TYPE c LENGTH 1,
           ld_style_guid                TYPE zexcel_cell_style,
           ls_stylemapping              TYPE zexcel_s_stylemapping,
           lo_table_object              TYPE REF TO object,
@@ -1241,21 +1217,8 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           ld_flag_italic               TYPE abap_bool VALUE abap_false,
           ld_date                      TYPE d,
           ld_date_char                 TYPE c LENGTH 50,
-          ld_font_height               TYPE tdfontsize VALUE lc_default_font_height,
-          lt_itcfc                     TYPE STANDARD TABLE OF itcfc,
-          ld_offset                    TYPE i,
-          ld_length                    TYPE i,
-          ld_uccp                      TYPE i,
-          ls_font_metric               TYPE mty_s_font_metric,
-          ld_width_from_font_metrics   TYPE i,
-          ld_font_family               TYPE itcfh-tdfamily,
-          ld_font_name                 TYPE zexcel_style_font_name VALUE lc_default_font_name,
-          lt_font_families             LIKE STANDARD TABLE OF ld_font_family,
-          ls_font_cache                TYPE mty_s_font_cache.
-
-    FIELD-SYMBOLS: <ls_font_cache>  TYPE mty_s_font_cache,
-                   <ls_font_metric> TYPE mty_s_font_metric,
-                   <ls_itcfc>       TYPE itcfc.
+          ld_font_height               TYPE tdfontsize VALUE zcl_excel_font=>lc_default_font_height,
+          ld_font_name                 TYPE zexcel_style_font_name VALUE zcl_excel_font=>lc_default_font_name.
 
     " Determine cell content and cell style
     me->get_cell( EXPORTING ip_column = ip_column
@@ -1341,116 +1304,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       ENDTRY.
     ENDIF.
 
-    " Check if the same font (font name and font attributes) was already
-    " used before
-    READ TABLE mth_font_cache
-      WITH TABLE KEY
-        font_name   = ld_font_name
-        font_height = ld_font_height
-        flag_bold   = ld_flag_bold
-        flag_italic = ld_flag_italic
-      ASSIGNING <ls_font_cache>.
-
-    IF sy-subrc <> 0.
-      " Font is used for the first time
-      " Add the font to our local font cache
-      ls_font_cache-font_name   = ld_font_name.
-      ls_font_cache-font_height = ld_font_height.
-      ls_font_cache-flag_bold   = ld_flag_bold.
-      ls_font_cache-flag_italic = ld_flag_italic.
-      INSERT ls_font_cache INTO TABLE mth_font_cache
-        ASSIGNING <ls_font_cache>.
-
-      " Determine the SAPscript font family name from the Excel
-      " font name
-      SELECT tdfamily
-        FROM tfo01
-        INTO TABLE lt_font_families
-        UP TO 1 ROWS
-        WHERE tdtext = ld_font_name
-        ORDER BY PRIMARY KEY.
-
-      " Check if a matching font family was found
-      " Fonts can be uploaded from TTF files using transaction SE73
-      IF lines( lt_font_families ) > 0.
-        READ TABLE lt_font_families INDEX 1 INTO ld_font_family.
-
-        " Load font metrics (returns a table with the size of each letter
-        " in the font)
-        CALL FUNCTION 'LOAD_FONT'
-          EXPORTING
-            family      = ld_font_family
-            height      = ld_font_height
-            printer     = 'SWIN'
-            bold        = ld_flag_bold
-            italic      = ld_flag_italic
-          TABLES
-            metric      = lt_itcfc
-          EXCEPTIONS
-            font_family = 1
-            codepage    = 2
-            device_type = 3
-            OTHERS      = 4.
-        IF sy-subrc <> 0.
-          CLEAR lt_itcfc.
-        ENDIF.
-
-        " For faster access, convert each character number to the actual
-        " character, and store the characters and their sizes in a hash
-        " table
-        LOOP AT lt_itcfc ASSIGNING <ls_itcfc>.
-          ld_uccp = <ls_itcfc>-cpcharno.
-          ls_font_metric-char =
-            cl_abap_conv_in_ce=>uccpi( ld_uccp ).
-          ls_font_metric-char_width = <ls_itcfc>-tdcwidths.
-          INSERT ls_font_metric
-            INTO TABLE <ls_font_cache>-th_font_metrics.
-        ENDLOOP.
-
-      ENDIF.
-    ENDIF.
-
-    " Calculate the cell width
-    " If available, use font metrics
-    IF lines( <ls_font_cache>-th_font_metrics ) = 0.
-      " Font metrics are not available
-      " -> Calculate the cell width using only the font size
-      ld_length = strlen( ld_cell_value ).
-      ep_width = ld_length * ld_font_height / lc_default_font_height + lc_excel_cell_padding.
-
-    ELSE.
-      " Font metrics are available
-
-      " Calculate the size of the text by adding the sizes of each
-      " letter
-      ld_length = strlen( ld_cell_value ).
-      DO ld_length TIMES.
-        " Subtract 1, because the first character is at offset 0
-        ld_offset = sy-index - 1.
-
-        " Read the current character from the cell value
-        ld_current_character = ld_cell_value+ld_offset(1).
-
-        " Look up the size of the current letter
-        READ TABLE <ls_font_cache>-th_font_metrics
-          WITH TABLE KEY char = ld_current_character
-          ASSIGNING <ls_font_metric>.
-        IF sy-subrc = 0.
-          " The size of the letter is known
-          " -> Add the actual size of the letter
-          ADD <ls_font_metric>-char_width TO ld_width_from_font_metrics.
-        ELSE.
-          " The size of the letter is unknown
-          " -> Add the font height as the default letter size
-          ADD ld_font_height TO ld_width_from_font_metrics.
-        ENDIF.
-      ENDDO.
-
-      " Add cell padding (Excel makes columns a bit wider than the space
-      " that is needed for the text itself) and convert unit
-      " (division by 100)
-      ep_width = ld_width_from_font_metrics / 100 + lc_excel_cell_padding.
-    ENDIF.
+    ep_width = zcl_excel_font=>calculate_text_width(
+      iv_font_name   = ld_font_name
+      iv_font_height = ld_font_height
+      iv_flag_bold   = ld_flag_bold
+      iv_flag_italic = ld_flag_italic
+      iv_cell_value  = ld_cell_value ).
 
     " If the current cell contains an auto filter, make it a bit wider.
     " The size used by the auto filter button does not depend on the font
@@ -1459,7 +1318,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       ADD 2 TO ep_width.
     ENDIF.
 
-  ENDMETHOD.                    "CALCULATE_CELL_WIDTH
+  ENDMETHOD.
 
 
   METHOD calculate_column_widths.
@@ -3241,7 +3100,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   METHOD set_area.
 
     DATA: lv_row              TYPE zexcel_cell_row,
+          lv_row_start        TYPE zexcel_cell_row,
           lv_row_end          TYPE zexcel_cell_row,
+          lv_column_int       TYPE zexcel_cell_column_alpha,
+          lv_column           TYPE zexcel_cell_column_alpha,
           lv_column_start     TYPE zexcel_cell_column_alpha,
           lv_column_end       TYPE zexcel_cell_column_alpha,
           lv_column_start_int TYPE zexcel_cell_column_alpha,
@@ -3272,26 +3134,71 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     ENDIF.
 
-    IF ip_data_type IS SUPPLIED OR
-       ip_abap_type IS SUPPLIED.
+    " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
+    IF ip_merge = abap_true OR ip_area = c_area-topleft.
 
-      me->set_cell( ip_column    = lv_column_start
-                    ip_row       = lv_row
-                    ip_value     = ip_value
-                    ip_formula   = ip_formula
-                    ip_style     = ip_style
-                    ip_hyperlink = ip_hyperlink
-                    ip_data_type = ip_data_type
-                    ip_abap_type = ip_abap_type ).
+      IF ip_data_type IS SUPPLIED OR
+         ip_abap_type IS SUPPLIED.
+
+        me->set_cell( ip_column    = lv_column_start
+                      ip_row       = lv_row
+                      ip_value     = ip_value
+                      ip_formula   = ip_formula
+                      ip_style     = ip_style
+                      ip_hyperlink = ip_hyperlink
+                      ip_data_type = ip_data_type
+                      ip_abap_type = ip_abap_type ).
+
+      ELSE.
+
+        me->set_cell( ip_column    = lv_column_start
+                      ip_row       = lv_row
+                      ip_value     = ip_value
+                      ip_formula   = ip_formula
+                      ip_style     = ip_style
+                      ip_hyperlink = ip_hyperlink ).
+
+      ENDIF.
 
     ELSE.
 
-      me->set_cell( ip_column    = lv_column_start
-                    ip_row       = lv_row
-                    ip_value     = ip_value
-                    ip_formula   = ip_formula
-                    ip_style     = ip_style
-                    ip_hyperlink = ip_hyperlink ).
+      lv_column_int = lv_column_start_int.
+      lv_row_start = lv_row.
+      WHILE lv_column_int <= lv_column_end_int.
+
+        lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+        lv_row = lv_row_start.
+
+        WHILE lv_row <= lv_row_end.
+
+          IF ip_data_type IS SUPPLIED OR
+             ip_abap_type IS SUPPLIED.
+
+            me->set_cell( ip_column    = lv_column
+                          ip_row       = lv_row
+                          ip_value     = ip_value
+                          ip_formula   = ip_formula
+                          ip_style     = ip_style
+                          ip_hyperlink = ip_hyperlink
+                          ip_data_type = ip_data_type
+                          ip_abap_type = ip_abap_type ).
+
+          ELSE.
+
+            me->set_cell( ip_column    = lv_column
+                          ip_row       = lv_row
+                          ip_value     = ip_value
+                          ip_formula   = ip_formula
+                          ip_style     = ip_style
+                          ip_hyperlink = ip_hyperlink ).
+
+          ENDIF.
+
+          ADD 1 TO lv_row.
+        ENDWHILE.
+
+        ADD 1 TO lv_column_int.
+      ENDWHILE.
 
     ENDIF.
 
@@ -3318,6 +3225,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
   METHOD set_area_formula.
     DATA: ld_row            TYPE zexcel_cell_row,
+          ld_row_start      TYPE zexcel_cell_row,
           ld_row_end        TYPE zexcel_cell_row,
           ld_column         TYPE zexcel_cell_column_alpha,
           ld_column_end     TYPE zexcel_cell_column_alpha,
@@ -3346,8 +3254,31 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           error = 'Wrong Merging Parameters'.
     ENDIF.
 
-    me->set_cell_formula( ip_column = ld_column ip_row = ld_row
-                          ip_formula = ip_formula ).
+    " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
+    IF ip_merge = abap_true OR ip_area = c_area-topleft.
+
+      me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                            ip_formula = ip_formula ).
+
+    ELSE.
+
+      ld_row_start = ld_row.
+      WHILE ld_column_int <= ld_column_end_int.
+
+        ld_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
+        ld_row = ld_row_start.
+        WHILE ld_row <= ld_row_end.
+
+          me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                                ip_formula = ip_formula ).
+
+          ADD 1 TO ld_row.
+        ENDWHILE.
+
+        ADD 1 TO ld_column_int.
+      ENDWHILE.
+
+    ENDIF.
 
     IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
       me->set_merge( ip_column_start = ld_column ip_row = ld_row
