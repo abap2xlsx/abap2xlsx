@@ -1,103 +1,107 @@
-CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
-CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
+class ltc_check_cell_column_formula definition deferred.
+class zcl_excel_worksheet definition local friends
     ltc_check_cell_column_formula.
 
-CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
-    RISK LEVEL HARMLESS
-    DURATION SHORT.
+class lcl_excel_worksheet_test definition for testing
+    risk level harmless
+    duration short.
 
-  PRIVATE SECTION.
+  private section.
 * ================
-    DATA:
-      f_cut TYPE REF TO zcl_excel_worksheet.  "class under test
+    data:
+      f_cut type ref to zcl_excel_worksheet.  "class under test
 
-    CLASS-METHODS: class_setup.
-    CLASS-METHODS: class_teardown.
-    METHODS: setup.
-    METHODS: teardown.
-    METHODS: set_merge FOR TESTING.
-    METHODS: delete_merge FOR TESTING.
-    METHODS: get_dimension_range FOR TESTING.
-ENDCLASS.       "lcl_Excel_Worksheet_Test
+    class-methods: class_setup.
+    class-methods: class_teardown.
+    methods: setup.
+    methods: teardown.
+    methods: set_merge for testing raising cx_static_check.
+    methods: delete_merge for testing raising cx_static_check.
+    methods: get_dimension_range for testing raising cx_static_check.
+endclass.       "lcl_Excel_Worksheet_Test
 
 
-CLASS ltc_check_cell_column_formula DEFINITION FOR TESTING
-    RISK LEVEL HARMLESS
-    DURATION SHORT.
+class ltc_check_cell_column_formula definition for testing
+    risk level harmless
+    duration short.
 
-  PRIVATE SECTION.
+  private section.
 
-    METHODS: success FOR TESTING RAISING cx_static_check.
-    METHODS: fails_both_formula_id_value FOR TESTING RAISING cx_static_check.
-    METHODS: fails_both_formula_id_formula FOR TESTING RAISING cx_static_check.
-    METHODS: formula_id_not_found FOR TESTING RAISING cx_static_check.
-    METHODS: outside_table_fails__above FOR TESTING RAISING cx_static_check.
-    METHODS: outside_table_fails__below FOR TESTING RAISING cx_static_check.
-    METHODS: outside_table_fails__left FOR TESTING RAISING cx_static_check.
-    METHODS: outside_table_fails__right FOR TESTING RAISING cx_static_check.
-    METHODS: must_be_in_same_column FOR TESTING RAISING cx_static_check.
+    methods: success for testing raising cx_static_check.
+    methods: fails_both_formula_id_value for testing raising cx_static_check.
+    methods: fails_both_formula_id_formula for testing raising cx_static_check.
+    methods: formula_id_not_found for testing raising cx_static_check.
+    methods: outside_table_fails__above for testing raising cx_static_check.
+    methods: outside_table_fails__below for testing raising cx_static_check.
+    methods: outside_table_fails__left for testing raising cx_static_check.
+    methods: outside_table_fails__right for testing raising cx_static_check.
+    methods: must_be_in_same_column for testing raising cx_static_check.
 
-    METHODS: setup.
-    METHODS: should_fail
-      IMPORTING
-        ip_formula_id TYPE zexcel_s_cell_data-column_formula_id
-        ip_formula    TYPE zexcel_s_cell_data-cell_formula OPTIONAL
-        ip_value      TYPE zexcel_s_cell_data-cell_value OPTIONAL
-        ip_row        TYPE zexcel_s_cell_data-cell_row
-        ip_column     TYPE zexcel_s_cell_data-cell_column
-        ip_exp        TYPE string
-      RAISING
+    methods: setup.
+    methods: should_fail
+      importing
+        ip_formula_id type zexcel_s_cell_data-column_formula_id
+        ip_formula    type zexcel_s_cell_data-cell_formula optional
+        ip_value      type zexcel_s_cell_data-cell_value optional
+        ip_row        type zexcel_s_cell_data-cell_row
+        ip_column     type zexcel_s_cell_data-cell_column
+        ip_exp        type string
+      raising
         zcx_excel.
 
-    DATA: mt_column_formulas TYPE zcl_excel_worksheet=>mty_th_column_formula,
-          c_messages         LIKE zcl_excel_worksheet=>c_messages.
+    data: mt_column_formulas type zcl_excel_worksheet=>mty_th_column_formula,
+          c_messages         like zcl_excel_worksheet=>c_messages.
 
-ENDCLASS.
+endclass.
 
 
-CLASS lcl_excel_worksheet_test IMPLEMENTATION.
+class lcl_excel_worksheet_test implementation.
 * ==============================================
 
-  METHOD class_setup.
+  method class_setup.
 * ===================
 
-  ENDMETHOD.       "class_Setup
+  endmethod.       "class_Setup
 
 
-  METHOD class_teardown.
+  method class_teardown.
 * ======================
 
 
-  ENDMETHOD.       "class_Teardown
+  endmethod.       "class_Teardown
 
 
-  METHOD setup.
+  method setup.
 * =============
 
-    DATA lo_excel TYPE REF TO zcl_excel.
+    data lo_excel type ref to zcl_excel.
 
-    CREATE OBJECT lo_excel.
+    create object lo_excel.
 
-    CREATE OBJECT f_cut
-      EXPORTING
-        ip_excel = lo_excel.
+    try.
+        create object f_cut
+          exporting
+            ip_excel = lo_excel.
+      catch zcx_excel.
+      cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    endtry.
 
-  ENDMETHOD.       "setup
+  endmethod.       "setup
 
 
-  METHOD teardown.
+  method teardown.
 * ================
 
 
-  ENDMETHOD.       "teardown
+  endmethod.       "teardown
 
-  METHOD set_merge.
+  method set_merge.
 * ====================
 
-    DATA lt_merge TYPE string_table.
-    DATA lv_merge TYPE string.
-    DATA lv_size TYPE i.
-    DATA lv_size_next TYPE i.
+    data lt_merge type string_table.
+    data lv_merge type string.
+    data lv_size type i.
+    data lv_size_next type i.
 
 
 *  Test 1. Simple test for initial value
@@ -136,15 +140,15 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 
     lv_size = lv_size_next.
 
-    TRY.
+    try.
         f_cut->set_merge(
           ip_column_start = 2
           ip_column_end = 3
           ip_row = 2
           ip_row_to = 3
         ).
-      CATCH zcx_excel.
-    ENDTRY.
+      catch zcx_excel.
+    endtry.
 
     lt_merge = f_cut->get_merge( ).
     lv_size_next = lines( lt_merge ).
@@ -189,7 +193,7 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
     ).
 
     lt_merge = f_cut->get_merge( ).
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    read table lt_merge into lv_merge index 1.
 
     cl_abap_unit_assert=>assert_equals(
       act   = lv_merge
@@ -210,7 +214,7 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
     ).
 
     lt_merge = f_cut->get_merge( ).
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    read table lt_merge into lv_merge index 1.
 
     cl_abap_unit_assert=>assert_equals(
       act   = lv_merge
@@ -219,14 +223,14 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       level = if_aunit_constants=>critical
     ).
 
-  ENDMETHOD.
+  endmethod.
 
-  METHOD delete_merge.
+  method delete_merge.
 * ====================
-    DATA lt_merge TYPE string_table.
-    DATA lv_merge TYPE string.
-    DATA lv_size TYPE i.
-    DATA lv_index TYPE i.
+    data lt_merge type string_table.
+    data lv_merge type string.
+    data lv_size type i.
+    data lv_index type i.
 
 *  Test 1. Simple test delete all merges
 
@@ -250,14 +254,14 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 
 *  Test 2. Simple test delete all merges
 
-    DO 10 TIMES.
+    do 10 times.
       f_cut->set_merge(
         ip_column_start = 2 + sy-index * 2
         ip_column_end = 3 + sy-index * 2
         ip_row = 2 + sy-index * 2
         ip_row_to = 3 + sy-index * 2
       ).
-    ENDDO.
+    enddo.
 
     f_cut->delete_merge( ).
     lt_merge = f_cut->get_merge( ).
@@ -272,7 +276,7 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 
 *  Test 3. Delete concrete merge with success
 
-    DO 4 TIMES.
+    do 4 times.
       lv_index = sy-index.
 
       f_cut->delete_merge( ).
@@ -284,12 +288,12 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
         ip_row_to = 3
       ).
 
-      CASE lv_index.
-        WHEN 1. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 2 ).
-        WHEN 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 3 ).
-        WHEN 3. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 2 ).
-        WHEN 4. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 3 ).
-      ENDCASE.
+      case lv_index.
+        when 1. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 2 ).
+        when 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 3 ).
+        when 3. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 2 ).
+        when 4. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 3 ).
+      endcase.
 
       lt_merge = f_cut->get_merge( ).
       lv_size = lines( lt_merge ).
@@ -300,11 +304,11 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
         msg   = 'Expect merge table with 1 line fully cleared'
         level = if_aunit_constants=>critical
       ).
-    ENDDO.
+    enddo.
 
 *  Test 4. Delete concrete merge with fail
 
-    DO 4 TIMES.
+    do 4 times.
       lv_index = sy-index.
 
       f_cut->delete_merge( ).
@@ -316,12 +320,12 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
         ip_row_to = 3
       ).
 
-      CASE lv_index.
-        WHEN 1. f_cut->delete_merge( ip_cell_column = 1 ip_cell_row = 2 ).
-        WHEN 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 1 ).
-        WHEN 3. f_cut->delete_merge( ip_cell_column = 4 ip_cell_row = 2 ).
-        WHEN 4. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 4 ).
-      ENDCASE.
+      case lv_index.
+        when 1. f_cut->delete_merge( ip_cell_column = 1 ip_cell_row = 2 ).
+        when 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 1 ).
+        when 3. f_cut->delete_merge( ip_cell_column = 4 ip_cell_row = 2 ).
+        when 4. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 4 ).
+      endcase.
 
       lt_merge = f_cut->get_merge( ).
       lv_size = lines( lt_merge ).
@@ -332,7 +336,7 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
         msg   = 'Expect no merge were deleted'
         level = if_aunit_constants=>critical
       ).
-    ENDDO.
+    enddo.
 
 *  Test 5. Delete concrete merge #1
 
@@ -362,7 +366,7 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       level = if_aunit_constants=>critical
     ).
 
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    read table lt_merge into lv_merge index 1.
 
     cl_abap_unit_assert=>assert_equals(
       act   = lv_merge
@@ -399,7 +403,7 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       level = if_aunit_constants=>critical
     ).
 
-    READ TABLE lt_merge INTO lv_merge INDEX 1.
+    read table lt_merge into lv_merge index 1.
 
     cl_abap_unit_assert=>assert_equals(
       act   = lv_merge
@@ -408,9 +412,9 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       level = if_aunit_constants=>critical
     ).
 
-  ENDMETHOD.       "delete_Merge
+  endmethod.       "delete_Merge
 
-  METHOD get_dimension_range.
+  method get_dimension_range.
     cl_abap_unit_assert=>assert_equals(
       act   = f_cut->get_dimension_range( )
       exp   = 'A1'
@@ -436,42 +440,42 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       msg   = 'get_dimension_range'
       level = if_aunit_constants=>critical
     ).
-  ENDMETHOD.
+  endmethod.
 
-ENDCLASS.       "lcl_Excel_Worksheet_Test
+endclass.       "lcl_Excel_Worksheet_Test
 
 
-CLASS ltc_check_cell_column_formula IMPLEMENTATION.
+class ltc_check_cell_column_formula implementation.
 
-  METHOD setup.
+  method setup.
 
-    DATA: ls_column_formula  TYPE zcl_excel_worksheet=>mty_s_column_formula.
+    data: ls_column_formula  type zcl_excel_worksheet=>mty_s_column_formula.
 
     c_messages = zcl_excel_worksheet=>c_messages.
 
     " Column Formula in table A1:B4 (for unknown reason, bottom_right_row is last actual row minus 1)
-    CLEAR ls_column_formula.
+    clear ls_column_formula.
     ls_column_formula-id = 1.
     ls_column_formula-column = 1.
     ls_column_formula-table_top_left_row = 1.
     ls_column_formula-table_bottom_right_row = 3.
     ls_column_formula-table_left_column_int = 1.
     ls_column_formula-table_right_column_int = 2.
-    INSERT ls_column_formula INTO TABLE mt_column_formulas.
+    insert ls_column_formula into table mt_column_formulas.
 
     " Column Formula in table D1:E4 (for unknown reason, bottom_right_row is last actual row minus 1)
-    CLEAR ls_column_formula.
+    clear ls_column_formula.
     ls_column_formula-id = 2.
     ls_column_formula-column = 4.
     ls_column_formula-table_top_left_row = 1.
     ls_column_formula-table_bottom_right_row = 3.
     ls_column_formula-table_left_column_int = 4.
     ls_column_formula-table_right_column_int = 5.
-    INSERT ls_column_formula INTO TABLE mt_column_formulas.
+    insert ls_column_formula into table mt_column_formulas.
 
-  ENDMETHOD.
+  endmethod.
 
-  METHOD success.
+  method success.
 
     zcl_excel_worksheet=>check_cell_column_formula(
         it_column_formulas   = mt_column_formulas
@@ -481,47 +485,47 @@ CLASS ltc_check_cell_column_formula IMPLEMENTATION.
         ip_row               = 2
         ip_column            = 1 ).
 
-  ENDMETHOD.
+  endmethod.
 
-  METHOD fails_both_formula_id_value.
+  method fails_both_formula_id_value.
     should_fail( ip_formula_id = 1 ip_formula = '' ip_value = '3.14' ip_row = 2 ip_column = 1 ip_exp = c_messages-formula_id_only_is_possible ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD fails_both_formula_id_formula.
+  method fails_both_formula_id_formula.
     should_fail( ip_formula_id = 1 ip_formula = 'A2' ip_value = '' ip_row = 2 ip_column = 1 ip_exp = c_messages-formula_id_only_is_possible ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD formula_id_not_found.
+  method formula_id_not_found.
     should_fail( ip_formula_id = 3 ip_row = 1 ip_column = 1 ip_exp = c_messages-column_formula_id_not_found ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD outside_table_fails__above.
+  method outside_table_fails__above.
     should_fail( ip_formula_id = 2 ip_row = 1 ip_column = 1 ip_exp = c_messages-formula_not_in_this_table ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD outside_table_fails__below.
+  method outside_table_fails__below.
     should_fail( ip_formula_id = 2 ip_row = 5 ip_column = 1 ip_exp = c_messages-formula_not_in_this_table ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD outside_table_fails__left.
+  method outside_table_fails__left.
     should_fail( ip_formula_id = 2 ip_row = 2 ip_column = 0 ip_exp = c_messages-formula_not_in_this_table ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD outside_table_fails__right.
+  method outside_table_fails__right.
     should_fail( ip_formula_id = 2 ip_row = 2 ip_column = 3 ip_exp = c_messages-formula_not_in_this_table ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD must_be_in_same_column.
+  method must_be_in_same_column.
     should_fail( ip_formula_id = 1 ip_row = 2 ip_column = 2 ip_exp = c_messages-formula_in_other_column ).
-  ENDMETHOD.
+  endmethod.
 
-  METHOD should_fail.
+  method should_fail.
 
-    DATA: lo_exception TYPE REF TO zcx_excel.
+    data: lo_exception type ref to zcx_excel.
 
-    TRY.
+    try.
         zcl_excel_worksheet=>check_cell_column_formula(
-          EXPORTING
+          exporting
             it_column_formulas   = mt_column_formulas
             ip_column_formula_id = ip_formula_id
             ip_formula           = ip_formula
@@ -529,10 +533,10 @@ CLASS ltc_check_cell_column_formula IMPLEMENTATION.
             ip_row               = ip_row
             ip_column            = ip_column ).
         cl_abap_unit_assert=>fail( msg = |Should have failed with error "{ ip_exp }"| ).
-      CATCH zcx_excel INTO lo_exception.
+      catch zcx_excel into lo_exception.
         cl_abap_unit_assert=>assert_equals( act = lo_exception->get_text( ) exp = ip_exp msg = ip_exp ).
-    ENDTRY.
+    endtry.
 
-  ENDMETHOD.
+  endmethod.
 
-ENDCLASS.
+endclass.

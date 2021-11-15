@@ -12,7 +12,9 @@ CLASS zcl_excel_column DEFINITION
       IMPORTING
         !ip_index     TYPE zexcel_cell_column_alpha
         !ip_worksheet TYPE REF TO zcl_excel_worksheet
-        !ip_excel     TYPE REF TO zcl_excel .
+        !ip_excel     TYPE REF TO zcl_excel
+      RAISING
+        zcx_excel .
     METHODS get_auto_size
       RETURNING
         VALUE(r_auto_size) TYPE abap_bool .
@@ -48,7 +50,9 @@ CLASS zcl_excel_column DEFINITION
       IMPORTING
         !ip_index        TYPE zexcel_cell_column_alpha
       RETURNING
-        VALUE(io_column) TYPE REF TO zcl_excel_column .
+        VALUE(io_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel .
     METHODS set_outline_level
       IMPORTING
         !ip_outline_level TYPE int4 .

@@ -34,17 +34,23 @@ CLASS zcl_excel_converter DEFINITION
       EXPORTING
         !e_bytecount TYPE i
         !et_file     TYPE solix_tab
-        !e_file      TYPE xstring .
+        !e_file      TYPE xstring
+      RAISING
+        zcx_excel .
     METHODS get_option
       RETURNING
         VALUE(rs_option) TYPE zexcel_s_converter_option .
-    METHODS open_file .
+    METHODS open_file
+              RAISING
+                zcx_excel .
     METHODS set_option
       IMPORTING
         !is_option TYPE zexcel_s_converter_option .
     METHODS write_file
       IMPORTING
-        !i_path TYPE string OPTIONAL .
+        !i_path TYPE string OPTIONAL
+      RAISING
+        zcx_excel .
 *"* protected components of class ZCL_EXCEL_CONVERTER
 *"* do not include other source files here!!!
   PROTECTED SECTION.

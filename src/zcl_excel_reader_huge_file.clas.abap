@@ -68,7 +68,8 @@ CLASS zcl_excel_reader_huge_file DEFINITION
     METHODS put_cell_to_worksheet
       IMPORTING
         !io_worksheet TYPE REF TO zcl_excel_worksheet
-        !is_cell      TYPE t_cell .
+        !is_cell      TYPE t_cell
+      RAISING zcx_excel.
     METHODS get_shared_string
       IMPORTING
         !iv_index       TYPE any
@@ -88,7 +89,8 @@ CLASS zcl_excel_reader_huge_file DEFINITION
         !io_reader    TYPE REF TO if_sxml_reader
         !io_worksheet TYPE REF TO zcl_excel_worksheet
       RAISING
-        lcx_not_found .
+        lcx_not_found
+        zcx_excel .
     METHODS get_sxml_reader
       IMPORTING
         !iv_path         TYPE string

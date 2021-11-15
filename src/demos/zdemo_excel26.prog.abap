@@ -96,6 +96,7 @@ START-OF-SELECTION.
 *      ALV user command
 *--------------------------------------------------------------------*
 FORM user_command .
+  DATA lo_error TYPE REF TO zcx_excel.
   IF sy-ucomm = 'EXCEL'.
 
 * get save file path
@@ -118,7 +119,11 @@ FORM user_command .
                 INTO l_path.
 
 * export file to save file path
-    PERFORM export_to_excel.
+    TRY.
+        PERFORM export_to_excel.
+      CATCH zcx_excel INTO lo_error.
+        MESSAGE lo_error->get_text( ) TYPE 'E'.
+    ENDTRY.
 
   ENDIF.
 ENDFORM.                    " USER_COMMAND
@@ -129,6 +134,7 @@ ENDFORM.                    " USER_COMMAND
 * This subroutine is principal demo session
 *--------------------------------------------------------------------*
 FORM export_to_excel RAISING zcx_excel.
+  DATA: lo_error TYPE REF TO zcx_excel.
 * create zcl_excel_worksheet object
 
   CREATE OBJECT lo_excel.
@@ -143,10 +149,13 @@ FORM export_to_excel RAISING zcx_excel.
           i_top       = 2
           i_left      = 1
              ).
-    CATCH zcx_excel .
+
+      PERFORM write_file.
+
+    CATCH zcx_excel INTO lo_error.
+      MESSAGE lo_error->get_text( ) TYPE 'E'.
   ENDTRY.
 
-  PERFORM write_file.
 
 ENDFORM.                    "EXPORT_TO_EXCEL
 *&---------------------------------------------------------------------*
@@ -157,7 +166,7 @@ ENDFORM.                    "EXPORT_TO_EXCEL
 *  -->  p1        text
 *  <--  p2        text
 *----------------------------------------------------------------------*
-FORM write_file .
+FORM write_file RAISING zcx_excel.
   DATA: lt_file     TYPE solix_tab,
         l_bytecount TYPE i,
         l_file      TYPE xstring.

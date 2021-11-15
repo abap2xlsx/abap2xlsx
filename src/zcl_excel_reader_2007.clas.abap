@@ -254,7 +254,9 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS load_worksheet_autofilter
       IMPORTING
         io_ixml_worksheet TYPE REF TO if_ixml_document
-        io_worksheet      TYPE REF TO zcl_excel_worksheet.
+        io_worksheet      TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel.
     METHODS load_worksheet_pagemargins
       IMPORTING
         !io_ixml_worksheet TYPE REF TO if_ixml_document
@@ -276,7 +278,9 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS load_theme
       IMPORTING
         VALUE(iv_path) TYPE string
-        !ip_excel      TYPE REF TO zcl_excel .
+        !ip_excel      TYPE REF TO zcl_excel
+      RAISING
+        zcx_excel .
   PRIVATE SECTION.
 
     DATA zip TYPE REF TO lcl_zip_archive .
