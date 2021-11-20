@@ -19,7 +19,10 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
       f_cut        TYPE REF TO zcl_excel_common.  "class under test
 
     METHODS: setup.
-    METHODS: convert_column2alpha FOR TESTING.
+    METHODS: convert_column2alpha_simple FOR TESTING.
+    METHODS: convert_column2alpha_maxcol FOR TESTING.
+    METHODS: convert_column2alpha_last FOR TESTING.
+    METHODS: convert_column2alpha_oob FOR TESTING.
     METHODS convert_column2int_basic FOR TESTING.
     METHODS convert_column2int_maxcol FOR TESTING.
     METHODS convert_column2int_oob_empty FOR TESTING.
@@ -118,7 +121,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.       "setup
 
 
-  METHOD convert_column2alpha.
+  METHOD convert_column2alpha_simple.
 * ============================
     DATA ep_column TYPE zexcel_cell_column_alpha.
 
@@ -138,6 +141,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2alpha_simple
+
+
+  METHOD convert_column2alpha_maxcol.
+* ============================
+    DATA ep_column TYPE zexcel_cell_column_alpha.
 
 * Test 2. Max column for OXML #16,384 = XFD
     TRY.
@@ -155,6 +164,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2alpha_maxcol
+
+
+  METHOD convert_column2alpha_last.
+* ============================
+    DATA ep_column TYPE zexcel_cell_column_alpha.
 
 * Test 3. Index 0 is out of bounds
     TRY.
@@ -172,6 +187,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=>fatal
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2alpha_last
+
+
+  METHOD convert_column2alpha_oob.
+* ============================
+    DATA ep_column TYPE zexcel_cell_column_alpha.
 
 * Test 4. Exception should be thrown index out of bounds
     TRY.
@@ -191,7 +212,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=>tolerable
         ).
     ENDTRY.
-  ENDMETHOD.       "convert_Column2alpha
+  ENDMETHOD.       "convert_Column2alpha_oob
 
 
   METHOD convert_column2int_basic.
