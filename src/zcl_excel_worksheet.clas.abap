@@ -357,7 +357,8 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS get_default_column
       RETURNING
         VALUE(eo_column) TYPE REF TO zcl_excel_column
-      RAISING zcx_excel.
+      RAISING
+        zcx_excel.
     METHODS get_default_excel_date_format
       RETURNING
         VALUE(ep_default_excel_date_format) TYPE zexcel_number_format .

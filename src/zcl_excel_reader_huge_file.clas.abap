@@ -69,7 +69,8 @@ CLASS zcl_excel_reader_huge_file DEFINITION
       IMPORTING
         !io_worksheet TYPE REF TO zcl_excel_worksheet
         !is_cell      TYPE t_cell
-      RAISING zcx_excel.
+      RAISING
+        zcx_excel.
     METHODS get_shared_string
       IMPORTING
         !iv_index       TYPE any

@@ -60,14 +60,14 @@ INCLUDE zdemo_excel_outputopt_incl.
 
 START-OF-SELECTION.
   DATA: lo_error   TYPE REF TO zcx_excel,
-        ls_message TYPE string.
+        lv_message TYPE string.
 
   CREATE OBJECT lo_app.
   TRY.
   lo_app->main( ).
     CATCH zcx_excel INTO lo_error.
-        ls_message = lo_error->get_text( ).
-        MESSAGE ls_message TYPE 'E'.
+      lv_message = lo_error->get_text( ).
+      MESSAGE lv_message TYPE 'I' DISPLAY LIKE 'E'.
   ENDTRY.
 
 

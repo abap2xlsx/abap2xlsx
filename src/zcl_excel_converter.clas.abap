@@ -41,8 +41,8 @@ CLASS zcl_excel_converter DEFINITION
       RETURNING
         VALUE(rs_option) TYPE zexcel_s_converter_option .
     METHODS open_file
-              RAISING
-                zcx_excel .
+      RAISING
+        zcx_excel .
     METHODS set_option
       IMPORTING
         !is_option TYPE zexcel_s_converter_option .

@@ -98,7 +98,7 @@ START-OF-SELECTION.
 *--------------------------------------------------------------------*
 FORM user_command .
   DATA: lo_error   TYPE REF TO zcx_excel,
-        ls_message TYPE string.
+        lv_message TYPE string.
 
 * get save file path
       cl_gui_frontend_services=>get_sapgui_workdir( CHANGING sapworkdir = l_path ).
@@ -135,8 +135,8 @@ FORM user_command .
   ENDCASE.
 
     CATCH zcx_excel INTO lo_error.
-        ls_message = lo_error->get_text( ).
-        MESSAGE ls_message TYPE 'E'.
+      lv_message = lo_error->get_text( ).
+      MESSAGE lv_message TYPE 'I' DISPLAY LIKE 'E'.
   ENDTRY.
 
 ENDFORM.                    " USER_COMMAND
