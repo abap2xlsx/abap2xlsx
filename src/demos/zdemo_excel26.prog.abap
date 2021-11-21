@@ -121,7 +121,7 @@ FORM user_command .
 
 * export file to save file path
     TRY.
-        PERFORM export_to_excel.
+    PERFORM export_to_excel.
       CATCH zcx_excel INTO lo_error.
         ls_message = lo_error->get_text( ).
         MESSAGE ls_message TYPE 'E'.

@@ -79,9 +79,9 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
     CREATE OBJECT lo_excel.
 
     TRY.
-        CREATE OBJECT f_cut
-          EXPORTING
-            ip_excel = lo_excel.
+    CREATE OBJECT f_cut
+      EXPORTING
+        ip_excel = lo_excel.
       CATCH zcx_excel.
         cl_abap_unit_assert=>fail( 'Could not create instance' ).
     ENDTRY.

@@ -33,20 +33,20 @@ ENDCLASS.                     "lcl_handle_events IMPLEMENTATION
 * DATA DECLARATION
 *--------------------------------------------------------------------*
 
-DATA: lo_excel     TYPE REF TO zcl_excel,
-      lo_worksheet TYPE REF TO zcl_excel_worksheet,
-      lo_salv      TYPE REF TO cl_salv_table,
-      gr_events    TYPE REF TO lcl_handle_events,
-      lr_events    TYPE REF TO cl_salv_events_table,
-      gt_sbook     TYPE TABLE OF sbook.
+DATA: lo_excel          TYPE REF TO zcl_excel,
+      lo_worksheet      TYPE REF TO zcl_excel_worksheet,
+      lo_salv           TYPE REF TO cl_salv_table,
+      gr_events         TYPE REF TO lcl_handle_events,
+      lr_events         TYPE REF TO cl_salv_events_table,
+      gt_sbook          TYPE TABLE OF sbook.
 
 DATA: l_path            TYPE string,  " local dir
       lv_workdir        TYPE string,
       lv_file_separator TYPE c.
 
 CONSTANTS:
-  lv_default_file_name  TYPE string VALUE '32_Export_ALV.xlsx',
-  lv_default_file_name2 TYPE string VALUE '32_Export_Convert.xlsx'.
+      lv_default_file_name TYPE string VALUE '32_Export_ALV.xlsx',
+      lv_default_file_name2 TYPE string VALUE '32_Export_Convert.xlsx'.
 *--------------------------------------------------------------------*
 *START-OF-SELECTION
 *--------------------------------------------------------------------*
@@ -96,43 +96,43 @@ START-OF-SELECTION.
 *&---------------------------------------------------------------------*
 *      ALV user command
 *--------------------------------------------------------------------*
-FORM user_command.
+FORM user_command .
   DATA: lo_error   TYPE REF TO zcx_excel,
         ls_message TYPE string.
 
 * get save file path
-  cl_gui_frontend_services=>get_sapgui_workdir( CHANGING sapworkdir = l_path ).
-  cl_gui_cfw=>flush( ).
-  cl_gui_frontend_services=>directory_browse(
-    EXPORTING initial_folder = l_path
-    CHANGING selected_folder = l_path ).
+      cl_gui_frontend_services=>get_sapgui_workdir( CHANGING sapworkdir = l_path ).
+      cl_gui_cfw=>flush( ).
+      cl_gui_frontend_services=>directory_browse(
+        EXPORTING initial_folder = l_path
+        CHANGING selected_folder = l_path ).
 
-  IF l_path IS INITIAL.
-    cl_gui_frontend_services=>get_sapgui_workdir(
-      CHANGING sapworkdir = lv_workdir ).
-    l_path = lv_workdir.
-  ENDIF.
+      IF l_path IS INITIAL.
+        cl_gui_frontend_services=>get_sapgui_workdir(
+          CHANGING sapworkdir = lv_workdir ).
+        l_path = lv_workdir.
+      ENDIF.
 
-  cl_gui_frontend_services=>get_file_separator(
-    CHANGING file_separator = lv_file_separator ).
+      cl_gui_frontend_services=>get_file_separator(
+        CHANGING file_separator = lv_file_separator ).
 
 
 
 * export file to save file path
   TRY.
-      CASE sy-ucomm.
-        WHEN 'EXCELBIND'.
-          CONCATENATE l_path lv_file_separator lv_default_file_name
-                      INTO l_path.
-          PERFORM export_to_excel_bind.
+  CASE sy-ucomm.
+    WHEN 'EXCELBIND'.
+      CONCATENATE l_path lv_file_separator lv_default_file_name
+                  INTO l_path.
+      PERFORM export_to_excel_bind.
 
-        WHEN 'EXCELCONV'.
+    WHEN 'EXCELCONV'.
 
-          CONCATENATE l_path lv_file_separator lv_default_file_name2
-                      INTO l_path.
-          PERFORM export_to_excel_conv.
+      CONCATENATE l_path lv_file_separator lv_default_file_name2
+                  INTO l_path.
+      PERFORM export_to_excel_conv.
 
-      ENDCASE.
+  ENDCASE.
 
     CATCH zcx_excel INTO lo_error.
         ls_message = lo_error->get_text( ).
@@ -225,7 +225,7 @@ FORM write_file RAISING zcx_excel.
       RECEIVING
         et_solix   = lt_file.
 
-    l_bytecount = xstrlen( l_file ).
+    l_bytecount = XSTRLEN( l_file ).
   ELSE.
     " Convert to binary
     CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
