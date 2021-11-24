@@ -10,7 +10,9 @@ REPORT zdemo_excel27.
 
 CLASS lcl_app DEFINITION.
   PUBLIC SECTION.
-    METHODS main.
+    METHODS main
+      RAISING
+        zcx_excel.
   PRIVATE SECTION.
     METHODS conditional_formatting_cellis
       IMPORTING
@@ -20,14 +22,18 @@ CLASS lcl_app DEFINITION.
         op     TYPE zexcel_condition_operator
         f      TYPE zexcel_style_formula
         f2     TYPE zexcel_style_formula
-        numfmt TYPE string.
+        numfmt TYPE string
+      RAISING
+        zcx_excel.
     METHODS conditional_formatting_textfun
       IMPORTING
         column TYPE simple
         row    TYPE zexcel_cell_row
         txtfun TYPE zcl_excel_style_cond=>tv_textfunction
         text   TYPE string
-        numfmt TYPE string.
+        numfmt TYPE string
+      RAISING
+        zcx_excel.
 ENDCLASS.
 
 CONSTANTS: c_fish       TYPE string VALUE 'Fish'.
@@ -53,8 +59,16 @@ INCLUDE zdemo_excel_outputopt_incl.
 
 
 START-OF-SELECTION.
+  DATA: lo_error   TYPE REF TO zcx_excel,
+        lv_message TYPE string.
+
   CREATE OBJECT lo_app.
+  TRY.
   lo_app->main( ).
+    CATCH zcx_excel INTO lo_error.
+      lv_message = lo_error->get_text( ).
+      MESSAGE lv_message TYPE 'I' DISPLAY LIKE 'E'.
+  ENDTRY.
 
 
 CLASS lcl_app IMPLEMENTATION.

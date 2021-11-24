@@ -48,13 +48,17 @@ CLASS zcl_excel_writer_2007 DEFINITION
         !io_document                   TYPE REF TO if_ixml_document
         !io_worksheet                  TYPE REF TO zcl_excel_worksheet
       RETURNING
-        VALUE(rv_ixml_sheet_data_root) TYPE REF TO if_ixml_element .
+        VALUE(rv_ixml_sheet_data_root) TYPE REF TO if_ixml_element
+      RAISING
+        zcx_excel .
     METHODS add_further_data_to_zip
       IMPORTING
         !io_zip TYPE REF TO cl_abap_zip .
     METHODS create
       RETURNING
-        VALUE(ep_excel) TYPE xstring .
+        VALUE(ep_excel) TYPE xstring
+      RAISING
+        zcx_excel .
     METHODS create_content_types
       RETURNING
         VALUE(ep_content) TYPE xstring .
@@ -108,7 +112,9 @@ CLASS zcl_excel_writer_2007 DEFINITION
       IMPORTING
         !io_worksheet     TYPE REF TO zcl_excel_worksheet
       RETURNING
-        VALUE(ep_content) TYPE xstring .
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
     METHODS create_xl_relationships
       RETURNING
         VALUE(ep_content) TYPE xstring .
@@ -161,13 +167,17 @@ CLASS zcl_excel_writer_2007 DEFINITION
       IMPORTING
         !io_table         TYPE REF TO zcl_excel_table
       RETURNING
-        VALUE(ep_content) TYPE xstring .
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
     METHODS create_xl_theme
       RETURNING
         VALUE(ep_content) TYPE xstring .
     METHODS create_xl_workbook
       RETURNING
-        VALUE(ep_content) TYPE xstring .
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
     METHODS get_shared_string_index
       IMPORTING
         !ip_cell_value  TYPE zexcel_cell_value

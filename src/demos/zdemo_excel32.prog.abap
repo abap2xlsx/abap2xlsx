@@ -97,6 +97,8 @@ START-OF-SELECTION.
 *      ALV user command
 *--------------------------------------------------------------------*
 FORM user_command .
+  DATA: lo_error   TYPE REF TO zcx_excel,
+        lv_message TYPE string.
 
 * get save file path
       cl_gui_frontend_services=>get_sapgui_workdir( CHANGING sapworkdir = l_path ).
@@ -117,6 +119,7 @@ FORM user_command .
 
 
 * export file to save file path
+  TRY.
   CASE sy-ucomm.
     WHEN 'EXCELBIND'.
       CONCATENATE l_path lv_file_separator lv_default_file_name
@@ -130,6 +133,12 @@ FORM user_command .
       PERFORM export_to_excel_conv.
 
   ENDCASE.
+
+    CATCH zcx_excel INTO lo_error.
+      lv_message = lo_error->get_text( ).
+      MESSAGE lv_message TYPE 'I' DISPLAY LIKE 'E'.
+  ENDTRY.
+
 ENDFORM.                    " USER_COMMAND
 *--------------------------------------------------------------------*
 * FORM EXPORT_TO_EXCEL_CONV
@@ -193,7 +202,7 @@ ENDFORM.                    "EXPORT_TO_EXCEL_BIND
 *  -->  p1        text
 *  <--  p2        text
 *----------------------------------------------------------------------*
-FORM write_file .
+FORM write_file RAISING zcx_excel.
   DATA: lt_file     TYPE solix_tab,
         l_bytecount TYPE i,
         l_file      TYPE xstring.
