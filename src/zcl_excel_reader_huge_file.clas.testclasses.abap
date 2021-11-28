@@ -25,6 +25,7 @@ CLASS lcl_test DEFINITION FOR TESTING
       test_formula FOR TESTING RAISING cx_static_check,
       test_read_shared_strings FOR TESTING RAISING cx_static_check,
       test_shared_string_some_empty FOR TESTING RAISING cx_static_check,
+      test_shared_string_multi_style FOR TESTING RAISING cx_static_check,
       test_skip_to_inexistent FOR TESTING RAISING cx_static_check,
       get_reader IMPORTING iv_xml TYPE string RETURNING VALUE(eo_reader) TYPE REF TO if_sxml_reader,
       assert_value_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_value TYPE string,
@@ -222,6 +223,29 @@ CLASS lcl_test IMPLEMENTATION.
      `Alpha` TO lt_exp,
      ``      TO lt_exp,
      `Bravo` TO lt_exp.
+
+    lt_act = out->read_shared_strings( lo_reader ).
+
+    cl_abap_unit_assert=>assert_equals( act = lt_act
+                   exp = lt_exp ).
+
+  ENDMETHOD.
+
+*
+  METHOD test_shared_string_multi_style.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lt_act    TYPE stringtab,
+          lt_exp    TYPE stringtab.
+    lo_reader = cl_sxml_string_reader=>create( cl_abap_codepage=>convert_to(
+      `<sst>` &&
+      `<si><t>Cell A2</t></si>` &&
+      `<si><r><t>the following coloured part</t></r><r><rPr><sz val="11"/><color rgb="FFFF0000"/><rFont val="Calibri"/><family val="2"/><scheme val="minor"/></rPr><t xml:space="preserve"> will disappear</t></r></si>` &&
+      `<si><t>Cell A3</t></si>` &&
+      `</sst>` ) ).
+    APPEND :
+     `Cell A2` TO lt_exp,
+     `the following coloured part will disappear` TO lt_exp,
+     `Cell A3` TO lt_exp.
 
     lt_act = out->read_shared_strings( lo_reader ).
 
