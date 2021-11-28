@@ -28,7 +28,7 @@ CLASS zcl_excel_reader_huge_file DEFINITION
       BEGIN OF t_cell.
         INCLUDE TYPE t_cell_coord AS coord.
         INCLUDE TYPE t_cell_content AS content.
-      TYPES: END OF t_cell .
+    TYPES: END OF t_cell .
 
     INTERFACE if_sxml_node LOAD .
     CONSTANTS c_end_of_stream TYPE if_sxml_node=>node_type VALUE if_sxml_node=>co_nt_final. "#EC NOTEXT

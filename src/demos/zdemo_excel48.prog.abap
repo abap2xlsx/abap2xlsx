@@ -6,15 +6,15 @@
 REPORT zdemo_excel48.
 
 DATA:
-  lo_excel                TYPE REF TO zcl_excel,
-  lo_worksheet            TYPE REF TO zcl_excel_worksheet,
-  lo_style_1              TYPE REF TO zcl_excel_style,
-  lo_style_2              TYPE REF TO zcl_excel_style,
-  lv_style_1_guid         TYPE zexcel_cell_style,
-  lv_style_2_guid         TYPE zexcel_cell_style,
-  lv_value                TYPE string,
-  ls_rtf                  TYPE zexcel_s_rtf,
-  lt_rtf                  TYPE zexcel_t_rtf.
+  lo_excel        TYPE REF TO zcl_excel,
+  lo_worksheet    TYPE REF TO zcl_excel_worksheet,
+  lo_style_1      TYPE REF TO zcl_excel_style,
+  lo_style_2      TYPE REF TO zcl_excel_style,
+  lv_style_1_guid TYPE zexcel_cell_style,
+  lv_style_2_guid TYPE zexcel_cell_style,
+  lv_value        TYPE string,
+  ls_rtf          TYPE zexcel_s_rtf,
+  lt_rtf          TYPE zexcel_t_rtf.
 
 
 CONSTANTS:

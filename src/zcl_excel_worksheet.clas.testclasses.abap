@@ -40,7 +40,7 @@ CLASS ltc_check_cell_column_formula DEFINITION FOR TESTING
     METHODS: setup.
     METHODS: should_fail
       IMPORTING
-        ip_formula_id   TYPE zexcel_s_cell_data-column_formula_id
+        ip_formula_id TYPE zexcel_s_cell_data-column_formula_id
         ip_formula    TYPE zexcel_s_cell_data-cell_formula OPTIONAL
         ip_value      TYPE zexcel_s_cell_data-cell_value OPTIONAL
         ip_row        TYPE zexcel_s_cell_data-cell_row
