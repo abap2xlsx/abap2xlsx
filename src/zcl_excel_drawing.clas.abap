@@ -131,9 +131,9 @@ CLASS zcl_excel_drawing DEFINITION
     DATA type TYPE zexcel_drawing_type VALUE type_image. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  . " .
     DATA index TYPE string .
     DATA anchor TYPE zexcel_drawing_anchor VALUE anchor_one_cell. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  . " .
-    CONSTANTS c_media_source_www TYPE c VALUE 1.        "#EC NOTEXT
-    CONSTANTS c_media_source_xstring TYPE c VALUE 0.    "#EC NOTEXT
-    CONSTANTS c_media_source_mime TYPE c VALUE 2.       "#EC NOTEXT
+    CONSTANTS c_media_source_www TYPE c VALUE 1.            "#EC NOTEXT
+    CONSTANTS c_media_source_xstring TYPE c VALUE 0.        "#EC NOTEXT
+    CONSTANTS c_media_source_mime TYPE c VALUE 2.           "#EC NOTEXT
     DATA guid TYPE guid_16 .
     DATA media TYPE xstring .
     DATA media_key_www TYPE wwwdatatab .

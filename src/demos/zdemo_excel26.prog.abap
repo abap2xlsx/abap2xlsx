@@ -121,7 +121,7 @@ FORM user_command .
 
 * export file to save file path
     TRY.
-    PERFORM export_to_excel.
+        PERFORM export_to_excel.
       CATCH zcx_excel INTO lo_error.
         lv_message = lo_error->get_text( ).
         MESSAGE lv_message TYPE 'I' DISPLAY LIKE 'E'.
@@ -146,12 +146,12 @@ FORM export_to_excel RAISING zcx_excel.
   lo_worksheet->set_title( ip_title = 'Sheet1' ).
 
 * write to excel using method Bin_object
-      lo_worksheet->bind_alv(
-          io_alv      = lo_salv
-          it_table    = gt_sbook
-          i_top       = 2
-          i_left      = 1
-             ).
+  lo_worksheet->bind_alv(
+      io_alv      = lo_salv
+      it_table    = gt_sbook
+      i_top       = 2
+      i_left      = 1
+         ).
 
   PERFORM write_file.
 

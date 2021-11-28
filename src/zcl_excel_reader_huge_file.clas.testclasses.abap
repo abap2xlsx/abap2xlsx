@@ -1,133 +1,133 @@
 *"* use this source file for your ABAP unit test classes
-class lcl_test definition deferred.
-class zcl_excel_reader_huge_file definition local friends lcl_test.
+CLASS lcl_test DEFINITION DEFERRED.
+CLASS zcl_excel_reader_huge_file DEFINITION LOCAL FRIENDS lcl_test.
 
 *
-class lcl_test definition for testing
-      risk level harmless
-      duration short.
+CLASS lcl_test DEFINITION FOR TESTING
+      RISK LEVEL HARMLESS
+      DURATION SHORT.
 
-  private section.
-    data:
-      out type ref to zcl_excel_reader_huge_file, " object under test
-      excel type ref to zcl_excel,
-      worksheet type ref to zcl_excel_worksheet.
-    methods:
-      setup raising cx_static_check,
-      test_number for testing raising cx_static_check,
-      test_shared_string for testing raising cx_static_check,
-      test_shared_string_missing for testing raising cx_static_check,
-      test_inline_string for testing raising cx_static_check,
-      test_empty_cells for testing raising cx_static_check,
-      test_boolean for testing raising cx_static_check,
-      test_style for testing raising cx_static_check,
-      test_style_missing for testing raising cx_static_check,
-      test_formula for testing raising cx_static_check,
-      test_read_shared_strings for testing raising cx_static_check,
-      test_shared_string_some_empty for testing raising cx_static_check,
-      test_skip_to_inexistent for testing raising cx_static_check,
-      get_reader importing iv_xml type string returning value(eo_reader) type ref to if_sxml_reader,
-      assert_value_equals importing iv_row type i default 1 iv_col type i default 1 iv_value type string,
-      assert_formula_equals importing iv_row type i default 1 iv_col type i default 1 iv_formula type string,
-      assert_style_equals importing iv_row type i default 1 iv_col type i default 1 iv_style type ZEXCEL_CELL_STYLE,
-      assert_datatype_equals importing iv_row type i default 1 iv_col type i default 1 iv_datatype type string.
+  PRIVATE SECTION.
+    DATA:
+      out       TYPE REF TO zcl_excel_reader_huge_file, " object under test
+      excel     TYPE REF TO zcl_excel,
+      worksheet TYPE REF TO zcl_excel_worksheet.
+    METHODS:
+      setup RAISING cx_static_check,
+      test_number FOR TESTING RAISING cx_static_check,
+      test_shared_string FOR TESTING RAISING cx_static_check,
+      test_shared_string_missing FOR TESTING RAISING cx_static_check,
+      test_inline_string FOR TESTING RAISING cx_static_check,
+      test_empty_cells FOR TESTING RAISING cx_static_check,
+      test_boolean FOR TESTING RAISING cx_static_check,
+      test_style FOR TESTING RAISING cx_static_check,
+      test_style_missing FOR TESTING RAISING cx_static_check,
+      test_formula FOR TESTING RAISING cx_static_check,
+      test_read_shared_strings FOR TESTING RAISING cx_static_check,
+      test_shared_string_some_empty FOR TESTING RAISING cx_static_check,
+      test_skip_to_inexistent FOR TESTING RAISING cx_static_check,
+      get_reader IMPORTING iv_xml TYPE string RETURNING VALUE(eo_reader) TYPE REF TO if_sxml_reader,
+      assert_value_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_value TYPE string,
+      assert_formula_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_formula TYPE string,
+      assert_style_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_style TYPE zexcel_cell_style,
+      assert_datatype_equals IMPORTING iv_row TYPE i DEFAULT 1 iv_col TYPE i DEFAULT 1 iv_datatype TYPE string.
 
-endclass.                    "lcl_test DEFINITION
-
-*
-class lcl_test implementation.
+ENDCLASS.                    "lcl_test DEFINITION
 
 *
-  method test_number.
-    data lo_reader type ref to if_sxml_reader.
+CLASS lcl_test IMPLEMENTATION.
+
+*
+  METHOD test_number.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
     lo_reader = get_reader(
       `<c r="A1" t="n"><v>17</v></c>`
       ).
     out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
     assert_value_equals( `17` ).
     assert_datatype_equals( `n` ).
-  endmethod.                    "test_shared_string
+  ENDMETHOD.                    "test_shared_string
 
 *
-  method test_shared_string.
-    data lo_reader type ref to if_sxml_reader.
-    data: ls_shared_string type zcl_excel_reader_huge_file=>t_shared_string.
+  METHOD test_shared_string.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
+    DATA: ls_shared_string TYPE zcl_excel_reader_huge_file=>t_shared_string.
     ls_shared_string-value = `Test1`.
-    append ls_shared_string to out->shared_strings.
+    APPEND ls_shared_string TO out->shared_strings.
     ls_shared_string-value = `Test2`.
-    append ls_shared_string to out->shared_strings.
+    APPEND ls_shared_string TO out->shared_strings.
     lo_reader = get_reader(
       `<c r="A1" t="s"><v>1</v></c>`
       ).
     out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
     assert_value_equals( `Test2` ).
     assert_datatype_equals( `s` ).
-  endmethod.                    "test_shared_string
+  ENDMETHOD.                    "test_shared_string
 *
-  method test_shared_string_missing.
+  METHOD test_shared_string_missing.
 
-    data: lo_reader type ref to if_sxml_reader,
-          lo_ex type ref to lcx_not_found,
-          lv_text type string.
-    data: ls_shared_string type zcl_excel_reader_huge_file=>t_shared_string.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string.
+    DATA: ls_shared_string TYPE zcl_excel_reader_huge_file=>t_shared_string.
     ls_shared_string-value = `Test`.
-    append ls_shared_string to out->shared_strings.
+    APPEND ls_shared_string TO out->shared_strings.
     lo_reader = get_reader(
       `<c r="A1" t="s"><v>1</v></c>`
       ).
 
-    try.
+    TRY.
         out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-        CL_ABAP_UNIT_ASSERT=>fail( `Index to non-existent shared string should give an error` ).
-      catch lcx_not_found into lo_ex.
+        cl_abap_unit_assert=>fail( `Index to non-existent shared string should give an error` ).
+      CATCH lcx_not_found INTO lo_ex.
         lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
-    endtry.
+    ENDTRY.
 
-  endmethod.
+  ENDMETHOD.
 *
-  method test_inline_string.
-    data lo_reader type ref to if_sxml_reader.
+  METHOD test_inline_string.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
     lo_reader = get_reader(
       `<c r="A1" t="inlineStr"><is><t>Alpha</t></is></c>`
       ).
     out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
     assert_value_equals( `Alpha` ).
     assert_datatype_equals( `inlineStr` ).
-  endmethod.                    "test_inline_string
+  ENDMETHOD.                    "test_inline_string
 
 *
-  method test_boolean.
-    data lo_reader type ref to if_sxml_reader.
+  METHOD test_boolean.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
     lo_reader = get_reader(
       `<c r="A1" t="b"><v>1</v></c>`
       ).
     out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
     assert_value_equals( `1` ).
     assert_datatype_equals( `b` ).
-  endmethod.                    "test_boolean
+  ENDMETHOD.                    "test_boolean
 
 *
-  method test_formula.
-    data lo_reader type ref to if_sxml_reader.
+  METHOD test_formula.
+    DATA lo_reader TYPE REF TO if_sxml_reader.
     lo_reader = get_reader(
       `<c r="A1" t="n"><f>A2*A2</f></c>`
       ).
     out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
     assert_formula_equals( `A2*A2` ).
     assert_datatype_equals( `n` ).
-  endmethod.                    "test_formula
+  ENDMETHOD.                    "test_formula
 
 *
-  method test_empty_cells.
+  METHOD test_empty_cells.
 
 * There is no need to store an empty cell in the ABAP worksheet structure
 
-    data: lo_reader type ref to if_sxml_reader.
-    data: ls_shared_string type zcl_excel_reader_huge_file=>t_shared_string.
+    DATA: lo_reader TYPE REF TO if_sxml_reader.
+    DATA: ls_shared_string TYPE zcl_excel_reader_huge_file=>t_shared_string.
     ls_shared_string-value = ``.
-    append ls_shared_string to out->shared_strings.
+    APPEND ls_shared_string TO out->shared_strings.
     ls_shared_string-value = `t`.
-    append ls_shared_string to out->shared_strings.
+    APPEND ls_shared_string TO out->shared_strings.
     lo_reader = get_reader(
       `<c r="A1" t="s"><v>0</v></c>` &
       `<c r="A2" t="inlineStr"><is><t></t></is></c>` &
@@ -140,17 +140,17 @@ class lcl_test implementation.
     assert_value_equals( iv_row = 2 iv_col = 1 iv_value = `` ).
     assert_value_equals( iv_row = 3 iv_col = 1 iv_value = `t` ).
 
-  endmethod.
+  ENDMETHOD.
 
 *
-  method test_style.
-    data:
-      lo_reader type ref to if_sxml_reader,
-      lo_style  type ref to zcl_excel_style,
-      lv_guid type ZEXCEL_CELL_STYLE.
-      create object lo_style.
-      append lo_style to out->styles.
-      lv_guid = lo_style->get_guid( ).
+  METHOD test_style.
+    DATA:
+      lo_reader TYPE REF TO if_sxml_reader,
+      lo_style  TYPE REF TO zcl_excel_style,
+      lv_guid   TYPE zexcel_cell_style.
+    CREATE OBJECT lo_style.
+    APPEND lo_style TO out->styles.
+    lv_guid = lo_style->get_guid( ).
 
     lo_reader = get_reader(
       `<c r="A1" s="0"><v>18</v></c>`
@@ -159,173 +159,173 @@ class lcl_test implementation.
 
     assert_style_equals( lv_guid ).
 
-  endmethod.                    "test_style
+  ENDMETHOD.                    "test_style
 
 *
-  method test_style_missing.
+  METHOD test_style_missing.
 
-    data:
-      lo_reader type ref to if_sxml_reader,
-      lo_ex type ref to lcx_not_found,
-      lv_text type string.
+    DATA:
+      lo_reader TYPE REF TO if_sxml_reader,
+      lo_ex     TYPE REF TO lcx_not_found,
+      lv_text   TYPE string.
 
     lo_reader = get_reader(
       `<c r="A1" s="0"><v>18</v></c>`
       ).
 
-    try.
+    TRY.
         out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-        CL_ABAP_UNIT_ASSERT=>fail( `Reference to non-existent style should throw an lcx_not_found exception` ).
-      catch lcx_not_found into lo_ex.
+        cl_abap_unit_assert=>fail( `Reference to non-existent style should throw an lcx_not_found exception` ).
+      CATCH lcx_not_found INTO lo_ex.
         lv_text = lo_ex->get_text( ).  " >>> May inspect the message in the debugger
-    endtry.
+    ENDTRY.
 
-  endmethod.                    "test_style
+  ENDMETHOD.                    "test_style
 
 *
-  method test_read_shared_strings.
-    data: lo_c2x type ref to cl_abap_conv_out_ce,
-          lv_xstring type xstring,
-          lo_reader type ref to if_sxml_reader,
-          lt_act type stringtab,
-          lt_exp type stringtab.
+  METHOD test_read_shared_strings.
+    DATA: lo_c2x     TYPE REF TO cl_abap_conv_out_ce,
+          lv_xstring TYPE xstring,
+          lo_reader  TYPE REF TO if_sxml_reader,
+          lt_act     TYPE stringtab,
+          lt_exp     TYPE stringtab.
 
     lo_c2x = cl_abap_conv_out_ce=>create( ).
-    lo_c2x->convert( exporting data   = `<sst><si><t/></si><si><t>Alpha</t></si><si><t>Bravo</t></si></sst>`
-                     importing buffer = lv_xstring ).
+    lo_c2x->convert( EXPORTING data   = `<sst><si><t/></si><si><t>Alpha</t></si><si><t>Bravo</t></si></sst>`
+                     IMPORTING buffer = lv_xstring ).
     lo_reader = cl_sxml_string_reader=>create( lv_xstring ).
-    append :
-     `` to lt_exp,
-     `Alpha` to lt_exp,
-     `Bravo` to lt_exp.
+    APPEND :
+     `` TO lt_exp,
+     `Alpha` TO lt_exp,
+     `Bravo` TO lt_exp.
 
     lt_act = out->read_shared_strings( lo_reader ).
 
-    CL_ABAP_UNIT_ASSERT=>assert_equals( act = lt_act
+    cl_abap_unit_assert=>assert_equals( act = lt_act
                    exp = lt_exp ).
 
-  endmethod.
+  ENDMETHOD.
 
 *
-  method test_shared_string_some_empty.
-    data: lo_reader type ref to if_sxml_reader,
-          lt_act type stringtab,
-          lt_exp type stringtab.
+  METHOD test_shared_string_some_empty.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lt_act    TYPE stringtab,
+          lt_exp    TYPE stringtab.
     lo_reader = cl_sxml_string_reader=>create( cl_abap_codepage=>convert_to(
       `<sst><si><t/></si>` &
       `<si><t>Alpha</t></si>` &
       `<si><t/></si>` &
       `<si><t>Bravo</t></si></sst>`
       ) ).
-    append :
-     `` to lt_exp,
-     `Alpha` to lt_exp,
-     ``      to lt_exp,
-     `Bravo` to lt_exp.
+    APPEND :
+     `` TO lt_exp,
+     `Alpha` TO lt_exp,
+     ``      TO lt_exp,
+     `Bravo` TO lt_exp.
 
     lt_act = out->read_shared_strings( lo_reader ).
 
-    CL_ABAP_UNIT_ASSERT=>assert_equals( act = lt_act
+    cl_abap_unit_assert=>assert_equals( act = lt_act
                    exp = lt_exp ).
 
-  endmethod.
+  ENDMETHOD.
 
 
 *
-  method test_skip_to_inexistent.
-    data: lo_c2x type ref to cl_abap_conv_out_ce,
-          lv_xstring type xstring,
-          lo_reader type ref to if_sxml_reader,
-          lo_ex type ref to lcx_not_found,
-          lv_text type string.
+  METHOD test_skip_to_inexistent.
+    DATA: lo_c2x     TYPE REF TO cl_abap_conv_out_ce,
+          lv_xstring TYPE xstring,
+          lo_reader  TYPE REF TO if_sxml_reader,
+          lo_ex      TYPE REF TO lcx_not_found,
+          lv_text    TYPE string.
 
     lo_c2x = cl_abap_conv_out_ce=>create( ).
-    lo_c2x->convert( exporting data   = `<sst><si><t/></si><si><t>Alpha</t></si><si><t>Bravo</t></si></sst>`
-                     importing buffer = lv_xstring ).
+    lo_c2x->convert( EXPORTING data   = `<sst><si><t/></si><si><t>Alpha</t></si><si><t>Bravo</t></si></sst>`
+                     IMPORTING buffer = lv_xstring ).
     lo_reader = cl_sxml_string_reader=>create( lv_xstring ).
-    try.
+    TRY.
         out->skip_to( iv_element_name = `nonExistingElement` io_reader = lo_reader ).
-        CL_ABAP_UNIT_ASSERT=>fail( `Skipping to non-existing element must raise lcx_not_found exception` ).
-      catch lcx_not_found into lo_ex.
+        cl_abap_unit_assert=>fail( `Skipping to non-existing element must raise lcx_not_found exception` ).
+      CATCH lcx_not_found INTO lo_ex.
         lv_text = lo_ex->get_text( ). " May inspect exception text in debugger
-    endtry.
-  endmethod.
+    ENDTRY.
+  ENDMETHOD.
 
 *
-  method get_reader.
-    data: lv_full type string,
-          lo_c2x type ref to cl_abap_conv_out_ce,
-          lv_xstring type xstring.
-    concatenate `<root><sheetData><row>` iv_xml `</row></sheetData></root>` into lv_full.
+  METHOD get_reader.
+    DATA: lv_full    TYPE string,
+          lo_c2x     TYPE REF TO cl_abap_conv_out_ce,
+          lv_xstring TYPE xstring.
+    CONCATENATE `<root><sheetData><row>` iv_xml `</row></sheetData></root>` INTO lv_full.
     lo_c2x = cl_abap_conv_out_ce=>create( ).
-    lo_c2x->convert( exporting data   = lv_full
-                     importing buffer = lv_xstring ).
+    lo_c2x->convert( EXPORTING data   = lv_full
+                     IMPORTING buffer = lv_xstring ).
     eo_reader = cl_sxml_string_reader=>create( lv_xstring ).
-  endmethod.                    "get_reader
+  ENDMETHOD.                    "get_reader
 *
-  method assert_value_equals.
+  METHOD assert_value_equals.
 
-    constants: lc_empty_string type string value is initial.
+    CONSTANTS: lc_empty_string TYPE string VALUE IS INITIAL.
 
-    field-symbols: <ls_cell_data> type zexcel_s_cell_data,
-                   <lv_value> type string.
+    FIELD-SYMBOLS: <ls_cell_data> TYPE zexcel_s_cell_data,
+                   <lv_value>     TYPE string.
 
-    read table worksheet->sheet_content assigning <ls_cell_data>
-      with table key cell_row = iv_row cell_column = iv_col.
-    if sy-subrc eq 0.
-      assign <ls_cell_data>-cell_value to <lv_value>.
-    else.
-      assign lc_empty_string to <lv_value>.
-    endif.
+    READ TABLE worksheet->sheet_content ASSIGNING <ls_cell_data>
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    IF sy-subrc EQ 0.
+      ASSIGN <ls_cell_data>-cell_value TO <lv_value>.
+    ELSE.
+      ASSIGN lc_empty_string TO <lv_value>.
+    ENDIF.
 
-    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <lv_value>
+    cl_abap_unit_assert=>assert_equals( act = <lv_value>
                    exp = iv_value ).
 
-  endmethod.                    "assert_value_equals
+  ENDMETHOD.                    "assert_value_equals
 **
-  method assert_formula_equals.
+  METHOD assert_formula_equals.
 
-    field-symbols: <ls_cell_data> type zexcel_s_cell_data.
+    FIELD-SYMBOLS: <ls_cell_data> TYPE zexcel_s_cell_data.
 
-    read table worksheet->sheet_content assigning <ls_cell_data>
-      with table key cell_row = iv_row cell_column = iv_col.
-    CL_ABAP_UNIT_ASSERT=>assert_subrc( sy-subrc ).
+    READ TABLE worksheet->sheet_content ASSIGNING <ls_cell_data>
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    cl_abap_unit_assert=>assert_subrc( sy-subrc ).
 
-    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <ls_cell_data>-cell_formula
+    cl_abap_unit_assert=>assert_equals( act = <ls_cell_data>-cell_formula
                    exp = iv_formula ).
 
-  endmethod.                    "assert_formula_equals
+  ENDMETHOD.                    "assert_formula_equals
 *
-  method assert_style_equals.
+  METHOD assert_style_equals.
 
-    field-symbols: <ls_cell_data> type zexcel_s_cell_data.
+    FIELD-SYMBOLS: <ls_cell_data> TYPE zexcel_s_cell_data.
 
-    read table worksheet->sheet_content assigning <ls_cell_data>
-      with table key cell_row = iv_row cell_column = iv_col.
-    CL_ABAP_UNIT_ASSERT=>assert_subrc( sy-subrc ).
+    READ TABLE worksheet->sheet_content ASSIGNING <ls_cell_data>
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    cl_abap_unit_assert=>assert_subrc( sy-subrc ).
 
-    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <ls_cell_data>-cell_style
+    cl_abap_unit_assert=>assert_equals( act = <ls_cell_data>-cell_style
                    exp = iv_style ).
 
-  endmethod.
+  ENDMETHOD.
 *
-  method assert_datatype_equals.
+  METHOD assert_datatype_equals.
 
-    field-symbols: <ls_cell_data> type zexcel_s_cell_data.
+    FIELD-SYMBOLS: <ls_cell_data> TYPE zexcel_s_cell_data.
 
-    read table worksheet->sheet_content assigning <ls_cell_data>
-      with table key cell_row = iv_row cell_column = iv_col.
-    CL_ABAP_UNIT_ASSERT=>assert_subrc( sy-subrc ).
+    READ TABLE worksheet->sheet_content ASSIGNING <ls_cell_data>
+      WITH TABLE KEY cell_row = iv_row cell_column = iv_col.
+    cl_abap_unit_assert=>assert_subrc( sy-subrc ).
 
-    CL_ABAP_UNIT_ASSERT=>assert_equals( act = <ls_cell_data>-data_type
+    cl_abap_unit_assert=>assert_equals( act = <ls_cell_data>-data_type
                    exp = iv_datatype ).
 
-  endmethod.                    "assert_datatype_equals
-  method setup.
-    create object out.
-    create object excel.
-    create object worksheet
-      exporting
+  ENDMETHOD.                    "assert_datatype_equals
+  METHOD setup.
+    CREATE OBJECT out.
+    CREATE OBJECT excel.
+    CREATE OBJECT worksheet
+      EXPORTING
         ip_excel = excel.
-  endmethod.                    "setup
-endclass.                    "lcl_test IMPLEMENTATION
+  ENDMETHOD.                    "setup
+ENDCLASS.                    "lcl_test IMPLEMENTATION
