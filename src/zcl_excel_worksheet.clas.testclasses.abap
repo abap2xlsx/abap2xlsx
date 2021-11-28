@@ -40,7 +40,7 @@ CLASS ltc_check_cell_column_formula DEFINITION FOR TESTING
     METHODS: setup.
     METHODS: should_fail
       IMPORTING
-        ip_formula_id TYPE zexcel_s_cell_data-column_formula_id
+        ip_formula_id   TYPE zexcel_s_cell_data-column_formula_id
         ip_formula    TYPE zexcel_s_cell_data-cell_formula OPTIONAL
         ip_value      TYPE zexcel_s_cell_data-cell_value OPTIONAL
         ip_row        TYPE zexcel_s_cell_data-cell_row
@@ -79,9 +79,9 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
     CREATE OBJECT lo_excel.
 
     TRY.
-    CREATE OBJECT f_cut
-      EXPORTING
-        ip_excel = lo_excel.
+        CREATE OBJECT f_cut
+          EXPORTING
+            ip_excel = lo_excel.
       CATCH zcx_excel.
         cl_abap_unit_assert=>fail( 'Could not create instance' ).
     ENDTRY.
