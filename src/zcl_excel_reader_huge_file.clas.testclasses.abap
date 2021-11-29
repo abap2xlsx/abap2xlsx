@@ -244,7 +244,7 @@ CLASS lcl_test IMPLEMENTATION.
       `</sst>` ) ).
     APPEND :
      `Cell A2` TO lt_exp,
-     `the following coloured part will disappear` TO lt_exp,
+     `the following coloured part will be preserved` TO lt_exp,
      `Cell A3` TO lt_exp.
 
     lt_act = out->read_shared_strings( lo_reader ).
