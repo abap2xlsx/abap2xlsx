@@ -239,7 +239,7 @@ CLASS lcl_test IMPLEMENTATION.
     lo_reader = cl_sxml_string_reader=>create( cl_abap_codepage=>convert_to(
       `<sst>` &&
       `<si><t>Cell A2</t></si>` &&
-      `<si><r><t>the following coloured part</t></r><r><rPr><sz val="11"/><color rgb="FFFF0000"/><rFont val="Calibri"/><family val="2"/><scheme val="minor"/></rPr><t xml:space="preserve"> will disappear</t></r></si>` &&
+      `<si><r><t>the following coloured part</t></r><r><rPr><sz val="11"/><color rgb="FFFF0000"/><rFont val="Calibri"/><family val="2"/><scheme val="minor"/></rPr><t xml:space="preserve"> will be preserved</t></r></si>` &&
       `<si><t>Cell A3</t></si>` &&
       `</sst>` ) ).
     APPEND :
