@@ -19,7 +19,10 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
       f_cut        TYPE REF TO zcl_excel_common.  "class under test
 
     METHODS: setup.
-    METHODS: convert_column2alpha FOR TESTING.
+    METHODS: convert_column2alpha_simple FOR TESTING.
+    METHODS: convert_column2alpha_maxcol FOR TESTING.
+    METHODS: convert_column2alpha_last FOR TESTING.
+    METHODS: convert_column2alpha_oob FOR TESTING.
     METHODS convert_column2int_basic FOR TESTING.
     METHODS convert_column2int_maxcol FOR TESTING.
     METHODS convert_column2int_oob_empty FOR TESTING.
@@ -53,15 +56,15 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
       RAISING
         cx_static_check.
     METHODS: calc_cell_dist_samecell FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_down1pl FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_downsome FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_up1pl FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_upsome FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_right1pl FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_rightsome FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_left1pl FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_leftsome FOR TESTING RAISING cx_static_check,
-        calc_cell_dist_fullpack FOR TESTING RAISING cx_static_check.
+      calc_cell_dist_down1pl FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_downsome FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_up1pl FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_upsome FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_right1pl FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_rightsome FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_left1pl FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_leftsome FOR TESTING RAISING cx_static_check,
+      calc_cell_dist_fullpack FOR TESTING RAISING cx_static_check.
     METHODS macro_shift_formula
       IMPORTING
         iv_reference_formula TYPE clike
@@ -69,31 +72,31 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
         iv_shift_rows        TYPE i
         iv_expected          TYPE string.
     METHODS: shift_formula_basic FOR TESTING,
-        shift_formula_rightdown FOR TESTING,
-        shift_formula_leftup FOR TESTING,
-        shift_formula_fixedcolrows FOR TESTING,
-        shift_formula_mixedfixedrows FOR TESTING,
-        shift_formula_rangename FOR TESTING,
-        shift_formula_stringlitconc FOR TESTING,
-        shift_formula_extref FOR TESTING,
-        shift_formula_charblanks FOR TESTING,
-        shift_formula_stringblanks FOR TESTING,
-        shift_formula_funcnoargs FOR TESTING,
-        shift_formula_nocellref FOR TESTING,
-        shift_formula_empty FOR TESTING,
-        shift_formula_referr_colunder FOR TESTING,
-        shift_formula_referr_rowunder FOR TESTING,
-        shift_formula_referr_rowcolund FOR TESTING,
-        shift_formula_sheet_nodigit FOR TESTING,
-        shift_formula_sheet_nodig FOR TESTING,
-        shift_formula_sheet_special FOR TESTING,
-        shift_formula_resp_blanks_1 FOR TESTING,
-        shift_formula_resp_blanks_2 FOR TESTING,
-        shift_formula_range FOR TESTING,
-        shift_formula_notcols FOR TESTING,
-        shift_formula_name FOR TESTING,
-        shift_formula_refcolumn1 FOR TESTING,
-        shift_formula_refcolumn2 FOR TESTING.
+      shift_formula_rightdown FOR TESTING,
+      shift_formula_leftup FOR TESTING,
+      shift_formula_fixedcolrows FOR TESTING,
+      shift_formula_mixedfixedrows FOR TESTING,
+      shift_formula_rangename FOR TESTING,
+      shift_formula_stringlitconc FOR TESTING,
+      shift_formula_extref FOR TESTING,
+      shift_formula_charblanks FOR TESTING,
+      shift_formula_stringblanks FOR TESTING,
+      shift_formula_funcnoargs FOR TESTING,
+      shift_formula_nocellref FOR TESTING,
+      shift_formula_empty FOR TESTING,
+      shift_formula_referr_colunder FOR TESTING,
+      shift_formula_referr_rowunder FOR TESTING,
+      shift_formula_referr_rowcolund FOR TESTING,
+      shift_formula_sheet_nodigit FOR TESTING,
+      shift_formula_sheet_nodig FOR TESTING,
+      shift_formula_sheet_special FOR TESTING,
+      shift_formula_resp_blanks_1 FOR TESTING,
+      shift_formula_resp_blanks_2 FOR TESTING,
+      shift_formula_range FOR TESTING,
+      shift_formula_notcols FOR TESTING,
+      shift_formula_name FOR TESTING,
+      shift_formula_refcolumn1 FOR TESTING,
+      shift_formula_refcolumn2 FOR TESTING.
     METHODS is_cell_in_range_ulc_in FOR TESTING.
     METHODS is_cell_in_range_lrc_in FOR TESTING.
     METHODS is_cell_in_range_leftside_out FOR TESTING.
@@ -118,7 +121,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.       "setup
 
 
-  METHOD convert_column2alpha.
+  METHOD convert_column2alpha_simple.
 * ============================
     DATA ep_column TYPE zexcel_cell_column_alpha.
 
@@ -138,6 +141,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2alpha_simple
+
+
+  METHOD convert_column2alpha_maxcol.
+* ============================
+    DATA ep_column TYPE zexcel_cell_column_alpha.
 
 * Test 2. Max column for OXML #16,384 = XFD
     TRY.
@@ -155,6 +164,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical    " Error Severity
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2alpha_maxcol
+
+
+  METHOD convert_column2alpha_last.
+* ============================
+    DATA ep_column TYPE zexcel_cell_column_alpha.
 
 * Test 3. Index 0 is out of bounds
     TRY.
@@ -172,6 +187,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=>fatal
         ).
     ENDTRY.
+  ENDMETHOD. "convert_column2alpha_last
+
+
+  METHOD convert_column2alpha_oob.
+* ============================
+    DATA ep_column TYPE zexcel_cell_column_alpha.
 
 * Test 4. Exception should be thrown index out of bounds
     TRY.
@@ -191,7 +212,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=>tolerable
         ).
     ENDTRY.
-  ENDMETHOD.       "convert_Column2alpha
+  ENDMETHOD.       "convert_Column2alpha_oob
 
 
   METHOD convert_column2int_basic.
@@ -1384,7 +1405,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_sheet_nodigit.
 
-" Sheet name not ending with digit
+    " Sheet name not ending with digit
     macro_shift_formula(
       iv_reference_formula = 'Sheet!A1'
       iv_shift_cols        = 1
@@ -1395,7 +1416,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_sheet_nodig.
 
-" Sheet name ending with digit
+    " Sheet name ending with digit
     macro_shift_formula(
       iv_reference_formula = 'Sheet2!A1'
       iv_shift_cols        = 1
@@ -1406,7 +1427,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_sheet_special.
 
-" Sheet name with special characters
+    " Sheet name with special characters
     macro_shift_formula(
       iv_reference_formula = |'Sheet name'!A1|
       iv_shift_cols        = 1
@@ -1417,7 +1438,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_resp_blanks_1.
 
-" Respecting blanks
+    " Respecting blanks
     macro_shift_formula(
       iv_reference_formula = 'SUBTOTAL(109,Table1[SUM 1])'
       iv_shift_cols        = 1
@@ -1428,7 +1449,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_resp_blanks_2.
 
-" Respecting blanks
+    " Respecting blanks
     macro_shift_formula(
       iv_reference_formula = 'B4 & C4'
       iv_shift_cols        = 0
@@ -1439,7 +1460,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_range.
 
-" F_1 is a range name, not a cell address
+    " F_1 is a range name, not a cell address
     macro_shift_formula(
       iv_reference_formula = 'SUM(F_1,F_2)'
       iv_shift_cols        = 1
@@ -1449,7 +1470,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD shift_formula_notcols.
-" RC are not columns
+    " RC are not columns
     macro_shift_formula(
       iv_reference_formula = 'INDIRECT("RC[4]",FALSE)'
       iv_shift_cols        = 1
@@ -1460,7 +1481,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_name.
 
-" A1 is a sheet name
+    " A1 is a sheet name
     macro_shift_formula(
       iv_reference_formula = |'A1'!$A$1|
       iv_shift_cols        = 1
@@ -1471,7 +1492,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_refcolumn1.
 
-" Reference to another column in the same row of a Table, with a space in the column name
+    " Reference to another column in the same row of a Table, with a space in the column name
     macro_shift_formula(
       iv_reference_formula = 'Tbl[[#This Row],[Air fare]]'
       iv_shift_cols        = 1
@@ -1482,7 +1503,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD shift_formula_refcolumn2.
 
-" Reference to another column in the same row of a Table, inside more complex expression
+    " Reference to another column in the same row of a Table, inside more complex expression
     macro_shift_formula(
       iv_reference_formula = 'Tbl[[#This Row],[Air]]+A1'
       iv_shift_cols        = 1

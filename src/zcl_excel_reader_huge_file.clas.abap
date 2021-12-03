@@ -28,7 +28,7 @@ CLASS zcl_excel_reader_huge_file DEFINITION
       BEGIN OF t_cell.
         INCLUDE TYPE t_cell_coord AS coord.
         INCLUDE TYPE t_cell_content AS content.
-      TYPES: END OF t_cell .
+    TYPES: END OF t_cell .
 
     INTERFACE if_sxml_node LOAD .
     CONSTANTS c_end_of_stream TYPE if_sxml_node=>node_type VALUE if_sxml_node=>co_nt_final. "#EC NOTEXT
@@ -68,7 +68,9 @@ CLASS zcl_excel_reader_huge_file DEFINITION
     METHODS put_cell_to_worksheet
       IMPORTING
         !io_worksheet TYPE REF TO zcl_excel_worksheet
-        !is_cell      TYPE t_cell .
+        !is_cell      TYPE t_cell
+      RAISING
+        zcx_excel.
     METHODS get_shared_string
       IMPORTING
         !iv_index       TYPE any
@@ -88,7 +90,8 @@ CLASS zcl_excel_reader_huge_file DEFINITION
         !io_reader    TYPE REF TO if_sxml_reader
         !io_worksheet TYPE REF TO zcl_excel_worksheet
       RAISING
-        lcx_not_found .
+        lcx_not_found
+        zcx_excel .
     METHODS get_sxml_reader
       IMPORTING
         !iv_path         TYPE string
@@ -246,16 +249,20 @@ CLASS zcl_excel_reader_huge_file IMPLEMENTATION.
 
     WHILE io_reader->node_type NE c_end_of_stream.
       io_reader->next_node( ).
-      IF io_reader->name EQ `t`.
-        CASE io_reader->node_type .
-          WHEN c_element_open .
-            CLEAR lv_value .
-          WHEN c_node_value .
-            lv_value = lv_value && io_reader->value .
-          WHEN c_element_close .
-            APPEND lv_value TO et_shared_strings.
-        ENDCASE .
-      ENDIF.
+      CASE io_reader->name.
+        WHEN 'si'.
+          CASE io_reader->node_type .
+            WHEN c_element_open .
+              CLEAR lv_value .
+            WHEN c_element_close .
+              APPEND lv_value TO et_shared_strings.
+          ENDCASE .
+        WHEN 't'.
+          CASE io_reader->node_type .
+            WHEN c_node_value .
+              lv_value = lv_value && io_reader->value .
+          ENDCASE .
+      ENDCASE .
     ENDWHILE.
 
   ENDMETHOD.

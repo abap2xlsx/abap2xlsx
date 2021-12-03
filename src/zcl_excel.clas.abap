@@ -147,8 +147,8 @@ CLASS zcl_excel DEFINITION
       IMPORTING
         !io_theme TYPE REF TO zcl_excel_theme .
     METHODS fill_template
-      importing
-        !iv_data TYPE REF TO ZCL_EXCEL_TEMPLATE_DATA
+      IMPORTING
+        !iv_data TYPE REF TO zcl_excel_template_data
       RAISING
         zcx_excel .
   PROTECTED SECTION.
