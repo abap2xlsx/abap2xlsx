@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+ <asx:values>
+  <DATA>
+   <GROUP_ID>github.com/sapmentors/abap2xlsx</GROUP_ID>
+   <ARTIFACT_ID>abap2xlsx</ARTIFACT_ID>
+   <VERSION>7.14.0</VERSION>
+   <REPOSITORY_TYPE>abapGit</REPOSITORY_TYPE>
+   <GIT_URL>https://github.com/sapmentors/abap2xlsx.git</GIT_URL>
+  </DATA>
+ </asx:values>
+</asx:abap>
