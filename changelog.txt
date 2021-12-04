@@ -110,12 +110,12 @@ Legend
 ! remove XFELD usage
 ! Dynamic prefill of date in zdemo_calendar
 
-2021-12-11 v7.3.0
+2020-12-11 v7.3.0
 ------------------
 * Fix in ZDEMO_EXCEL11: Field-symbol usage
 ! Update abapGit-installation.md
 
-2021-11-11 v7.2.0
+2020-11-11 v7.2.0
 ------------------
 ! Improve Documentaiton
 ! Fix package errors
