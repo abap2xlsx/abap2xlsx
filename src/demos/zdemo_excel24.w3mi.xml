@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL24</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL24 (24_Sheets_with_different_default_dat</TEXT>
+   <TEXT>abap2xlsx Demo: Multiple sheets with different default date formats</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
@@ -15,7 +15,6 @@
      <RELID>MI</RELID>
      <OBJID>ZDEMO_EXCEL24</OBJID>
      <NAME>filename</NAME>
-     <VALUE>24_Sheets_with_different_default_date_formats.xlsx</VALUE>
     </WWWPARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

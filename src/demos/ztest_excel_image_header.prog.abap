@@ -8,12 +8,11 @@
 
 REPORT ztest_excel_image_header.
 
-CLASS lcl_excel_generator DEFINITION
-  FINAL
-  CREATE PUBLIC .
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
 
   PUBLIC SECTION.
-    INTERFACES zif_demo_excel_generator.
+    METHODS zif_demo_excel_generator~get_information REDEFINITION.
+    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
 
 ENDCLASS.
 
@@ -35,9 +34,6 @@ START-OF-SELECTION.
 
 CLASS lcl_excel_generator IMPLEMENTATION.
 
-  METHOD zif_demo_excel_generator~get_next_generator.
-  ENDMETHOD.
-
   METHOD zif_demo_excel_generator~get_information.
 
     result-objid = sy-repid.
@@ -57,7 +53,9 @@ CLASS lcl_excel_generator IMPLEMENTATION.
           lv_content   TYPE xstring.
 
 
-    DATA: ls_io TYPE skwf_io.
+    DATA: ls_io    TYPE skwf_io,
+          lv_datum TYPE d,
+          lv_uzeit TYPE t.
 
     " Creates active sheet
     CREATE OBJECT lo_excel.
@@ -117,8 +115,10 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     lo_worksheet = lo_excel->add_new_worksheet( 'Sheet2' ).
 
     " Add some content otherwise the error "nothing to be printed" is shown
-    lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = sy-datum ).
-    lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = sy-uzeit ).
+    lv_datum = zcl_demo_excel_generator=>get_date_now( ).
+    lv_uzeit = zcl_demo_excel_generator=>get_time_now( ).
+    lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = lv_datum ).
+    lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = lv_uzeit ).
 
 **********************************************************************
 *** Header Left

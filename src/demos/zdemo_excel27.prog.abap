@@ -15,12 +15,11 @@ CLASS lcl_app DEFINITION.
         zcx_excel.
 ENDCLASS.
 
-CLASS lcl_excel_generator DEFINITION
-  FINAL
-  CREATE PUBLIC .
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
 
   PUBLIC SECTION.
-    INTERFACES zif_demo_excel_generator.
+    METHODS zif_demo_excel_generator~get_information REDEFINITION.
+    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
 
   PRIVATE SECTION.
     METHODS conditional_formatting_cellis
@@ -90,9 +89,6 @@ ENDCLASS.
 
 
 CLASS lcl_excel_generator IMPLEMENTATION.
-
-  METHOD zif_demo_excel_generator~get_next_generator.
-  ENDMETHOD.
 
   METHOD zif_demo_excel_generator~get_information.
 

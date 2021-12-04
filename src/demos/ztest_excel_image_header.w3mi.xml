@@ -3,7 +3,6 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZTEST_EXCEL_IMAGE_HEADER</NAME>
-   <TEXT>abap2xlsx: result of program ZTEST_EXCEL_IMAGE_HEADER (Image_Header_Footer.xlsx)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
@@ -15,7 +14,6 @@
      <RELID>MI</RELID>
      <OBJID>ZTEST_EXCEL_IMAGE_HEADER</OBJID>
      <NAME>filename</NAME>
-     <VALUE>Image_Header_Footer.xlsx</VALUE>
     </WWWPARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

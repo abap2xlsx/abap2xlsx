@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL_COMMENTS</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL_COMMENTS (Comments.xlsx)</TEXT>
+   <TEXT>abap2xlsx Demo: Hello World</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
@@ -15,7 +15,6 @@
      <RELID>MI</RELID>
      <OBJID>ZDEMO_EXCEL_COMMENTS</OBJID>
      <NAME>filename</NAME>
-     <VALUE>Comments.xlsx</VALUE>
     </WWWPARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

@@ -8,12 +8,12 @@
 
 REPORT zdemo_excel17.
 
-CLASS lcl_excel_generator DEFINITION
-  FINAL
-  CREATE PUBLIC .
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
 
   PUBLIC SECTION.
-    INTERFACES zif_demo_excel_generator.
+    METHODS zif_demo_excel_generator~get_information REDEFINITION.
+    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
+    METHODS zif_demo_excel_generator~checker_initialization REDEFINITION.
 
 ENDCLASS.
 
@@ -36,9 +36,6 @@ START-OF-SELECTION.
 
 
 CLASS lcl_excel_generator IMPLEMENTATION.
-
-  METHOD zif_demo_excel_generator~get_next_generator.
-  ENDMETHOD.
 
   METHOD zif_demo_excel_generator~get_information.
 
@@ -84,6 +81,12 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     lo_worksheet->set_cell( ip_row = 8 ip_column = 'C' ip_value = 'This cell is locked as all the others empty cell' ).
 
     result = lo_excel.
+
+  ENDMETHOD.
+
+  METHOD zif_demo_excel_generator~checker_initialization.
+
+    p_pwd = 'secret'.
 
   ENDMETHOD.
 

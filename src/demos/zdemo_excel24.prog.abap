@@ -10,12 +10,11 @@ REPORT zdemo_excel24.
 
 TYPE-POOLS: abap.
 
-CLASS lcl_excel_generator DEFINITION
-  FINAL
-  CREATE PUBLIC .
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
 
   PUBLIC SECTION.
-    INTERFACES zif_demo_excel_generator.
+    METHODS zif_demo_excel_generator~get_information REDEFINITION.
+    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
 
 ENDCLASS.
 
@@ -37,9 +36,6 @@ START-OF-SELECTION.
 
 
 CLASS lcl_excel_generator IMPLEMENTATION.
-
-  METHOD zif_demo_excel_generator~get_next_generator.
-  ENDMETHOD.
 
   METHOD zif_demo_excel_generator~get_information.
 
@@ -64,7 +60,8 @@ CLASS lcl_excel_generator IMPLEMENTATION.
           lv_workdir        TYPE string,
           lv_file_separator TYPE c.
 
-    DATA: lv_value TYPE string.
+    DATA: lv_value TYPE string,
+          lv_datum TYPE d.
 
     " Creates active sheet
     CREATE OBJECT lo_excel.
@@ -75,7 +72,8 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 1 ip_value = 'Default Date Format' ).
     " Insert current date
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 3 ip_value = 'Current Date:' ).
-    lo_worksheet->set_cell( ip_column = 'A' ip_row = 4 ip_value = sy-datum ).
+    lv_datum = zcl_demo_excel_generator=>get_date_now( ).
+    lo_worksheet->set_cell( ip_column = 'A' ip_row = 4 ip_value = lv_datum ).
 
     lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = 'Sheet2!A1' ).
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 6 ip_value = 'This is a link to the second sheet' ip_hyperlink = lo_hyperlink ).

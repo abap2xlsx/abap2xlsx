@@ -11,10 +11,12 @@
 REPORT zdemo_excel15.
 
 
-CLASS lcl_excel_generator DEFINITION.
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
 
   PUBLIC SECTION.
-    INTERFACES zif_demo_excel_generator.
+    METHODS zif_demo_excel_generator~get_information REDEFINITION.
+    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
+    METHODS zif_demo_excel_generator~get_next_generator REDEFINITION.
 
     CLASS-METHODS class_constructor.
 

@@ -7,7 +7,6 @@ CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
     METHODS zif_demo_excel_generator~checker_initialization REDEFINITION.
     METHODS zif_demo_excel_generator~get_information REDEFINITION.
     METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
-    METHODS zif_demo_excel_generator~cleanup_for_diff REDEFINITION.
 
 ENDCLASS.
 
@@ -147,97 +146,6 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     ENDLOOP.
 
     result = lo_excel.
-
-  ENDMETHOD.
-
-  METHOD zif_demo_excel_generator~cleanup_for_diff.
-
-    DATA: zip     TYPE REF TO cl_abap_zip,
-          content TYPE xstring.
-    FIELD-SYMBOLS: <file> TYPE cl_abap_zip=>t_file.
-
-    zip = super->zif_demo_excel_generator~cleanup_for_diff( xstring ).
-
-    LOOP AT zip->files ASSIGNING <file>
-        WHERE name CP 'xl/drawings/drawing*.xml'.
-      zip->get(
-        EXPORTING
-          name                    = <file>-name
-        IMPORTING
-          content                 = content
-        EXCEPTIONS
-          zip_index_error         = 1
-          zip_decompression_error = 2
-          OTHERS                  = 3 ).
-      IF sy-subrc <> 0.
-*     MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
-*                WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
-      ENDIF.
-      DATA lo_ixml TYPE REF TO if_ixml.
-      DATA lo_streamfactory TYPE REF TO if_ixml_stream_factory.
-      DATA lo_istream TYPE REF TO if_ixml_istream.
-      DATA lo_parser TYPE REF TO if_ixml_parser.
-      DATA lo_renderer TYPE REF TO if_ixml_renderer.
-      DATA lo_ostream TYPE REF TO if_ixml_ostream.
-      DATA lo_document TYPE REF TO if_ixml_document.
-      DATA lo_element TYPE REF TO if_ixml_element.
-      DATA: file_name TYPE cl_abap_zip=>t_file-name,
-            name TYPE string.
-      lo_ixml = cl_ixml=>create( ).
-      lo_streamfactory = lo_ixml->create_stream_factory( ).
-      lo_istream = lo_streamfactory->create_istream_xstring( content ).
-      lo_document = lo_ixml->create_document( ).
-      lo_parser = lo_ixml->create_parser(
-                document       = lo_document
-                istream        = lo_istream
-                stream_factory = lo_streamfactory ).
-      lo_parser->parse( ).
-*      DATA(namespace_context) = lo_document->get_namespace_context( ).
-*      DATA(prefix) = namespace_context->map_to_prefix( 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-      DATA(filter) = lo_document->create_filter_name_ns( name = 'cNvPr' namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-      DATA(iterator) = lo_document->create_iterator_filtered( filter ).
-      DO.
-        lo_element ?= iterator->get_next( ).
-        IF lo_element IS NOT BOUND.
-          EXIT.
-        ENDIF.
-*      lo_element = lo_document->find_from_name_ns( name = 'cNvPr' uri = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-*      WHILE lo_element IS BOUND.
-        name = lo_element->get_name( ).
-        data(id) = lo_element->get_attribute_ns( name = 'id' )."uri = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-        name = lo_element->get_attribute_ns( name = 'name' )."uri = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-        lo_element->set_attribute_ns( name = 'name' value = '' ).
-*        lo_element->set_attribute( name = 'name' value = '' ).
-*        lo_element ?= lo_element->get_next( ).
-*      ENDWHILE.
-      ENDDO.
-
-      CLEAR content.
-      lo_ostream = lo_streamfactory->create_ostream_xstring( content ).
-      lo_renderer = lo_ixml->create_renderer(
-                  document = lo_document
-                  ostream  = lo_ostream ).
-      lo_renderer->render( ).
-
-      TYPES: BEGIN OF ty_file,
-               name    TYPE string,
-               content TYPE xstring,
-             END OF ty_file.
-      DATA: ls_file TYPE ty_file,
-            lt_file TYPE TABLE OF ty_file.
-      ls_file-name = <file>-name.
-      ls_file-content = content.
-      APPEND ls_file TO lt_file.
-
-    ENDLOOP.
-
-    FIELD-SYMBOLS: <ls_file2> TYPE ty_file.
-    LOOP AT lt_file ASSIGNING <ls_file2>.
-      zip->delete( name = <ls_file2>-name ).
-      zip->add( name = <ls_file2>-name content = <ls_file2>-content ).
-    ENDLOOP.
-
-    result = zip.
 
   ENDMETHOD.
 
