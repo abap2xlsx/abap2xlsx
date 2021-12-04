@@ -188,7 +188,9 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
                 stream_factory = lo_streamfactory ).
       lo_parser->parse( ).
 
-      lo_filter = lo_document->create_filter_name_ns( name = 'cNvPr' namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
+      lo_filter = lo_document->create_filter_name_ns(
+                name      = 'cNvPr'
+                namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
       lo_iterator = lo_document->create_iterator_filtered( lo_filter ).
       DO.
         lo_element ?= lo_iterator->get_next( ).
