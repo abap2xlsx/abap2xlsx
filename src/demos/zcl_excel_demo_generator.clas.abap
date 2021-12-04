@@ -77,8 +77,34 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 
   METHOD zif_excel_demo_generator~cleanup_for_diff.
 
-    DATA: zip     TYPE REF TO cl_abap_zip,
-          content TYPE xstring.
+    TYPES: BEGIN OF ty_docprops_core,
+             creator          TYPE string,
+             description      TYPE string,
+             last_modified_by TYPE string,
+             created          TYPE string,
+             modified         TYPE string,
+           END OF ty_docprops_core.
+    TYPES: BEGIN OF ty_file,
+             name    TYPE string,
+             content TYPE xstring,
+           END OF ty_file.
+    DATA: zip           TYPE REF TO cl_abap_zip,
+          content       TYPE xstring,
+          docprops_core TYPE ty_docprops_core,
+          lx            TYPE REF TO cx_root.
+    DATA: ls_file          TYPE ty_file,
+          lt_file          TYPE TABLE OF ty_file,
+          lo_ixml          TYPE REF TO if_ixml,
+          lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+          lo_istream       TYPE REF TO if_ixml_istream,
+          lo_parser        TYPE REF TO if_ixml_parser,
+          lo_renderer      TYPE REF TO if_ixml_renderer,
+          lo_ostream       TYPE REF TO if_ixml_ostream,
+          lo_document      TYPE REF TO if_ixml_document,
+          lo_element       TYPE REF TO if_ixml_element,
+          filter           TYPE REF TO if_ixml_node_filter,
+          iterator         TYPE REF TO if_ixml_node_iterator.
+    FIELD-SYMBOLS: <file> TYPE cl_abap_zip=>t_file.
 
     CREATE OBJECT zip.
     zip->load(
@@ -106,18 +132,10 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 *              WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
     ENDIF.
 
-    TYPES: BEGIN OF ty_docprops_core,
-             creator          TYPE string,
-             description      TYPE string,
-             last_modified_by TYPE string,
-             created          TYPE string,
-             modified         TYPE string,
-           END OF ty_docprops_core.
-    DATA: docprops_core TYPE ty_docprops_core.
 
     TRY.
         CALL TRANSFORMATION zexcel_tr_docprops_core SOURCE XML content RESULT root = docprops_core.
-      CATCH cx_root INTO DATA(lx).
+      CATCH cx_root INTO lx.
         RETURN.
     ENDTRY.
 
@@ -143,8 +161,6 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
         name    = 'docProps/core.xml'
         content = content ).
 
-    FIELD-SYMBOLS: <file> TYPE cl_abap_zip=>t_file.
-
     LOOP AT zip->files ASSIGNING <file>
         WHERE name CP 'xl/drawings/drawing*.xml'.
 
@@ -161,18 +177,6 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 *     MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
 *                WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
       ENDIF.
-      DATA lo_ixml TYPE REF TO if_ixml.
-      DATA lo_streamfactory TYPE REF TO if_ixml_stream_factory.
-      DATA lo_istream TYPE REF TO if_ixml_istream.
-      DATA lo_parser TYPE REF TO if_ixml_parser.
-      DATA lo_renderer TYPE REF TO if_ixml_renderer.
-      DATA lo_ostream TYPE REF TO if_ixml_ostream.
-      DATA lo_document TYPE REF TO if_ixml_document.
-      DATA lo_element TYPE REF TO if_ixml_element.
-      DATA: file_name TYPE cl_abap_zip=>t_file-name,
-            name      TYPE string,
-            filter    TYPE REF TO if_ixml_node_filter,
-            iterator  TYPE REF TO if_ixml_node_iterator.
       lo_ixml = cl_ixml=>create( ).
       lo_streamfactory = lo_ixml->create_stream_factory( ).
       lo_istream = lo_streamfactory->create_istream_xstring( content ).
@@ -199,12 +203,6 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
                   ostream  = lo_ostream ).
       lo_renderer->render( ).
 
-      TYPES: BEGIN OF ty_file,
-               name    TYPE string,
-               content TYPE xstring,
-             END OF ty_file.
-      DATA: ls_file TYPE ty_file,
-            lt_file TYPE TABLE OF ty_file.
       ls_file-name = <file>-name.
       ls_file-content = content.
       APPEND ls_file TO lt_file.
