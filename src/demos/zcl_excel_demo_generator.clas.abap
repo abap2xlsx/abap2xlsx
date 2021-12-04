@@ -102,8 +102,8 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
           lo_ostream       TYPE REF TO if_ixml_ostream,
           lo_document      TYPE REF TO if_ixml_document,
           lo_element       TYPE REF TO if_ixml_element,
-          filter           TYPE REF TO if_ixml_node_filter,
-          iterator         TYPE REF TO if_ixml_node_iterator.
+          lo_filter           TYPE REF TO if_ixml_node_filter,
+          lo_iterator         TYPE REF TO if_ixml_node_iterator.
     FIELD-SYMBOLS: <file> TYPE cl_abap_zip=>t_file.
 
     CREATE OBJECT zip.
@@ -177,6 +177,7 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 *     MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
 *                WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
       ENDIF.
+
       lo_ixml = cl_ixml=>create( ).
       lo_streamfactory = lo_ixml->create_stream_factory( ).
       lo_istream = lo_streamfactory->create_istream_xstring( content ).
@@ -186,10 +187,11 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
                 istream        = lo_istream
                 stream_factory = lo_streamfactory ).
       lo_parser->parse( ).
-      filter = lo_document->create_filter_name_ns( name = 'cNvPr' namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-      iterator = lo_document->create_iterator_filtered( filter ).
+
+      lo_filter = lo_document->create_filter_name_ns( name = 'cNvPr' namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
+      lo_iterator = lo_document->create_iterator_filtered( lo_filter ).
       DO.
-        lo_element ?= iterator->get_next( ).
+        lo_element ?= lo_iterator->get_next( ).
         IF lo_element IS NOT BOUND.
           EXIT.
         ENDIF.
