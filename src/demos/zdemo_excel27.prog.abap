@@ -13,6 +13,15 @@ CLASS lcl_app DEFINITION.
     METHODS main
       RAISING
         zcx_excel.
+ENDCLASS.
+
+CLASS lcl_excel_generator DEFINITION
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    INTERFACES zif_demo_excel_generator.
+
   PRIVATE SECTION.
     METHODS conditional_formatting_cellis
       IMPORTING
@@ -34,25 +43,15 @@ CLASS lcl_app DEFINITION.
         numfmt TYPE string
       RAISING
         zcx_excel.
+    DATA: lo_excel        TYPE REF TO zcl_excel,
+          lo_worksheet    TYPE REF TO zcl_excel_worksheet,
+          lv_style_1_guid TYPE zexcel_cell_style.
+
 ENDCLASS.
 
 CONSTANTS: c_fish       TYPE string VALUE 'Fish'.
 
 DATA: lo_app             TYPE REF TO lcl_app.
-DATA: lo_excel           TYPE REF TO zcl_excel,
-      lo_worksheet       TYPE REF TO zcl_excel_worksheet,
-      lo_range           TYPE REF TO zcl_excel_range,
-      lo_data_validation TYPE REF TO zcl_excel_data_validation,
-      lo_style_1         TYPE REF TO zcl_excel_style,
-      lo_style_2         TYPE REF TO zcl_excel_style,
-      lv_style_1_guid    TYPE zexcel_cell_style,
-      lv_style_2_guid    TYPE zexcel_cell_style,
-      lv_style_guid      TYPE zexcel_cell_style,
-      ls_cellis          TYPE zexcel_conditional_cellis,
-      ls_textfunction    TYPE zcl_excel_style_cond=>ts_conditional_textfunction.
-
-
-DATA: lv_title          TYPE zexcel_sheet_title.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '27_ConditionalFormatting.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -74,6 +73,48 @@ START-OF-SELECTION.
 CLASS lcl_app IMPLEMENTATION.
 
   METHOD main.
+
+    DATA: lo_excel_generator TYPE REF TO lcl_excel_generator,
+          lo_excel           TYPE REF TO zcl_excel.
+
+    CREATE OBJECT lo_excel_generator.
+    lo_excel = lo_excel_generator->zif_demo_excel_generator~generate_excel( ).
+
+*** Create output
+    lcl_output=>output( lo_excel ).
+
+  ENDMETHOD.
+
+
+ENDCLASS.
+
+
+CLASS lcl_excel_generator IMPLEMENTATION.
+
+  METHOD zif_demo_excel_generator~get_next_generator.
+  ENDMETHOD.
+
+  METHOD zif_demo_excel_generator~get_information.
+
+    result-objid = sy-repid.
+    result-text = 'abap2xlsx Demo: Data conditional formatting with styles'.
+    result-filename = gc_save_file_name.
+
+  ENDMETHOD.
+
+  METHOD zif_demo_excel_generator~generate_excel.
+
+    DATA: "lo_excel           TYPE REF TO zcl_excel,
+      "lo_worksheet       TYPE REF TO zcl_excel_worksheet,
+      lo_range           TYPE REF TO zcl_excel_range,
+      lo_data_validation TYPE REF TO zcl_excel_data_validation,
+      lo_style_1         TYPE REF TO zcl_excel_style,
+      lo_style_2         TYPE REF TO zcl_excel_style,
+      lv_style_2_guid    TYPE zexcel_cell_style,
+      ls_cellis          TYPE zexcel_conditional_cellis.
+
+
+    DATA: lv_title          TYPE zexcel_sheet_title.
 
     DATA:
       lo_style_cond TYPE REF TO zcl_excel_style_cond,
@@ -161,8 +202,7 @@ CLASS lcl_app IMPLEMENTATION.
     conditional_formatting_textfun( column = 'E' row = 6 txtfun = zcl_excel_style_cond=>c_textfunction_endswith     text = 'p' numfmt = 'ends with p' ).
     conditional_formatting_textfun( column = 'F' row = 6 txtfun = zcl_excel_style_cond=>c_textfunction_notcontains  text = 'h' numfmt = 'not contains h' ).
 
-*** Create output
-    lcl_output=>output( lo_excel ).
+    result = lo_excel.
 
   ENDMETHOD.
 
@@ -171,7 +211,9 @@ CLASS lcl_app IMPLEMENTATION.
 
     DATA:
       lo_style      TYPE REF TO zcl_excel_style,
-      lo_style_cond TYPE REF TO zcl_excel_style_cond.
+      lv_style_guid TYPE zexcel_cell_style,
+      lo_style_cond TYPE REF TO zcl_excel_style_cond,
+      ls_cellis     TYPE zexcel_conditional_cellis.
 
     lo_style                             = lo_excel->add_new_style( ).
     lo_style->font->color-rgb            = zcl_excel_style_color=>c_white.
@@ -200,8 +242,10 @@ CLASS lcl_app IMPLEMENTATION.
   METHOD conditional_formatting_textfun.
 
     DATA:
-      lo_style      TYPE REF TO zcl_excel_style,
-      lo_style_cond TYPE REF TO zcl_excel_style_cond.
+      lo_style        TYPE REF TO zcl_excel_style,
+      lv_style_guid   TYPE zexcel_cell_style,
+      lo_style_cond   TYPE REF TO zcl_excel_style_cond,
+      ls_textfunction TYPE zcl_excel_style_cond=>ts_conditional_textfunction.
 
     lo_style                             = lo_excel->add_new_style( ).
     lo_style->font->color-rgb            = zcl_excel_style_color=>c_white.
