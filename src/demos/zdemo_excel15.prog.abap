@@ -11,18 +11,18 @@
 REPORT zdemo_excel15.
 
 
-CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_excel_demo_generator.
 
   PUBLIC SECTION.
-    METHODS zif_demo_excel_generator~get_information REDEFINITION.
-    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
-    METHODS zif_demo_excel_generator~get_next_generator REDEFINITION.
+    METHODS zif_excel_demo_generator~get_information REDEFINITION.
+    METHODS zif_excel_demo_generator~generate_excel REDEFINITION.
+    METHODS zif_excel_demo_generator~get_next_generator REDEFINITION.
 
     CLASS-METHODS class_constructor.
 
     METHODS get_sub_generator
       RETURNING
-        VALUE(result) TYPE REF TO zif_demo_excel_generator
+        VALUE(result) TYPE REF TO zif_excel_demo_generator
       RAISING
         zcx_excel.
 
@@ -30,7 +30,7 @@ CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
     TYPES: ty_class_name TYPE c LENGTH 100.
     CLASS-DATA: lt_class_names TYPE TABLE OF ty_class_name.
     DATA: index         TYPE i VALUE 1,
-          sub_generator TYPE REF TO zif_demo_excel_generator.
+          sub_generator TYPE REF TO zif_excel_demo_generator.
 
 ENDCLASS.
 
@@ -38,7 +38,7 @@ ENDCLASS.
 TYPE-POOLS: abap.
 
 DATA: lv_workdir         TYPE string,
-      go_excel_generator TYPE REF TO zif_demo_excel_generator.
+      go_excel_generator TYPE REF TO zif_excel_demo_generator.
 
 
 PARAMETERS: p_path  TYPE zexcel_export_dir,
@@ -90,7 +90,8 @@ FORM main.
         col_str        TYPE zexcel_cell_column_alpha,
         row            TYPE int4               VALUE 1,
         value          TYPE zexcel_cell_value,
-        converted_date TYPE d.
+        converted_date TYPE d,
+        info           TYPE zif_excel_demo_generator=>ty_information.
 
 
   IF p_path IS INITIAL.
@@ -105,8 +106,7 @@ FORM main.
     TRY.
 
         excel = go_excel_generator->generate_excel( ).
-
-        DATA(info) = go_excel_generator->get_information( ).
+        info = go_excel_generator->get_information( ).
         CONCATENATE p_path lv_file_separator info-filename INTO output_file_path.
 
         IF p_noout EQ abap_false.
@@ -197,7 +197,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     APPEND '\PROGRAM=ZDEMO_EXCEL8\CLASS=LCL_EXCEL_GENERATOR' TO lt_class_names.
     APPEND '\PROGRAM=ZDEMO_EXCEL13\CLASS=LCL_EXCEL_GENERATOR' TO lt_class_names.
     APPEND '\PROGRAM=ZDEMO_EXCEL24\CLASS=LCL_EXCEL_GENERATOR' TO lt_class_names.
-*    APPEND '\PROGRAM=ZDEMO_EXCEL31\CLASS=LCL_EXCEL_GENERATOR' TO lt_class_names.
+    APPEND '\PROGRAM=ZDEMO_EXCEL31\CLASS=LCL_EXCEL_GENERATOR' TO lt_class_names.
 
   ENDMETHOD.
 
@@ -219,7 +219,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~get_next_generator.
+  METHOD zif_excel_demo_generator~get_next_generator.
 
     DATA: lo_excel_generator TYPE REF TO lcl_excel_generator.
 
@@ -238,9 +238,9 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~get_information.
+  METHOD zif_excel_demo_generator~get_information.
 
-    DATA: lo_excel_generator TYPE REF TO zif_demo_excel_generator.
+    DATA: lo_excel_generator TYPE REF TO zif_excel_demo_generator.
 
     lo_excel_generator = get_sub_generator( ).
 
@@ -251,9 +251,9 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~generate_excel.
+  METHOD zif_excel_demo_generator~generate_excel.
 
-    DATA: lo_excel_generator TYPE REF TO zif_demo_excel_generator.
+    DATA: lo_excel_generator TYPE REF TO zif_excel_demo_generator.
 
     lo_excel_generator = get_sub_generator( ).
 

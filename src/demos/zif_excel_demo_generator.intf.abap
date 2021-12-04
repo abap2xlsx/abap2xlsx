@@ -1,4 +1,4 @@
-INTERFACE zif_demo_excel_generator
+INTERFACE zif_excel_demo_generator
   PUBLIC .
   TYPES: BEGIN OF ty_information,
            objid    TYPE wwwdata-objid,
@@ -15,7 +15,7 @@ INTERFACE zif_demo_excel_generator
       VALUE(result) TYPE ty_information.
   METHODS get_next_generator
     RETURNING
-      VALUE(result) TYPE REF TO zif_demo_excel_generator.
+      VALUE(result) TYPE REF TO zif_excel_demo_generator.
   METHODS checker_initialization.
   METHODS cleanup_for_diff
     IMPORTING

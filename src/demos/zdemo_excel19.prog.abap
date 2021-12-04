@@ -10,11 +10,11 @@ REPORT zdemo_excel19.
 
 TYPE-POOLS: abap.
 
-CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_excel_demo_generator.
 
   PUBLIC SECTION.
-    METHODS zif_demo_excel_generator~get_information REDEFINITION.
-    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
+    METHODS zif_excel_demo_generator~get_information REDEFINITION.
+    METHODS zif_excel_demo_generator~generate_excel REDEFINITION.
 
 ENDCLASS.
 
@@ -30,7 +30,7 @@ PARAMETERS: p_noout TYPE abap_bool DEFAULT abap_true.
 START-OF-SELECTION.
 
   CREATE OBJECT lo_excel_generator.
-  lo_excel = lo_excel_generator->zif_demo_excel_generator~generate_excel( ).
+  lo_excel = lo_excel_generator->zif_excel_demo_generator~generate_excel( ).
 
 *** Create output
   lcl_output=>output( lo_excel ).
@@ -39,7 +39,7 @@ START-OF-SELECTION.
 
 CLASS lcl_excel_generator IMPLEMENTATION.
 
-  METHOD zif_demo_excel_generator~get_information.
+  METHOD zif_excel_demo_generator~get_information.
 
     result-objid = sy-repid.
     result-text = 'abap2xlsx Demo: Set active sheet'.
@@ -47,7 +47,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~generate_excel.
+  METHOD zif_excel_demo_generator~generate_excel.
 
     DATA: lo_excel     TYPE REF TO zcl_excel,
           lo_worksheet TYPE REF TO zcl_excel_worksheet.

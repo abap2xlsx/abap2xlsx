@@ -1,9 +1,9 @@
-CLASS zcl_demo_excel_generator DEFINITION
+CLASS zcl_excel_demo_generator DEFINITION
   PUBLIC
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    INTERFACES zif_demo_excel_generator.
+    INTERFACES zif_excel_demo_generator.
     CLASS-METHODS class_constructor.
     CLASS-METHODS get_date_now
       RETURNING
@@ -26,21 +26,21 @@ ENDCLASS.
 
 
 
-CLASS zcl_demo_excel_generator IMPLEMENTATION.
+CLASS zcl_excel_demo_generator IMPLEMENTATION.
 
-  METHOD zif_demo_excel_generator~checker_initialization.
-
-  ENDMETHOD.
-
-  METHOD zif_demo_excel_generator~generate_excel.
+  METHOD zif_excel_demo_generator~checker_initialization.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~get_information.
+  METHOD zif_excel_demo_generator~generate_excel.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~get_next_generator.
+  METHOD zif_excel_demo_generator~get_information.
+
+  ENDMETHOD.
+
+  METHOD zif_excel_demo_generator~get_next_generator.
 
   ENDMETHOD.
 
@@ -75,9 +75,10 @@ CLASS zcl_demo_excel_generator IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~cleanup_for_diff.
+  METHOD zif_excel_demo_generator~cleanup_for_diff.
 
-    DATA: zip TYPE REF TO cl_abap_zip.
+    DATA: zip     TYPE REF TO cl_abap_zip,
+          content TYPE xstring.
 
     CREATE OBJECT zip.
     zip->load(
@@ -90,12 +91,11 @@ CLASS zcl_demo_excel_generator IMPLEMENTATION.
 *   MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
 *              WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
     ENDIF.
-
     zip->get(
       EXPORTING
         name                    = 'docProps/core.xml'
       IMPORTING
-        content                 = DATA(content)
+        content                 = content
       EXCEPTIONS
         zip_index_error         = 1
         zip_decompression_error = 2
@@ -170,7 +170,9 @@ CLASS zcl_demo_excel_generator IMPLEMENTATION.
       DATA lo_document TYPE REF TO if_ixml_document.
       DATA lo_element TYPE REF TO if_ixml_element.
       DATA: file_name TYPE cl_abap_zip=>t_file-name,
-            name TYPE string.
+            name      TYPE string,
+            filter    TYPE REF TO if_ixml_node_filter,
+            iterator  TYPE REF TO if_ixml_node_iterator.
       lo_ixml = cl_ixml=>create( ).
       lo_streamfactory = lo_ixml->create_stream_factory( ).
       lo_istream = lo_streamfactory->create_istream_xstring( content ).
@@ -180,24 +182,14 @@ CLASS zcl_demo_excel_generator IMPLEMENTATION.
                 istream        = lo_istream
                 stream_factory = lo_streamfactory ).
       lo_parser->parse( ).
-*      DATA(namespace_context) = lo_document->get_namespace_context( ).
-*      DATA(prefix) = namespace_context->map_to_prefix( 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-      DATA(filter) = lo_document->create_filter_name_ns( name = 'cNvPr' namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-      DATA(iterator) = lo_document->create_iterator_filtered( filter ).
+      filter = lo_document->create_filter_name_ns( name = 'cNvPr' namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
+      iterator = lo_document->create_iterator_filtered( filter ).
       DO.
         lo_element ?= iterator->get_next( ).
         IF lo_element IS NOT BOUND.
           EXIT.
         ENDIF.
-*      lo_element = lo_document->find_from_name_ns( name = 'cNvPr' uri = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-*      WHILE lo_element IS BOUND.
-        name = lo_element->get_name( ).
-        data(id) = lo_element->get_attribute_ns( name = 'id' )."uri = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-        name = lo_element->get_attribute_ns( name = 'name' )."uri = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
         lo_element->set_attribute_ns( name = 'name' value = '' ).
-*        lo_element->set_attribute( name = 'name' value = '' ).
-*        lo_element ?= lo_element->get_next( ).
-*      ENDWHILE.
       ENDDO.
 
       CLEAR content.

@@ -8,11 +8,11 @@
 
 REPORT zdemo_excel1.
 
-CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_excel_demo_generator.
 
   PUBLIC SECTION.
-    METHODS zif_demo_excel_generator~get_information REDEFINITION.
-    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
+    METHODS zif_excel_demo_generator~get_information REDEFINITION.
+    METHODS zif_excel_demo_generator~generate_excel REDEFINITION.
 
 ENDCLASS.
 
@@ -26,7 +26,7 @@ INCLUDE zdemo_excel_outputopt_incl.
 START-OF-SELECTION.
 
   CREATE OBJECT lo_excel_generator.
-  lo_excel = lo_excel_generator->zif_demo_excel_generator~generate_excel( ).
+  lo_excel = lo_excel_generator->zif_excel_demo_generator~generate_excel( ).
 
 *** Create output
   lcl_output=>output( lo_excel ).
@@ -35,7 +35,7 @@ START-OF-SELECTION.
 
 CLASS lcl_excel_generator IMPLEMENTATION.
 
-  METHOD zif_demo_excel_generator~get_information.
+  METHOD zif_excel_demo_generator~get_information.
 
     result-objid = sy-repid.
     result-text = 'abap2xlsx Demo: Hello World'.
@@ -43,7 +43,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~generate_excel.
+  METHOD zif_excel_demo_generator~generate_excel.
 
     DATA: lo_excel     TYPE REF TO zcl_excel,
           lo_worksheet TYPE REF TO zcl_excel_worksheet,
@@ -58,8 +58,8 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     " Get active sheet
     lo_worksheet = lo_excel->get_active_worksheet( ).
 *    lo_worksheet->set_title( ip_title = 'Sheet1' ).
-    lv_datum = zcl_demo_excel_generator=>get_date_now( ).
-    lv_uzeit = zcl_demo_excel_generator=>get_time_now( ).
+    lv_datum = zcl_excel_demo_generator=>get_date_now( ).
+    lv_uzeit = zcl_excel_demo_generator=>get_time_now( ).
     lo_worksheet->set_cell( ip_column = 'B' ip_row = 2 ip_value = 'Hello world' ).
     lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = lv_datum ).
     lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = lv_uzeit ).

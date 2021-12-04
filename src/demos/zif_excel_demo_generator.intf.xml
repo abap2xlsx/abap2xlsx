@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOINTERF>
-    <CLSNAME>ZIF_DEMO_EXCEL_GENERATOR</CLSNAME>
+    <CLSNAME>ZIF_EXCEL_DEMO_GENERATOR</CLSNAME>
     <LANGU>E</LANGU>
     <DESCRIPT>abap2xlsx: interface to execute demo programs</DESCRIPT>
     <EXPOSURE>2</EXPOSURE>

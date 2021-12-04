@@ -8,16 +8,16 @@
 
 REPORT zdemo_excel10.
 
-CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_demo_excel_generator.
+CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_excel_demo_generator.
 
   PUBLIC SECTION.
-    METHODS zif_demo_excel_generator~get_information REDEFINITION.
-    METHODS zif_demo_excel_generator~generate_excel REDEFINITION.
+    METHODS zif_excel_demo_generator~get_information REDEFINITION.
+    METHODS zif_excel_demo_generator~generate_excel REDEFINITION.
 
 ENDCLASS.
 
 DATA: lo_excel           TYPE REF TO zcl_excel,
-      lo_excel_generator TYPE REF TO zif_demo_excel_generator.
+      lo_excel_generator TYPE REF TO zif_excel_demo_generator.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '10_iTabFieldCatalog.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
@@ -34,7 +34,7 @@ START-OF-SELECTION.
 
 CLASS lcl_excel_generator IMPLEMENTATION.
 
-  METHOD zif_demo_excel_generator~get_information.
+  METHOD zif_excel_demo_generator~get_information.
 
     result-objid = sy-repid.
     result-text = 'abap2xlsx Demo: Format internal table with field catalog'.
@@ -42,7 +42,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD zif_demo_excel_generator~generate_excel.
+  METHOD zif_excel_demo_generator~generate_excel.
 
     DATA: lo_excel          TYPE REF TO zcl_excel,
           lo_worksheet      TYPE REF TO zcl_excel_worksheet,

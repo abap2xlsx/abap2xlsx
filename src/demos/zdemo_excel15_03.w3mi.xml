@@ -2,23 +2,23 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_W3MI" serializer_version="v2.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-   <NAME>ZDEMO_EXCEL15/3</NAME>
+   <NAME>ZDEMO_EXCEL15_03</NAME>
    <TEXT>abap2xlsx Demo: Export internal table</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
-     <OBJID>ZDEMO_EXCEL15/3</OBJID>
+     <OBJID>ZDEMO_EXCEL15_03</OBJID>
      <NAME>fileextension</NAME>
      <VALUE>.xlsx</VALUE>
     </WWWPARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
-     <OBJID>ZDEMO_EXCEL15/3</OBJID>
+     <OBJID>ZDEMO_EXCEL15_03</OBJID>
      <NAME>filename</NAME>
     </WWWPARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
-     <OBJID>ZDEMO_EXCEL15/3</OBJID>
+     <OBJID>ZDEMO_EXCEL15_03</OBJID>
      <NAME>mimetype</NAME>
      <VALUE>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</VALUE>
     </WWWPARAMS>
