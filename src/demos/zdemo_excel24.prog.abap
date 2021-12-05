@@ -39,7 +39,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   METHOD zif_excel_demo_generator~get_information.
 
-    result-objid = sy-repid.
+    result-program = sy-repid.
     result-text = 'abap2xlsx Demo: Multiple sheets with different default date formats'.
     result-filename = gc_save_file_name.
 
@@ -88,7 +88,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 1 ip_value = 'Date Format set to YYYYMMDD' ).
     " Insert current date
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 3 ip_value = 'Current Date:' ).
-    lo_worksheet->set_cell( ip_column = 'A' ip_row = 4 ip_value = sy-datum ).
+    lo_worksheet->set_cell( ip_column = 'A' ip_row = 4 ip_value = lv_datum ).
 
     lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = 'Sheet3!B2' ).
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 6 ip_value = 'This is link to the third sheet' ip_hyperlink = lo_hyperlink ).
@@ -102,7 +102,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 1 ip_value = 'Date Format set to YYYY/MM/DD' ).
     " Insert current date
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 3 ip_value = 'Current Date:' ).
-    lo_worksheet->set_cell( ip_column = 'A' ip_row = 4 ip_value = sy-datum ).
+    lo_worksheet->set_cell( ip_column = 'A' ip_row = 4 ip_value = lv_datum ).
 
     lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = 'Sheet4!B2' ).
     lo_worksheet->set_cell( ip_column = 'A' ip_row = 6 ip_value = 'This is link to the 4th sheet' ip_hyperlink = lo_hyperlink ).

@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL16</NAME>
-   <TEXT>abap2xlsx Demo: Drawings</TEXT>
+   <TEXT>16_Drawings.xlsx (ZDEMO_EXCEL16)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

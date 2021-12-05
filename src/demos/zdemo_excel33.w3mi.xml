@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL33</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL33 (33_autofilter.xlsx)</TEXT>
+   <TEXT>33_autofilter.xlsx (ZDEMO_EXCEL33)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

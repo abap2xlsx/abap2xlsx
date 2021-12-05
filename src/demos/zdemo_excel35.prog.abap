@@ -82,7 +82,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   METHOD zif_excel_demo_generator~get_information.
 
-    result-objid = sy-repid.
+    result-program = sy-repid.
     result-text = 'abap2xlsx Demo: static styles'.
     result-filename = lv_default_file_name.
 

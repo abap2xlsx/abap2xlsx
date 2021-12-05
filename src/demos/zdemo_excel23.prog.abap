@@ -39,7 +39,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   METHOD zif_excel_demo_generator~get_information.
 
-    result-objid = sy-repid.
+    result-program = sy-repid.
     result-text = 'abap2xlsx Demo: Multiple sheets with and w/o grid lines, print options'.
     result-filename = gc_save_file_name.
 

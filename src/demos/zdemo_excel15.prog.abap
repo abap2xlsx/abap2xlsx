@@ -245,9 +245,9 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     lo_excel_generator = get_sub_generator( ).
 
     result = lo_excel_generator->get_information( ).
-    REPLACE 'ZDEMO_EXCEL' IN result-objid WITH 'ZDEMO_EXCEL15/'.
-    CONCATENATE '15_' result-filename INTO result-filename.
-    REPLACE '.xlsx' IN result-filename WITH 'FromReader.xlsx'.
+    result-program = sy-repid.
+    result-objid = |{ sy-repid }_{ result-filename(2) }|.
+    result-filename = |15_{ replace( val = result-filename sub = '.xlsx' with = 'FromReader.xlsx' ) }|.
 
   ENDMETHOD.
 

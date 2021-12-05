@@ -92,7 +92,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   METHOD zif_excel_demo_generator~get_information.
 
-    result-objid = sy-repid.
+    result-program = sy-repid.
     result-text = 'abap2xlsx Demo: Data conditional formatting with styles'.
     result-filename = gc_save_file_name.
 

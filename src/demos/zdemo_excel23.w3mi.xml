@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL23</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL23 (23_Sheets_with_and_without_grid_line</TEXT>
+   <TEXT>23_Sheets_with_and_without_grid_lines.xlsx (ZDEMO_EXCEL23)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

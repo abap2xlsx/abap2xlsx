@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL17</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL17 (17_SheetProtection.xlsx)</TEXT>
+   <TEXT>17_SheetProtection.xlsx (ZDEMO_EXCEL17)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL34</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL34 (34_Static Styles_Chess.xlsx)</TEXT>
+   <TEXT>34_Static Styles_Chess.xlsx (ZDEMO_EXCEL34)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

@@ -36,7 +36,7 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   METHOD zif_excel_demo_generator~get_information.
 
-    result-objid = sy-repid.
+    result-program = sy-repid.
     result-text = 'abap2xlsx Demo: Format internal table with field catalog'.
     result-filename = gc_save_file_name.
 

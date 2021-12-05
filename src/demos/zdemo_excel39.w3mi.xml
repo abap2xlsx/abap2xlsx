@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL39</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL39 (39_Charts.xlsx)</TEXT>
+   <TEXT>39_Charts.xlsx (ZDEMO_EXCEL39)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

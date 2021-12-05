@@ -1,6 +1,7 @@
 INTERFACE zif_excel_demo_generator
   PUBLIC .
   TYPES: BEGIN OF ty_information,
+           program  TYPE trdir-name,
            objid    TYPE wwwdata-objid,
            text     TYPE wwwdata-text,
            filename TYPE string,

@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL38</NAME>
-   <TEXT>abap2xlsx Demo: Read file and output</TEXT>
+   <TEXT>38_SAP-Icons.xlsx (ZDEMO_EXCEL38)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

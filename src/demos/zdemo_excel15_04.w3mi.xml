@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL15_04</NAME>
-   <TEXT>abap2xlsx Demo: Create XLXS with multiple sheets</TEXT>
+   <TEXT>15_04_SheetsFromReader.xlsx (ZDEMO_EXCEL15)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
@@ -15,6 +15,7 @@
      <RELID>MI</RELID>
      <OBJID>ZDEMO_EXCEL15_04</OBJID>
      <NAME>filename</NAME>
+     <VALUE>15_04_SheetsFromReader.xlsx</VALUE>
     </WWWPARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>

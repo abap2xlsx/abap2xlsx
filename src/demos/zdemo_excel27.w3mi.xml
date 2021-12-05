@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <NAME>ZDEMO_EXCEL27</NAME>
-   <TEXT>abap2xlsx: result of program ZDEMO_EXCEL27 (27_ConditionalFormatting.xlsx)</TEXT>
+   <TEXT>27_ConditionalFormatting.xlsx (ZDEMO_EXCEL27)</TEXT>
    <PARAMS>
     <WWWPARAMS>
      <RELID>MI</RELID>
