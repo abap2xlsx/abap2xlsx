@@ -183,14 +183,14 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
       lo_istream = lo_streamfactory->create_istream_xstring( content ).
       lo_document = lo_ixml->create_document( ).
       lo_parser = lo_ixml->create_parser(
-                document       = lo_document
-                istream        = lo_istream
-                stream_factory = lo_streamfactory ).
+                  document       = lo_document
+                  istream        = lo_istream
+                  stream_factory = lo_streamfactory ).
       lo_parser->parse( ).
 
       lo_filter = lo_document->create_filter_name_ns(
-                name      = 'cNvPr'
-                namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
+                  name      = 'cNvPr'
+                  namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
       lo_iterator = lo_document->create_iterator_filtered( lo_filter ).
       DO.
         lo_element ?= lo_iterator->get_next( ).
