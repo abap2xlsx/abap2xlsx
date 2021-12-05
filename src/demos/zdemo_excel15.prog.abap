@@ -69,8 +69,7 @@ FORM main.
   CONSTANTS: sheet_with_date_formats TYPE string VALUE '24_Sheets_with_different_default_date_formats.xlsx'.
 
   DATA: excel           TYPE REF TO zcl_excel,
-        lo_excel_writer TYPE REF TO zif_excel_writer,
-        reader          TYPE REF TO zif_excel_reader.
+        lo_excel_writer TYPE REF TO zif_excel_writer.
 
   DATA: ex  TYPE REF TO zcx_excel,
         msg TYPE string.
@@ -80,7 +79,6 @@ FORM main.
         lt_file_tab  TYPE solix_tab.
 
   DATA: output_file_path  TYPE string,
-        input_file_path   TYPE string,
         lv_file_separator TYPE c.
 
   DATA: worksheet      TYPE REF TO zcl_excel_worksheet,
@@ -106,6 +104,7 @@ FORM main.
     TRY.
 
         excel = go_excel_generator->generate_excel( ).
+
         info = go_excel_generator->get_information( ).
         CONCATENATE p_path lv_file_separator info-filename INTO output_file_path.
 
@@ -253,11 +252,23 @@ CLASS lcl_excel_generator IMPLEMENTATION.
 
   METHOD zif_excel_demo_generator~generate_excel.
 
-    DATA: lo_excel_generator TYPE REF TO zif_excel_demo_generator.
+    DATA: lo_excel_generator TYPE REF TO zif_excel_demo_generator,
+          lo_excel           TYPE REF TO zcl_excel,
+          lo_excel_writer    TYPE REF TO zif_excel_writer,
+          lo_reader          TYPE REF TO zif_excel_reader,
+          lv_file            TYPE xstring.
 
     lo_excel_generator = get_sub_generator( ).
 
-    result = lo_excel_generator->generate_excel( ).
+    lo_excel = lo_excel_generator->generate_excel( ).
+
+    CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
+    lv_file = lo_excel_writer->write_file( lo_excel ).
+
+    CREATE OBJECT lo_reader TYPE zcl_excel_reader_2007.
+    lo_excel = lo_reader->load( lv_file ).
+
+    result = lo_excel.
 
   ENDMETHOD.
 
