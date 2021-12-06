@@ -3,23 +3,30 @@ CLASS zcl_excel_demo_generator DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
+
     INTERFACES zif_excel_demo_generator.
+
     CLASS-METHODS class_constructor.
+
     CLASS-METHODS get_date_now
       RETURNING
         VALUE(result) TYPE d.
+
     CLASS-METHODS get_time_now
       RETURNING
         VALUE(result) TYPE t.
+
     CLASS-METHODS set_date_now
       IMPORTING
         date TYPE d.
+
     CLASS-METHODS set_time_now
       IMPORTING
         time TYPE t.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+
     TYPES : BEGIN OF ty_zip_structure,
               ref_to_structure TYPE REF TO data,
               ref_to_x         TYPE REF TO data,
@@ -31,8 +38,10 @@ CLASS zcl_excel_demo_generator DEFINITION
               conv_out_utf8    TYPE REF TO cl_abap_conv_out_ce,
               conv_out_ibm437  TYPE REF TO cl_abap_conv_out_ce,
             END OF ty_zip_structure.
+
     CLASS-DATA: date_now TYPE d,
                 time_now TYPE t.
+
     METHODS zip_cleanup_for_diff
       IMPORTING
         zip_xstring   TYPE xstring
@@ -40,6 +49,7 @@ CLASS zcl_excel_demo_generator DEFINITION
         VALUE(result) TYPE xstring
       RAISING
         zcx_excel.
+
     METHODS init_structure
       IMPORTING
         length        TYPE i
@@ -47,18 +57,21 @@ CLASS zcl_excel_demo_generator DEFINITION
         structure     TYPE any
       RETURNING
         VALUE(result) TYPE ty_zip_structure.
+
     METHODS write_zip
       IMPORTING
         offset        TYPE i
       CHANGING
         zip_structure TYPE zcl_excel_demo_generator=>ty_zip_structure
         zip_xstring   TYPE xstring.
+
     METHODS read_zip
       IMPORTING
         zip_xstring   TYPE xstring
         offset        TYPE i
       CHANGING
         zip_structure TYPE zcl_excel_demo_generator=>ty_zip_structure.
+
 ENDCLASS.
 
 
@@ -396,7 +409,11 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 
   METHOD init_structure.
 
-    DATA: offset TYPE i.
+    DATA:
+      offset      TYPE i,
+      rtts_struct TYPE REF TO cl_abap_structdescr.
+    FIELD-SYMBOLS:
+      <component> TYPE abap_compdescr.
 
     CREATE DATA result-ref_to_structure LIKE structure.
     result-length = length.
@@ -405,7 +422,8 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 
     result-view = cl_abap_view_offlen=>create( ).
     offset = 0.
-    LOOP AT CAST cl_abap_structdescr( cl_abap_typedescr=>describe_by_data( structure ) )->components ASSIGNING FIELD-SYMBOL(<component>).
+    rtts_struct ?= cl_abap_typedescr=>describe_by_data( structure ).
+    LOOP AT rtts_struct->components ASSIGNING <component>.
       result-view->append( off = offset len = <component>-length ).
       offset = offset + <component>-length.
     ENDLOOP.
