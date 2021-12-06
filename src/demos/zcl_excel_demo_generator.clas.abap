@@ -325,24 +325,26 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
       central_file_header_signature TYPE x LENGTH 4 VALUE '504B0102',
       end_of_central_dir_signature  TYPE x LENGTH 4 VALUE '504B0506'.
     DATA:
-      local_file_header   TYPE zcl_excel_demo_generator=>ty_zip_structure,
-      central_file_header TYPE zcl_excel_demo_generator=>ty_zip_structure,
-      end_of_central_dir  TYPE zcl_excel_demo_generator=>ty_zip_structure,
-      offset              TYPE i,
-      max_offset          TYPE i.
+      dummy_local_file_header   TYPE ty_local_file_header,
+      dummy_central_file_header TYPE ty_central_file_header,
+      dummy_end_of_central_dir  TYPE ty_end_of_central_dir,
+      local_file_header         TYPE zcl_excel_demo_generator=>ty_zip_structure,
+      central_file_header       TYPE zcl_excel_demo_generator=>ty_zip_structure,
+      end_of_central_dir        TYPE zcl_excel_demo_generator=>ty_zip_structure,
+      offset                    TYPE i,
+      max_offset                TYPE i.
 
 
 
-
-    local_file_header = init_structure( length = 30 charset_bit = 60 structure = VALUE ty_local_file_header( ) ).
+    local_file_header = init_structure( length = 30 charset_bit = 60 structure = dummy_local_file_header ).
     ASSIGN local_file_header-ref_to_structure->* TO <local_file_header>.
     ASSIGN local_file_header-ref_to_x->* TO <local_file_header_x>.
 
-    central_file_header = init_structure( length = 46 charset_bit = 76 structure = VALUE ty_central_file_header( ) ).
+    central_file_header = init_structure( length = 46 charset_bit = 76 structure = dummy_central_file_header ).
     ASSIGN central_file_header-ref_to_structure->* TO <central_file_header>.
     ASSIGN central_file_header-ref_to_x->* TO <central_file_header_x>.
 
-    end_of_central_dir = init_structure( length = 22 charset_bit = 0 structure = VALUE ty_end_of_central_dir( ) ).
+    end_of_central_dir = init_structure( length = 22 charset_bit = 0 structure = dummy_end_of_central_dir ).
     ASSIGN end_of_central_dir-ref_to_structure->* TO <end_of_central_dir>.
     ASSIGN end_of_central_dir-ref_to_x->* TO <end_of_central_dir_x>.
 
@@ -470,11 +472,11 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 
     IF charset = 0.
       IF zip_structure-conv_out_ibm437 IS NOT BOUND.
-        DATA(conv_out_ibm437) = cl_abap_conv_out_ce=>create(
+        zip_structure-conv_out_ibm437 = cl_abap_conv_out_ce=>create(
                   encoding = '1107'
                   endian = 'L' ).
       ENDIF.
-      conv_out_ibm437->convert_struc(
+      zip_structure-conv_out_ibm437->convert_struc(
             EXPORTING data = <zip_structure>
                       view = zip_structure-view
             IMPORTING buffer = <zip_structure_x> ).
