@@ -25,8 +25,8 @@ CLASS lcl_app DEFINITION.
               diff                   TYPE abap_bool,
               xlsx_just_now          TYPE xstring,
               xlsx_reference         TYPE xstring,
-              compare_xlsx_just_now  TYPE REF TO cl_abap_zip,
-              compare_xlsx_reference TYPE REF TO cl_abap_zip,
+              compare_xlsx_just_now  TYPE xstring, "REF TO cl_abap_zip,
+              compare_xlsx_reference TYPE xstring,
             END OF ty_check_result,
             BEGIN OF ty_alv_line,
               status_icon            TYPE string,
@@ -39,8 +39,8 @@ CLASS lcl_app DEFINITION.
               filename               TYPE string,
               xlsx_just_now          TYPE xstring,
               xlsx_reference         TYPE xstring,
-              compare_xlsx_just_now  TYPE REF TO cl_abap_zip,
-              compare_xlsx_reference TYPE REF TO cl_abap_zip,
+              compare_xlsx_just_now  TYPE xstring, "REF TO cl_abap_zip,
+              compare_xlsx_reference TYPE xstring, "REF TO cl_abap_zip,
               cell_types             TYPE salv_t_int4_column,
             END OF ty_alv_line,
             ty_alv_table TYPE STANDARD TABLE OF ty_alv_line WITH DEFAULT KEY.
@@ -323,7 +323,9 @@ CLASS lcl_app IMPLEMENTATION.
 
     DATA: lo_excel  TYPE REF TO zcl_excel,
           lo_writer TYPE REF TO zcl_excel_writer_2007,
-          diff      TYPE REF TO object.
+          diff      TYPE REF TO object,
+          lx        TYPE REF TO cx_root,
+          message   TYPE string.
     FIELD-SYMBOLS: <is_different> TYPE abap_bool.
 
     "=========================
@@ -359,17 +361,7 @@ CLASS lcl_app IMPLEMENTATION.
       result-compare_xlsx_just_now = lo_excel_generator->cleanup_for_diff( result-xlsx_just_now ).
       result-compare_xlsx_reference = lo_excel_generator->cleanup_for_diff( result-xlsx_reference ).
 
-      CALL METHOD ('ZCL_ZIP_DIFF_ITEM')=>('GET_DIFF')
-        EXPORTING
-          zip_1  = result-compare_xlsx_reference
-          zip_2  = result-compare_xlsx_just_now
-        RECEIVING
-          result = diff.
-
-      ASSIGN ('DIFF->IS_DIFFERENT') TO <is_different>.
-      IF sy-subrc = 0.
-        result-diff = <is_different>.
-      ENDIF.
+      result-diff = boolc( result-compare_xlsx_just_now <> result-compare_xlsx_reference ).
 
     ENDIF.
 
@@ -381,6 +373,8 @@ CLASS lcl_app IMPLEMENTATION.
     DATA: alv_line       TYPE ty_alv_line,
           message        TYPE string,
           lx             TYPE REF TO cx_root,
+          zip_old        TYPE REF TO cl_abap_zip,
+          zip_new        TYPE REF TO cl_abap_zip,
           refresh_stable TYPE lvc_s_stbl.
 
     READ TABLE alv_table INDEX row INTO alv_line.
@@ -396,10 +390,34 @@ CLASS lcl_app IMPLEMENTATION.
                     io_container = zip_diff_container.
             ENDIF.
 
+            CREATE OBJECT zip_old.
+            zip_old->load(
+              EXPORTING
+                zip             = alv_line-compare_xlsx_reference
+              EXCEPTIONS
+                zip_parse_error = 1
+                OTHERS          = 2 ).
+            IF sy-subrc <> 0.
+* MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+*            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+            ENDIF.
+
+            CREATE OBJECT zip_new.
+            zip_new->load(
+              EXPORTING
+                zip             = alv_line-compare_xlsx_just_now
+              EXCEPTIONS
+                zip_parse_error = 1
+                OTHERS          = 2 ).
+            IF sy-subrc <> 0.
+* MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+*            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+            ENDIF.
+
             CALL METHOD viewer->('DIFF_AND_VIEW')
               EXPORTING
-                zip_old = alv_line-compare_xlsx_reference
-                zip_new = alv_line-compare_xlsx_just_now.
+                zip_old = zip_old
+                zip_new = zip_new.
 
           CATCH cx_root INTO lx.
             message = |Viewer error (https://github.com/sandraros/zip-diff): { lx->get_text( ) }|.

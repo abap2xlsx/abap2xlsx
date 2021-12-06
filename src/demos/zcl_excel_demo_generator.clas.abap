@@ -20,8 +20,45 @@ CLASS zcl_excel_demo_generator DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    TYPES : BEGIN OF ty_zip_structure,
+              ref_to_structure TYPE REF TO data,
+              ref_to_x         TYPE REF TO data,
+              length           TYPE i,
+              view             TYPE REF TO cl_abap_view_offlen,
+              charset_bit      TYPE i,
+              conv_in_utf8     TYPE REF TO cl_abap_conv_in_ce,
+              conv_in_ibm437   TYPE REF TO cl_abap_conv_in_ce,
+              conv_out_utf8    TYPE REF TO cl_abap_conv_out_ce,
+              conv_out_ibm437  TYPE REF TO cl_abap_conv_out_ce,
+            END OF ty_zip_structure.
     CLASS-DATA: date_now TYPE d,
                 time_now TYPE t.
+    METHODS zip_cleanup_for_diff
+      IMPORTING
+        zip_xstring   TYPE xstring
+      RETURNING
+        VALUE(result) TYPE xstring
+      RAISING
+        zcx_excel.
+    METHODS init_structure
+      IMPORTING
+        length        TYPE i
+        charset_bit   TYPE i
+        structure     TYPE any
+      RETURNING
+        VALUE(result) TYPE ty_zip_structure.
+    METHODS write_zip
+      IMPORTING
+        offset        TYPE i
+      CHANGING
+        zip_structure TYPE zcl_excel_demo_generator=>ty_zip_structure
+        zip_xstring   TYPE xstring.
+    METHODS read_zip
+      IMPORTING
+        zip_xstring   TYPE xstring
+        offset        TYPE i
+      CHANGING
+        zip_structure TYPE zcl_excel_demo_generator=>ty_zip_structure.
 ENDCLASS.
 
 
@@ -102,9 +139,11 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
           lo_ostream       TYPE REF TO if_ixml_ostream,
           lo_document      TYPE REF TO if_ixml_document,
           lo_element       TYPE REF TO if_ixml_element,
-          lo_filter           TYPE REF TO if_ixml_node_filter,
-          lo_iterator         TYPE REF TO if_ixml_node_iterator.
-    FIELD-SYMBOLS: <file> TYPE cl_abap_zip=>t_file.
+          lo_filter        TYPE REF TO if_ixml_node_filter,
+          lo_iterator      TYPE REF TO if_ixml_node_iterator.
+    FIELD-SYMBOLS:
+      <file>     TYPE cl_abap_zip=>t_file,
+      <ls_file2> TYPE ty_file.
 
     CREATE OBJECT zip.
     zip->load(
@@ -213,14 +252,247 @@ CLASS zcl_excel_demo_generator IMPLEMENTATION.
 
     ENDLOOP.
 
-    FIELD-SYMBOLS: <ls_file2> TYPE ty_file.
     LOOP AT lt_file ASSIGNING <ls_file2>.
       zip->delete( name = <ls_file2>-name ).
       zip->add( name = <ls_file2>-name content = <ls_file2>-content ).
     ENDLOOP.
 
-    result = zip.
+    result = zip->save( ).
+    result = zip_cleanup_for_diff( result ).
 
   ENDMETHOD.
+
+
+  METHOD zip_cleanup_for_diff.
+
+    TYPES : BEGIN OF ty_local_file_header,
+              local_file_header_signature TYPE x LENGTH 4,  " 04034b50
+              version_needed_to_extract   TYPE x LENGTH 2,
+              general_purpose_bit_flag    TYPE x LENGTH 2,
+              compression_method          TYPE x LENGTH 2,
+              last_mod_file_time          TYPE int2,
+              last_mod_file_date          TYPE int2,
+              crc_32                      TYPE x LENGTH 4,
+              compressed_size             TYPE i,
+              uncompressed_size           TYPE i,
+              file_name_length            TYPE int2,
+              extra_field_length          TYPE int2,
+              " file name (variable size)
+              " extra field (variable size)
+            END OF ty_local_file_header,
+            BEGIN OF ty_central_file_header,
+              central_file_header_signature TYPE x LENGTH 4, " 02014b50
+              version_made_by               TYPE x LENGTH 2,
+              version_needed_to_extract     TYPE x LENGTH 2,
+              general_purpose_bit_flag      TYPE x LENGTH 2,
+              compression_method            TYPE x LENGTH 2,
+              last_mod_file_time            TYPE int2,
+              last_mod_file_date            TYPE int2,
+              crc_32                        TYPE x LENGTH 4,
+              compressed_size               TYPE i,
+              uncompressed_size             TYPE i,
+              file_name_length              TYPE int2, " field 12
+              extra_field_length            TYPE int2, " field 13
+              file_comment_length           TYPE int2, " field 14
+              disk_number_start             TYPE int2,
+              internal_file_attributes      TYPE x LENGTH 2,
+              external_file_attributes      TYPE x LENGTH 4,
+              rel_offset_of_local_header    TYPE x LENGTH 4,
+              " file name                       (variable size defined in 12)
+              " extra field                     (variable size defined in 13)
+              " file comment                    (variable size defined in 14)
+            END OF ty_central_file_header,
+            BEGIN OF ty_end_of_central_dir,
+              signature                      TYPE x LENGTH 4, " 0x06054b50
+              number_of_this_disk            TYPE int2,
+              disk_num_start_of_central_dir  TYPE int2,
+              n_of_entries_in_central_dir_dk TYPE int2,
+              n_of_entries_in_central_dir    TYPE int2,
+              size_of_central_dir            TYPE i,
+              offset_start_of_central_dir    TYPE i,
+              file_comment_length            TYPE int2,
+            END OF ty_end_of_central_dir.
+
+    FIELD-SYMBOLS:
+      <local_file_header_x>   TYPE x,
+      <central_file_header_x> TYPE x,
+      <end_of_central_dir_x>  TYPE x,
+      <local_file_header>     TYPE ty_local_file_header,
+      <central_file_header>   TYPE ty_central_file_header,
+      <end_of_central_dir>    TYPE ty_end_of_central_dir.
+    CONSTANTS:
+      local_file_header_signature   TYPE x LENGTH 4 VALUE '504B0304',
+      central_file_header_signature TYPE x LENGTH 4 VALUE '504B0102',
+      end_of_central_dir_signature  TYPE x LENGTH 4 VALUE '504B0506'.
+    DATA:
+      local_file_header   TYPE zcl_excel_demo_generator=>ty_zip_structure,
+      central_file_header TYPE zcl_excel_demo_generator=>ty_zip_structure,
+      end_of_central_dir  TYPE zcl_excel_demo_generator=>ty_zip_structure,
+      offset              TYPE i,
+      max_offset          TYPE i.
+
+
+
+
+    local_file_header = init_structure( length = 30 charset_bit = 60 structure = VALUE ty_local_file_header( ) ).
+    ASSIGN local_file_header-ref_to_structure->* TO <local_file_header>.
+    ASSIGN local_file_header-ref_to_x->* TO <local_file_header_x>.
+
+    central_file_header = init_structure( length = 46 charset_bit = 76 structure = VALUE ty_central_file_header( ) ).
+    ASSIGN central_file_header-ref_to_structure->* TO <central_file_header>.
+    ASSIGN central_file_header-ref_to_x->* TO <central_file_header_x>.
+
+    end_of_central_dir = init_structure( length = 22 charset_bit = 0 structure = VALUE ty_end_of_central_dir( ) ).
+    ASSIGN end_of_central_dir-ref_to_structure->* TO <end_of_central_dir>.
+    ASSIGN end_of_central_dir-ref_to_x->* TO <end_of_central_dir_x>.
+
+    result = zip_xstring.
+
+    offset = 0.
+    max_offset = xstrlen( result ) - 4.
+    WHILE offset <= max_offset.
+
+      CASE result+offset(4).
+
+        WHEN local_file_header_signature.
+
+          read_zip( EXPORTING zip_xstring = result offset = offset CHANGING zip_structure = local_file_header ).
+
+          CLEAR <local_file_header>-last_mod_file_date.
+          CLEAR <local_file_header>-last_mod_file_time.
+
+          write_zip( EXPORTING offset = offset CHANGING zip_structure = local_file_header zip_xstring = result ).
+
+          offset = offset + local_file_header-length + <local_file_header>-file_name_length + <local_file_header>-extra_field_length + <local_file_header>-compressed_size.
+
+        WHEN central_file_header_signature.
+
+          read_zip( EXPORTING zip_xstring = result offset = offset CHANGING zip_structure = central_file_header ).
+
+          CLEAR <central_file_header>-last_mod_file_date.
+          CLEAR <central_file_header>-last_mod_file_time.
+
+          write_zip( EXPORTING offset = offset CHANGING zip_structure = central_file_header zip_xstring = result ).
+
+          offset = offset + central_file_header-length + <central_file_header>-file_name_length + <central_file_header>-extra_field_length + <central_file_header>-file_comment_length.
+
+        WHEN end_of_central_dir_signature.
+
+          read_zip( EXPORTING zip_xstring = result offset = offset CHANGING zip_structure = end_of_central_dir ).
+
+          offset = offset + end_of_central_dir-length + <end_of_central_dir>-file_comment_length.
+
+        WHEN OTHERS.
+          RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'Invalid ZIP file'.
+
+      ENDCASE.
+
+    ENDWHILE.
+
+  ENDMETHOD.
+
+
+  METHOD init_structure.
+
+    DATA: offset TYPE i.
+
+    CREATE DATA result-ref_to_structure LIKE structure.
+    result-length = length.
+    result-charset_bit = charset_bit.
+    CREATE DATA result-ref_to_x TYPE x LENGTH length.
+
+    result-view = cl_abap_view_offlen=>create( ).
+    offset = 0.
+    LOOP AT CAST cl_abap_structdescr( cl_abap_typedescr=>describe_by_data( structure ) )->components ASSIGNING FIELD-SYMBOL(<component>).
+      result-view->append( off = offset len = <component>-length ).
+      offset = offset + <component>-length.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+  METHOD read_zip.
+
+    DATA:
+      charset TYPE i.
+    FIELD-SYMBOLS:
+      <zip_structure_x> TYPE x,
+      <zip_structure>   TYPE any.
+
+    ASSIGN zip_structure-ref_to_x->* TO <zip_structure_x>.
+    ASSIGN zip_structure-ref_to_structure->* TO <zip_structure>.
+
+    <zip_structure_x> = zip_xstring+offset.
+
+    IF zip_structure-charset_bit >= 1.
+      GET BIT zip_structure-charset_bit OF <zip_structure_x> INTO charset.
+    ENDIF.
+
+    IF charset = 0.
+      IF zip_structure-conv_in_ibm437 IS NOT BOUND.
+        zip_structure-conv_in_ibm437 = cl_abap_conv_in_ce=>create(
+                  encoding = '1107'
+                  endian = 'L' ).
+      ENDIF.
+      zip_structure-conv_in_ibm437->convert_struc(
+            EXPORTING input = <zip_structure_x>
+                      view = zip_structure-view
+            IMPORTING data = <zip_structure> ).
+    ELSE.
+      IF zip_structure-conv_in_utf8 IS NOT BOUND.
+        zip_structure-conv_in_utf8 = cl_abap_conv_in_ce=>create(
+                  encoding = '4110'
+                  endian = 'L' ).
+      ENDIF.
+      zip_structure-conv_in_utf8->convert_struc(
+            EXPORTING input = <zip_structure_x>
+                      view = zip_structure-view
+            IMPORTING data = <zip_structure> ).
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD write_zip.
+
+    DATA:
+      charset TYPE i.
+    FIELD-SYMBOLS:
+      <zip_structure_x> TYPE x,
+      <zip_structure>   TYPE any.
+
+    ASSIGN zip_structure-ref_to_x->* TO <zip_structure_x>.
+    ASSIGN zip_structure-ref_to_structure->* TO <zip_structure>.
+
+    IF zip_structure-charset_bit >= 1.
+      GET BIT zip_structure-charset_bit OF <zip_structure_x> INTO charset.
+    ENDIF.
+
+    IF charset = 0.
+      IF zip_structure-conv_out_ibm437 IS NOT BOUND.
+        DATA(conv_out_ibm437) = cl_abap_conv_out_ce=>create(
+                  encoding = '1107'
+                  endian = 'L' ).
+      ENDIF.
+      conv_out_ibm437->convert_struc(
+            EXPORTING data = <zip_structure>
+                      view = zip_structure-view
+            IMPORTING buffer = <zip_structure_x> ).
+    ELSE.
+      IF zip_structure-conv_out_utf8 IS NOT BOUND.
+        zip_structure-conv_out_utf8 = cl_abap_conv_out_ce=>create(
+                  encoding = '4110'
+                  endian = 'L' ).
+      ENDIF.
+      zip_structure-conv_out_utf8->convert_struc(
+            EXPORTING data = <zip_structure>
+                      view = zip_structure-view
+            IMPORTING buffer = <zip_structure_x> ).
+    ENDIF.
+
+    REPLACE SECTION OFFSET offset LENGTH zip_structure-length OF zip_xstring WITH <zip_structure_x> IN BYTE MODE.
+
+  ENDMETHOD.
+
 
 ENDCLASS.

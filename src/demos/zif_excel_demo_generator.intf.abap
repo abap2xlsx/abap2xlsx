@@ -22,5 +22,7 @@ INTERFACE zif_excel_demo_generator
     IMPORTING
       xstring       TYPE xstring
     RETURNING
-      VALUE(result) TYPE REF TO cl_abap_zip.
+      VALUE(result) TYPE xstring
+    RAISING
+      zcx_excel.
 ENDINTERFACE.
