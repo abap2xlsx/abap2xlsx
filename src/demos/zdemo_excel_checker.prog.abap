@@ -89,7 +89,7 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD set_sscrfields.
 
-    ref_sscrfields = REF #( sscrfields ).
+    GET REFERENCE OF sscrfields INTO ref_sscrfields.
 
   ENDMETHOD.
 
