@@ -79,7 +79,6 @@ CLASS lcl_app DEFINITION.
           viewer             TYPE REF TO object,
           salv               TYPE REF TO cl_salv_table,
           alv_table          TYPE ty_alv_table.
-    CONSTANTS: state LIKE zcl_zip_diff_item=>state VALUE zcl_zip_diff_item=>state.
 
 ENDCLASS.
 
@@ -101,6 +100,11 @@ CLASS lcl_app IMPLEMENTATION.
           columns TYPE REF TO cl_salv_columns_table,
           events  TYPE REF TO cl_salv_events_table,
           lx      TYPE REF TO cx_root.
+
+    LOOP AT SCREEN.
+      screen-active = '0'.
+      MODIFY SCREEN.
+    ENDLOOP.
 
     TRY.
 
@@ -187,8 +191,8 @@ CLASS lcl_app IMPLEMENTATION.
 
           WHEN 'FC01'. " REFRESH
 
-            load_alv_table( ).
-            salv->refresh( ).
+            " restart the program completely so that to consider modification/recompile of any ZDEMO_EXCEL program
+            SUBMIT (sy-repid) VIA SELECTION-SCREEN.
 
         ENDCASE.
 
@@ -319,7 +323,8 @@ CLASS lcl_app IMPLEMENTATION.
 
     DATA: lo_excel  TYPE REF TO zcl_excel,
           lo_writer TYPE REF TO zcl_excel_writer_2007,
-          diff      TYPE REF TO zcl_zip_diff_item.
+          diff      TYPE REF TO object.
+    FIELD-SYMBOLS: <is_different> TYPE abap_bool.
 
     "=========================
     " ASK XLSX TO DEMO PROGRAM
@@ -354,13 +359,17 @@ CLASS lcl_app IMPLEMENTATION.
       result-compare_xlsx_just_now = lo_excel_generator->cleanup_for_diff( result-xlsx_just_now ).
       result-compare_xlsx_reference = lo_excel_generator->cleanup_for_diff( result-xlsx_reference ).
 
-      diff = zcl_zip_diff_item=>get_diff( zip_1 = result-compare_xlsx_reference
-                                          zip_2 = result-compare_xlsx_just_now ).
+      CALL METHOD ('ZCL_ZIP_DIFF_ITEM')=>('GET_DIFF')
+        EXPORTING
+          zip_1  = result-compare_xlsx_reference
+          zip_2  = result-compare_xlsx_just_now
+        RECEIVING
+          result = diff.
 
-      LOOP AT diff->items TRANSPORTING NO FIELDS WHERE diff_state <> state-same.
-        EXIT.
-      ENDLOOP.
-      result-diff = boolc( sy-subrc = 0 ).
+      ASSIGN ('DIFF->IS_DIFFERENT') TO <is_different>.
+      IF sy-subrc = 0.
+        result-diff = <is_different>.
+      ENDIF.
 
     ENDIF.
 
