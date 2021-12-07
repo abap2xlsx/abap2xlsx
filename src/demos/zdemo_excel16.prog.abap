@@ -13,6 +13,7 @@ CLASS lcl_excel_generator DEFINITION INHERITING FROM zcl_excel_demo_generator.
   PUBLIC SECTION.
     METHODS zif_excel_demo_generator~get_information REDEFINITION.
     METHODS zif_excel_demo_generator~generate_excel REDEFINITION.
+    METHODS zif_excel_demo_generator~checker_initialization REDEFINITION.
 
 ENDCLASS.
 
@@ -161,6 +162,14 @@ CLASS lcl_excel_generator IMPLEMENTATION.
     ENDIF.
 
     result = lo_excel.
+
+  ENDMETHOD.
+
+  METHOD zif_excel_demo_generator~checker_initialization.
+
+    p_objid = '456694429165174BE10000000A1550C0'. " Question mark in standard Web Dynpro WDT_QUIZ
+    p_class = 'M_IMAGE_P'.
+    pobjtype = 'P'.
 
   ENDMETHOD.
 
