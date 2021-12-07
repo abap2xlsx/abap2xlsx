@@ -20,12 +20,12 @@ CLASS zcl_excel_reader_2007 DEFINITION
 *"* protected components of class ZCL_EXCEL_READER_2007
 *"* do not include other source files here!!!
       BEGIN OF t_relationship,
-        id         TYPE string,
-        type       TYPE string,
-        target     TYPE string,
-        targetmode TYPE string,
-        worksheet  TYPE REF TO zcl_excel_worksheet,
-        sheetid    TYPE string,     "ins #235 - repeat rows/cols - needed to identify correct sheet
+        id           TYPE string,
+        type         TYPE string,
+        target       TYPE string,
+        targetmode   TYPE string,
+        worksheet    TYPE REF TO zcl_excel_worksheet,
+        sheetid      TYPE string,     "ins #235 - repeat rows/cols - needed to identify correct sheet
         localsheetid TYPE string,
       END OF t_relationship .
     TYPES:
@@ -254,7 +254,9 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS load_worksheet_autofilter
       IMPORTING
         io_ixml_worksheet TYPE REF TO if_ixml_document
-        io_worksheet      TYPE REF TO zcl_excel_worksheet.
+        io_worksheet      TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel.
     METHODS load_worksheet_pagemargins
       IMPORTING
         !io_ixml_worksheet TYPE REF TO if_ixml_document
@@ -276,7 +278,9 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS load_theme
       IMPORTING
         VALUE(iv_path) TYPE string
-        !ip_excel      TYPE REF TO zcl_excel .
+        !ip_excel      TYPE REF TO zcl_excel
+      RAISING
+        zcx_excel .
   PRIVATE SECTION.
 
     DATA zip TYPE REF TO lcl_zip_archive .
@@ -872,7 +876,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_node_si            TYPE REF TO if_ixml_element,
       lo_node_si_child      TYPE REF TO if_ixml_element,
       lo_node_r_child_t     TYPE REF TO if_ixml_element,
-      lo_node_r_child_rPr   TYPE REF TO if_ixml_element,
+      lo_node_r_child_rpr   TYPE REF TO if_ixml_element,
       lo_font               TYPE REF TO zcl_excel_style_font,
       ls_rtf                TYPE zexcel_s_rtf,
       lv_current_offset     TYPE int2,
@@ -1524,95 +1528,95 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     lo_node_font = io_xml_element.
 
-      CREATE OBJECT lo_font.
+    CREATE OBJECT lo_font.
 *--------------------------------------------------------------------*
 *   Bold
 *--------------------------------------------------------------------*
-      IF lo_node_font->find_from_name( 'b' ) IS BOUND.
-        lo_font->bold = abap_true.
-      ENDIF.
+    IF lo_node_font->find_from_name( 'b' ) IS BOUND.
+      lo_font->bold = abap_true.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   Italic
 *--------------------------------------------------------------------*
-      IF lo_node_font->find_from_name( 'i' ) IS BOUND.
-        lo_font->italic = abap_true.
-      ENDIF.
+    IF lo_node_font->find_from_name( 'i' ) IS BOUND.
+      lo_font->italic = abap_true.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   Underline
 *--------------------------------------------------------------------*
-      lo_node2 = lo_node_font->find_from_name( 'u' ).
-      IF lo_node2 IS BOUND.
-        lo_font->underline      = abap_true.
-        lo_font->underline_mode = lo_node2->get_attribute( 'val' ).
-      ENDIF.
+    lo_node2 = lo_node_font->find_from_name( 'u' ).
+    IF lo_node2 IS BOUND.
+      lo_font->underline      = abap_true.
+      lo_font->underline_mode = lo_node2->get_attribute( 'val' ).
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   StrikeThrough
 *--------------------------------------------------------------------*
-      IF lo_node_font->find_from_name( 'strike' ) IS BOUND.
-        lo_font->strikethrough = abap_true.
-      ENDIF.
+    IF lo_node_font->find_from_name( 'strike' ) IS BOUND.
+      lo_font->strikethrough = abap_true.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   Fontsize
 *--------------------------------------------------------------------*
-      lo_node2 = lo_node_font->find_from_name( 'sz' ).
-      IF lo_node2 IS BOUND.
-        lo_font->size = lo_node2->get_attribute( 'val' ).
-      ENDIF.
+    lo_node2 = lo_node_font->find_from_name( 'sz' ).
+    IF lo_node2 IS BOUND.
+      lo_font->size = lo_node2->get_attribute( 'val' ).
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   Fontname
 *--------------------------------------------------------------------*
-      lo_node2 = lo_node_font->find_from_name( 'name' ).
+    lo_node2 = lo_node_font->find_from_name( 'name' ).
+    IF lo_node2 IS BOUND.
+      lo_font->name = lo_node2->get_attribute( 'val' ).
+    ELSE.
+      lo_node2 = lo_node_font->find_from_name( 'rFont' ).
       IF lo_node2 IS BOUND.
         lo_font->name = lo_node2->get_attribute( 'val' ).
-      ELSE.
-        lo_node2 = lo_node_font->find_from_name( 'rFont' ).
-        IF lo_node2 IS BOUND.
-          lo_font->name = lo_node2->get_attribute( 'val' ).
-        ENDIF.
       ENDIF.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   Fontfamily
 *--------------------------------------------------------------------*
-      lo_node2 = lo_node_font->find_from_name( 'family' ).
-      IF lo_node2 IS BOUND.
-        lo_font->family = lo_node2->get_attribute( 'val' ).
-      ENDIF.
+    lo_node2 = lo_node_font->find_from_name( 'family' ).
+    IF lo_node2 IS BOUND.
+      lo_font->family = lo_node2->get_attribute( 'val' ).
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   Fontscheme
 *--------------------------------------------------------------------*
-      lo_node2 = lo_node_font->find_from_name( 'scheme' ).
-      IF lo_node2 IS BOUND.
-        lo_font->scheme = lo_node2->get_attribute( 'val' ).
-      ELSE.
-        CLEAR lo_font->scheme.
-      ENDIF.
+    lo_node2 = lo_node_font->find_from_name( 'scheme' ).
+    IF lo_node2 IS BOUND.
+      lo_font->scheme = lo_node2->get_attribute( 'val' ).
+    ELSE.
+      CLEAR lo_font->scheme.
+    ENDIF.
 
 *--------------------------------------------------------------------*
 *   Fontcolor
 *--------------------------------------------------------------------*
-      lo_node2 = lo_node_font->find_from_name( 'color' ).
-      IF lo_node2 IS BOUND.
-        fill_struct_from_attributes( EXPORTING
-                                       ip_element   =  lo_node2
-                                     CHANGING
-                                       cp_structure = ls_color ).
-        lo_font->color-rgb = ls_color-rgb.
-        IF ls_color-indexed IS NOT INITIAL.
-          lo_font->color-indexed = ls_color-indexed.
-        ENDIF.
-
-        IF ls_color-theme IS NOT INITIAL.
-          lo_font->color-theme = ls_color-theme.
-        ENDIF.
-        lo_font->color-tint = ls_color-tint.
+    lo_node2 = lo_node_font->find_from_name( 'color' ).
+    IF lo_node2 IS BOUND.
+      fill_struct_from_attributes( EXPORTING
+                                     ip_element   =  lo_node2
+                                   CHANGING
+                                     cp_structure = ls_color ).
+      lo_font->color-rgb = ls_color-rgb.
+      IF ls_color-indexed IS NOT INITIAL.
+        lo_font->color-indexed = ls_color-indexed.
       ENDIF.
+
+      IF ls_color-theme IS NOT INITIAL.
+        lo_font->color-theme = ls_color-theme.
+      ENDIF.
+      lo_font->color-tint = ls_color-tint.
+    ENDIF.
 
     ro_font = lo_font.
 
@@ -3568,9 +3572,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     DATA: lo_ixml_ignored_errors TYPE REF TO if_ixml_node_collection,
           lo_ixml_ignored_error  TYPE REF TO if_ixml_element,
-          lo_ixml_iterator   TYPE REF TO if_ixml_node_iterator,
-          ls_ignored_error   TYPE zcl_excel_worksheet=>mty_s_ignored_errors,
-          lt_ignored_errors  TYPE zcl_excel_worksheet=>mty_th_ignored_errors.
+          lo_ixml_iterator       TYPE REF TO if_ixml_node_iterator,
+          ls_ignored_error       TYPE zcl_excel_worksheet=>mty_s_ignored_errors,
+          lt_ignored_errors      TYPE zcl_excel_worksheet=>mty_th_ignored_errors.
 
     DATA: BEGIN OF ls_raw_ignored_error,
             sqref              TYPE string,

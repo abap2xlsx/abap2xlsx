@@ -5,7 +5,8 @@ CLASS lcl_output DEFINITION CREATE PRIVATE.
   PUBLIC SECTION.
     CLASS-METHODS:
       output         IMPORTING cl_excel            TYPE REF TO zcl_excel
-                               iv_writerclass_name TYPE clike OPTIONAL,
+                               iv_writerclass_name TYPE clike OPTIONAL
+                     RAISING   zcx_excel,
       f4_path        RETURNING VALUE(selected_folder) TYPE string,
       parametertexts.
 
