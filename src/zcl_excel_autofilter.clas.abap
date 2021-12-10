@@ -33,7 +33,9 @@ CLASS zcl_excel_autofilter DEFINITION
         !io_sheet TYPE REF TO zcl_excel_worksheet .
     METHODS get_filter_area
       RETURNING
-        VALUE(rs_area) TYPE zexcel_s_autofilter_area .
+        VALUE(rs_area) TYPE zexcel_s_autofilter_area
+      RAISING
+        zcx_excel .
     METHODS get_filter_range
       RETURNING
         VALUE(r_range) TYPE zexcel_cell_value
@@ -399,9 +401,9 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
 
 
   METHOD validate_area.
-    DATA: l_col TYPE zexcel_cell_column,
+    DATA: l_col                   TYPE zexcel_cell_column,
           ls_original_filter_area TYPE zexcel_s_autofilter_area,
-          l_row TYPE zexcel_cell_row.
+          l_row                   TYPE zexcel_cell_row.
 
     l_row = worksheet->get_highest_row( ) .
     l_col = worksheet->get_highest_column( ) .

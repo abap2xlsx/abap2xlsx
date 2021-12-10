@@ -46,23 +46,23 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_FONT IMPLEMENTATION.
+CLASS zcl_excel_font IMPLEMENTATION.
 
 
   METHOD calculate_text_width.
 
     CONSTANTS lc_excel_cell_padding TYPE float VALUE '0.75'.
 
-    DATA: ld_current_character         TYPE c LENGTH 1,
-          lt_itcfc                     TYPE STANDARD TABLE OF itcfc,
-          ld_offset                    TYPE i,
-          ld_length                    TYPE i,
-          ld_uccp                      TYPE i,
-          ls_font_metric               TYPE mty_s_font_metric,
-          ld_width_from_font_metrics   TYPE i,
-          ld_font_family               TYPE itcfh-tdfamily,
-          lt_font_families             LIKE STANDARD TABLE OF ld_font_family,
-          ls_font_cache                TYPE mty_s_font_cache.
+    DATA: ld_current_character       TYPE c LENGTH 1,
+          lt_itcfc                   TYPE STANDARD TABLE OF itcfc,
+          ld_offset                  TYPE i,
+          ld_length                  TYPE i,
+          ld_uccp                    TYPE i,
+          ls_font_metric             TYPE mty_s_font_metric,
+          ld_width_from_font_metrics TYPE i,
+          ld_font_family             TYPE itcfh-tdfamily,
+          lt_font_families           LIKE STANDARD TABLE OF ld_font_family,
+          ls_font_cache              TYPE mty_s_font_cache.
 
     FIELD-SYMBOLS: <ls_font_cache>  TYPE mty_s_font_cache,
                    <ls_font_metric> TYPE mty_s_font_metric,

@@ -111,7 +111,9 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !ip_column       TYPE simple
       RETURNING
-        VALUE(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel .
     METHODS add_new_style_cond
       IMPORTING
         !ip_dimension_range  TYPE string DEFAULT 'A1'
@@ -334,7 +336,9 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !ip_column       TYPE simple
       RETURNING
-        VALUE(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel .
     METHODS get_columns
       RETURNING
         VALUE(eo_columns) TYPE REF TO zcl_excel_columns .
@@ -352,7 +356,9 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_size) TYPE i .
     METHODS get_default_column
       RETURNING
-        VALUE(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel.
     METHODS get_default_excel_date_format
       RETURNING
         VALUE(ep_default_excel_date_format) TYPE zexcel_number_format .
@@ -575,7 +581,9 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column_end   TYPE simple OPTIONAL
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL .
+        !ip_style        TYPE zexcel_cell_style OPTIONAL
+      RAISING
+        zcx_excel .
     METHODS set_area_formula
       IMPORTING
         !ip_column_start TYPE simple
@@ -594,7 +602,9 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row          TYPE zexcel_cell_row
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_style        TYPE zexcel_cell_style
-        !ip_merge        TYPE abap_bool OPTIONAL .
+        !ip_merge        TYPE abap_bool OPTIONAL
+      RAISING
+        zcx_excel .
     METHODS set_area
       IMPORTING
         !ip_column_start TYPE simple
@@ -715,7 +725,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
+CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD add_comment.

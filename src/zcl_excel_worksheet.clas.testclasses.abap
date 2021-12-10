@@ -15,9 +15,9 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     CLASS-METHODS: class_teardown.
     METHODS: setup.
     METHODS: teardown.
-    METHODS: set_merge FOR TESTING.
-    METHODS: delete_merge FOR TESTING.
-    METHODS: get_dimension_range FOR TESTING.
+    METHODS: set_merge FOR TESTING RAISING cx_static_check.
+    METHODS: delete_merge FOR TESTING RAISING cx_static_check.
+    METHODS: get_dimension_range FOR TESTING RAISING cx_static_check.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
 
 
@@ -78,9 +78,13 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 
     CREATE OBJECT lo_excel.
 
-    CREATE OBJECT f_cut
-      EXPORTING
-        ip_excel = lo_excel.
+    TRY.
+        CREATE OBJECT f_cut
+          EXPORTING
+            ip_excel = lo_excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
 
   ENDMETHOD.       "setup
 

@@ -147,8 +147,8 @@ CLASS zcl_excel DEFINITION
       IMPORTING
         !io_theme TYPE REF TO zcl_excel_theme .
     METHODS fill_template
-      importing
-        !iv_data TYPE REF TO ZCL_EXCEL_TEMPLATE_DATA
+      IMPORTING
+        !iv_data TYPE REF TO zcl_excel_template_data
       RAISING
         zcx_excel .
   PROTECTED SECTION.
@@ -156,7 +156,7 @@ CLASS zcl_excel DEFINITION
     DATA worksheets TYPE REF TO zcl_excel_worksheets .
   PRIVATE SECTION.
 
-    CONSTANTS version TYPE c LENGTH 10 VALUE '7.2.0'.       "#EC NOTEXT
+    CONSTANTS version TYPE c LENGTH 10 VALUE '7.14.0'.      "#EC NOTEXT
     DATA autofilters TYPE REF TO zcl_excel_autofilters .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA default_style TYPE zexcel_cell_style .
