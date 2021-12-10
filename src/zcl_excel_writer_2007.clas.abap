@@ -4088,6 +4088,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscalesheetview
                                       value = lv_value ).
     ENDIF.
+    IF io_worksheet->zif_excel_sheet_properties~get_right_to_left( ) EQ abap_true.
+      lo_element_2->set_attribute_ns( name  = 'rightToLeft'
+                                      value = '1' ).
+    ENDIF.
     lo_element_2->set_attribute_ns( name  = lc_xml_attr_workbookviewid
                                             value = '0' ).
     " showGridLines attribute

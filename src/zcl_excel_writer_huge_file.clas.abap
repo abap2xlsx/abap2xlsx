@@ -209,6 +209,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         zoomscalenormal    TYPE i,
         zoomscalepageview  TYPE i,
         zoomscalesheetview TYPE i,
+        righttoleft        TYPE i,
         workbookviewid     TYPE c,
         showgridlines      TYPE c,
         showrowcolheaders  TYPE c,
@@ -379,6 +380,12 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = 10.
       ENDIF.
       l_worksheet-zoomscalesheetview = io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview.
+    ENDIF.
+
+    IF io_worksheet->zif_excel_sheet_properties~get_right_to_left( ) EQ abap_true.
+      l_worksheet-righttoleft = lc_one.
+    ELSE.
+      l_worksheet-righttoleft = lc_zero.
     ENDIF.
 
     l_worksheet-workbookviewid = lc_zero.
