@@ -1751,9 +1751,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
 
-    changer->apply( ip_worksheet = me
-                    ip_column    = ip_column
-                    ip_row       = ip_row ).
+    ep_guid = changer->apply( ip_worksheet = me
+                              ip_column    = ip_column
+                              ip_row       = ip_row ).
 
 
   ENDMETHOD.                    "CHANGE_CELL_STYLE

@@ -3,9 +3,11 @@ INTERFACE zif_excel_style_changer
 
   METHODS apply
     IMPORTING
-      ip_worksheet TYPE REF TO zcl_excel_worksheet
-      ip_column    TYPE simple
-      ip_row       TYPE zexcel_cell_row
+      ip_worksheet   TYPE REF TO zcl_excel_worksheet
+      ip_column      TYPE simple
+      ip_row         TYPE zexcel_cell_row
+    RETURNING
+      VALUE(ep_guid) TYPE zexcel_cell_style
     RAISING
       zcx_excel.
   METHODS get_guid
@@ -488,6 +490,6 @@ INTERFACE zif_excel_style_changer
       value         TYPE zexcel_style_color_tint
     RETURNING
       VALUE(result) TYPE REF TO zif_excel_style_changer.
-  DATA: complete_style   TYPE zexcel_s_cstyle_complete READ-ONLY,
-        complete_stylex  TYPE zexcel_s_cstylex_complete READ-ONLY.
+  DATA: complete_style  TYPE zexcel_s_cstyle_complete READ-ONLY,
+        complete_stylex TYPE zexcel_s_cstylex_complete READ-ONLY.
 ENDINTERFACE.

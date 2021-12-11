@@ -15,23 +15,6 @@ CLASS zcl_excel_style_changer DEFINITION
       RAISING
         zcx_excel.
 
-*    CLASS-METHODS get
-*      IMPORTING
-*        excel         TYPE REF TO zcl_excel
-*      RETURNING
-*        VALUE(result) TYPE REF TO zif_excel_style_changer
-*      RAISING
-*        zcx_excel.
-*
-*    CLASS-METHODS get_from_guid
-*      IMPORTING
-*        excel         TYPE REF TO zcl_excel
-*        guid          TYPE zexcel_cell_style
-*      RETURNING
-*        VALUE(result) TYPE REF TO zif_excel_style_changer
-*      RAISING
-*        zcx_excel.
-
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -108,32 +91,6 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
     CREATE OBJECT style.
     style->excel = excel.
     result = style.
-
-*  ENDMETHOD.
-*
-*
-*  METHOD get.
-*
-*    DATA: style TYPE REF TO zcl_excel_style_changer.
-*
-*    CREATE OBJECT style.
-*    style->excel = excel.
-*    result = style.
-*
-*  ENDMETHOD.
-*
-*
-*  METHOD get_from_guid.
-*
-*    DATA: style TYPE REF TO zcl_excel_style_changer.
-*
-*    DATA(stylemapping) = excel->get_style_to_guid( guid ).
-*    CREATE OBJECT style.
-*    style->excel = excel.
-*    style->complete_style = stylemapping-complete_style.
-*    style->complete_stylex = stylemapping-complete_stylex.
-*
-*    result = style.
 
   ENDMETHOD.
 
@@ -562,11 +519,11 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
 * Now we have a completly filled styles.
 * This can be used to get the guid
 * Return guid if requested.  Might be used if copy&paste of styles is requested
-    l_guid = me->excel->get_static_cellstyle_guid( ip_cstyle_complete  = stylemapping-complete_style
+    ep_guid = me->excel->get_static_cellstyle_guid( ip_cstyle_complete  = stylemapping-complete_style
                                                    ip_cstylex_complete = stylemapping-complete_stylex  ).
     lo_worksheet->set_cell_style( ip_column = ip_column
                                   ip_row    = ip_row
-                                  ip_style  = l_guid ).
+                                  ip_style  = ep_guid ).
 
   ENDMETHOD.
 
