@@ -48,6 +48,7 @@
             <tt:attribute name="zoomScalePageLayoutView" value-ref="WORKSHEET.ZOOMSCALEPAGEVIEW"  />
           </tt:cond>
           <tt:attribute name="zoomScaleSheetLayoutView"  value-ref="WORKSHEET.ZOOMSCALESHEETVIEW" />
+          <tt:attribute name="rightToLeft"               value-ref="WORKSHEET.RIGHTTOLEFT"        />
           <tt:attribute name="workbookViewId"            value-ref="WORKSHEET.WORKBOOKVIEWID"     />
           <tt:attribute name="showGridLines"             value-ref="WORKSHEET.SHOWGRIDLINES"      />
           <tt:attribute name="showRowColHeaders"         value-ref="WORKSHEET.SHOWROWCOLHEADERS"  />

@@ -2212,6 +2212,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
              zoomscalenormal   TYPE string,
              workbookviewid    TYPE string,
              showrowcolheaders TYPE string,
+             righttoleft       TYPE string,
            END OF lty_sheetview.
 
     TYPES: BEGIN OF lty_mergecell,
@@ -2728,6 +2729,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ls_sheetview-showgridlines = abap_false.
     ENDIF.
     io_worksheet->set_show_gridlines( ls_sheetview-showgridlines ).
+    IF ls_sheetview-righttoleft = lc_xml_attr_true
+        OR ls_sheetview-righttoleft = lc_xml_attr_true_int.
+      io_worksheet->zif_excel_sheet_properties~set_right_to_left( abap_true ).
+    ENDIF.
 
 
     "Add merge cell information
