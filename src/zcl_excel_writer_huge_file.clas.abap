@@ -250,7 +250,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
           draft              TYPE c,
           errors             TYPE string,
           firstpagenumber    TYPE i,
-          fittopage          TYPE c,
           fittoheight        TYPE i,
           fittowidth         TYPE i,
           horizontaldpi      TYPE i,
@@ -683,7 +682,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
     l_worksheet-pagesetup-cellcomments       = io_worksheet->sheet_setup->cell_comments.
     l_worksheet-pagesetup-copies             = io_worksheet->sheet_setup->copies.
     l_worksheet-pagesetup-firstpagenumber    = io_worksheet->sheet_setup->first_page_number.
-    l_worksheet-pagesetup-fittopage          = io_worksheet->sheet_setup->fit_to_page.
     l_worksheet-pagesetup-fittoheight        = io_worksheet->sheet_setup->fit_to_height.
     l_worksheet-pagesetup-fittowidth         = io_worksheet->sheet_setup->fit_to_width.
     l_worksheet-pagesetup-horizontaldpi      = io_worksheet->sheet_setup->horizontal_dpi.
