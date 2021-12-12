@@ -667,6 +667,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA title TYPE zexcel_sheet_title VALUE 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     DATA upper_cell TYPE zexcel_s_cell_data .
     DATA mt_ignored_errors TYPE mty_th_ignored_errors.
+    DATA right_to_left TYPE abap_bool.
 
     METHODS calculate_cell_width
       IMPORTING
@@ -4260,6 +4261,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS
 
 
+  METHOD zif_excel_sheet_properties~get_right_to_left.
+    result = right_to_left.
+  ENDMETHOD.
+
+
   METHOD zif_excel_sheet_properties~get_style.
     IF zif_excel_sheet_properties~style IS NOT INITIAL.
       ep_style = zif_excel_sheet_properties~style.
@@ -4281,6 +4287,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     zif_excel_sheet_properties~zoomscale_pagelayoutview = 100 .
     zif_excel_sheet_properties~zoomscale_sheetlayoutview = 100 .
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE
+
+
+  METHOD zif_excel_sheet_properties~set_right_to_left.
+    me->right_to_left = right_to_left.
+  ENDMETHOD.
 
 
   METHOD zif_excel_sheet_properties~set_style.
