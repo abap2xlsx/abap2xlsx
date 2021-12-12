@@ -826,8 +826,8 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
         node ?= node->find_from_name( name = 'lineChart' namespace = 'c' ).
         node2 ?= node->find_from_name( name = 'marker' namespace = 'c' depth = '1' ).
         IF node2 IS BOUND.
-        zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-        lo_linechart->ns_markerval = ls_prop-val.
+          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+          lo_linechart->ns_markerval = ls_prop-val.
         ENDIF.
         node2 ?= node->find_from_name( name = 'smooth' namespace = 'c' depth = '1' ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
@@ -976,35 +976,35 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
       WHEN c_graph_bars.
         node2 ?= node->find_from_name( name = 'legendPos' namespace = 'c' ).
         IF node2 IS BOUND.
-        zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-        lo_barchart->ns_legendposval = ls_prop-val.
+          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+          lo_barchart->ns_legendposval = ls_prop-val.
         ENDIF.
         node2 ?= node->find_from_name( name = 'overlay' namespace = 'c' ).
         IF node2 IS BOUND.
-        zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-        lo_barchart->ns_overlayval = ls_prop-val.
+          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+          lo_barchart->ns_overlayval = ls_prop-val.
         ENDIF.
       WHEN c_graph_line.
         node2 ?= node->find_from_name( name = 'legendPos' namespace = 'c' ).
         IF node2 IS BOUND.
-        zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-        lo_linechart->ns_legendposval = ls_prop-val.
+          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+          lo_linechart->ns_legendposval = ls_prop-val.
         ENDIF.
         node2 ?= node->find_from_name( name = 'overlay' namespace = 'c' ).
         IF node2 IS BOUND.
-        zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-        lo_linechart->ns_overlayval = ls_prop-val.
+          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+          lo_linechart->ns_overlayval = ls_prop-val.
         ENDIF.
       WHEN c_graph_pie.
         node2 ?= node->find_from_name( name = 'legendPos' namespace = 'c' ).
         IF node2 IS BOUND.
-        zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-        lo_piechart->ns_legendposval = ls_prop-val.
+          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+          lo_piechart->ns_legendposval = ls_prop-val.
         ENDIF.
         node2 ?= node->find_from_name( name = 'overlay' namespace = 'c' ).
         IF node2 IS BOUND.
-        zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
-        lo_piechart->ns_overlayval = ls_prop-val.
+          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
+          lo_piechart->ns_overlayval = ls_prop-val.
         ENDIF.
         node2 ?= node->find_from_name( name = 'pPr' namespace = 'a' ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
