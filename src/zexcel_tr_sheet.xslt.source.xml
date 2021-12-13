@@ -27,12 +27,12 @@
           <tt:attribute name="summaryRight" value-ref="WORKSHEET.SUMMARYRIGHT" />
           <tt:attribute name="summaryBelow" value-ref="WORKSHEET.SUMMARYBELOW" />
         </outlinePr>
+        <tt:cond check="not-initial(WORKSHEET.FITTOPAGE)">
+          <pageSetUpPr>
+            <tt:attribute name="fitToPage" value-ref="WORKSHEET.FITTOPAGE"/>
+          </pageSetUpPr>
+        </tt:cond>
       </sheetPr>
-      <tt:cond check="not-initial(WORKSHEET.FITTOPAGE)">
-        <pageSetupPr>
-          <tt:attribute name="fitToPage" value-ref="WORKSHEET.FITTOPAGE" />
-        </pageSetupPr>
-      </tt:cond>
       <dimension>
         <tt:attribute name="ref" value-ref="WORKSHEET.DIMENSION" />
       </dimension>
@@ -48,6 +48,7 @@
             <tt:attribute name="zoomScalePageLayoutView" value-ref="WORKSHEET.ZOOMSCALEPAGEVIEW"  />
           </tt:cond>
           <tt:attribute name="zoomScaleSheetLayoutView"  value-ref="WORKSHEET.ZOOMSCALESHEETVIEW" />
+          <tt:attribute name="rightToLeft"               value-ref="WORKSHEET.RIGHTTOLEFT"        />
           <tt:attribute name="workbookViewId"            value-ref="WORKSHEET.WORKBOOKVIEWID"     />
           <tt:attribute name="showGridLines"             value-ref="WORKSHEET.SHOWGRIDLINES"      />
           <tt:attribute name="showRowColHeaders"         value-ref="WORKSHEET.SHOWROWCOLHEADERS"  />
@@ -112,8 +113,8 @@
               <tt:attribute name="hidden"       value-ref="HIDDEN"       />
             </tt:cond>
             <tt:cond check="not-initial(CUSTOMHEIGHT)">
-              <tt:attribute name="customHeight" value-ref="CUSTOMHIGHT"  />
-              <tt:attribute name="ht"           value-ref="HIGHT"        />
+              <tt:attribute name="customHeight" value-ref="CUSTOMHEIGHT" />
+              <tt:attribute name="ht"           value-ref="HEIGHT"       />
             </tt:cond>
             <tt:cond check="not-initial(COLLAPSED)">
               <tt:attribute name="collapsed"    value-ref="COLLAPSED"    />
@@ -229,8 +230,8 @@
           <tt:cond check="FIRSTPAGENUMBER != 0">
             <tt:attribute name="firstPageNumber"    value-ref="FIRSTPAGENUMBER"    />
           </tt:cond>
-          <tt:cond check="not-initial(FITTOPAGE)">
-            <tt:attribute name="fitToHeight"        value-ref="FITTOHIGHT"         />
+          <tt:cond check="not-initial(ref('.WORKSHEET.FITTOPAGE'))">
+            <tt:attribute name="fitToHeight"        value-ref="FITTOHEIGHT"        />
             <tt:attribute name="fitToWidth"         value-ref="FITTOWIDTH"         />
           </tt:cond>
           <tt:cond check="HORIZONTALDPI != 0">

@@ -25,9 +25,15 @@ INTERFACE zif_excel_sheet_properties
   DATA hide_columns_from TYPE zexcel_cell_column_alpha .
 
   METHODS initialize .
+  METHODS get_right_to_left
+    RETURNING
+      VALUE(result) TYPE abap_bool.
   METHODS get_style
     RETURNING
       VALUE(ep_style) TYPE zexcel_cell_style .
+  METHODS set_right_to_left
+    IMPORTING
+      !right_to_left TYPE abap_bool .
   METHODS set_style
     IMPORTING
       !ip_style TYPE zexcel_cell_style .
