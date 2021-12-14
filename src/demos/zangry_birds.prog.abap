@@ -722,10 +722,10 @@ START-OF-SELECTION.
                           ip_value  = 'Created with abap2xlsx'
                           ip_style  = lv_style_credit_guid ).
 
-  lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = 'https://sapmentors.github.io/abap2xlsx' ).
+  lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = 'https://abap2xlsx.github.io/abap2xlsx' ).
   lo_worksheet->set_cell( ip_column    = 'AP'
                           ip_row       = 24
-                          ip_value     = 'https://sapmentors.github.io/abap2xlsx'
+                          ip_value     = 'https://abap2xlsx.github.io/abap2xlsx'
                           ip_style     = lv_style_link_guid
                           ip_hyperlink = lo_hyperlink ).
 
