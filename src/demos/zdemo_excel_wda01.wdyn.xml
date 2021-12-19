@@ -1112,7 +1112,7 @@
      <CONTROLLER_NAME>V_MAIN</CONTROLLER_NAME>
      <CMPNAME>ONACTIONBTN_DOWNLOAD</CMPNAME>
      <LINE_NUMBER>29</LINE_NUMBER>
-     <SOURCE_LINE>      i_mime_type     = &apos;EXCEL&apos;</SOURCE_LINE>
+     <SOURCE_LINE>      i_mime_type     = &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&apos;</SOURCE_LINE>
     </WDY_CTLR_COMPO_SOURCE_VRS>
     <WDY_CTLR_COMPO_SOURCE_VRS>
      <COMPONENT_NAME>ZDEMO_EXCEL_WDA01</COMPONENT_NAME>
