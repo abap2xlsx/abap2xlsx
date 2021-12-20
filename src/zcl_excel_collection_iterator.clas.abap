@@ -15,7 +15,7 @@ CLASS zcl_excel_collection_iterator DEFINITION
         VALUE(object) TYPE REF TO object.
     METHODS constructor
       IMPORTING
-        collection TYPE REF TO zCL_excel_COLLECTION.
+        collection TYPE REF TO zcl_excel_collection.
   PROTECTED SECTION.
   PRIVATE SECTION.
     DATA index TYPE i VALUE 0.
@@ -24,7 +24,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COLLECTION_ITERATOR IMPLEMENTATION.
+CLASS zcl_excel_collection_iterator IMPLEMENTATION.
 
 
   METHOD constructor .

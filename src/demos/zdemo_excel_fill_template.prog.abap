@@ -15,60 +15,60 @@ REPORT zdemo_excel_fill_template.
 * on the Excel file ZDEMO_EXCEL_TEMPLATE
 * from SMW0.
 *=================
-TYPES t_number TYPE p length 16 decimals 4.
+TYPES t_number TYPE p LENGTH 16 DECIMALS 4.
 TYPES:
- begin of t_TABLE1,
-     PERSON                         type string,
-     SALARY                         type t_number,
- end of t_TABLE1,
+  BEGIN OF t_table1,
+    person TYPE string,
+    salary TYPE t_number,
+  END OF t_table1,
 
- tt_TABLE1 type standard table of t_TABLE1 with default key,
+  tt_table1 TYPE STANDARD TABLE OF t_table1 WITH DEFAULT KEY,
 
- begin of t_LINE1,
-     CARRID                         type string,
-     CONNID                         type string,
-     FLDATE                         type d,
-     PRICE                          type t_number,
- end of t_LINE1,
+  BEGIN OF t_line1,
+    carrid TYPE string,
+    connid TYPE string,
+    fldate TYPE d,
+    price  TYPE t_number,
+  END OF t_line1,
 
- tt_LINE1 type standard table of t_LINE1 with default key,
+  tt_line1 TYPE STANDARD TABLE OF t_line1 WITH DEFAULT KEY,
 
- begin of t_TABLE2,
-     CARRID                         type string,
-     PRICE                          type t_number,
-     LINE1                          type tt_LINE1,
- end of t_TABLE2,
+  BEGIN OF t_table2,
+    carrid TYPE string,
+    price  TYPE t_number,
+    line1  TYPE tt_line1,
+  END OF t_table2,
 
- tt_TABLE2 type standard table of t_TABLE2 with default key,
+  tt_table2 TYPE STANDARD TABLE OF t_table2 WITH DEFAULT KEY,
 
- begin of t_Sheet1,
-     DATE                           type d,
-     TIME                           type t,
-     USER                           type string,
-     TOTAL                          type t_number,
-     PRICE                          type t_number,
-     TABLE1                         type tt_TABLE1,
-     TABLE2                         type tt_TABLE2,
- end of t_Sheet1,
-
-
- begin of t_TABLE3,
-     PERSON                         type string,
-     SALARY                         type t_number,
- end of t_TABLE3,
-
- tt_TABLE3 type standard table of t_TABLE3 with default key,
-
- begin of t_Sheet2,
-     DATE                           type d,
-     TIME                           type t,
-     USER                           type string,
-     TOTAL                          type t_number,
-     TABLE3                         type tt_TABLE3,
- end of t_Sheet2.
+  BEGIN OF t_sheet1,
+    date   TYPE d,
+    time   TYPE t,
+    user   TYPE string,
+    total  TYPE t_number,
+    price  TYPE t_number,
+    table1 TYPE tt_table1,
+    table2 TYPE tt_table2,
+  END OF t_sheet1,
 
 
-DATA: lo_data type ref to ZCL_EXCEL_TEMPLATE_DATA.
+  BEGIN OF t_table3,
+    person TYPE string,
+    salary TYPE t_number,
+  END OF t_table3,
+
+  tt_table3 TYPE STANDARD TABLE OF t_table3 WITH DEFAULT KEY,
+
+  BEGIN OF t_sheet2,
+    date   TYPE d,
+    time   TYPE t,
+    user   TYPE string,
+    total  TYPE t_number,
+    table3 TYPE tt_table3,
+  END OF t_sheet2.
+
+
+DATA: lo_data TYPE REF TO zcl_excel_template_data.
 *=================
 * End of generated code
 *=================
@@ -299,55 +299,55 @@ FORM load_smw0
     RAISING
         zcx_excel.
 
-    DATA: lv_excel_data   TYPE xstring,
-          lt_mime         TYPE TABLE OF w3mime,
-          ls_key          TYPE wwwdatatab,
-          lv_errormessage TYPE string,
-          lv_filesize     TYPE i,
-          lv_filesizec    TYPE c LENGTH 10.
+  DATA: lv_excel_data   TYPE xstring,
+        lt_mime         TYPE TABLE OF w3mime,
+        ls_key          TYPE wwwdatatab,
+        lv_errormessage TYPE string,
+        lv_filesize     TYPE i,
+        lv_filesizec    TYPE c LENGTH 10.
 
 *--------------------------------------------------------------------*
 * Read file into binary string
 *--------------------------------------------------------------------*
 
-    ls_key-relid = 'MI'.
-    ls_key-objid = iv_w3objid .
+  ls_key-relid = 'MI'.
+  ls_key-objid = iv_w3objid .
 
-    CALL FUNCTION 'WWWDATA_IMPORT'
-      EXPORTING
-        key    = ls_key
-      TABLES
-        mime   = lt_mime
-      EXCEPTIONS
-        OTHERS = 1.
-    IF sy-subrc <> 0.
-      lv_errormessage = 'A problem occured when reading the MIME object'(004).
-      zcx_excel=>raise_text( lv_errormessage ).
-    ENDIF.
+  CALL FUNCTION 'WWWDATA_IMPORT'
+    EXPORTING
+      key    = ls_key
+    TABLES
+      mime   = lt_mime
+    EXCEPTIONS
+      OTHERS = 1.
+  IF sy-subrc <> 0.
+    lv_errormessage = 'A problem occured when reading the MIME object'(004).
+    zcx_excel=>raise_text( lv_errormessage ).
+  ENDIF.
 
-    CALL FUNCTION 'WWWPARAMS_READ'
-      EXPORTING
-        relid = ls_key-relid
-        objid = ls_key-objid
-        name  = 'filesize'
-      IMPORTING
-        value = lv_filesizec.
+  CALL FUNCTION 'WWWPARAMS_READ'
+    EXPORTING
+      relid = ls_key-relid
+      objid = ls_key-objid
+      name  = 'filesize'
+    IMPORTING
+      value = lv_filesizec.
 
-    lv_filesize = lv_filesizec.
-    CALL FUNCTION 'SCMS_BINARY_TO_XSTRING'
-      EXPORTING
-        input_length = lv_filesize
-      IMPORTING
-        buffer       = lv_excel_data
-      TABLES
-        binary_tab   = lt_mime
-      EXCEPTIONS
-        failed       = 1
-        OTHERS       = 2.
+  lv_filesize = lv_filesizec.
+  CALL FUNCTION 'SCMS_BINARY_TO_XSTRING'
+    EXPORTING
+      input_length = lv_filesize
+    IMPORTING
+      buffer       = lv_excel_data
+    TABLES
+      binary_tab   = lt_mime
+    EXCEPTIONS
+      failed       = 1
+      OTHERS       = 2.
 
 *--------------------------------------------------------------------*
 * Parse Excel data into ZCL_EXCEL object from binary string
 *--------------------------------------------------------------------*
-    ro_excel = io_reader->load( i_excel2007 = lv_excel_data ).
+  ro_excel = io_reader->load( i_excel2007 = lv_excel_data ).
 
 ENDFORM.

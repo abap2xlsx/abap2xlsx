@@ -69,7 +69,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
 
 **********************************************************************
 * STEP 0: Build Regex for invalid characters
-" uccpi returns 2 chars but for this specific input 1 char is enough
+    " uccpi returns 2 chars but for this specific input 1 char is enough
     CASE cl_abap_char_utilities=>charsize.
       WHEN 1.lv_last_allowed_char = cl_abap_conv_in_ce=>uccpi( 255 ).  " FF     in non-Unicode
       WHEN 2.lv_last_allowed_char = cl_abap_conv_in_ce=>uccpi( 65533 )." FFFD   in Unicode
@@ -209,6 +209,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         zoomscalenormal    TYPE i,
         zoomscalepageview  TYPE i,
         zoomscalesheetview TYPE i,
+        righttoleft        TYPE i,
         workbookviewid     TYPE c,
         showgridlines      TYPE c,
         showrowcolheaders  TYPE c,
@@ -249,7 +250,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
           draft              TYPE c,
           errors             TYPE string,
           firstpagenumber    TYPE i,
-          fittopage          TYPE c,
           fittoheight        TYPE i,
           fittowidth         TYPE i,
           horizontaldpi      TYPE i,
@@ -379,6 +379,12 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = 10.
       ENDIF.
       l_worksheet-zoomscalesheetview = io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview.
+    ENDIF.
+
+    IF io_worksheet->zif_excel_sheet_properties~get_right_to_left( ) EQ abap_true.
+      l_worksheet-righttoleft = lc_one.
+    ELSE.
+      l_worksheet-righttoleft = lc_zero.
     ENDIF.
 
     l_worksheet-workbookviewid = lc_zero.
@@ -676,7 +682,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
     l_worksheet-pagesetup-cellcomments       = io_worksheet->sheet_setup->cell_comments.
     l_worksheet-pagesetup-copies             = io_worksheet->sheet_setup->copies.
     l_worksheet-pagesetup-firstpagenumber    = io_worksheet->sheet_setup->first_page_number.
-    l_worksheet-pagesetup-fittopage          = io_worksheet->sheet_setup->fit_to_page.
     l_worksheet-pagesetup-fittoheight        = io_worksheet->sheet_setup->fit_to_height.
     l_worksheet-pagesetup-fittowidth         = io_worksheet->sheet_setup->fit_to_width.
     l_worksheet-pagesetup-horizontaldpi      = io_worksheet->sheet_setup->horizontal_dpi.

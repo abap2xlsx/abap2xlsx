@@ -75,10 +75,15 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_merge .
     TYPES:
       mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
+    TYPES ty_area TYPE c LENGTH 1.
 
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
     CONSTANTS c_break_row TYPE zexcel_break VALUE 1.        "#EC NOTEXT
+    CONSTANTS: BEGIN OF c_area,
+                 whole   TYPE ty_area VALUE 'W',            "#EC NOTEXT
+                 topleft TYPE ty_area VALUE 'T',            "#EC NOTEXT
+               END OF c_area.
     DATA excel TYPE REF TO zcl_excel READ-ONLY .
     DATA print_gridlines TYPE zexcel_print_gridlines READ-ONLY VALUE abap_false. "#EC NOTEXT
     DATA sheet_content TYPE zexcel_t_cell_data .
@@ -106,7 +111,9 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !ip_column       TYPE simple
       RETURNING
-        VALUE(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel .
     METHODS add_new_style_cond
       IMPORTING
         !ip_dimension_range  TYPE string DEFAULT 'A1'
@@ -329,7 +336,9 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !ip_column       TYPE simple
       RETURNING
-        VALUE(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel .
     METHODS get_columns
       RETURNING
         VALUE(eo_columns) TYPE REF TO zcl_excel_columns .
@@ -347,7 +356,9 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_size) TYPE i .
     METHODS get_default_column
       RETURNING
-        VALUE(eo_column) TYPE REF TO zcl_excel_column .
+        VALUE(eo_column) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel.
     METHODS get_default_excel_date_format
       RETURNING
         VALUE(ep_default_excel_date_format) TYPE zexcel_number_format .
@@ -570,7 +581,9 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column_end   TYPE simple OPTIONAL
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL .
+        !ip_style        TYPE zexcel_cell_style OPTIONAL
+      RAISING
+        zcx_excel .
     METHODS set_area_formula
       IMPORTING
         !ip_column_start TYPE simple
@@ -579,6 +592,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_formula      TYPE zexcel_cell_formula
         !ip_merge        TYPE abap_bool OPTIONAL
+        !ip_area         TYPE ty_area DEFAULT c_area-topleft
       RAISING
         zcx_excel .
     METHODS set_area_style
@@ -588,7 +602,9 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row          TYPE zexcel_cell_row
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_style        TYPE zexcel_cell_style
-        !ip_merge        TYPE abap_bool OPTIONAL .
+        !ip_merge        TYPE abap_bool OPTIONAL
+      RAISING
+        zcx_excel .
     METHODS set_area
       IMPORTING
         !ip_column_start TYPE simple
@@ -602,6 +618,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type    TYPE abap_typekind OPTIONAL
         !ip_merge        TYPE abap_bool OPTIONAL
+        !ip_area         TYPE ty_area DEFAULT c_area-topleft
       RAISING
         zcx_excel .
     METHODS get_header_footer_drawings
@@ -619,30 +636,6 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
   PROTECTED SECTION.
   PRIVATE SECTION.
-
-    TYPES:
-      BEGIN OF mty_s_font_metric,
-        char       TYPE c LENGTH 1,
-        char_width TYPE tdcwidths,
-      END OF mty_s_font_metric .
-    TYPES:
-      mty_th_font_metrics
-             TYPE HASHED TABLE OF mty_s_font_metric
-             WITH UNIQUE KEY char .
-    TYPES:
-      BEGIN OF mty_s_font_cache,
-        font_name       TYPE zexcel_style_font_name,
-        font_height     TYPE tdfontsize,
-        flag_bold       TYPE abap_bool,
-        flag_italic     TYPE abap_bool,
-        th_font_metrics TYPE mty_th_font_metrics,
-      END OF mty_s_font_cache .
-    TYPES:
-      mty_th_font_cache
-             TYPE HASHED TABLE OF mty_s_font_cache
-             WITH UNIQUE KEY font_name font_height flag_bold flag_italic .
-*  types:
-*    mty_ts_row_dimension TYPE SORTED TABLE OF zexcel_s_worksheet_rowdimensio WITH UNIQUE KEY row .
 
 *"* private components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
@@ -663,7 +656,6 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA hyperlinks TYPE REF TO cl_object_collection .
     DATA lower_cell TYPE zexcel_s_cell_data .
     DATA mo_pagebreaks TYPE REF TO zcl_excel_worksheet_pagebreaks .
-    CLASS-DATA mth_font_cache TYPE mty_th_font_cache .
     DATA mt_row_outlines TYPE mty_ts_outlines_row .
     DATA print_title_col_from TYPE zexcel_cell_column_alpha .
     DATA print_title_col_to TYPE zexcel_cell_column_alpha .
@@ -675,6 +667,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA title TYPE zexcel_sheet_title VALUE 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     DATA upper_cell TYPE zexcel_s_cell_data .
     DATA mt_ignored_errors TYPE mty_th_ignored_errors.
+    DATA right_to_left TYPE abap_bool.
 
     METHODS calculate_cell_width
       IMPORTING
@@ -733,7 +726,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
+CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD add_comment.
@@ -1222,13 +1215,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 *          - Add cell padding to simulate Excel behavior
 *--------------------------------------------------------------------*
 
-    CONSTANTS:
-      lc_default_font_name   TYPE zexcel_style_font_name VALUE 'Calibri', "#EC NOTEXT
-      lc_default_font_height TYPE tdfontsize VALUE '110',
-      lc_excel_cell_padding  TYPE float VALUE '0.75'.
-
     DATA: ld_cell_value                TYPE zexcel_cell_value,
-          ld_current_character         TYPE c LENGTH 1,
           ld_style_guid                TYPE zexcel_cell_style,
           ls_stylemapping              TYPE zexcel_s_stylemapping,
           lo_table_object              TYPE REF TO object,
@@ -1240,21 +1227,8 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           ld_flag_italic               TYPE abap_bool VALUE abap_false,
           ld_date                      TYPE d,
           ld_date_char                 TYPE c LENGTH 50,
-          ld_font_height               TYPE tdfontsize VALUE lc_default_font_height,
-          lt_itcfc                     TYPE STANDARD TABLE OF itcfc,
-          ld_offset                    TYPE i,
-          ld_length                    TYPE i,
-          ld_uccp                      TYPE i,
-          ls_font_metric               TYPE mty_s_font_metric,
-          ld_width_from_font_metrics   TYPE i,
-          ld_font_family               TYPE itcfh-tdfamily,
-          ld_font_name                 TYPE zexcel_style_font_name VALUE lc_default_font_name,
-          lt_font_families             LIKE STANDARD TABLE OF ld_font_family,
-          ls_font_cache                TYPE mty_s_font_cache.
-
-    FIELD-SYMBOLS: <ls_font_cache>  TYPE mty_s_font_cache,
-                   <ls_font_metric> TYPE mty_s_font_metric,
-                   <ls_itcfc>       TYPE itcfc.
+          ld_font_height               TYPE tdfontsize VALUE zcl_excel_font=>lc_default_font_height,
+          ld_font_name                 TYPE zexcel_style_font_name VALUE zcl_excel_font=>lc_default_font_name.
 
     " Determine cell content and cell style
     me->get_cell( EXPORTING ip_column = ip_column
@@ -1340,116 +1314,12 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       ENDTRY.
     ENDIF.
 
-    " Check if the same font (font name and font attributes) was already
-    " used before
-    READ TABLE mth_font_cache
-      WITH TABLE KEY
-        font_name   = ld_font_name
-        font_height = ld_font_height
-        flag_bold   = ld_flag_bold
-        flag_italic = ld_flag_italic
-      ASSIGNING <ls_font_cache>.
-
-    IF sy-subrc <> 0.
-      " Font is used for the first time
-      " Add the font to our local font cache
-      ls_font_cache-font_name   = ld_font_name.
-      ls_font_cache-font_height = ld_font_height.
-      ls_font_cache-flag_bold   = ld_flag_bold.
-      ls_font_cache-flag_italic = ld_flag_italic.
-      INSERT ls_font_cache INTO TABLE mth_font_cache
-        ASSIGNING <ls_font_cache>.
-
-      " Determine the SAPscript font family name from the Excel
-      " font name
-      SELECT tdfamily
-        FROM tfo01
-        INTO TABLE lt_font_families
-        UP TO 1 ROWS
-        WHERE tdtext = ld_font_name
-        ORDER BY PRIMARY KEY.
-
-      " Check if a matching font family was found
-      " Fonts can be uploaded from TTF files using transaction SE73
-      IF lines( lt_font_families ) > 0.
-        READ TABLE lt_font_families INDEX 1 INTO ld_font_family.
-
-        " Load font metrics (returns a table with the size of each letter
-        " in the font)
-        CALL FUNCTION 'LOAD_FONT'
-          EXPORTING
-            family      = ld_font_family
-            height      = ld_font_height
-            printer     = 'SWIN'
-            bold        = ld_flag_bold
-            italic      = ld_flag_italic
-          TABLES
-            metric      = lt_itcfc
-          EXCEPTIONS
-            font_family = 1
-            codepage    = 2
-            device_type = 3
-            OTHERS      = 4.
-        IF sy-subrc <> 0.
-          CLEAR lt_itcfc.
-        ENDIF.
-
-        " For faster access, convert each character number to the actual
-        " character, and store the characters and their sizes in a hash
-        " table
-        LOOP AT lt_itcfc ASSIGNING <ls_itcfc>.
-          ld_uccp = <ls_itcfc>-cpcharno.
-          ls_font_metric-char =
-            cl_abap_conv_in_ce=>uccpi( ld_uccp ).
-          ls_font_metric-char_width = <ls_itcfc>-tdcwidths.
-          INSERT ls_font_metric
-            INTO TABLE <ls_font_cache>-th_font_metrics.
-        ENDLOOP.
-
-      ENDIF.
-    ENDIF.
-
-    " Calculate the cell width
-    " If available, use font metrics
-    IF lines( <ls_font_cache>-th_font_metrics ) = 0.
-      " Font metrics are not available
-      " -> Calculate the cell width using only the font size
-      ld_length = strlen( ld_cell_value ).
-      ep_width = ld_length * ld_font_height / lc_default_font_height + lc_excel_cell_padding.
-
-    ELSE.
-      " Font metrics are available
-
-      " Calculate the size of the text by adding the sizes of each
-      " letter
-      ld_length = strlen( ld_cell_value ).
-      DO ld_length TIMES.
-        " Subtract 1, because the first character is at offset 0
-        ld_offset = sy-index - 1.
-
-        " Read the current character from the cell value
-        ld_current_character = ld_cell_value+ld_offset(1).
-
-        " Look up the size of the current letter
-        READ TABLE <ls_font_cache>-th_font_metrics
-          WITH TABLE KEY char = ld_current_character
-          ASSIGNING <ls_font_metric>.
-        IF sy-subrc = 0.
-          " The size of the letter is known
-          " -> Add the actual size of the letter
-          ADD <ls_font_metric>-char_width TO ld_width_from_font_metrics.
-        ELSE.
-          " The size of the letter is unknown
-          " -> Add the font height as the default letter size
-          ADD ld_font_height TO ld_width_from_font_metrics.
-        ENDIF.
-      ENDDO.
-
-      " Add cell padding (Excel makes columns a bit wider than the space
-      " that is needed for the text itself) and convert unit
-      " (division by 100)
-      ep_width = ld_width_from_font_metrics / 100 + lc_excel_cell_padding.
-    ENDIF.
+    ep_width = zcl_excel_font=>calculate_text_width(
+      iv_font_name   = ld_font_name
+      iv_font_height = ld_font_height
+      iv_flag_bold   = ld_flag_bold
+      iv_flag_italic = ld_flag_italic
+      iv_cell_value  = ld_cell_value ).
 
     " If the current cell contains an auto filter, make it a bit wider.
     " The size used by the auto filter button does not depend on the font
@@ -1458,7 +1328,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
       ADD 2 TO ep_width.
     ENDIF.
 
-  ENDMETHOD.                    "CALCULATE_CELL_WIDTH
+  ENDMETHOD.
 
 
   METHOD calculate_column_widths.
@@ -1518,619 +1388,374 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   METHOD change_cell_style.
-    " issue # 139
-    DATA: stylemapping    TYPE zexcel_s_stylemapping,
-          complete_style  TYPE zexcel_s_cstyle_complete,
-          complete_stylex TYPE zexcel_s_cstylex_complete,
-          l_guid          TYPE zexcel_cell_style.   "issue # 177
-    DATA: lv_border_supplied  TYPE abap_bool,
-          lv_xborder_supplied TYPE abap_bool,
-          lv_style_supplied   TYPE abap_bool.
 
-* First get current stylsettings
-    TRY.
-        me->get_cell( EXPORTING ip_column = ip_column  " Cell Column
-                                ip_row    = ip_row      " Cell Row
-                      IMPORTING ep_guid   = l_guid )." Cell Value ).  "issue # 177
+    DATA: changer TYPE REF TO zif_excel_style_changer.
 
 
-        stylemapping = me->excel->get_style_to_guid( l_guid ).        "issue # 177
-        complete_style  = stylemapping-complete_style.
-        complete_stylex = stylemapping-complete_stylex.
-      CATCH zcx_excel.
-* Error --> use submitted style
-    ENDTRY.
+    changer = zcl_excel_style_changer=>create( excel = excel ).
 
-*  move_supplied_multistyles: complete.
+
     IF ip_complete IS SUPPLIED.
       IF ip_xcomplete IS NOT SUPPLIED.
         zcx_excel=>raise_text( 'Complete styleinfo has to be supplied with corresponding X-field' ).
       ENDIF.
-      MOVE-CORRESPONDING ip_complete  TO complete_style.
-      MOVE-CORRESPONDING ip_xcomplete TO complete_stylex.
+      changer->set_complete( ip_complete = ip_complete ip_xcomplete = ip_xcomplete ).
     ENDIF.
 
 
 
     IF ip_font IS SUPPLIED.
-      DATA: fontx LIKE ip_xfont.
       IF ip_xfont IS SUPPLIED.
-        fontx = ip_xfont.
+        changer->set_complete_font( ip_font = ip_font ip_xfont = ip_xfont ).
       ELSE.
-* Only supplied values should be used - exception: Flags bold and italic strikethrough underline
-        MOVE 'X' TO: fontx-bold,
-                     fontx-italic,
-                     fontx-strikethrough,
-                     fontx-underline_mode.
-        CLEAR fontx-color WITH 'X'.
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_font-color
-          CHANGING
-            cs_xcolor = fontx-color ).
-        IF ip_font-family IS NOT INITIAL.
-          fontx-family = 'X'.
-        ENDIF.
-        IF ip_font-name IS NOT INITIAL.
-          fontx-name = 'X'.
-        ENDIF.
-        IF ip_font-scheme IS NOT INITIAL.
-          fontx-scheme = 'X'.
-        ENDIF.
-        IF ip_font-size IS NOT INITIAL.
-          fontx-size = 'X'.
-        ENDIF.
-        IF ip_font-underline_mode IS NOT INITIAL.
-          fontx-underline_mode = 'X'.
-        ENDIF.
+        changer->set_complete_font( ip_font = ip_font ).
       ENDIF.
-      MOVE-CORRESPONDING ip_font  TO complete_style-font.
-      MOVE-CORRESPONDING fontx    TO complete_stylex-font.
-* Correction for undeline mode
     ENDIF.
 
     IF ip_fill IS SUPPLIED.
-      DATA: fillx LIKE ip_xfill.
       IF ip_xfill IS SUPPLIED.
-        fillx = ip_xfill.
+        changer->set_complete_fill( ip_fill = ip_fill ip_xfill = ip_xfill ).
       ELSE.
-        CLEAR fillx WITH 'X'.
-        IF ip_fill-filltype IS INITIAL.
-          CLEAR fillx-filltype.
-        ENDIF.
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_fill-fgcolor
-          CHANGING
-            cs_xcolor = fillx-fgcolor ).
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_fill-bgcolor
-          CHANGING
-            cs_xcolor = fillx-bgcolor ).
-
+        changer->set_complete_fill( ip_fill = ip_fill ).
       ENDIF.
-      MOVE-CORRESPONDING ip_fill  TO complete_style-fill.
-      MOVE-CORRESPONDING fillx    TO complete_stylex-fill.
     ENDIF.
 
 
     IF ip_borders IS SUPPLIED.
-      DATA: bordersx LIKE ip_xborders.
       IF ip_xborders IS SUPPLIED.
-        bordersx = ip_xborders.
+        changer->set_complete_borders( ip_borders = ip_borders ip_xborders = ip_xborders ).
       ELSE.
-        CLEAR bordersx WITH 'X'.
-        IF ip_borders-allborders-border_style IS INITIAL.
-          CLEAR bordersx-allborders-border_style.
-        ENDIF.
-        IF ip_borders-diagonal-border_style IS INITIAL.
-          CLEAR bordersx-diagonal-border_style.
-        ENDIF.
-        IF ip_borders-down-border_style IS INITIAL.
-          CLEAR bordersx-down-border_style.
-        ENDIF.
-        IF ip_borders-left-border_style IS INITIAL.
-          CLEAR bordersx-left-border_style.
-        ENDIF.
-        IF ip_borders-right-border_style IS INITIAL.
-          CLEAR bordersx-right-border_style.
-        ENDIF.
-        IF ip_borders-top-border_style IS INITIAL.
-          CLEAR bordersx-top-border_style.
-        ENDIF.
-
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_borders-allborders-border_color
-          CHANGING
-            cs_xcolor = bordersx-allborders-border_color ).
-
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_borders-diagonal-border_color
-          CHANGING
-            cs_xcolor = bordersx-diagonal-border_color ).
-
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_borders-down-border_color
-          CHANGING
-            cs_xcolor = bordersx-down-border_color ).
-
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_borders-left-border_color
-          CHANGING
-            cs_xcolor = bordersx-left-border_color ).
-
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_borders-right-border_color
-          CHANGING
-            cs_xcolor = bordersx-right-border_color ).
-
-        clear_initial_colorxfields(
-          EXPORTING
-            is_color  = ip_borders-top-border_color
-          CHANGING
-            cs_xcolor = bordersx-top-border_color ).
-
+        changer->set_complete_borders( ip_borders = ip_borders ).
       ENDIF.
-      MOVE-CORRESPONDING ip_borders  TO complete_style-borders.
-      MOVE-CORRESPONDING bordersx    TO complete_stylex-borders.
     ENDIF.
 
     IF ip_alignment IS SUPPLIED.
-      DATA: alignmentx LIKE ip_xalignment.
       IF ip_xalignment IS SUPPLIED.
-        alignmentx = ip_xalignment.
+        changer->set_complete_alignment( ip_alignment = ip_alignment ip_xalignment = ip_xalignment ).
       ELSE.
-        CLEAR alignmentx WITH 'X'.
-        IF ip_alignment-horizontal IS INITIAL.
-          CLEAR alignmentx-horizontal.
-        ENDIF.
-        IF ip_alignment-vertical IS INITIAL.
-          CLEAR alignmentx-vertical.
-        ENDIF.
+        changer->set_complete_alignment( ip_alignment = ip_alignment ).
       ENDIF.
-      MOVE-CORRESPONDING ip_alignment  TO complete_style-alignment.
-      MOVE-CORRESPONDING alignmentx    TO complete_stylex-alignment.
     ENDIF.
 
     IF ip_protection IS SUPPLIED.
-      MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
       IF ip_xprotection IS SUPPLIED.
-        MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
+        changer->set_complete_protection( ip_protection = ip_protection ip_xprotection = ip_xprotection ).
       ELSE.
-        IF ip_protection-hidden IS NOT INITIAL.
-          complete_stylex-protection-hidden = 'X'.
-        ENDIF.
-        IF ip_protection-locked IS NOT INITIAL.
-          complete_stylex-protection-locked = 'X'.
-        ENDIF.
+        changer->set_complete_protection( ip_protection = ip_protection ).
       ENDIF.
     ENDIF.
 
 
-    lv_border_supplied = boolc( ip_borders_allborders IS SUPPLIED ).
-    lv_xborder_supplied = boolc( ip_xborders_allborders IS SUPPLIED ).
-    move_supplied_borders(
-      EXPORTING
-        iv_border_supplied        = lv_border_supplied
-        is_border                 = ip_borders_allborders
-        iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders_allborders
-      CHANGING
-        cs_complete_style_border  = complete_style-borders-allborders
-        cs_complete_stylex_border = complete_stylex-borders-allborders ).
+    IF ip_borders_allborders IS SUPPLIED.
+      IF ip_xborders_allborders IS SUPPLIED.
+        changer->set_complete_borders_all( ip_borders_allborders = ip_borders_allborders ip_xborders_allborders = ip_xborders_allborders ).
+      ELSE.
+        changer->set_complete_borders_all( ip_borders_allborders = ip_borders_allborders ).
+      ENDIF.
+    ENDIF.
 
-    lv_border_supplied = boolc( ip_borders_diagonal IS SUPPLIED ).
-    lv_xborder_supplied = boolc( ip_xborders_diagonal IS SUPPLIED ).
-    move_supplied_borders(
-      EXPORTING
-        iv_border_supplied        = lv_border_supplied
-        is_border                 = ip_borders_diagonal
-        iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders_diagonal
-      CHANGING
-        cs_complete_style_border  = complete_style-borders-diagonal
-        cs_complete_stylex_border = complete_stylex-borders-diagonal ).
+    IF ip_borders_diagonal IS SUPPLIED.
+      IF ip_xborders_diagonal IS SUPPLIED.
+        changer->set_complete_borders_diagonal( ip_borders_diagonal = ip_borders_diagonal ip_xborders_diagonal = ip_xborders_diagonal ).
+      ELSE.
+        changer->set_complete_borders_diagonal( ip_borders_diagonal = ip_borders_diagonal ).
+      ENDIF.
+    ENDIF.
 
-    lv_border_supplied = boolc( ip_borders_down IS SUPPLIED ).
-    lv_xborder_supplied = boolc( ip_xborders_down IS SUPPLIED ).
-    move_supplied_borders(
-      EXPORTING
-        iv_border_supplied        = lv_border_supplied
-        is_border                 = ip_borders_down
-        iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders_down
-      CHANGING
-        cs_complete_style_border  = complete_style-borders-down
-        cs_complete_stylex_border = complete_stylex-borders-down ).
+    IF ip_borders_down IS SUPPLIED.
+      IF ip_xborders_down IS SUPPLIED.
+        changer->set_complete_borders_down( ip_borders_down = ip_borders_down ip_xborders_down = ip_xborders_down ).
+      ELSE.
+        changer->set_complete_borders_down( ip_borders_down = ip_borders_down ).
+      ENDIF.
+    ENDIF.
 
-    lv_border_supplied = boolc( ip_borders_left IS SUPPLIED ).
-    lv_xborder_supplied = boolc( ip_xborders_left IS SUPPLIED ).
-    move_supplied_borders(
-      EXPORTING
-        iv_border_supplied        = lv_border_supplied
-        is_border                 = ip_borders_left
-        iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders_left
-      CHANGING
-        cs_complete_style_border  = complete_style-borders-left
-        cs_complete_stylex_border = complete_stylex-borders-left ).
+    IF ip_borders_left IS SUPPLIED.
+      IF ip_xborders_left IS SUPPLIED.
+        changer->set_complete_borders_left( ip_borders_left = ip_borders_left ip_xborders_left = ip_xborders_left ).
+      ELSE.
+        changer->set_complete_borders_left( ip_borders_left = ip_borders_left ).
+      ENDIF.
+    ENDIF.
 
-    lv_border_supplied = boolc( ip_borders_right IS SUPPLIED ).
-    lv_xborder_supplied = boolc( ip_xborders_right IS SUPPLIED ).
-    move_supplied_borders(
-      EXPORTING
-        iv_border_supplied        = lv_border_supplied
-        is_border                 = ip_borders_right
-        iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders_right
-      CHANGING
-        cs_complete_style_border  = complete_style-borders-right
-        cs_complete_stylex_border = complete_stylex-borders-right ).
+    IF ip_borders_right IS SUPPLIED.
+      IF ip_xborders_right IS SUPPLIED.
+        changer->set_complete_borders_right( ip_borders_right = ip_borders_right ip_xborders_right = ip_xborders_right ).
+      ELSE.
+        changer->set_complete_borders_right( ip_borders_right = ip_borders_right ).
+      ENDIF.
+    ENDIF.
 
-    lv_border_supplied = boolc( ip_borders_top IS SUPPLIED ).
-    lv_xborder_supplied = boolc( ip_xborders_top IS SUPPLIED ).
-    move_supplied_borders(
-      EXPORTING
-        iv_border_supplied        = lv_border_supplied
-        is_border                 = ip_borders_top
-        iv_xborder_supplied       = lv_xborder_supplied
-        is_xborder                = ip_xborders_top
-      CHANGING
-        cs_complete_style_border  = complete_style-borders-top
-        cs_complete_stylex_border = complete_stylex-borders-top ).
+    IF ip_borders_top IS SUPPLIED.
+      IF ip_xborders_top IS SUPPLIED.
+        changer->set_complete_borders_top( ip_borders_top = ip_borders_top ip_xborders_top = ip_xborders_top ).
+      ELSE.
+        changer->set_complete_borders_top( ip_borders_top = ip_borders_top ).
+      ENDIF.
+    ENDIF.
 
     IF ip_number_format_format_code IS SUPPLIED.
-      complete_style-number_format-format_code = ip_number_format_format_code.
-      complete_stylex-number_format-format_code = 'X'.
+      changer->set_number_format( ip_number_format_format_code ).
     ENDIF.
     IF ip_font_bold IS SUPPLIED.
-      complete_style-font-bold = ip_font_bold.
-      complete_stylex-font-bold = 'X'.
+      changer->set_font_bold( ip_font_bold ).
     ENDIF.
     IF ip_font_color IS SUPPLIED.
-      complete_style-font-color = ip_font_color.
-      complete_stylex-font-color-rgb = 'X'.
+      changer->set_font_color( ip_font_color ).
     ENDIF.
     IF ip_font_color_rgb IS SUPPLIED.
-      complete_style-font-color-rgb = ip_font_color_rgb.
-      complete_stylex-font-color-rgb = 'X'.
+      changer->set_font_color_rgb( ip_font_color_rgb ).
     ENDIF.
     IF ip_font_color_indexed IS SUPPLIED.
-      complete_style-font-color-indexed = ip_font_color_indexed.
-      complete_stylex-font-color-indexed = 'X'.
+      changer->set_font_color_indexed( ip_font_color_indexed ).
     ENDIF.
     IF ip_font_color_theme IS SUPPLIED.
-      complete_style-font-color-theme = ip_font_color_theme.
-      complete_stylex-font-color-theme = 'X'.
+      changer->set_font_color_theme( ip_font_color_theme ).
     ENDIF.
     IF ip_font_color_tint IS SUPPLIED.
-      complete_style-font-color-tint = ip_font_color_tint.
-      complete_stylex-font-color-tint = 'X'.
+      changer->set_font_color_tint( ip_font_color_tint ).
     ENDIF.
 
     IF ip_font_family IS SUPPLIED.
-      complete_style-font-family = ip_font_family.
-      complete_stylex-font-family = 'X'.
+      changer->set_font_family( ip_font_family ).
     ENDIF.
     IF ip_font_italic IS SUPPLIED.
-      complete_style-font-italic = ip_font_italic.
-      complete_stylex-font-italic = 'X'.
+      changer->set_font_italic( ip_font_italic ).
     ENDIF.
     IF ip_font_name IS SUPPLIED.
-      complete_style-font-name = ip_font_name.
-      complete_stylex-font-name = 'X'.
+      changer->set_font_name( ip_font_name ).
     ENDIF.
     IF ip_font_scheme IS SUPPLIED.
-      complete_style-font-scheme = ip_font_scheme.
-      complete_stylex-font-scheme = 'X'.
+      changer->set_font_scheme( ip_font_scheme ).
     ENDIF.
     IF ip_font_size IS SUPPLIED.
-      complete_style-font-size = ip_font_size.
-      complete_stylex-font-size = 'X'.
+      changer->set_font_size( ip_font_size ).
     ENDIF.
     IF ip_font_strikethrough IS SUPPLIED.
-      complete_style-font-strikethrough = ip_font_strikethrough.
-      complete_stylex-font-strikethrough = 'X'.
+      changer->set_font_strikethrough( ip_font_strikethrough ).
     ENDIF.
     IF ip_font_underline IS SUPPLIED.
-      complete_style-font-underline = ip_font_underline.
-      complete_stylex-font-underline = 'X'.
+      changer->set_font_underline( ip_font_underline ).
     ENDIF.
     IF ip_font_underline_mode IS SUPPLIED.
-      complete_style-font-underline_mode = ip_font_underline_mode.
-      complete_stylex-font-underline_mode = 'X'.
+      changer->set_font_underline_mode( ip_font_underline_mode ).
     ENDIF.
+
     IF ip_fill_filltype IS SUPPLIED.
-      complete_style-fill-filltype = ip_fill_filltype.
-      complete_stylex-fill-filltype = 'X'.
+      changer->set_fill_filltype( ip_fill_filltype ).
     ENDIF.
     IF ip_fill_rotation IS SUPPLIED.
-      complete_style-fill-rotation = ip_fill_rotation.
-      complete_stylex-fill-rotation = 'X'.
+      changer->set_fill_rotation( ip_fill_rotation ).
     ENDIF.
     IF ip_fill_fgcolor IS SUPPLIED.
-      complete_style-fill-fgcolor = ip_fill_fgcolor.
-      complete_stylex-fill-fgcolor-rgb = 'X'.
+      changer->set_fill_fgcolor( ip_fill_fgcolor ).
     ENDIF.
     IF ip_fill_fgcolor_rgb IS SUPPLIED.
-      complete_style-fill-fgcolor-rgb = ip_fill_fgcolor_rgb.
-      complete_stylex-fill-fgcolor-rgb = 'X'.
+      changer->set_fill_fgcolor_rgb( ip_fill_fgcolor_rgb ).
     ENDIF.
     IF ip_fill_fgcolor_indexed IS SUPPLIED.
-      complete_style-fill-fgcolor-indexed = ip_fill_fgcolor_indexed.
-      complete_stylex-fill-fgcolor-indexed = 'X'.
+      changer->set_fill_fgcolor_indexed( ip_fill_fgcolor_indexed ).
     ENDIF.
     IF ip_fill_fgcolor_theme IS SUPPLIED.
-      complete_style-fill-fgcolor-theme = ip_fill_fgcolor_theme.
-      complete_stylex-fill-fgcolor-theme = 'X'.
+      changer->set_fill_fgcolor_theme( ip_fill_fgcolor_theme ).
     ENDIF.
     IF ip_fill_fgcolor_tint IS SUPPLIED.
-      complete_style-fill-fgcolor-tint = ip_fill_fgcolor_tint.
-      complete_stylex-fill-fgcolor-tint = 'X'.
+      changer->set_fill_fgcolor_tint( ip_fill_fgcolor_tint ).
     ENDIF.
 
     IF ip_fill_bgcolor IS SUPPLIED.
-      complete_style-fill-bgcolor = ip_fill_bgcolor.
-      complete_stylex-fill-bgcolor-rgb = 'X'.
+      changer->set_fill_bgcolor( ip_fill_bgcolor ).
     ENDIF.
     IF ip_fill_bgcolor_rgb IS SUPPLIED.
-      complete_style-fill-bgcolor-rgb = ip_fill_bgcolor_rgb.
-      complete_stylex-fill-bgcolor-rgb = 'X'.
+      changer->set_fill_bgcolor_rgb( ip_fill_bgcolor_rgb ).
     ENDIF.
     IF ip_fill_bgcolor_indexed IS SUPPLIED.
-      complete_style-fill-bgcolor-indexed = ip_fill_bgcolor_indexed.
-      complete_stylex-fill-bgcolor-indexed = 'X'.
+      changer->set_fill_bgcolor_indexed( ip_fill_bgcolor_indexed ).
     ENDIF.
     IF ip_fill_bgcolor_theme IS SUPPLIED.
-      complete_style-fill-bgcolor-theme = ip_fill_bgcolor_theme.
-      complete_stylex-fill-bgcolor-theme = 'X'.
+      changer->set_fill_bgcolor_theme( ip_fill_bgcolor_theme ).
     ENDIF.
     IF ip_fill_bgcolor_tint IS SUPPLIED.
-      complete_style-fill-bgcolor-tint = ip_fill_bgcolor_tint.
-      complete_stylex-fill-bgcolor-tint = 'X'.
+      changer->set_fill_bgcolor_tint( ip_fill_bgcolor_tint ).
     ENDIF.
 
     IF ip_fill_gradtype_type IS SUPPLIED.
-      complete_style-fill-gradtype-type = ip_fill_gradtype_type.
-      complete_stylex-fill-gradtype-type = 'X'.
+      changer->set_fill_gradtype_type( ip_fill_gradtype_type ).
     ENDIF.
     IF ip_fill_gradtype_degree IS SUPPLIED.
-      complete_style-fill-gradtype-degree = ip_fill_gradtype_degree.
-      complete_stylex-fill-gradtype-degree = 'X'.
+      changer->set_fill_gradtype_degree( ip_fill_gradtype_degree ).
     ENDIF.
     IF ip_fill_gradtype_bottom IS SUPPLIED.
-      complete_style-fill-gradtype-bottom = ip_fill_gradtype_bottom.
-      complete_stylex-fill-gradtype-bottom = 'X'.
+      changer->set_fill_gradtype_bottom( ip_fill_gradtype_bottom ).
     ENDIF.
     IF ip_fill_gradtype_left IS SUPPLIED.
-      complete_style-fill-gradtype-left = ip_fill_gradtype_left.
-      complete_stylex-fill-gradtype-left = 'X'.
+      changer->set_fill_gradtype_left( ip_fill_gradtype_left ).
     ENDIF.
     IF ip_fill_gradtype_top IS SUPPLIED.
-      complete_style-fill-gradtype-top = ip_fill_gradtype_top.
-      complete_stylex-fill-gradtype-top = 'X'.
+      changer->set_fill_gradtype_top( ip_fill_gradtype_top ).
     ENDIF.
     IF ip_fill_gradtype_right IS SUPPLIED.
-      complete_style-fill-gradtype-right = ip_fill_gradtype_right.
-      complete_stylex-fill-gradtype-right = 'X'.
+      changer->set_fill_gradtype_right( ip_fill_gradtype_right ).
     ENDIF.
     IF ip_fill_gradtype_position1 IS SUPPLIED.
-      complete_style-fill-gradtype-position1 = ip_fill_gradtype_position1.
-      complete_stylex-fill-gradtype-position1 = 'X'.
+      changer->set_fill_gradtype_position1( ip_fill_gradtype_position1 ).
     ENDIF.
     IF ip_fill_gradtype_position2 IS SUPPLIED.
-      complete_style-fill-gradtype-position2 = ip_fill_gradtype_position2.
-      complete_stylex-fill-gradtype-position2 = 'X'.
+      changer->set_fill_gradtype_position2( ip_fill_gradtype_position2 ).
     ENDIF.
     IF ip_fill_gradtype_position3 IS SUPPLIED.
-      complete_style-fill-gradtype-position3 = ip_fill_gradtype_position3.
-      complete_stylex-fill-gradtype-position3 = 'X'.
+      changer->set_fill_gradtype_position3( ip_fill_gradtype_position3 ).
     ENDIF.
 
 
 
     IF ip_borders_diagonal_mode IS SUPPLIED.
-      complete_style-borders-diagonal_mode = ip_borders_diagonal_mode.
-      complete_stylex-borders-diagonal_mode = 'X'.
+      changer->set_borders_diagonal_mode( ip_borders_diagonal_mode ).
     ENDIF.
     IF ip_alignment_horizontal IS SUPPLIED.
-      complete_style-alignment-horizontal = ip_alignment_horizontal.
-      complete_stylex-alignment-horizontal = 'X'.
+      changer->set_alignment_horizontal( ip_alignment_horizontal ).
     ENDIF.
     IF ip_alignment_vertical IS SUPPLIED.
-      complete_style-alignment-vertical = ip_alignment_vertical.
-      complete_stylex-alignment-vertical = 'X'.
+      changer->set_alignment_vertical( ip_alignment_vertical ).
     ENDIF.
     IF ip_alignment_textrotation IS SUPPLIED.
-      complete_style-alignment-textrotation = ip_alignment_textrotation.
-      complete_stylex-alignment-textrotation = 'X'.
+      changer->set_alignment_textrotation( ip_alignment_textrotation ).
     ENDIF.
     IF ip_alignment_wraptext IS SUPPLIED.
-      complete_style-alignment-wraptext = ip_alignment_wraptext.
-      complete_stylex-alignment-wraptext = 'X'.
+      changer->set_alignment_wraptext( ip_alignment_wraptext ).
     ENDIF.
     IF ip_alignment_shrinktofit IS SUPPLIED.
-      complete_style-alignment-shrinktofit = ip_alignment_shrinktofit.
-      complete_stylex-alignment-shrinktofit = 'X'.
+      changer->set_alignment_shrinktofit( ip_alignment_shrinktofit ).
     ENDIF.
     IF ip_alignment_indent IS SUPPLIED.
-      complete_style-alignment-indent = ip_alignment_indent.
-      complete_stylex-alignment-indent = 'X'.
+      changer->set_alignment_indent( ip_alignment_indent ).
     ENDIF.
     IF ip_protection_hidden IS SUPPLIED.
-      complete_style-protection-hidden = ip_protection_hidden.
-      complete_stylex-protection-hidden = 'X'.
+      changer->set_protection_hidden( ip_protection_hidden ).
     ENDIF.
     IF ip_protection_locked IS SUPPLIED.
-      complete_style-protection-locked = ip_protection_locked.
-      complete_stylex-protection-locked = 'X'.
+      changer->set_protection_locked( ip_protection_locked ).
     ENDIF.
 
     IF ip_borders_allborders_style IS SUPPLIED.
-      complete_style-borders-allborders-border_style = ip_borders_allborders_style.
-      complete_stylex-borders-allborders-border_style = 'X'.
+      changer->set_borders_allborders_style( ip_borders_allborders_style ).
     ENDIF.
     IF ip_borders_allborders_color IS SUPPLIED.
-      complete_style-borders-allborders-border_color = ip_borders_allborders_color.
-      complete_stylex-borders-allborders-border_color-rgb = 'X'.
+      changer->set_borders_allborders_color( ip_borders_allborders_color ).
     ENDIF.
     IF ip_borders_allbo_color_rgb IS SUPPLIED.
-      complete_style-borders-allborders-border_color-rgb = ip_borders_allbo_color_rgb.
-      complete_stylex-borders-allborders-border_color-rgb = 'X'.
+      changer->set_borders_allbo_color_rgb( ip_borders_allbo_color_rgb ).
     ENDIF.
     IF ip_borders_allbo_color_indexed IS SUPPLIED.
-      complete_style-borders-allborders-border_color-indexed = ip_borders_allbo_color_indexed.
-      complete_stylex-borders-allborders-border_color-indexed = 'X'.
+      changer->set_borders_allbo_color_indexe( ip_borders_allbo_color_indexed ).
     ENDIF.
     IF ip_borders_allbo_color_theme IS SUPPLIED.
-      complete_style-borders-allborders-border_color-theme = ip_borders_allbo_color_theme.
-      complete_stylex-borders-allborders-border_color-theme = 'X'.
+      changer->set_borders_allbo_color_theme( ip_borders_allbo_color_theme ).
     ENDIF.
     IF ip_borders_allbo_color_tint IS SUPPLIED.
-      complete_style-borders-allborders-border_color-tint = ip_borders_allbo_color_tint.
-      complete_stylex-borders-allborders-border_color-tint = 'X'.
+      changer->set_borders_allbo_color_tint( ip_borders_allbo_color_tint ).
     ENDIF.
 
     IF ip_borders_diagonal_style IS SUPPLIED.
-      complete_style-borders-diagonal-border_style = ip_borders_diagonal_style.
-      complete_stylex-borders-diagonal-border_style = 'X'.
+      changer->set_borders_diagonal_style( ip_borders_diagonal_style ).
     ENDIF.
     IF ip_borders_diagonal_color IS SUPPLIED.
-      complete_style-borders-diagonal-border_color = ip_borders_diagonal_color.
-      complete_stylex-borders-diagonal-border_color-rgb = 'X'.
+      changer->set_borders_diagonal_color( ip_borders_diagonal_color ).
     ENDIF.
     IF ip_borders_diagonal_color_rgb IS SUPPLIED.
-      complete_style-borders-diagonal-border_color-rgb = ip_borders_diagonal_color_rgb.
-      complete_stylex-borders-diagonal-border_color-rgb = 'X'.
+      changer->set_borders_diagonal_color_rgb( ip_borders_diagonal_color_rgb ).
     ENDIF.
     IF ip_borders_diagonal_color_inde IS SUPPLIED.
-      complete_style-borders-diagonal-border_color-indexed = ip_borders_diagonal_color_inde.
-      complete_stylex-borders-diagonal-border_color-indexed = 'X'.
+      changer->set_borders_diagonal_color_ind( ip_borders_diagonal_color_inde ).
     ENDIF.
     IF ip_borders_diagonal_color_them IS SUPPLIED.
-      complete_style-borders-diagonal-border_color-theme = ip_borders_diagonal_color_them.
-      complete_stylex-borders-diagonal-border_color-theme = 'X'.
+      changer->set_borders_diagonal_color_the( ip_borders_diagonal_color_them ).
     ENDIF.
     IF ip_borders_diagonal_color_tint IS SUPPLIED.
-      complete_style-borders-diagonal-border_color-tint = ip_borders_diagonal_color_tint.
-      complete_stylex-borders-diagonal-border_color-tint = 'X'.
+      changer->set_borders_diagonal_color_tin( ip_borders_diagonal_color_tint ).
     ENDIF.
 
     IF ip_borders_down_style IS SUPPLIED.
-      complete_style-borders-down-border_style = ip_borders_down_style.
-      complete_stylex-borders-down-border_style = 'X'.
+      changer->set_borders_down_style( ip_borders_down_style ).
     ENDIF.
     IF ip_borders_down_color IS SUPPLIED.
-      complete_style-borders-down-border_color = ip_borders_down_color.
-      complete_stylex-borders-down-border_color-rgb = 'X'.
+      changer->set_borders_down_color( ip_borders_down_color ).
     ENDIF.
     IF ip_borders_down_color_rgb IS SUPPLIED.
-      complete_style-borders-down-border_color-rgb = ip_borders_down_color_rgb.
-      complete_stylex-borders-down-border_color-rgb = 'X'.
+      changer->set_borders_down_color_rgb( ip_borders_down_color_rgb ).
     ENDIF.
     IF ip_borders_down_color_indexed IS SUPPLIED.
-      complete_style-borders-down-border_color-indexed = ip_borders_down_color_indexed.
-      complete_stylex-borders-down-border_color-indexed = 'X'.
+      changer->set_borders_down_color_indexed( ip_borders_down_color_indexed ).
     ENDIF.
     IF ip_borders_down_color_theme IS SUPPLIED.
-      complete_style-borders-down-border_color-theme = ip_borders_down_color_theme.
-      complete_stylex-borders-down-border_color-theme = 'X'.
+      changer->set_borders_down_color_theme( ip_borders_down_color_theme ).
     ENDIF.
     IF ip_borders_down_color_tint IS SUPPLIED.
-      complete_style-borders-down-border_color-tint = ip_borders_down_color_tint.
-      complete_stylex-borders-down-border_color-tint = 'X'.
+      changer->set_borders_down_color_tint( ip_borders_down_color_tint ).
     ENDIF.
 
     IF ip_borders_left_style IS SUPPLIED.
-      complete_style-borders-left-border_style = ip_borders_left_style.
-      complete_stylex-borders-left-border_style = 'X'.
+      changer->set_borders_left_style( ip_borders_left_style ).
     ENDIF.
     IF ip_borders_left_color IS SUPPLIED.
-      complete_style-borders-left-border_color = ip_borders_left_color.
-      complete_stylex-borders-left-border_color-rgb = 'X'.
+      changer->set_borders_left_color( ip_borders_left_color ).
     ENDIF.
     IF ip_borders_left_color_rgb IS SUPPLIED.
-      complete_style-borders-left-border_color-rgb = ip_borders_left_color_rgb.
-      complete_stylex-borders-left-border_color-rgb = 'X'.
+      changer->set_borders_left_color_rgb( ip_borders_left_color_rgb ).
     ENDIF.
     IF ip_borders_left_color_indexed IS SUPPLIED.
-      complete_style-borders-left-border_color-indexed = ip_borders_left_color_indexed.
-      complete_stylex-borders-left-border_color-indexed = 'X'.
+      changer->set_borders_left_color_indexed( ip_borders_left_color_indexed ).
     ENDIF.
     IF ip_borders_left_color_theme IS SUPPLIED.
-      complete_style-borders-left-border_color-theme = ip_borders_left_color_theme.
-      complete_stylex-borders-left-border_color-theme = 'X'.
+      changer->set_borders_left_color_theme( ip_borders_left_color_theme ).
     ENDIF.
     IF ip_borders_left_color_tint IS SUPPLIED.
-      complete_style-borders-left-border_color-tint = ip_borders_left_color_tint.
-      complete_stylex-borders-left-border_color-tint = 'X'.
+      changer->set_borders_left_color_tint( ip_borders_left_color_tint ).
     ENDIF.
 
     IF ip_borders_right_style IS SUPPLIED.
-      complete_style-borders-right-border_style = ip_borders_right_style.
-      complete_stylex-borders-right-border_style = 'X'.
+      changer->set_borders_right_style( ip_borders_right_style ).
     ENDIF.
     IF ip_borders_right_color IS SUPPLIED.
-      complete_style-borders-right-border_color = ip_borders_right_color.
-      complete_stylex-borders-right-border_color-rgb = 'X'.
+      changer->set_borders_right_color( ip_borders_right_color ).
     ENDIF.
     IF ip_borders_right_color_rgb IS SUPPLIED.
-      complete_style-borders-right-border_color-rgb = ip_borders_right_color_rgb.
-      complete_stylex-borders-right-border_color-rgb = 'X'.
+      changer->set_borders_right_color_rgb( ip_borders_right_color_rgb ).
     ENDIF.
     IF ip_borders_right_color_indexed IS SUPPLIED.
-      complete_style-borders-right-border_color-indexed = ip_borders_right_color_indexed.
-      complete_stylex-borders-right-border_color-indexed = 'X'.
+      changer->set_borders_right_color_indexe( ip_borders_right_color_indexed ).
     ENDIF.
     IF ip_borders_right_color_theme IS SUPPLIED.
-      complete_style-borders-right-border_color-theme = ip_borders_right_color_theme.
-      complete_stylex-borders-right-border_color-theme = 'X'.
+      changer->set_borders_right_color_theme( ip_borders_right_color_theme ).
     ENDIF.
     IF ip_borders_right_color_tint IS SUPPLIED.
-      complete_style-borders-right-border_color-tint = ip_borders_right_color_tint.
-      complete_stylex-borders-right-border_color-tint = 'X'.
+      changer->set_borders_right_color_tint( ip_borders_right_color_tint ).
     ENDIF.
 
     IF ip_borders_top_style IS SUPPLIED.
-      complete_style-borders-top-border_style = ip_borders_top_style.
-      complete_stylex-borders-top-border_style = 'X'.
+      changer->set_borders_top_style( ip_borders_top_style ).
     ENDIF.
     IF ip_borders_top_color IS SUPPLIED.
-      complete_style-borders-top-border_color = ip_borders_top_color.
-      complete_stylex-borders-top-border_color-rgb = 'X'.
+      changer->set_borders_top_color( ip_borders_top_color ).
     ENDIF.
     IF ip_borders_top_color_rgb IS SUPPLIED.
-      complete_style-borders-top-border_color-rgb = ip_borders_top_color_rgb.
-      complete_stylex-borders-top-border_color-rgb = 'X'.
+      changer->set_borders_top_color_rgb( ip_borders_top_color_rgb ).
     ENDIF.
     IF ip_borders_top_color_indexed IS SUPPLIED.
-      complete_style-borders-top-border_color-indexed = ip_borders_top_color_indexed.
-      complete_stylex-borders-top-border_color-indexed = 'X'.
+      changer->set_borders_top_color_indexed( ip_borders_top_color_indexed ).
     ENDIF.
     IF ip_borders_top_color_theme IS SUPPLIED.
-      complete_style-borders-top-border_color-theme = ip_borders_top_color_theme.
-      complete_stylex-borders-top-border_color-theme = 'X'.
+      changer->set_borders_top_color_theme( ip_borders_top_color_theme ).
     ENDIF.
     IF ip_borders_top_color_tint IS SUPPLIED.
-      complete_style-borders-top-border_color-tint = ip_borders_top_color_tint.
-      complete_stylex-borders-top-border_color-tint = 'X'.
+      changer->set_borders_top_color_tint( ip_borders_top_color_tint ).
     ENDIF.
 
 
-* Now we have a completly filled styles.
-* This can be used to get the guid
-* Return guid if requested.  Might be used if copy&paste of styles is requested
-    ep_guid = me->excel->get_static_cellstyle_guid( ip_cstyle_complete  = complete_style
-                                                    ip_cstylex_complete = complete_stylex  ).
-    me->set_cell_style( ip_column = ip_column
-                        ip_row    = ip_row
-                        ip_style  = ep_guid ).
+    ep_guid = changer->apply( ip_worksheet = me
+                              ip_column    = ip_column
+                              ip_row       = ip_row ).
+
 
   ENDMETHOD.                    "CHANGE_CELL_STYLE
 
@@ -3240,7 +2865,10 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   METHOD set_area.
 
     DATA: lv_row              TYPE zexcel_cell_row,
+          lv_row_start        TYPE zexcel_cell_row,
           lv_row_end          TYPE zexcel_cell_row,
+          lv_column_int       TYPE zexcel_cell_column_alpha,
+          lv_column           TYPE zexcel_cell_column_alpha,
           lv_column_start     TYPE zexcel_cell_column_alpha,
           lv_column_end       TYPE zexcel_cell_column_alpha,
           lv_column_start_int TYPE zexcel_cell_column_alpha,
@@ -3271,26 +2899,71 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
     ENDIF.
 
-    IF ip_data_type IS SUPPLIED OR
-       ip_abap_type IS SUPPLIED.
+    " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
+    IF ip_merge = abap_true OR ip_area = c_area-topleft.
 
-      me->set_cell( ip_column    = lv_column_start
-                    ip_row       = lv_row
-                    ip_value     = ip_value
-                    ip_formula   = ip_formula
-                    ip_style     = ip_style
-                    ip_hyperlink = ip_hyperlink
-                    ip_data_type = ip_data_type
-                    ip_abap_type = ip_abap_type ).
+      IF ip_data_type IS SUPPLIED OR
+         ip_abap_type IS SUPPLIED.
+
+        me->set_cell( ip_column    = lv_column_start
+                      ip_row       = lv_row
+                      ip_value     = ip_value
+                      ip_formula   = ip_formula
+                      ip_style     = ip_style
+                      ip_hyperlink = ip_hyperlink
+                      ip_data_type = ip_data_type
+                      ip_abap_type = ip_abap_type ).
+
+      ELSE.
+
+        me->set_cell( ip_column    = lv_column_start
+                      ip_row       = lv_row
+                      ip_value     = ip_value
+                      ip_formula   = ip_formula
+                      ip_style     = ip_style
+                      ip_hyperlink = ip_hyperlink ).
+
+      ENDIF.
 
     ELSE.
 
-      me->set_cell( ip_column    = lv_column_start
-                    ip_row       = lv_row
-                    ip_value     = ip_value
-                    ip_formula   = ip_formula
-                    ip_style     = ip_style
-                    ip_hyperlink = ip_hyperlink ).
+      lv_column_int = lv_column_start_int.
+      lv_row_start = lv_row.
+      WHILE lv_column_int <= lv_column_end_int.
+
+        lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+        lv_row = lv_row_start.
+
+        WHILE lv_row <= lv_row_end.
+
+          IF ip_data_type IS SUPPLIED OR
+             ip_abap_type IS SUPPLIED.
+
+            me->set_cell( ip_column    = lv_column
+                          ip_row       = lv_row
+                          ip_value     = ip_value
+                          ip_formula   = ip_formula
+                          ip_style     = ip_style
+                          ip_hyperlink = ip_hyperlink
+                          ip_data_type = ip_data_type
+                          ip_abap_type = ip_abap_type ).
+
+          ELSE.
+
+            me->set_cell( ip_column    = lv_column
+                          ip_row       = lv_row
+                          ip_value     = ip_value
+                          ip_formula   = ip_formula
+                          ip_style     = ip_style
+                          ip_hyperlink = ip_hyperlink ).
+
+          ENDIF.
+
+          ADD 1 TO lv_row.
+        ENDWHILE.
+
+        ADD 1 TO lv_column_int.
+      ENDWHILE.
 
     ENDIF.
 
@@ -3317,6 +2990,7 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
   METHOD set_area_formula.
     DATA: ld_row            TYPE zexcel_cell_row,
+          ld_row_start      TYPE zexcel_cell_row,
           ld_row_end        TYPE zexcel_cell_row,
           ld_column         TYPE zexcel_cell_column_alpha,
           ld_column_end     TYPE zexcel_cell_column_alpha,
@@ -3345,8 +3019,31 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           error = 'Wrong Merging Parameters'.
     ENDIF.
 
-    me->set_cell_formula( ip_column = ld_column ip_row = ld_row
-                          ip_formula = ip_formula ).
+    " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
+    IF ip_merge = abap_true OR ip_area = c_area-topleft.
+
+      me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                            ip_formula = ip_formula ).
+
+    ELSE.
+
+      ld_row_start = ld_row.
+      WHILE ld_column_int <= ld_column_end_int.
+
+        ld_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
+        ld_row = ld_row_start.
+        WHILE ld_row <= ld_row_end.
+
+          me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+                                ip_formula = ip_formula ).
+
+          ADD 1 TO ld_row.
+        ENDWHILE.
+
+        ADD 1 TO ld_column_int.
+      ENDWHILE.
+
+    ENDIF.
 
     IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
       me->set_merge( ip_column_start = ld_column ip_row = ld_row
@@ -4319,6 +4016,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_PRINTSETTINGS~SET_PRINT_REPEAT_ROWS
 
 
+  METHOD zif_excel_sheet_properties~get_right_to_left.
+    result = right_to_left.
+  ENDMETHOD.
+
+
   METHOD zif_excel_sheet_properties~get_style.
     IF zif_excel_sheet_properties~style IS NOT INITIAL.
       ep_style = zif_excel_sheet_properties~style.
@@ -4340,6 +4042,11 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
     zif_excel_sheet_properties~zoomscale_pagelayoutview = 100 .
     zif_excel_sheet_properties~zoomscale_sheetlayoutview = 100 .
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_PROPERTIES~INITIALIZE
+
+
+  METHOD zif_excel_sheet_properties~set_right_to_left.
+    me->right_to_left = right_to_left.
+  ENDMETHOD.
 
 
   METHOD zif_excel_sheet_properties~set_style.

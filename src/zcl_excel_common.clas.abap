@@ -221,7 +221,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
+CLASS zcl_excel_common IMPLEMENTATION.
 
 
   METHOD calculate_cell_distance.
@@ -1082,32 +1082,32 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
                lcv_digits               TYPE string VALUE '0123456789',
                lcv_cell_reference_error TYPE string VALUE '#REF!'.
 
-    DATA: lv_tcnt           TYPE i,         " Counter variable
-          lv_tlen           TYPE i,         " Temp variable length
-          lv_cnt            TYPE i,         " Counter variable
-          lv_cnt2           TYPE i,         " Counter variable
-          lv_offset1        TYPE i,         " Character offset
-          lv_numchars       TYPE i,         " Number of characters counter
-          lv_tchar(1)       TYPE c,         " Temp character
-          lv_tchar2(1)      TYPE c,         " Temp character
-          lv_cur_form       TYPE string,    " Formula for current cell
-          lv_ref_cell_addr  TYPE string,    " Reference cell address
-          lv_tcol1          TYPE string,    " Temp column letter
-          lv_tcol2          TYPE string,    " Temp column letter
-          lv_tcoln          TYPE i,         " Temp column number
-          lv_trow1          TYPE string,    " Temp row number
-          lv_trow2          TYPE string,    " Temp row number
-          lv_flen           TYPE i,         " Length of reference formula
-          lv_tlen2          TYPE i,         " Temp variable length
-          lv_substr1        TYPE string,    " Substring variable
-          lv_abscol         TYPE string,    " Absolute column symbol
-          lv_absrow         TYPE string,    " Absolute row symbol
-          lv_ref_formula    TYPE string,
-          lv_compare_1      TYPE string,
-          lv_compare_2      TYPE string,
-          lv_level          TYPE i,         " Level of groups [..[..]..] or {..}
+    DATA: lv_tcnt          TYPE i,         " Counter variable
+          lv_tlen          TYPE i,         " Temp variable length
+          lv_cnt           TYPE i,         " Counter variable
+          lv_cnt2          TYPE i,         " Counter variable
+          lv_offset1       TYPE i,         " Character offset
+          lv_numchars      TYPE i,         " Number of characters counter
+          lv_tchar(1)      TYPE c,         " Temp character
+          lv_tchar2(1)     TYPE c,         " Temp character
+          lv_cur_form      TYPE string,    " Formula for current cell
+          lv_ref_cell_addr TYPE string,    " Reference cell address
+          lv_tcol1         TYPE string,    " Temp column letter
+          lv_tcol2         TYPE string,    " Temp column letter
+          lv_tcoln         TYPE i,         " Temp column number
+          lv_trow1         TYPE string,    " Temp row number
+          lv_trow2         TYPE string,    " Temp row number
+          lv_flen          TYPE i,         " Length of reference formula
+          lv_tlen2         TYPE i,         " Temp variable length
+          lv_substr1       TYPE string,    " Substring variable
+          lv_abscol        TYPE string,    " Absolute column symbol
+          lv_absrow        TYPE string,    " Absolute row symbol
+          lv_ref_formula   TYPE string,
+          lv_compare_1     TYPE string,
+          lv_compare_2     TYPE string,
+          lv_level         TYPE i,         " Level of groups [..[..]..] or {..}
 
-          lv_errormessage   TYPE string.
+          lv_errormessage  TYPE string.
 
 *--------------------------------------------------------------------*
 * When copying a cell in EXCEL to another cell any inherent formulas
@@ -1289,17 +1289,17 @@ CLASS ZCL_EXCEL_COMMON IMPLEMENTATION.
             ENDDO.
           ENDIF.
 
-        " Is valid column & row ?
-        IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
-          " COLUMN + ROW
-          CONCATENATE lv_tcol1 lv_trow1 INTO lv_compare_1.
-          " Original condensed string
-          lv_compare_2 = lv_ref_cell_addr.
-          CONDENSE lv_compare_2.
-          IF lv_compare_1 <> lv_compare_2.
-            CLEAR: lv_trow1, lv_tchar2.
+          " Is valid column & row ?
+          IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
+            " COLUMN + ROW
+            CONCATENATE lv_tcol1 lv_trow1 INTO lv_compare_1.
+            " Original condensed string
+            lv_compare_2 = lv_ref_cell_addr.
+            CONDENSE lv_compare_2.
+            IF lv_compare_1 <> lv_compare_2.
+              CLEAR: lv_trow1, lv_tchar2.
+            ENDIF.
           ENDIF.
-        ENDIF.
 
 *--------------------------------------------------------------------*
 * Check for invalid cell address
