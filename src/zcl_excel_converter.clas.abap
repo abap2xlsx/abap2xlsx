@@ -836,7 +836,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         CLEAR l_func.
     ENDCASE.
 
-    MOVE i_value TO l_string.
+    l_string = i_value.
 
     CONCATENATE l_string l_func INTO r_text SEPARATED BY space.
 

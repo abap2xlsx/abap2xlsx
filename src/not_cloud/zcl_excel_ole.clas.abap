@@ -1325,13 +1325,13 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         contentsitem-row = realoverflow.
 
         IF sy-subrc = 0.
-          MOVE semaitem-col_ops TO search_item(3).
+          search_item(3) = semaitem-col_ops.
           SEARCH 'ADD#CNT#MIN#MAX#AVG#NOP#DFT#'
                             FOR search_item.
           IF sy-subrc NE 0.
             RAISE error_in_sema.
           ENDIF.
-          MOVE semaitem-col_typ TO search_item(3).
+          search_item(3) = semaitem-col_typ.
           SEARCH 'NUM#N00#N01#N02#N03#N04#PCT#DAT#MON#STR#'
                             FOR search_item.
           IF sy-subrc NE 0.
@@ -1382,7 +1382,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
                 CLEAR contentsitem-value.
               ENDIF.
             ELSE.
-              MOVE <item> TO contentsitem-value.
+              contentsitem-value = <item>.
             ENDIF.
           ELSEIF semaitem-col_typ EQ 'NUM' OR
                  semaitem-col_typ EQ 'N00' OR
@@ -1758,7 +1758,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         IF curritem-left EQ curritem2-left.
           length = curritem-top + curritem-rows.
           IF length EQ curritem2-top AND curritem-decimals EQ curritem2-decimals.
-            MOVE curritem TO curritem3.
+            curritem3 = curritem.
             curritem3-rows = curritem3-rows + curritem2-rows.
             curritem-left = -1.
             MODIFY currcells INDEX sy-index FROM curritem.
@@ -1794,7 +1794,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         curritem2-rows.
           length = curritem-left + curritem-columns.
           IF length EQ curritem2-left AND curritem-decimals EQ curritem2-decimals.
-            MOVE curritem TO curritem3.
+            curritem3 = curritem.
             curritem3-columns = curritem3-columns + curritem2-columns.
             curritem-left = -1.
             MODIFY currcells INDEX sy-index FROM curritem.
