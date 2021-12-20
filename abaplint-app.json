@@ -3,6 +3,7 @@
     "default": {
       "filename": "./abaplint.json"
     },
+    
     "steampunk": {
       "filename": "./abaplint-steampunk.json"
     }
