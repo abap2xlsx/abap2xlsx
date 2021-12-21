@@ -16,6 +16,7 @@ DATA: gc_save_file_name TYPE string VALUE '37- Read template and output.&'.
 
 SELECTION-SCREEN BEGIN OF BLOCK blx WITH FRAME.
 PARAMETERS: p_upfile TYPE string LOWER CASE MEMORY ID gr8.
+PARAMETERS: p_applse AS CHECKBOX.
 SELECTION-SCREEN END OF BLOCK blx.
 
 INCLUDE zdemo_excel_outputopt_incl.
@@ -240,13 +241,13 @@ FORM read_template RAISING zcx_excel .
 
         WHEN '.XLSX'.
           CREATE OBJECT reader TYPE zcl_excel_reader_2007.
-          excel = reader->load_file(  p_upfile ).
+          excel = reader->load_file( i_filename = p_upfile i_from_applserver = p_applse ).
           "Use template for charts
           excel->use_template = abap_true.
 
         WHEN '.XLSM'.
           CREATE OBJECT reader TYPE zcl_excel_reader_xlsm.
-          excel = reader->load_file(  p_upfile ).
+          excel = reader->load_file( i_filename = p_upfile i_from_applserver = p_applse ).
           "Use template for charts
           excel->use_template = abap_true.
 
@@ -258,7 +259,7 @@ FORM read_template RAISING zcx_excel .
 
     WHEN OTHERS.
       CREATE OBJECT reader TYPE (lb_read).
-      excel = reader->load_file(  p_upfile ).
+      excel = reader->load_file( i_filename = p_upfile i_from_applserver = p_applse ).
       "Use template for charts
       excel->use_template = abap_true.
 
