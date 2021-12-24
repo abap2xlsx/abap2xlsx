@@ -2142,12 +2142,28 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_columns.
+
+    DATA: columns TYPE TABLE OF i,
+          column  TYPE i.
+    FIELD-SYMBOLS:
+          <sheet_cell> TYPE zexcel_s_cell_data.
+
+    LOOP AT sheet_content ASSIGNING <sheet_cell>.
+      COLLECT <sheet_cell>-cell_column INTO columns.
+    ENDLOOP.
+
+    LOOP AT columns INTO column.
+      " This will create the column instance if it doesn't exist
+      get_column( column ).
+    ENDLOOP.
+
     eo_columns = me->columns.
   ENDMETHOD.                    "GET_COLUMNS
 
 
   METHOD get_columns_iterator.
 
+    get_columns( ).
     eo_iterator = me->columns->get_iterator( ).
 
   ENDMETHOD.                    "GET_COLUMNS_ITERATOR
@@ -2494,12 +2510,40 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_rows.
+
+    DATA: row TYPE i.
+    FIELD-SYMBOLS: <sheet_cell> TYPE zexcel_s_cell_data.
+
+    IF sheet_content IS NOT INITIAL.
+
+      row = 0.
+      DO.
+        " Find the next row
+        READ TABLE sheet_content ASSIGNING <sheet_cell> WITH KEY cell_row = row.
+        CASE sy-subrc.
+          WHEN 4.
+            " row doesn't exist, but it exists another row, SY-TABIX points to the first cell in this row.
+            READ TABLE sheet_content ASSIGNING <sheet_cell> INDEX sy-tabix.
+            ASSERT sy-subrc = 0.
+            row = <sheet_cell>-cell_row.
+          WHEN 8.
+            " it was the last available row
+            EXIT.
+        ENDCASE.
+        " This will create the row instance if it doesn't exist
+        get_row( row ).
+        row = row + 1.
+      ENDDO.
+
+    ENDIF.
+
     eo_rows = me->rows.
   ENDMETHOD.                    "GET_ROWS
 
 
   METHOD get_rows_iterator.
 
+    get_rows( ).
     eo_iterator = me->rows->get_iterator( ).
 
   ENDMETHOD.                    "GET_ROWS_ITERATOR
