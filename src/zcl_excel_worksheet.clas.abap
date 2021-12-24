@@ -2986,15 +2986,15 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_column_start_int TYPE zexcel_cell_column_alpha,
           lv_column_end_int   TYPE zexcel_cell_column_alpha.
 
-    MOVE: ip_row_to TO lv_row_end,
-          ip_row    TO lv_row.
+    lv_row_end = ip_row_to.
+    lv_row = ip_row.
 
     IF lv_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
       lv_row_end = lv_row.
     ENDIF.
 
-    MOVE: ip_column_start TO lv_column_start,
-          ip_column_end   TO lv_column_end.
+    lv_column_start = ip_column_start.
+    lv_column_end = ip_column_end.
 
     IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
       lv_column_end = lv_column_start.
@@ -3109,14 +3109,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_column_int     TYPE zexcel_cell_column_alpha,
           ld_column_end_int TYPE zexcel_cell_column_alpha.
 
-    MOVE: ip_row_to TO ld_row_end,
-          ip_row    TO ld_row.
+    ld_row_end = ip_row_to.
+    ld_row = ip_row.
     IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
       ld_row_end = ld_row.
     ENDIF.
 
-    MOVE: ip_column_start TO ld_column,
-          ip_column_end   TO ld_column_end.
+    ld_column = ip_column_start.
+    ld_column_end = ip_column_end.
 
     IF ld_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
       ld_column_end = ld_column.
@@ -3175,8 +3175,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lv_column    TYPE zexcel_cell_column,
           lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
 
-    MOVE: ip_row_to TO ld_row_end,
-          ip_row    TO ld_row_start.
+    ld_row_end = ip_row_to.
+    ld_row_start = ip_row.
     IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
       ld_row_end = ld_row_start.
     ENDIF.
@@ -3218,8 +3218,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_current_column   TYPE zexcel_cell_column_alpha,
           ld_current_row      TYPE zexcel_cell_row.
 
-    MOVE: ip_row_to TO ld_row_end,
-          ip_row    TO ld_row_start.
+    ld_row_end = ip_row_to.
+    ld_row_start = ip_row.
     IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
       ld_row_end = ld_row_start.
     ENDIF.
@@ -3689,8 +3689,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_current_column TYPE zexcel_cell_column_alpha,
           ld_current_row    TYPE zexcel_cell_row.
 
-    MOVE: ip_row_to TO ld_row_end,
-          ip_row    TO ld_row_start.
+    ld_row_end = ip_row_to.
+    ld_row_start = ip_row.
     IF ld_row_end IS INITIAL.
       ld_row_end = ld_row_start.
     ENDIF.
@@ -3832,7 +3832,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       LOOP AT ip_table ASSIGNING <fs_table_line>.
         lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
         ASSIGN COMPONENT <fs_dfies>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
-        MOVE <fs_fldval> TO lv_cell_value.
+        lv_cell_value = <fs_fldval>.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
                       ip_value  = <fs_fldval>   "lv_cell_value
