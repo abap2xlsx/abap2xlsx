@@ -178,7 +178,7 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS change_area_style
       IMPORTING
-        !ip_column_start  TYPE simple OPTIONAL
+        !ip_column_start  TYPE simple
         !ip_column_end    TYPE simple OPTIONAL
         !ip_row           TYPE zexcel_cell_row OPTIONAL
         !ip_row_to        TYPE zexcel_cell_row OPTIONAL
