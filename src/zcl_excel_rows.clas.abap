@@ -13,13 +13,6 @@ CLASS zcl_excel_rows DEFINITION
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPES:
-      BEGIN OF mty_s_hashed_row,
-        row_index TYPE int4,
-        row       TYPE REF TO zcl_excel_row,
-      END OF mty_s_hashed_row ,
-      mty_ts_hashed_row TYPE HASHED TABLE OF mty_s_hashed_row WITH UNIQUE KEY row_index.
-
     METHODS add
       IMPORTING
         !io_row TYPE REF TO zcl_excel_row .
@@ -52,6 +45,12 @@ CLASS zcl_excel_rows DEFINITION
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
   PRIVATE SECTION.
+    TYPES:
+      BEGIN OF mty_s_hashed_row,
+        row_index TYPE int4,
+        row       TYPE REF TO zcl_excel_row,
+      END OF mty_s_hashed_row ,
+      mty_ts_hashed_row TYPE HASHED TABLE OF mty_s_hashed_row WITH UNIQUE KEY row_index.
 
     DATA rows TYPE REF TO cl_object_collection .
     DATA rows_hashed TYPE mty_ts_hashed_row .
