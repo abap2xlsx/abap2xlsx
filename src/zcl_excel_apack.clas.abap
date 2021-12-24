@@ -21,11 +21,11 @@ CLASS zcl_excel_apack IMPLEMENTATION.
 
   METHOD constructor.
 
-    descriptor-group_id        = 'github.com/sapmentors/abap2xlsx'.
+    descriptor-group_id        = 'github.com/abap2xlsx/abap2xlsx'.
     descriptor-artifact_id     = 'abap2xlsx'.
     descriptor-version         = '7.14.0'.
     descriptor-repository_type = 'abapGit'.
-    descriptor-git_url         = 'https://github.com/sapmentors/abap2xlsx.git'.
+    descriptor-git_url         = 'https://github.com/abap2xlsx/abap2xlsx.git'.
 
   ENDMETHOD.
 

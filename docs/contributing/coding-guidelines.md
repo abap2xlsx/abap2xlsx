@@ -1,6 +1,6 @@
 # Naming convention of variables, etc.
 
-In abap2xlsx, over time, alas, the ABAP code came to mix different [naming standards](https://github.com/sapmentors/abap2xlsx/issues/773). Naming standards may vary from one class to another, but one naming standards is usually correctly applied in each class.
+In abap2xlsx, over time, alas, the ABAP code came to mix different [naming standards](https://github.com/abap2xlsx/abap2xlsx/issues/773). Naming standards may vary from one class to another, but one naming standards is usually correctly applied in each class.
 
 It's not possible to impose one naming standards by fixing the existing names, because clients may have developed custom programs which may already refer to them.
 When it's about adding a new variable, parameter or type in an existing object or method, it's embarrassing to impose one naming standards because that could be inconsistent with the variables, parameters or types which already exist at this place.
