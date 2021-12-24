@@ -176,6 +176,15 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS calculate_column_widths
       RAISING
         zcx_excel .
+    METHODS change_area_style
+      IMPORTING
+        !ip_column_start  TYPE simple
+        !ip_column_end    TYPE simple OPTIONAL
+        !ip_row           TYPE zexcel_cell_row
+        !ip_row_to        TYPE zexcel_cell_row OPTIONAL
+        !ip_style_changer TYPE REF TO zif_excel_style_changer
+      RAISING
+        zcx_excel.
     METHODS change_cell_style
       IMPORTING
         !ip_column                      TYPE simple
@@ -1387,6 +1396,65 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "CALCULATE_COLUMN_WIDTHS
 
 
+  METHOD change_area_style.
+
+    DATA: lv_row              TYPE zexcel_cell_row,
+          lv_row_start        TYPE zexcel_cell_row,
+          lv_row_to           TYPE zexcel_cell_row,
+          lv_column_int       TYPE zexcel_cell_column_alpha,
+          lv_column           TYPE zexcel_cell_column_alpha,
+          lv_column_start     TYPE zexcel_cell_column_alpha,
+          lv_column_end       TYPE zexcel_cell_column_alpha,
+          lv_column_start_int TYPE zexcel_cell_column_alpha,
+          lv_column_end_int   TYPE zexcel_cell_column_alpha.
+
+    lv_row_to = ip_row_to.
+    lv_row = ip_row.
+
+    IF lv_row_to IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+      lv_row_to = lv_row.
+    ENDIF.
+
+    lv_column_start = ip_column_start.
+    lv_column_end = ip_column_end.
+
+    IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
+      lv_column_end = lv_column_start.
+    ENDIF.
+
+    lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
+    lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
+
+    IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_to.
+
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Wrong Merging Parameters'.
+
+    ENDIF.
+
+    lv_column_int = lv_column_start_int.
+    lv_row_start = lv_row.
+    WHILE lv_column_int <= lv_column_end_int.
+
+      lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+      lv_row = lv_row_start.
+
+      WHILE lv_row <= lv_row_to.
+
+        ip_style_changer->apply( ip_worksheet = me
+                                 ip_column    = lv_column_int
+                                 ip_row       = lv_row ).
+
+        ADD 1 TO lv_row.
+      ENDWHILE.
+
+      ADD 1 TO lv_column_int.
+    ENDWHILE.
+
+  ENDMETHOD.
+
+
   METHOD change_cell_style.
 
     DATA: changer TYPE REF TO zif_excel_style_changer.
@@ -2074,12 +2142,28 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_columns.
+
+    DATA: columns TYPE TABLE OF i,
+          column  TYPE i.
+    FIELD-SYMBOLS:
+          <sheet_cell> TYPE zexcel_s_cell_data.
+
+    LOOP AT sheet_content ASSIGNING <sheet_cell>.
+      COLLECT <sheet_cell>-cell_column INTO columns.
+    ENDLOOP.
+
+    LOOP AT columns INTO column.
+      " This will create the column instance if it doesn't exist
+      get_column( column ).
+    ENDLOOP.
+
     eo_columns = me->columns.
   ENDMETHOD.                    "GET_COLUMNS
 
 
   METHOD get_columns_iterator.
 
+    get_columns( ).
     eo_iterator = me->columns->get_iterator( ).
 
   ENDMETHOD.                    "GET_COLUMNS_ITERATOR
@@ -2426,12 +2510,40 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_rows.
+
+    DATA: row TYPE i.
+    FIELD-SYMBOLS: <sheet_cell> TYPE zexcel_s_cell_data.
+
+    IF sheet_content IS NOT INITIAL.
+
+      row = 0.
+      DO.
+        " Find the next row
+        READ TABLE sheet_content ASSIGNING <sheet_cell> WITH KEY cell_row = row.
+        CASE sy-subrc.
+          WHEN 4.
+            " row doesn't exist, but it exists another row, SY-TABIX points to the first cell in this row.
+            READ TABLE sheet_content ASSIGNING <sheet_cell> INDEX sy-tabix.
+            ASSERT sy-subrc = 0.
+            row = <sheet_cell>-cell_row.
+          WHEN 8.
+            " it was the last available row
+            EXIT.
+        ENDCASE.
+        " This will create the row instance if it doesn't exist
+        get_row( row ).
+        row = row + 1.
+      ENDDO.
+
+    ENDIF.
+
     eo_rows = me->rows.
   ENDMETHOD.                    "GET_ROWS
 
 
   METHOD get_rows_iterator.
 
+    get_rows( ).
     eo_iterator = me->rows->get_iterator( ).
 
   ENDMETHOD.                    "GET_ROWS_ITERATOR
