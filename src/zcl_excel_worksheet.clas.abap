@@ -1400,7 +1400,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lv_row              TYPE zexcel_cell_row,
           lv_row_start        TYPE zexcel_cell_row,
-          lv_row_end          TYPE zexcel_cell_row,
+          lv_row_to          TYPE zexcel_cell_row,
           lv_column_int       TYPE zexcel_cell_column_alpha,
           lv_column           TYPE zexcel_cell_column_alpha,
           lv_column_start     TYPE zexcel_cell_column_alpha,
