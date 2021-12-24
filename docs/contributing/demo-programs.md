@@ -16,10 +16,10 @@ Table of contents:
 The demo programs can generally be used all these different ways:
 - they can be called directly
 - they can be called from the program `ZABAP2XLSX_DEMO_SHOW`
-  - This program shows the list of the programs whose names start with the characters "ZDEMO_EXCEL", along with their titles, and double-clicking any of them displays the produced Excel file (the workbook and its sheets) on the same screen.
+  - This program shows the list of the programs whose names start with the characters "ZDEMO_EXCEL" and whose ABAP code includes `ZDEMO_EXCEL_OUTPUTOPT_INCL`, along with their titles, and double-clicking any of them displays the produced Excel file (the workbook and its sheets) on the same screen.
 - they can be called from the program `ZDEMO_EXCEL`
   - This program starts a predefined list of demo programs with default parameters to create the Excel files in a given folder.
-- they can be called from the program `ZABAP2XLSX_DEMO_CHECKER`
+- they can be called from the program `ZDEMO_EXCEL_CHECKER`
   - This program is used by abap2xlsx developers to detect regressions
 
 # Program name and title
@@ -52,12 +52,12 @@ START-OF-SELECTION.
 
 # Local class `LCL_EXCEL_GENERATOR`
 
-The demo program should define a local class which inherits from `ZCL_EXCEL_GENERATOR`, named `LCL_EXCEL_GENERATOR`, so that it can be called by `ZABAP2XLSX_DEMO_CHECKER`.
+The demo program should define a local class which inherits from `ZCL_EXCEL_GENERATOR`, named `LCL_EXCEL_GENERATOR`, so that it can be called by `ZDEMO_EXCEL_CHECKER`.
 
 `ZCL_EXCEL_GENERATOR` defines 3 methods, only the 2 first ones are mandatory.
 - Method `GET_INFORMATION`
-  - It is to return the demo title (displayed by `ZABA2XLSX_DEMO_CHECKER`, and the plan is to have `ZABA2XLSX_DEMO_SHOW` use this name too),
-  - an object ID which refers to the Excel file stored in the Web Repository (to be used by `ZABA2XLSX_DEMO_CHECKER` as a reference for detecting any regression), 
+  - It is to return the demo title (displayed by `ZDEMO_EXCEL_CHECKER`, and the plan is to have `ZABA2XLSX_DEMO_SHOW` use this name too),
+  - an object ID which refers to the Excel file stored in the Web Repository (to be used by `ZDEMO_EXCEL_CHECKER` as a reference for detecting any regression), 
   - and the name of the Excel file stored in the Web Repository
 - Method `GENERATE_EXCEL`
   - It is to generate and return the `ZCL_EXCEL` instance which contains the demonstration
@@ -72,7 +72,7 @@ The demo program should define a local class which inherits from `ZCL_EXCEL_GENE
   ```abap
     SUBMIT zdemo_excel1 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Hello world
   ```
-- In the program `ZABAP2XLSX_DEMO_CHECKER`, add one line in the method `LOAD_ALV_TABLE` to reference your local class (here, the one of program `ZDEMO_EXCEL1`):
+- In the program `ZDEMO_EXCEL_CHECKER`, add one line in the method `LOAD_ALV_TABLE` to reference your local class (here, the one of program `ZDEMO_EXCEL1`):
   ```abap
   APPEND '\PROGRAM=ZDEMO_EXCEL1\CLASS=LCL_EXCEL_GENERATOR' TO class_names.
   ```
