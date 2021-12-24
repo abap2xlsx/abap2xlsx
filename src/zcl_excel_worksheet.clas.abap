@@ -180,7 +180,7 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !ip_column_start  TYPE simple
         !ip_column_end    TYPE simple OPTIONAL
-        !ip_row           TYPE zexcel_cell_row OPTIONAL
+        !ip_row           TYPE zexcel_cell_row
         !ip_row_to        TYPE zexcel_cell_row OPTIONAL
         !ip_style_changer TYPE REF TO zif_excel_style_changer
       RAISING
