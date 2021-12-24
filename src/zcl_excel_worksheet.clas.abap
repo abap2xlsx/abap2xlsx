@@ -1400,7 +1400,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lv_row              TYPE zexcel_cell_row,
           lv_row_start        TYPE zexcel_cell_row,
-          lv_row_to          TYPE zexcel_cell_row,
+          lv_row_to           TYPE zexcel_cell_row,
           lv_column_int       TYPE zexcel_cell_column_alpha,
           lv_column           TYPE zexcel_cell_column_alpha,
           lv_column_start     TYPE zexcel_cell_column_alpha,
@@ -1408,11 +1408,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_column_start_int TYPE zexcel_cell_column_alpha,
           lv_column_end_int   TYPE zexcel_cell_column_alpha.
 
-    lv_row_end = ip_row_to.
+    lv_row_to = ip_row_to.
     lv_row = ip_row.
 
-    IF lv_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
-      lv_row_end = lv_row.
+    IF lv_row_to IS INITIAL OR ip_row_to IS NOT SUPPLIED.
+      lv_row_to = lv_row.
     ENDIF.
 
     lv_column_start = ip_column_start.
@@ -1425,7 +1425,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
     lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
 
-    IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_end.
+    IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_to.
 
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
@@ -1440,7 +1440,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
       lv_row = lv_row_start.
 
-      WHILE lv_row <= lv_row_end.
+      WHILE lv_row <= lv_row_to.
 
         ip_style_changer->apply( ip_worksheet = me
                                  ip_column    = lv_column_int
