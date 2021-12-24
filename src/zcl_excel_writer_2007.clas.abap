@@ -699,7 +699,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_override
                                                        parent = lo_document ).
 
-      MOVE sy-index TO lv_worksheets_numc.
+      lv_worksheets_numc = sy-index.
       SHIFT lv_worksheets_numc LEFT DELETING LEADING '0'.
       lv_xml_node_worksheet_pn = lc_xml_node_worksheet_pn.
       REPLACE ALL OCCURRENCES OF '#' IN lv_xml_node_worksheet_pn WITH lv_worksheets_numc.
@@ -3589,7 +3589,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DELETE lt_cell_data WHERE cell_formula IS NOT INITIAL. " delete formula content
 
     DESCRIBE TABLE lt_cell_data LINES lv_count.
-    MOVE lv_count TO lv_count_str.
+    lv_count_str = lv_count.
 
     " separating plain and rich text format strings
     lt_cell_data_rtf = lt_cell_data.
@@ -3611,7 +3611,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     FREE lt_cell_data_rtf.
 
     DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
-    MOVE lv_uniquecount TO lv_uniquecount_str.
+    lv_uniquecount_str = lv_uniquecount.
 
     SHIFT lv_uniquecount_str RIGHT DELETING TRAILING space.
     SHIFT lv_uniquecount_str LEFT DELETING LEADING space.
@@ -3620,9 +3620,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     LOOP AT lt_cell_data ASSIGNING <fs_sheet_content> WHERE data_type = 's'.
 *    lv_sytabix = sy-tabix - 1.
       lv_sytabix = lv_count.
-      MOVE lv_sytabix                    TO ls_shared_string-string_no.
-      MOVE <fs_sheet_content>-cell_value TO ls_shared_string-string_value.
-      MOVE <fs_sheet_content>-data_type TO ls_shared_string-string_type.
+      ls_shared_string-string_no = lv_sytabix.
+      ls_shared_string-string_value = <fs_sheet_content>-cell_value.
+      ls_shared_string-string_type = <fs_sheet_content>-data_type.
       ls_shared_string-rtf_tab = <fs_sheet_content>-rtf_tab.
       INSERT ls_shared_string INTO TABLE shared_strings.
       ADD 1 TO lv_count.
@@ -4395,7 +4395,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " sheetProtection node
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_sheetprotection
                                                        parent = lo_document ).
-      MOVE io_worksheet->zif_excel_sheet_protection~password TO lv_value.
+      lv_value = io_worksheet->zif_excel_sheet_protection~password.
       IF lv_value IS NOT INITIAL.
         lo_element->set_attribute_ns( name  = lc_xml_attr_password
                                       value = lv_value ).
@@ -4669,12 +4669,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_3 = lo_document->create_simple_element( name = lc_xml_node_databar
                                                              parent = lo_document ).
 
-          MOVE ls_databar-cfvo1_value TO ls_cfvo-value.
-          MOVE ls_databar-cfvo1_type  TO ls_cfvo-type.
+          ls_cfvo-value = ls_databar-cfvo1_value.
+          ls_cfvo-type = ls_databar-cfvo1_type.
           APPEND ls_cfvo TO lt_cfvo.
 
-          MOVE ls_databar-cfvo2_value TO ls_cfvo-value.
-          MOVE ls_databar-cfvo2_type  TO ls_cfvo-type.
+          ls_cfvo-value = ls_databar-cfvo2_value.
+          ls_cfvo-type = ls_databar-cfvo2_type.
           APPEND ls_cfvo TO lt_cfvo.
 
           LOOP AT lt_cfvo INTO ls_cfvo.
@@ -4709,16 +4709,16 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_3 = lo_document->create_simple_element( name = lc_xml_node_colorscale
                                                              parent = lo_document ).
 
-          MOVE ls_colorscale-cfvo1_value TO ls_cfvo-value.
-          MOVE ls_colorscale-cfvo1_type  TO ls_cfvo-type.
+          ls_cfvo-value = ls_colorscale-cfvo1_value.
+          ls_cfvo-type = ls_colorscale-cfvo1_type.
           APPEND ls_cfvo TO lt_cfvo.
 
-          MOVE ls_colorscale-cfvo2_value TO ls_cfvo-value.
-          MOVE ls_colorscale-cfvo2_type  TO ls_cfvo-type.
+          ls_cfvo-value = ls_colorscale-cfvo2_value.
+          ls_cfvo-type = ls_colorscale-cfvo2_type.
           APPEND ls_cfvo TO lt_cfvo.
 
-          MOVE ls_colorscale-cfvo3_value TO ls_cfvo-value.
-          MOVE ls_colorscale-cfvo3_type  TO ls_cfvo-type.
+          ls_cfvo-value = ls_colorscale-cfvo3_value.
+          ls_cfvo-type = ls_colorscale-cfvo3_type.
           APPEND ls_cfvo TO lt_cfvo.
 
           APPEND ls_colorscale-colorrgb1 TO lt_colors.
@@ -4788,50 +4788,50 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                  zcl_excel_style_cond=>c_iconset_3symbols2 OR
                  zcl_excel_style_cond=>c_iconset_3trafficlights OR
                  zcl_excel_style_cond=>c_iconset_3trafficlights2.
-              MOVE ls_iconset-cfvo1_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo1_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo1_value.
+              ls_cfvo-type = ls_iconset-cfvo1_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo2_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo2_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo2_value.
+              ls_cfvo-type = ls_iconset-cfvo2_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo3_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo3_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo3_value.
+              ls_cfvo-type = ls_iconset-cfvo3_type.
               APPEND ls_cfvo TO lt_cfvo.
             WHEN zcl_excel_style_cond=>c_iconset_4arrows OR
                  zcl_excel_style_cond=>c_iconset_4arrowsgray OR
                  zcl_excel_style_cond=>c_iconset_4rating OR
                  zcl_excel_style_cond=>c_iconset_4redtoblack OR
                  zcl_excel_style_cond=>c_iconset_4trafficlights.
-              MOVE ls_iconset-cfvo1_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo1_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo1_value.
+              ls_cfvo-type = ls_iconset-cfvo1_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo2_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo2_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo2_value.
+              ls_cfvo-type = ls_iconset-cfvo2_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo3_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo3_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo3_value.
+              ls_cfvo-type = ls_iconset-cfvo3_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo4_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo4_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo4_value.
+              ls_cfvo-type = ls_iconset-cfvo4_type.
               APPEND ls_cfvo TO lt_cfvo.
             WHEN zcl_excel_style_cond=>c_iconset_5arrows OR
                  zcl_excel_style_cond=>c_iconset_5arrowsgray OR
                  zcl_excel_style_cond=>c_iconset_5quarters OR
                  zcl_excel_style_cond=>c_iconset_5rating.
-              MOVE ls_iconset-cfvo1_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo1_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo1_value.
+              ls_cfvo-type = ls_iconset-cfvo1_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo2_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo2_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo2_value.
+              ls_cfvo-type = ls_iconset-cfvo2_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo3_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo3_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo3_value.
+              ls_cfvo-type = ls_iconset-cfvo3_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo4_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo4_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo4_value.
+              ls_cfvo-type = ls_iconset-cfvo4_type.
               APPEND ls_cfvo TO lt_cfvo.
-              MOVE ls_iconset-cfvo5_value TO ls_cfvo-value.
-              MOVE ls_iconset-cfvo5_type  TO ls_cfvo-type.
+              ls_cfvo-value = ls_iconset-cfvo5_value.
+              ls_cfvo-type = ls_iconset-cfvo5_type.
               APPEND ls_cfvo TO lt_cfvo.
             WHEN OTHERS.
               CLEAR lt_cfvo.
@@ -5791,7 +5791,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       lv_index_str = iv_drawing_index.
       CONDENSE lv_index_str NO-GAPS.
-      MOVE me->c_xl_drawings TO lv_value.
+      lv_value = me->c_xl_drawings.
       REPLACE 'xl' WITH '..' INTO lv_value.
       REPLACE '#' WITH lv_index_str INTO lv_value.
       lo_element->set_attribute_ns( name  = lc_xml_attr_target
@@ -5823,7 +5823,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       lv_index_str = iv_comment_index.
       CONDENSE lv_index_str NO-GAPS.
-      MOVE me->cl_xl_drawing_for_comments TO lv_value.
+      lv_value = me->cl_xl_drawing_for_comments.
       REPLACE 'xl' WITH '..' INTO lv_value.
       REPLACE '#' WITH lv_index_str INTO lv_value.
       lo_element->set_attribute_ns( name  = lc_xml_attr_target
@@ -5845,7 +5845,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       lv_index_str = iv_comment_index.
       CONDENSE lv_index_str NO-GAPS.
-      MOVE me->c_xl_comments TO lv_value.
+      lv_value = me->c_xl_comments.
       REPLACE 'xl' WITH '..' INTO lv_value.
       REPLACE '#' WITH lv_index_str INTO lv_value.
       lo_element->set_attribute_ns( name  = lc_xml_attr_target
@@ -5873,7 +5873,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       lv_index_str = lv_comment_index.
       CONDENSE lv_index_str NO-GAPS.
-      MOVE me->cl_xl_drawing_for_comments TO lv_value.
+      lv_value = me->cl_xl_drawing_for_comments.
       REPLACE 'xl' WITH '..' INTO lv_value.
       REPLACE '#' WITH lv_index_str INTO lv_value.
       lo_element->set_attribute_ns( name  = lc_xml_attr_target
@@ -6920,25 +6920,25 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     " update attribute "count"
     DESCRIBE TABLE lt_fonts LINES lv_fonts_count.
-    MOVE lv_fonts_count TO lv_value.
+    lv_value = lv_fonts_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_fonts->set_attribute_ns( name  = lc_xml_attr_count
                                         value = lv_value ).
     DESCRIBE TABLE lt_fills LINES lv_fills_count.
-    MOVE lv_fills_count TO lv_value.
+    lv_value = lv_fills_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_fills->set_attribute_ns( name  = lc_xml_attr_count
                                         value = lv_value ).
     DESCRIBE TABLE lt_borders LINES lv_borders_count.
-    MOVE lv_borders_count TO lv_value.
+    lv_value = lv_borders_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_borders->set_attribute_ns( name  = lc_xml_attr_count
                                           value = lv_value ).
     DESCRIBE TABLE lt_cellxfs LINES lv_cellxfs_count.
-    MOVE lv_cellxfs_count TO lv_value.
+    lv_value = lv_cellxfs_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_cellxfs->set_attribute_ns( name  = lc_xml_attr_count
@@ -6973,61 +6973,61 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     LOOP AT lt_cellxfs INTO ls_cellxfs.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_xf
                                                           parent = lo_document ).
-      MOVE ls_cellxfs-numfmtid TO lv_value.
+      lv_value = ls_cellxfs-numfmtid.
       SHIFT lv_value RIGHT DELETING TRAILING space.
       SHIFT lv_value LEFT DELETING LEADING space.
       lo_element->set_attribute_ns( name  = lc_xml_attr_numfmtid
                                     value = lv_value ).
-      MOVE ls_cellxfs-fontid TO lv_value.
+      lv_value = ls_cellxfs-fontid.
       SHIFT lv_value RIGHT DELETING TRAILING space.
       SHIFT lv_value LEFT DELETING LEADING space.
       lo_element->set_attribute_ns( name  = lc_xml_attr_fontid
                                     value = lv_value ).
-      MOVE ls_cellxfs-fillid TO lv_value.
+      lv_value = ls_cellxfs-fillid.
       SHIFT lv_value RIGHT DELETING TRAILING space.
       SHIFT lv_value LEFT DELETING LEADING space.
       lo_element->set_attribute_ns( name  = lc_xml_attr_fillid
                                     value = lv_value ).
-      MOVE ls_cellxfs-borderid TO lv_value.
+      lv_value = ls_cellxfs-borderid.
       SHIFT lv_value RIGHT DELETING TRAILING space.
       SHIFT lv_value LEFT DELETING LEADING space.
       lo_element->set_attribute_ns( name  = lc_xml_attr_borderid
                                     value = lv_value ).
-      MOVE ls_cellxfs-xfid TO lv_value.
+      lv_value = ls_cellxfs-xfid.
       SHIFT lv_value RIGHT DELETING TRAILING space.
       SHIFT lv_value LEFT DELETING LEADING space.
       lo_element->set_attribute_ns( name  = lc_xml_attr_xfid
                                     value = lv_value ).
       IF ls_cellxfs-applynumberformat EQ 1.
-        MOVE ls_cellxfs-applynumberformat TO lv_value.
+        lv_value = ls_cellxfs-applynumberformat.
         SHIFT lv_value RIGHT DELETING TRAILING space.
         SHIFT lv_value LEFT DELETING LEADING space.
         lo_element->set_attribute_ns( name  = lc_xml_attr_applynumberformat
                                       value = lv_value ).
       ENDIF.
       IF ls_cellxfs-applyfont EQ 1.
-        MOVE ls_cellxfs-applyfont TO lv_value.
+        lv_value = ls_cellxfs-applyfont.
         SHIFT lv_value RIGHT DELETING TRAILING space.
         SHIFT lv_value LEFT DELETING LEADING space.
         lo_element->set_attribute_ns( name  = lc_xml_attr_applyfont
                                       value = lv_value ).
       ENDIF.
       IF ls_cellxfs-applyfill EQ 1.
-        MOVE ls_cellxfs-applyfill TO lv_value.
+        lv_value = ls_cellxfs-applyfill.
         SHIFT lv_value RIGHT DELETING TRAILING space.
         SHIFT lv_value LEFT DELETING LEADING space.
         lo_element->set_attribute_ns( name  = lc_xml_attr_applyfill
                                       value = lv_value ).
       ENDIF.
       IF ls_cellxfs-applyborder EQ 1.
-        MOVE ls_cellxfs-applyborder TO lv_value.
+        lv_value = ls_cellxfs-applyborder.
         SHIFT lv_value RIGHT DELETING TRAILING space.
         SHIFT lv_value LEFT DELETING LEADING space.
         lo_element->set_attribute_ns( name  = lc_xml_attr_applyborder
                                       value = lv_value ).
       ENDIF.
       IF ls_cellxfs-applyalignment EQ 1. " depends on each style not for all the sheet
-        MOVE ls_cellxfs-applyalignment TO lv_value.
+        lv_value = ls_cellxfs-applyalignment.
         SHIFT lv_value RIGHT DELETING TRAILING space.
         SHIFT lv_value LEFT DELETING LEADING space.
         lo_element->set_attribute_ns( name  = lc_xml_attr_applyalignment
@@ -7038,12 +7038,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         READ TABLE lt_alignments INTO ls_alignment INDEX ls_cellxfs-alignmentid.
         SUBTRACT 1 FROM ls_cellxfs-alignmentid.
         IF ls_alignment-horizontal IS NOT INITIAL.
-          MOVE ls_alignment-horizontal TO lv_value.
+          lv_value = ls_alignment-horizontal.
           lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_horizontal
                                               value = lv_value ).
         ENDIF.
         IF ls_alignment-vertical IS NOT INITIAL.
-          MOVE ls_alignment-vertical TO lv_value.
+          lv_value = ls_alignment-vertical.
           lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_vertical
                                               value = lv_value ).
         ENDIF.
@@ -7052,7 +7052,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                               value = c_on ).
         ENDIF.
         IF ls_alignment-textrotation IS NOT INITIAL.
-          MOVE ls_alignment-textrotation TO lv_value.
+          lv_value = ls_alignment-textrotation.
           SHIFT lv_value RIGHT DELETING TRAILING space.
           SHIFT lv_value LEFT DELETING LEADING space.
           lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_textrotation
@@ -7063,7 +7063,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                               value = c_on ).
         ENDIF.
         IF ls_alignment-indent IS NOT INITIAL.
-          MOVE ls_alignment-indent TO lv_value.
+          lv_value = ls_alignment-indent.
           SHIFT lv_value RIGHT DELETING TRAILING space.
           SHIFT lv_value LEFT DELETING LEADING space.
           lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_indent
@@ -7073,7 +7073,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         lo_element->append_child( new_child = lo_sub_element_2 ).
       ENDIF.
       IF ls_cellxfs-applyprotection EQ 1.
-        MOVE ls_cellxfs-applyprotection TO lv_value.
+        lv_value = ls_cellxfs-applyprotection.
         CONDENSE lv_value NO-GAPS.
         lo_element->set_attribute_ns( name  = lc_xml_attr_applyprotection
                                       value = lv_value ).
@@ -7083,13 +7083,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         READ TABLE lt_protections INTO ls_protection INDEX ls_cellxfs-protectionid.
         SUBTRACT 1 FROM ls_cellxfs-protectionid.
         IF ls_protection-locked IS NOT INITIAL.
-          MOVE ls_protection-locked TO lv_value.
+          lv_value = ls_protection-locked.
           CONDENSE lv_value.
           lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_locked
                                               value = lv_value ).
         ENDIF.
         IF ls_protection-hidden IS NOT INITIAL.
-          MOVE ls_protection-hidden TO lv_value.
+          lv_value = ls_protection-hidden.
           CONDENSE lv_value.
           lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_hidden
                                               value = lv_value ).
@@ -7692,25 +7692,25 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     IF me->excel->zif_excel_book_protection~protected EQ abap_true.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_workbookprotection
                                                        parent = lo_document ).
-      MOVE me->excel->zif_excel_book_protection~workbookpassword TO lv_value.
+      lv_value = me->excel->zif_excel_book_protection~workbookpassword.
       IF lv_value IS NOT INITIAL.
         lo_element->set_attribute_ns( name  = lc_xml_attr_workbookpassword
                                       value = lv_value ).
       ENDIF.
-      MOVE me->excel->zif_excel_book_protection~revisionspassword TO lv_value.
+      lv_value = me->excel->zif_excel_book_protection~revisionspassword.
       IF lv_value IS NOT INITIAL.
         lo_element->set_attribute_ns( name  = lc_xml_attr_revisionspassword
                                       value = lv_value ).
       ENDIF.
-      MOVE me->excel->zif_excel_book_protection~lockrevision TO lv_value.
+      lv_value = me->excel->zif_excel_book_protection~lockrevision.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_lockrevision
                                     value = lv_value ).
-      MOVE me->excel->zif_excel_book_protection~lockstructure TO lv_value.
+      lv_value = me->excel->zif_excel_book_protection~lockstructure.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_lockstructure
                                     value = lv_value ).
-      MOVE me->excel->zif_excel_book_protection~lockwindows TO lv_value.
+      lv_value = me->excel->zif_excel_book_protection~lockwindows.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_lockwindows
                                     value = lv_value ).

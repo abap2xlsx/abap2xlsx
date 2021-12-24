@@ -42,6 +42,12 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>P_APPLSE</KEY>
+     <ENTRY>From Application Server</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>P_UPFILE</KEY>
      <ENTRY>Input template</ENTRY>
      <LENGTH>22</LENGTH>

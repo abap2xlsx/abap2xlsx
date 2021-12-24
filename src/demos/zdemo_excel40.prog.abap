@@ -1,8 +1,9 @@
 REPORT zdemo_excel40.
 
 
-DATA: lo_excel     TYPE REF TO zcl_excel,
-      lo_worksheet TYPE REF TO zcl_excel_worksheet.
+DATA: lo_excel         TYPE REF TO zcl_excel,
+      lo_worksheet     TYPE REF TO zcl_excel_worksheet,
+      lo_style_changer TYPE REF TO zif_excel_style_changer.
 
 DATA: lv_row       TYPE zexcel_cell_row,
       lv_col       TYPE i,
@@ -29,41 +30,32 @@ START-OF-SELECTION.
 *    - first 3 rows will  have fontcolor set
 *    These marked cells will be used for repeatable rows/columns on printpages
 *--------------------------------------------------------------------*
-  DO 100 TIMES.  " Rows
+    lo_worksheet->set_area(
+          ip_column_start = 1
+          ip_column_end   = 20
+          ip_row          = 1
+          ip_row_to       = 100
+          ip_formula      = 'CHAR(64+COLUMN())&TEXT(ROW(),"????????0")'
+          ip_area         = lo_worksheet->c_area-whole ).
 
-    lv_row = sy-index .
-    WRITE lv_row TO lv_row_char.
+    lo_style_changer = zcl_excel_style_changer=>create( lo_excel ).
+    lo_style_changer->set_fill_filltype( zcl_excel_style_fill=>c_fill_solid ).
+    lo_style_changer->set_fill_fgcolor_rgb( zcl_excel_style_color=>c_yellow ).
+    lo_worksheet->change_area_style(
+          ip_column_start  = 1
+          ip_column_end    = 20
+          ip_row           = 1
+          ip_row_to        = 3
+          ip_style_changer = lo_style_changer ).
 
-    DO 20 TIMES.
-
-      lv_col = sy-index - 1.
-      CONCATENATE sy-abcde+lv_col(1) lv_row_char INTO lv_value.
-      lv_col = sy-index.
-      lo_worksheet->set_cell( ip_row    = lv_row
-                              ip_column = lv_col
-                              ip_value  = lv_value ).
-
-      TRY.
-          IF lv_row <= 3.
-            lo_worksheet->change_cell_style(  ip_column           = lv_col
-                                              ip_row              = lv_row
-                                              ip_fill_filltype    = zcl_excel_style_fill=>c_fill_solid
-                                              ip_fill_fgcolor_rgb = zcl_excel_style_color=>c_yellow ).
-          ENDIF.
-          IF lv_col <= 4.
-            lo_worksheet->change_cell_style(  ip_column           = lv_col
-                                              ip_row              = lv_row
-                                              ip_font_color_rgb   = zcl_excel_style_color=>c_red ).
-          ENDIF.
-        CATCH zcx_excel .
-      ENDTRY.
-
-    ENDDO.
-
-
-
-  ENDDO.
-
+    lo_style_changer = zcl_excel_style_changer=>create( lo_excel ).
+    lo_style_changer->set_font_color_rgb( zcl_excel_style_color=>c_red ).
+    lo_worksheet->change_area_style(
+          ip_column_start  = 1
+          ip_column_end    = 4
+          ip_row           = 1
+          ip_row_to        = 100
+          ip_style_changer = lo_style_changer ).
 
 *--------------------------------------------------------------------*
 *  Printsettings

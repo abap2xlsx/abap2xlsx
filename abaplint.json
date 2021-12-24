@@ -152,7 +152,9 @@
       "allowExit": false
     },
     "line_only_punc": false,
-    "obsolete_statement": false,
+    "obsolete_statement": {
+      "move": true
+    },
     "start_at_tab": false,
     "whitespace_end": true,
     "exporting": false,
