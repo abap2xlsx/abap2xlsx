@@ -163,28 +163,28 @@ CLASS zcl_excel_converter DEFINITION
     METHODS create_style_normal
       IMPORTING
         !i_alignment    TYPE zexcel_alignment OPTIONAL
-        !i_inttype      TYPE inttype OPTIONAL
+        !i_inttype      TYPE abap_typekind OPTIONAL
         !i_decimals     TYPE int1 OPTIONAL
       RETURNING
         VALUE(ro_style) TYPE REF TO zcl_excel_style .
     METHODS create_style_stripped
       IMPORTING
         !i_alignment    TYPE zexcel_alignment OPTIONAL
-        !i_inttype      TYPE inttype OPTIONAL
+        !i_inttype      TYPE abap_typekind OPTIONAL
         !i_decimals     TYPE int1 OPTIONAL
       RETURNING
         VALUE(ro_style) TYPE REF TO zcl_excel_style .
     METHODS create_style_subtotal
       IMPORTING
         !i_alignment    TYPE zexcel_alignment OPTIONAL
-        !i_inttype      TYPE inttype OPTIONAL
+        !i_inttype      TYPE abap_typekind OPTIONAL
         !i_decimals     TYPE int1 OPTIONAL
       RETURNING
         VALUE(ro_style) TYPE REF TO zcl_excel_style .
     METHODS create_style_total
       IMPORTING
         !i_alignment    TYPE zexcel_alignment OPTIONAL
-        !i_inttype      TYPE inttype OPTIONAL
+        !i_inttype      TYPE abap_typekind OPTIONAL
         !i_decimals     TYPE int1 OPTIONAL
       RETURNING
         VALUE(ro_style) TYPE REF TO zcl_excel_style .
@@ -223,7 +223,7 @@ CLASS zcl_excel_converter DEFINITION
       IMPORTING
         !i_type        TYPE ty_style_type
         !i_alignment   TYPE zexcel_alignment DEFAULT space
-        !i_inttype     TYPE inttype DEFAULT space
+        !i_inttype     TYPE abap_typekind DEFAULT space
         !i_decimals    TYPE int1 DEFAULT 0
       RETURNING
         VALUE(r_style) TYPE zexcel_cell_style .
@@ -246,7 +246,7 @@ CLASS zcl_excel_converter DEFINITION
     METHODS set_autofilter_area .
     METHODS set_cell_format
       IMPORTING
-        !i_inttype      TYPE inttype
+        !i_inttype      TYPE abap_typekind
         !i_decimals     TYPE int1
       RETURNING
         VALUE(r_format) TYPE zexcel_number_format .
