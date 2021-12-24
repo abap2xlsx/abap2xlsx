@@ -574,10 +574,10 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
       fontx = ip_xfont.
     ELSE.
 * Only supplied values should be used - exception: Flags bold and italic strikethrough underline
-      MOVE 'X' TO: fontx-bold,
-                   fontx-italic,
-                   fontx-strikethrough,
-                   fontx-underline_mode.
+      fontx-bold = 'X'.
+      fontx-italic = 'X'.
+      fontx-strikethrough = 'X'.
+      fontx-underline_mode = 'X'.
       CLEAR fontx-color WITH 'X'.
       clear_initial_colorxfields(
         EXPORTING

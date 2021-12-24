@@ -3806,7 +3806,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lv_actual_length_line TYPE i,
           lv_errormessage       TYPE string.
 
-    MOVE i_filename TO lv_filename.
+    lv_filename = i_filename.
 
     DESCRIBE FIELD ls_binary_data LENGTH lv_max_length_line IN BYTE MODE.
     OPEN DATASET lv_filename FOR INPUT IN BINARY MODE.
@@ -3843,7 +3843,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lv_filename     TYPE string,
           lv_errormessage TYPE string.
 
-    MOVE i_filename TO lv_filename.
+    lv_filename = i_filename.
 
     cl_gui_frontend_services=>gui_upload( EXPORTING
                                             filename                = lv_filename
