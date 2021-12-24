@@ -191,7 +191,7 @@ CLASS lcl_app IMPLEMENTATION.
 
           WHEN 'FC01'. " REFRESH
 
-            " restart the program completely so that to consider modification/recompile of any ZDEMO_EXCEL program
+            " restart the program completely to account for modification/rebuild of any ZDEMO_EXCEL program
             SUBMIT (sy-repid) VIA SELECTION-SCREEN.
 
         ENDCASE.
