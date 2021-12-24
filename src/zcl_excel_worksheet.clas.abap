@@ -2443,22 +2443,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD get_rows.
 
-    DATA: first_row TYPE i,
-          last_row  TYPE i,
-          row       TYPE i.
+    DATA: row       TYPE i.
     FIELD-SYMBOLS:
     <sheet_cell> TYPE zexcel_s_cell_data.
 
     IF sheet_content IS NOT INITIAL.
-
-      first_row = rows->get_min_index( ).
-      IF first_row = 0.
-        first_row = zcl_excel_common=>c_excel_sheet_min_row.
-      ENDIF.
-      last_row = rows->get_max_index( ).
-      IF last_row = 0.
-        last_row = zcl_excel_common=>c_excel_sheet_max_row.
-      ENDIF.
 
       row = 0.
       DO.
