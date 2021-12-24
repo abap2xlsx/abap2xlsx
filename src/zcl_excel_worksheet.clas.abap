@@ -2443,9 +2443,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD get_rows.
 
-    DATA: row       TYPE i.
-    FIELD-SYMBOLS:
-    <sheet_cell> TYPE zexcel_s_cell_data.
+    DATA: row TYPE i.
+    FIELD-SYMBOLS: <sheet_cell> TYPE zexcel_s_cell_data.
 
     IF sheet_content IS NOT INITIAL.
 
