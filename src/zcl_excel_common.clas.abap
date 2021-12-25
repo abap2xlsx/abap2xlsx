@@ -601,10 +601,10 @@ CLASS zcl_excel_common IMPLEMENTATION.
                                                 e_row       = e_row_end ).
     ENDIF.
 
-    IF e_column_start_int IS SUPPLIED.
+    IF e_column_start_int IS SUPPLIED AND e_column_start IS NOT INITIAL.
       e_column_start_int = convert_column2int( e_column_start ).
     ENDIF.
-    IF e_column_end_int IS SUPPLIED.
+    IF e_column_end_int IS SUPPLIED AND e_column_end IS NOT INITIAL.
       e_column_end_int = convert_column2int( e_column_end ).
     ENDIF.
 
