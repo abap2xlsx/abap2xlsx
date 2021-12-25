@@ -739,18 +739,17 @@ CLASS zcl_excel_worksheet DEFINITION
       CHANGING
         cs_complete_style_border  TYPE zexcel_s_cstyle_border
         cs_complete_stylex_border TYPE zexcel_s_cstylex_border.
-    METHODS normalize_columnrow
+    METHODS normalize_columnrow_parameter
       IMPORTING
         ip_columnrow  TYPE csequence OPTIONAL
         ip_column     TYPE simple OPTIONAL
         ip_row        TYPE zexcel_cell_row OPTIONAL
       EXPORTING
         ep_column     TYPE zexcel_cell_column
-*        ep_column_ref TYPE REF TO data
         ep_row        TYPE zexcel_cell_row
       RAISING
         zcx_excel.
-    METHODS normalize_range
+    METHODS normalize_range_parameter
       IMPORTING
         ip_range        TYPE csequence OPTIONAL
         ip_column_start TYPE simple OPTIONAL
@@ -1442,11 +1441,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_column_start_int TYPE zexcel_cell_column,
           lv_column_end_int   TYPE zexcel_cell_column.
 
-    normalize_range( EXPORTING ip_range        = ip_range
-                               ip_column_start = ip_column_start     ip_column_end = ip_column_end
-                               ip_row          = ip_row              ip_row_to     = ip_row_to
-                     IMPORTING ep_column_start = lv_column_start_int ep_column_end = lv_column_end_int
-                               ep_row          = lv_row_start        ep_row_to     = lv_row_to ).
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start     ip_column_end = ip_column_end
+                                         ip_row          = ip_row              ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = lv_column_start_int ep_column_end = lv_column_end_int
+                                         ep_row          = lv_row_start        ep_row_to     = lv_row_to ).
 
     lv_column_int = lv_column_start_int.
     WHILE lv_column_int <= lv_column_end_int.
@@ -1473,11 +1472,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           column  TYPE zexcel_cell_column,
           row     TYPE zexcel_cell_row.
 
-    normalize_columnrow( EXPORTING ip_columnrow = ip_columnrow
-                                   ip_column    = ip_column
-                                   ip_row       = ip_row
-                         IMPORTING ep_column    = column
-                                   ep_row       = row ).
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = column
+                                             ep_row       = row ).
 
     changer = zcl_excel_style_changer=>create( excel = excel ).
 
@@ -2116,11 +2115,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_row           TYPE zexcel_cell_row,
           ls_sheet_content TYPE zexcel_s_cell_data.
 
-    normalize_columnrow( EXPORTING ip_columnrow = ip_columnrow
-                                   ip_column    = ip_column
-                                   ip_row       = ip_row
-                         IMPORTING ep_column    = lv_column
-                                   ep_row       = lv_row ).
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
 
     READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = lv_row
                                                                   cell_column  = lv_column.
@@ -2899,7 +2898,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD normalize_columnrow.
+  METHOD normalize_columnrow_parameter.
 
     IF NOT ( ( ip_column IS INITIAL AND ip_row IS INITIAL ) OR ip_columnrow IS INITIAL ).
       RAISE EXCEPTION TYPE zcx_excel
@@ -2922,7 +2921,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD normalize_range.
+  METHOD normalize_range_parameter.
 
     DATA: lv_errormessage TYPE string.
 
@@ -3083,11 +3082,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_column_start_int TYPE zexcel_cell_column,
           lv_column_end_int   TYPE zexcel_cell_column.
 
-    normalize_range( EXPORTING ip_range        = ip_range
-                               ip_column_start = ip_column_start     ip_column_end = ip_column_end
-                               ip_row          = ip_row              ip_row_to     = ip_row_to
-                     IMPORTING ep_column_start = lv_column_start_int ep_column_end = lv_column_end_int
-                               ep_row          = lv_row_start        ep_row_to     = lv_row_end ).
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start     ip_column_end = ip_column_end
+                                         ip_row          = ip_row              ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = lv_column_start_int ep_column_end = lv_column_end_int
+                                         ep_row          = lv_row_start        ep_row_to     = lv_row_end ).
 
     " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
     IF ip_merge = abap_true OR ip_area = c_area-topleft.
@@ -3186,11 +3185,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_column_start_int TYPE zexcel_cell_column,
           ld_column_end_int   TYPE zexcel_cell_column.
 
-    normalize_range( EXPORTING ip_range        = ip_range
-                               ip_column_start = ip_column_start      ip_column_end = ip_column_end
-                               ip_row          = ip_row               ip_row_to     = ip_row_to
-                     IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
-                               ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start      ip_column_end = ip_column_end
+                                         ip_row          = ip_row               ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
+                                         ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
 
     " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
     IF ip_merge = abap_true OR ip_area = c_area-topleft.
@@ -3236,11 +3235,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_value            TYPE string.
     DATA: lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
 
-    normalize_range( EXPORTING ip_range        = ip_range
-                               ip_column_start = ip_column_start      ip_column_end = ip_column_end
-                               ip_row          = ip_row               ip_row_to     = ip_row_to
-                     IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
-                               ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start      ip_column_end = ip_column_end
+                                         ip_row          = ip_row               ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
+                                         ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
 
     ld_column_int = ld_column_start_int.
     WHILE ld_column_int <= ld_column_end_int.
@@ -3276,11 +3275,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_current_column   TYPE zexcel_cell_column_alpha,
           ld_current_row      TYPE zexcel_cell_row.
 
-    normalize_range( EXPORTING ip_range        = ip_range
-                               ip_column_start = ip_column_start      ip_column_end = ip_column_end
-                               ip_row          = ip_row               ip_row_to     = ip_row_to
-                     IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
-                               ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start      ip_column_end = ip_column_end
+                                         ip_row          = ip_row               ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
+                                         ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
 
     ld_column_int = ld_column_start_int.
     WHILE ld_column_int <= ld_column_end_int.
@@ -3331,11 +3330,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       zcx_excel=>raise_text( 'Please provide the value or formula' ).
     ENDIF.
 
-    normalize_columnrow( EXPORTING ip_columnrow = ip_columnrow
-                                   ip_column    = ip_column
-                                   ip_row       = ip_row
-                         IMPORTING ep_column    = lv_column
-                                   ep_row       = lv_row ).
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 *  lv_style_guid = ip_style.
@@ -3586,11 +3585,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Get cell to set formula into
 *--------------------------------------------------------------------*
-    normalize_columnrow( EXPORTING ip_columnrow = ip_columnrow
-                                   ip_column    = ip_column
-                                   ip_row       = ip_row
-                         IMPORTING ep_column    = lv_column
-                                   ep_row       = lv_row ).
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
 
     READ TABLE me->sheet_content ASSIGNING <sheet_content> WITH TABLE KEY cell_row    = lv_row
                                                                           cell_column = lv_column.
@@ -3620,11 +3619,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     lv_style_guid = ip_style.
 
-    normalize_columnrow( EXPORTING ip_columnrow = ip_columnrow
-                                   ip_column    = ip_column
-                                   ip_row       = ip_row
-                         IMPORTING ep_column    = lv_column
-                                   ep_row       = lv_row ).
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
 
     READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = lv_row
                                                                    cell_column = lv_column.
@@ -3690,11 +3689,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_row_to       TYPE zexcel_cell_row,
           lv_errormessage TYPE string.
 
-    normalize_range( EXPORTING ip_range        = ip_range
-                               ip_column_start = ip_column_start ip_column_end = ip_column_end
-                               ip_row          = ip_row          ip_row_to     = ip_row_to
-                     IMPORTING ep_column_start = lv_column_start ep_column_end = lv_column_end
-                               ep_row          = lv_row          ep_row_to     = lv_row_to ).
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start ip_column_end = ip_column_end
+                                         ip_row          = ip_row          ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = lv_column_start ep_column_end = lv_column_end
+                                         ep_row          = lv_row          ep_row_to     = lv_row_to ).
 
     IF ip_value IS SUPPLIED OR ip_formula IS SUPPLIED.
       " if there is a value or formula set the value to the top-left cell
@@ -3752,11 +3751,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_current_column TYPE zexcel_cell_column_alpha,
           ld_current_row    TYPE zexcel_cell_row.
 
-    normalize_range( EXPORTING ip_range        = ip_range
-                               ip_column_start = ip_column_start ip_column_end = ip_column_end
-                               ip_row          = ip_row          ip_row_to     = ip_row_to
-                     IMPORTING ep_column_start = ld_column_start ep_column_end = ld_column_end
-                               ep_row          = ld_row_start    ep_row_to     = ld_row_end ).
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start ip_column_end = ip_column_end
+                                         ip_row          = ip_row          ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start ep_column_end = ld_column_end
+                                         ep_row          = ld_row_start    ep_row_to     = ld_row_end ).
 
     "set the style cell by cell
     ld_column_int = ld_column_start.
