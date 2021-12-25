@@ -25,11 +25,11 @@ START-OF-SELECTION.
   " Get active sheet
   lo_worksheet = lo_excel->get_active_worksheet( ).
 *  lo_worksheet->set_title( ip_title = 'Sheet1' ).
-  lo_worksheet->set_cell( ip_columnrow = 'B2' ip_value = 'Hello world' ).
-  lo_worksheet->set_cell( ip_columnrow = 'B3' ip_value = sy-datum ).
-  lo_worksheet->set_cell( ip_columnrow = 'C3' ip_value = sy-uzeit ).
+  lo_worksheet->set_cell( ip_column = 'B' ip_row = 2 ip_value = 'Hello world' ).
+  lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = sy-datum ).
+  lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = sy-uzeit ).
   lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = 'https://abap2xlsx.github.io/abap2xlsx' ).
-  lo_worksheet->set_cell( ip_columnrow = 'B4' ip_value = 'Click here to visit abap2xlsx homepage' ip_hyperlink = lo_hyperlink ).
+  lo_worksheet->set_cell( ip_column = 'B' ip_row = 4 ip_value = 'Click here to visit abap2xlsx homepage' ip_hyperlink = lo_hyperlink ).
 
   lo_worksheet->set_cell( ip_column = 'B' ip_row =  6 ip_value = '你好，世界' ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row =  6 ip_value = '(Chinese)' ).
