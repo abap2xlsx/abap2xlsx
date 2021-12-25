@@ -1261,7 +1261,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * Capture reference cell address
 *--------------------------------------------------------------------*
           TRY.
-              MOVE: lv_ref_formula+lv_offset1(lv_tlen) TO lv_ref_cell_addr. "Ref cell address
+              lv_ref_cell_addr = lv_ref_formula+lv_offset1(lv_tlen). "Ref cell address
             CATCH cx_root.
               lv_errormessage = 'Internal error in Class ZCL_EXCEL_COMMON Method SHIFT_FORMULA Spot 1 '.  " Change to messageclass if possible
               zcx_excel=>raise_text( lv_errormessage ).
@@ -1445,7 +1445,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * Return resulting formula
 *--------------------------------------------------------------------*
     IF lv_cur_form IS NOT INITIAL.
-      MOVE lv_cur_form TO ev_resulting_formula.
+      ev_resulting_formula = lv_cur_form.
     ENDIF.
 
   ENDMETHOD.

@@ -151,8 +151,8 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
       lv_content = me->create_xl_sheet( io_worksheet = lo_worksheet
                                         iv_active    = lv_active ).
       lv_xl_sheet = me->c_xl_sheet.
-      MOVE sy-index TO: lv_syindex,
-                        lv_comment_index. " (+) Issue 588
+      lv_syindex = sy-index.
+      lv_comment_index = sy-index. " (+) Issue 588
       SHIFT lv_syindex RIGHT DELETING TRAILING space.
       SHIFT lv_syindex LEFT DELETING LEADING space.
       REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet WITH lv_syindex.
@@ -182,7 +182,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 * Add drawings **********************************
       lo_drawings = lo_worksheet->get_drawings( ).
       IF lo_drawings->is_empty( ) = abap_false.
-        MOVE lv_drawing_index TO lv_syindex.
+        lv_syindex = lv_drawing_index.
         SHIFT lv_syindex RIGHT DELETING TRAILING space.
         SHIFT lv_syindex LEFT DELETING LEADING space.
 
