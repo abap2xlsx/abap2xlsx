@@ -31,10 +31,7 @@ START-OF-SELECTION.
 *    These marked cells will be used for repeatable rows/columns on printpages
 *--------------------------------------------------------------------*
     lo_worksheet->set_area(
-          ip_column_start = 1
-          ip_column_end   = 20
-          ip_row          = 1
-          ip_row_to       = 100
+          ip_range        = 'A1:T100'
           ip_formula      = 'CHAR(64+COLUMN())&TEXT(ROW(),"????????0")'
           ip_area         = lo_worksheet->c_area-whole ).
 

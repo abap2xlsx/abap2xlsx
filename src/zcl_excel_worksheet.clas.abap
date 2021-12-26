@@ -2900,7 +2900,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD normalize_columnrow_parameter.
 
-    IF NOT ( ( ip_column IS INITIAL AND ip_row IS INITIAL ) OR ip_columnrow IS INITIAL ).
+    IF ( ( ip_column IS NOT INITIAL OR ip_row IS NOT INITIAL ) AND ip_columnrow IS NOT INITIAL )
+        OR ( ip_column IS INITIAL AND ip_row IS INITIAL AND ip_columnrow IS INITIAL ).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = 'Please provide either row and column, or cell reference'.
@@ -2925,8 +2926,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lv_errormessage TYPE string.
 
-    IF NOT ( ( ip_column_start IS INITIAL AND ip_column_end IS INITIAL
-            AND ip_row IS INITIAL AND ip_row_to IS INITIAL ) OR ip_range IS INITIAL ).
+    IF ( ( ip_column_start IS NOT INITIAL OR ip_column_end IS NOT INITIAL
+            OR ip_row IS NOT INITIAL OR ip_row_to IS NOT INITIAL ) AND ip_range IS NOT INITIAL )
+        OR ( ip_column_start IS INITIAL AND ip_column_end IS INITIAL
+            AND ip_row IS INITIAL AND ip_row_to IS INITIAL AND ip_range IS INITIAL ).
       RAISE EXCEPTION TYPE zcx_excel
         EXPORTING
           error = 'Please provide either row and column interval, or range reference'.
@@ -2942,13 +2945,15 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           e_row_start        = ep_row
           e_row_end          = ep_row_to ).
     ELSE.
-      ep_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
-      IF ep_column_start IS INITIAL.
+      IF ip_column_start IS INITIAL.
         ep_column_start = zcl_excel_common=>c_excel_sheet_min_col.
+      ELSE.
+        ep_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
       ENDIF.
-      ep_column_end = zcl_excel_common=>convert_column2int( ip_column_end ).
-      IF ep_column_end IS INITIAL.
+      IF ip_column_end IS INITIAL.
         ep_column_end = ep_column_start.
+      ELSE.
+        ep_column_end = zcl_excel_common=>convert_column2int( ip_column_end ).
       ENDIF.
       ep_row = ip_row.
       IF ep_row IS INITIAL.
@@ -3232,7 +3237,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_column_end_int   TYPE zexcel_cell_column,
           ld_current_column   TYPE zexcel_cell_column_alpha,
           ld_current_row      TYPE zexcel_cell_row,
-          ld_value            TYPE string.
+          ld_value            TYPE string,
+          ld_formula          TYPE string.
     DATA: lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
 
     normalize_range_parameter( EXPORTING ip_range        = ip_range
@@ -3247,8 +3253,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ld_current_row = ld_row_start.
       WHILE ld_current_row <= ld_row_end.
 
-        me->get_cell( EXPORTING ip_column = ld_current_column ip_row = ld_current_row
-                      IMPORTING ep_value  = ld_value ).
+        me->get_cell( EXPORTING ip_column  = ld_current_column ip_row = ld_current_row
+                      IMPORTING ep_value   = ld_value
+                                ep_formula = ld_formula ).
 
         IF ip_is_internal = abap_true.
           lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = ip_url ).
@@ -3256,7 +3263,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = ip_url ).
         ENDIF.
 
-        me->set_cell( ip_column = ld_current_column ip_row = ld_current_row ip_value = ld_value ip_hyperlink = lo_hyperlink ).
+        me->set_cell( ip_column = ld_current_column ip_row = ld_current_row ip_value = ld_value ip_formula = ld_formula ip_hyperlink = lo_hyperlink ).
 
         ADD 1 TO ld_current_row.
       ENDWHILE.

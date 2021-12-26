@@ -129,8 +129,7 @@ START-OF-SELECTION.
           IF <wa_files>-input = sheet_with_date_formats.
             worksheet->get_cell(
               EXPORTING
-                ip_column = 'A'
-                ip_row = 4
+                ip_columnrow = 'A4'
               IMPORTING
                 ep_value = value
             ).
