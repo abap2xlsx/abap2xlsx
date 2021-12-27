@@ -529,7 +529,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'i' uri = namespace-default ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
-            lv_val  = lo_ixml_element->get_attribute_ns( name = 'val' uri = namespace-default ).
+            lv_val  = lo_ixml_element->get_attribute_ns( 'val' ).
             IF lv_val <> '0'.
               ls_cstyle-font-italic  = 'X'.
               ls_cstylex-font-italic = 'X'.
@@ -542,7 +542,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'b' uri = namespace-default ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
-            lv_val  = lo_ixml_element->get_attribute_ns( name = 'val' uri = namespace-default ).
+            lv_val  = lo_ixml_element->get_attribute_ns( 'val' ).
             IF lv_val <> '0'.
               ls_cstyle-font-bold  = 'X'.
               ls_cstylex-font-bold = 'X'.
@@ -555,7 +555,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'strike' uri = namespace-default ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
-            lv_val  = lo_ixml_element->get_attribute_ns( name = 'val' uri = namespace-default ).
+            lv_val  = lo_ixml_element->get_attribute_ns( 'val' ).
             IF lv_val <> '0'.
               ls_cstyle-font-strikethrough  = 'X'.
               ls_cstylex-font-strikethrough = 'X'.
@@ -568,7 +568,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'color' uri = namespace-default ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
-            lv_val  = lo_ixml_element->get_attribute_ns( name = 'rgb' uri = namespace-default ).
+            lv_val  = lo_ixml_element->get_attribute_ns( 'rgb' ).
             ls_cstyle-font-color-rgb  = lv_val.
             ls_cstylex-font-color-rgb = 'X'.
           ENDIF.
@@ -579,7 +579,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             lo_ixml_element2 = lo_ixml_dxf_child->find_from_name_ns( name = 'bgColor' uri = namespace-default ).
             IF lo_ixml_element2 IS BOUND.
               CLEAR lv_val.
-              lv_val  = lo_ixml_element2->get_attribute_ns( name = 'rgb' uri = namespace-default ).
+              lv_val  = lo_ixml_element2->get_attribute_ns( 'rgb' ).
               IF lv_val IS NOT INITIAL.
                 ls_cstyle-fill-filltype       = zcl_excel_style_fill=>c_fill_solid.
                 ls_cstyle-fill-bgcolor-rgb    = lv_val.
@@ -587,7 +587,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                 ls_cstylex-fill-bgcolor-rgb   = 'X'.
               ENDIF.
               CLEAR lv_val.
-              lv_val  = lo_ixml_element2->get_attribute_ns( name = 'theme' uri = namespace-default ).
+              lv_val  = lo_ixml_element2->get_attribute_ns( 'theme' ).
               IF lv_val IS NOT INITIAL.
                 ls_cstyle-fill-filltype         = zcl_excel_style_fill=>c_fill_solid.
                 ls_cstyle-fill-bgcolor-theme    = lv_val.
@@ -2807,7 +2807,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_ixml_sheetpr ?=  lo_ixml_worksheet->find_from_name_ns( name = 'pageSetUpPr' uri = namespace-default ).
     IF lo_ixml_sheetpr IS BOUND.
 
-      lv_fit_to_page = lo_ixml_sheetpr->get_attribute_ns( name = 'fitToPage' uri = namespace-default ).
+      lv_fit_to_page = lo_ixml_sheetpr->get_attribute_ns( 'fitToPage' ).
       IF lv_fit_to_page IS NOT INITIAL.
         io_worksheet->sheet_setup->fit_to_page = 'X'.
       ENDIF.
@@ -3032,7 +3032,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_ixml_rule        ?= lo_ixml_iterator2->get_next( ).
 
       WHILE lo_ixml_rule IS BOUND.
-        lv_rule = lo_ixml_rule->get_attribute_ns( name = 'type' uri = namespace-default ).
+        lv_rule = lo_ixml_rule->get_attribute_ns( 'type' ).
         CLEAR lo_style_cond.
 
 *--------------------------------------------------------------------*
@@ -3079,11 +3079,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
         IF lo_style_cond IS BOUND.
           lo_style_cond->rule      = lv_rule.
-          lo_style_cond->priority  = lo_ixml_rule->get_attribute_ns( name = 'priority' uri = namespace-default ).
+          lo_style_cond->priority  = lo_ixml_rule->get_attribute_ns( 'priority' ).
 *--------------------------------------------------------------------*
 * Set area to which conditional formatting belongs
 *--------------------------------------------------------------------*
-          lv_area =  lo_ixml_cond_format->get_attribute_ns( name = 'sqref' uri = namespace-default ).
+          lv_area =  lo_ixml_cond_format->get_attribute_ns( 'sqref' ).
           SPLIT lv_area AT space INTO TABLE lt_areas.
           DELETE lt_areas WHERE table_line IS INITIAL.
           LOOP AT lt_areas INTO lv_area.
@@ -3120,7 +3120,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * above or below average
 *--------------------------------------------------------------------*
-    val  = io_ixml_rule->get_attribute_ns( name = 'aboveAverage' uri = namespace-default ).
+    val  = io_ixml_rule->get_attribute_ns( 'aboveAverage' ).
     IF val = '0'.  " 0 = below average
       io_style_cond->mode_above_average-above_average = space.
     ELSE.
@@ -3131,7 +3131,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * Equal average also?
 *--------------------------------------------------------------------*
     CLEAR val.
-    val  = io_ixml_rule->get_attribute_ns( name = 'equalAverage' uri = namespace-default ).
+    val  = io_ixml_rule->get_attribute_ns( 'equalAverage' ).
     IF val = '1'.  " 0 = below average
       io_style_cond->mode_above_average-equal_average = 'X'.
     ELSE.
@@ -3142,7 +3142,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * Standard deviation instead of value ( 2nd stddev, 3rd stdev )
 *--------------------------------------------------------------------*
     CLEAR val.
-    val  = io_ixml_rule->get_attribute_ns( name = 'stdDev' uri = namespace-default ).
+    val  = io_ixml_rule->get_attribute_ns( 'stdDev' ).
     CASE val.
       WHEN 1
         OR 2
@@ -3153,7 +3153,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Cell formatting for top10
 *--------------------------------------------------------------------*
-    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( name = 'dxfId' uri = namespace-default ).
+    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
     READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
     IF sy-subrc = 0.
       io_style_cond->mode_above_average-cell_style = <ls_dxf_style>-guid.
@@ -3171,8 +3171,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_dxf_style> LIKE LINE OF me->mt_dxf_styles.
 
-    io_style_cond->mode_cellis-operator  = io_ixml_rule->get_attribute_ns( name = 'operator' uri = namespace-default ).
-    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( name = 'dxfId' uri = namespace-default ).
+    io_style_cond->mode_cellis-operator  = io_ixml_rule->get_attribute_ns( 'operator' ).
+    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
     READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
     IF sy-subrc = 0.
       io_style_cond->mode_cellis-cell_style = <ls_dxf_style>-guid.
@@ -3214,16 +3214,16 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
       CASE sy-index.
         WHEN 1.
-          io_style_cond->mode_colorscale-cfvo1_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_colorscale-cfvo1_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_colorscale-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_colorscale-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN 2.
-          io_style_cond->mode_colorscale-cfvo2_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_colorscale-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN 3.
-          io_style_cond->mode_colorscale-cfvo3_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_colorscale-cfvo3_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_colorscale-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN OTHERS.
           EXIT.
@@ -3239,13 +3239,13 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
       CASE sy-index.
         WHEN 1.
-          io_style_cond->mode_colorscale-colorrgb1  = lo_ixml->get_attribute_ns( name = 'rgb' uri = namespace-default ).
+          io_style_cond->mode_colorscale-colorrgb1  = lo_ixml->get_attribute_ns( 'rgb' ).
 
         WHEN 2.
-          io_style_cond->mode_colorscale-colorrgb2  = lo_ixml->get_attribute_ns( name = 'rgb' uri = namespace-default ).
+          io_style_cond->mode_colorscale-colorrgb2  = lo_ixml->get_attribute_ns( 'rgb' ).
 
         WHEN 3.
-          io_style_cond->mode_colorscale-colorrgb3  = lo_ixml->get_attribute_ns( name = 'rgb' uri = namespace-default ).
+          io_style_cond->mode_colorscale-colorrgb3  = lo_ixml->get_attribute_ns( 'rgb' ).
 
         WHEN OTHERS.
           EXIT.
@@ -3264,7 +3264,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     lo_ixml ?= io_ixml_rule->find_from_name_ns( name = 'color' uri = namespace-default ).
     IF lo_ixml IS BOUND.
-      io_style_cond->mode_databar-colorrgb = lo_ixml->get_attribute_ns( name = 'rgb' uri = namespace-default ).
+      io_style_cond->mode_databar-colorrgb = lo_ixml->get_attribute_ns( 'rgb' ).
     ENDIF.
 
     lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name_ns( name = 'cfvo' uri = namespace-default ).
@@ -3274,12 +3274,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
       CASE sy-index.
         WHEN 1.
-          io_style_cond->mode_databar-cfvo1_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_databar-cfvo1_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_databar-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_databar-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN 2.
-          io_style_cond->mode_databar-cfvo2_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_databar-cfvo2_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_databar-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_databar-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN OTHERS.
           EXIT.
@@ -3301,7 +3301,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_dxf_style> LIKE LINE OF me->mt_dxf_styles.
 
-    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( name = 'dxfId' uri = namespace-default ).
+    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
     READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
     IF sy-subrc = 0.
       io_style_cond->mode_expression-cell_style = <ls_dxf_style>-guid.
@@ -3335,8 +3335,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_rule_iconset TYPE REF TO if_ixml_element.
 
     lo_ixml_rule_iconset ?= io_ixml_rule->get_first_child( ).
-    io_style_cond->mode_iconset-iconset   = lo_ixml_rule_iconset->get_attribute_ns( name = 'iconSet' uri = namespace-default ).
-    io_style_cond->mode_iconset-showvalue = lo_ixml_rule_iconset->get_attribute_ns( name = 'showValue' uri = namespace-default ).
+    io_style_cond->mode_iconset-iconset   = lo_ixml_rule_iconset->get_attribute_ns( 'iconSet' ).
+    io_style_cond->mode_iconset-showvalue = lo_ixml_rule_iconset->get_attribute_ns( 'showValue' ).
     lo_ixml_nodes ?= lo_ixml_rule_iconset->get_elements_by_tag_name_ns( name = 'cfvo' uri = namespace-default ).
     lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
     lo_ixml ?= lo_ixml_iterator->get_next( ).
@@ -3344,24 +3344,24 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
       CASE sy-index.
         WHEN 1.
-          io_style_cond->mode_iconset-cfvo1_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_iconset-cfvo1_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_iconset-cfvo1_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_iconset-cfvo1_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN 2.
-          io_style_cond->mode_iconset-cfvo2_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_iconset-cfvo2_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_iconset-cfvo2_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_iconset-cfvo2_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN 3.
-          io_style_cond->mode_iconset-cfvo3_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_iconset-cfvo3_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_iconset-cfvo3_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_iconset-cfvo3_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN 4.
-          io_style_cond->mode_iconset-cfvo4_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_iconset-cfvo4_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_iconset-cfvo4_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_iconset-cfvo4_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN 5.
-          io_style_cond->mode_iconset-cfvo5_type  = lo_ixml->get_attribute_ns( name = 'type' uri = namespace-default ).
-          io_style_cond->mode_iconset-cfvo5_value = lo_ixml->get_attribute_ns( name = 'val' uri = namespace-default ).
+          io_style_cond->mode_iconset-cfvo5_type  = lo_ixml->get_attribute_ns( 'type' ).
+          io_style_cond->mode_iconset-cfvo5_value = lo_ixml->get_attribute_ns( 'val' ).
 
         WHEN OTHERS.
           EXIT.
@@ -3378,16 +3378,16 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_dxf_style> LIKE LINE OF me->mt_dxf_styles.
 
-    io_style_cond->mode_top10-topxx_count  = io_ixml_rule->get_attribute_ns( name = 'rank' uri = namespace-default ).        " Top10, Top20, Top 50...
+    io_style_cond->mode_top10-topxx_count  = io_ixml_rule->get_attribute_ns( 'rank' ).        " Top10, Top20, Top 50...
 
-    io_style_cond->mode_top10-percent      = io_ixml_rule->get_attribute_ns( name = 'percent' uri = namespace-default ).     " Top10 percent instead of Top10 values
+    io_style_cond->mode_top10-percent      = io_ixml_rule->get_attribute_ns( 'percent' ).     " Top10 percent instead of Top10 values
     IF io_style_cond->mode_top10-percent = '1'.
       io_style_cond->mode_top10-percent = 'X'.
     ELSE.
       io_style_cond->mode_top10-percent = ' '.
     ENDIF.
 
-    io_style_cond->mode_top10-bottom       = io_ixml_rule->get_attribute_ns( name = 'bottom' uri = namespace-default ).      " Bottom10 instead of Top10
+    io_style_cond->mode_top10-bottom       = io_ixml_rule->get_attribute_ns( 'bottom' ).      " Bottom10 instead of Top10
     IF io_style_cond->mode_top10-bottom = '1'.
       io_style_cond->mode_top10-bottom = 'X'.
     ELSE.
@@ -3396,7 +3396,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Cell formatting for top10
 *--------------------------------------------------------------------*
-    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( name = 'dxfId' uri = namespace-default ).
+    lv_dxf_style_index  = io_ixml_rule->get_attribute_ns( 'dxfId' ).
     READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
     IF sy-subrc = 0.
       io_style_cond->mode_top10-cell_style = <ls_dxf_style>-guid.
@@ -3456,7 +3456,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       INTO rels_drawing_path.
     rels_drawing_path = resolve_path( rels_drawing_path ).
     rels_drawing = me->get_ixml_from_zip_archive( rels_drawing_path ).
-    node ?= rels_drawing->find_from_name_ns( name = 'Relationship' uri = namespace-default ).
+    node ?= rels_drawing->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ).
     WHILE node IS BOUND.
       fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
 
@@ -3552,10 +3552,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       CLEAR ls_hyperlink.
       CLEAR lv_url.
 
-      ls_hyperlink-ref      = lo_ixml_hyperlink->get_attribute_ns( name = 'ref' ).
-      ls_hyperlink-display  = lo_ixml_hyperlink->get_attribute_ns( name = 'display' ).
-      ls_hyperlink-location = lo_ixml_hyperlink->get_attribute_ns( name = 'location' ).
-      ls_hyperlink-tooltip  = lo_ixml_hyperlink->get_attribute_ns( name = 'tooltip' ).
+      ls_hyperlink-ref      = lo_ixml_hyperlink->get_attribute_ns( 'ref' ).
+      ls_hyperlink-display  = lo_ixml_hyperlink->get_attribute_ns( 'display' ).
+      ls_hyperlink-location = lo_ixml_hyperlink->get_attribute_ns( 'location' ).
+      ls_hyperlink-tooltip  = lo_ixml_hyperlink->get_attribute_ns( 'tooltip' ).
       ls_hyperlink-r_id     = lo_ixml_hyperlink->get_attribute_ns( name = 'id' uri = namespace-r ).
       IF ls_hyperlink-r_id IS INITIAL.  " Internal link
         lv_is_internal = abap_true.
@@ -3685,7 +3685,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_ixml_rowbreak  ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml_rowbreak IS BOUND.
       APPEND INITIAL LINE TO lt_pagebreaks ASSIGNING <ls_pagebreak_row>.
-      <ls_pagebreak_row>-cell_row = lo_ixml_rowbreak->get_attribute_ns( name = 'id' uri = namespace-default ).
+      <ls_pagebreak_row>-cell_row = lo_ixml_rowbreak->get_attribute_ns( 'id' ).
 
       lo_ixml_rowbreak  ?= lo_ixml_iterator->get_next( ).
     ENDWHILE.
@@ -3704,7 +3704,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         APPEND INITIAL LINE TO lt_pagebreaks ASSIGNING <ls_pagebreak_col>.
         <ls_pagebreak_col>-cell_row = <ls_pagebreak_row>-cell_row.
       ENDIF.
-      <ls_pagebreak_col>-cell_column = lo_ixml_colbreak->get_attribute_ns( name = 'id' uri = namespace-default ).
+      <ls_pagebreak_col>-cell_column = lo_ixml_colbreak->get_attribute_ns( 'id' ).
 
       lo_ixml_colbreak  ?= lo_ixml_iterator->get_next( ).
     ENDWHILE.
@@ -3748,13 +3748,13 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     lo_ixml_autofilter_elem = io_ixml_worksheet->find_from_name_ns( name = 'autoFilter' uri = namespace-default ).
     IF lo_ixml_autofilter_elem IS BOUND.
-      lv_ref = lo_ixml_autofilter_elem->get_attribute_ns( name = 'ref' uri = namespace-default ).
+      lv_ref = lo_ixml_autofilter_elem->get_attribute_ns( 'ref' ).
 
       lo_ixml_filter_column_coll = lo_ixml_autofilter_elem->get_elements_by_tag_name_ns( name = 'filterColumn' uri = namespace-default ).
       lo_ixml_filter_column_iter = lo_ixml_filter_column_coll->create_iterator( ).
       lo_ixml_filter_column ?= lo_ixml_filter_column_iter->get_next( ).
       WHILE lo_ixml_filter_column IS BOUND.
-        lv_col_id = lo_ixml_filter_column->get_attribute_ns( name = 'colId' uri = namespace-default ).
+        lv_col_id = lo_ixml_filter_column->get_attribute_ns( 'colId' ).
         lv_column = lv_col_id + 1.
 
         lo_ixml_filters_coll = lo_ixml_filter_column->get_elements_by_tag_name_ns( name = 'filters' uri = namespace-default ).
@@ -3766,7 +3766,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_filter_iter = lo_ixml_filter_coll->create_iterator( ).
           lo_ixml_filter ?= lo_ixml_filter_iter->get_next( ).
           WHILE lo_ixml_filter IS BOUND.
-            lv_val = lo_ixml_filter->get_attribute_ns( name = 'val' uri = namespace-default ).
+            lv_val = lo_ixml_filter->get_attribute_ns( 'val' ).
 
             lo_autofilter = lo_autofilters->get( io_worksheet = io_worksheet ).
             IF lo_autofilter IS NOT BOUND.
