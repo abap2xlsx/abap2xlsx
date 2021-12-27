@@ -2436,7 +2436,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       INTO lv_rels_worksheet_path.
     TRY.                                                                          " +#222  _rels/xxx.rels might not be present.  If not found there can be no drawings --> just ignore this section
         lo_ixml_rels_worksheet = me->get_ixml_from_zip_archive( lv_rels_worksheet_path ).
-        lo_ixml_node ?= lo_ixml_rels_worksheet->find_from_name_ns( name = 'Relationship' uri = namespace-default ).
+        lo_ixml_node ?= lo_ixml_rels_worksheet->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ).
       CATCH zcx_excel.                            "#EC NO_HANDLER +#222
         " +#222   No errorhandling necessary - node will be unbound if error occurs
     ENDTRY.                                                   " +#222
@@ -3552,10 +3552,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       CLEAR ls_hyperlink.
       CLEAR lv_url.
 
-      ls_hyperlink-ref      = lo_ixml_hyperlink->get_attribute_ns( name = 'ref' uri = namespace-default ).
-      ls_hyperlink-display  = lo_ixml_hyperlink->get_attribute_ns( name = 'display' uri = namespace-default ).
-      ls_hyperlink-location = lo_ixml_hyperlink->get_attribute_ns( name = 'location' uri = namespace-default ).
-      ls_hyperlink-tooltip  = lo_ixml_hyperlink->get_attribute_ns( name = 'tooltip' uri = namespace-default ).
+      ls_hyperlink-ref      = lo_ixml_hyperlink->get_attribute_ns( name = 'ref' ).
+      ls_hyperlink-display  = lo_ixml_hyperlink->get_attribute_ns( name = 'display' ).
+      ls_hyperlink-location = lo_ixml_hyperlink->get_attribute_ns( name = 'location' ).
+      ls_hyperlink-tooltip  = lo_ixml_hyperlink->get_attribute_ns( name = 'tooltip' ).
       ls_hyperlink-r_id     = lo_ixml_hyperlink->get_attribute_ns( name = 'id' uri = namespace-r ).
       IF ls_hyperlink-r_id IS INITIAL.  " Internal link
         lv_is_internal = abap_true.
