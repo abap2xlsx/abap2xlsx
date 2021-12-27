@@ -13,13 +13,6 @@ CLASS zcl_excel_rows DEFINITION
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPES:
-      BEGIN OF mty_s_hashed_row,
-        row_index TYPE int4,
-        row       TYPE REF TO zcl_excel_row,
-      END OF mty_s_hashed_row ,
-      mty_ts_hasehd_row TYPE HASHED TABLE OF mty_s_hashed_row WITH UNIQUE KEY row_index.
-
     METHODS add
       IMPORTING
         !io_row TYPE REF TO zcl_excel_row .
@@ -52,9 +45,15 @@ CLASS zcl_excel_rows DEFINITION
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
   PRIVATE SECTION.
+    TYPES:
+      BEGIN OF mty_s_hashed_row,
+        row_index TYPE int4,
+        row       TYPE REF TO zcl_excel_row,
+      END OF mty_s_hashed_row ,
+      mty_ts_hashed_row TYPE HASHED TABLE OF mty_s_hashed_row WITH UNIQUE KEY row_index.
 
     DATA rows TYPE REF TO cl_object_collection .
-    DATA rows_hasehd TYPE mty_ts_hasehd_row .
+    DATA rows_hashed TYPE mty_ts_hashed_row .
 
 ENDCLASS.
 
@@ -69,14 +68,14 @@ CLASS zcl_excel_rows IMPLEMENTATION.
     ls_hashed_row-row_index = io_row->get_row_index( ).
     ls_hashed_row-row = io_row.
 
-    INSERT ls_hashed_row INTO TABLE rows_hasehd.
+    INSERT ls_hashed_row INTO TABLE rows_hashed.
 
     rows->add( io_row ).
   ENDMETHOD.                    "ADD
 
 
   METHOD clear.
-    CLEAR rows_hasehd.
+    CLEAR rows_hashed.
     rows->clear( ).
   ENDMETHOD.                    "CLEAR
 
@@ -91,7 +90,7 @@ CLASS zcl_excel_rows IMPLEMENTATION.
   METHOD get.
     FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
 
-    READ TABLE rows_hasehd WITH KEY row_index = ip_index ASSIGNING <ls_hashed_row>.
+    READ TABLE rows_hashed WITH KEY row_index = ip_index ASSIGNING <ls_hashed_row>.
     IF sy-subrc = 0.
       eo_row = <ls_hashed_row>-row.
     ENDIF.
@@ -109,7 +108,7 @@ CLASS zcl_excel_rows IMPLEMENTATION.
 
 
   METHOD remove.
-    DELETE TABLE rows_hasehd WITH TABLE KEY row_index = io_row->get_row_index( ) .
+    DELETE TABLE rows_hashed WITH TABLE KEY row_index = io_row->get_row_index( ) .
     rows->remove( io_row ).
   ENDMETHOD.                    "REMOVE
 
@@ -121,7 +120,7 @@ CLASS zcl_excel_rows IMPLEMENTATION.
   METHOD get_min_index.
     FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
 
-    LOOP AT rows_hasehd ASSIGNING <ls_hashed_row>.
+    LOOP AT rows_hashed ASSIGNING <ls_hashed_row>.
       IF ep_index = 0 OR <ls_hashed_row>-row_index < ep_index.
         ep_index = <ls_hashed_row>-row_index.
       ENDIF.
@@ -131,7 +130,7 @@ CLASS zcl_excel_rows IMPLEMENTATION.
   METHOD get_max_index.
     FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
 
-    LOOP AT rows_hasehd ASSIGNING <ls_hashed_row>.
+    LOOP AT rows_hashed ASSIGNING <ls_hashed_row>.
       IF <ls_hashed_row>-row_index > ep_index.
         ep_index = <ls_hashed_row>-row_index.
       ENDIF.

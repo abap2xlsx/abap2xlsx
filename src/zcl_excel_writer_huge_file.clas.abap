@@ -101,8 +101,8 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
     LOOP AT lt_cell_data ASSIGNING <sheet_content>.
 
       lv_sytabix = sy-tabix - 1.
-      MOVE lv_sytabix                 TO ls_shared_string-string_no.
-      MOVE <sheet_content>-cell_value TO ls_shared_string-string_value.
+      ls_shared_string-string_no = lv_sytabix.
+      ls_shared_string-string_value = <sheet_content>-cell_value.
       REPLACE ALL OCCURRENCES OF REGEX lv_invalid
            IN ls_shared_string-string_value WITH ` `.
       APPEND ls_shared_string TO shared_strings.
