@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SICF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <URL>/sap/bc/webdynpro/sap/NPL0018/</URL>
+   <ICFSERVICE>
+    <ICF_NAME>NPL0018</ICF_NAME>
+    <ORIG_NAME>NPL0018</ORIG_NAME>
+    <ICFALTNME>ZDEMO_EXCEL_WDA01</ICFALTNME>
+   </ICFSERVICE>
+   <ICFDOCU>
+    <ICF_NAME>NPL0018</ICF_NAME>
+    <ICF_LANGU>E</ICF_LANGU>
+    <ICF_DOCU>Web Dynpro Application ZDEMO_EXCEL_WDA01 / Component ZDEMO_EXCEL_WDA01</ICF_DOCU>
+   </ICFDOCU>
+  </asx:values>
+ </asx:abap>
+</abapGit>
