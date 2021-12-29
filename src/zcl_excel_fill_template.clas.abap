@@ -86,7 +86,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_fill_template IMPLEMENTATION.
+CLASS ZCL_EXCEL_FILL_TEMPLATE IMPLEMENTATION.
 
 
   METHOD create.
@@ -100,6 +100,7 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
     eo_template_filler->find_var( ).
 
   ENDMETHOD.
+
 
   METHOD discard_overlapped.
     DATA:
@@ -520,9 +521,9 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
   METHOD get_range.
 
     DATA:
-      lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator,
+      lo_worksheets_iterator TYPE REF TO zcl_excel_collection_iterator,
       lo_worksheet           TYPE REF TO zcl_excel_worksheet,
-      lo_range_iterator      TYPE REF TO cl_object_collection_iterator,
+      lo_range_iterator      TYPE REF TO zcl_excel_collection_iterator,
       lo_range               TYPE REF TO zcl_excel_range.
 
 

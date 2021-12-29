@@ -18,7 +18,7 @@ CLASS zcl_excel_columns DEFINITION
         VALUE(eo_column) TYPE REF TO zcl_excel_column .
     METHODS get_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS is_empty
       RETURNING
         VALUE(is_empty) TYPE flag .
@@ -41,13 +41,13 @@ CLASS zcl_excel_columns DEFINITION
       END OF mty_s_hashed_column ,
       mty_ts_hashed_column TYPE HASHED TABLE OF mty_s_hashed_column WITH UNIQUE KEY column_index.
 
-    DATA columns TYPE REF TO cl_object_collection .
+    DATA columns TYPE REF TO zcl_excel_collection .
     DATA columns_hashed TYPE mty_ts_hashed_column .
 ENDCLASS.
 
 
 
-CLASS zcl_excel_columns IMPLEMENTATION.
+CLASS ZCL_EXCEL_COLUMNS IMPLEMENTATION.
 
 
   METHOD add.

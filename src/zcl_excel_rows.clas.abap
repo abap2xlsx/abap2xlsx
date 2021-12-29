@@ -25,7 +25,7 @@ CLASS zcl_excel_rows DEFINITION
         VALUE(eo_row) TYPE REF TO zcl_excel_row .
     METHODS get_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS is_empty
       RETURNING
         VALUE(is_empty) TYPE flag .
@@ -52,14 +52,14 @@ CLASS zcl_excel_rows DEFINITION
       END OF mty_s_hashed_row ,
       mty_ts_hashed_row TYPE HASHED TABLE OF mty_s_hashed_row WITH UNIQUE KEY row_index.
 
-    DATA rows TYPE REF TO cl_object_collection .
+    DATA rows TYPE REF TO zcl_excel_collection .
     DATA rows_hashed TYPE mty_ts_hashed_row .
 
 ENDCLASS.
 
 
 
-CLASS zcl_excel_rows IMPLEMENTATION.
+CLASS ZCL_EXCEL_ROWS IMPLEMENTATION.
 
 
   METHOD add.
@@ -102,6 +102,28 @@ CLASS zcl_excel_rows IMPLEMENTATION.
   ENDMETHOD.                    "GET_ITERATOR
 
 
+  METHOD get_max_index.
+    FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
+
+    LOOP AT rows_hashed ASSIGNING <ls_hashed_row>.
+      IF <ls_hashed_row>-row_index > ep_index.
+        ep_index = <ls_hashed_row>-row_index.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+
+  METHOD get_min_index.
+    FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
+
+    LOOP AT rows_hashed ASSIGNING <ls_hashed_row>.
+      IF ep_index = 0 OR <ls_hashed_row>-row_index < ep_index.
+        ep_index = <ls_hashed_row>-row_index.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+
   METHOD is_empty.
     is_empty = rows->is_empty( ).
   ENDMETHOD.                    "IS_EMPTY
@@ -116,25 +138,4 @@ CLASS zcl_excel_rows IMPLEMENTATION.
   METHOD size.
     ep_size = rows->size( ).
   ENDMETHOD.                    "SIZE
-
-  METHOD get_min_index.
-    FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
-
-    LOOP AT rows_hashed ASSIGNING <ls_hashed_row>.
-      IF ep_index = 0 OR <ls_hashed_row>-row_index < ep_index.
-        ep_index = <ls_hashed_row>-row_index.
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD get_max_index.
-    FIELD-SYMBOLS: <ls_hashed_row> TYPE mty_s_hashed_row.
-
-    LOOP AT rows_hashed ASSIGNING <ls_hashed_row>.
-      IF <ls_hashed_row>-row_index > ep_index.
-        ep_index = <ls_hashed_row>-row_index.
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
 ENDCLASS.

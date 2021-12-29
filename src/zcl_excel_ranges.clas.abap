@@ -19,7 +19,7 @@ CLASS zcl_excel_ranges DEFINITION
         VALUE(eo_range) TYPE REF TO zcl_excel_range .
     METHODS get_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS is_empty
       RETURNING
         VALUE(is_empty) TYPE flag .
@@ -36,12 +36,12 @@ CLASS zcl_excel_ranges DEFINITION
 *"* do not include other source files here!!!
   PRIVATE SECTION.
 
-    DATA ranges TYPE REF TO cl_object_collection .
+    DATA ranges TYPE REF TO zcl_excel_collection .
 ENDCLASS.
 
 
 
-CLASS zcl_excel_ranges IMPLEMENTATION.
+CLASS ZCL_EXCEL_RANGES IMPLEMENTATION.
 
 
   METHOD add.

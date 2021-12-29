@@ -19,7 +19,7 @@ CLASS zcl_excel_styles DEFINITION
         VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS get_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS is_empty
       RETURNING
         VALUE(is_empty) TYPE flag .
@@ -43,12 +43,12 @@ CLASS zcl_excel_styles DEFINITION
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    DATA styles TYPE REF TO cl_object_collection .
+    DATA styles TYPE REF TO zcl_excel_collection .
 ENDCLASS.
 
 
 
-CLASS zcl_excel_styles IMPLEMENTATION.
+CLASS ZCL_EXCEL_STYLES IMPLEMENTATION.
 
 
   METHOD add.

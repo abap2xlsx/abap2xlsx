@@ -78,13 +78,13 @@ CLASS zcl_excel DEFINITION
       IMPORTING
         !ip_type           TYPE zexcel_drawing_type
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_next_table_id
       RETURNING
         VALUE(ep_id) TYPE i .
     METHODS get_ranges_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_static_cellstyle_guid
       IMPORTING
         !ip_cstyle_complete  TYPE zexcel_s_cstyle_complete
@@ -93,7 +93,7 @@ CLASS zcl_excel DEFINITION
         VALUE(ep_guid)       TYPE zexcel_cell_style .
     METHODS get_styles_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_style_index_in_styles
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style
@@ -113,7 +113,7 @@ CLASS zcl_excel DEFINITION
         !eo_theme TYPE REF TO zcl_excel_theme .
     METHODS get_worksheets_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_worksheets_name
       RETURNING
         VALUE(ep_name) TYPE zexcel_worksheets_name .
@@ -184,7 +184,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel IMPLEMENTATION.
+CLASS ZCL_EXCEL IMPLEMENTATION.
 
 
   METHOD add_new_autofilter.
@@ -364,6 +364,28 @@ CLASS zcl_excel IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD fill_template.
+
+    DATA: lo_template_filler TYPE REF TO zcl_excel_fill_template.
+
+    FIELD-SYMBOLS:
+      <lv_sheet>     TYPE zexcel_sheet_title,
+      <lv_data_line> TYPE zcl_excel_template_data=>ts_template_data_sheet.
+
+
+    lo_template_filler = zcl_excel_fill_template=>create( me ).
+
+    LOOP AT lo_template_filler->mt_sheet ASSIGNING <lv_sheet>.
+
+      READ TABLE iv_data->mt_data ASSIGNING <lv_data_line> WITH KEY sheet = <lv_sheet>.
+      CHECK sy-subrc = 0.
+      lo_template_filler->fill_sheet( <lv_data_line> ).
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
   METHOD get_active_sheet_index.
     r_active_worksheet = me->worksheets->active_worksheet.
   ENDMETHOD.
@@ -403,7 +425,7 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD get_next_table_id.
     DATA: lo_worksheet    TYPE REF TO zcl_excel_worksheet,
-          lo_iterator     TYPE REF TO cl_object_collection_iterator,
+          lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lv_tables_count TYPE i.
 
     lo_iterator = me->get_worksheets_iterator( ).
@@ -461,7 +483,7 @@ CLASS zcl_excel IMPLEMENTATION.
   METHOD get_style_from_guid.
 
     DATA: lo_style    TYPE REF TO zcl_excel_style,
-          lo_iterator TYPE REF TO cl_object_collection_iterator.
+          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
 
     lo_iterator = styles->get_iterator( ).
     WHILE lo_iterator->has_next( ) = abap_true.
@@ -477,7 +499,7 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD get_style_index_in_styles.
     DATA: index TYPE syindex.
-    DATA: lo_iterator TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_style    TYPE REF TO zcl_excel_style.
 
     CHECK ip_guid IS NOT INITIAL.
@@ -595,7 +617,7 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD set_active_sheet_index_by_name.
 
-    DATA: ws_it    TYPE REF TO cl_object_collection_iterator,
+    DATA: ws_it    TYPE REF TO zcl_excel_collection_iterator,
           ws       TYPE REF TO zcl_excel_worksheet,
           lv_title TYPE zexcel_sheet_title,
           count    TYPE i VALUE 1.
@@ -674,27 +696,5 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD zif_excel_book_vba_project~set_vbaproject.
     me->zif_excel_book_vba_project~vbaproject = ip_vbaproject.
-  ENDMETHOD.
-
-
-  METHOD fill_template.
-
-    DATA: lo_template_filler TYPE REF TO zcl_excel_fill_template.
-
-    FIELD-SYMBOLS:
-      <lv_sheet>     TYPE zexcel_sheet_title,
-      <lv_data_line> TYPE zcl_excel_template_data=>ts_template_data_sheet.
-
-
-    lo_template_filler = zcl_excel_fill_template=>create( me ).
-
-    LOOP AT lo_template_filler->mt_sheet ASSIGNING <lv_sheet>.
-
-      READ TABLE iv_data->mt_data ASSIGNING <lv_data_line> WITH KEY sheet = <lv_sheet>.
-      CHECK sy-subrc = 0.
-      lo_template_filler->fill_sheet( <lv_data_line> ).
-
-    ENDLOOP.
-
   ENDMETHOD.
 ENDCLASS.

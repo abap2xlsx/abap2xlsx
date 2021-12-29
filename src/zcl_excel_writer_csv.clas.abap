@@ -53,7 +53,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_writer_csv IMPLEMENTATION.
+CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
 
 
   METHOD create.
@@ -77,7 +77,7 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
           lv_tmp    TYPE string,
           lv_time   TYPE c LENGTH 8.
 
-    DATA: lo_iterator  TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_iterator  TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
     DATA: lt_cell_data TYPE zexcel_t_cell_data_unsorted,
