@@ -6,13 +6,6 @@ CLASS zcl_excel_columns DEFINITION
 *"* public components of class ZCL_EXCEL_COLUMNS
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPES:
-      BEGIN OF mty_s_hashed_column,
-        column_index TYPE int4,
-        column       TYPE REF TO zcl_excel_column,
-      END OF mty_s_hashed_column ,
-      mty_ts_hasehd_column TYPE HASHED TABLE OF mty_s_hashed_column WITH UNIQUE KEY column_index.
-
     METHODS add
       IMPORTING
         !io_column TYPE REF TO zcl_excel_column .
@@ -41,9 +34,15 @@ CLASS zcl_excel_columns DEFINITION
 *"* private components of class ZABAP_EXCEL_RANGES
 *"* do not include other source files here!!!
   PRIVATE SECTION.
+    TYPES:
+      BEGIN OF mty_s_hashed_column,
+        column_index TYPE int4,
+        column       TYPE REF TO zcl_excel_column,
+      END OF mty_s_hashed_column ,
+      mty_ts_hashed_column TYPE HASHED TABLE OF mty_s_hashed_column WITH UNIQUE KEY column_index.
 
     DATA columns TYPE REF TO cl_object_collection .
-    DATA columns_hasehd TYPE mty_ts_hasehd_column .
+    DATA columns_hashed TYPE mty_ts_hashed_column .
 ENDCLASS.
 
 
@@ -57,14 +56,14 @@ CLASS zcl_excel_columns IMPLEMENTATION.
     ls_hashed_column-column_index = io_column->get_column_index( ).
     ls_hashed_column-column = io_column.
 
-    INSERT ls_hashed_column INTO TABLE columns_hasehd .
+    INSERT ls_hashed_column INTO TABLE columns_hashed .
 
     columns->add( io_column ).
   ENDMETHOD.
 
 
   METHOD clear.
-    CLEAR columns_hasehd.
+    CLEAR columns_hashed.
     columns->clear( ).
   ENDMETHOD.
 
@@ -79,7 +78,7 @@ CLASS zcl_excel_columns IMPLEMENTATION.
   METHOD get.
     FIELD-SYMBOLS: <ls_hashed_column> TYPE mty_s_hashed_column.
 
-    READ TABLE columns_hasehd WITH KEY column_index = ip_index ASSIGNING <ls_hashed_column>.
+    READ TABLE columns_hashed WITH KEY column_index = ip_index ASSIGNING <ls_hashed_column>.
     IF sy-subrc = 0.
       eo_column = <ls_hashed_column>-column.
     ENDIF.
@@ -97,7 +96,7 @@ CLASS zcl_excel_columns IMPLEMENTATION.
 
 
   METHOD remove.
-    DELETE TABLE columns_hasehd WITH TABLE KEY column_index = io_column->get_column_index( ) .
+    DELETE TABLE columns_hashed WITH TABLE KEY column_index = io_column->get_column_index( ) .
     columns->remove( io_column ).
   ENDMETHOD.
 
