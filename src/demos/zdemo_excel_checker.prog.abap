@@ -5,22 +5,10 @@
 *&---------------------------------------------------------------------*
 REPORT zdemo_excel_checker.
 
-CLASS lcl_xlsx_cleanup_for_diff DEFINITION
+CLASS lcl_zip_cleanup_for_diff DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-
-    METHODS run
-      IMPORTING
-        xstring       TYPE xstring
-
-      RETURNING
-        VALUE(result) TYPE xstring
-      RAISING
-        zcx_excel.
-
-  PROTECTED SECTION.
-  PRIVATE SECTION.
 
     TYPES : BEGIN OF ty_zip_structure,
               ref_to_structure TYPE REF TO data,
@@ -34,16 +22,15 @@ CLASS lcl_xlsx_cleanup_for_diff DEFINITION
               conv_out_ibm437  TYPE REF TO cl_abap_conv_out_ce,
             END OF ty_zip_structure.
 
-    CLASS-DATA: date_now TYPE d,
-                time_now TYPE t.
-
-    METHODS zip_cleanup_for_diff
+    METHODS run
       IMPORTING
         zip_xstring   TYPE xstring
       RETURNING
         VALUE(result) TYPE xstring
       RAISING
         zcx_excel.
+
+  PRIVATE SECTION.
 
     METHODS init_structure
       IMPORTING
@@ -57,7 +44,7 @@ CLASS lcl_xlsx_cleanup_for_diff DEFINITION
       IMPORTING
         offset        TYPE i
       CHANGING
-        zip_structure TYPE lcl_xlsx_cleanup_for_diff=>ty_zip_structure
+        zip_structure TYPE ty_zip_structure
         zip_xstring   TYPE xstring.
 
     METHODS read_zip
@@ -65,7 +52,23 @@ CLASS lcl_xlsx_cleanup_for_diff DEFINITION
         zip_xstring   TYPE xstring
         offset        TYPE i
       CHANGING
-        zip_structure TYPE lcl_xlsx_cleanup_for_diff=>ty_zip_structure.
+        zip_structure TYPE ty_zip_structure.
+
+ENDCLASS.
+
+CLASS lcl_xlsx_cleanup_for_diff DEFINITION
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+
+    METHODS run
+      IMPORTING
+        xstring       TYPE xstring
+
+      RETURNING
+        VALUE(result) TYPE xstring
+      RAISING
+        zcx_excel.
 
 ENDCLASS.
 
@@ -89,8 +92,7 @@ CLASS lcl_xlsx_cleanup_for_diff IMPLEMENTATION.
     DATA: zip           TYPE REF TO cl_abap_zip,
           content       TYPE xstring,
           docprops_core TYPE ty_docprops_core,
-          lx            TYPE REF TO cx_root.
-    DATA: ls_file          TYPE ty_file,
+     ls_file          TYPE ty_file,
           lt_file          TYPE TABLE OF ty_file,
           lo_ixml          TYPE REF TO if_ixml,
           lo_streamfactory TYPE REF TO if_ixml_stream_factory,
@@ -101,7 +103,8 @@ CLASS lcl_xlsx_cleanup_for_diff IMPLEMENTATION.
           lo_document      TYPE REF TO if_ixml_document,
           lo_element       TYPE REF TO if_ixml_element,
           lo_filter        TYPE REF TO if_ixml_node_filter,
-          lo_iterator      TYPE REF TO if_ixml_node_iterator.
+          lo_iterator      TYPE REF TO if_ixml_node_iterator,
+          zip_cleanup_for_diff type ref to lcl_zip_cleanup_for_diff.
     FIELD-SYMBOLS:
       <file>     TYPE cl_abap_zip=>t_file,
       <ls_file2> TYPE ty_file.
@@ -210,12 +213,20 @@ CLASS lcl_xlsx_cleanup_for_diff IMPLEMENTATION.
     ENDLOOP.
 
     result = zip->save( ).
-    result = zip_cleanup_for_diff( result ).
+
+    CREATE OBJECT zip_cleanup_for_diff.
+    result = zip_cleanup_for_diff->run( result ).
 
   ENDMETHOD.
 
 
-  METHOD zip_cleanup_for_diff.
+ENDCLASS.
+
+
+CLASS lcl_zip_cleanup_for_diff IMPLEMENTATION.
+
+
+  METHOD run.
 
     TYPES : BEGIN OF ty_local_file_header,
               local_file_header_signature TYPE x LENGTH 4,  " 04034b50
@@ -280,9 +291,9 @@ CLASS lcl_xlsx_cleanup_for_diff IMPLEMENTATION.
       dummy_local_file_header   TYPE ty_local_file_header,
       dummy_central_file_header TYPE ty_central_file_header,
       dummy_end_of_central_dir  TYPE ty_end_of_central_dir,
-      local_file_header         TYPE lcl_xlsx_cleanup_for_diff=>ty_zip_structure,
-      central_file_header       TYPE lcl_xlsx_cleanup_for_diff=>ty_zip_structure,
-      end_of_central_dir        TYPE lcl_xlsx_cleanup_for_diff=>ty_zip_structure,
+      local_file_header         TYPE ty_zip_structure,
+      central_file_header       TYPE ty_zip_structure,
+      end_of_central_dir        TYPE ty_zip_structure,
       offset                    TYPE i,
       max_offset                TYPE i.
 
@@ -612,7 +623,7 @@ CLASS lcl_app IMPLEMENTATION.
               WHEN 'FC01'. " REFRESH
 
                 " restart the program completely to account for modification/rebuild of any ZDEMO_EXCEL program
-                SUBMIT (sy-repid) VIA SELECTION-SCREEN.
+                SUBMIT (sy-repid) VIA SELECTION-SCREEN USING SELECTION-SCREEN 1001 WITH p_path = p_path.
 
             ENDCASE.
         ENDCASE.
@@ -683,10 +694,7 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD at_selection_screen_output1001.
 
-    DATA: excluded_functions TYPE ui_functions,
-          columns            TYPE REF TO cl_salv_columns_table,
-          events             TYPE REF TO cl_salv_events_table,
-          lx                 TYPE REF TO cx_root.
+    DATA: excluded_functions TYPE ui_functions.
 
     LOOP AT SCREEN.
       screen-active = '0'.
@@ -694,6 +702,7 @@ CLASS lcl_app IMPLEMENTATION.
     ENDLOOP.
 
     ref_sscrfields->functxt_01 = icon_refresh.
+
     APPEND 'ONLI' TO excluded_functions.
     APPEND 'PRIN' TO excluded_functions.
     APPEND 'SPOS' TO excluded_functions.
@@ -716,22 +725,10 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD check_regression.
 
-    DATA: lo_excel  TYPE REF TO zcl_excel,
-          lo_reader TYPE REF TO zcl_excel_reader_2007,
-          lo_writer TYPE REF TO zcl_excel_writer_2007,
-          diff      TYPE REF TO object,
-          error     TYPE REF TO cx_root,
-          message   TYPE string.
-    FIELD-SYMBOLS:
-      <is_different> TYPE abap_bool.
-
     result-xlsx_just_now = gui_upload( file_name = p_path && lv_filesep && demo-filename ).
 
     result-xlsx_reference = read_xlsx_from_web_repository( objid = demo-objid ).
 
-    "=========================
-    " COMPARE
-    "=========================
     IF result-xlsx_reference IS INITIAL.
 
       result-diff = abap_true.
@@ -982,8 +979,7 @@ CLASS lcl_app IMPLEMENTATION.
           alv_line     TYPE ty_alv_line,
           cell_type    TYPE salv_s_int4_column,
           error        TYPE REF TO cx_root,
-          check_result TYPE ty_check_result,
-          message      TYPE string.
+          check_result TYPE ty_check_result.
     FIELD-SYMBOLS:
       <demo> TYPE ty_demo.
 
@@ -1039,7 +1035,6 @@ CLASS lcl_app IMPLEMENTATION.
   METHOD on_link_clicked.
 
     DATA: alv_line       TYPE ty_alv_line,
-          message        TYPE string,
           error          TYPE REF TO cx_root,
           zip_old        TYPE REF TO cl_abap_zip,
           zip_new        TYPE REF TO cl_abap_zip,
@@ -1354,9 +1349,8 @@ DATA: app TYPE REF TO lcl_app.
 
 PARAMETERS p_path TYPE zexcel_export_dir.
 
-SELECTION-SCREEN FUNCTION KEY 1.
-
 SELECTION-SCREEN BEGIN OF SCREEN 1001.
+SELECTION-SCREEN FUNCTION KEY 1.
 PARAMETERS dummy.
 SELECTION-SCREEN END OF SCREEN 1001.
 
