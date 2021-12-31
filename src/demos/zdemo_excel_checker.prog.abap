@@ -89,22 +89,22 @@ CLASS lcl_xlsx_cleanup_for_diff IMPLEMENTATION.
              name    TYPE string,
              content TYPE xstring,
            END OF ty_file.
-    DATA: zip           TYPE REF TO cl_abap_zip,
-          content       TYPE xstring,
-          docprops_core TYPE ty_docprops_core,
-     ls_file          TYPE ty_file,
-          lt_file          TYPE TABLE OF ty_file,
-          lo_ixml          TYPE REF TO if_ixml,
-          lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-          lo_istream       TYPE REF TO if_ixml_istream,
-          lo_parser        TYPE REF TO if_ixml_parser,
-          lo_renderer      TYPE REF TO if_ixml_renderer,
-          lo_ostream       TYPE REF TO if_ixml_ostream,
-          lo_document      TYPE REF TO if_ixml_document,
-          lo_element       TYPE REF TO if_ixml_element,
-          lo_filter        TYPE REF TO if_ixml_node_filter,
-          lo_iterator      TYPE REF TO if_ixml_node_iterator,
-          zip_cleanup_for_diff type ref to lcl_zip_cleanup_for_diff.
+    DATA: zip                  TYPE REF TO cl_abap_zip,
+          content              TYPE xstring,
+          docprops_core        TYPE ty_docprops_core,
+          ls_file              TYPE ty_file,
+          lt_file              TYPE TABLE OF ty_file,
+          lo_ixml              TYPE REF TO if_ixml,
+          lo_streamfactory     TYPE REF TO if_ixml_stream_factory,
+          lo_istream           TYPE REF TO if_ixml_istream,
+          lo_parser            TYPE REF TO if_ixml_parser,
+          lo_renderer          TYPE REF TO if_ixml_renderer,
+          lo_ostream           TYPE REF TO if_ixml_ostream,
+          lo_document          TYPE REF TO if_ixml_document,
+          lo_element           TYPE REF TO if_ixml_element,
+          lo_filter            TYPE REF TO if_ixml_node_filter,
+          lo_iterator          TYPE REF TO if_ixml_node_iterator,
+          zip_cleanup_for_diff TYPE REF TO lcl_zip_cleanup_for_diff.
     FIELD-SYMBOLS:
       <file>     TYPE cl_abap_zip=>t_file,
       <ls_file2> TYPE ty_file.
@@ -613,8 +613,15 @@ CLASS lcl_app IMPLEMENTATION.
 
           WHEN 1000.
 
-            read_screen_fields( ).
-            CALL SELECTION-SCREEN 1001.
+            CASE ref_sscrfields->ucomm.
+
+              WHEN 'ONLI'.
+
+                read_screen_fields( ).
+                SUBMIT zdemo_excel WITH p_path = p_path AND RETURN.
+                CALL SELECTION-SCREEN 1001.
+
+            ENDCASE.
 
           WHEN 1001.
 
@@ -622,8 +629,7 @@ CLASS lcl_app IMPLEMENTATION.
 
               WHEN 'FC01'. " REFRESH
 
-                " restart the program completely to account for modification/rebuild of any ZDEMO_EXCEL program
-                SUBMIT (sy-repid) VIA SELECTION-SCREEN USING SELECTION-SCREEN 1001 WITH p_path = p_path.
+                SUBMIT (sy-repid) WITH p_path = p_path.
 
             ENDCASE.
         ENDCASE.
@@ -725,6 +731,9 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD check_regression.
 
+    DATA: xlsx_cleanup_for_diff TYPE REF TO lcl_xlsx_cleanup_for_diff.
+
+
     result-xlsx_just_now = gui_upload( file_name = p_path && lv_filesep && demo-filename ).
 
     result-xlsx_reference = read_xlsx_from_web_repository( objid = demo-objid ).
@@ -735,8 +744,9 @@ CLASS lcl_app IMPLEMENTATION.
 
     ELSE.
 
-      result-compare_xlsx_just_now = NEW lcl_xlsx_cleanup_for_diff( )->run( result-xlsx_just_now ).
-      result-compare_xlsx_reference = NEW lcl_xlsx_cleanup_for_diff( )->run( result-xlsx_reference ).
+      CREATE OBJECT xlsx_cleanup_for_diff.
+      result-compare_xlsx_just_now = xlsx_cleanup_for_diff->run( result-xlsx_just_now ).
+      result-compare_xlsx_reference = xlsx_cleanup_for_diff->run( result-xlsx_reference ).
 
       result-diff = boolc( result-compare_xlsx_just_now <> result-compare_xlsx_reference ).
 
@@ -935,13 +945,15 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD gui_upload.
 
-    DATA(solix_tab) = VALUE solix_tab( ).
+    DATA: solix_tab   TYPE solix_tab,
+          file_length TYPE i.
+
     cl_gui_frontend_services=>gui_upload(
       EXPORTING
         filename                = file_name
         filetype                = 'BIN'
       IMPORTING
-        filelength              = DATA(file_length)
+        filelength              = file_length
       CHANGING
         data_tab                = solix_tab
       EXCEPTIONS
