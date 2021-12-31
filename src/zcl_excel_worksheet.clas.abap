@@ -3181,10 +3181,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ld_row_end = ld_row_start.
     ENDIF.
     ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
-    IF ip_column_end IS INITIAL.
+    ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
+    IF ld_column_end_int IS INITIAL OR ip_column_end IS NOT SUPPLIED.
       ld_column_end_int = ld_column_start_int.
-    ELSE.
-      ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
     ENDIF.
 
     WHILE ld_column_start_int <= ld_column_end_int.
