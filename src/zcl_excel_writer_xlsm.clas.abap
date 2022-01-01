@@ -31,7 +31,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WRITER_XLSM IMPLEMENTATION.
+CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 
 
   METHOD add_further_data_to_zip.
