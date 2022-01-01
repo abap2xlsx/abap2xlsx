@@ -63,7 +63,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_style_changer IMPLEMENTATION.
+CLASS ZCL_EXCEL_STYLE_CHANGER IMPLEMENTATION.
 
 
   METHOD clear_initial_colorxfields.
@@ -187,9 +187,9 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
       stylemapping-complete_stylex-borders-right = complete_stylex-borders-right.
     ENDIF.
 
-    IF multiple_change_requested-borders-TOP = abap_true.
-      stylemapping-complete_style-borders-TOP = complete_style-borders-TOP.
-      stylemapping-complete_stylex-borders-TOP = complete_stylex-borders-TOP.
+    IF multiple_change_requested-borders-top = abap_true.
+      stylemapping-complete_style-borders-top = complete_style-borders-top.
+      stylemapping-complete_stylex-borders-top = complete_stylex-borders-top.
     ENDIF.
 
     IF multiple_change_requested-alignment = abap_true.
@@ -536,21 +536,431 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD zif_excel_style_changer~set_font_size.
+  METHOD zif_excel_style_changer~set_alignment_horizontal.
 
-    complete_style-font-size = value.
-    complete_stylex-font-size = abap_true.
-    single_change_requested-font-size = abap_true.
+    complete_style-alignment-horizontal = value.
+    complete_stylex-alignment-horizontal = 'X'.
+
     result = me.
 
   ENDMETHOD.
 
 
-  METHOD zif_excel_style_changer~set_number_format.
+  METHOD zif_excel_style_changer~set_alignment_indent.
 
-    complete_style-number_format-format_code = value.
-    complete_stylex-number_format-format_code = abap_true.
-    single_change_requested-number_format-format_code = abap_true.
+    complete_style-alignment-indent = value.
+    complete_stylex-alignment-indent = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_alignment_shrinktofit.
+
+    complete_style-alignment-shrinktofit = value.
+    complete_stylex-alignment-shrinktofit = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_alignment_textrotation.
+
+    complete_style-alignment-textrotation = value.
+    complete_stylex-alignment-textrotation = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_alignment_vertical.
+
+    complete_style-alignment-vertical = value.
+    complete_stylex-alignment-vertical = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_alignment_wraptext.
+
+    complete_style-alignment-wraptext = value.
+    complete_stylex-alignment-wraptext = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_allborders_color.
+
+    complete_style-borders-allborders-border_color = value.
+    complete_stylex-borders-allborders-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_allborders_style.
+
+    complete_style-borders-allborders-border_style = value.
+    complete_stylex-borders-allborders-border_style = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_allbo_color_indexe.
+
+    complete_style-borders-allborders-border_color-indexed = value.
+    complete_stylex-borders-allborders-border_color-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_allbo_color_rgb.
+
+    complete_style-borders-allborders-border_color-rgb = value.
+    complete_stylex-borders-allborders-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_allbo_color_theme.
+
+    complete_style-borders-allborders-border_color-theme = value.
+    complete_stylex-borders-allborders-border_color-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_allbo_color_tint.
+
+    complete_style-borders-allborders-border_color-tint = value.
+    complete_stylex-borders-allborders-border_color-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_diagonal_color.
+
+    complete_style-borders-diagonal-border_color = value.
+    complete_stylex-borders-diagonal-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_diagonal_color_ind.
+
+    complete_style-borders-diagonal-border_color-indexed = value.
+    complete_stylex-borders-diagonal-border_color-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_diagonal_color_rgb.
+
+    complete_style-borders-diagonal-border_color-rgb = value.
+    complete_stylex-borders-diagonal-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_diagonal_color_the.
+
+    complete_style-borders-diagonal-border_color-theme = value.
+    complete_stylex-borders-diagonal-border_color-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_diagonal_color_tin.
+
+    complete_style-borders-diagonal-border_color-tint = value.
+    complete_stylex-borders-diagonal-border_color-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_diagonal_mode.
+
+    complete_style-borders-diagonal_mode = value.
+    complete_stylex-borders-diagonal_mode = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_diagonal_style.
+
+    complete_style-borders-diagonal-border_style = value.
+    complete_stylex-borders-diagonal-border_style = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_down_color.
+
+    complete_style-borders-down-border_color = value.
+    complete_stylex-borders-down-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_down_color_indexed.
+
+    complete_style-borders-down-border_color-indexed = value.
+    complete_stylex-borders-down-border_color-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_down_color_rgb.
+
+    complete_style-borders-down-border_color-rgb = value.
+    complete_stylex-borders-down-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_down_color_theme.
+
+    complete_style-borders-down-border_color-theme = value.
+    complete_stylex-borders-down-border_color-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_down_color_tint.
+
+    complete_style-borders-down-border_color-tint = value.
+    complete_stylex-borders-down-border_color-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_down_style.
+
+    complete_style-borders-down-border_style = value.
+    complete_stylex-borders-down-border_style = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_left_color.
+
+    complete_style-borders-left-border_color = value.
+    complete_stylex-borders-left-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_left_color_indexed.
+
+    complete_style-borders-left-border_color-indexed = value.
+    complete_stylex-borders-left-border_color-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_left_color_rgb.
+
+    complete_style-borders-left-border_color-rgb = value.
+    complete_stylex-borders-left-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_left_color_theme.
+
+    complete_style-borders-left-border_color-theme = value.
+    complete_stylex-borders-left-border_color-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_left_color_tint.
+
+    complete_style-borders-left-border_color-tint = value.
+    complete_stylex-borders-left-border_color-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_left_style.
+
+    complete_style-borders-left-border_style = value.
+    complete_stylex-borders-left-border_style = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_right_color.
+
+    complete_style-borders-right-border_color = value.
+    complete_stylex-borders-right-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_right_color_indexe.
+
+    complete_style-borders-right-border_color-indexed = value.
+    complete_stylex-borders-right-border_color-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_right_color_rgb.
+
+    complete_style-borders-right-border_color-rgb = value.
+    complete_stylex-borders-right-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_right_color_theme.
+
+    complete_style-borders-right-border_color-theme = value.
+    complete_stylex-borders-right-border_color-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_right_color_tint.
+
+    complete_style-borders-right-border_color-tint = value.
+    complete_stylex-borders-right-border_color-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_right_style.
+
+    complete_style-borders-right-border_style = value.
+    complete_stylex-borders-right-border_style = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_top_color.
+
+    complete_style-borders-top-border_color = value.
+    complete_stylex-borders-top-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_top_color_indexed.
+
+    complete_style-borders-top-border_color-indexed = value.
+    complete_stylex-borders-top-border_color-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_top_color_rgb.
+
+    complete_style-borders-top-border_color-rgb = value.
+    complete_stylex-borders-top-border_color-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_top_color_theme.
+
+    complete_style-borders-top-border_color-theme = value.
+    complete_stylex-borders-top-border_color-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_top_color_tint.
+
+    complete_style-borders-top-border_color-tint = value.
+    complete_stylex-borders-top-border_color-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_borders_top_style.
+
+    complete_style-borders-top-border_style = value.
+    complete_stylex-borders-top-border_style = 'X'.
+
     result = me.
 
   ENDMETHOD.
@@ -566,76 +976,25 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD zif_excel_style_changer~set_complete_font.
+  METHOD zif_excel_style_changer~set_complete_alignment.
 
-    DATA: fontx TYPE zexcel_s_cstylex_font.
+    DATA: alignmentx LIKE ip_xalignment.
 
-    IF ip_xfont IS SUPPLIED.
-      fontx = ip_xfont.
+    IF ip_xalignment IS SUPPLIED.
+      alignmentx = ip_xalignment.
     ELSE.
-* Only supplied values should be used - exception: Flags bold and italic strikethrough underline
-      fontx-bold = 'X'.
-      fontx-italic = 'X'.
-      fontx-strikethrough = 'X'.
-      fontx-underline_mode = 'X'.
-      CLEAR fontx-color WITH 'X'.
-      clear_initial_colorxfields(
-        EXPORTING
-          is_color  = ip_font-color
-        CHANGING
-          cs_xcolor = fontx-color ).
-      IF ip_font-family IS NOT INITIAL.
-        fontx-family = 'X'.
+      CLEAR alignmentx WITH 'X'.
+      IF ip_alignment-horizontal IS INITIAL.
+        CLEAR alignmentx-horizontal.
       ENDIF.
-      IF ip_font-name IS NOT INITIAL.
-        fontx-name = 'X'.
-      ENDIF.
-      IF ip_font-scheme IS NOT INITIAL.
-        fontx-scheme = 'X'.
-      ENDIF.
-      IF ip_font-size IS NOT INITIAL.
-        fontx-size = 'X'.
-      ENDIF.
-      IF ip_font-underline_mode IS NOT INITIAL.
-        fontx-underline_mode = 'X'.
+      IF ip_alignment-vertical IS INITIAL.
+        CLEAR alignmentx-vertical.
       ENDIF.
     ENDIF.
 
-    complete_style-font = ip_font.
-    complete_stylex-font = fontx.
-    multiple_change_requested-font = abap_true.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_complete_fill.
-
-    DATA: fillx LIKE ip_xfill.
-    IF ip_xfill IS SUPPLIED.
-      fillx = ip_xfill.
-    ELSE.
-      CLEAR fillx WITH 'X'.
-      IF ip_fill-filltype IS INITIAL.
-        CLEAR fillx-filltype.
-      ENDIF.
-      clear_initial_colorxfields(
-        EXPORTING
-          is_color  = ip_fill-fgcolor
-        CHANGING
-          cs_xcolor = fillx-fgcolor ).
-      clear_initial_colorxfields(
-        EXPORTING
-          is_color  = ip_fill-bgcolor
-        CHANGING
-          cs_xcolor = fillx-bgcolor ).
-
-    ENDIF.
-
-    complete_style-fill = ip_fill.
-    complete_stylex-fill = fillx.
-    multiple_change_requested-fill = abap_true.
+    complete_style-alignment  = ip_alignment .
+    complete_stylex-alignment = alignmentx   .
+    multiple_change_requested-alignment = abap_true.
 
     result = me.
 
@@ -709,51 +1068,6 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
     complete_style-borders = ip_borders.
     complete_stylex-borders = bordersx.
     multiple_change_requested-borders-complete = abap_true.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_complete_alignment.
-
-    DATA: alignmentx LIKE ip_xalignment.
-
-    IF ip_xalignment IS SUPPLIED.
-      alignmentx = ip_xalignment.
-    ELSE.
-      CLEAR alignmentx WITH 'X'.
-      IF ip_alignment-horizontal IS INITIAL.
-        CLEAR alignmentx-horizontal.
-      ENDIF.
-      IF ip_alignment-vertical IS INITIAL.
-        CLEAR alignmentx-vertical.
-      ENDIF.
-    ENDIF.
-
-    complete_style-alignment  = ip_alignment .
-    complete_stylex-alignment = alignmentx   .
-    multiple_change_requested-alignment = abap_true.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_complete_protection.
-
-    MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
-    IF ip_xprotection IS SUPPLIED.
-      MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
-    ELSE.
-      IF ip_protection-hidden IS NOT INITIAL.
-        complete_stylex-protection-hidden = 'X'.
-      ENDIF.
-      IF ip_protection-locked IS NOT INITIAL.
-        complete_stylex-protection-locked = 'X'.
-      ENDIF.
-    ENDIF.
-    multiple_change_requested-protection = abap_true.
 
     result = me.
 
@@ -875,6 +1189,312 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD zif_excel_style_changer~set_complete_fill.
+
+    DATA: fillx LIKE ip_xfill.
+    IF ip_xfill IS SUPPLIED.
+      fillx = ip_xfill.
+    ELSE.
+      CLEAR fillx WITH 'X'.
+      IF ip_fill-filltype IS INITIAL.
+        CLEAR fillx-filltype.
+      ENDIF.
+      clear_initial_colorxfields(
+        EXPORTING
+          is_color  = ip_fill-fgcolor
+        CHANGING
+          cs_xcolor = fillx-fgcolor ).
+      clear_initial_colorxfields(
+        EXPORTING
+          is_color  = ip_fill-bgcolor
+        CHANGING
+          cs_xcolor = fillx-bgcolor ).
+
+    ENDIF.
+
+    complete_style-fill = ip_fill.
+    complete_stylex-fill = fillx.
+    multiple_change_requested-fill = abap_true.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_complete_font.
+
+    DATA: fontx TYPE zexcel_s_cstylex_font.
+
+    IF ip_xfont IS SUPPLIED.
+      fontx = ip_xfont.
+    ELSE.
+* Only supplied values should be used - exception: Flags bold and italic strikethrough underline
+      fontx-bold = 'X'.
+      fontx-italic = 'X'.
+      fontx-strikethrough = 'X'.
+      fontx-underline_mode = 'X'.
+      CLEAR fontx-color WITH 'X'.
+      clear_initial_colorxfields(
+        EXPORTING
+          is_color  = ip_font-color
+        CHANGING
+          cs_xcolor = fontx-color ).
+      IF ip_font-family IS NOT INITIAL.
+        fontx-family = 'X'.
+      ENDIF.
+      IF ip_font-name IS NOT INITIAL.
+        fontx-name = 'X'.
+      ENDIF.
+      IF ip_font-scheme IS NOT INITIAL.
+        fontx-scheme = 'X'.
+      ENDIF.
+      IF ip_font-size IS NOT INITIAL.
+        fontx-size = 'X'.
+      ENDIF.
+      IF ip_font-underline_mode IS NOT INITIAL.
+        fontx-underline_mode = 'X'.
+      ENDIF.
+    ENDIF.
+
+    complete_style-font = ip_font.
+    complete_stylex-font = fontx.
+    multiple_change_requested-font = abap_true.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_complete_protection.
+
+    MOVE-CORRESPONDING ip_protection  TO complete_style-protection.
+    IF ip_xprotection IS SUPPLIED.
+      MOVE-CORRESPONDING ip_xprotection TO complete_stylex-protection.
+    ELSE.
+      IF ip_protection-hidden IS NOT INITIAL.
+        complete_stylex-protection-hidden = 'X'.
+      ENDIF.
+      IF ip_protection-locked IS NOT INITIAL.
+        complete_stylex-protection-locked = 'X'.
+      ENDIF.
+    ENDIF.
+    multiple_change_requested-protection = abap_true.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_bgcolor.
+
+    complete_style-fill-bgcolor = value.
+    complete_stylex-fill-bgcolor-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_bgcolor_indexed.
+
+    complete_style-fill-bgcolor-indexed = value.
+    complete_stylex-fill-bgcolor-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_bgcolor_rgb.
+
+    complete_style-fill-bgcolor-rgb = value.
+    complete_stylex-fill-bgcolor-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_bgcolor_theme.
+
+    complete_style-fill-bgcolor-theme = value.
+    complete_stylex-fill-bgcolor-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_bgcolor_tint.
+
+    complete_style-fill-bgcolor-tint = value.
+    complete_stylex-fill-bgcolor-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_fgcolor.
+
+    complete_style-fill-fgcolor = value.
+    complete_stylex-fill-fgcolor-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_fgcolor_indexed.
+
+    complete_style-fill-fgcolor-indexed = value.
+    complete_stylex-fill-fgcolor-indexed = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_fgcolor_rgb.
+
+    complete_style-fill-fgcolor-rgb = value.
+    complete_stylex-fill-fgcolor-rgb = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_fgcolor_theme.
+
+    complete_style-fill-fgcolor-theme = value.
+    complete_stylex-fill-fgcolor-theme = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_fgcolor_tint.
+
+    complete_style-fill-fgcolor-tint = value.
+    complete_stylex-fill-fgcolor-tint = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_filltype.
+
+    complete_style-fill-filltype = value.
+    complete_stylex-fill-filltype = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_bottom.
+
+    complete_style-fill-gradtype-bottom = value.
+    complete_stylex-fill-gradtype-bottom = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_degree.
+
+    complete_style-fill-gradtype-degree = value.
+    complete_stylex-fill-gradtype-degree = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_left.
+
+    complete_style-fill-gradtype-left = value.
+    complete_stylex-fill-gradtype-left = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_position1.
+
+    complete_style-fill-gradtype-position1 = value.
+    complete_stylex-fill-gradtype-position1 = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_position2.
+
+    complete_style-fill-gradtype-position2 = value.
+    complete_stylex-fill-gradtype-position2 = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_position3.
+
+    complete_style-fill-gradtype-position3 = value.
+    complete_stylex-fill-gradtype-position3 = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_right.
+
+    complete_style-fill-gradtype-right = value.
+    complete_stylex-fill-gradtype-right = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_top.
+
+    complete_style-fill-gradtype-top = value.
+    complete_stylex-fill-gradtype-top = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_gradtype_type.
+
+    complete_style-fill-gradtype-type = value.
+    complete_stylex-fill-gradtype-type = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
+  METHOD zif_excel_style_changer~set_fill_rotation.
+
+    complete_style-fill-rotation = value.
+    complete_stylex-fill-rotation = 'X'.
+
+    result = me.
+
+  ENDMETHOD.
+
+
   METHOD zif_excel_style_changer~set_font_bold.
 
     complete_style-font-bold = value.
@@ -897,22 +1517,22 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD zif_excel_style_changer~set_font_color_rgb.
+  METHOD zif_excel_style_changer~set_font_color_indexed.
 
-    complete_style-font-color-rgb = value.
-    complete_stylex-font-color-rgb = 'X'.
-    single_change_requested-font-color-rgb = 'X'.
+    complete_style-font-color-indexed = value.
+    complete_stylex-font-color-indexed = 'X'.
+    single_change_requested-font-color-indexed = 'X'.
 
     result = me.
 
   ENDMETHOD.
 
 
-  METHOD zif_excel_style_changer~set_font_color_indexed.
+  METHOD zif_excel_style_changer~set_font_color_rgb.
 
-    complete_style-font-color-indexed = value.
-    complete_stylex-font-color-indexed = 'X'.
-    single_change_requested-font-color-indexed = 'X'.
+    complete_style-font-color-rgb = value.
+    complete_stylex-font-color-rgb = 'X'.
+    single_change_requested-font-color-rgb = 'X'.
 
     result = me.
 
@@ -982,6 +1602,16 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD zif_excel_style_changer~set_font_size.
+
+    complete_style-font-size = value.
+    complete_stylex-font-size = abap_true.
+    single_change_requested-font-size = abap_true.
+    result = me.
+
+  ENDMETHOD.
+
+
   METHOD zif_excel_style_changer~set_font_strikethrough.
 
     complete_style-font-strikethrough = value.
@@ -1012,281 +1642,11 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD zif_excel_style_changer~set_fill_filltype.
-
-    complete_style-fill-filltype = value.
-    complete_stylex-fill-filltype = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_rotation.
-
-    complete_style-fill-rotation = value.
-    complete_stylex-fill-rotation = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_fgcolor.
-
-    complete_style-fill-fgcolor = value.
-    complete_stylex-fill-fgcolor-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_fgcolor_rgb.
-
-    complete_style-fill-fgcolor-rgb = value.
-    complete_stylex-fill-fgcolor-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_fgcolor_indexed.
-
-    complete_style-fill-fgcolor-indexed = value.
-    complete_stylex-fill-fgcolor-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_fgcolor_theme.
-
-    complete_style-fill-fgcolor-theme = value.
-    complete_stylex-fill-fgcolor-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_fgcolor_tint.
-
-    complete_style-fill-fgcolor-tint = value.
-    complete_stylex-fill-fgcolor-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_bgcolor.
-
-    complete_style-fill-bgcolor = value.
-    complete_stylex-fill-bgcolor-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_bgcolor_rgb.
-
-    complete_style-fill-bgcolor-rgb = value.
-    complete_stylex-fill-bgcolor-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_bgcolor_indexed.
-
-    complete_style-fill-bgcolor-indexed = value.
-    complete_stylex-fill-bgcolor-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_bgcolor_theme.
-
-    complete_style-fill-bgcolor-theme = value.
-    complete_stylex-fill-bgcolor-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_bgcolor_tint.
-
-    complete_style-fill-bgcolor-tint = value.
-    complete_stylex-fill-bgcolor-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_type.
-
-    complete_style-fill-gradtype-type = value.
-    complete_stylex-fill-gradtype-type = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_degree.
-
-    complete_style-fill-gradtype-degree = value.
-    complete_stylex-fill-gradtype-degree = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_bottom.
-
-    complete_style-fill-gradtype-bottom = value.
-    complete_stylex-fill-gradtype-bottom = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_left.
-
-    complete_style-fill-gradtype-left = value.
-    complete_stylex-fill-gradtype-left = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_top.
-
-    complete_style-fill-gradtype-top = value.
-    complete_stylex-fill-gradtype-top = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_right.
-
-    complete_style-fill-gradtype-right = value.
-    complete_stylex-fill-gradtype-right = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_position1.
-
-    complete_style-fill-gradtype-position1 = value.
-    complete_stylex-fill-gradtype-position1 = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_position2.
-
-    complete_style-fill-gradtype-position2 = value.
-    complete_stylex-fill-gradtype-position2 = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_fill_gradtype_position3.
-
-    complete_style-fill-gradtype-position3 = value.
-    complete_stylex-fill-gradtype-position3 = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_diagonal_mode.
-
-    complete_style-borders-diagonal_mode = value.
-    complete_stylex-borders-diagonal_mode = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_alignment_horizontal.
-
-    complete_style-alignment-horizontal = value.
-    complete_stylex-alignment-horizontal = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_alignment_vertical.
-
-    complete_style-alignment-vertical = value.
-    complete_stylex-alignment-vertical = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_alignment_textrotation.
-
-    complete_style-alignment-textrotation = value.
-    complete_stylex-alignment-textrotation = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_alignment_wraptext.
-
-    complete_style-alignment-wraptext = value.
-    complete_stylex-alignment-wraptext = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_alignment_shrinktofit.
-
-    complete_style-alignment-shrinktofit = value.
-    complete_stylex-alignment-shrinktofit = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_alignment_indent.
-
-    complete_style-alignment-indent = value.
-    complete_stylex-alignment-indent = 'X'.
-
+  METHOD zif_excel_style_changer~set_number_format.
+
+    complete_style-number_format-format_code = value.
+    complete_stylex-number_format-format_code = abap_true.
+    single_change_requested-number_format-format_code = abap_true.
     result = me.
 
   ENDMETHOD.
@@ -1310,366 +1670,4 @@ CLASS zcl_excel_style_changer IMPLEMENTATION.
     result = me.
 
   ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_allborders_style.
-
-    complete_style-borders-allborders-border_style = value.
-    complete_stylex-borders-allborders-border_style = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_allborders_color.
-
-    complete_style-borders-allborders-border_color = value.
-    complete_stylex-borders-allborders-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_allbo_color_rgb.
-
-    complete_style-borders-allborders-border_color-rgb = value.
-    complete_stylex-borders-allborders-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_allbo_color_indexe.
-
-    complete_style-borders-allborders-border_color-indexed = value.
-    complete_stylex-borders-allborders-border_color-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_allbo_color_theme.
-
-    complete_style-borders-allborders-border_color-theme = value.
-    complete_stylex-borders-allborders-border_color-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_allbo_color_tint.
-
-    complete_style-borders-allborders-border_color-tint = value.
-    complete_stylex-borders-allborders-border_color-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_diagonal_style.
-
-    complete_style-borders-diagonal-border_style = value.
-    complete_stylex-borders-diagonal-border_style = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_diagonal_color.
-
-    complete_style-borders-diagonal-border_color = value.
-    complete_stylex-borders-diagonal-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_diagonal_color_rgb.
-
-    complete_style-borders-diagonal-border_color-rgb = value.
-    complete_stylex-borders-diagonal-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_diagonal_color_ind.
-
-    complete_style-borders-diagonal-border_color-indexed = value.
-    complete_stylex-borders-diagonal-border_color-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_diagonal_color_the.
-
-    complete_style-borders-diagonal-border_color-theme = value.
-    complete_stylex-borders-diagonal-border_color-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_diagonal_color_tin.
-
-    complete_style-borders-diagonal-border_color-tint = value.
-    complete_stylex-borders-diagonal-border_color-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_down_style.
-
-    complete_style-borders-down-border_style = value.
-    complete_stylex-borders-down-border_style = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_down_color.
-
-    complete_style-borders-down-border_color = value.
-    complete_stylex-borders-down-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_down_color_rgb.
-
-    complete_style-borders-down-border_color-rgb = value.
-    complete_stylex-borders-down-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_down_color_indexed.
-
-    complete_style-borders-down-border_color-indexed = value.
-    complete_stylex-borders-down-border_color-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_down_color_theme.
-
-    complete_style-borders-down-border_color-theme = value.
-    complete_stylex-borders-down-border_color-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_down_color_tint.
-
-    complete_style-borders-down-border_color-tint = value.
-    complete_stylex-borders-down-border_color-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_left_style.
-
-    complete_style-borders-left-border_style = value.
-    complete_stylex-borders-left-border_style = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_left_color.
-
-    complete_style-borders-left-border_color = value.
-    complete_stylex-borders-left-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_left_color_rgb.
-
-    complete_style-borders-left-border_color-rgb = value.
-    complete_stylex-borders-left-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_left_color_indexed.
-
-    complete_style-borders-left-border_color-indexed = value.
-    complete_stylex-borders-left-border_color-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_left_color_theme.
-
-    complete_style-borders-left-border_color-theme = value.
-    complete_stylex-borders-left-border_color-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_left_color_tint.
-
-    complete_style-borders-left-border_color-tint = value.
-    complete_stylex-borders-left-border_color-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_right_style.
-
-    complete_style-borders-right-border_style = value.
-    complete_stylex-borders-right-border_style = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_right_color.
-
-    complete_style-borders-right-border_color = value.
-    complete_stylex-borders-right-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_right_color_rgb.
-
-    complete_style-borders-right-border_color-rgb = value.
-    complete_stylex-borders-right-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_right_color_indexe.
-
-    complete_style-borders-right-border_color-indexed = value.
-    complete_stylex-borders-right-border_color-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_right_color_theme.
-
-    complete_style-borders-right-border_color-theme = value.
-    complete_stylex-borders-right-border_color-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_right_color_tint.
-
-    complete_style-borders-right-border_color-tint = value.
-    complete_stylex-borders-right-border_color-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_top_style.
-
-    complete_style-borders-top-border_style = value.
-    complete_stylex-borders-top-border_style = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_top_color.
-
-    complete_style-borders-top-border_color = value.
-    complete_stylex-borders-top-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_top_color_rgb.
-
-    complete_style-borders-top-border_color-rgb = value.
-    complete_stylex-borders-top-border_color-rgb = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_top_color_indexed.
-
-    complete_style-borders-top-border_color-indexed = value.
-    complete_stylex-borders-top-border_color-indexed = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_top_color_theme.
-
-    complete_style-borders-top-border_color-theme = value.
-    complete_stylex-borders-top-border_color-theme = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
-  METHOD zif_excel_style_changer~set_borders_top_color_tint.
-
-    complete_style-borders-top-border_color-tint = value.
-    complete_stylex-borders-top-border_color-tint = 'X'.
-
-    result = me.
-
-  ENDMETHOD.
-
-
 ENDCLASS.
