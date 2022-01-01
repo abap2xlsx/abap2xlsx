@@ -35,7 +35,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WRITER_HUGE_FILE IMPLEMENTATION.
+CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
 
 
   METHOD create_xl_sharedstrings.
