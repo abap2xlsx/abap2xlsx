@@ -53,8 +53,8 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
     DATA: lo_zip              TYPE REF TO cl_abap_zip,
           lo_worksheet        TYPE REF TO zcl_excel_worksheet,
           lo_active_worksheet TYPE REF TO zcl_excel_worksheet,
-          lo_iterator         TYPE REF TO cl_object_collection_iterator,
-          lo_nested_iterator  TYPE REF TO cl_object_collection_iterator,
+          lo_iterator         TYPE REF TO zcl_excel_collection_iterator,
+          lo_nested_iterator  TYPE REF TO zcl_excel_collection_iterator,
           lo_table            TYPE REF TO zcl_excel_table,
           lo_drawing          TYPE REF TO zcl_excel_drawing,
           lo_drawings         TYPE REF TO zcl_excel_drawings.
