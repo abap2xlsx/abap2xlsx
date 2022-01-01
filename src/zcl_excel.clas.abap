@@ -184,7 +184,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL IMPLEMENTATION.
+CLASS zcl_excel IMPLEMENTATION.
 
 
   METHOD add_new_autofilter.
