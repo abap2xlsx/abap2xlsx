@@ -1076,7 +1076,6 @@ CLASS ZCL_EXCEL_STYLE_CHANGER IMPLEMENTATION.
 
   METHOD zif_excel_style_changer~set_complete_borders_all.
 
-*    lv_border_supplied = boolc( ip_borders_allborders IS SUPPLIED ).
     lv_xborder_supplied = boolc( ip_xborders_allborders IS SUPPLIED ).
     move_supplied_borders(
       EXPORTING
