@@ -26,7 +26,7 @@
     <item>
      <ID>I</ID>
      <KEY>002</KEY>
-     <ENTRY>Created with abap2xlsx. Find more information at https://github.com/abap2xlsx/abap2xlsx.</ENTRY>
+     <ENTRY>Created with https://github.com/abap2xlsx/abap2xlsx</ENTRY>
      <LENGTH>132</LENGTH>
     </item>
     <item>
@@ -84,7 +84,7 @@
       <item>
        <ID>I</ID>
        <KEY>002</KEY>
-       <ENTRY>Erzeugt mit abap2xlsx. Weitere Informationen unter https://github.com/abap2xlsx/abap2xlsx.</ENTRY>
+       <ENTRY>Erzeugt mit https://github.com/abap2xlsx/abap2xlsx</ENTRY>
        <LENGTH>132</LENGTH>
       </item>
       <item>
