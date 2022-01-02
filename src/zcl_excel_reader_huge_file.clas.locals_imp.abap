@@ -3,12 +3,12 @@
 *"* declarations
 
 * Signal "not found"
-class lcx_not_found implementation.
-  method constructor.
+CLASS lcx_not_found IMPLEMENTATION.
+  METHOD constructor.
     super->constructor( textid = textid previous = previous ).
     me->error = error.
-  endmethod.                    "constructor
-  method if_message~get_text.
+  ENDMETHOD.                    "constructor
+  METHOD if_message~get_text.
     result = error.
-  endmethod.                    "if_message~get_text
-endclass.                    "lcx_not_found IMPLEMENTATION
+  ENDMETHOD.                    "if_message~get_text
+ENDCLASS.                    "lcx_not_found IMPLEMENTATION

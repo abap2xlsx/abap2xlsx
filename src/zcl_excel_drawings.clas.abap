@@ -26,7 +26,7 @@ CLASS zcl_excel_drawings DEFINITION
         VALUE(eo_drawing) TYPE REF TO zcl_excel_drawing .
     METHODS get_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS is_empty
       RETURNING
         VALUE(is_empty) TYPE flag .
@@ -48,7 +48,7 @@ CLASS zcl_excel_drawings DEFINITION
 
 *"* private components of class ZCL_EXCEL_DRAWINGS
 *"* do not include other source files here!!!
-    DATA drawings TYPE REF TO cl_object_collection .
+    DATA drawings TYPE REF TO zcl_excel_collection .
 ENDCLASS.
 
 

@@ -369,7 +369,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lt_outline_rows         TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
           ls_outline_row          LIKE LINE OF lt_outline_rows,
           lo_row                  TYPE REF TO zcl_excel_row,
-          lo_row_iterator         TYPE REF TO cl_object_collection_iterator,
+          lo_row_iterator         TYPE REF TO zcl_excel_collection_iterator,
           lv_row_offset           TYPE i,
           lv_row_collapse_flag    TYPE i.
 
