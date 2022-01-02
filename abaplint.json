@@ -106,7 +106,16 @@
     "in_statement_indentation": false,
     "indentation": false,
     "keep_single_parameter_on_one_line": false,
-    "keyword_case": false,
+    "keyword_case": {
+      "style": "upper",
+      "ignoreExceptions": true,
+      "ignoreLowerClassImplmentationStatement": true,
+      "ignoreGlobalClassDefinition": false,
+      "ignoreGlobalInterface": false,
+      "ignoreKeywords": [],
+      "ignoreGlobalClassBoundaries": false,
+      "ignoreFunctionModuleName": false
+    },
     "local_class_naming": false,
     "local_testclass_location": true,
     "main_file_contents": true,

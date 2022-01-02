@@ -3,10 +3,10 @@
 *"* implementation or private method's signature
 
 *
-class lcl_zip_archive definition abstract.
-  public section.
-    methods read abstract
-      importing i_filename type csequence
-      returning value(r_content) type xstring " Remember copy-on-write!
-      raising zcx_excel.
-endclass.
+CLASS lcl_zip_archive DEFINITION ABSTRACT.
+  PUBLIC SECTION.
+    METHODS read ABSTRACT
+      IMPORTING i_filename       TYPE csequence
+      RETURNING VALUE(r_content) TYPE xstring " Remember copy-on-write!
+      RAISING   zcx_excel.
+ENDCLASS.
