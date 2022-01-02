@@ -178,10 +178,6 @@
     "inline_data_old_versions": true,
     "local_variable_names": false,
     "class_attribute_names": false,
-    "commented_code": {
-      "exclude": [],
-      "severity": "Error",
-      "allowIncludeInFugr": true
-    }
+    "commented_code": true
   }
 }
