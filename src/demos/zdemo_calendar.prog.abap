@@ -158,9 +158,6 @@ START-OF-SELECTION.
   " Create Styles
   " Create an underline double style
   lo_style_month                        = lo_excel->add_new_style( ).
-  "lo_style_month->font->name            = zcl_excel_style_font=>c_name_roman.
-  "lo_style_month->font->scheme          = zcl_excel_style_font=>c_scheme_none.
-  "lo_style_month->font->family          = zcl_excel_style_font=>c_family_roman.
   lo_style_month->alignment->horizontal  = zcl_excel_style_alignment=>c_horizontal_right.
   lo_style_month->font->bold            = abap_true.
   lo_style_month->font->size            = 36.
