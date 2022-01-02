@@ -12,6 +12,7 @@
 *& Image Filename
 *& Image Description
 *& URL for the Description
+*& Photographer
 *&
 *& The Images should be landscape JPEG's with a 3:2 ratio and min.
 *& 450 pixel height. They must also be saved in the Export Directory.
@@ -33,8 +34,8 @@ PARAMETERS: p_from TYPE dfrom,
             p_to   TYPE dto.
 
 SELECTION-SCREEN BEGIN OF BLOCK orientation WITH FRAME TITLE orient.
-PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
-            p_lands TYPE flag RADIOBUTTON GROUP orie DEFAULT 'X'.
+  PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
+              p_lands TYPE flag RADIOBUTTON GROUP orie DEFAULT 'X'.
 SELECTION-SCREEN END OF BLOCK orientation.
 
 INITIALIZATION.
@@ -61,6 +62,8 @@ START-OF-SELECTION.
         lv_style_border_guid TYPE zexcel_cell_style.
   DATA: lo_style_center      TYPE REF TO zcl_excel_style,
         lv_style_center_guid TYPE zexcel_cell_style.
+  DATA: lo_style_right      TYPE REF TO zcl_excel_style,
+        lv_style_right_guid TYPE zexcel_cell_style.
 
   DATA: lv_full_path      TYPE string,
         image_descr_path  TYPE string,
@@ -88,10 +91,11 @@ START-OF-SELECTION.
   FIELD-SYMBOLS: <month_name> LIKE LINE OF month_names.
 
   TYPES: BEGIN OF tt_datatab,
-           month_nr TYPE fcmnr,
-           filename TYPE string,
-           descr    TYPE string,
-           url      TYPE string,
+           month_nr     TYPE fcmnr,
+           filename     TYPE string,
+           descr        TYPE string,
+           url          TYPE string,
+           photographer TYPE string,
          END OF tt_datatab.
 
   DATA: image_descriptions TYPE TABLE OF tt_datatab.
@@ -154,11 +158,7 @@ START-OF-SELECTION.
   " Create Styles
   " Create an underline double style
   lo_style_month                        = lo_excel->add_new_style( ).
-  " lo_style_month->font->underline       = abap_true.
-  " lo_style_month->font->underline_mode  = zcl_excel_style_font=>c_underline_single.
-  lo_style_month->font->name            = zcl_excel_style_font=>c_name_roman.
-  lo_style_month->font->scheme          = zcl_excel_style_font=>c_scheme_none.
-  lo_style_month->font->family          = zcl_excel_style_font=>c_family_roman.
+  lo_style_month->alignment->horizontal  = zcl_excel_style_alignment=>c_horizontal_right.
   lo_style_month->font->bold            = abap_true.
   lo_style_month->font->size            = 36.
   lv_style_month_guid                   = lo_style_month->get_guid( ).
@@ -177,6 +177,10 @@ START-OF-SELECTION.
   lo_style_center->alignment->horizontal  = zcl_excel_style_alignment=>c_horizontal_center.
   lo_style_center->alignment->vertical    = zcl_excel_style_alignment=>c_vertical_top.
   lv_style_center_guid                    = lo_style_center->get_guid( ).
+  "Create style alignment right
+  lo_style_right                         = lo_excel->add_new_style( ).
+  lo_style_right->alignment->horizontal  = zcl_excel_style_alignment=>c_horizontal_right.
+  lv_style_right_guid                    = lo_style_right->get_guid( ).
 
   " Get Month Names
   CALL FUNCTION 'MONTH_NAMES_GET'
@@ -307,7 +311,17 @@ START-OF-SELECTION.
       ENDIF.
       lo_row = lo_worksheet->get_row( row ).
       lo_row->set_row_height( '22.0' ).
-
+      " Photographer
+      IF NOT <img_descr>-photographer IS INITIAL.
+        value = <img_descr>-photographer.
+        lo_worksheet->set_cell(
+          EXPORTING
+            ip_column    = to_col_end " Cell Column
+            ip_row       = row      " Cell Row
+            ip_value     = value    " Cell Value
+            ip_style     = lv_style_right_guid
+        ).
+      ENDIF.
       " In Landscape mode the row between the description and the
       " dates should be not so high
       IF p_lands = abap_true.
