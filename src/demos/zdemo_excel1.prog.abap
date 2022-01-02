@@ -24,7 +24,6 @@ START-OF-SELECTION.
 
   " Get active sheet
   lo_worksheet = lo_excel->get_active_worksheet( ).
-*  lo_worksheet->set_title( ip_title = 'Sheet1' ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 2 ip_value = 'Hello world' ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = sy-datum ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = sy-uzeit ).
