@@ -15,7 +15,7 @@ CLASS zcl_excel_data_validations DEFINITION
     METHODS constructor .
     METHODS get_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS is_empty
       RETURNING
         VALUE(is_empty) TYPE flag .
@@ -32,7 +32,7 @@ CLASS zcl_excel_data_validations DEFINITION
 *"* do not include other source files here!!!
   PRIVATE SECTION.
 
-    DATA data_validations TYPE REF TO cl_object_collection .
+    DATA data_validations TYPE REF TO zcl_excel_collection .
 ENDCLASS.
 
 

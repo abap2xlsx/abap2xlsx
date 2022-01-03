@@ -50,8 +50,10 @@ CLASS zcl_excel_worksheet DEFINITION
         "! In other words, for a calculated column, a cell in that column is considered to have an error
         "! if its formula is different from the calculated column formula, or doesn't contain a formula at all.
         calculated_column     TYPE abap_bool,
-      END OF mty_s_ignored_errors,
-      mty_th_ignored_errors TYPE HASHED TABLE OF mty_s_ignored_errors WITH UNIQUE KEY cell_coords,
+      END OF mty_s_ignored_errors .
+    TYPES:
+      mty_th_ignored_errors TYPE HASHED TABLE OF mty_s_ignored_errors WITH UNIQUE KEY cell_coords .
+    TYPES:
       BEGIN OF mty_s_column_formula,
         id                     TYPE i,
         column                 TYPE zexcel_cell_column,
@@ -63,9 +65,10 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_s_column_formula .
     TYPES:
       mty_th_column_formula
-             TYPE HASHED TABLE OF mty_s_column_formula
-             WITH UNIQUE KEY id .
-    TYPES ty_doc_url TYPE c LENGTH 255.
+               TYPE HASHED TABLE OF mty_s_column_formula
+               WITH UNIQUE KEY id .
+    TYPES:
+      ty_doc_url TYPE c LENGTH 255 .
     TYPES:
       BEGIN OF mty_merge,
         row_from TYPE i,
@@ -75,30 +78,33 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_merge .
     TYPES:
       mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
-    TYPES ty_area TYPE c LENGTH 1.
+    TYPES:
+      ty_area TYPE c LENGTH 1 .
 
-    CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
-    CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
-    CONSTANTS c_break_row TYPE zexcel_break VALUE 1.        "#EC NOTEXT
-    CONSTANTS: BEGIN OF c_area,
-                 whole   TYPE ty_area VALUE 'W',            "#EC NOTEXT
-                 topleft TYPE ty_area VALUE 'T',            "#EC NOTEXT
-               END OF c_area.
+    CONSTANTS c_break_column TYPE zexcel_break VALUE 2 ##NO_TEXT.
+    CONSTANTS c_break_none TYPE zexcel_break VALUE 0 ##NO_TEXT.
+    CONSTANTS c_break_row TYPE zexcel_break VALUE 1 ##NO_TEXT.
+    CONSTANTS:
+      BEGIN OF c_area,
+        whole   TYPE ty_area VALUE 'W',                     "#EC NOTEXT
+        topleft TYPE ty_area VALUE 'T',                     "#EC NOTEXT
+      END OF c_area .
     DATA excel TYPE REF TO zcl_excel READ-ONLY .
-    DATA print_gridlines TYPE zexcel_print_gridlines READ-ONLY VALUE abap_false. "#EC NOTEXT
+    DATA print_gridlines TYPE zexcel_print_gridlines READ-ONLY VALUE abap_false ##NO_TEXT.
     DATA sheet_content TYPE zexcel_t_cell_data .
     DATA sheet_setup TYPE REF TO zcl_excel_sheet_setup .
-    DATA show_gridlines TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true. "#EC NOTEXT
-    DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true. "#EC NOTEXT
+    DATA show_gridlines TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
+    DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
     DATA styles TYPE zexcel_t_sheet_style .
     DATA tabcolor TYPE zexcel_s_tabcolor READ-ONLY .
     DATA column_formulas TYPE mty_th_column_formula READ-ONLY .
-    CLASS-DATA: BEGIN OF c_messages READ-ONLY,
-                  formula_id_only_is_possible TYPE string,
-                  column_formula_id_not_found TYPE string,
-                  formula_not_in_this_table   TYPE string,
-                  formula_in_other_column     TYPE string,
-                END OF c_messages.
+    CLASS-DATA:
+      BEGIN OF c_messages READ-ONLY,
+        formula_id_only_is_possible TYPE string,
+        column_formula_id_not_found TYPE string,
+        formula_not_in_this_table   TYPE string,
+        formula_in_other_column     TYPE string,
+      END OF c_messages .
     DATA mt_merged_cells TYPE mty_ts_merge READ-ONLY .
 
     METHODS add_comment
@@ -118,7 +124,7 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !ip_dimension_range  TYPE string DEFAULT 'A1'
       RETURNING
-        VALUE(eo_style_cond) TYPE REF TO zcl_excel_style_cond.
+        VALUE(eo_style_cond) TYPE REF TO zcl_excel_style_cond .
     METHODS add_new_data_validation
       RETURNING
         VALUE(eo_data_validation) TYPE REF TO zcl_excel_data_validation .
@@ -184,7 +190,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row_to        TYPE zexcel_cell_row OPTIONAL
         !ip_style_changer TYPE REF TO zif_excel_style_changer
       RAISING
-        zcx_excel.
+        zcx_excel .
     METHODS change_cell_style
       IMPORTING
         !ip_column                      TYPE simple
@@ -298,7 +304,7 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_guid)                  TYPE zexcel_cell_style
       RAISING
         zcx_excel .
-    CLASS-METHODS class_constructor.
+    CLASS-METHODS class_constructor .
     METHODS constructor
       IMPORTING
         !ip_excel TYPE REF TO zcl_excel
@@ -353,13 +359,13 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(eo_columns) TYPE REF TO zcl_excel_columns .
     METHODS get_columns_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_style_cond_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_data_validations_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_data_validations_size
       RETURNING
         VALUE(ep_size) TYPE i .
@@ -367,7 +373,7 @@ CLASS zcl_excel_worksheet DEFINITION
       RETURNING
         VALUE(eo_column) TYPE REF TO zcl_excel_column
       RAISING
-        zcx_excel.
+        zcx_excel .
     METHODS get_default_excel_date_format
       RETURNING
         VALUE(ep_default_excel_date_format) TYPE zexcel_number_format .
@@ -392,12 +398,12 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(r_drawings) TYPE REF TO zcl_excel_drawings .
     METHODS get_comments_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_drawings_iterator
       IMPORTING
         !ip_type           TYPE zexcel_drawing_type
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_freeze_cell
       EXPORTING
         !ep_row    TYPE zexcel_cell_row
@@ -417,13 +423,13 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_hyperlinks_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_hyperlinks_size
       RETURNING
         VALUE(ep_size) TYPE i .
     METHODS get_ignored_errors
       RETURNING
-        VALUE(rt_ignored_errors) TYPE mty_th_ignored_errors.
+        VALUE(rt_ignored_errors) TYPE mty_th_ignored_errors .
     METHODS get_merge
       RETURNING
         VALUE(merge_range) TYPE string_table
@@ -436,7 +442,7 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_ranges_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_row
       IMPORTING
         !ip_row       TYPE int4
@@ -447,7 +453,7 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(eo_rows) TYPE REF TO zcl_excel_rows .
     METHODS get_rows_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_row_outlines
       RETURNING
         VALUE(rt_row_outlines) TYPE mty_ts_outlines_row .
@@ -461,7 +467,7 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ev_tabcolor) TYPE zexcel_s_tabcolor .
     METHODS get_tables_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS get_tables_size
       RETURNING
         VALUE(ep_size) TYPE i .
@@ -520,16 +526,16 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS set_ignored_errors
       IMPORTING
-        it_ignored_errors TYPE mty_th_ignored_errors.
+        !it_ignored_errors TYPE mty_th_ignored_errors .
     METHODS set_merge
       IMPORTING
         !ip_column_start TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_min_col
         !ip_column_end   TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_max_col
         !ip_row          TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_min_row
         !ip_row_to       TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_max_row
-        !ip_style        TYPE zexcel_cell_style OPTIONAL "added parameter
-        !ip_value        TYPE simple OPTIONAL "added parameter
-        !ip_formula      TYPE zexcel_cell_formula OPTIONAL "added parameter
+        !ip_style        TYPE zexcel_cell_style OPTIONAL          "added parameter
+        !ip_value        TYPE simple OPTIONAL          "added parameter
+        !ip_formula      TYPE zexcel_cell_formula OPTIONAL        "added parameter
       RAISING
         zcx_excel .
     METHODS set_print_gridlines
@@ -662,7 +668,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA freeze_pane_cell_column TYPE zexcel_cell_column .
     DATA freeze_pane_cell_row TYPE zexcel_cell_row .
     DATA guid TYPE sysuuid_x16 .
-    DATA hyperlinks TYPE REF TO cl_object_collection .
+    DATA hyperlinks TYPE REF TO zcl_excel_collection .
     DATA lower_cell TYPE zexcel_s_cell_data .
     DATA mo_pagebreaks TYPE REF TO zcl_excel_worksheet_pagebreaks .
     DATA mt_row_outlines TYPE mty_ts_outlines_row .
@@ -672,7 +678,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA print_title_row_to TYPE zexcel_cell_row .
     DATA ranges TYPE REF TO zcl_excel_ranges .
     DATA rows TYPE REF TO zcl_excel_rows .
-    DATA tables TYPE REF TO cl_object_collection .
+    DATA tables TYPE REF TO zcl_excel_collection .
     DATA title TYPE zexcel_sheet_title VALUE 'Worksheet'. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     DATA upper_cell TYPE zexcel_s_cell_data .
     DATA mt_ignored_errors TYPE mty_th_ignored_errors.
@@ -897,7 +903,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lt_columns            TYPE zexcel_t_fieldcatalog,
       lv_maxcol             TYPE i,
       lv_maxrow             TYPE i,
-      lo_iterator           TYPE REF TO cl_object_collection_iterator,
+      lo_iterator           TYPE REF TO zcl_excel_collection_iterator,
       lo_style_cond         TYPE REF TO zcl_excel_style_cond,
       lo_curtable           TYPE REF TO zcl_excel_table.
     DATA: ls_column_formula TYPE mty_s_column_formula,
@@ -981,7 +987,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     lo_table->set_data( ir_data = ip_table ).
     lv_id = me->excel->get_next_table_id( ).
     lo_table->set_id( iv_id = lv_id ).
-*  lo_table->fieldcat = lt_field_catalog[].
 
     me->tables->add( lo_table ).
 
@@ -993,7 +998,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       " Due restrinction of new table object we cannot have two column with the same name
       " Check if a column with the same name exists, if exists add a counter
       " If no medium description is provided we try to use small or long
-*    lv_value = <ls_field_catalog>-scrtext_m.
       FIELD-SYMBOLS: <scrtxt1> TYPE any,
                      <scrtxt2> TYPE any,
                      <scrtxt3> TYPE any.
@@ -1348,7 +1352,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       END   OF t_auto_size.
     TYPES: tt_auto_size TYPE TABLE OF t_auto_size.
 
-    DATA: lo_column_iterator TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_column          TYPE REF TO zcl_excel_column.
 
     DATA: auto_size   TYPE flag.
@@ -1855,7 +1859,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD check_rtf.
 
     DATA: lo_style           TYPE REF TO zcl_excel_style,
-          lo_iterator        TYPE REF TO cl_object_collection_iterator,
+          lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lv_next_rtf_offset TYPE i,
           lv_tabix           TYPE i,
           lv_value           TYPE string,
@@ -1941,15 +1945,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     me->excel = ip_excel.
 
-*  CALL FUNCTION 'GUID_CREATE'                                    " del issue #379 - function is outdated in newer releases
-*    IMPORTING
-*      ev_guid_16 = me->guid.
     me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).        " ins issue #379 - replacement for outdated function call
 
     IF ip_title IS NOT INITIAL.
       lv_title = ip_title.
     ELSE.
-*    lv_title = me->guid.             " del issue #154 - Names of worksheets
       lv_title = me->generate_title( ). " ins issue #154 - Names of worksheets
     ENDIF.
 
@@ -2045,7 +2045,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD generate_title.
-    DATA: lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_worksheets_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet           TYPE REF TO zcl_excel_worksheet.
 
     DATA: t_titles    TYPE HASHED TABLE OF zexcel_sheet_title WITH UNIQUE KEY table_line,
@@ -2110,7 +2110,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     " Addition to solve issue #120, contribution by Stefan Schmöcker
-    DATA: style_iterator TYPE REF TO cl_object_collection_iterator,
+    DATA: style_iterator TYPE REF TO zcl_excel_collection_iterator,
           style          TYPE REF TO zcl_excel_style.
     IF ep_style IS SUPPLIED.
       CLEAR ep_style.
@@ -2171,7 +2171,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD get_comments.
     DATA: lo_comment  TYPE REF TO zcl_excel_comment,
-          lo_iterator TYPE REF TO cl_object_collection_iterator.
+          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
 
     CREATE OBJECT r_comments.
 
@@ -2288,7 +2288,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     me->update_dimension_range( ).
     IF upper_cell EQ lower_cell. "only one cell
       " Worksheet not filled
-*    IF upper_cell-cell_coords = '0'.
       IF upper_cell-cell_coords IS INITIAL.
         ep_dimension_range = 'A1'.
       ELSE.
@@ -2304,7 +2303,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD get_drawings.
 
     DATA: lo_drawing  TYPE REF TO zcl_excel_drawing,
-          lo_iterator TYPE REF TO cl_object_collection_iterator.
+          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
 
     CASE ip_type.
       WHEN zcl_excel_drawing=>type_image.
@@ -2558,7 +2557,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD get_style_cond.
 
-    DATA: lo_style_iterator TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_style_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_style_cond     TYPE REF TO zcl_excel_style_cond.
 
     lo_style_iterator = me->get_style_cond_iterator( ).
@@ -2799,14 +2798,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               EXPORTING
                 input  = ip_value
               IMPORTING
-*               LONG_TEXT  =
                 output = l_value
-*               SHORT_TEXT =
               EXCEPTIONS
                 OTHERS = 1.
             IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
             ELSE.
               TRY.
                   ep_value = l_value.
@@ -2882,7 +2877,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 
 
-    DATA: lo_range_iterator         TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_range_iterator         TYPE REF TO zcl_excel_collection_iterator,
           lo_range                  TYPE REF TO zcl_excel_range,
           lv_repeat_range_sheetname TYPE string,
           lv_repeat_range_col       TYPE string,
@@ -3277,7 +3272,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
-*  lv_style_guid = ip_style.
     lv_column = zcl_excel_common=>convert_column2int( ip_column ).
     IF ip_column_formula_id <> 0.
       check_cell_column_formula(
@@ -3420,12 +3414,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * Read table moved up, so that current style may be evaluated
-*  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
 
-*  READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
-*                                                                 cell_column = lv_column.
-*
-*  IF sy-subrc EQ 0.
     IF <fs_sheet_content> IS ASSIGNED.
 * End of change issue #152 - don't touch exisiting style if only value is passed
       <fs_sheet_content>-cell_value   = lv_value.
@@ -3442,15 +3431,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
       lv_row_alpha = ip_row.
-*    SHIFT lv_row_alpha RIGHT DELETING TRAILING space."del #152 - replaced with condense - should be faster
-*    SHIFT lv_row_alpha LEFT DELETING LEADING space.  "del #152 - replaced with condense - should be faster
       CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
       lv_col_alpha = zcl_excel_common=>convert_column2alpha( ip_column ).       " issue #155 - less restrictive typing for ip_column
       CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
-*    APPEND ls_sheet_content TO sheet_content.
-*    SORT sheet_content BY cell_row cell_column.
-      " me->update_dimension_range( ).
 
     ENDIF.
 
@@ -3874,12 +3858,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *              - Stefan Schmoecker,                          2012-12-02
 * changes: added additional check for ' as first character
 *--------------------------------------------------------------------*
-    DATA: lo_worksheets_iterator TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_worksheets_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet           TYPE REF TO zcl_excel_worksheet,
           errormessage           TYPE string,
           lv_rangesheetname_old  TYPE string,
           lv_rangesheetname_new  TYPE string,
-          lo_ranges_iterator     TYPE REF TO cl_object_collection_iterator,
+          lo_ranges_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_range               TYPE REF TO zcl_excel_range,
           lv_range_value         TYPE zexcel_range_value,
           lv_errormessage        TYPE string.                          " Can't pass '...'(abc) to exception-class

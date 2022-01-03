@@ -14,7 +14,7 @@
     PUBLIC SECTION.
       CLASS-METHODS create
         IMPORTING i_data TYPE xstring
-        RETURNING value(r_zip) TYPE REF TO lcl_zip_archive
+        RETURNING VALUE(r_zip) TYPE REF TO lcl_zip_archive
         RAISING zcx_excel.
       METHODS read REDEFINITION.
     PRIVATE SECTION.
@@ -31,7 +31,7 @@
       CLASS-METHODS create
         IMPORTING i_data TYPE xstring
                   i_alternate_zip_class TYPE seoclsname
-        RETURNING value(r_zip) TYPE REF TO lcl_zip_archive
+        RETURNING VALUE(r_zip) TYPE REF TO lcl_zip_archive
         RAISING zcx_excel.
       METHODS read REDEFINITION.
     PRIVATE SECTION.

@@ -55,7 +55,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_invalid           TYPE string.
 
     DATA:
-      lo_iterator  TYPE REF TO cl_object_collection_iterator,
+      lo_iterator  TYPE REF TO zcl_excel_collection_iterator,
       lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
     DATA:
@@ -279,7 +279,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
 * Local data
 *
     DATA:
-      lo_iterator                 TYPE REF TO cl_object_collection_iterator,
+      lo_iterator                 TYPE REF TO zcl_excel_collection_iterator,
       lo_table                    TYPE REF TO zcl_excel_table,
       lo_column_default           TYPE REF TO zcl_excel_column,
       lo_row_default              TYPE REF TO zcl_excel_row,
@@ -293,9 +293,9 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_freeze_cell_row          TYPE zexcel_cell_row,
       lv_freeze_cell_column       TYPE zexcel_cell_column,
       lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
-      lo_column_iterator          TYPE REF TO cl_object_collection_iterator,
+      lo_column_iterator          TYPE REF TO zcl_excel_collection_iterator,
       lo_column                   TYPE REF TO zcl_excel_column,
-      lo_row_iterator             TYPE REF TO cl_object_collection_iterator,
+      lo_row_iterator             TYPE REF TO zcl_excel_collection_iterator,
       lo_row                      TYPE REF TO zcl_excel_row,
       lv_relation_id              TYPE i VALUE 0,
       outline_level_row           TYPE i VALUE 0,
@@ -466,7 +466,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
     ENDWHILE.
 
 * Set column information (width, style, ...)
-*  IF lo_column_iterator->has_next( ) = abap_true.
     WHILE lo_column_iterator->has_next( ) = abap_true.
       lo_column ?= lo_column_iterator->get_next( ).
       IF lo_column->get_outline_level( ) > outline_level_col.
@@ -507,7 +506,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_column = zcl_excel_common=>convert_column2int( lo_column->get_column_index( ) ).
       INSERT lv_column INTO TABLE lts_sorted_columns.
     ENDWHILE.
-*  ENDIF.
 
 *
 * Now find all columns that were missing so far

@@ -148,7 +148,6 @@ START-OF-SELECTION.
   lo_style_link = lo_excel->add_new_style( ).
   lo_style_link->alignment->horizontal = zcl_excel_style_alignment=>c_horizontal_center.
   lo_style_link->alignment->vertical = zcl_excel_style_alignment=>c_vertical_center.
-*  lo_style_link->font->size   = 20.
   lv_style_link_guid = lo_style_link->get_guid( ).
 
   " Create image map                                                          " line 2
@@ -745,9 +744,6 @@ START-OF-SELECTION.
       output_length = lv_bytecount
     TABLES
       binary_tab    = lt_file_tab.
-*  " This method is only available on AS ABAP > 6.40
-*  lt_file_tab = cl_bcs_convert=>xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
   " Save the file
   cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = lv_bytecount

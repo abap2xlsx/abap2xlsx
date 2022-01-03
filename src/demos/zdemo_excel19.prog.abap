@@ -40,7 +40,6 @@ START-OF-SELECTION.
   lo_worksheet->set_cell( ip_row = 1 ip_column = 'A' ip_value = 'This is Sheet 3' ).
 
   IF p_noout EQ abap_false.
-    " lo_excel->set_active_sheet_index_by_name( data_sheet_name ).
     DATA: active_sheet_index TYPE zexcel_active_worksheet.
     active_sheet_index = lo_excel->get_active_sheet_index( ).
     WRITE: 'Sheet Index before: ', active_sheet_index.

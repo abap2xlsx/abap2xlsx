@@ -113,7 +113,6 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
         i_test           = '1'
         i_fcat_complete  = 'X'
       IMPORTING
-*       E_EDIT           =
         es_layout        = ws_layo
       CHANGING
         ct_fieldcat      = wt_fcat.
@@ -135,23 +134,15 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
           it_fieldcat_lvc_missing = 2
           OTHERS                  = 3.
       IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       ENDIF.
 
       CALL FUNCTION 'LT_VARIANT_LOAD'
         EXPORTING
-*         I_TOOL              = 'LT'
           i_tabname           = '1'
-*         I_TABNAME_SLAVE     =
           i_dialog            = ' '
           i_user_specific     = 'X'
-*         I_DEFAULT           = 'X'
-*         I_NO_REPTEXT_OPTIMIZE       =
-*         I_VIA_GRID          =
           i_fcat_complete     = 'X'
         IMPORTING
-*         E_EXIT              =
           et_fieldcat         = lt_kkblo_fieldcat
           et_sort             = lt_kkblo_sort
           et_filter           = lt_kkblo_filter
@@ -165,51 +156,25 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
           not_found           = 3
           OTHERS              = 4.
       IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       ENDIF.
 
       CALL FUNCTION 'LVC_TRANSFER_FROM_KKBLO'
         EXPORTING
-*         I_TECH_COMPLETE   =
-*         I_STRUCTURE_NAME  =
           it_fieldcat_kkblo = lt_kkblo_fieldcat
           it_sort_kkblo     = lt_kkblo_sort
           it_filter_kkblo   = lt_kkblo_filter
-*         IT_SPECIAL_GROUPS_KKBLO         =
-*         IT_FILTERED_ENTRIES_KKBLO       =
-*         IT_GROUPLEVELS_KKBLO            =
-*         IS_SUBTOT_OPTIONS_KKBLO         =
           is_layout_kkblo   = ls_kkblo_layout
-*         IS_REPREP_ID_KKBLO              =
-*         I_CALLBACK_PROGRAM_KKBLO        =
-*         IT_ADD_FIELDCAT   =
-*         IT_EXCLUDING_KKBLO              =
-*         IT_EXCEPT_QINFO_KKBLO           =
         IMPORTING
           et_fieldcat_lvc   = wt_fcat
           et_sort_lvc       = wt_sort
           et_filter_lvc     = wt_filt
-*         ET_SPECIAL_GROUPS_LVC           =
-*         ET_FILTER_INDEX_LVC             =
-*         ET_GROUPLEVELS_LVC              =
-*         ES_TOTAL_OPTIONS_LVC            =
           es_layout_lvc     = ws_layo
-*         ES_VARIANT_LVC    =
-*         E_VARIANT_SAVE_LVC              =
-*         ES_PRINT_INFO_LVC =
-*         ES_REPREP_LVC     =
-*         E_REPREP_ACTIVE_LVC             =
-*         ET_EXCLUDING_LVC  =
-*         ET_EXCEPT_QINFO_LVC             =
         TABLES
           it_data           = it_table
         EXCEPTIONS
           it_data_missing   = 1
           OTHERS            = 2.
       IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       ENDIF.
 
     ELSE.
