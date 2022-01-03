@@ -1781,7 +1781,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_worksheet               TYPE REF TO zcl_excel_worksheet,
       lo_range                   TYPE REF TO zcl_excel_range,
       lv_worksheet_title         TYPE zexcel_sheet_title,
-      lv_tabix                   TYPE sytabix,            " #235 - repeat rows/cols.  Needed to link defined name to correct worksheet
+      lv_tabix                   TYPE i,            " #235 - repeat rows/cols.  Needed to link defined name to correct worksheet
 
       ls_range                   TYPE t_range,
       lv_range_value             TYPE zexcel_range_value,

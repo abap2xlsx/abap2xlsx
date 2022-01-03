@@ -14,7 +14,7 @@ TYPES: BEGIN OF gty_icon,
        gtyt_icon TYPE STANDARD TABLE OF gty_icon WITH NON-UNIQUE DEFAULT KEY.
 
 DATA: lt_icon       TYPE gtyt_icon,
-      lv_row        TYPE sytabix,
+      lv_row        TYPE i,
       ls_wwwdatatab TYPE wwwdatatab,
       lt_mimedata   TYPE STANDARD TABLE OF w3mime WITH NON-UNIQUE DEFAULT KEY,
       lv_xstring    TYPE xstring.
