@@ -22,7 +22,7 @@ CLASS zcl_excel_worksheets DEFINITION
         VALUE(eo_worksheet) TYPE REF TO zcl_excel_worksheet .
     METHODS get_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO cl_object_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS is_empty
       RETURNING
         VALUE(is_empty) TYPE flag .
@@ -39,7 +39,7 @@ CLASS zcl_excel_worksheets DEFINITION
 *"* do not include other source files here!!!
   PRIVATE SECTION.
 
-    DATA worksheets TYPE REF TO cl_object_collection .
+    DATA worksheets TYPE REF TO zcl_excel_collection .
 ENDCLASS.
 
 

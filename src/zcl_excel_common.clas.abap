@@ -380,11 +380,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * Normalize input ( upper case , no gaps )
 *--------------------------------------------------------------------*
     lv_column_c = ip_column.
-*  TRANSLATE lv_column TO UPPER CASE.                       " Fix #246
     TRANSLATE lv_column_c TO UPPER CASE.                      " Fix #246
     CONDENSE lv_column_c NO-GAPS.
     IF lv_column_c EQ ''.
-*    lv_errormessage = 'Unable to interpret input as column'(003).
       MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
       zcx_excel=>raise_symsg( ).
     ENDIF.
@@ -425,7 +423,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
     lv_column_s = lv_column_c.
     IF lv_column_s CN sy-abcde.
-*    lv_errormessage = 'Unable to interpret input as column'(003).
       MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
       zcx_excel=>raise_symsg( ).
     ENDIF.
@@ -440,7 +437,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
       lv_column = lv_column_c.
       lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+0(1) ) MOD zcl_excel_common=>c_excel_col_module.
       IF lv_modulo < 1 OR lv_modulo > 26.
-*    lv_errormessage = 'Unable to interpret input as column'(003).
         MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
         zcx_excel=>raise_symsg( ).
       ENDIF.
@@ -452,7 +448,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
       CHECK lv_column+1(1) IS NOT INITIAL.      " No need to continue if string ended
       lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+1(1) ) MOD zcl_excel_common=>c_excel_col_module.
       IF lv_modulo < 1 OR lv_modulo > 26.
-*    lv_errormessage = 'Unable to interpret input as column'(003).
         MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
         zcx_excel=>raise_symsg( ).
       ENDIF.
@@ -464,7 +459,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
       CHECK lv_column+2(1) IS NOT INITIAL.      " No need to continue if string ended
       lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+2(1) ) MOD zcl_excel_common=>c_excel_col_module.
       IF lv_modulo < 1 OR lv_modulo > 26.
-*    lv_errormessage = 'Unable to interpret input as column'(003).
         MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
         zcx_excel=>raise_symsg( ).
       ENDIF.
@@ -1008,9 +1002,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
       CASE wa_component-type_kind.
         WHEN cl_abap_structdescr=>typekind_struct1 OR cl_abap_structdescr=>typekind_struct2.  " Structure --> use recursio
-*        IF flag_class = abap_true.
-** Only borders will be passed as unbound references.  But since we want to set a value we have to create an instance
-*        ENDIF.
           zcl_excel_common=>recursive_class_to_struct( EXPORTING i_source  = <attribute>
                                                        CHANGING  e_target  = <field>
                                                                  e_targetx = <fieldx> ).
@@ -1077,9 +1068,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
           zcl_excel_common=>recursive_struct_to_class( EXPORTING i_source  = <field>
                                                                  i_sourcex = <fieldx>
                                                        CHANGING  e_target  = <attribute> ).
-*      WHEN cl_abap_structdescr=>typekind_struct2.  " String
-*        CHECK <fieldx> = abap_true.  " Marked for change
-*        <attribute_s> = <field>.
         WHEN OTHERS.
           CHECK <fieldx> = abap_true.  " Marked for change
           <attribute> = <field>.
@@ -1433,8 +1421,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
               CONCATENATE lv_cur_form lv_absrow lv_trow1 INTO lv_cur_form.
             ELSEIF iv_shift_rows = 0.
               CONCATENATE lv_cur_form lv_trow1 INTO lv_cur_form.
-*        elseif lv_trow2 < 1.
-*          CONCATENATE lv_cur_form lc_cell_reference_error INTO lv_cur_form.
             ELSE.
               CONCATENATE lv_cur_form lv_trow2 INTO lv_cur_form.
             ENDIF.

@@ -267,10 +267,6 @@ ENDCLASS.
 
 CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
-  METHOD constructor.
-    me->ixml = cl_ixml=>create( ).
-  ENDMETHOD.
-
 
   METHOD add_1_val_child_node.
 
@@ -292,6 +288,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD constructor.
+    me->ixml = cl_ixml=>create( ).
+  ENDMETHOD.
+
+
   METHOD create.
 
 * Office 2007 file format is a cab of several xml files with extension .xlsx
@@ -299,8 +300,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lo_zip              TYPE REF TO cl_abap_zip,
           lo_worksheet        TYPE REF TO zcl_excel_worksheet,
           lo_active_worksheet TYPE REF TO zcl_excel_worksheet,
-          lo_iterator         TYPE REF TO cl_object_collection_iterator,
-          lo_nested_iterator  TYPE REF TO cl_object_collection_iterator,
+          lo_iterator         TYPE REF TO zcl_excel_collection_iterator,
+          lo_nested_iterator  TYPE REF TO zcl_excel_collection_iterator,
           lo_table            TYPE REF TO zcl_excel_table,
           lo_drawing          TYPE REF TO zcl_excel_drawing,
           lo_drawings         TYPE REF TO zcl_excel_drawings,
@@ -376,7 +377,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 **********************************************************************
 * STEP 8: Add xl/workbook.xml to zip
-*  lv_content = me->create_xl_styles_static( ).
     lv_content = me->create_xl_styles( ).
     lo_zip->add( name    = me->c_xl_styles
                  content = lv_content ).
@@ -512,14 +512,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_drawing ?= lo_iterator->get_next( ).
-*    IF lo_drawing->get_type( ) NE zcl_excel_drawing=>type_image_header_footer.
 
       lv_content = lo_drawing->get_media( ).
       lv_value = lo_drawing->get_media_name( ).
       CONCATENATE 'xl/media/' lv_value INTO lv_value.
       lo_zip->add( name    = lv_value
                    content = lv_content ).
-*    ENDIF.
     ENDWHILE.
 
 **********************************************************************
@@ -602,8 +600,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_root    TYPE REF TO if_ixml_element,
           lo_element         TYPE REF TO if_ixml_element,
           lo_worksheet       TYPE REF TO zcl_excel_worksheet,
-          lo_iterator        TYPE REF TO cl_object_collection_iterator,
-          lo_nested_iterator TYPE REF TO cl_object_collection_iterator,
+          lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
+          lo_nested_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_table           TYPE REF TO zcl_excel_table.
 
     DATA: lv_worksheets_num        TYPE i,
@@ -884,7 +882,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_sub_element_variant TYPE REF TO if_ixml_element,
           lo_sub_element_lpstr   TYPE REF TO if_ixml_element,
           lo_sub_element_i4      TYPE REF TO if_ixml_element,
-          lo_iterator            TYPE REF TO cl_object_collection_iterator,
+          lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet           TYPE REF TO zcl_excel_worksheet.
 
     DATA: lv_value                TYPE string.
@@ -1145,8 +1143,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CONVERT TIME STAMP excel->zif_excel_book_properties~created TIME ZONE sy-zonlo INTO DATE lv_date TIME lv_time.
     CONCATENATE lv_date lv_time INTO lv_value RESPECTING BLANKS.
     REPLACE ALL OCCURRENCES OF REGEX '([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})' IN lv_value WITH '$1-$2-$3T$4:$5:$6Z'.
-* lv_value = excel->zif_excel_book_properties~created.
-*  lv_value = '2010-07-04T14:58:53Z'.
     lo_element->set_value( value = lv_value ).
     lo_element_root->append_child( new_child = lo_element ).
 
@@ -1160,8 +1156,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CONVERT TIME STAMP excel->zif_excel_book_properties~modified TIME ZONE sy-zonlo INTO DATE lv_date TIME lv_time.
     CONCATENATE lv_date lv_time INTO lv_value RESPECTING BLANKS.
     REPLACE ALL OCCURRENCES OF REGEX '([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})' IN lv_value WITH '$1-$2-$3T$4:$5:$6Z'.
-*  lv_value = excel->zif_excel_book_properties~modified.
-*  lv_value = '2010-07-04T14:58:53Z'.
     lo_element->set_value( value = lv_value ).
     lo_element_root->append_child( new_child = lo_element ).
 
@@ -2092,12 +2086,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                      parent = lo_element3 ).
               lo_element4->set_attribute_ns( name  = 'val'
                                              value = ls_ax-axpos ).
-*            lo_element4 = lo_document->create_simple_element( name = lc_xml_node_numfmt
-*                                                   parent = lo_element3 ).
-*            lo_element4->set_attribute_ns( name  = 'formatCode'
-*                                           value = ls_ax-formatcode ).
-*            lo_element4->set_attribute_ns( name  = 'sourceLinked'
-*                                           value = ls_ax-sourcelinked ).
               lo_element4 = lo_document->create_simple_element( name = lc_xml_node_majortickmark
                                                      parent = lo_element3 ).
               lo_element4->set_attribute_ns( name  = 'val'
@@ -2347,7 +2335,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *       lo_element_charset     TYPE REF TO if_ixml_element,
           lo_element_family      TYPE REF TO if_ixml_element,
           lo_element_t           TYPE REF TO if_ixml_element,
-          lo_iterator            TYPE REF TO cl_object_collection_iterator,
+          lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_comments            TYPE REF TO zcl_excel_comments,
           lo_comment             TYPE REF TO zcl_excel_comment.
     DATA: lv_rel_id TYPE i,
@@ -2448,7 +2436,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lo_document           TYPE REF TO if_ixml_document,
           lo_element_root       TYPE REF TO if_ixml_element,
           lo_element_cellanchor TYPE REF TO if_ixml_element,
-          lo_iterator           TYPE REF TO cl_object_collection_iterator,
+          lo_iterator           TYPE REF TO zcl_excel_collection_iterator,
           lo_drawings           TYPE REF TO zcl_excel_drawings,
           lo_drawing            TYPE REF TO zcl_excel_drawing.
     DATA: lv_rel_id            TYPE i.
@@ -2510,8 +2498,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
           lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
 
-    DATA: lo_iterator     TYPE REF TO cl_object_collection_iterator,
-          lo_drawing      TYPE REF TO zcl_excel_drawing,
+    DATA: lo_drawing      TYPE REF TO zcl_excel_drawing,
           lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
@@ -2545,7 +2532,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lt_drawings = io_worksheet->get_header_footer_drawings( ).
     LOOP AT lt_drawings ASSIGNING <fs_drawings>. "Header or footer image exist
       ADD 1 TO lv_relation_id.
-*    lv_value = lv_relation_id.
       lv_value = <fs_drawings>-drawing->get_index( ).
       READ TABLE lt_temp WITH KEY str = lv_value TRANSPORTING NO FIELDS.
       IF sy-subrc NE 0.
@@ -2557,7 +2543,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
                                                            parent = lo_document ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_id
-*                                    value = 'LOGO' ).
                                       value = lv_value ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_type
                                       value = lc_xml_node_rid_image_tp ).
@@ -2565,7 +2550,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         lv_value = '../media/#'.
         REPLACE '#' IN lv_value WITH <fs_drawings>-drawing->get_media_name( ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_target
-*                                    value = '../media/LOGO.png' ).
                                       value = lv_value ).
         lo_element_root->append_child( new_child = lo_element ).
       ENDIF.
@@ -2595,7 +2579,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
-          lo_iterator     TYPE REF TO cl_object_collection_iterator,
+          lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_drawings     TYPE REF TO zcl_excel_drawings,
           lo_drawing      TYPE REF TO zcl_excel_drawing.
 
@@ -2678,12 +2662,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       EXPORTING
         stream = ld_stream.
 
-*  CALL FUNCTION 'CRM_IC_XML_STRING2XSTRING'
-*    EXPORTING
-*      instring   = ld_stream
-*    IMPORTING
-*      outxstring = ep_content.
-
     CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
       EXPORTING
         text   = ld_stream
@@ -2714,7 +2692,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
           lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
 
-    DATA: lo_iterator     TYPE REF TO cl_object_collection_iterator,
+    DATA: lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_drawing      TYPE REF TO zcl_excel_drawing,
           lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
@@ -3156,7 +3134,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_autofill      TYPE REF TO if_ixml_element,
           lo_element_row           TYPE REF TO if_ixml_element,
           lo_element_column        TYPE REF TO if_ixml_element,
-          lo_iterator              TYPE REF TO cl_object_collection_iterator,
+          lo_iterator              TYPE REF TO zcl_excel_collection_iterator,
           lo_comments              TYPE REF TO zcl_excel_comments,
           lo_comment               TYPE REF TO zcl_excel_comment,
           lv_row                   TYPE zexcel_cell_row,
@@ -3560,7 +3538,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_sub_element  TYPE REF TO if_ixml_element,
           lo_sub2_element TYPE REF TO if_ixml_element,
           lo_font_element TYPE REF TO if_ixml_element,
-          lo_iterator     TYPE REF TO cl_object_collection_iterator,
+          lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet    TYPE REF TO zcl_excel_worksheet.
 
     DATA: lt_cell_data       TYPE zexcel_t_cell_data_unsorted,
@@ -3618,7 +3596,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CLEAR lv_count.
     LOOP AT lt_cell_data ASSIGNING <fs_sheet_content> WHERE data_type = 's'.
-*    lv_sytabix = sy-tabix - 1.
       lv_sytabix = lv_count.
       ls_shared_string-string_no = lv_sytabix.
       ls_shared_string-string_value = <fs_sheet_content>-cell_value.
@@ -3893,7 +3870,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_2       TYPE REF TO if_ixml_element,
           lo_element_3       TYPE REF TO if_ixml_element,
           lo_element_4       TYPE REF TO if_ixml_element,
-          lo_iterator        TYPE REF TO cl_object_collection_iterator,
+          lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lo_style_cond      TYPE REF TO zcl_excel_style_cond,
           lo_data_validation TYPE REF TO zcl_excel_data_validation,
           lo_table           TYPE REF TO zcl_excel_table,
@@ -3924,9 +3901,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_freeze_cell_row          TYPE zexcel_cell_row,
           lv_freeze_cell_column       TYPE zexcel_cell_column,
           lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
-          lo_column_iterator          TYPE REF TO cl_object_collection_iterator,
+          lo_column_iterator          TYPE REF TO zcl_excel_collection_iterator,
           lo_column                   TYPE REF TO zcl_excel_column,
-          lo_row_iterator             TYPE REF TO cl_object_collection_iterator,
+          lo_row_iterator             TYPE REF TO zcl_excel_collection_iterator,
           ls_style_cond_mapping       TYPE zexcel_s_styles_cond_mapping,
           lv_relation_id              TYPE i VALUE 0,
           outline_level_col           TYPE i VALUE 0,
@@ -5476,73 +5453,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD create_xl_sheet_ignored_errors.
-    DATA: lo_element        TYPE REF TO if_ixml_element,
-          lo_element2       TYPE REF TO if_ixml_element,
-          lt_ignored_errors TYPE zcl_excel_worksheet=>mty_th_ignored_errors.
-    FIELD-SYMBOLS: <ls_ignored_errors> TYPE zcl_excel_worksheet=>mty_s_ignored_errors.
-
-    lt_ignored_errors = io_worksheet->get_ignored_errors( ).
-
-    IF lt_ignored_errors IS NOT INITIAL.
-      lo_element = io_document->create_simple_element( name   = 'ignoredErrors'
-                                                       parent = io_document ).
-
-
-      LOOP AT lt_ignored_errors ASSIGNING <ls_ignored_errors>.
-
-        lo_element2 = io_document->create_simple_element( name   = 'ignoredError'
-                                                          parent = io_document ).
-
-        lo_element2->set_attribute_ns( name  = 'sqref'
-                                       value = <ls_ignored_errors>-cell_coords ).
-
-        IF <ls_ignored_errors>-eval_error = abap_true.
-          lo_element2->set_attribute_ns( name  = 'evalError'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-two_digit_text_year = abap_true.
-          lo_element2->set_attribute_ns( name  = 'twoDigitTextYear'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-number_stored_as_text = abap_true.
-          lo_element2->set_attribute_ns( name  = 'numberStoredAsText'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-formula = abap_true.
-          lo_element2->set_attribute_ns( name  = 'formula'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-formula_range = abap_true.
-          lo_element2->set_attribute_ns( name  = 'formulaRange'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-unlocked_formula = abap_true.
-          lo_element2->set_attribute_ns( name  = 'unlockedFormula'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-empty_cell_reference = abap_true.
-          lo_element2->set_attribute_ns( name  = 'emptyCellReference'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-list_data_validation = abap_true.
-          lo_element2->set_attribute_ns( name  = 'listDataValidation'
-                                         value = '1' ).
-        ENDIF.
-        IF <ls_ignored_errors>-calculated_column = abap_true.
-          lo_element2->set_attribute_ns( name  = 'calculatedColumn'
-                                         value = '1' ).
-        ENDIF.
-
-        lo_element->append_child( lo_element2 ).
-
-      ENDLOOP.
-
-      io_element_root->append_child( lo_element ).
-
-    ENDIF.
-
-  ENDMETHOD.
   METHOD create_xl_sheet_column_formula.
 
     TYPES: ls_column_formula_used     TYPE mty_column_formula_used,
@@ -5615,6 +5525,75 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
     ELSE.
       eo_element->set_value( value = lv_value ).
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD create_xl_sheet_ignored_errors.
+    DATA: lo_element        TYPE REF TO if_ixml_element,
+          lo_element2       TYPE REF TO if_ixml_element,
+          lt_ignored_errors TYPE zcl_excel_worksheet=>mty_th_ignored_errors.
+    FIELD-SYMBOLS: <ls_ignored_errors> TYPE zcl_excel_worksheet=>mty_s_ignored_errors.
+
+    lt_ignored_errors = io_worksheet->get_ignored_errors( ).
+
+    IF lt_ignored_errors IS NOT INITIAL.
+      lo_element = io_document->create_simple_element( name   = 'ignoredErrors'
+                                                       parent = io_document ).
+
+
+      LOOP AT lt_ignored_errors ASSIGNING <ls_ignored_errors>.
+
+        lo_element2 = io_document->create_simple_element( name   = 'ignoredError'
+                                                          parent = io_document ).
+
+        lo_element2->set_attribute_ns( name  = 'sqref'
+                                       value = <ls_ignored_errors>-cell_coords ).
+
+        IF <ls_ignored_errors>-eval_error = abap_true.
+          lo_element2->set_attribute_ns( name  = 'evalError'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-two_digit_text_year = abap_true.
+          lo_element2->set_attribute_ns( name  = 'twoDigitTextYear'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-number_stored_as_text = abap_true.
+          lo_element2->set_attribute_ns( name  = 'numberStoredAsText'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-formula = abap_true.
+          lo_element2->set_attribute_ns( name  = 'formula'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-formula_range = abap_true.
+          lo_element2->set_attribute_ns( name  = 'formulaRange'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-unlocked_formula = abap_true.
+          lo_element2->set_attribute_ns( name  = 'unlockedFormula'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-empty_cell_reference = abap_true.
+          lo_element2->set_attribute_ns( name  = 'emptyCellReference'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-list_data_validation = abap_true.
+          lo_element2->set_attribute_ns( name  = 'listDataValidation'
+                                         value = '1' ).
+        ENDIF.
+        IF <ls_ignored_errors>-calculated_column = abap_true.
+          lo_element2->set_attribute_ns( name  = 'calculatedColumn'
+                                         value = '1' ).
+        ENDIF.
+
+        lo_element->append_child( lo_element2 ).
+
+      ENDLOOP.
+
+      io_element_root->append_child( lo_element ).
+
     ENDIF.
 
   ENDMETHOD.
@@ -5722,7 +5701,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
-          lo_iterator     TYPE REF TO cl_object_collection_iterator,
+          lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_table        TYPE REF TO zcl_excel_table,
           lo_link         TYPE REF TO zcl_excel_hyperlink.
 
@@ -5907,30 +5886,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element_root->append_child( new_child = lo_element ).
     ENDWHILE.
 
-*  IF io_worksheet->get_print_settings( )->is_empty( ) = abap_false.
-*    ADD 1 TO lv_relation_id.
-*    lv_value = lv_relation_id.
-*    CONDENSE lv_value.
-*    CONCATENATE 'rId' lv_value INTO lv_value.
-*
-*    lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
-*                                                     parent = lo_document ).
-*    lo_element->set_attribute_ns( name  = lc_xml_attr_id
-*                                  value = lv_value ).
-*    lo_element->set_attribute_ns( name  = lc_xml_attr_type
-*                                  value = lc_xml_node_rid_printer_tp ).
-*
-*    lv_index_str = iv_printer_index.
-*    CONDENSE lv_index_str NO-GAPS.
-*    MOVE me->c_xl_printersettings TO lv_value.
-*    REPLACE 'xl' WITH '..' INTO lv_value.
-*    REPLACE '#' WITH lv_index_str INTO lv_value.
-*    lo_element->set_attribute_ns( name  = lc_xml_attr_target
-*                                  value = lv_value ).
-*
-*    lo_element_root->append_child( new_child = lo_element ).
-*  ENDIF.
-
 **********************************************************************
 * STEP 5: Create xstring stream
     ep_content = render_xml_document( lo_document ).
@@ -5967,7 +5922,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ls_values              TYPE zexcel_s_autofilter_values,
           ls_area                TYPE zexcel_s_autofilter_area,
 
-          lo_iterator            TYPE REF TO cl_object_collection_iterator,
+          lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_table               TYPE REF TO zcl_excel_table,
           lt_table_areas         TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
           ls_table_area          LIKE LINE OF lt_table_areas,
@@ -5980,7 +5935,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_last_row            TYPE i,
 
 *        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
-          lo_row_iterator        TYPE REF TO cl_object_collection_iterator,
+          lo_row_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lo_row                 TYPE REF TO zcl_excel_row,
           lo_row_empty           TYPE REF TO zcl_excel_row,
           lts_row_outlines       TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
@@ -6008,7 +5963,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     " Get column count
     col_count      = io_worksheet->get_highest_column( ).
     " Get autofilter
-*lv_guid        = io_worksheet->get_guid( ) .
     lo_autofilters = excel->get_autofilters_reference( ).
     lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
     IF lo_autofilter IS BOUND.
@@ -6129,9 +6083,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                l_autofilter_hidden = abap_true.
               lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
             ENDIF.
-*          lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-*          CONCATENATE lv_xstring lv_xstring_partial
-*              INTO lv_xstring IN BYTE MODE.
             rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
           ENDIF.
           " Add new row
@@ -6231,8 +6182,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *issue #220 - If cell in tables-area don't use default from row or column or sheet - Coding 3 - end
 *--------------------------------------------------------------------*
       ENDIF.
-*  IF <ls_sheet_content>-cell_style IS NOT INITIAL.
-*    READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = <ls_sheet_content>-cell_style.
       IF lv_style_guid IS NOT INITIAL.
         READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
 *end of change issue #157 - allow column cellstyles
@@ -6315,9 +6264,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
          l_autofilter_hidden = abap_true.
         lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
       ENDIF.
-*    lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-*    CONCATENATE lv_xstring lv_xstring_partial
-*        INTO lv_xstring IN BYTE MODE.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
     ENDIF.
     DELETE io_worksheet->sheet_content WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries
@@ -6435,8 +6381,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element         TYPE REF TO if_ixml_element,
           lo_sub_element     TYPE REF TO if_ixml_element,
           lo_sub_element_2   TYPE REF TO if_ixml_element,
-          lo_iterator        TYPE REF TO cl_object_collection_iterator,
-          lo_iterator2       TYPE REF TO cl_object_collection_iterator,
+          lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
+          lo_iterator2       TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet       TYPE REF TO zcl_excel_worksheet,
           lo_style_cond      TYPE REF TO zcl_excel_style_cond,
           lo_style           TYPE REF TO zcl_excel_style.
@@ -6612,8 +6558,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ls_cellxfs-applynumberformat    = 1.
         IF ls_numfmt-numfmt EQ zcl_excel_style_number_format=>c_format_date_std.
           ls_cellxfs-numfmtid = 14.
-*      elseif ls_numfmt-NUMFMT eq 'STD_NDEC'.
-*        ls_cellxfs-numfmtid = 2.
         ENDIF.
       ENDIF.
       "---
@@ -6661,7 +6605,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element_numfmt->set_attribute_ns( name  = lc_xml_attr_numfmtid
                                         value = lv_value ).
       lv_value = ls_numfmt-numfmt.
-*    REPLACE ALL OCCURRENCES OF '.' IN lv_value WITH '\.'.
       lo_element_numfmt->set_attribute_ns( name  = lc_xml_attr_formatcode
                                            value = lv_value ).
       lo_element_numfmts->append_child( new_child = lo_element_numfmt ).
@@ -7472,7 +7415,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_element = lo_document->create_simple_element( name   = 'tableColumns'
                                                      parent = lo_document ).
 
-*  lo_columns = io_table->get_columns( ).
     LOOP AT io_table->fieldcat INTO ls_fieldcat WHERE dynpfld = abap_true.
       ADD 1 TO lv_num_columns.
     ENDLOOP.
@@ -7641,8 +7583,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element        TYPE REF TO if_ixml_element,
           lo_element_range  TYPE REF TO if_ixml_element,
           lo_sub_element    TYPE REF TO if_ixml_element,
-          lo_iterator       TYPE REF TO cl_object_collection_iterator,
-          lo_iterator_range TYPE REF TO cl_object_collection_iterator,
+          lo_iterator       TYPE REF TO zcl_excel_collection_iterator,
+          lo_iterator_range TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet      TYPE REF TO zcl_excel_worksheet,
           lo_range          TYPE REF TO zcl_excel_range,
           lo_autofilters    TYPE REF TO zcl_excel_autofilters,
@@ -7684,8 +7626,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     " fileVersion node
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_workbookpr
                                                      parent = lo_document ).
-*  lo_element->set_attribute_ns( name  = lc_xml_attr_themeversion
-*                                value = '124226' ).
     lo_element_root->append_child( new_child = lo_element ).
 
     " workbookProtection node
@@ -7889,6 +7829,16 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD create_xml_document.
+    DATA lo_encoding TYPE REF TO if_ixml_encoding.
+    lo_encoding = me->ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
+                                             character_set = 'utf-8' ).
+    ro_document = me->ixml->create_document( ).
+    ro_document->set_encoding( lo_encoding ).
+    ro_document->set_standalone( abap_true ).
+  ENDMETHOD.
+
+
   METHOD flag2bool.
 
 
@@ -7905,7 +7855,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     DATA ls_shared_string TYPE zexcel_s_shared_string.
 
-*  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
     IF it_rtf IS INITIAL.
       READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
       ep_index = ls_shared_string-string_no.
@@ -7919,6 +7868,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
+
 
   METHOD is_formula_shareable.
     DATA: lv_test_shared TYPE string.
@@ -7934,6 +7884,74 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
     ENDIF.
   ENDMETHOD.
+
+
+  METHOD render_xml_document.
+    DATA lo_streamfactory TYPE REF TO if_ixml_stream_factory.
+    DATA lo_ostream       TYPE REF TO if_ixml_ostream.
+    DATA lo_renderer      TYPE REF TO if_ixml_renderer.
+    DATA lv_string        TYPE string.
+
+    " So that the rendering of io_document to a XML text in UTF-8 XSTRING works for all Unicode characters (Chinese,
+    " emoticons, etc.) the method CREATE_OSTREAM_CSTRING must be used instead of CREATE_OSTREAM_XSTRING as explained
+    " in note 2922674 below (original there: https://launchpad.support.sap.com/#/notes/2922674), and then the STRING
+    " variable can be converted into UTF-8.
+    "
+    " Excerpt from Note 2922674 - Support for Unicode Characters U+10000 to U+10FFFF in the iXML kernel library / ABAP package SIXML.
+    "
+    "   You are running a unicode system with SAP Netweaver / SAP_BASIS release equal or lower than 7.51.
+    "
+    "   Some functions in the iXML kernel library / ABAP package SIXML does not fully or incorrectly support unicode
+    "   characters of the supplementary planes. This is caused by using UCS-2 in codepage conversion functions.
+    "   Therefore, when reading from iXML input steams, the characters from the supplementary planes, that are not
+    "   supported by UCS-2, might be replaced by the character #. When writing to iXML output streams, UTF-16 surrogate
+    "   pairs, representing characters from the supplementary planes, might be incorrectly encoded in UTF-8.
+    "
+    "   The characters incorrectly encoded in UTF-8, might be accepted as input for the iXML parser or external parsers,
+    "   but might also be rejected.
+    "
+    "   Support for unicode characters of the supplementary planes was introduced for SAP_BASIS 7.51 or lower with note
+    "   2220720, but later withdrawn with note 2346627 for functional issues.
+    "
+    "   Characters of the supplementary planes are supported with ABAP Platform 1709 / SAP_BASIS 7.52 and higher.
+    "
+    "   Please note, that the iXML runtime behaves like the ABAP runtime concerning the handling of unicode characters of
+    "   the supplementary planes. In iXML and ABAP, these characters have length 2 (as returned by ABAP build-in function
+    "   STRLEN), and string processing functions like SUBSTRING might split these characters into 2 invalid characters
+    "   with length 1. These invalid characters are commonly referred to as broken surrogate pairs.
+    "
+    "   A workaround for the incorrect UTF-8 encoding in SAP_BASIS 7.51 or lower is to render the document to an ABAP
+    "   variable with type STRING using a output stream created with factory method IF_IXML_STREAM_FACTORY=>CREATE_OSTREAM_CSTRING
+    "   and then to convert the STRING variable to UTF-8 using method CL_ABAP_CODEPAGE=>CONVERT_TO.
+
+    " 1) RENDER TO XML STRING
+    lo_streamfactory = me->ixml->create_stream_factory( ).
+    lo_ostream = lo_streamfactory->create_ostream_cstring( string = lv_string ).
+    lo_renderer = me->ixml->create_renderer( ostream  = lo_ostream document = io_document ).
+    lo_renderer->render( ).
+
+    " 2) CONVERT IT TO UTF-8
+    "-----------------
+    " The beginning of the XML string has these 57 characters:
+    "   X<?xml version="1.0" encoding="utf-16" standalone="yes"?>
+    "   (where "X" is the special character corresponding to the utf-16 BOM, hexadecimal FFFE or FEFF,
+    "   but there's no "X" in non-Unicode SAP systems)
+    " The encoding must be removed otherwise Excel would fail to decode correctly the UTF-8 XML.
+    " For a better performance, it's assumed that "encoding" is in the first 100 characters.
+    IF strlen( lv_string ) < 100.
+      REPLACE REGEX 'encoding="[^"]+"' IN lv_string WITH ``.
+    ELSE.
+      REPLACE REGEX 'encoding="[^"]+"' IN SECTION LENGTH 100 OF lv_string WITH ``.
+    ENDIF.
+    " Convert XML text to UTF-8 (NB: if 2 first bytes are the UTF-16 BOM, they are converted into 3 bytes of UTF-8 BOM)
+    ep_content = cl_abap_codepage=>convert_to( source = lv_string ).
+    " Add the UTF-8 Byte Order Mark if missing (NB: that serves as substitute of "encoding")
+    IF xstrlen( ep_content ) >= 3 AND ep_content(3) <> cl_abap_char_utilities=>byte_order_mark_utf8.
+      CONCATENATE cl_abap_char_utilities=>byte_order_mark_utf8 ep_content INTO ep_content IN BYTE MODE.
+    ENDIF.
+
+  ENDMETHOD.
+
 
   METHOD set_vml_shape_footer.
 
@@ -8157,7 +8175,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ld_7           TYPE string,
 
       lv_relation_id TYPE i,
-      lo_iterator    TYPE REF TO cl_object_collection_iterator,
+      lo_iterator    TYPE REF TO zcl_excel_collection_iterator,
       lo_worksheet   TYPE REF TO zcl_excel_worksheet,
       ls_odd_header  TYPE zexcel_s_worksheet_head_foot,
       ls_odd_footer  TYPE zexcel_s_worksheet_head_foot,
@@ -8218,86 +8236,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD create_xml_document.
-    DATA lo_encoding TYPE REF TO if_ixml_encoding.
-    lo_encoding = me->ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                             character_set = 'utf-8' ).
-    ro_document = me->ixml->create_document( ).
-    ro_document->set_encoding( lo_encoding ).
-    ro_document->set_standalone( abap_true ).
-  ENDMETHOD.
-
-  METHOD render_xml_document.
-    DATA lo_streamfactory TYPE REF TO if_ixml_stream_factory.
-    DATA lo_ostream       TYPE REF TO if_ixml_ostream.
-    DATA lo_renderer      TYPE REF TO if_ixml_renderer.
-    DATA lv_string        TYPE string.
-
-    " So that the rendering of io_document to a XML text in UTF-8 XSTRING works for all Unicode characters (Chinese,
-    " emoticons, etc.) the method CREATE_OSTREAM_CSTRING must be used instead of CREATE_OSTREAM_XSTRING as explained
-    " in note 2922674 below (original there: https://launchpad.support.sap.com/#/notes/2922674), and then the STRING
-    " variable can be converted into UTF-8.
-    "
-    " Excerpt from Note 2922674 - Support for Unicode Characters U+10000 to U+10FFFF in the iXML kernel library / ABAP package SIXML.
-    "
-    "   You are running a unicode system with SAP Netweaver / SAP_BASIS release equal or lower than 7.51.
-    "
-    "   Some functions in the iXML kernel library / ABAP package SIXML does not fully or incorrectly support unicode
-    "   characters of the supplementary planes. This is caused by using UCS-2 in codepage conversion functions.
-    "   Therefore, when reading from iXML input steams, the characters from the supplementary planes, that are not
-    "   supported by UCS-2, might be replaced by the character #. When writing to iXML output streams, UTF-16 surrogate
-    "   pairs, representing characters from the supplementary planes, might be incorrectly encoded in UTF-8.
-    "
-    "   The characters incorrectly encoded in UTF-8, might be accepted as input for the iXML parser or external parsers,
-    "   but might also be rejected.
-    "
-    "   Support for unicode characters of the supplementary planes was introduced for SAP_BASIS 7.51 or lower with note
-    "   2220720, but later withdrawn with note 2346627 for functional issues.
-    "
-    "   Characters of the supplementary planes are supported with ABAP Platform 1709 / SAP_BASIS 7.52 and higher.
-    "
-    "   Please note, that the iXML runtime behaves like the ABAP runtime concerning the handling of unicode characters of
-    "   the supplementary planes. In iXML and ABAP, these characters have length 2 (as returned by ABAP build-in function
-    "   STRLEN), and string processing functions like SUBSTRING might split these characters into 2 invalid characters
-    "   with length 1. These invalid characters are commonly referred to as broken surrogate pairs.
-    "
-    "   A workaround for the incorrect UTF-8 encoding in SAP_BASIS 7.51 or lower is to render the document to an ABAP
-    "   variable with type STRING using a output stream created with factory method IF_IXML_STREAM_FACTORY=>CREATE_OSTREAM_CSTRING
-    "   and then to convert the STRING variable to UTF-8 using method CL_ABAP_CODEPAGE=>CONVERT_TO.
-
-    " 1) RENDER TO XML STRING
-    lo_streamfactory = me->ixml->create_stream_factory( ).
-    lo_ostream = lo_streamfactory->create_ostream_cstring( string = lv_string ).
-    lo_renderer = me->ixml->create_renderer( ostream  = lo_ostream document = io_document ).
-    lo_renderer->render( ).
-
-    " 2) CONVERT IT TO UTF-8
-    "-----------------
-    " The beginning of the XML string has these 57 characters:
-    "   X<?xml version="1.0" encoding="utf-16" standalone="yes"?>
-    "   (where "X" is the special character corresponding to the utf-16 BOM, hexadecimal FFFE or FEFF,
-    "   but there's no "X" in non-Unicode SAP systems)
-    " The encoding must be removed otherwise Excel would fail to decode correctly the UTF-8 XML.
-    " For a better performance, it's assumed that "encoding" is in the first 100 characters.
-    IF strlen( lv_string ) < 100.
-      REPLACE REGEX 'encoding="[^"]+"' IN lv_string WITH ``.
-    ELSE.
-      REPLACE REGEX 'encoding="[^"]+"' IN SECTION LENGTH 100 OF lv_string WITH ``.
-    ENDIF.
-    " Convert XML text to UTF-8 (NB: if 2 first bytes are the UTF-16 BOM, they are converted into 3 bytes of UTF-8 BOM)
-    ep_content = cl_abap_codepage=>convert_to( source = lv_string ).
-    " Add the UTF-8 Byte Order Mark if missing (NB: that serves as substitute of "encoding")
-    IF xstrlen( ep_content ) >= 3 AND ep_content(3) <> cl_abap_char_utilities=>byte_order_mark_utf8.
-      CONCATENATE cl_abap_char_utilities=>byte_order_mark_utf8 ep_content INTO ep_content IN BYTE MODE.
-    ENDIF.
-
-  ENDMETHOD.
-
 
   METHOD zif_excel_writer~write_file.
     me->excel = io_excel.
 
     ep_file = me->create( ).
   ENDMETHOD.
-
 ENDCLASS.

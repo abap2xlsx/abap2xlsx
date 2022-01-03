@@ -3,12 +3,12 @@
 *"* components in the private section
 
 * Signal for "Not found"
-class lcx_not_found definition inheriting from cx_static_check.
-  public section.
-    data error type string.
-    methods constructor
-      importing error type string
-                textid type sotr_conc optional
-                previous type ref to cx_root optional.
-    methods if_message~get_text redefinition.
-endclass.
+CLASS lcx_not_found DEFINITION INHERITING FROM cx_static_check.
+  PUBLIC SECTION.
+    DATA error TYPE string.
+    METHODS constructor
+      IMPORTING error    TYPE string
+                textid   TYPE sotr_conc OPTIONAL
+                previous TYPE REF TO cx_root OPTIONAL.
+    METHODS if_message~get_text REDEFINITION.
+ENDCLASS.

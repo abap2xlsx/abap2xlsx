@@ -66,7 +66,6 @@ START-OF-SELECTION.
   zcl_excel_writer_csv=>set_endofline( ip_value = cl_abap_char_utilities=>cr_lf ).
 
   zcl_excel_writer_csv=>set_active_sheet_index( i_active_worksheet = 2 ).
-*  zcl_excel_writer_csv=>set_active_sheet_index_by_name(  I_WORKSHEET_NAME = 'Sheet2' ).
 
   lv_file = lo_excel_writer->write_file( lo_excel ).
 
@@ -78,9 +77,6 @@ START-OF-SELECTION.
       output_length = lv_bytecount
     TABLES
       binary_tab    = lt_file_tab.
-*  " This method is only available on AS ABAP > 6.40
-*  lt_file_tab = cl_bcs_convert=>xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
   " Save the file
   REPLACE FIRST OCCURRENCE OF '.csv'  IN lv_full_path WITH '_Sheet2.csv'.
@@ -89,7 +85,6 @@ START-OF-SELECTION.
                                                     filetype     = 'BIN'
                                            CHANGING data_tab     = lt_file_tab ).
 
-*  zcl_excel_writer_csv=>set_active_sheet_index( i_active_worksheet = 2 ).
   zcl_excel_writer_csv=>set_active_sheet_index_by_name(  i_worksheet_name = 'Sheet1' ).
   lv_file = lo_excel_writer->write_file( lo_excel ).
   REPLACE FIRST OCCURRENCE OF '_Sheet2.csv'  IN lv_full_path WITH '_Sheet1.csv'.
@@ -102,9 +97,6 @@ START-OF-SELECTION.
       output_length = lv_bytecount
     TABLES
       binary_tab    = lt_file_tab.
-*  " This method is only available on AS ABAP > 6.40
-*  lt_file_tab = cl_bcs_convert=>xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
   " Save the file
   cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = lv_bytecount
