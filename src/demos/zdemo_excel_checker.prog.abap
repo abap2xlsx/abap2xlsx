@@ -205,7 +205,6 @@ ENDCLASS.
 
 
 
-
 CLASS lcl_zip_cleanup_for_diff IMPLEMENTATION.
 
 

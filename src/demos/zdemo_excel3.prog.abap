@@ -10,6 +10,8 @@ REPORT zdemo_excel3.
 
 TYPE-POOLS: abap.
 
+TYPES: ty_sflight_lines TYPE TABLE OF sflight.
+
 DATA: lo_excel     TYPE REF TO zcl_excel,
       lo_worksheet TYPE REF TO zcl_excel_worksheet,
       lo_column    TYPE REF TO zcl_excel_column.
@@ -43,7 +45,7 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel->get_active_worksheet( ).
   lo_worksheet->set_title( ip_title = 'Internal table' ).
 
-  DATA lt_test TYPE TABLE OF sflight.
+  DATA lt_test TYPE ty_sflight_lines.
 
   IF p_empty <> abap_true.
     IF p_checkr = abap_true.
@@ -101,13 +103,14 @@ START-OF-SELECTION.
 *** Create output
   lcl_output=>output( lo_excel ).
 
-FORM load_fixed_data_for_checker CHANGING ct_test.
+
+
+FORM load_fixed_data_for_checker CHANGING ct_test TYPE ty_sflight_lines.
   DATA: lt_lines  TYPE TABLE OF string,
         lv_line   TYPE string,
         lt_fields TYPE TABLE OF string,
         lv_comp   TYPE i,
         lv_field  TYPE string,
-        lt_test   TYPE TABLE OF sflight,
         ls_test   TYPE sflight.
   FIELD-SYMBOLS: <lv_field> TYPE simple.
 
@@ -144,7 +147,6 @@ FORM load_fixed_data_for_checker CHANGING ct_test.
       <lv_field> = lv_field.
       lv_comp = lv_comp + 1.
     ENDLOOP.
-    APPEND ls_test TO lt_test.
+    APPEND ls_test TO ct_test.
   ENDLOOP.
-  ct_test = lt_test.
 ENDFORM.
