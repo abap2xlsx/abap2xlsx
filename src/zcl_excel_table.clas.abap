@@ -6,7 +6,6 @@ CLASS zcl_excel_table DEFINITION
 *"* public components of class ZCL_EXCEL_TABLE
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     CONSTANTS builtinstyle_dark1 TYPE zexcel_table_style VALUE 'TableStyleDark1'. "#EC NOTEXT
     CONSTANTS builtinstyle_dark2 TYPE zexcel_table_style VALUE 'TableStyleDark2'. "#EC NOTEXT

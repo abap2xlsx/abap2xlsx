@@ -6,7 +6,6 @@ CLASS zcl_excel_style_font DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     DATA bold TYPE flag .
     DATA color TYPE zexcel_s_style_color .

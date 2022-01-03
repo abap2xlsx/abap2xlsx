@@ -6,8 +6,6 @@ CLASS zcl_excel_converter_alv DEFINITION
 *"* public components of class ZCL_EXCEL_CONVERTER_ALV
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
-    TYPE-POOLS kkblo .
 
     INTERFACES zif_excel_converter
       ALL METHODS ABSTRACT .

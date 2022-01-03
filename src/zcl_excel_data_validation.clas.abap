@@ -6,7 +6,6 @@ CLASS zcl_excel_data_validation DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     DATA errorstyle TYPE zexcel_data_val_error_style .
     DATA operator TYPE zexcel_data_val_operator .

@@ -4,7 +4,6 @@ CLASS zcl_excel_comment DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     METHODS constructor .
     METHODS get_name

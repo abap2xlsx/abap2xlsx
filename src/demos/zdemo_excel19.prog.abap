@@ -8,8 +8,6 @@
 
 REPORT zdemo_excel19.
 
-TYPE-POOLS: abap.
-
 DATA: lo_excel     TYPE REF TO zcl_excel,
       lo_worksheet TYPE REF TO zcl_excel_worksheet.
 

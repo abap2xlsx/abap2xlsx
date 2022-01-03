@@ -6,7 +6,6 @@ CLASS zcl_excel_security DEFINITION
 *"* public components of class ZCL_EXCEL_SECURITY
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     DATA lockrevision TYPE flag .
     DATA lockstructure TYPE flag .

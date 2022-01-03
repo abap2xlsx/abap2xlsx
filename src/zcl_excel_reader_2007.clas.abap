@@ -5,7 +5,6 @@ CLASS zcl_excel_reader_2007 DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_READER_2007
 *"* do not include other source files here!!!
-    TYPE-POOLS ixml .
 
     INTERFACES zif_excel_reader .
 

@@ -6,7 +6,6 @@ CLASS zcl_excel_sheet_setup DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_SHEET_SETUP
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     DATA black_and_white TYPE flag .
     DATA cell_comments TYPE stringval .

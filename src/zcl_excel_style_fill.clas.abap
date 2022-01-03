@@ -4,7 +4,6 @@ CLASS zcl_excel_style_fill DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
 *"* public components of class ZCL_EXCEL_STYLE_FILL
 *"* do not include other source files here!!!

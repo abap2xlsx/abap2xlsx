@@ -7,7 +7,6 @@
 *&---------------------------------------------------------------------*
 
 REPORT zdemo_excel42.
-TYPE-POOLS: vrm.
 
 DATA: lo_excel      TYPE REF TO zcl_excel,
       lo_worksheet  TYPE REF TO zcl_excel_worksheet,

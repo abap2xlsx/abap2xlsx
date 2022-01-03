@@ -49,7 +49,6 @@ CLASS zcl_excel_autofilter DEFINITION
     METHODS get_values
       RETURNING
         VALUE(rt_filter) TYPE zexcel_t_autofilter_values .
-    TYPE-POOLS abap .
     METHODS is_row_hidden
       IMPORTING
         !iv_row             TYPE zexcel_cell_row

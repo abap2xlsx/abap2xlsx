@@ -6,7 +6,6 @@ CLASS zcl_excel_style_alignment DEFINITION
 *"* public components of class ZCL_EXCEL_STYLE_ALIGNMENT
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     CONSTANTS c_horizontal_general TYPE zexcel_alignment VALUE 'general'. "#EC NOTEXT
     CONSTANTS c_horizontal_left TYPE zexcel_alignment VALUE 'left'. "#EC NOTEXT

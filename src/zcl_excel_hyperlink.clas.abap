@@ -6,7 +6,6 @@ CLASS zcl_excel_hyperlink DEFINITION
 *"* public components of class ZCL_EXCEL_HYPERLINK
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     CLASS-METHODS create_external_link
       IMPORTING

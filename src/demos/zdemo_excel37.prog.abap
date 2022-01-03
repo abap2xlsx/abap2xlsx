@@ -1,7 +1,5 @@
 REPORT zdemo_excel37.
 
-TYPE-POOLS: vrm.
-
 DATA: excel                 TYPE REF TO zcl_excel,
       reader                TYPE REF TO zif_excel_reader,
       go_error              TYPE REF TO cx_root,

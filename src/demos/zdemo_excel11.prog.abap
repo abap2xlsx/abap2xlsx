@@ -8,8 +8,6 @@
 
 REPORT zdemo_excel11.
 
-TYPE-POOLS: abap.
-
 DATA: central_search     TYPE bapibus1006_central_search,
       addressdata_search TYPE bapibus1006_addr_search,
       others_search      TYPE bapibus1006_other_data.
