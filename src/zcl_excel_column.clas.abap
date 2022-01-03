@@ -6,7 +6,6 @@ CLASS zcl_excel_column DEFINITION
 *"* public components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     METHODS constructor
       IMPORTING

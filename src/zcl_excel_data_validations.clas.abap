@@ -6,7 +6,6 @@ CLASS zcl_excel_data_validations DEFINITION
 *"* public components of class ZCL_EXCEL_DATA_VALIDATIONS
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     METHODS add
       IMPORTING

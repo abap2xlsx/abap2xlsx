@@ -9,9 +9,6 @@ CLASS zcl_excel_worksheet DEFINITION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
-    TYPE-POOLS slis .
-    TYPE-POOLS soi .
 
     INTERFACES zif_excel_sheet_printsettings .
     INTERFACES zif_excel_sheet_properties .
