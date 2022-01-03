@@ -3711,9 +3711,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * if a fix size is supplied use this
     TRY.
         height = ip_height_fix.
-        IF height <= 0.
-          zcx_excel=>raise_text( 'Please supply a positive number as row-height' ).
-        ENDIF.
         lo_row->set_row_height( height ).
         RETURN.
       CATCH cx_sy_conversion_no_number.

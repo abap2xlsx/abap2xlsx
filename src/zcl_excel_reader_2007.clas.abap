@@ -2472,7 +2472,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_row = io_worksheet->get_row( lv_cell_row ).
       IF ls_row-customheight = '1'.
         lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_true ).
-      ELSE.
+      ELSEIF ls_row-ht > 0.
         lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_false ).
       ENDIF.
 
