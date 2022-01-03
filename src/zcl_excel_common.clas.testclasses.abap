@@ -33,7 +33,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS: convert_column2alpha_last FOR TESTING.
     METHODS: convert_column2alpha_oob FOR TESTING.
     METHODS convert_column2int_basic FOR TESTING.
-    METHODS convert_column2int_from_int FOR TESTING.
+    METHODS convert_column2int_from_int FOR TESTING RAISING cx_static_check.
     METHODS convert_column2int_maxcol FOR TESTING.
     METHODS convert_column2int_oob_empty FOR TESTING.
     METHODS convert_column2int_oob_invalid FOR TESTING.
