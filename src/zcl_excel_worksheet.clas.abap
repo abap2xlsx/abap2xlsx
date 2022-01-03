@@ -987,7 +987,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     lo_table->set_data( ir_data = ip_table ).
     lv_id = me->excel->get_next_table_id( ).
     lo_table->set_id( iv_id = lv_id ).
-*  lo_table->fieldcat = lt_field_catalog[].
 
     me->tables->add( lo_table ).
 
@@ -999,7 +998,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       " Due restrinction of new table object we cannot have two column with the same name
       " Check if a column with the same name exists, if exists add a counter
       " If no medium description is provided we try to use small or long
-*    lv_value = <ls_field_catalog>-scrtext_m.
       FIELD-SYMBOLS: <scrtxt1> TYPE any,
                      <scrtxt2> TYPE any,
                      <scrtxt3> TYPE any.
@@ -1947,15 +1945,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     me->excel = ip_excel.
 
-*  CALL FUNCTION 'GUID_CREATE'                                    " del issue #379 - function is outdated in newer releases
-*    IMPORTING
-*      ev_guid_16 = me->guid.
     me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).        " ins issue #379 - replacement for outdated function call
 
     IF ip_title IS NOT INITIAL.
       lv_title = ip_title.
     ELSE.
-*    lv_title = me->guid.             " del issue #154 - Names of worksheets
       lv_title = me->generate_title( ). " ins issue #154 - Names of worksheets
     ENDIF.
 
@@ -2294,7 +2288,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     me->update_dimension_range( ).
     IF upper_cell EQ lower_cell. "only one cell
       " Worksheet not filled
-*    IF upper_cell-cell_coords = '0'.
       IF upper_cell-cell_coords IS INITIAL.
         ep_dimension_range = 'A1'.
       ELSE.
@@ -2805,14 +2798,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               EXPORTING
                 input  = ip_value
               IMPORTING
-*               LONG_TEXT  =
                 output = l_value
-*               SHORT_TEXT =
               EXCEPTIONS
                 OTHERS = 1.
             IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
             ELSE.
               TRY.
                   ep_value = l_value.
@@ -3283,7 +3272,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
-*  lv_style_guid = ip_style.
     lv_column = zcl_excel_common=>convert_column2int( ip_column ).
     IF ip_column_formula_id <> 0.
       check_cell_column_formula(
@@ -3426,12 +3414,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * Read table moved up, so that current style may be evaluated
-*  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
 
-*  READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
-*                                                                 cell_column = lv_column.
-*
-*  IF sy-subrc EQ 0.
     IF <fs_sheet_content> IS ASSIGNED.
 * End of change issue #152 - don't touch exisiting style if only value is passed
       <fs_sheet_content>-cell_value   = lv_value.
@@ -3448,15 +3431,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
       lv_row_alpha = ip_row.
-*    SHIFT lv_row_alpha RIGHT DELETING TRAILING space."del #152 - replaced with condense - should be faster
-*    SHIFT lv_row_alpha LEFT DELETING LEADING space.  "del #152 - replaced with condense - should be faster
       CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
       lv_col_alpha = zcl_excel_common=>convert_column2alpha( ip_column ).       " issue #155 - less restrictive typing for ip_column
       CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
-*    APPEND ls_sheet_content TO sheet_content.
-*    SORT sheet_content BY cell_row cell_column.
-      " me->update_dimension_range( ).
 
     ENDIF.
 

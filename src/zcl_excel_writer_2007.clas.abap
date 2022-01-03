@@ -377,7 +377,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 **********************************************************************
 * STEP 8: Add xl/workbook.xml to zip
-*  lv_content = me->create_xl_styles_static( ).
     lv_content = me->create_xl_styles( ).
     lo_zip->add( name    = me->c_xl_styles
                  content = lv_content ).
@@ -513,14 +512,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_drawing ?= lo_iterator->get_next( ).
-*    IF lo_drawing->get_type( ) NE zcl_excel_drawing=>type_image_header_footer.
 
       lv_content = lo_drawing->get_media( ).
       lv_value = lo_drawing->get_media_name( ).
       CONCATENATE 'xl/media/' lv_value INTO lv_value.
       lo_zip->add( name    = lv_value
                    content = lv_content ).
-*    ENDIF.
     ENDWHILE.
 
 **********************************************************************
@@ -1146,8 +1143,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CONVERT TIME STAMP excel->zif_excel_book_properties~created TIME ZONE sy-zonlo INTO DATE lv_date TIME lv_time.
     CONCATENATE lv_date lv_time INTO lv_value RESPECTING BLANKS.
     REPLACE ALL OCCURRENCES OF REGEX '([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})' IN lv_value WITH '$1-$2-$3T$4:$5:$6Z'.
-* lv_value = excel->zif_excel_book_properties~created.
-*  lv_value = '2010-07-04T14:58:53Z'.
     lo_element->set_value( value = lv_value ).
     lo_element_root->append_child( new_child = lo_element ).
 
@@ -1161,8 +1156,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CONVERT TIME STAMP excel->zif_excel_book_properties~modified TIME ZONE sy-zonlo INTO DATE lv_date TIME lv_time.
     CONCATENATE lv_date lv_time INTO lv_value RESPECTING BLANKS.
     REPLACE ALL OCCURRENCES OF REGEX '([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})' IN lv_value WITH '$1-$2-$3T$4:$5:$6Z'.
-*  lv_value = excel->zif_excel_book_properties~modified.
-*  lv_value = '2010-07-04T14:58:53Z'.
     lo_element->set_value( value = lv_value ).
     lo_element_root->append_child( new_child = lo_element ).
 
@@ -2093,12 +2086,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                      parent = lo_element3 ).
               lo_element4->set_attribute_ns( name  = 'val'
                                              value = ls_ax-axpos ).
-*            lo_element4 = lo_document->create_simple_element( name = lc_xml_node_numfmt
-*                                                   parent = lo_element3 ).
-*            lo_element4->set_attribute_ns( name  = 'formatCode'
-*                                           value = ls_ax-formatcode ).
-*            lo_element4->set_attribute_ns( name  = 'sourceLinked'
-*                                           value = ls_ax-sourcelinked ).
               lo_element4 = lo_document->create_simple_element( name = lc_xml_node_majortickmark
                                                      parent = lo_element3 ).
               lo_element4->set_attribute_ns( name  = 'val'
@@ -2545,7 +2532,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lt_drawings = io_worksheet->get_header_footer_drawings( ).
     LOOP AT lt_drawings ASSIGNING <fs_drawings>. "Header or footer image exist
       ADD 1 TO lv_relation_id.
-*    lv_value = lv_relation_id.
       lv_value = <fs_drawings>-drawing->get_index( ).
       READ TABLE lt_temp WITH KEY str = lv_value TRANSPORTING NO FIELDS.
       IF sy-subrc NE 0.
@@ -2557,7 +2543,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
                                                            parent = lo_document ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_id
-*                                    value = 'LOGO' ).
                                       value = lv_value ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_type
                                       value = lc_xml_node_rid_image_tp ).
@@ -2565,7 +2550,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         lv_value = '../media/#'.
         REPLACE '#' IN lv_value WITH <fs_drawings>-drawing->get_media_name( ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_target
-*                                    value = '../media/LOGO.png' ).
                                       value = lv_value ).
         lo_element_root->append_child( new_child = lo_element ).
       ENDIF.
@@ -2677,12 +2661,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CALL METHOD lo_xml_document->parse_string
       EXPORTING
         stream = ld_stream.
-
-*  CALL FUNCTION 'CRM_IC_XML_STRING2XSTRING'
-*    EXPORTING
-*      instring   = ld_stream
-*    IMPORTING
-*      outxstring = ep_content.
 
     CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
       EXPORTING
@@ -3618,7 +3596,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CLEAR lv_count.
     LOOP AT lt_cell_data ASSIGNING <fs_sheet_content> WHERE data_type = 's'.
-*    lv_sytabix = sy-tabix - 1.
       lv_sytabix = lv_count.
       ls_shared_string-string_no = lv_sytabix.
       ls_shared_string-string_value = <fs_sheet_content>-cell_value.
@@ -5909,30 +5886,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element_root->append_child( new_child = lo_element ).
     ENDWHILE.
 
-*  IF io_worksheet->get_print_settings( )->is_empty( ) = abap_false.
-*    ADD 1 TO lv_relation_id.
-*    lv_value = lv_relation_id.
-*    CONDENSE lv_value.
-*    CONCATENATE 'rId' lv_value INTO lv_value.
-*
-*    lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
-*                                                     parent = lo_document ).
-*    lo_element->set_attribute_ns( name  = lc_xml_attr_id
-*                                  value = lv_value ).
-*    lo_element->set_attribute_ns( name  = lc_xml_attr_type
-*                                  value = lc_xml_node_rid_printer_tp ).
-*
-*    lv_index_str = iv_printer_index.
-*    CONDENSE lv_index_str NO-GAPS.
-*    MOVE me->c_xl_printersettings TO lv_value.
-*    REPLACE 'xl' WITH '..' INTO lv_value.
-*    REPLACE '#' WITH lv_index_str INTO lv_value.
-*    lo_element->set_attribute_ns( name  = lc_xml_attr_target
-*                                  value = lv_value ).
-*
-*    lo_element_root->append_child( new_child = lo_element ).
-*  ENDIF.
-
 **********************************************************************
 * STEP 5: Create xstring stream
     ep_content = render_xml_document( lo_document ).
@@ -6010,7 +5963,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     " Get column count
     col_count      = io_worksheet->get_highest_column( ).
     " Get autofilter
-*lv_guid        = io_worksheet->get_guid( ) .
     lo_autofilters = excel->get_autofilters_reference( ).
     lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
     IF lo_autofilter IS BOUND.
@@ -6131,9 +6083,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                l_autofilter_hidden = abap_true.
               lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
             ENDIF.
-*          lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-*          CONCATENATE lv_xstring lv_xstring_partial
-*              INTO lv_xstring IN BYTE MODE.
             rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
           ENDIF.
           " Add new row
@@ -6233,8 +6182,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *issue #220 - If cell in tables-area don't use default from row or column or sheet - Coding 3 - end
 *--------------------------------------------------------------------*
       ENDIF.
-*  IF <ls_sheet_content>-cell_style IS NOT INITIAL.
-*    READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = <ls_sheet_content>-cell_style.
       IF lv_style_guid IS NOT INITIAL.
         READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
 *end of change issue #157 - allow column cellstyles
@@ -6317,9 +6264,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
          l_autofilter_hidden = abap_true.
         lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
       ENDIF.
-*    lv_xstring_partial = render_ixml_element_no_header( lo_element_2 ).
-*    CONCATENATE lv_xstring lv_xstring_partial
-*        INTO lv_xstring IN BYTE MODE.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
     ENDIF.
     DELETE io_worksheet->sheet_content WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries
@@ -6614,8 +6558,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ls_cellxfs-applynumberformat    = 1.
         IF ls_numfmt-numfmt EQ zcl_excel_style_number_format=>c_format_date_std.
           ls_cellxfs-numfmtid = 14.
-*      elseif ls_numfmt-NUMFMT eq 'STD_NDEC'.
-*        ls_cellxfs-numfmtid = 2.
         ENDIF.
       ENDIF.
       "---
@@ -6663,7 +6605,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element_numfmt->set_attribute_ns( name  = lc_xml_attr_numfmtid
                                         value = lv_value ).
       lv_value = ls_numfmt-numfmt.
-*    REPLACE ALL OCCURRENCES OF '.' IN lv_value WITH '\.'.
       lo_element_numfmt->set_attribute_ns( name  = lc_xml_attr_formatcode
                                            value = lv_value ).
       lo_element_numfmts->append_child( new_child = lo_element_numfmt ).
@@ -7474,7 +7415,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_element = lo_document->create_simple_element( name   = 'tableColumns'
                                                      parent = lo_document ).
 
-*  lo_columns = io_table->get_columns( ).
     LOOP AT io_table->fieldcat INTO ls_fieldcat WHERE dynpfld = abap_true.
       ADD 1 TO lv_num_columns.
     ENDLOOP.
@@ -7686,8 +7626,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     " fileVersion node
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_workbookpr
                                                      parent = lo_document ).
-*  lo_element->set_attribute_ns( name  = lc_xml_attr_themeversion
-*                                value = '124226' ).
     lo_element_root->append_child( new_child = lo_element ).
 
     " workbookProtection node
@@ -7917,7 +7855,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     DATA ls_shared_string TYPE zexcel_s_shared_string.
 
-*  READ TABLE shared_strings INTO ls_shared_string WITH KEY string_value = ip_cell_value BINARY SEARCH.
     IF it_rtf IS INITIAL.
       READ TABLE shared_strings INTO ls_shared_string WITH TABLE KEY string_value = ip_cell_value.
       ep_index = ls_shared_string-string_no.

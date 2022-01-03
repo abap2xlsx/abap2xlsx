@@ -86,18 +86,8 @@ CLASS lcl_output IMPLEMENTATION.
     ENDIF.
     cl_output->xdata = cl_writer->write_file( cl_excel ).
 
-* After 6.40 via cl_bcs_convert
     cl_output->t_rawdata = cl_bcs_convert=>xstring_to_solix( iv_xstring  = cl_output->xdata ).
     cl_output->bytecount = xstrlen( cl_output->xdata ).
-
-* before 6.40
-*  CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
-*    EXPORTING
-*      buffer        = cl_output->xdata
-*    IMPORTING
-*      output_length = cl_output->bytecount
-*    TABLES
-*      binary_tab    = cl_output->t_rawdata.
 
     CASE 'X'.
       WHEN rb_down.
@@ -347,10 +337,6 @@ CLASS lcl_output IMPLEMENTATION.
 
 * add document to send request
         cl_send_request->set_document( cl_document ).
-
-* set sender in case if no own email is availabe
-*        cl_sender  = cl_cam_address_bcs=>create_internet_address( 'sender@sender.sender' ).
-*        cl_send_request->set_sender( cl_sender ).
 
 * add recipient(s) - here only 1 will be needed
         send_to = p_email.

@@ -305,26 +305,4 @@ START-OF-SELECTION.
   lo_row->set_row_height( ip_row_height = 30 ).
 
 
-
-*  CREATE OBJECT lo_excel_writer TYPE zcl_excel_writer_2007.
-*  lv_file = lo_excel_writer->write_file( lo_excel ).
-*
-*  " Convert to binary
-*  CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
-*    EXPORTING
-*      buffer        = lv_file
-*    IMPORTING
-*      output_length = lv_bytecount
-*    TABLES
-*      binary_tab    = lt_file_tab.
-**  " This method is only available on AS ABAP > 6.40
-**  lt_file_tab = cl_bcs_convert=>xstring_to_solix( iv_xstring  = lv_file ).
-**  lv_bytecount = xstrlen( lv_file ).
-*
-*  " Save the file
-*  cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = lv_bytecount
-*                                                    filename     = lv_full_path
-*                                                    filetype     = 'BIN'
-*                                           CHANGING data_tab     = lt_file_tab ).
-
   lcl_output=>output( lo_excel ).

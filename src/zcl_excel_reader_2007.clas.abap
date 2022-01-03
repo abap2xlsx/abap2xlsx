@@ -574,18 +574,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             ENDIF.
           ENDIF.
 
-* 2do - borders into dxf-styles.  Here and in writerclass
-*      WHEN 'border'.
-*        lo_ixml_element = lo_ixml_dxf_child->find_from_name( 'left' ).
-*        IF lo_ixml_element IS BOUND.
-*          CLEAR lv_val.
-*          lv_val  = lo_ixml_element2->get_attribute_ns( 'style' ).
-*          IF lv_val IS NOT INITIAL.
-*            ls_cstyle-borders-left-border_style  = lv_val.
-*            ls_cstylex-borders-left-border_style = 'X'.
-*          ENDIF.
-*        ENDIF.
-
       ENDCASE.
 
       lo_ixml_dxf_child ?= lo_ixml_iterator_dxf_children->get_next( ).
@@ -2680,7 +2668,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           ENDIF.
 
           IF ls_column-outlinelevel > ''.
-*          outline_level = condense( column-outlineLevel ).
             CONDENSE ls_column-outlinelevel.
             lv_outline_level = ls_column-outlinelevel.
             IF lv_outline_level > 0.
@@ -3053,8 +3040,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lv_area_end_col   TYPE zexcel_cell_column_alpha,
           lv_rule           TYPE zexcel_condition_rule.
 
-
-*  FIELD-SYMBOLS: <ls_external_hyperlink> LIKE LINE OF it_external_hyperlinks.
 
     lo_ixml_cond_formats =  io_ixml_worksheet->get_elements_by_tag_name( name = 'conditionalFormatting' ).
     lo_ixml_iterator     =  lo_ixml_cond_formats->create_iterator( ).

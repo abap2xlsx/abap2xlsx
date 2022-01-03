@@ -63,8 +63,6 @@ START-OF-SELECTION.
       error_no_gui            = 18
       OTHERS                  = 19.
   IF sy-subrc <> 0.
-*    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
-*               WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
   ENDIF.
 
   CALL FUNCTION 'SCMS_BINARY_TO_XSTRING'
