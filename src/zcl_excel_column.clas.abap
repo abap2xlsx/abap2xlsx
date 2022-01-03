@@ -32,7 +32,7 @@ CLASS zcl_excel_column DEFINITION
         VALUE(r_visible) TYPE abap_bool .
     METHODS get_width
       RETURNING
-        VALUE(r_width) TYPE float .
+        VALUE(r_width) TYPE f .
     METHODS get_xf_index
       RETURNING
         VALUE(r_xf_index) TYPE int4 .
@@ -91,7 +91,7 @@ CLASS zcl_excel_column DEFINITION
   PRIVATE SECTION.
 
     DATA column_index TYPE int4 .
-    DATA width TYPE float .
+    DATA width TYPE f .
     DATA auto_size TYPE abap_bool .
     DATA visible TYPE abap_bool .
     DATA outline_level TYPE int4 .
