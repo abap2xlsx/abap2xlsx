@@ -139,13 +139,13 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lc_true              TYPE lty_bool   VALUE 'true',
       lc_zero              TYPE c LENGTH 1 VALUE '0',
       lc_one               TYPE c LENGTH 1 VALUE '1',
-      lc_default_col_width TYPE float      VALUE '9.10'.
+      lc_default_col_width TYPE f      VALUE '9.10'.
 
     TYPES:
       BEGIN OF lty_column,
         min          TYPE i,
         max          TYPE i,
-        width        TYPE float,
+        width        TYPE f,
         hidden       TYPE lty_bool,
         customwidth  TYPE lty_bool,
         bestfit      TYPE lty_bool,
@@ -160,7 +160,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         spans        TYPE c LENGTH 11,  "12345:12345"
         hidden       TYPE lty_bool,
         customheight TYPE lty_bool,
-        height       TYPE float,
+        height       TYPE f,
         collapsed    TYPE lty_bool,
         outlinelevel TYPE i,
         customformat TYPE lty_bool,
@@ -220,8 +220,8 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         topleftcell        TYPE c LENGTH 10,
         activecell         TYPE c LENGTH 10,
         customheight       TYPE lty_bool,
-        defaultrowheight   TYPE float,
-        defaultcolwidth    TYPE float,
+        defaultrowheight   TYPE f,
+        defaultcolwidth    TYPE f,
         outlinelevelrow    TYPE i,
         outlinelevelcol    TYPE i,
         cols               TYPE STANDARD TABLE OF lty_column,

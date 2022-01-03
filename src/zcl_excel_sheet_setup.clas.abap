@@ -124,12 +124,12 @@ CLASS zcl_excel_sheet_setup DEFINITION
     METHODS constructor .
     METHODS set_page_margins
       IMPORTING
-        !ip_bottom TYPE float OPTIONAL
-        !ip_footer TYPE float OPTIONAL
-        !ip_header TYPE float OPTIONAL
-        !ip_left   TYPE float OPTIONAL
-        !ip_right  TYPE float OPTIONAL
-        !ip_top    TYPE float OPTIONAL
+        !ip_bottom TYPE f OPTIONAL
+        !ip_footer TYPE f OPTIONAL
+        !ip_header TYPE f OPTIONAL
+        !ip_left   TYPE f OPTIONAL
+        !ip_right  TYPE f OPTIONAL
+        !ip_top    TYPE f OPTIONAL
         !ip_unit   TYPE csequence DEFAULT 'in' .
     METHODS set_header_footer
       IMPORTING

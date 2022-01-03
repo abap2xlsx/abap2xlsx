@@ -2184,7 +2184,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     TYPES: BEGIN OF lty_column,
              min          TYPE string,
              max          TYPE string,
-             width        TYPE float,
+             width        TYPE f,
              customwidth  TYPE string,
              style        TYPE string,
              bestfit      TYPE string,
@@ -2209,7 +2209,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     TYPES: BEGIN OF lty_row,
              r            TYPE string,
              customheight TYPE string,
-             ht           TYPE float,
+             ht           TYPE f,
              spans        TYPE string,
              thickbot     TYPE string,
              customformat TYPE string,
@@ -2313,7 +2313,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
           lo_ixml_sheetformatpr_elem  TYPE REF TO if_ixml_element,
           ls_sheetformatpr            TYPE lty_sheetformatpr,
-          lv_height                   TYPE float,
+          lv_height                   TYPE f,
 
           lo_ixml_headerfooter_elem   TYPE REF TO if_ixml_element,
           ls_headerfooter             TYPE lty_headerfooter,

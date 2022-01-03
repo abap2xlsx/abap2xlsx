@@ -22,7 +22,7 @@ CLASS zcl_excel_row DEFINITION
         VALUE(r_outline_level) TYPE int4 .
     METHODS get_row_height
       RETURNING
-        VALUE(r_row_height) TYPE float .
+        VALUE(r_row_height) TYPE f .
     METHODS get_custom_height
       RETURNING
         VALUE(r_custom_height) TYPE abap_bool .
@@ -68,7 +68,7 @@ CLASS zcl_excel_row DEFINITION
   PRIVATE SECTION.
 
     DATA row_index TYPE int4 .
-    DATA row_height TYPE float .
+    DATA row_height TYPE f .
     DATA visible TYPE abap_bool .
     DATA outline_level TYPE int4 VALUE 0. "#EC NOTEXT .  .  .  .  .  .  .  .  . " .
     DATA collapsed TYPE abap_bool .
