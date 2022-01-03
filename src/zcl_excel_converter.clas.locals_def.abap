@@ -16,7 +16,7 @@ TYPES:   BEGIN OF ts_sort_values,
             value          TYPE REF TO data,
             new            TYPE flag,
             sort_level     TYPE int4,
-            is_collapsed   type flag,
+            is_collapsed   TYPE flag,
          END OF ts_sort_values,
 
          tt_sort_values TYPE HASHED TABLE OF ts_sort_values WITH UNIQUE KEY fieldname.

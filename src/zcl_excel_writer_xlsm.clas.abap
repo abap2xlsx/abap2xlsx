@@ -123,7 +123,6 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 
 **********************************************************************
 * STEP 8: Add xl/workbook.xml to zip
-*  lv_content = me->create_xl_styles_static( ).
     lv_content = me->create_xl_styles( ).
     lo_zip->add( name    = me->c_xl_styles
                  content = lv_content ).

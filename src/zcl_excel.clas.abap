@@ -460,9 +460,6 @@ CLASS zcl_excel IMPLEMENTATION.
     IF sy-subrc <> 0.
       style-complete_style  = ip_cstyle_complete.
       style-complete_stylex = ip_cstylex_complete.
-*    CALL FUNCTION 'GUID_CREATE'                               " del issue #379 - function is outdated in newer releases
-*      IMPORTING
-*        ev_guid_16 = style-guid.
       style-guid = zcl_excel_obsolete_func_wrap=>guid_create( ). " ins issue #379 - replacement for outdated function call
       INSERT style INTO TABLE me->t_stylemapping1.
       INSERT style INTO TABLE me->t_stylemapping2.

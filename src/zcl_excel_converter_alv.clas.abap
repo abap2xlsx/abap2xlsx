@@ -580,11 +580,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
         READ TABLE wt_sort INTO ls_sort WITH KEY fieldname = ls_fcat-fieldname.
         IF sy-subrc = 0 AND  ws_option-subtot <> abap_false.
           ls_fieldcatalog-sort_level      = 0 .
-*        IF  ls_fieldcatalog-totals_function IS INITIAL.  " Not clear why not
-*          CLEAR ls_fieldcatalog-is_subtotalled.
-*        ELSE.
           ls_fieldcatalog-is_subtotalled  = ls_sort-subtot.
-*        ENDIF.
           ls_fieldcatalog-is_collapsed    = ls_sort-expa.
           IF ls_fieldcatalog-is_subtotalled = abap_true.
             ls_fieldcatalog-sort_level      = ls_sort-spos.

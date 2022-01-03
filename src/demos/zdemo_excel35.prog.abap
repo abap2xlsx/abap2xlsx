@@ -163,9 +163,6 @@ START-OF-SELECTION.
       output_length = lv_bytecount
     TABLES
       binary_tab    = lt_file_tab.
-*  " This method is only available on AS ABAP > 6.40
-*  lt_file_tab = cl_bcs_convert=>xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
   " Save the file
   cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = lv_bytecount

@@ -82,7 +82,6 @@ START-OF-SELECTION.
   lo_worksheet->zif_excel_sheet_properties~zoomscale        = 150.
   lo_worksheet->zif_excel_sheet_properties~zoomscale_normal = 150.
 
-  "  lo_worksheet->sheet_setup->vertical_centered   = abap_true.
   lo_worksheet->sheet_setup->horizontal_centered = abap_true.
 
 

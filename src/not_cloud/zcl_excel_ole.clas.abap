@@ -1960,11 +1960,6 @@ CLASS zcl_excel_ole IMPLEMENTATION.
     lo_error_w = l_error.
     lc_retcode = lo_error_w->error_code.
 
-** catch no_flush -> led to dump ( optional )
-*    go_error = l_error.
-*    gc_retcode = go_error->error_code.
-*    error_doi.
-
     CLEAR:
       lt_sema,
       wa_sema,
@@ -2051,8 +2046,6 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 
       IF l_is_closed IS INITIAL.
         CALL METHOD lo_proxy->close_document
-*        EXPORTING
-*          do_save = do_save
           IMPORTING
             error   = lo_error
             retcode = lc_retcode.
