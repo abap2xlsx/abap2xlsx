@@ -12,7 +12,6 @@ CLASS zcl_excel_drawing DEFINITION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_DRAWING
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     CONSTANTS c_graph_pie TYPE zexcel_graph_type VALUE 1.   "#EC NOTEXT
     CONSTANTS c_graph_line TYPE zexcel_graph_type VALUE 2.  "#EC NOTEXT

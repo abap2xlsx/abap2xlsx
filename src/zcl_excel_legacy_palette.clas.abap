@@ -5,7 +5,6 @@ CLASS zcl_excel_legacy_palette DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_LEGACY_PALETTE
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     METHODS constructor .
     METHODS is_modified
