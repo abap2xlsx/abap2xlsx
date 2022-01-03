@@ -177,6 +177,7 @@
     "method_parameter_names": false,
     "inline_data_old_versions": true,
     "local_variable_names": false,
-    "class_attribute_names": false
+    "class_attribute_names": false,
+    "commented_code": true
   }
 }

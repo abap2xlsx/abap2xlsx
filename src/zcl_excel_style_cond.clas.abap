@@ -145,9 +145,7 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
 
 
     lv_column = zcl_excel_common=>convert_column2int( ip_start_column ).
-*  me->mv_cell_data-cell_row     = 1.
-*  me->mv_cell_data-cell_column  = lv_column.
-*
+
     lv_col_alpha = ip_start_column.
     lv_row_alpha = ip_start_row.
     SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
@@ -200,7 +198,6 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
 
 
     me->rule          = zcl_excel_style_cond=>c_rule_none.
-*  me->iconset->operator    = zcl_excel_style_conditional=>c_operator_none.
     me->mode_iconset  = ls_iconset.
     me->priority      = 1.
 
@@ -217,41 +214,6 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
 
 
   METHOD factory_cond_style_iconset.
-
-*--------------------------------------------------------------------*
-* Work in progress
-* Missing:  LE or LT may be specified --> extend structure ZEXCEL_CONDITIONAL_ICONSET to hold this information as well
-*--------------------------------------------------------------------*
-
-*  DATA: lv_needed_values TYPE i.
-*  CASE icon_type.
-*
-*    WHEN 'C_ICONSET_3ARROWS'
-*      OR 'C_ICONSET_3ARROWSGRAY'
-*      OR 'C_ICONSET_3FLAGS'
-*      OR 'C_ICONSET_3SIGNS'
-*      OR 'C_ICONSET_3SYMBOLS'
-*      OR 'C_ICONSET_3SYMBOLS2'
-*      OR 'C_ICONSET_3TRAFFICLIGHTS'
-*      OR 'C_ICONSET_3TRAFFICLIGHTS2'.
-*      lv_needed_values = 3.
-*
-*    WHEN 'C_ICONSET_4ARROWS'
-*      OR 'C_ICONSET_4ARROWSGRAY'
-*      OR 'C_ICONSET_4RATING'
-*      OR 'C_ICONSET_4REDTOBLACK'
-*      OR 'C_ICONSET_4TRAFFICLIGHTS'.
-*      lv_needed_values = 4.
-*
-*    WHEN 'C_ICONSET_5ARROWS'
-*      OR 'C_ICONSET_5ARROWSGRAY'
-*      OR 'C_ICONSET_5QUARTERS'
-*      OR 'C_ICONSET_5RATING'.
-*      lv_needed_values = 5.
-*
-*    WHEN OTHERS.
-*      RETURN.
-*  ENDCASE.
 
   ENDMETHOD.
 

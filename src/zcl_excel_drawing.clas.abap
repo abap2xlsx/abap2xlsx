@@ -153,9 +153,6 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
   METHOD constructor.
 
-*  CALL FUNCTION 'GUID_CREATE'                                  " del issue #379 - function is outdated in newer releases
-*    IMPORTING
-*      ev_guid_16 = me->guid.
     me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).      " ins issue #379 - replacement for outdated function call
 
     IF ip_title IS NOT INITIAL.
@@ -187,11 +184,9 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
   METHOD emu2pixel.
 * suppose 96 DPI
     IF ip_dpi IS SUPPLIED.
-*    r_emu = ip_pixel  * 914400 / ip_dpi.
       r_pixel = ip_emu * ip_dpi / 914400.
     ELSE.
 * suppose 96 DPI
-*    r_emu = ip_pixel  * 914400 / 96.
       r_pixel = ip_emu * 96 / 914400.
     ENDIF.
   ENDMETHOD.
@@ -865,10 +860,6 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
             node3 ?= node2->find_from_name( name = 'axPos' namespace = 'c' ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_axpos = ls_prop-val.
-*          node3 ?= node2->find_from_name( name = 'numFmt' namespace = 'c' ).
-*          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
-*          lv_formatcode = ls_prop-formatcode.
-*          lv_sourcelinked = ls_prop-sourcelinked.
             node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_majortickmark = ls_prop-val.

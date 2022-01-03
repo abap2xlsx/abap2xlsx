@@ -30,9 +30,9 @@ CLASS zcl_excel_obsolete_func_wrap IMPLEMENTATION.
 * in newer SAP releases
 *--------------------------------------------------------------------*
 *
-*  CALL FUNCTION 'GUID_CREATE'
-*    IMPORTING
-*      ev_guid_16 = rv_guid_16.
+*Before ABAP 7.02:  CALL FUNCTION 'GUID_CREATE'
+*Before ABAP 7.02:    IMPORTING
+*Before ABAP 7.02:      ev_guid_16 = rv_guid_16.
 
   ENDMETHOD.
 ENDCLASS.

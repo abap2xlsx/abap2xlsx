@@ -466,7 +466,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
     ENDWHILE.
 
 * Set column information (width, style, ...)
-*  IF lo_column_iterator->has_next( ) = abap_true.
     WHILE lo_column_iterator->has_next( ) = abap_true.
       lo_column ?= lo_column_iterator->get_next( ).
       IF lo_column->get_outline_level( ) > outline_level_col.
@@ -507,7 +506,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_column = zcl_excel_common=>convert_column2int( lo_column->get_column_index( ) ).
       INSERT lv_column INTO TABLE lts_sorted_columns.
     ENDWHILE.
-*  ENDIF.
 
 *
 * Now find all columns that were missing so far
