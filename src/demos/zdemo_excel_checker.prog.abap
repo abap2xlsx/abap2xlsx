@@ -56,6 +56,7 @@ CLASS lcl_zip_cleanup_for_diff DEFINITION
 
 ENDCLASS.
 
+
 CLASS lcl_xlsx_cleanup_for_diff DEFINITION
   CREATE PUBLIC .
 
@@ -73,154 +74,136 @@ CLASS lcl_xlsx_cleanup_for_diff DEFINITION
 ENDCLASS.
 
 
+CLASS lcl_app DEFINITION.
 
-CLASS lcl_xlsx_cleanup_for_diff IMPLEMENTATION.
+  PUBLIC SECTION.
 
-  METHOD run.
+    METHODS at_selection_screen.
 
-    TYPES: BEGIN OF ty_docprops_core,
-             creator          TYPE string,
-             description      TYPE string,
-             last_modified_by TYPE string,
-             created          TYPE string,
-             modified         TYPE string,
-           END OF ty_docprops_core.
-    TYPES: BEGIN OF ty_file,
-             name    TYPE string,
-             content TYPE xstring,
-           END OF ty_file.
-    DATA: zip                  TYPE REF TO cl_abap_zip,
-          content              TYPE xstring,
-          docprops_core        TYPE ty_docprops_core,
-          ls_file              TYPE ty_file,
-          lt_file              TYPE TABLE OF ty_file,
-          lo_ixml              TYPE REF TO if_ixml,
-          lo_streamfactory     TYPE REF TO if_ixml_stream_factory,
-          lo_istream           TYPE REF TO if_ixml_istream,
-          lo_parser            TYPE REF TO if_ixml_parser,
-          lo_renderer          TYPE REF TO if_ixml_renderer,
-          lo_ostream           TYPE REF TO if_ixml_ostream,
-          lo_document          TYPE REF TO if_ixml_document,
-          lo_element           TYPE REF TO if_ixml_element,
-          lo_filter            TYPE REF TO if_ixml_node_filter,
-          lo_iterator          TYPE REF TO if_ixml_node_iterator,
-          zip_cleanup_for_diff TYPE REF TO lcl_zip_cleanup_for_diff.
-    FIELD-SYMBOLS:
-      <file>     TYPE cl_abap_zip=>t_file,
-      <ls_file2> TYPE ty_file.
+    METHODS at_selection_screen_on_exit.
 
-    CREATE OBJECT zip.
-    zip->load(
-      EXPORTING
-        zip             = xstring
-      EXCEPTIONS
-        zip_parse_error = 1
-        OTHERS          = 2 ).
-    IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'zip load'.
-    ENDIF.
+    METHODS at_selection_screen_output.
 
-    zip->get(
-      EXPORTING
-        name                    = 'docProps/core.xml'
+    METHODS set_sscrfields
+      CHANGING
+        sscrfields TYPE sscrfields.
+
+  PRIVATE SECTION.
+
+    TYPES : BEGIN OF ty_demo,
+              program  TYPE trdir-name,
+              objid    TYPE wwwdata-objid,
+              text     TYPE wwwdata-text,
+              filename TYPE string,
+            END OF ty_demo,
+            ty_demos TYPE STANDARD TABLE OF ty_demo WITH DEFAULT KEY,
+            BEGIN OF ty_check_result,
+              diff                   TYPE abap_bool,
+              xlsx_just_now          TYPE xstring,
+              xlsx_reference         TYPE xstring,
+              compare_xlsx_just_now  TYPE xstring,
+              compare_xlsx_reference TYPE xstring,
+            END OF ty_check_result,
+            BEGIN OF ty_alv_line,
+              status_icon            TYPE string,
+              xlsx_diff              TYPE string,
+              write_smw0             TYPE string,
+              objid                  TYPE wwwdata-objid,
+              obj_text               TYPE wwwdata-text,
+              program                TYPE trdir-name,
+              prog_text              TYPE trdirt-text,
+              filename               TYPE string,
+              xlsx_just_now          TYPE xstring,
+              xlsx_reference         TYPE xstring,
+              compare_xlsx_just_now  TYPE xstring,
+              compare_xlsx_reference TYPE xstring,
+              cell_types             TYPE salv_t_int4_column,
+            END OF ty_alv_line,
+            ty_alv_table              TYPE STANDARD TABLE OF ty_alv_line WITH DEFAULT KEY,
+            ty_popup_confirm_question TYPE c LENGTH 400.
+
+    METHODS at_selection_screen_output1000.
+
+    METHODS at_selection_screen_output1001
+      RAISING
+        zcx_excel
+        cx_salv_data_error
+        cx_salv_not_found
+        cx_salv_msg.
+
+    METHODS check_regression
       IMPORTING
-        content                 = content
-      EXCEPTIONS
-        zip_index_error         = 1
-        zip_decompression_error = 2
-        OTHERS                  = 3 ).
-    IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'docProps/core.xml not found'.
-    ENDIF.
+        demo          TYPE ty_demo
+      RETURNING
+        VALUE(result) TYPE ty_check_result
+      RAISING
+        zcx_excel.
 
-    CALL TRANSFORMATION zexcel_tr_docprops_core SOURCE XML content RESULT root = docprops_core.
+    METHODS get_list_of_demo_files
+      RETURNING
+        VALUE(result) TYPE ty_demos.
 
-    CLEAR: docprops_core-creator,
-           docprops_core-description,
-           docprops_core-created,
-           docprops_core-modified.
+    METHODS gui_upload
+      IMPORTING
+        file_name     TYPE string
+      RETURNING
+        VALUE(result) TYPE xstring
+      RAISING
+        zcx_excel.
 
-    CALL TRANSFORMATION zexcel_tr_docprops_core SOURCE root = docprops_core RESULT XML content.
+    METHODS load_alv_table
+      RAISING
+        zcx_excel.
 
-    zip->delete(
-      EXPORTING
-        name            = 'docProps/core.xml'
-      EXCEPTIONS
-        zip_index_error = 1
-        OTHERS          = 2 ).
-    IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = |delete before add of docProps/core.xml|.
-    ENDIF.
+    METHODS on_link_clicked FOR EVENT link_click OF cl_salv_events_table IMPORTING column row.
 
-    zip->add(
-        name    = 'docProps/core.xml'
-        content = content ).
+    METHODS popup_confirm
+      IMPORTING
+        question TYPE ty_popup_confirm_question
+      RAISING
+        zcx_excel.
 
-    LOOP AT zip->files ASSIGNING <file>
-        WHERE name CP 'xl/drawings/drawing*.xml'.
+    METHODS read_screen_fields.
 
-      zip->get(
-        EXPORTING
-          name                    = <file>-name
-        IMPORTING
-          content                 = content
-        EXCEPTIONS
-          zip_index_error         = 1
-          zip_decompression_error = 2
-          OTHERS                  = 3 ).
-      IF sy-subrc <> 0.
-        RAISE EXCEPTION TYPE zcx_excel EXPORTING error = |{ <file>-name } not found|.
-      ENDIF.
+    METHODS read_xlsx_from_web_repository
+      IMPORTING
+        objid         TYPE wwwdata-objid
+      RETURNING
+        VALUE(result) TYPE xstring
+      RAISING
+        zcx_excel.
 
-      lo_ixml = cl_ixml=>create( ).
-      lo_streamfactory = lo_ixml->create_stream_factory( ).
-      lo_istream = lo_streamfactory->create_istream_xstring( content ).
-      lo_document = lo_ixml->create_document( ).
-      lo_parser = lo_ixml->create_parser(
-                  document       = lo_document
-                  istream        = lo_istream
-                  stream_factory = lo_streamfactory ).
-      lo_parser->parse( ).
+    METHODS screen_1001_pbo_first_time
+      RAISING
+        cx_salv_data_error
+        cx_salv_msg
+        cx_salv_not_found
+        zcx_excel .
 
-      lo_filter = lo_document->create_filter_name_ns(
-                  name      = 'cNvPr'
-                  namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
-      lo_iterator = lo_document->create_iterator_filtered( lo_filter ).
-      DO.
-        lo_element ?= lo_iterator->get_next( ).
-        IF lo_element IS NOT BOUND.
-          EXIT.
-        ENDIF.
-        lo_element->set_attribute_ns( name = 'name' value = '' ).
-      ENDDO.
+    METHODS write_screen_fields.
 
-      CLEAR content.
-      lo_ostream = lo_streamfactory->create_ostream_xstring( content ).
-      lo_renderer = lo_ixml->create_renderer(
-                  document = lo_document
-                  ostream  = lo_ostream ).
-      lo_renderer->render( ).
+    METHODS write_xlsx_to_web_repository
+      IMPORTING
+        objid    TYPE wwwdata-objid
+        text     TYPE wwwdata-text
+        xstring  TYPE xstring
+        filename TYPE clike
+      RAISING
+        zcx_excel.
 
-      ls_file-name = <file>-name.
-      ls_file-content = content.
-      APPEND ls_file TO lt_file.
-
-    ENDLOOP.
-
-    LOOP AT lt_file ASSIGNING <ls_file2>.
-      zip->delete( name = <ls_file2>-name ).
-      zip->add( name = <ls_file2>-name content = <ls_file2>-content ).
-    ENDLOOP.
-
-    result = zip->save( ).
-
-    CREATE OBJECT zip_cleanup_for_diff.
-    result = zip_cleanup_for_diff->run( result ).
-
-  ENDMETHOD.
-
+    DATA: ref_sscrfields     TYPE REF TO sscrfields,
+          p_path             TYPE zexcel_export_dir,
+          splitter           TYPE REF TO cl_gui_splitter_container,
+          alv_container      TYPE REF TO cl_gui_container,
+          zip_diff_container TYPE REF TO cl_gui_container,
+          viewer             TYPE REF TO object,
+          salv               TYPE REF TO cl_salv_table,
+          alv_table          TYPE ty_alv_table,
+          lv_filesep         TYPE c LENGTH 1.
 
 ENDCLASS.
+
+
 
 
 CLASS lcl_zip_cleanup_for_diff IMPLEMENTATION.
@@ -468,136 +451,153 @@ CLASS lcl_zip_cleanup_for_diff IMPLEMENTATION.
 ENDCLASS.
 
 
-CLASS lcl_app DEFINITION.
+CLASS lcl_xlsx_cleanup_for_diff IMPLEMENTATION.
 
-  PUBLIC SECTION.
+  METHOD run.
 
-    METHODS at_selection_screen.
+    TYPES: BEGIN OF ty_docprops_core,
+             creator          TYPE string,
+             description      TYPE string,
+             last_modified_by TYPE string,
+             created          TYPE string,
+             modified         TYPE string,
+           END OF ty_docprops_core.
+    TYPES: BEGIN OF ty_file,
+             name    TYPE string,
+             content TYPE xstring,
+           END OF ty_file.
+    DATA: zip                  TYPE REF TO cl_abap_zip,
+          content              TYPE xstring,
+          docprops_core        TYPE ty_docprops_core,
+          ls_file              TYPE ty_file,
+          lt_file              TYPE TABLE OF ty_file,
+          lo_ixml              TYPE REF TO if_ixml,
+          lo_streamfactory     TYPE REF TO if_ixml_stream_factory,
+          lo_istream           TYPE REF TO if_ixml_istream,
+          lo_parser            TYPE REF TO if_ixml_parser,
+          lo_renderer          TYPE REF TO if_ixml_renderer,
+          lo_ostream           TYPE REF TO if_ixml_ostream,
+          lo_document          TYPE REF TO if_ixml_document,
+          lo_element           TYPE REF TO if_ixml_element,
+          lo_filter            TYPE REF TO if_ixml_node_filter,
+          lo_iterator          TYPE REF TO if_ixml_node_iterator,
+          zip_cleanup_for_diff TYPE REF TO lcl_zip_cleanup_for_diff.
+    FIELD-SYMBOLS:
+      <file>     TYPE cl_abap_zip=>t_file,
+      <ls_file2> TYPE ty_file.
 
-    METHODS at_selection_screen_on_exit.
+    CREATE OBJECT zip.
+    zip->load(
+      EXPORTING
+        zip             = xstring
+      EXCEPTIONS
+        zip_parse_error = 1
+        OTHERS          = 2 ).
+    IF sy-subrc <> 0.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'zip load'.
+    ENDIF.
 
-    METHODS at_selection_screen_output.
-
-    METHODS set_sscrfields
-      CHANGING
-        sscrfields TYPE sscrfields.
-
-  PRIVATE SECTION.
-
-    TYPES : BEGIN OF ty_demo,
-              program  TYPE trdir-name,
-              objid    TYPE wwwdata-objid,
-              text     TYPE wwwdata-text,
-              filename TYPE string,
-            END OF ty_demo,
-            ty_demos TYPE STANDARD TABLE OF ty_demo WITH DEFAULT KEY,
-            BEGIN OF ty_check_result,
-              diff                   TYPE abap_bool,
-              xlsx_just_now          TYPE xstring,
-              xlsx_reference         TYPE xstring,
-              compare_xlsx_just_now  TYPE xstring, "REF TO cl_abap_zip,
-              compare_xlsx_reference TYPE xstring,
-            END OF ty_check_result,
-            BEGIN OF ty_alv_line,
-              status_icon            TYPE string,
-              error                  TYPE string,
-              xlsx_diff              TYPE string,
-              write_smw0             TYPE string,
-              program                TYPE trdir-name,
-              prog_text              TYPE trdirt-text,
-              objid                  TYPE wwwdata-objid,
-              obj_text               TYPE wwwdata-text,
-              filename               TYPE string,
-              xlsx_just_now          TYPE xstring,
-              xlsx_reference         TYPE xstring,
-              compare_xlsx_just_now  TYPE xstring, "REF TO cl_abap_zip,
-              compare_xlsx_reference TYPE xstring, "REF TO cl_abap_zip,
-              cell_types             TYPE salv_t_int4_column,
-            END OF ty_alv_line,
-            ty_alv_table              TYPE STANDARD TABLE OF ty_alv_line WITH DEFAULT KEY,
-            ty_popup_confirm_question TYPE c LENGTH 400.
-
-    METHODS at_selection_screen_output1000.
-
-    METHODS at_selection_screen_output1001
-      RAISING
-        zcx_excel
-        cx_salv_data_error
-        cx_salv_not_found
-        cx_salv_msg.
-
-    METHODS check_regression
+    zip->get(
+      EXPORTING
+        name                    = 'docProps/core.xml'
       IMPORTING
-        demo          TYPE ty_demo
-      RETURNING
-        VALUE(result) TYPE ty_check_result
-      RAISING
-        zcx_excel.
+        content                 = content
+      EXCEPTIONS
+        zip_index_error         = 1
+        zip_decompression_error = 2
+        OTHERS                  = 3 ).
+    IF sy-subrc <> 0.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'docProps/core.xml not found'.
+    ENDIF.
 
-    METHODS get_list_of_demo_files
-      RETURNING
-        VALUE(result) TYPE ty_demos.
+    CALL TRANSFORMATION zexcel_tr_docprops_core SOURCE XML content RESULT root = docprops_core.
 
-    METHODS gui_upload
-      IMPORTING
-        file_name     TYPE string
-      RETURNING
-        VALUE(result) TYPE xstring
-      RAISING
-        zcx_excel.
+    CLEAR: docprops_core-creator,
+           docprops_core-description,
+           docprops_core-created,
+           docprops_core-modified.
 
-    METHODS load_alv_table
-      RAISING
-        zcx_excel.
+    CALL TRANSFORMATION zexcel_tr_docprops_core SOURCE root = docprops_core RESULT XML content.
 
-    METHODS on_link_clicked FOR EVENT link_click OF cl_salv_events_table IMPORTING column row.
+    zip->delete(
+      EXPORTING
+        name            = 'docProps/core.xml'
+      EXCEPTIONS
+        zip_index_error = 1
+        OTHERS          = 2 ).
+    IF sy-subrc <> 0.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = |delete before add of docProps/core.xml|.
+    ENDIF.
 
-    METHODS popup_confirm
-      IMPORTING
-        question TYPE ty_popup_confirm_question
-      RAISING
-        zcx_excel.
+    zip->add(
+        name    = 'docProps/core.xml'
+        content = content ).
 
-    METHODS read_screen_fields.
+    LOOP AT zip->files ASSIGNING <file>
+        WHERE name CP 'xl/drawings/drawing*.xml'.
 
-    METHODS read_xlsx_from_web_repository
-      IMPORTING
-        objid         TYPE wwwdata-objid
-      RETURNING
-        VALUE(result) TYPE xstring
-      RAISING
-        zcx_excel.
+      zip->get(
+        EXPORTING
+          name                    = <file>-name
+        IMPORTING
+          content                 = content
+        EXCEPTIONS
+          zip_index_error         = 1
+          zip_decompression_error = 2
+          OTHERS                  = 3 ).
+      IF sy-subrc <> 0.
+        RAISE EXCEPTION TYPE zcx_excel EXPORTING error = |{ <file>-name } not found|.
+      ENDIF.
 
-    METHODS screen_1001_pbo_first_time
-      RAISING
-        cx_salv_data_error
-        cx_salv_msg
-        cx_salv_not_found
-        zcx_excel .
+      lo_ixml = cl_ixml=>create( ).
+      lo_streamfactory = lo_ixml->create_stream_factory( ).
+      lo_istream = lo_streamfactory->create_istream_xstring( content ).
+      lo_document = lo_ixml->create_document( ).
+      lo_parser = lo_ixml->create_parser(
+                  document       = lo_document
+                  istream        = lo_istream
+                  stream_factory = lo_streamfactory ).
+      lo_parser->parse( ).
 
-    METHODS write_screen_fields.
+      lo_filter = lo_document->create_filter_name_ns(
+                  name      = 'cNvPr'
+                  namespace = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing' ).
+      lo_iterator = lo_document->create_iterator_filtered( lo_filter ).
+      DO.
+        lo_element ?= lo_iterator->get_next( ).
+        IF lo_element IS NOT BOUND.
+          EXIT.
+        ENDIF.
+        lo_element->set_attribute_ns( name = 'name' value = '' ).
+      ENDDO.
 
-    METHODS write_xlsx_to_web_repository
-      IMPORTING
-        objid    TYPE wwwdata-objid
-        text     TYPE wwwdata-text
-        xstring  TYPE xstring
-        filename TYPE clike
-      RAISING
-        zcx_excel.
+      CLEAR content.
+      lo_ostream = lo_streamfactory->create_ostream_xstring( content ).
+      lo_renderer = lo_ixml->create_renderer(
+                  document = lo_document
+                  ostream  = lo_ostream ).
+      lo_renderer->render( ).
 
-    DATA: ref_sscrfields     TYPE REF TO sscrfields,
-          p_path             TYPE zexcel_export_dir,
-          splitter           TYPE REF TO cl_gui_splitter_container,
-          alv_container      TYPE REF TO cl_gui_container,
-          zip_diff_container TYPE REF TO cl_gui_container,
-          viewer             TYPE REF TO object,
-          salv               TYPE REF TO cl_salv_table,
-          alv_table          TYPE ty_alv_table,
-          lv_filesep         TYPE c LENGTH 1.
+      ls_file-name = <file>-name.
+      ls_file-content = content.
+      APPEND ls_file TO lt_file.
+
+    ENDLOOP.
+
+    LOOP AT lt_file ASSIGNING <ls_file2>.
+      zip->delete( name = <ls_file2>-name ).
+      zip->add( name = <ls_file2>-name content = <ls_file2>-content ).
+    ENDLOOP.
+
+    result = zip->save( ).
+
+    CREATE OBJECT zip_cleanup_for_diff.
+    result = zip_cleanup_for_diff->run( result ).
+
+  ENDMETHOD.
+
 
 ENDCLASS.
-
 
 
 CLASS lcl_app IMPLEMENTATION.
@@ -618,7 +618,7 @@ CLASS lcl_app IMPLEMENTATION.
               WHEN 'ONLI'.
 
                 read_screen_fields( ).
-                SUBMIT zdemo_excel WITH p_path = p_path AND RETURN.
+                SUBMIT zdemo_excel WITH p_path = p_path WITH p_checkr = abap_true AND RETURN.
                 CALL SELECTION-SCREEN 1001.
 
             ENDCASE.
@@ -1003,22 +1003,22 @@ CLASS lcl_app IMPLEMENTATION.
       TRY.
 
           CLEAR alv_line.
-
-          check_result = check_regression( <demo> ).
-
-          CLEAR alv_line.
-          CASE check_result-diff.
-            WHEN abap_true.
-              alv_line-status_icon = icon_cancel.
-            WHEN abap_false.
-              alv_line-status_icon = icon_okay.
-          ENDCASE.
+          alv_line-objid = <demo>-objid.
+          alv_line-obj_text = |{ <demo>-filename } ({ <demo>-program })|.
+          alv_line-filename = <demo>-filename.
           alv_line-program = <demo>-program.
           SELECT SINGLE text FROM trdirt INTO alv_line-prog_text
               WHERE sprsl = sy-langu
                 AND name  = alv_line-program.
-          alv_line-objid = <demo>-objid.
-          alv_line-obj_text = |{ <demo>-filename } ({ <demo>-program })|.
+
+          check_result = check_regression( <demo> ).
+
+          CASE check_result-diff.
+            WHEN abap_true.
+              alv_line-status_icon = '@0W\QFiles are different@'.
+            WHEN abap_false.
+              alv_line-status_icon = '@0V\QFiles are identical@'.
+          ENDCASE.
           IF check_result-diff = abap_true.
             alv_line-xlsx_diff = '@46\QShow differences@'.
             alv_line-write_smw0 = '@2L\QSave XLSX to Web Repository@'.
@@ -1036,7 +1036,7 @@ CLASS lcl_app IMPLEMENTATION.
           APPEND alv_line TO alv_table.
 
         CATCH cx_root INTO error.
-          alv_line-error = error->get_text( ).
+          alv_line-status_icon = |{ icon_cancel }{ error->get_text( ) }|.
       ENDTRY.
 
     ENDLOOP.
@@ -1077,7 +1077,7 @@ CLASS lcl_app IMPLEMENTATION.
                     zip_parse_error = 1
                     OTHERS          = 2 ).
                 IF sy-subrc <> 0.
-                  RAISE EXCEPTION TYPE zcx_excel EXPORTING error = |zip load old { alv_line-filename }|.
+                  RAISE EXCEPTION TYPE zcx_excel EXPORTING error = |zip load old { alv_line-obj_text }|.
                 ENDIF.
 
                 CREATE OBJECT zip_new.
@@ -1241,18 +1241,21 @@ CLASS lcl_app IMPLEMENTATION.
 
     columns = salv->get_columns( ).
     columns->set_cell_type_column( value = 'CELL_TYPES' ).
+    columns->get_column( 'STATUS_ICON' )->set_medium_text( 'Diff status' ).
     columns->get_column( 'STATUS_ICON' )->set_output_length( 2 ).
+    columns->get_column( 'XLSX_DIFF' )->set_medium_text( 'View diff' ).
     columns->get_column( 'XLSX_DIFF' )->set_output_length( 5 ).
     columns->get_column( 'XLSX_DIFF' )->set_alignment( if_salv_c_alignment=>centered ).
+    columns->get_column( 'WRITE_SMW0' )->set_medium_text( 'Web repository' ).
     columns->get_column( 'WRITE_SMW0' )->set_output_length( 5 ).
     columns->get_column( 'WRITE_SMW0' )->set_alignment( if_salv_c_alignment=>centered ).
     columns->get_column( 'PROGRAM' )->set_output_length( 15 ).
     columns->get_column( 'PROG_TEXT' )->set_output_length( 30 ).
     columns->get_column( 'OBJID' )->set_output_length( 20 ).
     columns->get_column( 'OBJ_TEXT' )->set_output_length( 50 ).
-    columns->get_column( 'XLSX_JUST_NOW' )->set_visible( if_salv_c_bool_sap=>false ).
-    columns->get_column( 'XLSX_JUST_NOW' )->set_alignment( if_salv_c_alignment=>centered ).
-    columns->get_column( 'XLSX_REFERENCE' )->set_visible( if_salv_c_bool_sap=>false ).
+    columns->get_column( 'FILENAME' )->set_output_length( 50 ).
+    columns->get_column( 'XLSX_JUST_NOW' )->set_technical( ).
+    columns->get_column( 'XLSX_REFERENCE' )->set_technical( ).
 
     events = salv->get_event( ).
     SET HANDLER on_link_clicked FOR events.
