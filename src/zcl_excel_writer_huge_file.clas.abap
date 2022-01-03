@@ -62,7 +62,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       ls_root          TYPE ts_root,
       lt_cell_data     TYPE zexcel_t_cell_data_unsorted,
       ls_shared_string TYPE zexcel_s_shared_string,
-      lv_sytabix       TYPE sytabix.
+      lv_sytabix       TYPE i.
 
     FIELD-SYMBOLS:
       <sheet_content>     TYPE zexcel_s_cell_data.
