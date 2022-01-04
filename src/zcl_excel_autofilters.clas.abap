@@ -6,7 +6,6 @@ CLASS zcl_excel_autofilters DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_AUTOFILTERS
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     CONSTANTS c_autofilter TYPE string VALUE '_xlnm._FilterDatabase'. "#EC NOTEXT
 
