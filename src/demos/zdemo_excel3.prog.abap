@@ -8,8 +8,6 @@
 
 REPORT zdemo_excel3.
 
-TYPE-POOLS: abap.
-
 TYPES: ty_sflight_lines TYPE TABLE OF sflight.
 
 DATA: lo_excel     TYPE REF TO zcl_excel,

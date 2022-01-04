@@ -81,8 +81,8 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
           lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
     DATA: lt_cell_data TYPE zexcel_t_cell_data_unsorted,
-          lv_row       TYPE sytabix,
-          lv_col       TYPE sytabix,
+          lv_row       TYPE i,
+          lv_col       TYPE i,
           lv_string    TYPE string,
           lc_value     TYPE string,
           lv_attrname  TYPE seocmpname.
