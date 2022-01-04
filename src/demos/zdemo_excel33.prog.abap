@@ -8,12 +8,14 @@
 
 REPORT zdemo_excel33.
 
+TYPES: ty_t005t_lines TYPE TABLE OF t005t.
+
 DATA: lo_excel      TYPE REF TO zcl_excel,
       lo_worksheet  TYPE REF TO zcl_excel_worksheet,
       lo_converter  TYPE REF TO zcl_excel_converter,
       lo_autofilter TYPE REF TO zcl_excel_autofilter.
 
-DATA lt_test TYPE TABLE OF t005t.
+DATA lt_test TYPE ty_t005t_lines.
 
 DATA: l_cell_value TYPE zexcel_cell_value,
       ls_area      TYPE zexcel_s_autofilter_area.
@@ -33,7 +35,7 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel->get_active_worksheet( ).
   lo_worksheet->set_title( ip_title = 'Internal table' ).
 
-  SELECT * UP TO 2 ROWS FROM t005t INTO TABLE lt_test.  "#EC CI_NOWHERE
+  PERFORM load_fixed_data CHANGING lt_test.
 
   CREATE OBJECT lo_converter.
 
@@ -65,3 +67,30 @@ START-OF-SELECTION.
 
 *** Create output
   lcl_output=>output( lo_excel ).
+
+
+FORM load_fixed_data CHANGING ct_test TYPE ty_t005t_lines.
+  DATA: lt_lines  TYPE TABLE OF string,
+        lv_line   TYPE string,
+        lt_fields TYPE TABLE OF string,
+        lv_comp   TYPE i,
+        lv_field  TYPE string,
+        ls_test   TYPE t005t.
+  FIELD-SYMBOLS: <lv_field> TYPE simple.
+
+  APPEND '001 E AD Andorra    Andorran    Andorra    Andorran   ' TO lt_lines.
+  APPEND '001 E BE Belgium    Belgian     Belgium    Belgian    ' TO lt_lines.
+  APPEND '001 E DE Germany    German      Germany    German     ' TO lt_lines.
+  APPEND '001 E FM Micronesia Micronesian Micronesia Micronesian' TO lt_lines.
+  LOOP AT lt_lines INTO lv_line.
+    CONDENSE lv_line.
+    SPLIT lv_line AT space INTO TABLE lt_fields.
+    lv_comp = 1.
+    LOOP AT lt_fields INTO lv_field.
+      ASSIGN COMPONENT lv_comp OF STRUCTURE ls_test TO <lv_field>.
+      <lv_field> = lv_field.
+      lv_comp = lv_comp + 1.
+    ENDLOOP.
+    APPEND ls_test TO ct_test.
+  ENDLOOP.
+ENDFORM.
