@@ -8,7 +8,7 @@ CLASS zcl_excel_sheet_setup DEFINITION
 *"* do not include other source files here!!!
 
     DATA black_and_white TYPE flag .
-    DATA cell_comments TYPE stringval .
+    DATA cell_comments TYPE string .
     DATA copies TYPE int2 .
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
@@ -93,7 +93,7 @@ CLASS zcl_excel_sheet_setup DEFINITION
     CONSTANTS c_pe_na TYPE string VALUE 'NA'.               "#EC NOTEXT
     DATA diff_oddeven_headerfooter TYPE flag .
     DATA draft TYPE flag .
-    DATA errors TYPE stringval .
+    DATA errors TYPE string .
     DATA even_footer TYPE zexcel_s_worksheet_head_foot .
     DATA even_header TYPE zexcel_s_worksheet_head_foot .
     DATA first_page_number TYPE int2 .
