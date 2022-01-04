@@ -98,7 +98,7 @@ CLASS zcl_excel DEFINITION
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style
       RETURNING
-        VALUE(ep_index) TYPE sytabix
+        VALUE(ep_index) TYPE i
       RAISING
         zcx_excel .
     METHODS get_style_to_guid

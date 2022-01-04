@@ -133,7 +133,6 @@ CLASS zcl_excel_common DEFINITION
         !ip_value       TYPE t
       RETURNING
         VALUE(ep_value) TYPE zexcel_cell_value .
-    TYPE-POOLS abap .
     TYPES: t_char10 TYPE c LENGTH 10.
     TYPES: t_char255 TYPE c LENGTH 255.
     CLASS-METHODS split_file

@@ -23,7 +23,6 @@
 
 REPORT zdemo_calendar.
 
-TYPE-POOLS: abap.
 CONSTANTS: gc_save_file_name TYPE string VALUE 'Calendar.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
 INCLUDE zdemo_calendar_classes.
@@ -34,7 +33,7 @@ PARAMETERS: p_from TYPE dfrom,
             p_to   TYPE dto.
 
 SELECTION-SCREEN BEGIN OF BLOCK orientation WITH FRAME TITLE orient.
-  PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
+PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
               p_lands TYPE flag RADIOBUTTON GROUP orie DEFAULT 'X'.
 SELECTION-SCREEN END OF BLOCK orientation.
 
