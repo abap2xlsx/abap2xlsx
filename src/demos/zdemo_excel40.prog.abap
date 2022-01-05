@@ -39,19 +39,13 @@ START-OF-SELECTION.
     lo_style_changer->set_fill_filltype( zcl_excel_style_fill=>c_fill_solid ).
     lo_style_changer->set_fill_fgcolor_rgb( zcl_excel_style_color=>c_yellow ).
     lo_worksheet->change_area_style(
-          ip_column_start  = 1
-          ip_column_end    = 20
-          ip_row           = 1
-          ip_row_to        = 3
+          ip_range        = 'A1:T3'
           ip_style_changer = lo_style_changer ).
 
     lo_style_changer = zcl_excel_style_changer=>create( lo_excel ).
     lo_style_changer->set_font_color_rgb( zcl_excel_style_color=>c_red ).
     lo_worksheet->change_area_style(
-          ip_column_start  = 1
-          ip_column_end    = 4
-          ip_row           = 1
-          ip_row_to        = 100
+          ip_range        = 'A1:D100'
           ip_style_changer = lo_style_changer ).
 
 *--------------------------------------------------------------------*
