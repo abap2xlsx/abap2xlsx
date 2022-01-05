@@ -10,8 +10,6 @@
 
 REPORT zdemo_excel15.
 
-TYPE-POOLS: abap.
-
 TYPES:
   BEGIN OF t_demo_excel15,
     input TYPE string,

@@ -9,9 +9,6 @@ CLASS zcl_excel_worksheet DEFINITION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
-    TYPE-POOLS slis .
-    TYPE-POOLS soi .
 
     INTERFACES zif_excel_sheet_printsettings .
     INTERFACES zif_excel_sheet_properties .
@@ -701,7 +698,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column      TYPE simple
         !ip_row         TYPE zexcel_cell_row
       RETURNING
-        VALUE(ep_width) TYPE float
+        VALUE(ep_width) TYPE f
       RAISING
         zcx_excel .
     CLASS-METHODS check_cell_column_formula
@@ -1384,7 +1381,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     TYPES:
       BEGIN OF t_auto_size,
         col_index TYPE int4,
-        width     TYPE float,
+        width     TYPE f,
       END   OF t_auto_size.
     TYPES: tt_auto_size TYPE TABLE OF t_auto_size.
 
@@ -1395,7 +1392,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: auto_sizes  TYPE tt_auto_size.
     DATA: count       TYPE int4.
     DATA: highest_row TYPE int4.
-    DATA: width       TYPE float.
+    DATA: width       TYPE f.
 
     FIELD-SYMBOLS: <auto_size>        LIKE LINE OF auto_sizes.
 
@@ -3630,7 +3627,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD set_column_width.
     DATA: lo_column  TYPE REF TO zcl_excel_column.
-    DATA: width             TYPE float.
+    DATA: width             TYPE f.
 
     lo_column = me->get_column( ip_column ).
 
@@ -3770,7 +3767,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD set_row_height.
     DATA: lo_row  TYPE REF TO zcl_excel_row.
-    DATA: height  TYPE float.
+    DATA: height  TYPE f.
 
     lo_row = me->get_row( ip_row ).
 

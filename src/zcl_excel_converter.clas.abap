@@ -5,7 +5,6 @@ CLASS zcl_excel_converter DEFINITION
 *"* public components of class ZCL_EXCEL_CONVERTER
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     CLASS-METHODS class_constructor .
     METHODS ask_option
