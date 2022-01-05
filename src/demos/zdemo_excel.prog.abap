@@ -14,6 +14,7 @@ DATA: lv_workdir TYPE string,
 
 
 PARAMETERS: p_path TYPE zexcel_export_dir.
+PARAMETERS: p_checkr NO-DISPLAY TYPE abap_bool.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_path.
   lv_workdir = p_path.
@@ -37,7 +38,7 @@ START-OF-SELECTION.
 
   SUBMIT zdemo_excel1 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Hello world
   SUBMIT zdemo_excel2 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Styles
-  SUBMIT zdemo_excel3 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: iTab binding
+  SUBMIT zdemo_excel3 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path WITH p_checkr = p_checkr AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: iTab binding
   SUBMIT zdemo_excel4 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Multi sheets, page setup and sheet properties
   SUBMIT zdemo_excel5 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Conditional formatting
   SUBMIT zdemo_excel6 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path     = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Formulas
