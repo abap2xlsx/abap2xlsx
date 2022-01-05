@@ -44,7 +44,7 @@ CLASS zcl_excel_drawing DEFINITION
         VALUE(r_from_row) TYPE zexcel_cell_row .
     METHODS get_guid
       RETURNING
-        VALUE(ep_guid) TYPE guid_16 .
+        VALUE(ep_guid) TYPE zexcel_guid .
     METHODS get_height_emu_str
       RETURNING
         VALUE(r_height) TYPE string .
@@ -133,7 +133,7 @@ CLASS zcl_excel_drawing DEFINITION
     CONSTANTS c_media_source_www TYPE c VALUE 1.            "#EC NOTEXT
     CONSTANTS c_media_source_xstring TYPE c VALUE 0.        "#EC NOTEXT
     CONSTANTS c_media_source_mime TYPE c VALUE 2.           "#EC NOTEXT
-    DATA guid TYPE guid_16 .
+    DATA guid TYPE zexcel_guid .
     DATA media TYPE xstring .
     DATA media_key_www TYPE wwwdatatab .
     DATA media_name TYPE string .
@@ -147,7 +147,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_drawing IMPLEMENTATION.
+CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -221,7 +221,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
   METHOD get_media.
 
-    DATA: lv_language TYPE sylangu.
+    DATA: lv_language LIKE sy-langu.
     DATA: lt_bin_mime TYPE sdokcntbins.
     DATA: lt_mime          TYPE tsfmime,
           lv_filesize      TYPE i,
@@ -1053,7 +1053,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
   METHOD set_media_mime.
 
-    DATA: lv_language TYPE sylangu.
+    DATA: lv_language LIKE sy-langu.
 
     io = ip_io.
     media_source = c_media_source_mime.
