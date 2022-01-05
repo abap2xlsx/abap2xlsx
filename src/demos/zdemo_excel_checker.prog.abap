@@ -1255,6 +1255,8 @@ CLASS lcl_app IMPLEMENTATION.
     columns->get_column( 'FILENAME' )->set_output_length( 50 ).
     columns->get_column( 'XLSX_JUST_NOW' )->set_technical( ).
     columns->get_column( 'XLSX_REFERENCE' )->set_technical( ).
+columns->get_column( 'COMPARE_XLSX_JUST_NOW' )->set_technical( ).
+columns->get_column( 'COMPARE_XLSX_REFERENCE' )->set_technical( ).
 
     events = salv->get_event( ).
     SET HANDLER on_link_clicked FOR events.
