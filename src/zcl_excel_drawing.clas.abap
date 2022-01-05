@@ -147,7 +147,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_drawing IMPLEMENTATION.
+CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -221,7 +221,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
   METHOD get_media.
 
-    DATA: lv_language TYPE sylangu.
+    DATA: lv_language LIKE sy-langu.
     DATA: lt_bin_mime TYPE sdokcntbins.
     DATA: lt_mime          TYPE tsfmime,
           lv_filesize      TYPE i,
@@ -1053,7 +1053,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
   METHOD set_media_mime.
 
-    DATA: lv_language TYPE sylangu.
+    DATA: lv_language LIKE sy-langu.
 
     io = ip_io.
     media_source = c_media_source_mime.
