@@ -429,7 +429,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * 1st character
 *--------------------------------------------------------------------*
       lv_column = lv_column_c.
-      lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+0(1) ) MOD zcl_excel_common=>c_excel_col_module.
+      FIND lv_column+0(1) IN sy-abcde MATCH OFFSET lv_modulo.
+      lv_modulo = lv_modulo + 1.
       IF lv_modulo < 1 OR lv_modulo > 26.
         MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
         zcx_excel=>raise_symsg( ).
@@ -440,7 +441,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * 2nd character if present
 *--------------------------------------------------------------------*
       CHECK lv_column+1(1) IS NOT INITIAL.      " No need to continue if string ended
-      lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+1(1) ) MOD zcl_excel_common=>c_excel_col_module.
+      FIND lv_column+1(1) IN sy-abcde MATCH OFFSET lv_modulo.
+      lv_modulo = lv_modulo + 1.
       IF lv_modulo < 1 OR lv_modulo > 26.
         MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
         zcx_excel=>raise_symsg( ).
@@ -451,7 +453,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * 3rd character if present
 *--------------------------------------------------------------------*
       CHECK lv_column+2(1) IS NOT INITIAL.      " No need to continue if string ended
-      lv_modulo = cl_abap_conv_out_ce=>uccpi( lv_column+2(1) ) MOD zcl_excel_common=>c_excel_col_module.
+      FIND lv_column+2(1) IN sy-abcde MATCH OFFSET lv_modulo.
+      lv_modulo = lv_modulo + 1.
       IF lv_modulo < 1 OR lv_modulo > 26.
         MESSAGE e800(zabap2xlsx) INTO lv_errormessage.
         zcx_excel=>raise_symsg( ).
