@@ -52,13 +52,13 @@
     <item>
      <ID>I</ID>
      <KEY>405</KEY>
-     <ENTRY>Merge: First row larger then last row</ENTRY>
+     <ENTRY>First row larger than last row</ENTRY>
      <LENGTH>60</LENGTH>
     </item>
     <item>
      <ID>I</ID>
      <KEY>406</KEY>
-     <ENTRY>Merge: First column larger then last column</ENTRY>
+     <ENTRY>First column larger than last column</ENTRY>
      <LENGTH>60</LENGTH>
     </item>
    </TPOOL>
