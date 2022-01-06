@@ -2977,9 +2977,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD normalize_style_parameter.
 
-    DATA: lo_style_type type ref to cl_abap_typedescr.
+    DATA: lo_style_type TYPE REF TO cl_abap_typedescr.
     FIELD-SYMBOLS:
-      <style> TYPE REF TO ZCL_EXCEL_STYLE.
+      <style> TYPE REF TO zcl_excel_style.
 
     CHECK ip_guid IS NOT INITIAL.
 
