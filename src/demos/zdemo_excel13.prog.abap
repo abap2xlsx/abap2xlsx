@@ -56,12 +56,10 @@ START-OF-SELECTION.
   lo_worksheet->set_merge( ip_row = 4 ip_column_start = 'B' ip_column_end = 'G' ).
 
   " Test also if merge works when oher merged chells are empty
-  lo_worksheet->set_cell( ip_row = 6 ip_column = 'B' ip_value = 'Tomato' ).
-  lo_worksheet->set_merge( ip_row = 6 ip_column_start = 'B' ip_column_end = 'G' ).
+  lo_worksheet->set_merge( ip_range = 'B6:G6' ip_value = 'Tomato' ).
 
   " Test the patch provided by Victor Alekhin to merge cells in one column
-  lo_worksheet->set_cell(  ip_row = 8 ip_column       = 'B' ip_value = 'Merge cells also over multiple rows by Victor Alekhin' ).
-  lo_worksheet->set_merge( ip_row = 8 ip_column_start = 'B' ip_column_end = 'G' ip_row_to = 10 ).
+  lo_worksheet->set_merge( ip_range = 'B8:G10' ip_value = 'Merge cells also over multiple rows by Victor Alekhin' ).
 
   " Test the patch provided by Alexander Budeyev with different column merges
   lo_worksheet->set_cell( ip_row = 12 ip_column = 'B' ip_value = 'Merge cells with different merges by Alexander Budeyev' ).
