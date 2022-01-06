@@ -3547,7 +3547,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ls_shared_string   TYPE zexcel_s_shared_string,
           lv_count_str       TYPE string,
           lv_uniquecount_str TYPE string,
-          lv_sytabix         TYPE sytabix,
+          lv_sytabix         TYPE i,
           lv_count           TYPE i,
           lv_uniquecount     TYPE i.
 
@@ -6415,7 +6415,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     TYPES: BEGIN OF ts_built_in_format,
              num_format TYPE zexcel_number_format,
-             id         TYPE sytabix,
+             id         TYPE i,
            END OF ts_built_in_format.
 
     DATA: lt_built_in_num_formats TYPE HASHED TABLE OF ts_built_in_format WITH UNIQUE KEY num_format,

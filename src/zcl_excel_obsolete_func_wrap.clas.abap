@@ -6,14 +6,14 @@ CLASS zcl_excel_obsolete_func_wrap DEFINITION
 
     CLASS-METHODS guid_create
       RETURNING
-        VALUE(rv_guid_16) TYPE guid_16 .
+        VALUE(rv_guid_16) TYPE zexcel_guid .
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS zcl_excel_obsolete_func_wrap IMPLEMENTATION.
+CLASS ZCL_EXCEL_OBSOLETE_FUNC_WRAP IMPLEMENTATION.
 
 
   METHOD guid_create.

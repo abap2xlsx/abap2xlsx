@@ -5,7 +5,6 @@ CLASS zcl_excel_reader_2007 DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_READER_2007
 *"* do not include other source files here!!!
-    TYPE-POOLS ixml .
 
     INTERFACES zif_excel_reader .
 
@@ -1782,7 +1781,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_worksheet               TYPE REF TO zcl_excel_worksheet,
       lo_range                   TYPE REF TO zcl_excel_range,
       lv_worksheet_title         TYPE zexcel_sheet_title,
-      lv_tabix                   TYPE sytabix,            " #235 - repeat rows/cols.  Needed to link defined name to correct worksheet
+      lv_tabix                   TYPE i,            " #235 - repeat rows/cols.  Needed to link defined name to correct worksheet
 
       ls_range                   TYPE t_range,
       lv_range_value             TYPE zexcel_range_value,
@@ -2185,7 +2184,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     TYPES: BEGIN OF lty_column,
              min          TYPE string,
              max          TYPE string,
-             width        TYPE float,
+             width        TYPE f,
              customwidth  TYPE string,
              style        TYPE string,
              bestfit      TYPE string,
@@ -2210,7 +2209,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     TYPES: BEGIN OF lty_row,
              r            TYPE string,
              customheight TYPE string,
-             ht           TYPE float,
+             ht           TYPE f,
              spans        TYPE string,
              thickbot     TYPE string,
              customformat TYPE string,
@@ -2314,7 +2313,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
           lo_ixml_sheetformatpr_elem  TYPE REF TO if_ixml_element,
           ls_sheetformatpr            TYPE lty_sheetformatpr,
-          lv_height                   TYPE float,
+          lv_height                   TYPE f,
 
           lo_ixml_headerfooter_elem   TYPE REF TO if_ixml_element,
           ls_headerfooter             TYPE lty_headerfooter,
