@@ -154,7 +154,7 @@ FORM load_scarr_data_for_checker CHANGING ct_scarr TYPE ty_scarr_lines.
   PERFORM load_data USING lt_lines CHANGING ct_scarr.
 ENDFORM.
 
-FORM load_data USING it_data TYPE TABLE changing ct_data TYPE TABLE.
+FORM load_data USING it_data TYPE table CHANGING ct_data TYPE table.
   DATA: lv_line     TYPE string,
         lt_fields   TYPE TABLE OF string,
         lv_comp     TYPE i,
