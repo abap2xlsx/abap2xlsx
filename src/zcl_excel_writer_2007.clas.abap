@@ -6107,7 +6107,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           IF lo_row->get_custom_height( ) = abap_true.
             lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1' ).
           ENDIF.
-          IF lo_row->get_row_height( ) >= 0.
+          IF lo_row->get_row_height( ) > 0.
             lv_value = lo_row->get_row_height( ).
             lo_element_2->set_attribute_ns( name  = 'ht' value = lv_value ).
           ENDIF.
