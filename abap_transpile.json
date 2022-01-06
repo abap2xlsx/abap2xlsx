@@ -85,8 +85,6 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "Void type: cl_abap_elemdescr, https://github.com/open-abap/open-abap/issues/228"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "encrypt_password",           "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "is_cell_in_range_lrc_in",      "note": "??"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "is_cell_in_range_ulc_in",      "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_charblanks", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_extref", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_leftup", "note": ""},
