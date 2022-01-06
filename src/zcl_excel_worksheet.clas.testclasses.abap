@@ -921,8 +921,9 @@ CLASS ltc_normalize_style_param IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD ref_to_zcl_excel_style.
+    DATA: style TYPE REF TO zcl_excel_style.
 
-    DATA(style) = excel->add_new_style( ).
+    style = excel->add_new_style( ).
     exp-fails = abap_false.
     exp-guid = style->get_guid( ).
     assert( input = style exp = exp ).
@@ -930,8 +931,9 @@ CLASS ltc_normalize_style_param IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD zexcel_cell_style.
+    DATA: style TYPE REF TO zcl_excel_style.
 
-    DATA(style) = excel->add_new_style( ).
+    style = excel->add_new_style( ).
     exp-fails = abap_false.
     exp-guid = style->get_guid( ).
     assert( input = exp-guid exp = exp ).
@@ -939,7 +941,6 @@ CLASS ltc_normalize_style_param IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD raw_16_bytes.
-
     DATA: raw_16_bytes TYPE x LENGTH 16.
 
     raw_16_bytes = 'A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1'.
