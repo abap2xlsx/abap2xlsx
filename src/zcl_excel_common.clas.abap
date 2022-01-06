@@ -42,15 +42,20 @@ CLASS zcl_excel_common DEFINITION
       IMPORTING
         !i_columnrow TYPE clike
       EXPORTING
-        !e_column    TYPE zexcel_cell_column_alpha
-        !e_row       TYPE zexcel_cell_row .
+        !e_column     TYPE zexcel_cell_column_alpha
+        !e_column_int TYPE zexcel_cell_column
+        !e_row        TYPE zexcel_cell_row
+      RAISING
+        zcx_excel.
     CLASS-METHODS convert_range2column_a_row
       IMPORTING
         !i_range            TYPE clike
         !i_allow_1dim_range TYPE abap_bool DEFAULT abap_false
       EXPORTING
         !e_column_start     TYPE zexcel_cell_column_alpha
+        !e_column_start_int TYPE zexcel_cell_column
         !e_column_end       TYPE zexcel_cell_column_alpha
+        !e_column_end_int   TYPE zexcel_cell_column
         !e_row_start        TYPE zexcel_cell_row
         !e_row_end          TYPE zexcel_cell_row
         !e_sheet            TYPE clike
@@ -493,6 +498,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
     FIND REGEX '^(\D+)(\d+)$' IN lv_columnrow SUBMATCHES e_column
                                                          pane_cell_row_a.
+    IF e_column_int IS SUPPLIED.
+      e_column_int = convert_column2int( ip_column = e_column ).
+    ENDIF.
     e_row = pane_cell_row_a.
 
   ENDMETHOD.
@@ -587,6 +595,13 @@ CLASS zcl_excel_common IMPLEMENTATION.
       convert_columnrow2column_a_row( EXPORTING i_columnrow = lv_columnrow_end
                                       IMPORTING e_column    = e_column_end
                                                 e_row       = e_row_end ).
+    ENDIF.
+
+    IF e_column_start_int IS SUPPLIED AND e_column_start IS NOT INITIAL.
+      e_column_start_int = convert_column2int( e_column_start ).
+    ENDIF.
+    IF e_column_end_int IS SUPPLIED AND e_column_end IS NOT INITIAL.
+      e_column_end_int = convert_column2int( e_column_end ).
     ENDIF.
 
     e_sheet = unescape_string( lv_sheet ).                  " Return in unescaped form
