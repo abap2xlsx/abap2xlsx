@@ -356,10 +356,14 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_columns
       RETURNING
-        VALUE(eo_columns) TYPE REF TO zcl_excel_columns .
+        VALUE(eo_columns) TYPE REF TO zcl_excel_columns
+      RAISING
+        zcx_excel .
     METHODS get_columns_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator
+      RAISING
+        zcx_excel .
     METHODS get_style_cond_iterator
       RETURNING
         VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
@@ -768,9 +772,11 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel.
     CLASS-METHODS normalize_style_parameter
       IMPORTING
-        !ip_guid       TYPE any
+        !ip_style_or_guid TYPE any
       RETURNING
-        VALUE(rv_guid) TYPE zexcel_cell_style .
+        VALUE(rv_guid)    TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
     METHODS print_title_set_range .
     METHODS update_dimension_range
       RAISING
@@ -2981,22 +2987,24 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     FIELD-SYMBOLS:
       <style> TYPE REF TO zcl_excel_style.
 
-    CHECK ip_guid IS NOT INITIAL.
+    CHECK ip_style_or_guid IS NOT INITIAL.
 
-    lo_style_type = cl_abap_typedescr=>describe_by_data( ip_guid ).
+    lo_style_type = cl_abap_typedescr=>describe_by_data( ip_style_or_guid ).
     IF lo_style_type->type_kind = lo_style_type->typekind_oref.
-      lo_style_type = cl_abap_typedescr=>describe_by_object_ref( ip_guid ).
+      lo_style_type = cl_abap_typedescr=>describe_by_object_ref( ip_style_or_guid ).
       IF lo_style_type->absolute_name = '\CLASS=ZCL_EXCEL_STYLE'.
-        ASSIGN ip_guid TO <style>.
+        ASSIGN ip_style_or_guid TO <style>.
         rv_guid = <style>->get_guid( ).
       ENDIF.
 
     ELSEIF lo_style_type->absolute_name = '\TYPE=ZEXCEL_CELL_STYLE'.
-      rv_guid = ip_guid.
+      rv_guid = ip_style_or_guid.
 
     ELSEIF lo_style_type->type_kind = lo_style_type->typekind_hex.
-      rv_guid = ip_guid.
+      rv_guid = ip_style_or_guid.
 
+    ELSE.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_tyle or zexcel_cell_style'.
     ENDIF.
 
   ENDMETHOD.

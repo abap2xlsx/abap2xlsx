@@ -128,6 +128,8 @@ START-OF-SELECTION.
 
   lo_style_gr_vertical2                    = lo_excel->add_new_style( io_clone_of = lo_style_gr_cornerlb ).
   lo_style_gr_vertical2->fill->filltype    = zcl_excel_style_fill=>c_fill_gradient_vertical.
+  lo_style_gr_vertical2->fill->fgcolor-rgb = zcl_excel_style_color=>c_white.
+  lo_style_gr_vertical2->fill->bgcolor-rgb = zcl_excel_style_color=>c_blue.
 
   lo_style_gr_fromcenter                   = lo_excel->add_new_style( io_clone_of = lo_style_gr_cornerlb ).
   lo_style_gr_fromcenter->fill->filltype   = zcl_excel_style_fill=>c_fill_gradient_fromcenter.
