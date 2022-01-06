@@ -55,14 +55,14 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_invalid           TYPE string.
 
     DATA:
-      lo_iterator  TYPE REF TO cl_object_collection_iterator,
+      lo_iterator  TYPE REF TO zcl_excel_collection_iterator,
       lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
     DATA:
       ls_root          TYPE ts_root,
       lt_cell_data     TYPE zexcel_t_cell_data_unsorted,
       ls_shared_string TYPE zexcel_s_shared_string,
-      lv_sytabix       TYPE sytabix.
+      lv_sytabix       TYPE i.
 
     FIELD-SYMBOLS:
       <sheet_content>     TYPE zexcel_s_cell_data.
@@ -139,13 +139,13 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lc_true              TYPE lty_bool   VALUE 'true',
       lc_zero              TYPE c LENGTH 1 VALUE '0',
       lc_one               TYPE c LENGTH 1 VALUE '1',
-      lc_default_col_width TYPE float      VALUE '9.10'.
+      lc_default_col_width TYPE f      VALUE '9.10'.
 
     TYPES:
       BEGIN OF lty_column,
         min          TYPE i,
         max          TYPE i,
-        width        TYPE float,
+        width        TYPE f,
         hidden       TYPE lty_bool,
         customwidth  TYPE lty_bool,
         bestfit      TYPE lty_bool,
@@ -160,7 +160,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         spans        TYPE c LENGTH 11,  "12345:12345"
         hidden       TYPE lty_bool,
         customheight TYPE lty_bool,
-        height       TYPE float,
+        height       TYPE f,
         collapsed    TYPE lty_bool,
         outlinelevel TYPE i,
         customformat TYPE lty_bool,
@@ -220,8 +220,8 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         topleftcell        TYPE c LENGTH 10,
         activecell         TYPE c LENGTH 10,
         customheight       TYPE lty_bool,
-        defaultrowheight   TYPE float,
-        defaultcolwidth    TYPE float,
+        defaultrowheight   TYPE f,
+        defaultcolwidth    TYPE f,
         outlinelevelrow    TYPE i,
         outlinelevelcol    TYPE i,
         cols               TYPE STANDARD TABLE OF lty_column,
@@ -279,7 +279,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
 * Local data
 *
     DATA:
-      lo_iterator                 TYPE REF TO cl_object_collection_iterator,
+      lo_iterator                 TYPE REF TO zcl_excel_collection_iterator,
       lo_table                    TYPE REF TO zcl_excel_table,
       lo_column_default           TYPE REF TO zcl_excel_column,
       lo_row_default              TYPE REF TO zcl_excel_row,
@@ -293,9 +293,9 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_freeze_cell_row          TYPE zexcel_cell_row,
       lv_freeze_cell_column       TYPE zexcel_cell_column,
       lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
-      lo_column_iterator          TYPE REF TO cl_object_collection_iterator,
+      lo_column_iterator          TYPE REF TO zcl_excel_collection_iterator,
       lo_column                   TYPE REF TO zcl_excel_column,
-      lo_row_iterator             TYPE REF TO cl_object_collection_iterator,
+      lo_row_iterator             TYPE REF TO zcl_excel_collection_iterator,
       lo_row                      TYPE REF TO zcl_excel_row,
       lv_relation_id              TYPE i VALUE 0,
       outline_level_row           TYPE i VALUE 0,
@@ -466,7 +466,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
     ENDWHILE.
 
 * Set column information (width, style, ...)
-*  IF lo_column_iterator->has_next( ) = abap_true.
     WHILE lo_column_iterator->has_next( ) = abap_true.
       lo_column ?= lo_column_iterator->get_next( ).
       IF lo_column->get_outline_level( ) > outline_level_col.
@@ -507,7 +506,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_column = zcl_excel_common=>convert_column2int( lo_column->get_column_index( ) ).
       INSERT lv_column INTO TABLE lts_sorted_columns.
     ENDWHILE.
-*  ENDIF.
 
 *
 * Now find all columns that were missing so far

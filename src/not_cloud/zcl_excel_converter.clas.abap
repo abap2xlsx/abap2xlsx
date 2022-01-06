@@ -5,7 +5,6 @@ CLASS zcl_excel_converter DEFINITION
 *"* public components of class ZCL_EXCEL_CONVERTER
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
 
     CLASS-METHODS class_constructor .
     METHODS ask_option
@@ -529,8 +528,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     READ TABLE wt_styles INTO ls_styles WITH KEY guid = i_style.
     IF sy-subrc = 0.
       lo_style                 = wo_excel->add_new_style( ).
-*    lo_style->borders        = ls_styles-style->borders.
-*    lo_style->protection     = ls_styles-style->protection.
       lo_style->font->bold                 = ls_styles-style->font->bold.
       lo_style->alignment->horizontal      = ls_styles-style->alignment->horizontal.
       lo_style->number_format->format_code = ls_styles-style->number_format->format_code.
@@ -586,8 +583,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
             not_supported_by_gui  = 4
            ).
     IF sy-subrc <> 0.
-*       MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*                  WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       CONCATENATE 'Excel_' w_fcount '.xlsx' INTO r_path.
     ELSE.
       DO.
@@ -1656,8 +1651,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 
     ASSIGN wo_data->* TO <fs_data>.
 
-* catch zcx_excel .
-*endtry.
     IF wo_excel IS BOUND.
       get_file( IMPORTING e_bytecount  = l_bytecount
                           et_file      = lt_file ) .
@@ -1671,13 +1664,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
       cl_gui_frontend_services=>execute(
         EXPORTING
           document               = l_dir
-*        application            =
-*        parameter              =
-*        default_directory      =
-*        maximized              =
-*        minimized              =
-*        synchronous            =
-*        operation              = 'OPEN'
         EXCEPTIONS
           cntl_error             = 1
           error_no_gui           = 2
@@ -1810,8 +1796,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 
     ASSIGN wo_data->* TO <fs_data>.
 
-* catch zcx_excel .
-*endtry.
     IF wo_excel IS BOUND.
       get_file( IMPORTING e_bytecount  = l_bytecount
                           et_file      = lt_file ) .

@@ -12,7 +12,6 @@ CLASS zcl_excel_drawing DEFINITION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_DRAWING
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     CONSTANTS c_graph_pie TYPE zexcel_graph_type VALUE 1.   "#EC NOTEXT
     CONSTANTS c_graph_line TYPE zexcel_graph_type VALUE 2.  "#EC NOTEXT
@@ -45,7 +44,7 @@ CLASS zcl_excel_drawing DEFINITION
         VALUE(r_from_row) TYPE zexcel_cell_row .
     METHODS get_guid
       RETURNING
-        VALUE(ep_guid) TYPE guid_16 .
+        VALUE(ep_guid) TYPE zexcel_guid .
     METHODS get_height_emu_str
       RETURNING
         VALUE(r_height) TYPE string .
@@ -134,7 +133,7 @@ CLASS zcl_excel_drawing DEFINITION
     CONSTANTS c_media_source_www TYPE c VALUE 1.            "#EC NOTEXT
     CONSTANTS c_media_source_xstring TYPE c VALUE 0.        "#EC NOTEXT
     CONSTANTS c_media_source_mime TYPE c VALUE 2.           "#EC NOTEXT
-    DATA guid TYPE guid_16 .
+    DATA guid TYPE zexcel_guid .
     DATA media TYPE xstring .
     DATA media_key_www TYPE wwwdatatab .
     DATA media_name TYPE string .
@@ -148,14 +147,11 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_drawing IMPLEMENTATION.
+CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
 
 
   METHOD constructor.
 
-*  CALL FUNCTION 'GUID_CREATE'                                  " del issue #379 - function is outdated in newer releases
-*    IMPORTING
-*      ev_guid_16 = me->guid.
     me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).      " ins issue #379 - replacement for outdated function call
 
     IF ip_title IS NOT INITIAL.
@@ -187,11 +183,9 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
   METHOD emu2pixel.
 * suppose 96 DPI
     IF ip_dpi IS SUPPLIED.
-*    r_emu = ip_pixel  * 914400 / ip_dpi.
       r_pixel = ip_emu * ip_dpi / 914400.
     ELSE.
 * suppose 96 DPI
-*    r_emu = ip_pixel  * 914400 / 96.
       r_pixel = ip_emu * 96 / 914400.
     ENDIF.
   ENDMETHOD.
@@ -227,7 +221,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
   METHOD get_media.
 
-    DATA: lv_language TYPE sylangu.
+    DATA: lv_language LIKE sy-langu.
     DATA: lt_bin_mime TYPE sdokcntbins.
     DATA: lt_mime          TYPE tsfmime,
           lv_filesize      TYPE i,
@@ -865,10 +859,6 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
             node3 ?= node2->find_from_name( name = 'axPos' namespace = 'c' ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_axpos = ls_prop-val.
-*          node3 ?= node2->find_from_name( name = 'numFmt' namespace = 'c' ).
-*          zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
-*          lv_formatcode = ls_prop-formatcode.
-*          lv_sourcelinked = ls_prop-sourcelinked.
             node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_majortickmark = ls_prop-val.
@@ -1063,7 +1053,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
   METHOD set_media_mime.
 
-    DATA: lv_language TYPE sylangu.
+    DATA: lv_language LIKE sy-langu.
 
     io = ip_io.
     media_source = c_media_source_mime.

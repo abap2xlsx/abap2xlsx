@@ -347,7 +347,7 @@ CLASS zcl_helper IMPLEMENTATION.
     DATA: value     TYPE string,
           hyperlink TYPE REF TO zcl_excel_hyperlink.
 
-    value = 'Created with abap2xlsx. Find more information at https://github.com/abap2xlsx/abap2xlsx.'(002).
+    value = 'Created with https://github.com/abap2xlsx/abap2xlsx'(002).
     hyperlink = zcl_excel_hyperlink=>create_external_link( 'https://github.com/abap2xlsx/abap2xlsx' ). "#EC NOTEXT
     c_worksheet->set_cell(
       EXPORTING

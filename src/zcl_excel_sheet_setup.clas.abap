@@ -6,10 +6,9 @@ CLASS zcl_excel_sheet_setup DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_SHEET_SETUP
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
 
     DATA black_and_white TYPE flag .
-    DATA cell_comments TYPE stringval .
+    DATA cell_comments TYPE string .
     DATA copies TYPE int2 .
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2.     "#EC NOTEXT
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0.       "#EC NOTEXT
@@ -94,7 +93,7 @@ CLASS zcl_excel_sheet_setup DEFINITION
     CONSTANTS c_pe_na TYPE string VALUE 'NA'.               "#EC NOTEXT
     DATA diff_oddeven_headerfooter TYPE flag .
     DATA draft TYPE flag .
-    DATA errors TYPE stringval .
+    DATA errors TYPE string .
     DATA even_footer TYPE zexcel_s_worksheet_head_foot .
     DATA even_header TYPE zexcel_s_worksheet_head_foot .
     DATA first_page_number TYPE int2 .
@@ -125,12 +124,12 @@ CLASS zcl_excel_sheet_setup DEFINITION
     METHODS constructor .
     METHODS set_page_margins
       IMPORTING
-        !ip_bottom TYPE float OPTIONAL
-        !ip_footer TYPE float OPTIONAL
-        !ip_header TYPE float OPTIONAL
-        !ip_left   TYPE float OPTIONAL
-        !ip_right  TYPE float OPTIONAL
-        !ip_top    TYPE float OPTIONAL
+        !ip_bottom TYPE f OPTIONAL
+        !ip_footer TYPE f OPTIONAL
+        !ip_header TYPE f OPTIONAL
+        !ip_left   TYPE f OPTIONAL
+        !ip_right  TYPE f OPTIONAL
+        !ip_top    TYPE f OPTIONAL
         !ip_unit   TYPE csequence DEFAULT 'in' .
     METHODS set_header_footer
       IMPORTING

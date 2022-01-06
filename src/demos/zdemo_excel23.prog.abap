@@ -8,8 +8,6 @@
 
 REPORT zdemo_excel23.
 
-TYPE-POOLS: abap.
-
 DATA: lo_excel     TYPE REF TO zcl_excel,
       lo_worksheet TYPE REF TO zcl_excel_worksheet,
       lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
@@ -82,7 +80,6 @@ START-OF-SELECTION.
   lo_worksheet->zif_excel_sheet_properties~zoomscale        = 150.
   lo_worksheet->zif_excel_sheet_properties~zoomscale_normal = 150.
 
-  "  lo_worksheet->sheet_setup->vertical_centered   = abap_true.
   lo_worksheet->sheet_setup->horizontal_centered = abap_true.
 
 

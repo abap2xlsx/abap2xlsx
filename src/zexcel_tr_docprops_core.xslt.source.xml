@@ -1,0 +1,19 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates">
+
+  <tt:root name="ROOT"/>
+
+  <tt:template>
+
+    <cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi=
+"http://www.w3.org/2001/XMLSchema-instance" tt:ref="ROOT" tt:extensible="deep-dynamic">
+      <dc:creator tt:value-ref="CREATOR"/>
+      <dc:description tt:value-ref="DESCRIPTION"/>
+      <cp:lastModifiedBy tt:value-ref="LAST_MODIFIED_BY"/>
+      <dcterms:created tt:value-ref="CREATED" xsi:type="dcterms:W3CDTF"/>
+      <dcterms:modified tt:value-ref="MODIFIED" xsi:type="dcterms:W3CDTF"/>
+    </cp:coreProperties>
+
+  </tt:template>
+
+</tt:transform>

@@ -149,21 +149,12 @@ FORM export_to_excel_conv RAISING zcx_excel.
   DATA: lo_converter TYPE REF TO zcl_excel_converter.
 
   CREATE OBJECT lo_converter.
-*TRY.
   lo_converter->convert(
     EXPORTING
       io_alv        = lo_salv
       it_table      = gt_sbook
       i_row_int     = 2
-      i_column_int  = 2
-*    i_table       =
-*    i_style_table =
-*    io_worksheet  =
-*  CHANGING
-*    co_excel      =
-         ).
-* CATCH zcx_excel .
-*ENDTRY.
+      i_column_int  = 2 ).
   lo_converter->write_file( i_path = l_path ).
 
 ENDFORM.                    "EXPORT_TO_EXCEL_CONV
@@ -180,16 +171,12 @@ FORM export_to_excel_bind RAISING zcx_excel.
   lo_worksheet->set_title( ip_title = 'Sheet1' ).
 
 * write to excel using method Bin_object
-*try.
   lo_worksheet->bind_alv(
       io_alv      = lo_salv
       it_table    = gt_sbook
       i_top       = 2
       i_left      = 1
          ).
-* catch zcx_excel .
-*endtry.
-
 
   PERFORM write_file.
 
