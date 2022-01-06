@@ -1547,8 +1547,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
           lt_components TYPE abap_component_tab,
           ls_components TYPE abap_componentdescr.
 
-    REFRESH rt_components.
-
     lo_struct ?= is_component-type.
     lt_components = lo_struct->get_components( ).
 
