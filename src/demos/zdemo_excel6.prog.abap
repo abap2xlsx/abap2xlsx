@@ -10,7 +10,7 @@ REPORT zdemo_excel6.
 
 DATA: lo_excel     TYPE REF TO zcl_excel,
       lo_worksheet TYPE REF TO zcl_excel_worksheet,
-      lv_row       TYPE syindex,
+      lv_row       TYPE i,
       lv_formula   TYPE string.
 
 
