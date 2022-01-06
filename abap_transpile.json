@@ -80,7 +80,6 @@
     "addCommonJS": true,
     "unknownTypes": "runtimeError",
     "skip": [
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calc_cell_dist_downsome",      "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calc_cell_dist_fullpack",      "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calc_cell_dist_left1pl",      "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "calc_cell_dist_leftsome",      "note": "??"},
