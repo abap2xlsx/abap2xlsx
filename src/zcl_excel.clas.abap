@@ -495,7 +495,7 @@ CLASS zcl_excel IMPLEMENTATION.
 
 
   METHOD get_style_index_in_styles.
-    DATA: index TYPE syindex.
+    DATA: index TYPE i.
     DATA: lo_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_style    TYPE REF TO zcl_excel_style.
 
