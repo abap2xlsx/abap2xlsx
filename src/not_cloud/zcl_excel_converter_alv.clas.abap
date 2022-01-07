@@ -408,7 +408,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
                    <fs_trange> TYPE STANDARD TABLE.
 
     IF ws_option-filter = abap_false.
-      REFRESH et_filter.
+      CLEAR et_filter.
       RETURN.
     ENDIF.
 
@@ -423,7 +423,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
         ASSIGN COMPONENT ls_filt-fieldname OF STRUCTURE <fs_stab> TO <fs>.
         IF sy-subrc = 0.
           IF l_line = 1.
-            REFRESH lt_components_tab.
+            CLEAR lt_components_tab.
             ls_components-name   = 'SIGN'.
             lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-sign ).
             ls_components-type   = lo_addit           .
@@ -455,7 +455,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
             ASSIGN lo_trange->* TO <fs_trange>.
             ASSIGN lo_srange->* TO <fs_srange>.
           ENDIF.
-          REFRESH <fs_trange>.
+          CLEAR <fs_trange>.
           ASSIGN COMPONENT 'SIGN'   OF STRUCTURE  <fs_srange> TO <fs1>.
           <fs1> = ls_filt-sign.
           ASSIGN COMPONENT 'OPTION' OF STRUCTURE  <fs_srange> TO <fs1>.
