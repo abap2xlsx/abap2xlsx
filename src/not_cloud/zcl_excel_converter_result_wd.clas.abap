@@ -88,7 +88,7 @@ CLASS zcl_excel_converter_result_wd IMPLEMENTATION.
                    <fs_filter> TYPE salv_wd_s_filter_rule_ref.
 
     LOOP AT  wt_fields ASSIGNING <fs_fields>.
-      REFRESH lt_filters.
+      CLEAR lt_filters.
       lt_filters    = <fs_fields>-r_field->if_salv_wd_filter~get_filter_rules( ) .
       LOOP AT lt_filters ASSIGNING <fs_filter>.
         ls_filt-fieldname = <fs_fields>-fieldname.
