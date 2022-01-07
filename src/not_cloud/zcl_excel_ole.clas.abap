@@ -1094,9 +1094,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         contents = contents
         no_flush = no_flush.
 
-    REFRESH:
-       ranges,
-       contents.
+    CLEAR: ranges, contents.
 
     rows = rowmax + li_commentary_rows + 1.
 
