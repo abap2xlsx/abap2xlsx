@@ -478,7 +478,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
       ENDLOOP.
       IF ws_option-filter = abap_undefined.
         <fs_tab> = <fs_ltab>.
-        REFRESH <fs_ltab>.
+        CLEAR <fs_ltab>.
       ENDIF.
     ENDLOOP.
 
