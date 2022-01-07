@@ -93,7 +93,6 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
     FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
 * --- Retrieve supported cell format
-    REFRESH lt_format.
     SELECT * INTO CORRESPONDING FIELDS OF TABLE lt_format
       FROM seocompodf
      WHERE clsname  = 'ZCL_EXCEL_STYLE_NUMBER_FORMAT'

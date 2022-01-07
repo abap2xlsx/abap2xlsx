@@ -312,8 +312,7 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
 *      replace variables of current range with data
       LOOP AT ct_cells ASSIGNING <ls_cell>.
 
-
-        REFRESH lt_matches.
+        CLEAR lt_matches.
 
         lv_cell_value = <ls_cell>-cell_value.
 
@@ -388,7 +387,7 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
         cv_diff         = lv_initial_diff  ).
 
 
-    REFRESH  lo_worksheet->sheet_content.
+    CLEAR lo_worksheet->sheet_content.
 
     LOOP AT lt_sheet_cells ASSIGNING <ls_sheet_cell>.
       INSERT <ls_sheet_cell> INTO TABLE lo_worksheet->sheet_content.
