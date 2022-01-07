@@ -63,9 +63,7 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
     lo_display              = io_salv->get_display_settings( ) .
     lo_functional           = io_salv->get_functional_settings( ) .
 
-    REFRESH: wt_fcat,
-             wt_sort,
-             wt_filt.
+    CLEAR: wt_fcat, wt_sort, wt_filt.
 
     lv_intercept_data_active = is_intercept_data_active( ).
 
