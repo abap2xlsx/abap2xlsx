@@ -6,13 +6,16 @@ CLASS lcl_output DEFINITION CREATE PRIVATE.
     CLASS-METHODS:
       output         IMPORTING cl_excel            TYPE REF TO zcl_excel
                                iv_writerclass_name TYPE clike OPTIONAL
+                               iv_info_message     TYPE abap_bool DEFAULT abap_true
                      RAISING   zcx_excel,
       f4_path        RETURNING VALUE(selected_folder) TYPE string,
       parametertexts.
 
   PRIVATE SECTION.
     METHODS:
-      download_frontend,
+      download_frontend
+        RAISING
+          zcx_excel,
       download_backend,
       display_online,
       send_email.
@@ -75,42 +78,54 @@ CLASS lcl_output IMPLEMENTATION.
   METHOD output.
 
     DATA: cl_output TYPE REF TO lcl_output,
-          cl_writer TYPE REF TO zif_excel_writer.
+          cl_writer TYPE REF TO zif_excel_writer,
+          cl_error  TYPE REF TO zcx_excel.
 
-    IF iv_writerclass_name IS INITIAL.
-      CREATE OBJECT cl_output.
-      CREATE OBJECT cl_writer TYPE zcl_excel_writer_2007.
-    ELSE.
-      CREATE OBJECT cl_output.
-      CREATE OBJECT cl_writer TYPE (iv_writerclass_name).
-    ENDIF.
-    cl_output->xdata = cl_writer->write_file( cl_excel ).
+    TRY.
 
-    cl_output->t_rawdata = cl_bcs_convert=>xstring_to_solix( iv_xstring  = cl_output->xdata ).
-    cl_output->bytecount = xstrlen( cl_output->xdata ).
-
-    CASE 'X'.
-      WHEN rb_down.
-        IF sy-batch IS INITIAL.
-          cl_output->download_frontend( ).
+        IF iv_writerclass_name IS INITIAL.
+          CREATE OBJECT cl_output.
+          CREATE OBJECT cl_writer TYPE zcl_excel_writer_2007.
         ELSE.
-          MESSAGE e802(zabap2xlsx).
+          CREATE OBJECT cl_output.
+          CREATE OBJECT cl_writer TYPE (iv_writerclass_name).
         ENDIF.
+        cl_output->xdata = cl_writer->write_file( cl_excel ).
 
-      WHEN rb_back.
-        cl_output->download_backend( ).
+        cl_output->t_rawdata = cl_bcs_convert=>xstring_to_solix( iv_xstring  = cl_output->xdata ).
+        cl_output->bytecount = xstrlen( cl_output->xdata ).
 
-      WHEN rb_show.
-        IF sy-batch IS INITIAL.
-          cl_output->display_online( ).
+        CASE 'X'.
+          WHEN rb_down.
+            IF sy-batch IS INITIAL.
+              cl_output->download_frontend( ).
+            ELSE.
+              MESSAGE e802(zabap2xlsx).
+            ENDIF.
+
+          WHEN rb_back.
+            cl_output->download_backend( ).
+
+          WHEN rb_show.
+            IF sy-batch IS INITIAL.
+              cl_output->display_online( ).
+            ELSE.
+              MESSAGE e803(zabap2xlsx).
+            ENDIF.
+
+          WHEN rb_send.
+            cl_output->send_email( ).
+
+        ENDCASE.
+
+      CATCH zcx_excel INTO cl_error.
+        IF iv_info_message = abap_true.
+          MESSAGE cl_error TYPE 'I' DISPLAY LIKE 'E'.
         ELSE.
-          MESSAGE e803(zabap2xlsx).
+          RAISE EXCEPTION cl_error.
         ENDIF.
+    ENDTRY.
 
-      WHEN rb_send.
-        cl_output->send_email( ).
-
-    ENDCASE.
   ENDMETHOD.                    "output
 
   METHOD f4_path.
@@ -208,7 +223,8 @@ CLASS lcl_output IMPLEMENTATION.
   ENDMETHOD.                    "parametertexts
 
   METHOD: download_frontend.
-    DATA: filename TYPE string.
+    DATA: filename TYPE string,
+          message  TYPE string.
 * I don't like p_path here - but for this include it's ok
     filename = p_path.
 * Add trailing "\" or "/"
@@ -223,7 +239,13 @@ CLASS lcl_output IMPLEMENTATION.
     cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = bytecount
                                                       filename     = filename
                                                       filetype     = 'BIN'
-                                             CHANGING data_tab     = t_rawdata ).
+                                             CHANGING data_tab     = t_rawdata
+                                           EXCEPTIONS others       = 1 ).
+    IF sy-subrc <> 0.
+      MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+              WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4 INTO message.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = message.
+    ENDIF.
   ENDMETHOD.                    "download_frontend
 
   METHOD download_backend.
