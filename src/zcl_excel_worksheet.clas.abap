@@ -3303,8 +3303,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lv_column        TYPE zexcel_cell_column,
           ls_sheet_content TYPE zexcel_s_cell_data,
           lv_row           TYPE zexcel_cell_row,
-          lv_row_alpha     TYPE string,
-          lv_col_alpha     TYPE zexcel_cell_column_alpha,
           lv_value         TYPE zexcel_cell_value,
           lv_data_type     TYPE zexcel_cell_data_type,
           lv_value_type    TYPE abap_typekind,
@@ -3493,10 +3491,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-column_formula_id = ip_column_formula_id.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
-      lv_row_alpha = lv_row.
-      CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
-      lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_column ).       " issue #155 - less restrictive typing for ip_column
-      CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
+      ls_sheet_content-cell_coords  = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
 
     ENDIF.
@@ -3585,6 +3580,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       CHECK ip_formula IS NOT INITIAL.  " only create new entry in sheet_content when a formula is passed
       ls_sheet_content-cell_row    = lv_row.
       ls_sheet_content-cell_column = lv_column.
+      ls_sheet_content-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE me->sheet_content ASSIGNING <sheet_content>.
     ENDIF.
 
@@ -4029,17 +4025,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    lv_row_alpha = upper_cell-cell_row.
-    lv_column_alpha = zcl_excel_common=>convert_column2alpha( upper_cell-cell_column ).
-    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-    SHIFT lv_row_alpha LEFT DELETING LEADING space.
-    CONCATENATE lv_column_alpha lv_row_alpha INTO upper_cell-cell_coords.
+    upper_cell-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = upper_cell-cell_column i_row = upper_cell-cell_row ).
 
-    lv_row_alpha = lower_cell-cell_row.
-    lv_column_alpha = zcl_excel_common=>convert_column2alpha( lower_cell-cell_column ).
-    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-    SHIFT lv_row_alpha LEFT DELETING LEADING space.
-    CONCATENATE lv_column_alpha lv_row_alpha INTO lower_cell-cell_coords.
+    lower_cell-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lower_cell-cell_column i_row = lower_cell-cell_row ).
 
   ENDMETHOD.                    "UPDATE_DIMENSION_RANGE
 

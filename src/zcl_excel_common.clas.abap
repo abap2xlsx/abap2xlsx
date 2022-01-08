@@ -38,6 +38,14 @@ CLASS zcl_excel_common DEFINITION
         VALUE(ep_column) TYPE zexcel_cell_column
       RAISING
         zcx_excel .
+    CLASS-METHODS convert_column_a_row2columnrow
+      IMPORTING
+        !i_column          TYPE simple
+        !i_row             TYPE zexcel_cell_row
+      RETURNING
+        VALUE(e_columnrow) TYPE string
+      RAISING
+        zcx_excel.
     CLASS-METHODS convert_columnrow2column_a_row
       IMPORTING
         !i_columnrow TYPE clike
@@ -479,6 +487,19 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * Save succesfull output into cache
 *--------------------------------------------------------------------*
     sv_prev_out2 = ep_column.
+
+  ENDMETHOD.
+
+
+  METHOD convert_column_a_row2columnrow.
+    DATA: lv_row_alpha     TYPE string,
+          lv_column_alpha  TYPE zexcel_cell_column_alpha.
+
+    lv_row_alpha = i_row.
+    lv_column_alpha = zcl_excel_common=>convert_column2alpha( i_column ).
+    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+    SHIFT lv_row_alpha LEFT DELETING LEADING space.
+    CONCATENATE lv_column_alpha lv_row_alpha INTO e_columnrow.
 
   ENDMETHOD.
 
