@@ -8,6 +8,50 @@ Legend
 + : added
 - : removed
 
+2022-01-08 v7.15.0
+------------------
+! Refactor ABAP Cloud: change REFRESH to CLEAR
+* Prevent row height zero
++ New parameter ip_columnrow in SET_CELL and other methods
+! Refactor ABAP Cloud: remove use of DTEL SYLANGU and DTEL GUID_16
+! Refactor ABAP Cloud: remove use of cl_abap_conv_out_ce=>uccpi
+! Refactor ABAP Cloud: move converter classes to not_cloud package
++ Refactor ABAP Cloud: Check demo regressions
+! Refactor ABAP Cloud: change FLOAT to F
+! Refactor ABAP Cloud: remove TYPE-POOLS statements
+! Refactor ABAP Cloud: change SYTABIX to I
+! Lint rule to reject commented code / commented code removed
++ Add column for photographer in zdemo_calendar
+! Lint rule to reject code not in keyword_case upper
+! Refactor ABAP Cloud: use new collection classes
++ Allow more than 255 sheets per workbook
+! Refactor ABAP Cloud: Domain for ZEXCEL_SHEET_TITLE
+* Demo WebDynpro: ICF, button text, MIME type
+! Refactor ABAP Cloud: ddic, fix UUID and GUID_16
+* Typo in code: hasehd -> hashed
+! Refactor ABAP Cloud: MOVE statements
+! Refactor ABAP Cloud: remove DTEL INTTYPE
+* After BIND_TABLE no columns in object
++ Change_area_style (same as change_cell_style, but for area)
++ Customizable demo 25 + backend in demo 37
+* Reflect new abap2xlsx project URL
+* Fix enhancement categories of several structures
+* Fix links after org. move
+! Refactor method change_cell_style in zcl_excel_worksheet
+* Correcting broken links after moving of repo
+* Reader fails for workbook with chart
++ Worksheet columns right-to-left
+* README.md, update urls
+* Huge writer error height/hight and fit to page
+! Refactor ABAP Cloud: remove use of DOMA INT2
+! Refactor ABAP Cloud: remove use of DTEL DSTRING
+* Huge reader reading cells multiple styles
+! Pretty print
+* Add exception handling
+! Split convert_column2alpha
++ SET_AREA/SET_AREA_FORMULA: set value or formula for whole area instea… …
+
+
 2021-11-11 v7.14.0
 ------------------
 + changelog
