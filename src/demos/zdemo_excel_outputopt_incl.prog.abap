@@ -240,7 +240,7 @@ CLASS lcl_output IMPLEMENTATION.
                                                       filename     = filename
                                                       filetype     = 'BIN'
                                              CHANGING data_tab     = t_rawdata
-                                           EXCEPTIONS others       = 1 ).
+                                           EXCEPTIONS OTHERS       = 1 ).
     IF sy-subrc <> 0.
       MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
               WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4 INTO message.
