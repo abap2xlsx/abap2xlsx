@@ -16,7 +16,7 @@ Legend
 ! Refactor ABAP Cloud: remove use of DTEL SYLANGU and DTEL GUID_16
 ! Refactor ABAP Cloud: remove use of cl_abap_conv_out_ce=>uccpi
 ! Refactor ABAP Cloud: move converter classes to not_cloud package
-+ Refactor ABAP Cloud: Check demo regressions
++ Check demo regressions
 ! Refactor ABAP Cloud: change FLOAT to F
 ! Refactor ABAP Cloud: remove TYPE-POOLS statements
 ! Refactor ABAP Cloud: change SYTABIX to I
