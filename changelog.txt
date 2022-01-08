@@ -51,7 +51,6 @@ Legend
 ! Split convert_column2alpha
 + SET_AREA/SET_AREA_FORMULA: set value or formula for whole area instea… …
 
-
 2021-11-11 v7.14.0
 ------------------
 + changelog
