@@ -925,7 +925,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         RAISE EXCEPTION TYPE zcx_excel.
       ENDIF.
     ELSE.
-      REFRESH wt_fieldcatalog.
+      CLEAR wt_fieldcatalog.
       GET REFERENCE OF it_table INTO wo_table.
     ENDIF.
   ENDMETHOD.
@@ -1338,8 +1338,8 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 
     ASSIGN wo_data->* TO <fs_tab> .
 
-    REFRESH: wt_sort_values,
-             wt_subtotal_rows.
+    CLEAR: wt_sort_values,
+           wt_subtotal_rows.
 
     DESCRIBE TABLE wt_fieldcatalog LINES l_cells.
     DESCRIBE TABLE <fs_tab> LINES l_count.
