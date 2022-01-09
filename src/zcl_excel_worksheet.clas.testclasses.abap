@@ -1,12 +1,12 @@
 CLASS ltc_normalize_columnrow_param DEFINITION DEFERRED.
 CLASS ltc_normalize_range_param DEFINITION DEFERRED.
-CLASS ltc_calculate_tab_bottom_right DEFINITION DEFERRED.
+CLASS ltc_calculate_table_bottom_rig DEFINITION DEFERRED.
 CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
 CLASS ltc_check_overlapping DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_normalize_columnrow_param
     ltc_normalize_range_param
-    ltc_calculate_tab_bottom_right
+    ltc_calculate_table_bottom_rig
     ltc_check_cell_column_formula
     ltc_check_overlapping.
 
@@ -29,27 +29,22 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
 ENDCLASS.       "lcl_Excel_Worksheet_Test
 
 
-CLASS ltc_calculate_tab_bottom_right DEFINITION FOR TESTING
+CLASS ltc_calculate_table_bottom_rig DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
     DURATION SHORT.
 
   PRIVATE SECTION.
 
-    TYPES : BEGIN OF ty_table_line,
-              col1 TYPE string,
-              col2 TYPE string,
-              col3 TYPE string,
-            END OF ty_table_line,
-            ty_table TYPE STANDARD TABLE OF ty_table_line WITH DEFAULT KEY.
-
-    METHODS: test FOR TESTING RAISING cx_static_check.
-
-    METHODS: setup.
+    METHODS:
+      simple FOR TESTING RAISING cx_static_check,
+      empty_table FOR TESTING RAISING cx_static_check,
+      column_not_selected FOR TESTING RAISING cx_static_check.
 
     DATA:
-      cut           TYPE REF TO zcl_excel_worksheet,  "class under test
-      table         TYPE ty_table,
-      field_catalog TYPE zexcel_t_fieldcatalog.
+      test_table         TYPE TABLE OF string,
+      field_catalog      TYPE zexcel_t_fieldcatalog,
+      field_catalog_line TYPE zexcel_s_fieldcatalog,
+      table_settings     TYPE zexcel_s_table_settings.  "class under test
 
 ENDCLASS.
 
@@ -101,11 +96,8 @@ CLASS ltc_check_overlapping DEFINITION FOR TESTING
                 fails TYPE abap_bool,
               END OF output,
             END OF ty_parameters.
-    DATA:
-      cut              TYPE REF TO zcl_excel_worksheet,  "class under test
-      table_1_settings TYPE zexcel_s_table_settings.
+    DATA: table_1_settings TYPE zexcel_s_table_settings.
 
-    METHODS setup.
     METHODS:
       no_overlap_top FOR TESTING RAISING cx_static_check,
       no_overlap_left FOR TESTING RAISING cx_static_check,
@@ -116,6 +108,7 @@ CLASS ltc_check_overlapping DEFINITION FOR TESTING
       overlap_bottom FOR TESTING RAISING cx_static_check,
       overlap_right FOR TESTING RAISING cx_static_check.
 
+    METHODS setup.
     METHODS assert
       IMPORTING
         input TYPE ty_parameters-input
@@ -596,52 +589,79 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
 
 
-CLASS ltc_calculate_tab_bottom_right IMPLEMENTATION.
+CLASS ltc_calculate_table_bottom_rig IMPLEMENTATION.
 
-  METHOD setup.
-    DATA: lo_excel          TYPE REF TO zcl_excel,
-          ls_field_catalog TYPE zexcel_s_fieldcatalog.
+  METHOD simple.
 
-    CREATE OBJECT lo_excel.
+    APPEND INITIAL LINE TO test_table.
+    APPEND INITIAL LINE TO test_table.
 
-    TRY.
-        CREATE OBJECT cut
-          EXPORTING
-            ip_excel = lo_excel.
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL1'.
+    APPEND field_catalog_line TO field_catalog.
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL2'.
+    APPEND field_catalog_line TO field_catalog.
 
-        APPEND INITIAL LINE TO table.
-        APPEND INITIAL LINE TO table.
-        APPEND INITIAL LINE TO table.
-    ls_field_catalog-dynpfld = abap_true.
-    ls_field_catalog-fieldname = 'COL1'.
-    APPEND ls_field_catalog TO field_catalog.
-    ls_field_catalog-dynpfld = abap_false.
-    ls_field_catalog-fieldname = 'COL2'.
-    APPEND ls_field_catalog TO field_catalog.
-    ls_field_catalog-dynpfld = abap_true.
-    ls_field_catalog-fieldname = 'COL3'.
-    APPEND ls_field_catalog TO field_catalog.
+    table_settings-top_left_column = 'A'.
+    table_settings-top_left_row = '1'.
 
-      CATCH zcx_excel.
-        cl_abap_unit_assert=>fail( 'setup failure' ).
-    ENDTRY.
+    zcl_excel_worksheet=>calculate_table_bottom_right(
+      EXPORTING
+        ip_table         = test_table
+        it_field_catalog = field_catalog
+      CHANGING
+        cs_settings      = table_settings ).
+
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_column exp = 'B' ).
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_row exp = 3 ).
 
   ENDMETHOD.
 
-  METHOD test.
-    DATA: lo_excel          TYPE REF TO zcl_excel,
-          ls_table_settings TYPE zexcel_s_table_settings.
+  METHOD empty_table.
 
-    ls_table_settings-top_left_column = 'A'.
-    ls_table_settings-top_left_row = '1'.
-    cut->calculate_table_bottom_right(
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL1'.
+    APPEND field_catalog_line TO field_catalog.
+
+    table_settings-top_left_column = 'B'.
+    table_settings-top_left_row = '2'.
+
+    zcl_excel_worksheet=>calculate_table_bottom_right(
       EXPORTING
-        ip_table         = table
+        ip_table         = test_table
         it_field_catalog = field_catalog
       CHANGING
-        cs_settings      = ls_table_settings ).
-    cl_abap_unit_assert=>assert_equals( act = ls_table_settings-bottom_right_column exp = 'B' ).
-    cl_abap_unit_assert=>assert_equals( act = ls_table_settings-bottom_right_row exp = 4 ).
+        cs_settings      = table_settings ).
+
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_column exp = 'B' ).
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_row exp = 2 ).
+
+  ENDMETHOD.
+
+  METHOD column_not_selected.
+
+    APPEND INITIAL LINE TO test_table.
+
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL1'.
+    APPEND field_catalog_line TO field_catalog.
+    field_catalog_line-dynpfld = abap_false.
+    field_catalog_line-fieldname = 'COL2'.
+    APPEND field_catalog_line TO field_catalog.
+
+    table_settings-top_left_column = 'B'.
+    table_settings-top_left_row = '2'.
+
+    zcl_excel_worksheet=>calculate_table_bottom_right(
+      EXPORTING
+        ip_table         = test_table
+        it_field_catalog = field_catalog
+      CHANGING
+        cs_settings      = table_settings ).
+
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_column exp = 'B' ).
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_row exp = 3 ).
 
   ENDMETHOD.
 
@@ -749,24 +769,10 @@ CLASS ltc_check_overlapping IMPLEMENTATION.
 
   METHOD setup.
 
-    DATA: lo_excel          TYPE REF TO zcl_excel,
-          ls_table_settings TYPE zexcel_s_table_settings.
-
-    CREATE OBJECT lo_excel.
-
-    TRY.
-        CREATE OBJECT cut
-          EXPORTING
-            ip_excel = lo_excel.
-
-        table_1_settings-top_left_column     = 'C'.
-        table_1_settings-top_left_row        = 3.
-        table_1_settings-bottom_right_column = 'D'.
-        table_1_settings-bottom_right_row    = 4.
-
-      CATCH zcx_excel.
-        cl_abap_unit_assert=>fail( 'setup failure' ).
-    ENDTRY.
+    table_1_settings-top_left_column     = 'C'.
+    table_1_settings-top_left_row        = 3.
+    table_1_settings-bottom_right_column = 'D'.
+    table_1_settings-bottom_right_row    = 4.
 
   ENDMETHOD.
 
@@ -883,21 +889,17 @@ CLASS ltc_check_overlapping IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD assert.
-    DATA: act        TYPE ty_parameters-output,
-          error      TYPE REF TO zcx_excel,
-          input_text TYPE string,
-          message    TYPE string.
+    DATA: error TYPE REF TO zcx_excel.
     FIELD-SYMBOLS:
           <table> TYPE STANDARD TABLE.
 
     TRY.
 
-        cut->check_overlapping(
+        zcl_excel_worksheet=>check_table_overlapping(
             is_table_settings       = input-table_settings
             it_other_table_settings = input-other_table_settings ).
         IF exp-fails = abap_true.
-          message = |Should have failed for { input_text }|.
-          cl_abap_unit_assert=>fail( msg = message ).
+          cl_abap_unit_assert=>fail( msg = 'Overlap exists, exception was expected' ).
         ENDIF.
 
       CATCH zcx_excel INTO error.
