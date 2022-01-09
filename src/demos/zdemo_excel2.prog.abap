@@ -148,7 +148,7 @@ START-OF-SELECTION.
 
 
 
-  " Create filled style turquoise using legacy excel ver <= 2003 palette. (https://code.sdn.sap.com/spaces/abap2xlsx/tickets/92)
+  " Create filled style turquoise using legacy excel ver <= 2003 palette. (https://github.com/abap2xlsx/abap2xlsx/issues/92)
   lo_style_filled_turquoise                 = lo_excel->add_new_style( ).
   lo_excel->legacy_palette->set_color( "replace built-in color from palette with out custom RGB turquoise
       ip_index =     16
@@ -173,7 +173,7 @@ START-OF-SELECTION.
   lo_worksheet->set_cell_style( ip_column = 'B' ip_row = 6 ip_style = lo_style_filled_green ).
   " Add Style to an empty cell to test Fix for Issue
   "#44 Exception ZCX_EXCEL thrown when style is set for an empty cell
-  " https://code.sdn.sap.com/spaces/abap2xlsx/tickets/44-exception-zcx_excel-thrown-when-style-is-set-for-an-empty-cell
+  " https://github.com/abap2xlsx/abap2xlsx/issues/44
   lo_worksheet->set_cell_style( ip_column = 'E' ip_row = 6 ip_style = lo_style_filled_green ).
 
 
