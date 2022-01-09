@@ -36,6 +36,8 @@ CLASS zcl_excel DEFINITION
     METHODS add_new_style
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style OPTIONAL
+        !io_clone_of    TYPE REF TO zcl_excel_style OPTIONAL
+          PREFERRED PARAMETER !ip_guid
       RETURNING
         VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS add_new_worksheet
@@ -234,7 +236,8 @@ CLASS zcl_excel IMPLEMENTATION.
 * Create default style
     CREATE OBJECT eo_style
       EXPORTING
-        ip_guid = ip_guid.
+        ip_guid     = ip_guid
+        io_clone_of = io_clone_of.
     styles->add( eo_style ).
 
     DATA: style2 TYPE zexcel_s_stylemapping.
