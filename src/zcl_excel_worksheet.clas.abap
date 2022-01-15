@@ -590,12 +590,13 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_table
       IMPORTING
-        !iv_skipped_rows TYPE int4 DEFAULT 0
-        !iv_skipped_cols TYPE int4 DEFAULT 0
-        !iv_max_col      TYPE int4 OPTIONAL
-        !iv_max_row      TYPE int4 OPTIONAL
+        !iv_skipped_rows           TYPE int4 DEFAULT 0
+        !iv_skipped_cols           TYPE int4 DEFAULT 0
+        !iv_max_col                TYPE int4 OPTIONAL
+        !iv_max_row                TYPE int4 OPTIONAL
+        !iv_skip_bottom_empty_rows TYPE abap_bool DEFAULT abap_false
       EXPORTING
-        !et_table        TYPE STANDARD TABLE
+        !et_table                  TYPE STANDARD TABLE
       RAISING
         zcx_excel .
     METHODS set_merge_style
@@ -2643,6 +2644,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA lx_conversion_error TYPE REF TO cx_sy_conversion_error.
     DATA lv_float TYPE f.
     DATA lv_type.
+    DATA lv_tabix TYPE i.
 
     lv_max_col =  me->get_highest_column( ).
     IF iv_max_col IS SUPPLIED AND iv_max_col < lv_max_col.
@@ -2747,6 +2749,20 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               ENDWHILE.
               ADD 1 TO lv_actual_row.
             ENDWHILE.
+
+            IF iv_skip_bottom_empty_rows = abap_true.
+              lv_tabix = lines( et_table ).
+              WHILE lv_tabix >= 1.
+                READ TABLE et_table INDEX lv_tabix ASSIGNING <ls_line>.
+                ASSERT sy-subrc = 0.
+                IF <ls_line> IS NOT INITIAL.
+                  EXIT.
+                ENDIF.
+                DELETE et_table INDEX lv_tabix.
+                lv_tabix = lv_tabix - 1.
+              ENDWHILE.
+            ENDIF.
+
           ENDIF.
 
 

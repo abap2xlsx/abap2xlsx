@@ -15,6 +15,18 @@
      <ENTRY>abap2xlsx Demo: Demo 43 GET_TABLE</ENTRY>
      <LENGTH>33</LENGTH>
     </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_FILE</KEY>
+     <ENTRY>Excel file</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_SKIP_B</KEY>
+     <ENTRY>Skip bottom empty rows</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>
