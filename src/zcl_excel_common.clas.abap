@@ -67,6 +67,11 @@ CLASS zcl_excel_common DEFINITION
       EXPORTING
         !e_column    TYPE zexcel_cell_column_alpha
         !e_row       TYPE zexcel_cell_row .
+    CLASS-METHODS clone_ixml_with_namespaces
+      IMPORTING
+        element TYPE REF TO if_ixml_element
+      RETURNING
+        VALUE(result) TYPE REF TO if_ixml_element.
     CLASS-METHODS date_to_excel_string
       IMPORTING
         !ip_value       TYPE d
@@ -621,6 +626,32 @@ CLASS zcl_excel_common IMPLEMENTATION.
                                                       row.
 
     e_row = row.
+
+  ENDMETHOD.
+
+
+  METHOD clone_ixml_with_namespaces.
+
+    DATA: iterator    TYPE REF TO if_ixml_node_iterator,
+          node        TYPE REF TO if_ixml_node,
+          xmlns       TYPE ihttpnvp,
+          xmlns_table TYPE TABLE OF ihttpnvp.
+    FIELD-SYMBOLS:
+      <xmlns> TYPE ihttpnvp.
+
+    iterator = element->create_iterator( ).
+    result ?= element->clone( ).
+    node = iterator->get_next( ).
+    WHILE node IS BOUND.
+      xmlns-name = node->get_namespace_prefix( ).
+      xmlns-value = node->get_namespace_uri( ).
+      COLLECT xmlns INTO xmlns_table.
+      node = iterator->get_next( ).
+    ENDWHILE.
+
+    LOOP AT xmlns_table ASSIGNING <xmlns>.
+      result->set_attribute_ns( prefix = 'xmlns' name = <xmlns>-name value = <xmlns>-value ).
+    ENDLOOP.
 
   ENDMETHOD.
 

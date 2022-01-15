@@ -356,10 +356,14 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_columns
       RETURNING
-        VALUE(eo_columns) TYPE REF TO zcl_excel_columns .
+        VALUE(eo_columns) TYPE REF TO zcl_excel_columns
+      RAISING
+        zcx_excel .
     METHODS get_columns_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator
+      RAISING
+        zcx_excel .
     METHODS get_style_cond_iterator
       RETURNING
         VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
@@ -491,7 +495,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row               TYPE zexcel_cell_row OPTIONAL
         !ip_value             TYPE simple OPTIONAL
         !ip_formula           TYPE zexcel_cell_formula OPTIONAL
-        !ip_style             TYPE zexcel_cell_style OPTIONAL
+        !ip_style             TYPE any OPTIONAL
         !ip_hyperlink         TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type         TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type         TYPE abap_typekind OPTIONAL
@@ -512,7 +516,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_columnrow TYPE csequence OPTIONAL
         !ip_column    TYPE simple OPTIONAL
         !ip_row       TYPE zexcel_cell_row OPTIONAL
-        !ip_style  TYPE zexcel_cell_style
+        !ip_style     TYPE any
       RAISING
         zcx_excel .
     METHODS set_column_width
@@ -537,7 +541,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column_end   TYPE simple OPTIONAL
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL          "added parameter
+        !ip_style        TYPE any OPTIONAL
         !ip_value        TYPE simple OPTIONAL          "added parameter
         !ip_formula      TYPE zexcel_cell_formula OPTIONAL        "added parameter
       RAISING
@@ -570,8 +574,8 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS set_table
       IMPORTING
         !ip_table           TYPE STANDARD TABLE
-        !ip_hdr_style       TYPE zexcel_cell_style OPTIONAL
-        !ip_body_style      TYPE zexcel_cell_style OPTIONAL
+        !ip_hdr_style       TYPE any OPTIONAL
+        !ip_body_style      TYPE any OPTIONAL
         !ip_table_title     TYPE string
         !ip_top_left_column TYPE zexcel_cell_column_alpha DEFAULT 'B'
         !ip_top_left_row    TYPE zexcel_cell_row DEFAULT 3
@@ -602,7 +606,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column_end   TYPE simple OPTIONAL
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL
+        !ip_style        TYPE any OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_area_formula
@@ -624,7 +628,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column_end   TYPE simple OPTIONAL
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_style        TYPE zexcel_cell_style
+        !ip_style        TYPE any
         !ip_merge        TYPE abap_bool OPTIONAL
       RAISING
         zcx_excel .
@@ -637,7 +641,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_value        TYPE simple OPTIONAL
         !ip_formula      TYPE zexcel_cell_formula OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL
+        !ip_style        TYPE any OPTIONAL
         !ip_hyperlink    TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type    TYPE abap_typekind OPTIONAL
@@ -767,6 +771,13 @@ CLASS zcl_excel_worksheet DEFINITION
         ep_row_to       TYPE zexcel_cell_row
       RAISING
         zcx_excel.
+    CLASS-METHODS normalize_style_parameter
+      IMPORTING
+        !ip_style_or_guid TYPE any
+      RETURNING
+        VALUE(rv_guid)    TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
     METHODS print_title_set_range .
     METHODS update_dimension_range
       RAISING
@@ -2986,6 +2997,35 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD normalize_style_parameter.
+
+    DATA: lo_style_type TYPE REF TO cl_abap_typedescr.
+    FIELD-SYMBOLS:
+      <style> TYPE REF TO zcl_excel_style.
+
+    CHECK ip_style_or_guid IS NOT INITIAL.
+
+    lo_style_type = cl_abap_typedescr=>describe_by_data( ip_style_or_guid ).
+    IF lo_style_type->type_kind = lo_style_type->typekind_oref.
+      lo_style_type = cl_abap_typedescr=>describe_by_object_ref( ip_style_or_guid ).
+      IF lo_style_type->absolute_name = '\CLASS=ZCL_EXCEL_STYLE'.
+        ASSIGN ip_style_or_guid TO <style>.
+        rv_guid = <style>->get_guid( ).
+      ENDIF.
+
+    ELSEIF lo_style_type->absolute_name = '\TYPE=ZEXCEL_CELL_STYLE'.
+      rv_guid = ip_style_or_guid.
+
+    ELSEIF lo_style_type->type_kind = lo_style_type->typekind_hex.
+      rv_guid = ip_style_or_guid.
+
+    ELSE.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_tyle or zexcel_cell_style'.
+    ENDIF.
+
+  ENDMETHOD.
+
+
   METHOD print_title_set_range.
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns
@@ -3369,11 +3409,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         lv_style_guid = <fs_sheet_content>-cell_style.
       ELSE.
         " Style provided as method-parameter --> use this
-        lv_style_guid = ip_style.
+        lv_style_guid = normalize_style_parameter( ip_style ).
       ENDIF.
     ELSE.
       " No cell found --> use supplied style even if empty
-      lv_style_guid = ip_style.
+      lv_style_guid = normalize_style_parameter( ip_style ).
     ENDIF.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
@@ -3621,7 +3661,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
-    lv_style_guid = ip_style.
+    lv_style_guid = normalize_style_parameter( ip_style ).
 
     normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
                                              ip_column    = ip_column

@@ -41,7 +41,6 @@ CLASS zcl_excel_theme_extlst IMPLEMENTATION.
 
 
   METHOD load.
-    "! so far copy only existing values
-    extlst ?= io_extlst.
+    extlst = zcl_excel_common=>clone_ixml_with_namespaces( io_extlst ).
   ENDMETHOD.                    "load
 ENDCLASS.
