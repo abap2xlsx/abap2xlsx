@@ -1040,12 +1040,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       IF <ls_field_catalog>-style_header IS NOT INITIAL.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = <ls_field_catalog>-scrtext_l
+                      ip_value  = <ls_field_catalog>-scrtext_h
                       ip_style  = <ls_field_catalog>-style_header ).
       ELSE.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = <ls_field_catalog>-scrtext_l ).
+                      ip_value  = <ls_field_catalog>-scrtext_h ).
       ENDIF.
 
       IF <ls_field_catalog>-column_formula IS NOT INITIAL.
@@ -1154,7 +1154,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       " totals
 *--------------------------------------------------------------------*
       IF <ls_field_catalog>-totals_function IS NOT INITIAL.
-        lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-scrtext_l ip_function = <ls_field_catalog>-totals_function ).
+        lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-scrtext_h ip_function = <ls_field_catalog>-totals_function ).
         IF <ls_field_catalog>-style_total IS NOT INITIAL.
           me->set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
@@ -2937,7 +2937,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
                    <scrtxt1> TYPE any,
                    <scrtxt2> TYPE any,
-                   <scrtxt3> TYPE any.
+                   <scrtxt3> TYPE any,
+                   <scrtxt4> TYPE any.
 
     " Due restrinction of new table object we cannot have two column with the same name
     " Check if a column with the same name exists, if exists add a counter
@@ -2952,32 +2953,43 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
           ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
           ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+          ASSIGN <ls_field_catalog>-scrtext_h TO <scrtxt4>.
         WHEN 'S'.
           ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
           ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
           ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+          ASSIGN <ls_field_catalog>-scrtext_h TO <scrtxt4>.
         WHEN 'L'.
           ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt3>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt4>.
+          ASSIGN <ls_field_catalog>-scrtext_h TO <scrtxt2>.
+        WHEN 'H'.
+          ASSIGN <ls_field_catalog>-scrtext_h TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt3>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt4>.
         WHEN OTHERS.
           ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
           ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
           ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+          ASSIGN <ls_field_catalog>-scrtext_h TO <scrtxt4>.
       ENDCASE.
 
       IF <scrtxt1> IS NOT INITIAL.
-        <ls_field_catalog>-scrtext_l = <scrtxt1>.
+        <ls_field_catalog>-scrtext_h = <scrtxt1>.
       ELSEIF <scrtxt2> IS NOT INITIAL.
-        <ls_field_catalog>-scrtext_l = <scrtxt2>.
+        <ls_field_catalog>-scrtext_h = <scrtxt2>.
       ELSEIF <scrtxt3> IS NOT INITIAL.
-        <ls_field_catalog>-scrtext_l = <scrtxt3>.
+        <ls_field_catalog>-scrtext_h = <scrtxt3>.
+      ELSEIF <scrtxt4> IS NOT INITIAL.
+        <ls_field_catalog>-scrtext_h = <scrtxt4>.
       ELSE.
-        <ls_field_catalog>-scrtext_l = 'Column'.  " default value as Excel does
+        <ls_field_catalog>-scrtext_h = 'Column'.  " default value as Excel does
       ENDIF.
 
       WHILE 1 = 1.
-        lv_value_lowercase = <ls_field_catalog>-scrtext_l.
+        lv_value_lowercase = <ls_field_catalog>-scrtext_h.
         TRANSLATE lv_value_lowercase TO LOWER CASE.
         READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
         IF sy-subrc <> 0.
@@ -2985,7 +2997,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           EXIT.
         ELSE.
           lv_syindex = sy-index.
-          CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO <ls_field_catalog>-scrtext_l.
+          CONCATENATE <ls_field_catalog>-scrtext_h lv_syindex INTO <ls_field_catalog>-scrtext_h.
         ENDIF.
       ENDWHILE.
 

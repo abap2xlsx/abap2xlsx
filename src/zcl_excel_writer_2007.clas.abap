@@ -7432,7 +7432,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       SHIFT lv_value LEFT DELETING LEADING '0'.
       lo_element2->set_attribute_ns( name  = 'id'
                                     value = lv_value ).
-      lv_value = ls_fieldcat-scrtext_l.
+      lv_value = ls_fieldcat-scrtext_h.
 
       " The text "_x...._", with "_x" not "_X", with exactly 4 ".", each being 0-9 a-f or A-F (case insensitive), is interpreted
       " like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.

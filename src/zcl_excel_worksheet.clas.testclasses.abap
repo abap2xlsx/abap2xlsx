@@ -144,6 +144,7 @@ CLASS ltc_normalize_column_heading DEFINITION FOR TESTING
       prefer_small_text FOR TESTING RAISING cx_static_check,
       prefer_medium_text FOR TESTING RAISING cx_static_check,
       prefer_long_text FOR TESTING RAISING cx_static_check,
+      prefer_huge_text FOR TESTING RAISING cx_static_check,
       default_text_if_none FOR TESTING RAISING cx_static_check,
       invalid_default_descr FOR TESTING RAISING cx_static_check.
 
@@ -1015,29 +1016,33 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     field-scrtext_s = 'Column1_S'.
     field-scrtext_m = 'Column1_M'.
     field-scrtext_l = 'Column1_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_S'.
+    field-scrtext_h = 'Column1_S'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = ''.
     field-scrtext_m = 'Column2_M'.
     field-scrtext_l = 'Column2_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_M'.
+    field-scrtext_h = 'Column2_M'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = ''.
     field-scrtext_m = 'Column3_M'.
     field-scrtext_l = ''.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_M'.
+    field-scrtext_h = 'Column3_M'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = ''.
     field-scrtext_m = ''.
     field-scrtext_l = 'Column4_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column4_L'.
+    field-scrtext_h = 'Column4_L'.
     APPEND field TO exp-field_catalog.
 
     assert( input = input exp = exp ).
@@ -1056,29 +1061,33 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     field-scrtext_s = 'Column1_S'.
     field-scrtext_m = 'Column1_M'.
     field-scrtext_l = 'Column1_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_M'.
+    field-scrtext_h = 'Column1_M'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = 'Column2_S'.
     field-scrtext_m = ''.
     field-scrtext_l = 'Column2_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_S'.
+    field-scrtext_h = 'Column2_S'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = 'Column3_S'.
     field-scrtext_m = ''.
     field-scrtext_l = ''.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_S'.
+    field-scrtext_h = 'Column3_S'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = ''.
     field-scrtext_m = ''.
     field-scrtext_l = 'Column4_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column4_L'.
+    field-scrtext_h = 'Column4_L'.
     APPEND field TO exp-field_catalog.
 
     assert( input = input exp = exp ).
@@ -1097,22 +1106,70 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     field-scrtext_s = 'Column1_S'.
     field-scrtext_m = 'Column1_M'.
     field-scrtext_l = 'Column1_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_L'.
+    field-scrtext_h = 'Column1_L'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = 'Column2_S'.
     field-scrtext_m = 'Column2_M'.
     field-scrtext_l = ''.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_M'.
+    field-scrtext_h = 'Column2_M'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = 'Column3_S'.
     field-scrtext_m = ''.
     field-scrtext_l = ''.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_S'.
+    field-scrtext_h = 'Column3_S'.
+    APPEND field TO exp-field_catalog.
+
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD prefer_huge_text.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output,
+          field TYPE zexcel_s_fieldcatalog.
+
+    input-default_descr = 'H'.
+
+    field-dynpfld   = abap_true.
+
+    field-scrtext_s = 'Column1_S'.
+    field-scrtext_m = 'Column1_M'.
+    field-scrtext_l = 'Column1_L'.
+    field-scrtext_h = 'Column1_H'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_h = 'Column1_H'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column2_S'.
+    field-scrtext_m = 'Column2_M'.
+    field-scrtext_l = 'Column2_L'.
+    field-scrtext_h = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_h = 'Column2_L'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column3_S'.
+    field-scrtext_m = 'Column3_M'.
+    field-scrtext_l = ''.
+    field-scrtext_h = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_h = 'Column3_M'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column4_S'.
+    field-scrtext_m = ''.
+    field-scrtext_l = ''.
+    field-scrtext_h = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_h = 'Column4_S'.
     APPEND field TO exp-field_catalog.
 
     assert( input = input exp = exp ).
@@ -1131,15 +1188,17 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     field-scrtext_s = ''.
     field-scrtext_m = ''.
     field-scrtext_l = ''.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column'.
+    field-scrtext_h = 'Column'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = ''.
     field-scrtext_m = ''.
     field-scrtext_l = ''.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column 1'.
+    field-scrtext_h = 'Column 1'.
     APPEND field TO exp-field_catalog.
 
     assert( input = input exp = exp ).
@@ -1158,29 +1217,33 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     field-scrtext_s = 'Column1_S'.
     field-scrtext_m = 'Column1_M'.
     field-scrtext_l = 'Column1_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_M'.
+    field-scrtext_h = 'Column1_M'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = 'Column2_S'.
     field-scrtext_m = ''.
     field-scrtext_l = 'Column2_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_S'.
+    field-scrtext_h = 'Column2_S'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = 'Column3_S'.
     field-scrtext_m = ''.
     field-scrtext_l = ''.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_S'.
+    field-scrtext_h = 'Column3_S'.
     APPEND field TO exp-field_catalog.
 
     field-scrtext_s = ''.
     field-scrtext_m = ''.
     field-scrtext_l = 'Column4_L'.
+    field-scrtext_h = ''.
     APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column4_L'.
+    field-scrtext_h = 'Column4_L'.
     APPEND field TO exp-field_catalog.
 
     assert( input = input exp = exp ).
