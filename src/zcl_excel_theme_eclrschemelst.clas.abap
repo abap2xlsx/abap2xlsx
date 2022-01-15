@@ -41,7 +41,6 @@ CLASS zcl_excel_theme_eclrschemelst IMPLEMENTATION.
 
 
   METHOD load.
-    "! so far copy only existing values
-    extracolor ?= io_extra_color.
+    extracolor = zcl_excel_common=>clone_ixml_with_namespaces( io_extra_color ).
   ENDMETHOD.                    "load
 ENDCLASS.

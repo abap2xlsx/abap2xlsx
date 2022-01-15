@@ -189,7 +189,6 @@ CLASS zcl_excel_theme_fmt_scheme IMPLEMENTATION.
 
 
   METHOD load.
-    "! so far copy only existing values
-    fmt_scheme ?= io_fmt_scheme.
+    fmt_scheme = zcl_excel_common=>clone_ixml_with_namespaces( io_fmt_scheme ).
   ENDMETHOD.                    "load
 ENDCLASS.

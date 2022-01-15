@@ -6197,10 +6197,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         " fomula node
         lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_f
                                                            parent = io_document ).
-        lv_value = <ls_sheet_content>-cell_formula.
-        CONDENSE lv_value.
-        lo_element_4->set_value( value = lv_value ).
-        lo_element_3->append_child( new_child = lo_element_4 ). " fomula node
+        lo_element_4->set_value( value = <ls_sheet_content>-cell_formula ).
+        lo_element_3->append_child( new_child = lo_element_4 ). " formula node
       ELSEIF <ls_sheet_content>-column_formula_id <> 0.
         create_xl_sheet_column_formula(
           EXPORTING
