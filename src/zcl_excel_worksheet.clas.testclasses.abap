@@ -1,11 +1,17 @@
 CLASS ltc_normalize_column_heading DEFINITION DEFERRED.
 CLASS ltc_normalize_columnrow_param DEFINITION DEFERRED.
 CLASS ltc_normalize_range_param DEFINITION DEFERRED.
+CLASS ltc_calculate_table_bottom_rig DEFINITION DEFERRED.
+CLASS ltc_normalize_style_param DEFINITION DEFERRED.
 CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
+CLASS ltc_check_overlapping DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_normalize_column_heading
     ltc_normalize_columnrow_param
     ltc_normalize_range_param
+    ltc_calculate_table_bottom_rig
+    ltc_check_overlapping
+    ltc_normalize_style_param
     ltc_check_cell_column_formula.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
@@ -26,6 +32,25 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     METHODS: get_dimension_range FOR TESTING RAISING cx_static_check.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
 
+
+CLASS ltc_calculate_table_bottom_rig DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+
+    METHODS:
+      simple FOR TESTING RAISING cx_static_check,
+      empty_table FOR TESTING RAISING cx_static_check,
+      column_not_selected FOR TESTING RAISING cx_static_check.
+
+    DATA:
+      test_table         TYPE TABLE OF string,
+      field_catalog      TYPE zexcel_t_fieldcatalog,
+      field_catalog_line TYPE zexcel_s_fieldcatalog,
+      table_settings     TYPE zexcel_s_table_settings.  "class under test
+
+ENDCLASS.
 
 CLASS ltc_check_cell_column_formula DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
@@ -58,6 +83,42 @@ CLASS ltc_check_cell_column_formula DEFINITION FOR TESTING
     DATA: mt_column_formulas TYPE zcl_excel_worksheet=>mty_th_column_formula,
           c_messages         LIKE zcl_excel_worksheet=>c_messages.
 
+ENDCLASS.
+
+
+CLASS ltc_check_overlapping DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    TYPES : BEGIN OF ty_parameters,
+              BEGIN OF input,
+                table_settings       TYPE zexcel_s_table_settings,
+                other_table_settings TYPE zcl_excel_worksheet=>ty_table_settings,
+              END OF input,
+              BEGIN OF output,
+                fails TYPE abap_bool,
+              END OF output,
+            END OF ty_parameters.
+    DATA: table_1_settings TYPE zexcel_s_table_settings.
+
+    METHODS:
+      no_overlap_top FOR TESTING RAISING cx_static_check,
+      no_overlap_left FOR TESTING RAISING cx_static_check,
+      no_overlap_bottom FOR TESTING RAISING cx_static_check,
+      no_overlap_right FOR TESTING RAISING cx_static_check,
+      overlap_top FOR TESTING RAISING cx_static_check,
+      overlap_left FOR TESTING RAISING cx_static_check,
+      overlap_bottom FOR TESTING RAISING cx_static_check,
+      overlap_right FOR TESTING RAISING cx_static_check.
+
+    METHODS setup.
+    METHODS assert
+      IMPORTING
+        input TYPE ty_parameters-input
+        exp   TYPE ty_parameters-output
+      RAISING
+        cx_static_check.
 ENDCLASS.
 
 
@@ -171,6 +232,38 @@ CLASS ltc_normalize_range_param DEFINITION FOR TESTING
       IMPORTING
         input TYPE ty_parameters-input
         exp   TYPE ty_parameters-output
+      RAISING
+        cx_static_check.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_style_param DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    TYPES : BEGIN OF ty_parameters_output,
+              fails TYPE abap_bool,
+              guid  TYPE zexcel_cell_style,
+            END OF ty_parameters_output.
+    DATA:
+      excel TYPE REF TO zcl_excel,
+      cut   TYPE REF TO zcl_excel_worksheet,  "class under test
+      exp   TYPE ty_parameters_output.
+
+
+    METHODS setup.
+    METHODS:
+      ref_to_zcl_excel_style FOR TESTING RAISING cx_static_check,
+      zexcel_cell_style FOR TESTING RAISING cx_static_check,
+      raw_16_bytes FOR TESTING RAISING cx_static_check,
+      other FOR TESTING RAISING cx_static_check.
+
+    METHODS assert
+      IMPORTING
+        input TYPE any
+        exp   TYPE ty_parameters_output
       RAISING
         cx_static_check.
 
@@ -567,6 +660,85 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 ENDCLASS.       "lcl_Excel_Worksheet_Test
 
 
+CLASS ltc_calculate_table_bottom_rig IMPLEMENTATION.
+
+  METHOD simple.
+
+    APPEND INITIAL LINE TO test_table.
+    APPEND INITIAL LINE TO test_table.
+
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL1'.
+    APPEND field_catalog_line TO field_catalog.
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL2'.
+    APPEND field_catalog_line TO field_catalog.
+
+    table_settings-top_left_column = 'A'.
+    table_settings-top_left_row = '1'.
+
+    zcl_excel_worksheet=>calculate_table_bottom_right(
+      EXPORTING
+        ip_table         = test_table
+        it_field_catalog = field_catalog
+      CHANGING
+        cs_settings      = table_settings ).
+
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_column exp = 'B' ).
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_row exp = 3 ).
+
+  ENDMETHOD.
+
+  METHOD empty_table.
+
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL1'.
+    APPEND field_catalog_line TO field_catalog.
+
+    table_settings-top_left_column = 'B'.
+    table_settings-top_left_row = '2'.
+
+    zcl_excel_worksheet=>calculate_table_bottom_right(
+      EXPORTING
+        ip_table         = test_table
+        it_field_catalog = field_catalog
+      CHANGING
+        cs_settings      = table_settings ).
+
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_column exp = 'B' ).
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_row exp = 2 ).
+
+  ENDMETHOD.
+
+  METHOD column_not_selected.
+
+    APPEND INITIAL LINE TO test_table.
+
+    field_catalog_line-dynpfld = abap_true.
+    field_catalog_line-fieldname = 'COL1'.
+    APPEND field_catalog_line TO field_catalog.
+    field_catalog_line-dynpfld = abap_false.
+    field_catalog_line-fieldname = 'COL2'.
+    APPEND field_catalog_line TO field_catalog.
+
+    table_settings-top_left_column = 'B'.
+    table_settings-top_left_row = '2'.
+
+    zcl_excel_worksheet=>calculate_table_bottom_right(
+      EXPORTING
+        ip_table         = test_table
+        it_field_catalog = field_catalog
+      CHANGING
+        cs_settings      = table_settings ).
+
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_column exp = 'B' ).
+    cl_abap_unit_assert=>assert_equals( act = table_settings-bottom_right_row exp = 3 ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
 CLASS ltc_check_cell_column_formula IMPLEMENTATION.
 
   METHOD setup.
@@ -657,6 +829,155 @@ CLASS ltc_check_cell_column_formula IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Should have failed with error "{ ip_exp }"| ).
       CATCH zcx_excel INTO lo_exception.
         cl_abap_unit_assert=>assert_equals( act = lo_exception->get_text( ) exp = ip_exp msg = ip_exp ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_check_overlapping IMPLEMENTATION.
+
+  METHOD setup.
+
+    table_1_settings-top_left_column     = 'C'.
+    table_1_settings-top_left_row        = 3.
+    table_1_settings-bottom_right_column = 'D'.
+    table_1_settings-bottom_right_row    = 4.
+
+  ENDMETHOD.
+
+  METHOD no_overlap_top.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'C'.
+    input-table_settings-top_left_row = 1.
+    input-table_settings-bottom_right_column = 'D'.
+    input-table_settings-bottom_right_row = 2.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_false.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD no_overlap_left.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'A'.
+    input-table_settings-top_left_row = 3.
+    input-table_settings-bottom_right_column = 'B'.
+    input-table_settings-bottom_right_row = 4.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_false.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD no_overlap_bottom.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'C'.
+    input-table_settings-top_left_row = 5.
+    input-table_settings-bottom_right_column = 'D'.
+    input-table_settings-bottom_right_row = 6.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_false.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD no_overlap_right.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'E'.
+    input-table_settings-top_left_row = 3.
+    input-table_settings-bottom_right_column = 'F'.
+    input-table_settings-bottom_right_row = 4.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_false.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD overlap_top.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'C'.
+    input-table_settings-top_left_row = 2.
+    input-table_settings-bottom_right_column = 'D'.
+    input-table_settings-bottom_right_row = 3.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD overlap_left.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'B'.
+    input-table_settings-top_left_row = 3.
+    input-table_settings-bottom_right_column = 'C'.
+    input-table_settings-bottom_right_row = 4.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD overlap_bottom.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'C'.
+    input-table_settings-top_left_row = 4.
+    input-table_settings-bottom_right_column = 'D'.
+    input-table_settings-bottom_right_row = 5.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD overlap_right.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-table_settings-top_left_column = 'D'.
+    input-table_settings-top_left_row = 3.
+    input-table_settings-bottom_right_column = 'E'.
+    input-table_settings-bottom_right_row = 4.
+    APPEND table_1_settings TO input-other_table_settings.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: error TYPE REF TO zcx_excel.
+    FIELD-SYMBOLS:
+          <table> TYPE STANDARD TABLE.
+
+    TRY.
+
+        zcl_excel_worksheet=>check_table_overlapping(
+            is_table_settings       = input-table_settings
+            it_other_table_settings = input-other_table_settings ).
+        IF exp-fails = abap_true.
+          cl_abap_unit_assert=>fail( msg = 'Overlap exists, exception was expected' ).
+        ENDIF.
+
+      CATCH zcx_excel INTO error.
+        IF exp-fails = abap_false.
+          RAISE EXCEPTION error.
+        ENDIF.
+        RETURN.
     ENDTRY.
 
   ENDMETHOD.
@@ -1117,6 +1438,98 @@ CLASS ltc_normalize_range_param IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( msg = message exp = exp-row_start     act = act-row_start ).
     message = |Invalid row start for { input_text }|.
     cl_abap_unit_assert=>assert_equals( msg = message exp = exp-row_end       act = act-row_end ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_style_param IMPLEMENTATION.
+
+  METHOD setup.
+
+    CREATE OBJECT excel.
+
+    TRY.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD ref_to_zcl_excel_style.
+    DATA: style TYPE REF TO zcl_excel_style.
+
+    style = excel->add_new_style( ).
+    exp-fails = abap_false.
+    exp-guid = style->get_guid( ).
+    assert( input = style exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD zexcel_cell_style.
+    DATA: style TYPE REF TO zcl_excel_style.
+
+    style = excel->add_new_style( ).
+    exp-fails = abap_false.
+    exp-guid = style->get_guid( ).
+    assert( input = exp-guid exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD raw_16_bytes.
+    DATA: raw_16_bytes TYPE x LENGTH 16.
+
+    raw_16_bytes = 'A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1'.
+    exp-fails = abap_false.
+    exp-guid = raw_16_bytes.
+    assert( input = raw_16_bytes exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD other.
+
+    exp-fails = abap_true.
+    assert( input = 'A' exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: rtti       TYPE REF TO cl_abap_typedescr,
+          message    TYPE string,
+          act        TYPE zexcel_cell_style,
+          error      TYPE REF TO zcx_excel,
+          input_text TYPE string.
+
+    rtti = cl_abap_typedescr=>describe_by_data( input ).
+    IF rtti->type_kind = rtti->typekind_oref.
+      rtti = cl_abap_typedescr=>describe_by_object_ref( input ).
+      input_text = |REF TO { rtti->absolute_name }|.
+    ELSE.
+      input_text = rtti->absolute_name.
+    ENDIF.
+
+    TRY.
+
+        act = cut->normalize_style_parameter( input ).
+
+        IF exp-fails = abap_true.
+          message = |Input type { input_text } accepted but only REF TO \\CLASS=ZCL_EXCEL_STYLE, \\TYPE=ZEXCEL_CELL_STYLE or any X type are supported|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+
+      CATCH zcx_excel INTO error.
+        IF exp-fails = abap_false.
+          message = |Input type { input_text } made it fail but it should succeed with result { exp-guid }|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+        RETURN.
+    ENDTRY.
+
+    cl_abap_unit_assert=>assert_equals( exp = exp-guid act = act ).
 
   ENDMETHOD.
 
