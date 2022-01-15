@@ -668,6 +668,7 @@ CLASS zcl_excel_worksheet DEFINITION
 
 *"* private components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
+    TYPES ty_table_settings TYPE STANDARD TABLE OF zexcel_s_table_settings WITH DEFAULT KEY.
     DATA active_cell TYPE zexcel_s_cell_data .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA columns TYPE REF TO zcl_excel_columns .
@@ -706,6 +707,14 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_width) TYPE f
       RAISING
         zcx_excel .
+    CLASS-METHODS calculate_table_bottom_right
+      IMPORTING
+        ip_table         TYPE STANDARD TABLE
+        it_field_catalog TYPE zexcel_t_fieldcatalog
+      CHANGING
+        cs_settings      TYPE zexcel_s_table_settings
+      RAISING
+        zcx_excel.
     CLASS-METHODS check_cell_column_formula
       IMPORTING
         it_column_formulas   TYPE mty_th_column_formula
@@ -724,6 +733,12 @@ CLASS zcl_excel_worksheet DEFINITION
         !ct_rtf         TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
+    CLASS-METHODS check_table_overlapping
+      IMPORTING
+        is_table_settings       TYPE zexcel_s_table_settings
+        it_other_table_settings TYPE ty_table_settings
+      RAISING
+        zcx_excel.
     METHODS clear_initial_colorxfields
       IMPORTING
         is_color  TYPE zexcel_s_style_color
@@ -927,30 +942,24 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lc_top_left_row    TYPE zexcel_cell_row VALUE 1.
 
     DATA:
-      lv_row_int            TYPE zexcel_cell_row,
-      lv_first_row          TYPE zexcel_cell_row,
-      lv_last_row           TYPE zexcel_cell_row,
-      lv_column_int         TYPE zexcel_cell_column,
-      lv_column_alpha       TYPE zexcel_cell_column_alpha,
-      lt_field_catalog      TYPE zexcel_t_fieldcatalog,
-      lv_id                 TYPE i,
-      lv_rows               TYPE i,
-      lv_formula            TYPE string,
-      ls_settings           TYPE zexcel_s_table_settings,
-      lo_table              TYPE REF TO zcl_excel_table,
-      lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
-      lv_value              TYPE string,
-      lv_value_lowercase    TYPE string,
-      lv_syindex            TYPE c LENGTH 3,
-      lv_errormessage       TYPE string,                                            "ins issue #237
-
-      lv_columns            TYPE i,
-      lt_columns            TYPE zexcel_t_fieldcatalog,
-      lv_maxcol             TYPE i,
-      lv_maxrow             TYPE i,
-      lo_iterator           TYPE REF TO zcl_excel_collection_iterator,
-      lo_style_cond         TYPE REF TO zcl_excel_style_cond,
-      lo_curtable           TYPE REF TO zcl_excel_table.
+      lv_row_int              TYPE zexcel_cell_row,
+      lv_first_row            TYPE zexcel_cell_row,
+      lv_last_row             TYPE zexcel_cell_row,
+      lv_column_int           TYPE zexcel_cell_column,
+      lv_column_alpha         TYPE zexcel_cell_column_alpha,
+      lt_field_catalog        TYPE zexcel_t_fieldcatalog,
+      lv_id                   TYPE i,
+      lv_formula              TYPE string,
+      ls_settings             TYPE zexcel_s_table_settings,
+      lo_table                TYPE REF TO zcl_excel_table,
+      lt_column_name_buffer   TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
+      lv_value                TYPE string,
+      lv_value_lowercase      TYPE string,
+      lv_syindex              TYPE c LENGTH 3,
+      lo_iterator             TYPE REF TO zcl_excel_collection_iterator,
+      lo_style_cond           TYPE REF TO zcl_excel_style_cond,
+      lo_curtable             TYPE REF TO zcl_excel_table,
+      lt_other_table_settings TYPE ty_table_settings.
     DATA: ls_column_formula TYPE mty_s_column_formula,
           lv_mincol         TYPE i.
 
@@ -982,50 +991,26 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     SORT lt_field_catalog BY position.
 
-*--------------------------------------------------------------------*
-*  issue #237   Check if overlapping areas exist  Start
-*--------------------------------------------------------------------*
-    "Get the number of columns for the current table
-    lt_columns = lt_field_catalog.
-    DELETE lt_columns WHERE dynpfld NE abap_true.
-    DESCRIBE TABLE lt_columns LINES lv_columns.
+    calculate_table_bottom_right(
+      EXPORTING
+        ip_table         = ip_table
+        it_field_catalog = lt_field_catalog
+      CHANGING
+        cs_settings      = ls_settings ).
 
-    "Calculate the top left row of the current table
-    lv_column_int = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
-    lv_row_int    = ls_settings-top_left_row.
-
-    "Get number of row for the current table
-    DESCRIBE TABLE ip_table LINES lv_rows.
-
-    "Calculate the bottom right row for the current table
-    lv_maxcol                       = lv_column_int + lv_columns - 1.
-    lv_maxrow                       = lv_row_int    + lv_rows - 1.
-    ls_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( lv_maxcol ).
-    ls_settings-bottom_right_row    = lv_maxrow.
-
-    lv_column_int                   = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
+* Check if overlapping areas exist
 
     lo_iterator = me->tables->get_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
-
       lo_curtable ?= lo_iterator->get_next( ).
-      IF  (    (  ls_settings-top_left_row     GE lo_curtable->settings-top_left_row                             AND ls_settings-top_left_row     LE lo_curtable->settings-bottom_right_row )
-            OR
-               (  ls_settings-bottom_right_row GE lo_curtable->settings-top_left_row                             AND ls_settings-bottom_right_row LE lo_curtable->settings-bottom_right_row )
-          )
-        AND
-          (    (  lv_column_int GE zcl_excel_common=>convert_column2int( lo_curtable->settings-top_left_column ) AND lv_column_int LE zcl_excel_common=>convert_column2int( lo_curtable->settings-bottom_right_column ) )
-            OR
-               (  lv_maxcol     GE zcl_excel_common=>convert_column2int( lo_curtable->settings-top_left_column ) AND lv_maxcol     LE zcl_excel_common=>convert_column2int( lo_curtable->settings-bottom_right_column ) )
-          ).
-        lv_errormessage = 'Table overlaps with previously bound table and will not be added to worksheet.'(400).
-        zcx_excel=>raise_text( lv_errormessage ).
-      ENDIF.
-
+      APPEND lo_curtable->settings TO lt_other_table_settings.
     ENDWHILE.
-*--------------------------------------------------------------------*
-*  issue #237   Check if overlapping areas exist  End
-*--------------------------------------------------------------------*
+
+    check_table_overlapping(
+        is_table_settings       = ls_settings
+        it_other_table_settings = lt_other_table_settings ).
+
+* Start filling the table
 
     CREATE OBJECT lo_table.
     lo_table->settings = ls_settings.
@@ -1035,6 +1020,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     me->tables->add( lo_table ).
 
+    lv_column_int = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
+    lv_row_int = ls_settings-top_left_row.
 * It is better to loop column by column (only visible column)
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
@@ -1113,7 +1100,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ls_column_formula-table_top_left_row     = lo_table->settings-top_left_row.
         ls_column_formula-table_bottom_right_row = lo_table->settings-bottom_right_row.
         ls_column_formula-table_left_column_int  = lv_mincol.
-        ls_column_formula-table_right_column_int = lv_maxcol.
+        ls_column_formula-table_right_column_int = zcl_excel_common=>convert_column2int( lo_table->settings-bottom_right_column ).
         INSERT ls_column_formula INTO TABLE column_formulas.
       ENDIF.
 
@@ -1233,7 +1220,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
       IF <ls_field_catalog>-style_cond IS NOT INITIAL.
         lv_first_row    = ls_settings-top_left_row + 1. " +1 to exclude header
-        lv_last_row     = ls_settings-top_left_row + lv_rows.
+        lv_last_row     = ls_settings-bottom_right_row.
         lo_style_cond = me->get_style_cond( <ls_field_catalog>-style_cond ).
         lo_style_cond->set_range( ip_start_column  = lv_column_alpha
                                   ip_start_row     = lv_first_row
@@ -1254,7 +1241,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     IF ip_table IS INITIAL.
       es_table_settings-bottom_right_row    = ls_settings-top_left_row + 2.           "Last rows
     ELSE.
-      es_table_settings-bottom_right_row    = ls_settings-top_left_row + lv_rows + 1. "Last rows
+      es_table_settings-bottom_right_row    = ls_settings-bottom_right_row + 1. "Last rows
     ENDIF.
     " << Issue #291
 
@@ -1443,6 +1430,40 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.                    "CALCULATE_COLUMN_WIDTHS
+
+
+  METHOD calculate_table_bottom_right.
+
+    DATA: lv_errormessage TYPE string,
+          lv_columns      TYPE i,
+          lt_columns      TYPE zexcel_t_fieldcatalog,
+          lv_maxrow       TYPE i,
+          lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
+          lo_curtable     TYPE REF TO zcl_excel_table,
+          lv_row_int      TYPE zexcel_cell_row,
+          lv_column_int   TYPE zexcel_cell_column,
+          lv_rows         TYPE i,
+          lv_maxcol       TYPE i.
+
+    "Get the number of columns for the current table
+    lt_columns = it_field_catalog.
+    DELETE lt_columns WHERE dynpfld NE abap_true.
+    DESCRIBE TABLE lt_columns LINES lv_columns.
+
+    "Calculate the top left row of the current table
+    lv_column_int = zcl_excel_common=>convert_column2int( cs_settings-top_left_column ).
+    lv_row_int    = cs_settings-top_left_row.
+
+    "Get number of row for the current table
+    DESCRIBE TABLE ip_table LINES lv_rows.
+
+    "Calculate the bottom right row for the current table
+    lv_maxcol                       = lv_column_int + lv_columns - 1.
+    lv_maxrow                       = lv_row_int    + lv_rows.
+    cs_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( lv_maxcol ).
+    cs_settings-bottom_right_row    = lv_maxrow.
+
+  ENDMETHOD.
 
 
   METHOD change_area_style.
@@ -1935,6 +1956,41 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         EXPORTING
           error = 'RTF specs length is not equal to value length'.
     ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD check_table_overlapping.
+
+    DATA: lv_errormessage TYPE string,
+          lv_column_int   TYPE zexcel_cell_column,
+          lv_maxcol       TYPE i.
+    FIELD-SYMBOLS:
+          <ls_table_settings> TYPE zexcel_s_table_settings.
+
+    lv_column_int = zcl_excel_common=>convert_column2int( is_table_settings-top_left_column ).
+    lv_maxcol = zcl_excel_common=>convert_column2int( is_table_settings-bottom_right_column ).
+
+    LOOP AT it_other_table_settings ASSIGNING <ls_table_settings>.
+
+      IF  (    (  is_table_settings-top_left_row     GE <ls_table_settings>-top_left_row
+              AND is_table_settings-top_left_row     LE <ls_table_settings>-bottom_right_row )
+            OR
+               (  is_table_settings-bottom_right_row GE <ls_table_settings>-top_left_row
+              AND is_table_settings-bottom_right_row LE <ls_table_settings>-bottom_right_row )
+          )
+        AND
+          (    (  lv_column_int GE zcl_excel_common=>convert_column2int( <ls_table_settings>-top_left_column )
+              AND lv_column_int LE zcl_excel_common=>convert_column2int( <ls_table_settings>-bottom_right_column ) )
+            OR
+               (  lv_maxcol     GE zcl_excel_common=>convert_column2int( <ls_table_settings>-top_left_column )
+              AND lv_maxcol     LE zcl_excel_common=>convert_column2int( <ls_table_settings>-bottom_right_column ) )
+          ).
+        lv_errormessage = 'Table overlaps with previously bound table and will not be added to worksheet.'(400).
+        zcx_excel=>raise_text( lv_errormessage ).
+      ENDIF.
+
+    ENDLOOP.
 
   ENDMETHOD.
 
