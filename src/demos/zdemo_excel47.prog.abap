@@ -215,7 +215,7 @@ CLASS lcl_app IMPLEMENTATION.
     lo_excel->set_active_sheet_index_by_name( 'Sheet1' ).
 
 *** Create output
-    lcl_output=>output( lo_excel ).
+    lcl_output=>output( cl_excel = lo_excel iv_info_message = abap_false ).
 
   ENDMETHOD.
 
