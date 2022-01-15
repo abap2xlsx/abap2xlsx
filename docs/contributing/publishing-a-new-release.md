@@ -29,6 +29,7 @@ Now [create the release in GitHub](https://docs.github.com/en/repositories/relea
 - Click "Releases"
 - Click "Draft a new release"
 - Click "Choose a tag"
-- Type the title and publish the release
+- Type the title, click "Auto-generate release notes" and click "Prview" to verify
+- Click "Publish release"
 - It's done, zip and tar.gz files are automatically assigned to the release
 - The new release appears in the Code home page
