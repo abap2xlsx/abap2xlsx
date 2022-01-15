@@ -739,6 +739,7 @@ CLASS lcl_app IMPLEMENTATION.
 
     IF result-xlsx_reference IS INITIAL.
 
+      " Object doesn't exist in the Web Repository
       result-diff = abap_true.
 
     ELSE.
@@ -890,6 +891,26 @@ CLASS lcl_app IMPLEMENTATION.
     line-objid = 'ZDEMO_EXCEL41'.
     line-filename = 'ABAP2XLSX Inheritance.xlsx'.
     APPEND line TO result.
+    line-program = 'ZDEMO_EXCEL42'.
+    line-objid = 'ZDEMO_EXCEL42'.
+    line-filename = '42 Theme Manipulation demo.xlsx'.
+    APPEND line TO result.
+    line-program = 'ZDEMO_EXCEL45'.
+    line-objid = 'ZDEMO_EXCEL45'.
+    line-filename = '45_ShowDropdown.xlsx'.
+    APPEND line TO result.
+    line-program = 'ZDEMO_EXCEL46'.
+    line-objid = 'ZDEMO_EXCEL46'.
+    line-filename = '46_ValidationWarning.xlsx'.
+    APPEND line TO result.
+    line-program = 'ZDEMO_EXCEL47'.
+    line-objid = 'ZDEMO_EXCEL47'.
+    line-filename = '47_ColumnFormulas.xlsx'.
+    APPEND line TO result.
+    line-program = 'ZDEMO_EXCEL48'.
+    line-objid = 'ZDEMO_EXCEL48'.
+    line-filename = '48_MultipleStylesInOneCell.xlsx'.
+    APPEND line TO result.
     line-program = 'ZDEMO_EXCEL_COMMENTS'.
     line-objid = 'ZDEMO_EXCEL_COMMENTS'.
     line-filename = 'Comments.xlsx'.
@@ -1036,6 +1057,7 @@ CLASS lcl_app IMPLEMENTATION.
 
         CATCH cx_root INTO error.
           alv_line-status_icon = |{ icon_cancel }{ error->get_text( ) }|.
+          APPEND alv_line TO alv_table.
       ENDTRY.
 
     ENDLOOP.
@@ -1175,7 +1197,9 @@ CLASS lcl_app IMPLEMENTATION.
         object_not_found    = 1
         parameter_not_found = 2
         OTHERS              = 3.
-    IF sy-subrc <> 0.
+    IF sy-subrc = 1.
+      RETURN.
+    ELSEIF sy-subrc >= 2.
       RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'WWW_GET_MIME_OBJECT'.
     ENDIF.
 

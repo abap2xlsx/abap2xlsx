@@ -13,7 +13,7 @@ DATA: lo_excel      TYPE REF TO zcl_excel,
       lo_theme      TYPE REF TO zcl_excel_theme,
       lo_style      TYPE REF TO zcl_excel_style,
       lv_style_guid TYPE zexcel_cell_style.
-DATA: gc_save_file_name TYPE string VALUE '42 Theme Manipulation demo.&'.
+DATA: gc_save_file_name TYPE string VALUE '42 Theme Manipulation demo.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
 
 INITIALIZATION.
