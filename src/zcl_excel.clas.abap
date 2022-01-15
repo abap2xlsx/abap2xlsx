@@ -13,6 +13,7 @@ CLASS zcl_excel DEFINITION
     DATA legacy_palette TYPE REF TO zcl_excel_legacy_palette READ-ONLY .
     DATA security TYPE REF TO zcl_excel_security .
     DATA use_template TYPE abap_bool .
+    CONSTANTS version TYPE c LENGTH 10 VALUE '7.15.0'.      "#EC NOTEXT
 
     METHODS add_new_autofilter
       IMPORTING
@@ -36,6 +37,8 @@ CLASS zcl_excel DEFINITION
     METHODS add_new_style
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style OPTIONAL
+        !io_clone_of    TYPE REF TO zcl_excel_style OPTIONAL
+          PREFERRED PARAMETER !ip_guid
       RETURNING
         VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS add_new_worksheet
@@ -156,7 +159,6 @@ CLASS zcl_excel DEFINITION
     DATA worksheets TYPE REF TO zcl_excel_worksheets .
   PRIVATE SECTION.
 
-    CONSTANTS version TYPE c LENGTH 10 VALUE '7.14.0'.      "#EC NOTEXT
     DATA autofilters TYPE REF TO zcl_excel_autofilters .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA default_style TYPE zexcel_cell_style .
@@ -234,7 +236,8 @@ CLASS zcl_excel IMPLEMENTATION.
 * Create default style
     CREATE OBJECT eo_style
       EXPORTING
-        ip_guid = ip_guid.
+        ip_guid     = ip_guid
+        io_clone_of = io_clone_of.
     styles->add( eo_style ).
 
     DATA: style2 TYPE zexcel_s_stylemapping.

@@ -280,9 +280,34 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !ip_excel      TYPE REF TO zcl_excel
       RAISING
         zcx_excel .
+
+    CONSTANTS: BEGIN OF namespace,
+                 x14ac               TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
+                 vba_project         TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
+                 c                   TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
+                 a                   TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
+                 xdr                 TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
+                 mc                  TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
+                 r                   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+                 chart               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
+                 drawing             TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+                 hyperlink           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+                 image               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
+                 office_document     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument',
+                 printer_settings    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
+                 shared_strings      TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings',
+                 styles              TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
+                 theme               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
+                 worksheet           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
+                 relationships       TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
+                 core_properties     TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
+                 main                TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+               END OF namespace.
+
   PRIVATE SECTION.
 
     DATA zip TYPE REF TO lcl_zip_archive .
+    DATA: gid TYPE i.
 
     METHODS create_zip_archive
       IMPORTING
@@ -501,7 +526,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * italic
 *--------------------------------------------------------------------*
-          lo_ixml_element = lo_ixml_dxf_child->find_from_name( 'i' ).
+          lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'i' uri = namespace-main ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
             lv_val  = lo_ixml_element->get_attribute_ns( 'val' ).
@@ -514,7 +539,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * bold
 *--------------------------------------------------------------------*
-          lo_ixml_element = lo_ixml_dxf_child->find_from_name( 'b' ).
+          lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'b' uri = namespace-main ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
             lv_val  = lo_ixml_element->get_attribute_ns( 'val' ).
@@ -527,7 +552,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * strikethrough
 *--------------------------------------------------------------------*
-          lo_ixml_element = lo_ixml_dxf_child->find_from_name( 'strike' ).
+          lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'strike' uri = namespace-main ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
             lv_val  = lo_ixml_element->get_attribute_ns( 'val' ).
@@ -540,7 +565,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * color
 *--------------------------------------------------------------------*
-          lo_ixml_element = lo_ixml_dxf_child->find_from_name( 'color' ).
+          lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'color' uri = namespace-main ).
           IF lo_ixml_element IS BOUND.
             CLEAR lv_val.
             lv_val  = lo_ixml_element->get_attribute_ns( 'rgb' ).
@@ -549,9 +574,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           ENDIF.
 
         WHEN 'fill'.
-          lo_ixml_element = lo_ixml_dxf_child->find_from_name( 'patternFill' ).
+          lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'patternFill' uri = namespace-main ).
           IF lo_ixml_element IS BOUND.
-            lo_ixml_element2 = lo_ixml_element->find_from_name( 'bgColor' ).
+            lo_ixml_element2 = lo_ixml_dxf_child->find_from_name_ns( name = 'bgColor' uri = namespace-main ).
             IF lo_ixml_element2 IS BOUND.
               CLEAR lv_val.
               lv_val  = lo_ixml_element2->get_attribute_ns( 'rgb' ).
@@ -669,18 +694,18 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
           rel_drawing    TYPE t_rel_drawing.
 
-    node ?= io_anchor_element->find_from_name( name = 'from' namespace = 'xdr' ).
+    node ?= io_anchor_element->find_from_name_ns( name = 'from' uri = namespace-xdr ).
     CHECK node IS NOT INITIAL.
-    node2 ?= node->find_from_name( name = 'col' namespace = 'xdr' ).
+    node2 ?= node->find_from_name_ns( name = 'col' uri = namespace-xdr ).
     ls_upper-col = node2->get_value( ).
-    node2 ?= node->find_from_name( name = 'row' namespace = 'xdr' ).
+    node2 ?= node->find_from_name_ns( name = 'row' uri = namespace-xdr ).
     ls_upper-row = node2->get_value( ).
-    node2 ?= node->find_from_name( name = 'colOff' namespace = 'xdr' ).
+    node2 ?= node->find_from_name_ns( name = 'colOff' uri = namespace-xdr ).
     ls_upper-col_offset = node2->get_value( ).
-    node2 ?= node->find_from_name( name = 'rowOff' namespace = 'xdr' ).
+    node2 ?= node->find_from_name_ns( name = 'rowOff' uri = namespace-xdr ).
     ls_upper-row_offset = node2->get_value( ).
 
-    node ?= io_anchor_element->find_from_name( name = 'ext' namespace = 'xdr' ).
+    node ?= io_anchor_element->find_from_name_ns( name = 'ext' uri = namespace-xdr ).
     IF node IS INITIAL.
       CLEAR ls_size.
     ELSE.
@@ -697,32 +722,32 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDTRY.
     ENDIF.
 
-    node ?= io_anchor_element->find_from_name( name = 'to' namespace = 'xdr' ).
+    node ?= io_anchor_element->find_from_name_ns( name = 'to' uri = namespace-xdr ).
     IF node IS INITIAL.
       CLEAR ls_lower.
     ELSE.
-      node2 ?= node->find_from_name( name = 'col' namespace = 'xdr' ).
+      node2 ?= node->find_from_name_ns( name = 'col' uri = namespace-xdr ).
       ls_lower-col = node2->get_value( ).
-      node2 ?= node->find_from_name( name = 'row' namespace = 'xdr' ).
+      node2 ?= node->find_from_name_ns( name = 'row' uri = namespace-xdr ).
       ls_lower-row = node2->get_value( ).
-      node2 ?= node->find_from_name( name = 'colOff' namespace = 'xdr' ).
+      node2 ?= node->find_from_name_ns( name = 'colOff' uri = namespace-xdr ).
       ls_lower-col_offset = node2->get_value( ).
-      node2 ?= node->find_from_name( name = 'rowOff' namespace = 'xdr' ).
+      node2 ?= node->find_from_name_ns( name = 'rowOff' uri = namespace-xdr ).
       ls_lower-row_offset = node2->get_value( ).
     ENDIF.
 
-    node ?= io_anchor_element->find_from_name( name = 'pic' namespace = 'xdr' ).
+    node ?= io_anchor_element->find_from_name_ns( name = 'pic' uri = namespace-xdr ).
     IF node IS NOT INITIAL.
-      node2 ?= node->find_from_name( name = 'nvPicPr' namespace = 'xdr' ).
+      node2 ?= node->find_from_name_ns( name = 'nvPicPr' uri = namespace-xdr ).
       CHECK node2 IS NOT INITIAL.
-      node3 ?= node2->find_from_name( name = 'cNvPr' namespace = 'xdr' ).
+      node3 ?= node2->find_from_name_ns( name = 'cNvPr' uri = namespace-xdr ).
       CHECK node3 IS NOT INITIAL.
       me->fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = cnvpr ).
       lv_title = cnvpr-name.
 
-      node2 ?= node->find_from_name( name = 'blipFill' namespace = 'xdr' ).
+      node2 ?= node->find_from_name_ns( name = 'blipFill' uri = namespace-xdr ).
       CHECK node2 IS NOT INITIAL.
-      node3 ?= node2->find_from_name( name = 'blip' namespace = 'a' ).
+      node3 ?= node2->find_from_name_ns( name = 'blip' uri = namespace-a ).
       CHECK node3 IS NOT INITIAL.
       me->fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = blip ).
       lv_relation_id = blip-embed.
@@ -730,20 +755,20 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       drawing_type = zcl_excel_drawing=>type_image.
     ENDIF.
 
-    node ?= io_anchor_element->find_from_name( name = 'graphicFrame' namespace = 'xdr' ).
+    node ?= io_anchor_element->find_from_name_ns( name = 'graphicFrame' uri = namespace-xdr ).
     IF node IS NOT INITIAL.
-      node2 ?= node->find_from_name( name = 'nvGraphicFramePr' namespace = 'xdr' ).
+      node2 ?= node->find_from_name_ns( name = 'nvGraphicFramePr' uri = namespace-xdr ).
       CHECK node2 IS NOT INITIAL.
-      node3 ?= node2->find_from_name( name = 'cNvPr' namespace = 'xdr' ).
+      node3 ?= node2->find_from_name_ns( name = 'cNvPr' uri = namespace-xdr ).
       CHECK node3 IS NOT INITIAL.
       me->fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = cnvpr ).
       lv_title = cnvpr-name.
 
-      node2 ?= node->find_from_name( name = 'graphic' namespace = 'a' ).
+      node2 ?= node->find_from_name_ns( name = 'graphic' uri = namespace-a ).
       CHECK node2 IS NOT INITIAL.
-      node3 ?= node2->find_from_name( name = 'graphicData' namespace = 'a' ).
+      node3 ?= node2->find_from_name_ns( name = 'graphicData' uri = namespace-a ).
       CHECK node3 IS NOT INITIAL.
-      node4 ?= node2->find_from_name( name = 'chart' namespace = 'c' ).
+      node4 ?= node2->find_from_name_ns( name = 'chart' uri = namespace-c ).
       CHECK node4 IS NOT INITIAL.
       me->fill_struct_from_attributes( EXPORTING ip_element = node4 CHANGING cp_structure = chart ).
       lv_relation_id = chart-id.
@@ -774,15 +799,15 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     IF drawing_type = zcl_excel_drawing=>type_chart.
 *  Begin fix for Issue #551
       DATA: lo_tmp_node_2                TYPE REF TO if_ixml_element.
-      lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'pieChart' namespace = 'c' ).
+      lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name_ns( name = 'pieChart' uri = namespace-c ).
       IF lo_tmp_node_2 IS NOT INITIAL.
         lo_drawing->graph_type = zcl_excel_drawing=>c_graph_pie.
       ELSE.
-        lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'barChart' namespace = 'c' ).
+        lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name_ns( name = 'barChart' uri = namespace-c ).
         IF lo_tmp_node_2 IS NOT INITIAL.
           lo_drawing->graph_type = zcl_excel_drawing=>c_graph_bars.
         ELSE.
-          lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name( name = 'lineChart' namespace = 'c' ).
+          lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name_ns( name = 'lineChart' uri = namespace-c ).
           IF lo_tmp_node_2 IS NOT INITIAL.
             lo_drawing->graph_type = zcl_excel_drawing=>c_graph_line.
           ENDIF.
@@ -813,14 +838,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * Look for dxfs-node
 *--------------------------------------------------------------------*
     lo_styles_xml = me->get_ixml_from_zip_archive( iv_path ).
-    lo_node_dxfs  = lo_styles_xml->find_from_name( 'dxfs' ).
+    lo_node_dxfs  = lo_styles_xml->find_from_name_ns( name = 'dxfs' uri = namespace-main ).
     CHECK lo_node_dxfs IS BOUND.
 
 
 *--------------------------------------------------------------------*
 * loop through all dxf-nodes and create style for each
 *--------------------------------------------------------------------*
-    lo_nodes_dxf ?= lo_node_dxfs->get_elements_by_tag_name( 'dxf' ).
+    lo_nodes_dxf ?= lo_node_dxfs->get_elements_by_tag_name_ns( name = 'dxf' uri = namespace-main ).
     lo_iterator_dxf = lo_nodes_dxf->create_iterator( ).
     lo_node_dxf ?= lo_iterator_dxf->get_next( ).
     WHILE lo_node_dxf IS BOUND.
@@ -920,7 +945,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     lo_shared_strings_xml = me->get_ixml_from_zip_archive( i_filename     = ip_path
                                                            is_normalizing = space ).  " NO!!! normalizing - otherwise leading blanks will be omitted and that is not really desired for the stringtable
-    lo_node_si ?= lo_shared_strings_xml->find_from_name( 'si' ).
+    lo_node_si ?= lo_shared_strings_xml->find_from_name_ns( name = 'si' uri = namespace-main ).
     WHILE lo_node_si IS BOUND.
 
       APPEND INITIAL LINE TO me->shared_strings ASSIGNING <ls_shared_string>.            " Each <si>-entry in the xml-file must lead to an entry in our stringtable
@@ -944,13 +969,15 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           WHILE lo_node_si_child IS BOUND.                                             " actually these children of <si> are <r>-tags
             CLEAR: ls_rtf.
 
-            lo_node_r_child_rpr ?= lo_node_si_child->find_from_name( 'rPr' ).          " extracting rich text formating data
+            " extracting rich text formating data
+            lo_node_r_child_rpr ?= lo_node_si_child->find_from_name_ns( name = 'rPr' uri = namespace-main ).
             IF lo_node_r_child_rpr IS BOUND.
               lo_font = load_style_font( lo_node_r_child_rpr ).
               ls_rtf-font = lo_font->get_structure( ).
             ENDIF.
             ls_rtf-offset = lv_current_offset.
-            lo_node_r_child_t ?= lo_node_si_child->find_from_name( 't' ).              " extract the <t>...</t> part of each <r>-tag
+            " extract the <t>...</t> part of each <r>-tag
+            lo_node_r_child_t ?= lo_node_si_child->find_from_name_ns( name = 't' uri = namespace-main ).
             IF lo_node_r_child_t IS BOUND.
               lv_node_value = lo_node_r_child_t->get_value( ).
               CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
@@ -1086,9 +1113,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Now everything is prepared to build a "full" style
 *--------------------------------------------------------------------*
-    lo_node_cellxfs  = lo_styles_xml->find_from_name( name = 'cellXfs' ).
+    lo_node_cellxfs  = lo_styles_xml->find_from_name_ns( name = 'cellXfs' uri = namespace-main ).
     IF lo_node_cellxfs IS BOUND.
-      lo_nodes_xf         = lo_node_cellxfs->get_elements_by_tag_name( name = 'xf' ).
+      lo_nodes_xf         = lo_node_cellxfs->get_elements_by_tag_name_ns( name = 'xf' uri = namespace-main ).
       lo_iterator_cellxfs = lo_nodes_xf->create_iterator( ).
       lo_node_cellxfs_xf ?= lo_iterator_cellxfs->get_next( ).
       WHILE lo_node_cellxfs_xf IS BOUND.
@@ -1144,7 +1171,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * §5 - Alignment
 *--------------------------------------------------------------------*
-        lo_node_cellxfs_xf_alignment ?= lo_node_cellxfs_xf->find_from_name( 'alignment' ).
+        lo_node_cellxfs_xf_alignment ?= lo_node_cellxfs_xf->find_from_name_ns( name = 'alignment' uri = namespace-main ).
         IF lo_node_cellxfs_xf_alignment IS BOUND.
           fill_struct_from_attributes( EXPORTING
                                          ip_element   =  lo_node_cellxfs_xf_alignment
@@ -1178,7 +1205,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * §6 - Protection
 *--------------------------------------------------------------------*
-        lo_node_cellxfs_xf_protection ?= lo_node_cellxfs_xf->find_from_name( 'protection' ).
+        lo_node_cellxfs_xf_protection ?= lo_node_cellxfs_xf->find_from_name_ns( name = 'protection' uri = namespace-main ).
         IF lo_node_cellxfs_xf_protection IS BOUND.
           fill_struct_from_attributes( EXPORTING
                                          ip_element   = lo_node_cellxfs_xf_protection
@@ -1251,7 +1278,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *              </diagonal>
 *          </border>
 *--------------------------------------------------------------------*
-    lo_node_border ?= ip_xml->find_from_name( 'border' ).
+    lo_node_border ?= ip_xml->find_from_name_ns( name = 'border' uri = namespace-main ).
     WHILE lo_node_border IS BOUND.
 
       CREATE OBJECT lo_cell_border.
@@ -1304,7 +1331,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * §2 Read the border-formatting
 *--------------------------------------------------------------------*
         lo_border->border_style = lo_node_bordertype->get_attribute( 'style' ).
-        lo_node_bordercolor ?= lo_node_bordertype->find_from_name( 'color' ).
+        lo_node_bordercolor ?= lo_node_bordertype->find_from_name_ns( name = 'color' uri = namespace-main ).
         IF lo_node_bordercolor IS BOUND.
           fill_struct_from_attributes( EXPORTING
                                          ip_element   =  lo_node_bordercolor
@@ -1376,7 +1403,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *          </fill>
 *--------------------------------------------------------------------*
 
-    lo_node_fill ?= ip_xml->find_from_name( 'fill' ).
+    lo_node_fill ?= ip_xml->find_from_name_ns( name = 'fill' uri = namespace-main ).
     WHILE lo_node_fill IS BOUND.
 
       CREATE OBJECT lo_fill.
@@ -1392,7 +1419,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Patternfill - background color
 *--------------------------------------------------------------------*
-          lo_node_bgcolor = lo_node_fill_child->find_from_name( 'bgColor' ).
+          lo_node_bgcolor = lo_node_fill_child->find_from_name_ns( name = 'bgColor' uri = namespace-main ).
           IF lo_node_bgcolor IS BOUND.
             fill_struct_from_attributes( EXPORTING
                                            ip_element   = lo_node_bgcolor
@@ -1413,7 +1440,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Patternfill - foreground color
 *--------------------------------------------------------------------*
-          lo_node_fgcolor = lo_node_fill->find_from_name( 'fgColor' ).
+          lo_node_fgcolor = lo_node_fill->find_from_name_ns( name = 'fgColor' uri = namespace-main ).
           IF lo_node_fgcolor IS BOUND.
             fill_struct_from_attributes( EXPORTING
                                            ip_element   = lo_node_fgcolor
@@ -1443,11 +1470,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_fill->gradtype-bottom = lo_node_fill_child->get_attribute( 'bottom' ).
           lo_fill->gradtype-degree = lo_node_fill_child->get_attribute( 'degree' ).
           FREE lo_node_stop.
-          lo_node_stop ?= lo_node_fill_child->find_from_name( 'stop' ).
+          lo_node_stop ?= lo_node_fill_child->find_from_name_ns( name = 'stop' uri = namespace-main ).
           WHILE lo_node_stop IS BOUND.
             IF lo_fill->gradtype-position1 IS INITIAL.
               lo_fill->gradtype-position1 = lo_node_stop->get_attribute( 'position' ).
-              lo_node_bgcolor = lo_node_stop->find_from_name( 'color' ).
+              lo_node_bgcolor = lo_node_stop->find_from_name_ns( name = 'color' uri = namespace-main ).
               IF lo_node_bgcolor IS BOUND.
                 fill_struct_from_attributes( EXPORTING
                                                 ip_element   = lo_node_bgcolor
@@ -1466,7 +1493,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               ENDIF.
             ELSEIF lo_fill->gradtype-position2 IS INITIAL.
               lo_fill->gradtype-position2 = lo_node_stop->get_attribute( 'position' ).
-              lo_node_fgcolor = lo_node_stop->find_from_name( 'color' ).
+              lo_node_fgcolor = lo_node_stop->find_from_name_ns( name = 'color' uri = namespace-main ).
               IF lo_node_fgcolor IS BOUND.
                 fill_struct_from_attributes( EXPORTING
                                                ip_element   = lo_node_fgcolor
@@ -1519,21 +1546,21 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *   Bold
 *--------------------------------------------------------------------*
-    IF lo_node_font->find_from_name( 'b' ) IS BOUND.
+    IF lo_node_font->find_from_name_ns( name = 'b' uri = namespace-main ) IS BOUND.
       lo_font->bold = abap_true.
     ENDIF.
 
 *--------------------------------------------------------------------*
 *   Italic
 *--------------------------------------------------------------------*
-    IF lo_node_font->find_from_name( 'i' ) IS BOUND.
+    IF lo_node_font->find_from_name_ns( name = 'i' uri = namespace-main ) IS BOUND.
       lo_font->italic = abap_true.
     ENDIF.
 
 *--------------------------------------------------------------------*
 *   Underline
 *--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'u' ).
+    lo_node2 = lo_node_font->find_from_name_ns( name = 'u' uri = namespace-main ).
     IF lo_node2 IS BOUND.
       lo_font->underline      = abap_true.
       lo_font->underline_mode = lo_node2->get_attribute( 'val' ).
@@ -1542,14 +1569,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *   StrikeThrough
 *--------------------------------------------------------------------*
-    IF lo_node_font->find_from_name( 'strike' ) IS BOUND.
+    IF lo_node_font->find_from_name_ns( name = 'strike' uri = namespace-main ) IS BOUND.
       lo_font->strikethrough = abap_true.
     ENDIF.
 
 *--------------------------------------------------------------------*
 *   Fontsize
 *--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'sz' ).
+    lo_node2 = lo_node_font->find_from_name_ns( name = 'sz' uri = namespace-main ).
     IF lo_node2 IS BOUND.
       lo_font->size = lo_node2->get_attribute( 'val' ).
     ENDIF.
@@ -1557,11 +1584,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *   Fontname
 *--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'name' ).
+    lo_node2 = lo_node_font->find_from_name_ns( name = 'name' uri = namespace-main ).
     IF lo_node2 IS BOUND.
       lo_font->name = lo_node2->get_attribute( 'val' ).
     ELSE.
-      lo_node2 = lo_node_font->find_from_name( 'rFont' ).
+      lo_node2 = lo_node_font->find_from_name_ns( name = 'rFont' uri = namespace-main ).
       IF lo_node2 IS BOUND.
         lo_font->name = lo_node2->get_attribute( 'val' ).
       ENDIF.
@@ -1570,7 +1597,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *   Fontfamily
 *--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'family' ).
+    lo_node2 = lo_node_font->find_from_name_ns( name = 'family' uri = namespace-main ).
     IF lo_node2 IS BOUND.
       lo_font->family = lo_node2->get_attribute( 'val' ).
     ENDIF.
@@ -1578,7 +1605,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *   Fontscheme
 *--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'scheme' ).
+    lo_node2 = lo_node_font->find_from_name_ns( name = 'scheme' uri = namespace-main ).
     IF lo_node2 IS BOUND.
       lo_font->scheme = lo_node2->get_attribute( 'val' ).
     ELSE.
@@ -1588,7 +1615,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *   Fontcolor
 *--------------------------------------------------------------------*
-    lo_node2 = lo_node_font->find_from_name( 'color' ).
+    lo_node2 = lo_node_font->find_from_name_ns( name = 'color' uri = namespace-main ).
     IF lo_node2 IS BOUND.
       fill_struct_from_attributes( EXPORTING
                                      ip_element   =  lo_node2
@@ -1636,7 +1663,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *              <scheme val="minor"/>
 *          </font>
 *--------------------------------------------------------------------*
-    lo_node_font ?= ip_xml->find_from_name( 'font' ).
+    lo_node_font ?= ip_xml->find_from_name_ns( name = 'font' uri = namespace-main ).
     WHILE lo_node_font IS BOUND.
 
       lo_font = load_style_font( lo_node_font ).
@@ -1687,7 +1714,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *             <numFmt formatCode="#,###,###,###,##0.00" numFmtId="164"/>
 *         </numFmts>
 *--------------------------------------------------------------------*
-    lo_node_numfmt ?= ip_xml->find_from_name( 'numFmt' ).
+    lo_node_numfmt ?= ip_xml->find_from_name_ns( name = 'numFmt' uri = namespace-main ).
     WHILE lo_node_numfmt IS BOUND.
 
       CLEAR ls_num_format.
@@ -1881,7 +1908,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         INTO lv_full_filename.
     lo_rels_workbook = me->get_ixml_from_zip_archive( lv_full_filename ).
 
-    lo_node ?= lo_rels_workbook->find_from_name( 'Relationship' ). "#EC NOTEXT
+    lo_node ?= lo_rels_workbook->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ). "#EC NOTEXT
     WHILE lo_node IS BOUND.
 
       me->fill_struct_from_attributes( EXPORTING ip_element = lo_node CHANGING cp_structure = ls_relationship ).
@@ -1939,7 +1966,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *   §3.1    Names and order of of worksheets
 *--------------------------------------------------------------------*
-    lo_node           ?= lo_workbook->find_from_name( 'sheet' ).
+    lo_node           ?= lo_workbook->find_from_name_ns( name = 'sheet' uri = namespace-main ).
     lv_workbook_index  = 1.
     WHILE lo_node IS BOUND.
 
@@ -2004,7 +2031,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *   §3.2    Active worksheet
 *--------------------------------------------------------------------*
     lv_zexcel_active_worksheet = 1.                                 " First sheet = active sheet if nothing else specified.
-    lo_node ?=  lo_workbook->find_from_name( 'workbookView' ).
+    lo_node ?=  lo_workbook->find_from_name_ns( name = 'workbookView' uri = namespace-main ).
     IF lo_node IS BOUND.
       lv_active_sheet_string = lo_node->get_attribute( 'activeTab' ).
       TRY.
@@ -2027,7 +2054,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *             - repeat rows/cols  - sheetlocal ( special range )
 *
 *--------------------------------------------------------------------*
-    lo_node ?=  lo_workbook->find_from_name( 'definedName' ).
+    lo_node ?=  lo_workbook->find_from_name_ns( name = 'definedName' uri = namespace-main ).
     WHILE lo_node IS BOUND.
 
       CLEAR lo_range.                                                                                       "ins issue #235 - repeat rows/cols
@@ -2397,7 +2424,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       INTO lv_rels_worksheet_path.
     TRY.                                                                          " +#222  _rels/xxx.rels might not be present.  If not found there can be no drawings --> just ignore this section
         lo_ixml_rels_worksheet = me->get_ixml_from_zip_archive( lv_rels_worksheet_path ).
-        lo_ixml_node ?= lo_ixml_rels_worksheet->find_from_name( 'Relationship' ).
+        lo_ixml_node ?= lo_ixml_rels_worksheet->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ).
       CATCH zcx_excel.                            "#EC NO_HANDLER +#222
         " +#222   No errorhandling necessary - node will be unbound if error occurs
     ENDTRY.                                                   " +#222
@@ -2440,7 +2467,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_ixml_worksheet = me->get_ixml_from_zip_archive( ip_path ).
 
 
-    lo_ixml_tabcolor ?= lo_ixml_worksheet->find_from_name( 'tabColor' ).
+    lo_ixml_tabcolor ?= lo_ixml_worksheet->find_from_name_ns( name = 'tabColor' uri = namespace-main ).
     IF lo_ixml_tabcolor IS BOUND.
       fill_struct_from_attributes( EXPORTING
                                      ip_element = lo_ixml_tabcolor
@@ -2453,7 +2480,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
-    lo_ixml_rows = lo_ixml_worksheet->get_elements_by_tag_name( name = 'row' ).
+    lo_ixml_rows = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'row' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_rows->create_iterator( ).
     lo_ixml_row_elem ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml_row_elem IS BOUND.
@@ -2494,7 +2521,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         ENDIF.
       ENDIF.
 
-      lo_ixml_cells = lo_ixml_row_elem->get_elements_by_tag_name( name = 'c' ).
+      lo_ixml_cells = lo_ixml_row_elem->get_elements_by_tag_name_ns( name = 'c' uri = namespace-main ).
       lo_ixml_iterator2 = lo_ixml_cells->create_iterator( ).
       lo_ixml_cell_elem ?= lo_ixml_iterator2->get_next( ).
       WHILE lo_ixml_cell_elem IS BOUND.
@@ -2504,7 +2531,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
         fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_cell_elem CHANGING cp_structure = ls_cell ).
 
-        lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name( name = 'v' ).
+        lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name_ns( name = 'v' uri = namespace-main ).
 
         CASE ls_cell-t.
           WHEN 's'. " String values are stored as index in shared string table
@@ -2517,7 +2544,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               ENDIF.
             ENDIF.
           WHEN 'inlineStr'. " inlineStr values are kept in special node
-            lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name( name = 'is' ).
+            lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name_ns( name = 'is' uri = namespace-main ).
             IF lo_ixml_value_elem IS BOUND.
               lv_cell_value = lo_ixml_value_elem->get_value( ).
             ENDIF.
@@ -2537,7 +2564,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           ENDIF.
         ENDIF.
 
-        lo_ixml_formula_elem = lo_ixml_cell_elem->find_from_name( name = 'f' ).
+        lo_ixml_formula_elem = lo_ixml_cell_elem->find_from_name_ns( name = 'f' uri = namespace-main ).
         IF lo_ixml_formula_elem IS BOUND.
           lv_cell_formula = lo_ixml_formula_elem->get_value( ).
 *--------------------------------------------------------------------*
@@ -2604,7 +2631,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *       reason - libre office doesn't use SPAN in row - definitions
 *--------------------------------------------------------------------*
     IF lv_max_col = 0.
-      lo_ixml_imension_elem = lo_ixml_worksheet->find_from_name( name = 'dimension' ).
+      lo_ixml_imension_elem = lo_ixml_worksheet->find_from_name_ns( name = 'dimension' uri = namespace-main ).
       IF lo_ixml_imension_elem IS BOUND.
         lv_dimension_range = lo_ixml_imension_elem->get_attribute( 'ref' ).
         IF lv_dimension_range CS ':'.
@@ -2620,7 +2647,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 
     "Get the customized column width
-    lo_ixml_columns = lo_ixml_worksheet->get_elements_by_tag_name( name = 'col' ).
+    lo_ixml_columns = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'col' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_columns->create_iterator( ).
     lo_ixml_column_elem ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml_column_elem IS BOUND.
@@ -2704,7 +2731,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     ENDWHILE.
 
     "Now we need to get information from the sheetView node
-    lo_ixml_sheetview_elem = lo_ixml_worksheet->find_from_name( name = 'sheetView' ).
+    lo_ixml_sheetview_elem = lo_ixml_worksheet->find_from_name_ns( name = 'sheetView' uri = namespace-main ).
     fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_sheetview_elem CHANGING cp_structure = ls_sheetview ).
     IF ls_sheetview-showgridlines IS INITIAL OR
        ls_sheetview-showgridlines = lc_xml_attr_true OR
@@ -2722,7 +2749,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 
     "Add merge cell information
-    lo_ixml_mergecells = lo_ixml_worksheet->get_elements_by_tag_name( name = 'mergeCell' ).
+    lo_ixml_mergecells = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'mergeCell' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_mergecells->create_iterator( ).
     lo_ixml_mergecell_elem ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml_mergecell_elem IS BOUND.
@@ -2746,7 +2773,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     ENDWHILE.
 
     " read sheet format properties
-    lo_ixml_sheetformatpr_elem = lo_ixml_worksheet->find_from_name( 'sheetFormatPr' ).
+    lo_ixml_sheetformatpr_elem = lo_ixml_worksheet->find_from_name_ns( name = 'sheetFormatPr' uri = namespace-main ).
     IF lo_ixml_sheetformatpr_elem IS NOT INITIAL.
       fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_sheetformatpr_elem CHANGING cp_structure = ls_sheetformatpr ).
       IF ls_sheetformatpr-customheight = '1'.
@@ -2764,7 +2791,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                       io_worksheet      = io_worksheet ).
 
 * FitToPage
-    lo_ixml_sheetpr ?=  lo_ixml_worksheet->find_from_name( 'pageSetUpPr' ).
+    lo_ixml_sheetpr ?=  lo_ixml_worksheet->find_from_name_ns( name = 'pageSetUpPr' uri = namespace-main ).
     IF lo_ixml_sheetpr IS BOUND.
 
       lv_fit_to_page = lo_ixml_sheetpr->get_attribute_ns( 'fitToPage' ).
@@ -2773,7 +2800,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDIF.
     ENDIF.
     " Read in page setup
-    lo_ixml_pagesetup_elem = lo_ixml_worksheet->find_from_name( 'pageSetup' ).
+    lo_ixml_pagesetup_elem = lo_ixml_worksheet->find_from_name_ns( name = 'pageSetup' uri = namespace-main ).
     IF lo_ixml_pagesetup_elem IS NOT INITIAL.
       fill_struct_from_attributes( EXPORTING
                                      ip_element = lo_ixml_pagesetup_elem
@@ -2799,12 +2826,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 
     " Read header footer
-    lo_ixml_headerfooter_elem = lo_ixml_worksheet->find_from_name( 'headerFooter' ).
+    lo_ixml_headerfooter_elem = lo_ixml_worksheet->find_from_name_ns( name = 'headerFooter' uri = namespace-main ).
     IF lo_ixml_headerfooter_elem IS NOT INITIAL.
       fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_headerfooter_elem CHANGING cp_structure = ls_headerfooter ).
       io_worksheet->sheet_setup->diff_oddeven_headerfooter = ls_headerfooter-differentoddeven.
 
-      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name( 'oddFooter' ).
+      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name_ns( name = 'oddFooter' uri = namespace-main ).
       IF lo_ixml_hf_value_elem IS NOT INITIAL.
         ls_odd_footer-left_value = lo_ixml_hf_value_elem->get_value( ).
       ENDIF.
@@ -2821,7 +2848,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     " Start fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
     " Read pane
-    lo_ixml_pane_elem = lo_ixml_sheetview_elem->find_from_name( name = 'pane' ).
+    lo_ixml_pane_elem = lo_ixml_sheetview_elem->find_from_name_ns( name = 'pane' uri = namespace-main ).
     IF lo_ixml_pane_elem IS BOUND.
       fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_pane_elem CHANGING cp_structure = ls_excel_pane ).
       " Issue #194
@@ -2847,7 +2874,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     " End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
 
     " Start fix 276 Read data validations
-    lo_ixml_datavalidations = lo_ixml_worksheet->get_elements_by_tag_name( name = 'dataValidation' ).
+    lo_ixml_datavalidations = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'dataValidation' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_datavalidations->create_iterator( ).
     lo_ixml_datavalidation_elem  ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml_datavalidation_elem  IS BOUND.
@@ -2856,12 +2883,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                    CHANGING
                                      cp_structure = ls_datavalidation ).
       CLEAR lo_ixml_formula_elem.
-      lo_ixml_formula_elem = lo_ixml_datavalidation_elem->find_from_name( name = 'formula1' ).
+      lo_ixml_formula_elem = lo_ixml_datavalidation_elem->find_from_name_ns( name = 'formula1' uri = namespace-main ).
       IF lo_ixml_formula_elem IS BOUND.
         ls_datavalidation-formula1 = lo_ixml_formula_elem->get_value( ).
       ENDIF.
       CLEAR lo_ixml_formula_elem.
-      lo_ixml_formula_elem = lo_ixml_datavalidation_elem->find_from_name( name = 'formula2' ).
+      lo_ixml_formula_elem = lo_ixml_datavalidation_elem->find_from_name_ns( name = 'formula2' uri = namespace-main ).
       IF lo_ixml_formula_elem IS BOUND.
         ls_datavalidation-formula2 = lo_ixml_formula_elem->get_value( ).
       ENDIF.
@@ -2976,23 +3003,23 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     lo_autofilters = io_worksheet->excel->get_autofilters_reference( ).
 
-    lo_ixml_autofilter_elem = io_ixml_worksheet->find_from_name( 'autoFilter' ).
+    lo_ixml_autofilter_elem = io_ixml_worksheet->find_from_name_ns( name = 'autoFilter' uri = namespace-main ).
     IF lo_ixml_autofilter_elem IS BOUND.
       lv_ref = lo_ixml_autofilter_elem->get_attribute_ns( 'ref' ).
 
-      lo_ixml_filter_column_coll = lo_ixml_autofilter_elem->get_elements_by_tag_name( name = 'filterColumn' ).
+      lo_ixml_filter_column_coll = lo_ixml_autofilter_elem->get_elements_by_tag_name_ns( name = 'filterColumn' uri = namespace-main ).
       lo_ixml_filter_column_iter = lo_ixml_filter_column_coll->create_iterator( ).
       lo_ixml_filter_column ?= lo_ixml_filter_column_iter->get_next( ).
       WHILE lo_ixml_filter_column IS BOUND.
         lv_col_id = lo_ixml_filter_column->get_attribute_ns( 'colId' ).
         lv_column = lv_col_id + 1.
 
-        lo_ixml_filters_coll = lo_ixml_filter_column->get_elements_by_tag_name( name = 'filters' ).
+        lo_ixml_filters_coll = lo_ixml_filter_column->get_elements_by_tag_name_ns( name = 'filters' uri = namespace-main ).
         lo_ixml_filters_iter = lo_ixml_filters_coll->create_iterator( ).
         lo_ixml_filters ?= lo_ixml_filters_iter->get_next( ).
         WHILE lo_ixml_filters IS BOUND.
 
-          lo_ixml_filter_coll = lo_ixml_filter_column->get_elements_by_tag_name( name = 'filter' ).
+          lo_ixml_filter_coll = lo_ixml_filter_column->get_elements_by_tag_name_ns( name = 'filter' uri = namespace-main ).
           lo_ixml_filter_iter = lo_ixml_filter_coll->create_iterator( ).
           lo_ixml_filter ?= lo_ixml_filter_iter->get_next( ).
           WHILE lo_ixml_filter IS BOUND.
@@ -3040,7 +3067,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lv_rule           TYPE zexcel_condition_rule.
 
 
-    lo_ixml_cond_formats =  io_ixml_worksheet->get_elements_by_tag_name( name = 'conditionalFormatting' ).
+    lo_ixml_cond_formats =  io_ixml_worksheet->get_elements_by_tag_name_ns( name = 'conditionalFormatting' uri = namespace-main ).
     lo_ixml_iterator     =  lo_ixml_cond_formats->create_iterator( ).
     lo_ixml_cond_format  ?= lo_ixml_iterator->get_next( ).
 
@@ -3053,7 +3080,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Get type of rule
 *--------------------------------------------------------------------*
-      lo_ixml_rules       =  lo_ixml_cond_format->get_elements_by_tag_name( name = 'cfRule' ).
+      lo_ixml_rules       =  lo_ixml_cond_format->get_elements_by_tag_name_ns( name = 'cfRule' uri = namespace-main ).
       lo_ixml_iterator2   =  lo_ixml_rules->create_iterator( ).
       lo_ixml_rule        ?= lo_ixml_iterator2->get_next( ).
 
@@ -3204,7 +3231,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       io_style_cond->mode_cellis-cell_style = <ls_dxf_style>-guid.
     ENDIF.
 
-    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'formula' ).
+    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name_ns( name = 'formula' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
     lo_ixml ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml IS BOUND.
@@ -3233,7 +3260,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml          TYPE REF TO if_ixml_element.
 
 
-    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'cfvo' ).
+    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name_ns( name = 'cfvo' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
     lo_ixml ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml IS BOUND.
@@ -3258,7 +3285,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_ixml ?= lo_ixml_iterator->get_next( ).
     ENDWHILE.
 
-    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'color' ).
+    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name_ns( name = 'color' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
     lo_ixml ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml IS BOUND.
@@ -3288,12 +3315,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lo_ixml_iterator TYPE REF TO if_ixml_node_iterator,
           lo_ixml          TYPE REF TO if_ixml_element.
 
-    lo_ixml ?= io_ixml_rule->find_from_name( 'color' ).
+    lo_ixml ?= io_ixml_rule->find_from_name_ns( name = 'color' uri = namespace-main ).
     IF lo_ixml IS BOUND.
       io_style_cond->mode_databar-colorrgb = lo_ixml->get_attribute_ns( 'rgb' ).
     ENDIF.
 
-    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'cfvo' ).
+    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name_ns( name = 'cfvo' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
     lo_ixml ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml IS BOUND.
@@ -3333,7 +3360,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       io_style_cond->mode_expression-cell_style = <ls_dxf_style>-guid.
     ENDIF.
 
-    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name( 'formula' ).
+    lo_ixml_nodes ?= io_ixml_rule->get_elements_by_tag_name_ns( name = 'formula' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
     lo_ixml ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml IS BOUND.
@@ -3363,7 +3390,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_ixml_rule_iconset ?= io_ixml_rule->get_first_child( ).
     io_style_cond->mode_iconset-iconset   = lo_ixml_rule_iconset->get_attribute_ns( 'iconSet' ).
     io_style_cond->mode_iconset-showvalue = lo_ixml_rule_iconset->get_attribute_ns( 'showValue' ).
-    lo_ixml_nodes ?= lo_ixml_rule_iconset->get_elements_by_tag_name( 'cfvo' ).
+    lo_ixml_nodes ?= lo_ixml_rule_iconset->get_elements_by_tag_name_ns( name = 'cfvo' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_nodes->create_iterator( ).
     lo_ixml ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml IS BOUND.
@@ -3482,7 +3509,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       INTO rels_drawing_path.
     rels_drawing_path = resolve_path( rels_drawing_path ).
     rels_drawing = me->get_ixml_from_zip_archive( rels_drawing_path ).
-    node ?= rels_drawing->find_from_name( 'Relationship' ).
+    node ?= rels_drawing->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ).
     WHILE node IS BOUND.
       fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
 
@@ -3515,7 +3542,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     drawing = me->get_ixml_from_zip_archive( ip_path ).
 
 * one-cell anchor **************
-    anchors = drawing->get_elements_by_tag_name( name = 'oneCellAnchor' namespace = 'xdr' ).
+    anchors = drawing->get_elements_by_tag_name_ns( name = 'oneCellAnchor' uri = namespace-xdr ).
     coll_length = anchors->get_length( ).
     iterator = anchors->create_iterator( ).
     DO coll_length TIMES.
@@ -3530,7 +3557,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     ENDDO.
 
 * two-cell anchor ******************
-    anchors = drawing->get_elements_by_tag_name( name = 'twoCellAnchor' namespace = 'xdr' ).
+    anchors = drawing->get_elements_by_tag_name_ns( name = 'twoCellAnchor' uri = namespace-xdr ).
     coll_length = anchors->get_length( ).
     iterator = anchors->create_iterator( ).
     DO coll_length TIMES.
@@ -3570,7 +3597,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_external_hyperlink> LIKE LINE OF it_external_hyperlinks.
 
-    lo_ixml_hyperlinks =  io_ixml_worksheet->get_elements_by_tag_name( name = 'hyperlink' ).
+    lo_ixml_hyperlinks =  io_ixml_worksheet->get_elements_by_tag_name_ns( name = 'hyperlink' uri = namespace-main ).
     lo_ixml_iterator   =  lo_ixml_hyperlinks->create_iterator( ).
     lo_ixml_hyperlink  ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml_hyperlink IS BOUND.
@@ -3582,8 +3609,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ls_hyperlink-display  = lo_ixml_hyperlink->get_attribute_ns( 'display' ).
       ls_hyperlink-location = lo_ixml_hyperlink->get_attribute_ns( 'location' ).
       ls_hyperlink-tooltip  = lo_ixml_hyperlink->get_attribute_ns( 'tooltip' ).
-      ls_hyperlink-r_id     = lo_ixml_hyperlink->get_attribute( name      = 'id'
-                                                                namespace = 'r' ).
+      ls_hyperlink-r_id     = lo_ixml_hyperlink->get_attribute_ns( name = 'id' uri = namespace-r ).
       IF ls_hyperlink-r_id IS INITIAL.  " Internal link
         lv_is_internal = abap_true.
         lv_url = ls_hyperlink-location.
@@ -3648,7 +3674,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     CLEAR lt_ignored_errors.
 
-    lo_ixml_ignored_errors =  io_ixml_worksheet->get_elements_by_tag_name( name = 'ignoredError' ).
+    lo_ixml_ignored_errors =  io_ixml_worksheet->get_elements_by_tag_name_ns( name = 'ignoredError' uri = namespace-main ).
     lo_ixml_iterator   =  lo_ixml_ignored_errors->create_iterator( ).
     lo_ixml_ignored_error  ?= lo_ixml_iterator->get_next( ).
 
@@ -3705,9 +3731,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * Since rows and columns are handled in separate nodes
 * Build table to identify these cells
 *--------------------------------------------------------------------*
-    lo_node ?= io_ixml_worksheet->find_from_name( 'rowBreaks' ).
+    lo_node ?= io_ixml_worksheet->find_from_name_ns( name = 'rowBreaks' uri = namespace-main ).
     CHECK lo_node IS BOUND.
-    lo_ixml_rowbreaks =  lo_node->get_elements_by_tag_name( name = 'brk' ).
+    lo_ixml_rowbreaks =  lo_node->get_elements_by_tag_name_ns( name = 'brk' uri = namespace-main ).
     lo_ixml_iterator  =  lo_ixml_rowbreaks->create_iterator( ).
     lo_ixml_rowbreak  ?= lo_ixml_iterator->get_next( ).
     WHILE lo_ixml_rowbreak IS BOUND.
@@ -3718,9 +3744,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     ENDWHILE.
     CHECK <ls_pagebreak_row> IS ASSIGNED.
 
-    lo_node ?= io_ixml_worksheet->find_from_name( 'colBreaks' ).
+    lo_node ?= io_ixml_worksheet->find_from_name_ns( name = 'colBreaks' uri = namespace-main ).
     CHECK lo_node IS BOUND.
-    lo_ixml_colbreaks =  lo_node->get_elements_by_tag_name( name = 'brk' ).
+    lo_ixml_colbreaks =  lo_node->get_elements_by_tag_name_ns( name = 'brk' uri = namespace-main ).
     lo_ixml_iterator  =  lo_ixml_colbreaks->create_iterator( ).
     lo_ixml_colbreak  ?= lo_ixml_iterator->get_next( ).
     CLEAR lv_count.
@@ -3763,7 +3789,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
          ls_pagemargins           TYPE lty_page_margins.
 
 
-    lo_ixml_pagemargins_elem = io_ixml_worksheet->find_from_name( 'pageMargins' ).
+    lo_ixml_pagemargins_elem = io_ixml_worksheet->find_from_name_ns( name = 'pageMargins' uri = namespace-main ).
     IF lo_ixml_pagemargins_elem IS NOT INITIAL.
       fill_struct_from_attributes( EXPORTING
                                      ip_element = lo_ixml_pagemargins_elem
@@ -4076,7 +4102,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * §3  Cycle through the Relationship Tags and use the ones we need
 *--------------------------------------------------------------------*
-    lo_node ?= lo_rels->find_from_name( 'Relationship' ).   "#EC NOTEXT
+    lo_node ?= lo_rels->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ).   "#EC NOTEXT
     WHILE lo_node IS BOUND.
 
       fill_struct_from_attributes( EXPORTING

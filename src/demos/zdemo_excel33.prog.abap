@@ -46,6 +46,7 @@ START-OF-SELECTION.
                             io_worksheet = lo_worksheet
                          CHANGING
                             co_excel     = lo_excel ) .
+  PERFORM set_column_headers USING lo_worksheet 'Client;Language;Country;Name;Nationality;Long name;Nationality'.
 
   lo_autofilter = lo_excel->add_new_autofilter( io_sheet = lo_worksheet ) .
 
@@ -93,4 +94,21 @@ FORM load_fixed_data CHANGING ct_test TYPE ty_t005t_lines.
     ENDLOOP.
     APPEND ls_test TO ct_test.
   ENDLOOP.
+ENDFORM.
+
+FORM set_column_headers
+    USING io_worksheet TYPE REF TO zcl_excel_worksheet
+          iv_headers   TYPE csequence
+    RAISING zcx_excel.
+
+  DATA: lt_headers TYPE TABLE OF string,
+        lv_header  TYPE string,
+        lv_tabix   TYPE i.
+
+  SPLIT iv_headers AT ';' INTO TABLE lt_headers.
+  LOOP AT lt_headers INTO lv_header.
+    lv_tabix = sy-tabix.
+    io_worksheet->set_cell( ip_row = 1 ip_column = lv_tabix ip_value = lv_header ).
+  ENDLOOP.
+
 ENDFORM.
