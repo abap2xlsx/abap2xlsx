@@ -1024,6 +1024,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     me->tables->add( lo_table ).
 
+    lv_column_int = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
+    lv_row_int = ls_settings-top_left_row.
+
     lt_field_catalog = normalize_column_heading_texts(
           iv_default_descr = iv_default_descr
           it_field_catalog = lt_field_catalog ).
