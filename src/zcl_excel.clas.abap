@@ -13,6 +13,7 @@ CLASS zcl_excel DEFINITION
     DATA legacy_palette TYPE REF TO zcl_excel_legacy_palette READ-ONLY .
     DATA security TYPE REF TO zcl_excel_security .
     DATA use_template TYPE abap_bool .
+    CONSTANTS version TYPE c LENGTH 10 VALUE '7.15.0'.      "#EC NOTEXT
 
     METHODS add_new_autofilter
       IMPORTING
@@ -158,7 +159,6 @@ CLASS zcl_excel DEFINITION
     DATA worksheets TYPE REF TO zcl_excel_worksheets .
   PRIVATE SECTION.
 
-    CONSTANTS version TYPE c LENGTH 10 VALUE '7.14.0'.      "#EC NOTEXT
     DATA autofilters TYPE REF TO zcl_excel_autofilters .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA default_style TYPE zexcel_cell_style .
