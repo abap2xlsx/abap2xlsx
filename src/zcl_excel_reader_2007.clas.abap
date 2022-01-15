@@ -4081,6 +4081,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *        </Relationships>
 *--------------------------------------------------------------------*
 
+    CLEAR mt_dxf_styles.
+    CLEAR mt_ref_formulae.
+    CLEAR shared_strings.
+    CLEAR styles.
 
 *--------------------------------------------------------------------*
 * §1  Create EXCEL-Object we want to return to caller
