@@ -1,9 +1,11 @@
 CLASS ltc_normalize_columnrow_param DEFINITION DEFERRED.
 CLASS ltc_normalize_range_param DEFINITION DEFERRED.
+CLASS ltc_normalize_style_param DEFINITION DEFERRED.
 CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_normalize_columnrow_param
     ltc_normalize_range_param
+    ltc_normalize_style_param
     ltc_check_cell_column_formula.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
@@ -134,6 +136,38 @@ CLASS ltc_normalize_range_param DEFINITION FOR TESTING
       IMPORTING
         input TYPE ty_parameters-input
         exp   TYPE ty_parameters-output
+      RAISING
+        cx_static_check.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_style_param DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    TYPES : BEGIN OF ty_parameters_output,
+              fails TYPE abap_bool,
+              guid  TYPE zexcel_cell_style,
+            END OF ty_parameters_output.
+    DATA:
+      excel TYPE REF TO zcl_excel,
+      cut   TYPE REF TO zcl_excel_worksheet,  "class under test
+      exp   TYPE ty_parameters_output.
+
+
+    METHODS setup.
+    METHODS:
+      ref_to_zcl_excel_style FOR TESTING RAISING cx_static_check,
+      zexcel_cell_style FOR TESTING RAISING cx_static_check,
+      raw_16_bytes FOR TESTING RAISING cx_static_check,
+      other FOR TESTING RAISING cx_static_check.
+
+    METHODS assert
+      IMPORTING
+        input TYPE any
+        exp   TYPE ty_parameters_output
       RAISING
         cx_static_check.
 
@@ -864,6 +898,98 @@ CLASS ltc_normalize_range_param IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( msg = message exp = exp-row_start     act = act-row_start ).
     message = |Invalid row start for { input_text }|.
     cl_abap_unit_assert=>assert_equals( msg = message exp = exp-row_end       act = act-row_end ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_style_param IMPLEMENTATION.
+
+  METHOD setup.
+
+    CREATE OBJECT excel.
+
+    TRY.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD ref_to_zcl_excel_style.
+    DATA: style TYPE REF TO zcl_excel_style.
+
+    style = excel->add_new_style( ).
+    exp-fails = abap_false.
+    exp-guid = style->get_guid( ).
+    assert( input = style exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD zexcel_cell_style.
+    DATA: style TYPE REF TO zcl_excel_style.
+
+    style = excel->add_new_style( ).
+    exp-fails = abap_false.
+    exp-guid = style->get_guid( ).
+    assert( input = exp-guid exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD raw_16_bytes.
+    DATA: raw_16_bytes TYPE x LENGTH 16.
+
+    raw_16_bytes = 'A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1'.
+    exp-fails = abap_false.
+    exp-guid = raw_16_bytes.
+    assert( input = raw_16_bytes exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD other.
+
+    exp-fails = abap_true.
+    assert( input = 'A' exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: rtti       TYPE REF TO cl_abap_typedescr,
+          message    TYPE string,
+          act        TYPE zexcel_cell_style,
+          error      TYPE REF TO zcx_excel,
+          input_text TYPE string.
+
+    rtti = cl_abap_typedescr=>describe_by_data( input ).
+    IF rtti->type_kind = rtti->typekind_oref.
+      rtti = cl_abap_typedescr=>describe_by_object_ref( input ).
+      input_text = |REF TO { rtti->absolute_name }|.
+    ELSE.
+      input_text = rtti->absolute_name.
+    ENDIF.
+
+    TRY.
+
+        act = cut->normalize_style_parameter( input ).
+
+        IF exp-fails = abap_true.
+          message = |Input type { input_text } accepted but only REF TO \\CLASS=ZCL_EXCEL_STYLE, \\TYPE=ZEXCEL_CELL_STYLE or any X type are supported|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+
+      CATCH zcx_excel INTO error.
+        IF exp-fails = abap_false.
+          message = |Input type { input_text } made it fail but it should succeed with result { exp-guid }|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+        RETURN.
+    ENDTRY.
+
+    cl_abap_unit_assert=>assert_equals( exp = exp-guid act = act ).
 
   ENDMETHOD.
 

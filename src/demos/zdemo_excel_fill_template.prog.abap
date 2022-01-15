@@ -244,7 +244,7 @@ FORM generate_file.
 
 
 *** Create output
-      lcl_output=>output( lo_excel ).
+      lcl_output=>output( cl_excel = lo_excel iv_info_message = abap_false ).
 
     CATCH cx_root INTO lo_root.
       MESSAGE lo_root TYPE 'I' DISPLAY LIKE 'E'.

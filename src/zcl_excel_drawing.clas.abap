@@ -28,6 +28,13 @@ CLASS zcl_excel_drawing DEFINITION
     CONSTANTS c_media_type_xml TYPE string VALUE 'xml'.     "#EC NOTEXT
     CONSTANTS c_media_type_jpg TYPE string VALUE 'jpg'.     "#EC NOTEXT
     CONSTANTS type_image_header_footer TYPE zexcel_drawing_type VALUE 'hd_ft'. "#EC NOTEXT
+    CONSTANTS: BEGIN OF namespace,
+                 c   TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
+                 a   TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
+                 r   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+                 mc  TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
+                 c14 TYPE string VALUE 'http://schemas.microsoft.com/office/drawing/2007/8/2/chart',
+               END OF namespace.
 
     METHODS constructor
       IMPORTING
@@ -401,56 +408,56 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     ENDCASE.
 
     "Fill properties
-    node2 ?= node->find_from_name( name = 'date1904' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'date1904' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_1904val = ls_prop-val.
-    node2 ?= node->find_from_name( name = 'lang' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'lang' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_langval = ls_prop-val.
-    node2 ?= node->find_from_name( name = 'roundedCorners' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'roundedCorners' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_roundedcornersval = ls_prop-val.
 
     "style
-    node2 ?= node->find_from_name( name = 'style' namespace = 'c14' ).
+    node2 ?= node->find_from_name_ns( name = 'style' uri = namespace-c14 ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_c14styleval = ls_prop-val.
-    node2 ?= node->find_from_name( name = 'style' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'style' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_styleval = ls_prop-val.
     "---------------------------Read graph properties
     "ADDED
     CLEAR node2.
-    node2 ?= node->find_from_name( name = 'title' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'title' uri = namespace-c ).
     IF node2 IS BOUND AND node2 IS NOT INITIAL.
-      node3 ?= node2->find_from_name( name = 't' namespace = 'a' ).
+      node3 ?= node2->find_from_name_ns( name = 't' uri = namespace-a ).
       me->graph->title = node3->get_value( ).
     ENDIF.
     "END
 
-    node2 ?= node->find_from_name( name = 'autoTitleDeleted' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'autoTitleDeleted' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_autotitledeletedval = ls_prop-val.
 
     "plotArea
     CASE me->graph_type.
       WHEN c_graph_bars.
-        node2 ?= node->find_from_name( name = 'barDir' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'barDir' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_bardirval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'grouping' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'grouping' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_groupingval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'varyColors' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'varyColors' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_varycolorsval = ls_prop-val.
 
         "Load series
-        CALL METHOD node->get_elements_by_tag_name
+        CALL METHOD node->get_elements_by_tag_name_ns
           EXPORTING
 *           depth     = 0
             name = 'ser'
-*           namespace = ''
+            uri  = namespace-c
           RECEIVING
             rval = lo_collection.
         CALL METHOD lo_collection->create_iterator
@@ -461,27 +468,27 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
           node2 ?= lo_node->query_interface( ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
-          node3 ?= node2->find_from_name( name = 'idx' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'idx' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_idx = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'order' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'order' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_order = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'invertIfNegative' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'invertIfNegative' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_invertifnegative = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'v' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'v' uri = namespace-c ).
           IF node3 IS BOUND.
             lv_sername = node3->get_value( ).
           ENDIF.
-          node3 ?= node2->find_from_name( name = 'strRef' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'strRef' uri = namespace-c ).
           IF node3 IS BOUND.
-            node4 ?= node3->find_from_name( name = 'f' namespace = 'c' ).
+            node4 ?= node3->find_from_name_ns( name = 'f' uri = namespace-c ).
             lv_label = node4->get_value( ).
           ENDIF.
-          node3 ?= node2->find_from_name( name = 'numRef' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'numRef' uri = namespace-c ).
           IF node3 IS BOUND.
-            node4 ?= node3->find_from_name( name = 'f' namespace = 'c' ).
+            node4 ?= node3->find_from_name_ns( name = 'f' uri = namespace-c ).
             lv_value = node4->get_value( ).
           ENDIF.
           CALL METHOD lo_barchart->create_serie
@@ -498,35 +505,35 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
           ENDIF.
         ENDWHILE.
         "note: numCache avoided
-        node2 ?= node->find_from_name( name = 'showLegendKey' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showLegendKey' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_showlegendkeyval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showVal' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showVal' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_showvalval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showCatName' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showCatName' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_showcatnameval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showSerName' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showSerName' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_showsernameval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showPercent' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showPercent' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_showpercentval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showBubbleSize' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showBubbleSize' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_showbubblesizeval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'gapWidth' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'gapWidth' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_barchart->ns_gapwidthval = ls_prop-val.
 
         "Load axes
-        node2 ?= node->find_from_name( name = 'barChart' namespace = 'c' ).
-        CALL METHOD node2->get_elements_by_tag_name
+        node2 ?= node->find_from_name_ns( name = 'barChart' uri = namespace-c ).
+        CALL METHOD node2->get_elements_by_tag_name_ns
           EXPORTING
 *           depth     = 0
             name = 'axId'
-*           namespace = ''
+            uri  = namespace-c
           RECEIVING
             rval = lo_collection.
         CALL METHOD lo_collection->create_iterator
@@ -540,45 +547,45 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lv_axid = ls_prop-val.
           IF sy-index EQ 1. "catAx
-            node2 ?= node->find_from_name( name = 'catAx' namespace = 'c' ).
-            node3 ?= node2->find_from_name( name = 'orientation' namespace = 'c' ).
+            node2 ?= node->find_from_name_ns( name = 'catAx' uri = namespace-c ).
+            node3 ?= node2->find_from_name_ns( name = 'orientation' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_orientation = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'delete' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'delete' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_delete = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'axPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'axPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_axpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'numFmt' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'numFmt' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_formatcode = ls_prop-formatcode.
             lv_sourcelinked = ls_prop-sourcelinked.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_majortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_minortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'tickLblPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'tickLblPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_ticklblpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crossAx' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crossAx' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crossax = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crosses' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crosses' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crosses = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'auto' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'auto' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_auto = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'lblAlgn' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'lblAlgn' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_lblalgn = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'lblOffset' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'lblOffset' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_lbloffset = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'noMultiLvlLbl' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'noMultiLvlLbl' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_nomultilvllbl = ls_prop-val.
             CALL METHOD lo_barchart->create_ax
@@ -600,36 +607,36 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
                 ip_lbloffset     = lv_lbloffset
                 ip_nomultilvllbl = lv_nomultilvllbl.
           ELSEIF sy-index EQ 2. "valAx
-            node2 ?= node->find_from_name( name = 'valAx' namespace = 'c' ).
-            node3 ?= node2->find_from_name( name = 'orientation' namespace = 'c' ).
+            node2 ?= node->find_from_name_ns( name = 'valAx' uri = namespace-c ).
+            node3 ?= node2->find_from_name_ns( name = 'orientation' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_orientation = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'delete' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'delete' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_delete = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'axPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'axPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_axpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'numFmt' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'numFmt' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_formatcode = ls_prop-formatcode.
             lv_sourcelinked = ls_prop-sourcelinked.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_majortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_minortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'tickLblPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'tickLblPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_ticklblpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crossAx' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crossAx' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crossax = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crosses' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crosses' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crosses = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crossBetween' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crossBetween' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crossbetween = ls_prop-val.
             CALL METHOD lo_barchart->create_ax
@@ -655,16 +662,16 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
         ENDWHILE.
 
       WHEN c_graph_pie.
-        node2 ?= node->find_from_name( name = 'varyColors' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'varyColors' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_varycolorsval = ls_prop-val.
 
         "Load series
-        CALL METHOD node->get_elements_by_tag_name
+        CALL METHOD node->get_elements_by_tag_name_ns
           EXPORTING
 *           depth     = 0
             name = 'ser'
-*           namespace = ''
+            uri  = namespace-c
           RECEIVING
             rval = lo_collection.
         CALL METHOD lo_collection->create_iterator
@@ -675,24 +682,24 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
           node2 ?= lo_node->query_interface( ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
-          node3 ?= node2->find_from_name( name = 'idx' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'idx' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_idx = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'order' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'order' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_order = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'v' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'v' uri = namespace-c ).
           IF node3 IS BOUND.
             lv_sername = node3->get_value( ).
           ENDIF.
-          node3 ?= node2->find_from_name( name = 'strRef' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'strRef' uri = namespace-c ).
           IF node3 IS BOUND.
-            node4 ?= node3->find_from_name( name = 'f' namespace = 'c' ).
+            node4 ?= node3->find_from_name_ns( name = 'f' uri = namespace-c ).
             lv_label = node4->get_value( ).
           ENDIF.
-          node3 ?= node2->find_from_name( name = 'numRef' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'numRef' uri = namespace-c ).
           IF node3 IS BOUND.
-            node4 ?= node3->find_from_name( name = 'f' namespace = 'c' ).
+            node4 ?= node3->find_from_name_ns( name = 'f' uri = namespace-c ).
             lv_value = node4->get_value( ).
           ENDIF.
           CALL METHOD lo_piechart->create_serie
@@ -709,44 +716,44 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
         ENDWHILE.
 
         "note: numCache avoided
-        node2 ?= node->find_from_name( name = 'showLegendKey' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showLegendKey' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_showlegendkeyval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showVal' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showVal' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_showvalval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showCatName' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showCatName' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_showcatnameval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showSerName' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showSerName' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_showsernameval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showPercent' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showPercent' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_showpercentval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showBubbleSize' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showBubbleSize' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_showbubblesizeval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showLeaderLines' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showLeaderLines' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_showleaderlinesval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'firstSliceAng' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'firstSliceAng' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_firstsliceangval = ls_prop-val.
       WHEN c_graph_line.
-        node2 ?= node->find_from_name( name = 'grouping' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'grouping' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_groupingval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'varyColors' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'varyColors' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_varycolorsval = ls_prop-val.
 
         "Load series
-        CALL METHOD node->get_elements_by_tag_name
+        CALL METHOD node->get_elements_by_tag_name_ns
           EXPORTING
 *           depth     = 0
             name = 'ser'
-*           namespace = ''
+            uri  = namespace-c
           RECEIVING
             rval = lo_collection.
         CALL METHOD lo_collection->create_iterator
@@ -757,30 +764,30 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
           node2 ?= lo_node->query_interface( ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
-          node3 ?= node2->find_from_name( name = 'idx' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'idx' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_idx = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'order' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'order' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_order = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'symbol' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'symbol' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_symbol = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'smooth' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'smooth' uri = namespace-c ).
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
           lv_smooth = ls_prop-val.
-          node3 ?= node2->find_from_name( name = 'v' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'v' uri = namespace-c ).
           IF node3 IS BOUND.
             lv_sername = node3->get_value( ).
           ENDIF.
-          node3 ?= node2->find_from_name( name = 'strRef' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'strRef' uri = namespace-c ).
           IF node3 IS BOUND.
-            node4 ?= node3->find_from_name( name = 'f' namespace = 'c' ).
+            node4 ?= node3->find_from_name_ns( name = 'f' uri = namespace-c ).
             lv_label = node4->get_value( ).
           ENDIF.
-          node3 ?= node2->find_from_name( name = 'numRef' namespace = 'c' ).
+          node3 ?= node2->find_from_name_ns( name = 'numRef' uri = namespace-c ).
           IF node3 IS BOUND.
-            node4 ?= node3->find_from_name( name = 'f' namespace = 'c' ).
+            node4 ?= node3->find_from_name_ns( name = 'f' uri = namespace-c ).
             lv_value = node4->get_value( ).
           ENDIF.
           CALL METHOD lo_linechart->create_serie
@@ -798,44 +805,44 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
           ENDIF.
         ENDWHILE.
         "note: numCache avoided
-        node2 ?= node->find_from_name( name = 'showLegendKey' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showLegendKey' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_showlegendkeyval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showVal' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showVal' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_showvalval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showCatName' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showCatName' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_showcatnameval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showSerName' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showSerName' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_showsernameval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showPercent' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showPercent' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_showpercentval = ls_prop-val.
-        node2 ?= node->find_from_name( name = 'showBubbleSize' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'showBubbleSize' uri = namespace-c ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_showbubblesizeval = ls_prop-val.
 
-        node ?= node->find_from_name( name = 'lineChart' namespace = 'c' ).
-        node2 ?= node->find_from_name( name = 'marker' namespace = 'c' depth = '1' ).
+        node ?= node->find_from_name_ns( name = 'lineChart' uri = namespace-c ).
+        node2 ?= node->find_from_name_ns( name = 'marker' uri = namespace-c depth = '1' ).
         IF node2 IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lo_linechart->ns_markerval = ls_prop-val.
         ENDIF.
-        node2 ?= node->find_from_name( name = 'smooth' namespace = 'c' depth = '1' ).
+        node2 ?= node->find_from_name_ns( name = 'smooth' uri = namespace-c depth = '1' ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_smoothval = ls_prop-val.
         node ?= ip_chart->if_ixml_node~get_first_child( ).
         CHECK node IS NOT INITIAL.
 
         "Load axes
-        node2 ?= node->find_from_name( name = 'lineChart' namespace = 'c' ).
-        CALL METHOD node2->get_elements_by_tag_name
+        node2 ?= node->find_from_name_ns( name = 'lineChart' uri = namespace-c ).
+        CALL METHOD node2->get_elements_by_tag_name_ns
           EXPORTING
 *           depth     = 0
             name = 'axId'
-*           namespace = ''
+            uri  = namespace-c
           RECEIVING
             rval = lo_collection.
         CALL METHOD lo_collection->create_iterator
@@ -849,41 +856,41 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lv_axid = ls_prop-val.
           IF sy-index EQ 1. "catAx
-            node2 ?= node->find_from_name( name = 'catAx' namespace = 'c' ).
-            node3 ?= node2->find_from_name( name = 'orientation' namespace = 'c' ).
+            node2 ?= node->find_from_name_ns( name = 'catAx' uri = namespace-c ).
+            node3 ?= node2->find_from_name_ns( name = 'orientation' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_orientation = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'delete' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'delete' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_delete = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'axPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'axPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_axpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_majortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_minortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'tickLblPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'tickLblPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_ticklblpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crossAx' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crossAx' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crossax = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crosses' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crosses' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crosses = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'auto' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'auto' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_auto = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'lblAlgn' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'lblAlgn' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_lblalgn = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'lblOffset' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'lblOffset' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_lbloffset = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'noMultiLvlLbl' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'noMultiLvlLbl' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_nomultilvllbl = ls_prop-val.
             CALL METHOD lo_linechart->create_ax
@@ -905,36 +912,36 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
                 ip_lbloffset     = lv_lbloffset
                 ip_nomultilvllbl = lv_nomultilvllbl.
           ELSEIF sy-index EQ 2. "valAx
-            node2 ?= node->find_from_name( name = 'valAx' namespace = 'c' ).
-            node3 ?= node2->find_from_name( name = 'orientation' namespace = 'c' ).
+            node2 ?= node->find_from_name_ns( name = 'valAx' uri = namespace-c ).
+            node3 ?= node2->find_from_name_ns( name = 'orientation' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_orientation = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'delete' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'delete' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_delete = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'axPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'axPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_axpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'numFmt' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'numFmt' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_formatcode = ls_prop-formatcode.
             lv_sourcelinked = ls_prop-sourcelinked.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_majortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'majorTickMark' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'majorTickMark' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_minortickmark = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'tickLblPos' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'tickLblPos' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_ticklblpos = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crossAx' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crossAx' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crossax = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crosses' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crosses' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crosses = ls_prop-val.
-            node3 ?= node2->find_from_name( name = 'crossBetween' namespace = 'c' ).
+            node3 ?= node2->find_from_name_ns( name = 'crossBetween' uri = namespace-c ).
             zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node3 CHANGING cp_structure = ls_prop ).
             lv_crossbetween = ls_prop-val.
             CALL METHOD lo_linechart->create_ax
@@ -964,60 +971,60 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     "legend
     CASE me->graph_type.
       WHEN c_graph_bars.
-        node2 ?= node->find_from_name( name = 'legendPos' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'legendPos' uri = namespace-c ).
         IF node2 IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lo_barchart->ns_legendposval = ls_prop-val.
         ENDIF.
-        node2 ?= node->find_from_name( name = 'overlay' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'overlay' uri = namespace-c ).
         IF node2 IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lo_barchart->ns_overlayval = ls_prop-val.
         ENDIF.
       WHEN c_graph_line.
-        node2 ?= node->find_from_name( name = 'legendPos' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'legendPos' uri = namespace-c ).
         IF node2 IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lo_linechart->ns_legendposval = ls_prop-val.
         ENDIF.
-        node2 ?= node->find_from_name( name = 'overlay' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'overlay' uri = namespace-c ).
         IF node2 IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lo_linechart->ns_overlayval = ls_prop-val.
         ENDIF.
       WHEN c_graph_pie.
-        node2 ?= node->find_from_name( name = 'legendPos' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'legendPos' uri = namespace-c ).
         IF node2 IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lo_piechart->ns_legendposval = ls_prop-val.
         ENDIF.
-        node2 ?= node->find_from_name( name = 'overlay' namespace = 'c' ).
+        node2 ?= node->find_from_name_ns( name = 'overlay' uri = namespace-c ).
         IF node2 IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
           lo_piechart->ns_overlayval = ls_prop-val.
         ENDIF.
-        node2 ?= node->find_from_name( name = 'pPr' namespace = 'a' ).
+        node2 ?= node->find_from_name_ns( name = 'pPr' uri = namespace-a ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_pprrtl = ls_prop-rtl.
-        node2 ?= node->find_from_name( name = 'endParaRPr' namespace = 'a' ).
+        node2 ?= node->find_from_name_ns( name = 'endParaRPr' uri = namespace-a ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_piechart->ns_endpararprlang = ls_prop-lang.
 
       WHEN OTHERS.
     ENDCASE.
 
-    node2 ?= node->find_from_name( name = 'plotVisOnly' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'plotVisOnly' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_plotvisonlyval = ls_prop-val.
-    node2 ?= node->find_from_name( name = 'dispBlanksAs' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'dispBlanksAs' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_dispblanksasval = ls_prop-val.
-    node2 ?= node->find_from_name( name = 'showDLblsOverMax' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'showDLblsOverMax' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
     me->graph->ns_showdlblsovermaxval = ls_prop-val.
     "---------------------
 
-    node2 ?= node->find_from_name( name = 'pageMargins' namespace = 'c' ).
+    node2 ?= node->find_from_name_ns( name = 'pageMargins' uri = namespace-c ).
     zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_pagemargins ).
     me->graph->pagemargins = ls_pagemargins.
 
