@@ -156,7 +156,7 @@ FORM export_to_excel.
 
   wa_listheader-typ = 'A'.
   wa_listheader-info =
-      'Project hosting at https://cw.sdn.sap.com/cw/groups/abap2xlsx'.
+      'Project hosting at https://github.com/abap2xlsx'.
   APPEND wa_listheader TO gt_listheader.
 
 * write to excel using method Bin_ALV

@@ -5,7 +5,6 @@ CLASS zcl_excel_reader_2007 DEFINITION
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_READER_2007
 *"* do not include other source files here!!!
-    TYPE-POOLS ixml .
 
     INTERFACES zif_excel_reader .
 
@@ -598,18 +597,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               CLEAR lv_val.
             ENDIF.
           ENDIF.
-
-* 2do - borders into dxf-styles.  Here and in writerclass
-*      WHEN 'border'.
-*        lo_ixml_element = lo_ixml_dxf_child->find_from_name( 'left' ).
-*        IF lo_ixml_element IS BOUND.
-*          CLEAR lv_val.
-*          lv_val  = lo_ixml_element2->get_attribute_ns( 'style' ).
-*          IF lv_val IS NOT INITIAL.
-*            ls_cstyle-borders-left-border_style  = lv_val.
-*            ls_cstylex-borders-left-border_style = 'X'.
-*          ENDIF.
-*        ENDIF.
 
       ENDCASE.
 
@@ -1821,7 +1808,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_worksheet               TYPE REF TO zcl_excel_worksheet,
       lo_range                   TYPE REF TO zcl_excel_range,
       lv_worksheet_title         TYPE zexcel_sheet_title,
-      lv_tabix                   TYPE sytabix,            " #235 - repeat rows/cols.  Needed to link defined name to correct worksheet
+      lv_tabix                   TYPE i,            " #235 - repeat rows/cols.  Needed to link defined name to correct worksheet
 
       ls_range                   TYPE t_range,
       lv_range_value             TYPE zexcel_range_value,
@@ -2224,7 +2211,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     TYPES: BEGIN OF lty_column,
              min          TYPE string,
              max          TYPE string,
-             width        TYPE float,
+             width        TYPE f,
              customwidth  TYPE string,
              style        TYPE string,
              bestfit      TYPE string,
@@ -2249,7 +2236,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     TYPES: BEGIN OF lty_row,
              r            TYPE string,
              customheight TYPE string,
-             ht           TYPE float,
+             ht           TYPE f,
              spans        TYPE string,
              thickbot     TYPE string,
              customformat TYPE string,
@@ -2353,7 +2340,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
           lo_ixml_sheetformatpr_elem  TYPE REF TO if_ixml_element,
           ls_sheetformatpr            TYPE lty_sheetformatpr,
-          lv_height                   TYPE float,
+          lv_height                   TYPE f,
 
           lo_ixml_headerfooter_elem   TYPE REF TO if_ixml_element,
           ls_headerfooter             TYPE lty_headerfooter,
@@ -2511,7 +2498,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_row = io_worksheet->get_row( lv_cell_row ).
       IF ls_row-customheight = '1'.
         lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_true ).
-      ELSE.
+      ELSEIF ls_row-ht > 0.
         lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_false ).
       ENDIF.
 
@@ -2707,7 +2694,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           ENDIF.
 
           IF ls_column-outlinelevel > ''.
-*          outline_level = condense( column-outlineLevel ).
             CONDENSE ls_column-outlinelevel.
             lv_outline_level = ls_column-outlinelevel.
             IF lv_outline_level > 0.
@@ -3080,8 +3066,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lv_area_end_col   TYPE zexcel_cell_column_alpha,
           lv_rule           TYPE zexcel_condition_rule.
 
-
-*  FIELD-SYMBOLS: <ls_external_hyperlink> LIKE LINE OF it_external_hyperlinks.
 
     lo_ixml_cond_formats =  io_ixml_worksheet->get_elements_by_tag_name_ns( name = 'conditionalFormatting' uri = namespace-main ).
     lo_ixml_iterator     =  lo_ixml_cond_formats->create_iterator( ).

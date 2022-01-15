@@ -6,14 +6,14 @@ CLASS zcl_excel_obsolete_func_wrap DEFINITION
 
     CLASS-METHODS guid_create
       RETURNING
-        VALUE(rv_guid_16) TYPE guid_16 .
+        VALUE(rv_guid_16) TYPE zexcel_guid .
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS zcl_excel_obsolete_func_wrap IMPLEMENTATION.
+CLASS ZCL_EXCEL_OBSOLETE_FUNC_WRAP IMPLEMENTATION.
 
 
   METHOD guid_create.
@@ -30,9 +30,9 @@ CLASS zcl_excel_obsolete_func_wrap IMPLEMENTATION.
 * in newer SAP releases
 *--------------------------------------------------------------------*
 *
-*  CALL FUNCTION 'GUID_CREATE'
-*    IMPORTING
-*      ev_guid_16 = rv_guid_16.
+*Before ABAP 7.02:  CALL FUNCTION 'GUID_CREATE'
+*Before ABAP 7.02:    IMPORTING
+*Before ABAP 7.02:      ev_guid_16 = rv_guid_16.
 
   ENDMETHOD.
 ENDCLASS.

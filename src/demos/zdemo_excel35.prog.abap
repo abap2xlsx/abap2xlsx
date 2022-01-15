@@ -123,7 +123,7 @@ START-OF-SELECTION.
   " Get active sheet
   lo_worksheet = lo_excel->get_active_worksheet( ).
   lo_worksheet->set_title( ip_title = 'Styles' ).
-  lo_worksheet->set_cell( ip_column = 'B' ip_row = 2 ip_value = 'Hello world' ).
+  lo_worksheet->set_cell( ip_columnrow = 'B2' ip_value = 'Hello world' ).
   lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = 'Bold text'            ip_style = lv_style_bold_guid ).
   lo_worksheet->set_cell( ip_column = 'D' ip_row = 4 ip_value = 'Underlined text'      ip_style = lv_style_underline_guid ).
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 5 ip_value = 'Filled text'          ip_style = lv_style_filled_guid ).
@@ -133,7 +133,7 @@ START-OF-SELECTION.
   " Fill the cell and apply one style
   lo_worksheet->set_cell( ip_column = 'B' ip_row = 6 ip_value = 'Filled text'          ip_style = lv_style_filled_guid ).
   " Change the style
-  lo_worksheet->set_cell_style( ip_column = 'B' ip_row = 6 ip_style = lv_style_filled_green_guid ).
+  lo_worksheet->set_cell_style( ip_columnrow = 'B6' ip_style = lv_style_filled_green_guid ).
   " Add Style to an empty cell to test Fix for Issue
   "#44 Exception ZCX_EXCEL thrown when style is set for an empty cell
   " https://code.sdn.sap.com/spaces/abap2xlsx/tickets/44-exception-zcx_excel-thrown-when-style-is-set-for-an-empty-cell
@@ -142,8 +142,7 @@ START-OF-SELECTION.
 
 * Demonstrate how to retroactivly change the cellstyle
 *Filled text and underlinded text
-  lo_worksheet->change_cell_style(  ip_column                     = 'B'
-                                    ip_row                        = 5
+  lo_worksheet->change_cell_style(  ip_columnrow                 = 'B5'
                                     ip_font_bold                 = abap_true
                                     ip_font_italic               = abap_true ).
 
@@ -163,9 +162,6 @@ START-OF-SELECTION.
       output_length = lv_bytecount
     TABLES
       binary_tab    = lt_file_tab.
-*  " This method is only available on AS ABAP > 6.40
-*  lt_file_tab = cl_bcs_convert=>xstring_to_solix( iv_xstring  = lv_file ).
-*  lv_bytecount = xstrlen( lv_file ).
 
   " Save the file
   cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = lv_bytecount

@@ -23,7 +23,6 @@
 
 REPORT zdemo_calendar.
 
-TYPE-POOLS: abap.
 CONSTANTS: gc_save_file_name TYPE string VALUE 'Calendar.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
 INCLUDE zdemo_calendar_classes.
@@ -34,7 +33,7 @@ PARAMETERS: p_from TYPE dfrom,
             p_to   TYPE dto.
 
 SELECTION-SCREEN BEGIN OF BLOCK orientation WITH FRAME TITLE orient.
-  PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
+PARAMETERS: p_portr TYPE flag RADIOBUTTON GROUP orie,
               p_lands TYPE flag RADIOBUTTON GROUP orie DEFAULT 'X'.
 SELECTION-SCREEN END OF BLOCK orientation.
 
@@ -271,17 +270,6 @@ START-OF-SELECTION.
         ip_style     = lv_style_month_guid
     ).
 
-*    to_col_int = zcl_excel_common=>convert_column2int( from_col ) + 7.
-*    to_col = zcl_excel_common=>convert_column2alpha( to_col_int ).
-*
-*    lo_worksheet->set_merge(
-*      EXPORTING
-*        ip_column_start = from_col  " Cell Column Start
-*        ip_column_end   = to_col    " Cell Column End
-*        ip_row          = row       " Cell Row
-*        ip_row_to       = row       " Cell Row
-*    ).
-
     " Add drawing from a XSTRING read from a file
     UNASSIGN <img_descr>.
     READ TABLE image_descriptions WITH KEY month_nr = month_nr ASSIGNING <img_descr>.
@@ -354,11 +342,6 @@ START-OF-SELECTION.
     ENDIF.
 
     " Add Calendar
-*    CALL FUNCTION 'SLS_MISC_GET_LAST_DAY_OF_MONTH'
-*      EXPORTING
-*        day_in            = date_from
-*      IMPORTING
-*        last_day_of_month = date_to.
     date_to = date_from.
     date_to+6(2) = '01'.              " First of month
     ADD 31 TO date_to.                " Somewhere in following month

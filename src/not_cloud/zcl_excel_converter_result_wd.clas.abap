@@ -64,7 +64,6 @@ CLASS zcl_excel_converter_result_wd IMPLEMENTATION.
 
     LOOP AT lt_dfies INTO ls_dfies.
       MOVE-CORRESPONDING ls_dfies TO ls_fcat.
-*      ls_fcat-columnname = ls_dfies-fieldname.
       ls_fcat-col_pos = ls_dfies-position.
       ls_fcat-key     = ls_dfies-keyflag.
       get_fields_info( CHANGING xs_fcat = ls_fcat ) .
@@ -89,7 +88,7 @@ CLASS zcl_excel_converter_result_wd IMPLEMENTATION.
                    <fs_filter> TYPE salv_wd_s_filter_rule_ref.
 
     LOOP AT  wt_fields ASSIGNING <fs_fields>.
-      REFRESH lt_filters.
+      CLEAR lt_filters.
       lt_filters    = <fs_fields>-r_field->if_salv_wd_filter~get_filter_rules( ) .
       LOOP AT lt_filters ASSIGNING <fs_filter>.
         ls_filt-fieldname = <fs_fields>-fieldname.
@@ -123,14 +122,7 @@ CLASS zcl_excel_converter_result_wd IMPLEMENTATION.
           CLEAR ls_sort.
           ls_sort-spos      = lo_sort->get_sort_position( ).
           ls_sort-fieldname = <fs_fields>-fieldname.
-*      ls_sort-GROUP
           ls_sort-subtot    = lo_sort->get_group_aggregation( ).
-*      ls_sort-COMP
-*      ls_sort-EXPA
-*      ls_sort-SELTEXT
-*      ls_sort-OBLIGATORY
-*      ls_sort-LEVEL
-*      ls_sort-NO_OUT
           IF l_sort_order = if_salv_wd_c_sort=>sort_order_ascending.
             ls_sort-up = abap_true.
           ELSE.
@@ -244,9 +236,6 @@ CLASS zcl_excel_converter_result_wd IMPLEMENTATION.
 
         apply_sort( EXPORTING it_table = <fs_table>
                     IMPORTING eo_table = eo_table ) .
-
-*      get_color( EXPORTING io_table    = eo_table
-*                 IMPORTING et_colors   = et_colors ) .
 
         get_filter( IMPORTING et_filter  = et_filter
                     CHANGING  xo_table   = eo_table ) .

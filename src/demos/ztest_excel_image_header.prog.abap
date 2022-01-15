@@ -82,8 +82,7 @@ START-OF-SELECTION.
   lo_worksheet = lo_excel->add_new_worksheet( 'Sheet2' ).
 
   " Add some content otherwise the error "nothing to be printed" is shown
-  lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = sy-datum ).
-  lo_worksheet->set_cell( ip_column = 'C' ip_row = 3 ip_value = sy-uzeit ).
+  lo_worksheet->set_cell( ip_column = 'B' ip_row = 3 ip_value = 'Hello world' ).
 
 **********************************************************************
 *** Header Left

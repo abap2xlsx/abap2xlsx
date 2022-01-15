@@ -9,9 +9,6 @@ CLASS zcl_excel_worksheet DEFINITION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-    TYPE-POOLS abap .
-    TYPE-POOLS slis .
-    TYPE-POOLS soi .
 
     INTERFACES zif_excel_sheet_printsettings .
     INTERFACES zif_excel_sheet_properties .
@@ -184,17 +181,19 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS change_area_style
       IMPORTING
-        !ip_column_start  TYPE simple
+        !ip_range         TYPE csequence OPTIONAL
+        !ip_column_start  TYPE simple OPTIONAL
         !ip_column_end    TYPE simple OPTIONAL
-        !ip_row           TYPE zexcel_cell_row
+        !ip_row           TYPE zexcel_cell_row OPTIONAL
         !ip_row_to        TYPE zexcel_cell_row OPTIONAL
         !ip_style_changer TYPE REF TO zif_excel_style_changer
       RAISING
         zcx_excel .
     METHODS change_cell_style
       IMPORTING
-        !ip_column                      TYPE simple
-        !ip_row                         TYPE zexcel_cell_row
+        !ip_columnrow                   TYPE csequence OPTIONAL
+        !ip_column                      TYPE simple OPTIONAL
+        !ip_row                         TYPE zexcel_cell_row OPTIONAL
         !ip_complete                    TYPE zexcel_s_cstyle_complete OPTIONAL
         !ip_xcomplete                   TYPE zexcel_s_cstylex_complete OPTIONAL
         !ip_font                        TYPE zexcel_s_cstyle_font OPTIONAL
@@ -336,15 +335,16 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_cell
       IMPORTING
-        !ip_column  TYPE simple
-        !ip_row     TYPE zexcel_cell_row
+        !ip_columnrow TYPE csequence OPTIONAL
+        !ip_column    TYPE simple OPTIONAL
+        !ip_row       TYPE zexcel_cell_row OPTIONAL
       EXPORTING
-        !ep_value   TYPE zexcel_cell_value
-        !ep_rc      TYPE sysubrc
-        !ep_style   TYPE REF TO zcl_excel_style
-        !ep_guid    TYPE zexcel_cell_style
-        !ep_formula TYPE zexcel_cell_formula
-        !et_rtf     TYPE zexcel_t_rtf
+        !ep_value     TYPE zexcel_cell_value
+        !ep_rc        TYPE sysubrc
+        !ep_style     TYPE REF TO zcl_excel_style
+        !ep_guid      TYPE zexcel_cell_style
+        !ep_formula   TYPE zexcel_cell_formula
+        !et_rtf       TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
     METHODS get_column
@@ -356,10 +356,14 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_columns
       RETURNING
-        VALUE(eo_columns) TYPE REF TO zcl_excel_columns .
+        VALUE(eo_columns) TYPE REF TO zcl_excel_columns
+      RAISING
+        zcx_excel .
     METHODS get_columns_iterator
       RETURNING
-        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
+        VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator
+      RAISING
+        zcx_excel .
     METHODS get_style_cond_iterator
       RETURNING
         VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
@@ -486,11 +490,12 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS set_cell
       IMPORTING
-        !ip_column            TYPE simple
-        !ip_row               TYPE zexcel_cell_row
+        !ip_columnrow         TYPE csequence OPTIONAL
+        !ip_column            TYPE simple OPTIONAL
+        !ip_row               TYPE zexcel_cell_row OPTIONAL
         !ip_value             TYPE simple OPTIONAL
         !ip_formula           TYPE zexcel_cell_formula OPTIONAL
-        !ip_style             TYPE zexcel_cell_style OPTIONAL
+        !ip_style             TYPE any OPTIONAL
         !ip_hyperlink         TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type         TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type         TYPE abap_typekind OPTIONAL
@@ -500,16 +505,18 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS set_cell_formula
       IMPORTING
-        !ip_column  TYPE simple
-        !ip_row     TYPE zexcel_cell_row
-        !ip_formula TYPE zexcel_cell_formula
+        !ip_columnrow TYPE csequence OPTIONAL
+        !ip_column    TYPE simple OPTIONAL
+        !ip_row       TYPE zexcel_cell_row OPTIONAL
+        !ip_formula   TYPE zexcel_cell_formula
       RAISING
         zcx_excel .
     METHODS set_cell_style
       IMPORTING
-        !ip_column TYPE simple
-        !ip_row    TYPE zexcel_cell_row
-        !ip_style  TYPE zexcel_cell_style
+        !ip_columnrow TYPE csequence OPTIONAL
+        !ip_column    TYPE simple OPTIONAL
+        !ip_row       TYPE zexcel_cell_row OPTIONAL
+        !ip_style     TYPE any
       RAISING
         zcx_excel .
     METHODS set_column_width
@@ -529,11 +536,12 @@ CLASS zcl_excel_worksheet DEFINITION
         !it_ignored_errors TYPE mty_th_ignored_errors .
     METHODS set_merge
       IMPORTING
-        !ip_column_start TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_min_col
-        !ip_column_end   TYPE simple DEFAULT zcl_excel_common=>c_excel_sheet_max_col
-        !ip_row          TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_min_row
-        !ip_row_to       TYPE zexcel_cell_row DEFAULT zcl_excel_common=>c_excel_sheet_max_row
-        !ip_style        TYPE zexcel_cell_style OPTIONAL          "added parameter
+        !ip_range        TYPE csequence OPTIONAL
+        !ip_column_start TYPE simple OPTIONAL
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row OPTIONAL
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_style        TYPE any OPTIONAL
         !ip_value        TYPE simple OPTIONAL          "added parameter
         !ip_formula      TYPE zexcel_cell_formula OPTIONAL        "added parameter
       RAISING
@@ -566,8 +574,8 @@ CLASS zcl_excel_worksheet DEFINITION
     METHODS set_table
       IMPORTING
         !ip_table           TYPE STANDARD TABLE
-        !ip_hdr_style       TYPE zexcel_cell_style OPTIONAL
-        !ip_body_style      TYPE zexcel_cell_style OPTIONAL
+        !ip_hdr_style       TYPE any OPTIONAL
+        !ip_body_style      TYPE any OPTIONAL
         !ip_table_title     TYPE string
         !ip_top_left_column TYPE zexcel_cell_column_alpha DEFAULT 'B'
         !ip_top_left_row    TYPE zexcel_cell_row DEFAULT 3
@@ -592,18 +600,20 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS set_merge_style
       IMPORTING
+        !ip_range        TYPE csequence OPTIONAL
         !ip_column_start TYPE simple OPTIONAL
         !ip_column_end   TYPE simple OPTIONAL
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL
+        !ip_style        TYPE any OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_area_formula
       IMPORTING
-        !ip_column_start TYPE simple
+        !ip_range        TYPE csequence OPTIONAL
+        !ip_column_start TYPE simple OPTIONAL
         !ip_column_end   TYPE simple OPTIONAL
-        !ip_row          TYPE zexcel_cell_row
+        !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_formula      TYPE zexcel_cell_formula
         !ip_merge        TYPE abap_bool OPTIONAL
@@ -612,23 +622,25 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS set_area_style
       IMPORTING
-        !ip_column_start TYPE simple
+        !ip_range        TYPE csequence OPTIONAL
+        !ip_column_start TYPE simple OPTIONAL
         !ip_column_end   TYPE simple OPTIONAL
-        !ip_row          TYPE zexcel_cell_row
+        !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_style        TYPE zexcel_cell_style
+        !ip_style        TYPE any
         !ip_merge        TYPE abap_bool OPTIONAL
       RAISING
         zcx_excel .
     METHODS set_area
       IMPORTING
-        !ip_column_start TYPE simple
+        !ip_range        TYPE csequence OPTIONAL
+        !ip_column_start TYPE simple OPTIONAL
         !ip_column_end   TYPE simple OPTIONAL
-        !ip_row          TYPE zexcel_cell_row
+        !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_value        TYPE simple OPTIONAL
         !ip_formula      TYPE zexcel_cell_formula OPTIONAL
-        !ip_style        TYPE zexcel_cell_style OPTIONAL
+        !ip_style        TYPE any OPTIONAL
         !ip_hyperlink    TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type    TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type    TYPE abap_typekind OPTIONAL
@@ -641,9 +653,10 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(rt_drawings) TYPE zexcel_t_drawings .
     METHODS set_area_hyperlink
       IMPORTING
-        !ip_column_start TYPE simple
+        !ip_range        TYPE csequence OPTIONAL
+        !ip_column_start TYPE simple OPTIONAL
         !ip_column_end   TYPE simple OPTIONAL
-        !ip_row          TYPE zexcel_cell_row
+        !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_url          TYPE string
         !ip_is_internal  TYPE abap_bool
@@ -689,7 +702,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column      TYPE simple
         !ip_row         TYPE zexcel_cell_row
       RETURNING
-        VALUE(ep_width) TYPE float
+        VALUE(ep_width) TYPE f
       RAISING
         zcx_excel .
     CLASS-METHODS check_cell_column_formula
@@ -733,6 +746,37 @@ CLASS zcl_excel_worksheet DEFINITION
       CHANGING
         cs_complete_style_border  TYPE zexcel_s_cstyle_border
         cs_complete_stylex_border TYPE zexcel_s_cstylex_border.
+    METHODS normalize_columnrow_parameter
+      IMPORTING
+        ip_columnrow  TYPE csequence OPTIONAL
+        ip_column     TYPE simple OPTIONAL
+        ip_row        TYPE zexcel_cell_row OPTIONAL
+      EXPORTING
+        ep_column     TYPE zexcel_cell_column
+        ep_row        TYPE zexcel_cell_row
+      RAISING
+        zcx_excel.
+    METHODS normalize_range_parameter
+      IMPORTING
+        ip_range        TYPE csequence OPTIONAL
+        ip_column_start TYPE simple OPTIONAL
+        ip_column_end   TYPE simple OPTIONAL
+        ip_row          TYPE zexcel_cell_row OPTIONAL
+        ip_row_to       TYPE zexcel_cell_row OPTIONAL
+      EXPORTING
+        ep_column_start TYPE zexcel_cell_column
+        ep_column_end   TYPE zexcel_cell_column
+        ep_row          TYPE zexcel_cell_row
+        ep_row_to       TYPE zexcel_cell_row
+      RAISING
+        zcx_excel.
+    CLASS-METHODS normalize_style_parameter
+      IMPORTING
+        !ip_style_or_guid TYPE any
+      RETURNING
+        VALUE(rv_guid)    TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
     METHODS print_title_set_range .
     METHODS update_dimension_range
       RAISING
@@ -987,7 +1031,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     lo_table->set_data( ir_data = ip_table ).
     lv_id = me->excel->get_next_table_id( ).
     lo_table->set_id( iv_id = lv_id ).
-*  lo_table->fieldcat = lt_field_catalog[].
 
     me->tables->add( lo_table ).
 
@@ -999,7 +1042,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       " Due restrinction of new table object we cannot have two column with the same name
       " Check if a column with the same name exists, if exists add a counter
       " If no medium description is provided we try to use small or long
-*    lv_value = <ls_field_catalog>-scrtext_m.
       FIELD-SYMBOLS: <scrtxt1> TYPE any,
                      <scrtxt2> TYPE any,
                      <scrtxt3> TYPE any.
@@ -1350,7 +1392,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     TYPES:
       BEGIN OF t_auto_size,
         col_index TYPE int4,
-        width     TYPE float,
+        width     TYPE f,
       END   OF t_auto_size.
     TYPES: tt_auto_size TYPE TABLE OF t_auto_size.
 
@@ -1361,7 +1403,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: auto_sizes  TYPE tt_auto_size.
     DATA: count       TYPE int4.
     DATA: highest_row TYPE int4.
-    DATA: width       TYPE float.
+    DATA: width       TYPE f.
 
     FIELD-SYMBOLS: <auto_size>        LIKE LINE OF auto_sizes.
 
@@ -1407,45 +1449,20 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lv_row              TYPE zexcel_cell_row,
           lv_row_start        TYPE zexcel_cell_row,
           lv_row_to           TYPE zexcel_cell_row,
-          lv_column_int       TYPE zexcel_cell_column_alpha,
-          lv_column           TYPE zexcel_cell_column_alpha,
-          lv_column_start     TYPE zexcel_cell_column_alpha,
-          lv_column_end       TYPE zexcel_cell_column_alpha,
-          lv_column_start_int TYPE zexcel_cell_column_alpha,
-          lv_column_end_int   TYPE zexcel_cell_column_alpha.
+          lv_column_int       TYPE zexcel_cell_column,
+          lv_column_start_int TYPE zexcel_cell_column,
+          lv_column_end_int   TYPE zexcel_cell_column.
 
-    lv_row_to = ip_row_to.
-    lv_row = ip_row.
-
-    IF lv_row_to IS INITIAL OR ip_row_to IS NOT SUPPLIED.
-      lv_row_to = lv_row.
-    ENDIF.
-
-    lv_column_start = ip_column_start.
-    lv_column_end = ip_column_end.
-
-    IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
-      lv_column_end = lv_column_start.
-    ENDIF.
-
-    lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
-    lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
-
-    IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_to.
-
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'Wrong Merging Parameters'.
-
-    ENDIF.
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start     ip_column_end = ip_column_end
+                                         ip_row          = ip_row              ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = lv_column_start_int ep_column_end = lv_column_end_int
+                                         ep_row          = lv_row_start        ep_row_to     = lv_row_to ).
 
     lv_column_int = lv_column_start_int.
-    lv_row_start = lv_row.
     WHILE lv_column_int <= lv_column_end_int.
 
-      lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
       lv_row = lv_row_start.
-
       WHILE lv_row <= lv_row_to.
 
         ip_style_changer->apply( ip_worksheet = me
@@ -1463,8 +1480,15 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD change_cell_style.
 
-    DATA: changer TYPE REF TO zif_excel_style_changer.
+    DATA: changer TYPE REF TO zif_excel_style_changer,
+          column  TYPE zexcel_cell_column,
+          row     TYPE zexcel_cell_row.
 
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = column
+                                             ep_row       = row ).
 
     changer = zcl_excel_style_changer=>create( excel = excel ).
 
@@ -1827,8 +1851,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
     ep_guid = changer->apply( ip_worksheet = me
-                              ip_column    = ip_column
-                              ip_row       = ip_row ).
+                              ip_column    = column
+                              ip_row       = row ).
 
 
   ENDMETHOD.                    "CHANGE_CELL_STYLE
@@ -1947,15 +1971,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     me->excel = ip_excel.
 
-*  CALL FUNCTION 'GUID_CREATE'                                    " del issue #379 - function is outdated in newer releases
-*    IMPORTING
-*      ev_guid_16 = me->guid.
     me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).        " ins issue #379 - replacement for outdated function call
 
     IF ip_title IS NOT INITIAL.
       lv_title = ip_title.
     ELSE.
-*    lv_title = me->guid.             " del issue #154 - Names of worksheets
       lv_title = me->generate_title( ). " ins issue #154 - Names of worksheets
     ENDIF.
 
@@ -2100,11 +2120,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD get_cell.
 
     DATA: lv_column        TYPE zexcel_cell_column,
+          lv_row           TYPE zexcel_cell_row,
           ls_sheet_content TYPE zexcel_s_cell_data.
 
-    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
 
-    READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = ip_row
+    READ TABLE sheet_content INTO ls_sheet_content WITH TABLE KEY cell_row     = lv_row
                                                                   cell_column  = lv_column.
 
     ep_rc       = sy-subrc.
@@ -2294,7 +2319,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     me->update_dimension_range( ).
     IF upper_cell EQ lower_cell. "only one cell
       " Worksheet not filled
-*    IF upper_cell-cell_coords = '0'.
       IF upper_cell-cell_coords IS INITIAL.
         ep_dimension_range = 'A1'.
       ELSE.
@@ -2656,7 +2680,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *now we are ready for handle the table data
 *--------------------------------------------------------------------*
-            REFRESH et_table.
+            CLEAR et_table.
 *--------------------------------------------------------------------*
 * Handle each Row until end on right side
 *--------------------------------------------------------------------*
@@ -2805,14 +2829,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               EXPORTING
                 input  = ip_value
               IMPORTING
-*               LONG_TEXT  =
                 output = l_value
-*               SHORT_TEXT =
               EXCEPTIONS
                 OTHERS = 1.
             IF sy-subrc <> 0.
-* MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
-*         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
             ELSE.
               TRY.
                   ep_value = l_value.
@@ -2876,6 +2896,115 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
       MOVE-CORRESPONDING is_border  TO cs_complete_style_border.
       MOVE-CORRESPONDING ls_borderx TO cs_complete_stylex_border.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD normalize_columnrow_parameter.
+
+    IF ( ( ip_column IS NOT INITIAL OR ip_row IS NOT INITIAL ) AND ip_columnrow IS NOT INITIAL )
+        OR ( ip_column IS INITIAL AND ip_row IS INITIAL AND ip_columnrow IS INITIAL ).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Please provide either row and column, or cell reference'.
+    ENDIF.
+
+    IF ip_columnrow IS NOT INITIAL.
+      zcl_excel_common=>convert_columnrow2column_a_row(
+        EXPORTING
+          i_columnrow  = ip_columnrow
+        IMPORTING
+          e_column_int = ep_column
+          e_row        = ep_row ).
+    ELSE.
+      ep_column = zcl_excel_common=>convert_column2int( ip_column ).
+      ep_row    = ip_row.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD normalize_range_parameter.
+
+    DATA: lv_errormessage TYPE string.
+
+    IF ( ( ip_column_start IS NOT INITIAL OR ip_column_end IS NOT INITIAL
+            OR ip_row IS NOT INITIAL OR ip_row_to IS NOT INITIAL ) AND ip_range IS NOT INITIAL )
+        OR ( ip_column_start IS INITIAL AND ip_column_end IS INITIAL
+            AND ip_row IS INITIAL AND ip_row_to IS INITIAL AND ip_range IS INITIAL ).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Please provide either row and column interval, or range reference'.
+    ENDIF.
+
+    IF ip_range IS NOT INITIAL.
+      zcl_excel_common=>convert_range2column_a_row(
+        EXPORTING
+          i_range            = ip_range
+        IMPORTING
+          e_column_start_int = ep_column_start
+          e_column_end_int   = ep_column_end
+          e_row_start        = ep_row
+          e_row_end          = ep_row_to ).
+    ELSE.
+      IF ip_column_start IS INITIAL.
+        ep_column_start = zcl_excel_common=>c_excel_sheet_min_col.
+      ELSE.
+        ep_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
+      ENDIF.
+      IF ip_column_end IS INITIAL.
+        ep_column_end = ep_column_start.
+      ELSE.
+        ep_column_end = zcl_excel_common=>convert_column2int( ip_column_end ).
+      ENDIF.
+      ep_row = ip_row.
+      IF ep_row IS INITIAL.
+        ep_row = zcl_excel_common=>c_excel_sheet_min_row.
+      ENDIF.
+      ep_row_to = ip_row_to.
+      IF ep_row_to IS INITIAL.
+        ep_row_to = ep_row.
+      ENDIF.
+    ENDIF.
+
+    IF ep_row > ep_row_to.
+      lv_errormessage = 'First row larger than last row'(405).
+      zcx_excel=>raise_text( lv_errormessage ).
+    ENDIF.
+
+    IF ep_column_start > ep_column_end.
+      lv_errormessage = 'First column larger than last column'(406).
+      zcx_excel=>raise_text( lv_errormessage ).
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD normalize_style_parameter.
+
+    DATA: lo_style_type TYPE REF TO cl_abap_typedescr.
+    FIELD-SYMBOLS:
+      <style> TYPE REF TO zcl_excel_style.
+
+    CHECK ip_style_or_guid IS NOT INITIAL.
+
+    lo_style_type = cl_abap_typedescr=>describe_by_data( ip_style_or_guid ).
+    IF lo_style_type->type_kind = lo_style_type->typekind_oref.
+      lo_style_type = cl_abap_typedescr=>describe_by_object_ref( ip_style_or_guid ).
+      IF lo_style_type->absolute_name = '\CLASS=ZCL_EXCEL_STYLE'.
+        ASSIGN ip_style_or_guid TO <style>.
+        rv_guid = <style>->get_guid( ).
+      ENDIF.
+
+    ELSEIF lo_style_type->absolute_name = '\TYPE=ZEXCEL_CELL_STYLE'.
+      rv_guid = ip_style_or_guid.
+
+    ELSEIF lo_style_type->type_kind = lo_style_type->typekind_hex.
+      rv_guid = ip_style_or_guid.
+
+    ELSE.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_tyle or zexcel_cell_style'.
     ENDIF.
 
   ENDMETHOD.
@@ -2985,37 +3114,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lv_row              TYPE zexcel_cell_row,
           lv_row_start        TYPE zexcel_cell_row,
           lv_row_end          TYPE zexcel_cell_row,
-          lv_column_int       TYPE zexcel_cell_column_alpha,
+          lv_column_int       TYPE zexcel_cell_column,
           lv_column           TYPE zexcel_cell_column_alpha,
-          lv_column_start     TYPE zexcel_cell_column_alpha,
-          lv_column_end       TYPE zexcel_cell_column_alpha,
-          lv_column_start_int TYPE zexcel_cell_column_alpha,
-          lv_column_end_int   TYPE zexcel_cell_column_alpha.
+          lv_column_start_int TYPE zexcel_cell_column,
+          lv_column_end_int   TYPE zexcel_cell_column.
 
-    lv_row_end = ip_row_to.
-    lv_row = ip_row.
-
-    IF lv_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
-      lv_row_end = lv_row.
-    ENDIF.
-
-    lv_column_start = ip_column_start.
-    lv_column_end = ip_column_end.
-
-    IF lv_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
-      lv_column_end = lv_column_start.
-    ENDIF.
-
-    lv_column_start_int = zcl_excel_common=>convert_column2int( lv_column_start ).
-    lv_column_end_int   = zcl_excel_common=>convert_column2int( lv_column_end ).
-
-    IF lv_column_start_int > lv_column_end_int OR lv_row > lv_row_end.
-
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'Wrong Merging Parameters'.
-
-    ENDIF.
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start     ip_column_end = ip_column_end
+                                         ip_row          = ip_row              ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = lv_column_start_int ep_column_end = lv_column_end_int
+                                         ep_row          = lv_row_start        ep_row_to     = lv_row_end ).
 
     " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
     IF ip_merge = abap_true OR ip_area = c_area-topleft.
@@ -3023,8 +3131,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       IF ip_data_type IS SUPPLIED OR
          ip_abap_type IS SUPPLIED.
 
-        me->set_cell( ip_column    = lv_column_start
-                      ip_row       = lv_row
+        me->set_cell( ip_column    = lv_column_start_int
+                      ip_row       = lv_row_start
                       ip_value     = ip_value
                       ip_formula   = ip_formula
                       ip_style     = ip_style
@@ -3034,8 +3142,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
       ELSE.
 
-        me->set_cell( ip_column    = lv_column_start
-                      ip_row       = lv_row
+        me->set_cell( ip_column    = lv_column_start_int
+                      ip_row       = lv_row_start
                       ip_value     = ip_value
                       ip_formula   = ip_formula
                       ip_style     = ip_style
@@ -3046,7 +3154,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ELSE.
 
       lv_column_int = lv_column_start_int.
-      lv_row_start = lv_row.
       WHILE lv_column_int <= lv_column_end_int.
 
         lv_column = zcl_excel_common=>convert_column2alpha( lv_column_int ).
@@ -3087,18 +3194,18 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     IF ip_style IS SUPPLIED.
 
-      me->set_area_style( ip_column_start = lv_column_start
-                          ip_column_end   = lv_column_end
-                          ip_row          = lv_row
+      me->set_area_style( ip_column_start = lv_column_start_int
+                          ip_column_end   = lv_column_end_int
+                          ip_row          = lv_row_start
                           ip_row_to       = lv_row_end
                           ip_style        = ip_style ).
     ENDIF.
 
     IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
 
-      me->set_merge( ip_column_start = lv_column_start
-                     ip_column_end   = lv_column_end
-                     ip_row          = lv_row
+      me->set_merge( ip_column_start = lv_column_start_int
+                     ip_column_end   = lv_column_end_int
+                     ip_row          = lv_row_start
                      ip_row_to       = lv_row_end ).
 
     ENDIF.
@@ -3107,45 +3214,29 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD set_area_formula.
-    DATA: ld_row            TYPE zexcel_cell_row,
-          ld_row_start      TYPE zexcel_cell_row,
-          ld_row_end        TYPE zexcel_cell_row,
-          ld_column         TYPE zexcel_cell_column_alpha,
-          ld_column_end     TYPE zexcel_cell_column_alpha,
-          ld_column_int     TYPE zexcel_cell_column_alpha,
-          ld_column_end_int TYPE zexcel_cell_column_alpha.
+    DATA: ld_row              TYPE zexcel_cell_row,
+          ld_row_start        TYPE zexcel_cell_row,
+          ld_row_end          TYPE zexcel_cell_row,
+          ld_column           TYPE zexcel_cell_column_alpha,
+          ld_column_int       TYPE zexcel_cell_column,
+          ld_column_start_int TYPE zexcel_cell_column,
+          ld_column_end_int   TYPE zexcel_cell_column.
 
-    ld_row_end = ip_row_to.
-    ld_row = ip_row.
-    IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
-      ld_row_end = ld_row.
-    ENDIF.
-
-    ld_column = ip_column_start.
-    ld_column_end = ip_column_end.
-
-    IF ld_column_end IS INITIAL OR ip_column_end IS NOT SUPPLIED.
-      ld_column_end = ld_column.
-    ENDIF.
-
-    ld_column_int      = zcl_excel_common=>convert_column2int( ld_column ).
-    ld_column_end_int  = zcl_excel_common=>convert_column2int( ld_column_end ).
-
-    IF ld_column_int > ld_column_end_int OR ld_row > ld_row_end.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'Wrong Merging Parameters'.
-    ENDIF.
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start      ip_column_end = ip_column_end
+                                         ip_row          = ip_row               ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
+                                         ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
 
     " IP_AREA has been added to maintain ascending compatibility (see discussion in PR 869)
     IF ip_merge = abap_true OR ip_area = c_area-topleft.
 
-      me->set_cell_formula( ip_column = ld_column ip_row = ld_row
+      me->set_cell_formula( ip_column = ld_column_start_int ip_row = ld_row_start
                             ip_formula = ip_formula ).
 
     ELSE.
 
-      ld_row_start = ld_row.
+      ld_column_int = ld_column_start_int.
       WHILE ld_column_int <= ld_column_end_int.
 
         ld_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
@@ -3164,8 +3255,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
-      me->set_merge( ip_column_start = ld_column ip_row = ld_row
-                     ip_column_end   = ld_column_end   ip_row_to = ld_row_end ).
+      me->set_merge( ip_column_start = ld_column_start_int ip_row = ld_row_start
+                     ip_column_end   = ld_column_end_int   ip_row_to = ld_row_end ).
     ENDIF.
   ENDMETHOD.                    "set_area_formula
 
@@ -3173,32 +3264,30 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD set_area_hyperlink.
     DATA: ld_row_start        TYPE zexcel_cell_row,
           ld_row_end          TYPE zexcel_cell_row,
+          ld_column_int       TYPE zexcel_cell_column,
           ld_column_start_int TYPE zexcel_cell_column,
           ld_column_end_int   TYPE zexcel_cell_column,
           ld_current_column   TYPE zexcel_cell_column_alpha,
           ld_current_row      TYPE zexcel_cell_row,
-          ld_value            TYPE string.
-    DATA: lv_column    TYPE zexcel_cell_column,
-          lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
+          ld_value            TYPE string,
+          ld_formula          TYPE string.
+    DATA: lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
 
-    ld_row_end = ip_row_to.
-    ld_row_start = ip_row.
-    IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
-      ld_row_end = ld_row_start.
-    ENDIF.
-    ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
-    ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
-    IF ld_column_end_int IS INITIAL OR ip_column_end IS NOT SUPPLIED.
-      ld_column_end_int = ld_column_start_int.
-    ENDIF.
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start      ip_column_end = ip_column_end
+                                         ip_row          = ip_row               ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
+                                         ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
 
-    WHILE ld_column_start_int <= ld_column_end_int.
-      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
+    ld_column_int = ld_column_start_int.
+    WHILE ld_column_int <= ld_column_end_int.
+      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
       ld_current_row = ld_row_start.
       WHILE ld_current_row <= ld_row_end.
 
-        me->get_cell( EXPORTING ip_column = ld_current_column ip_row = ld_current_row
-                      IMPORTING ep_value  = ld_value ).
+        me->get_cell( EXPORTING ip_column  = ld_current_column ip_row = ld_current_row
+                      IMPORTING ep_value   = ld_value
+                                ep_formula = ld_formula ).
 
         IF ip_is_internal = abap_true.
           lo_hyperlink = zcl_excel_hyperlink=>create_internal_link( iv_location = ip_url ).
@@ -3206,11 +3295,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lo_hyperlink = zcl_excel_hyperlink=>create_external_link( iv_url = ip_url ).
         ENDIF.
 
-        me->set_cell( ip_column = ld_current_column ip_row = ld_current_row ip_value = ld_value ip_hyperlink = lo_hyperlink ).
+        me->set_cell( ip_column = ld_current_column ip_row = ld_current_row ip_value = ld_value ip_formula = ld_formula ip_hyperlink = lo_hyperlink ).
 
         ADD 1 TO ld_current_row.
       ENDWHILE.
-      ADD 1 TO ld_column_start_int.
+      ADD 1 TO ld_column_int.
     ENDWHILE.
 
   ENDMETHOD.                    "SET_AREA_HYPERLINK
@@ -3219,35 +3308,32 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD set_area_style.
     DATA: ld_row_start        TYPE zexcel_cell_row,
           ld_row_end          TYPE zexcel_cell_row,
+          ld_column_int       TYPE zexcel_cell_column,
           ld_column_start_int TYPE zexcel_cell_column,
           ld_column_end_int   TYPE zexcel_cell_column,
           ld_current_column   TYPE zexcel_cell_column_alpha,
           ld_current_row      TYPE zexcel_cell_row.
 
-    ld_row_end = ip_row_to.
-    ld_row_start = ip_row.
-    IF ld_row_end IS INITIAL OR ip_row_to IS NOT SUPPLIED.
-      ld_row_end = ld_row_start.
-    ENDIF.
-    ld_column_start_int = zcl_excel_common=>convert_column2int( ip_column_start ).
-    ld_column_end_int   = zcl_excel_common=>convert_column2int( ip_column_end ).
-    IF ld_column_end_int IS INITIAL OR ip_column_end IS NOT SUPPLIED.
-      ld_column_end_int = ld_column_start_int.
-    ENDIF.
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start      ip_column_end = ip_column_end
+                                         ip_row          = ip_row               ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start_int  ep_column_end = ld_column_end_int
+                                         ep_row          = ld_row_start         ep_row_to     = ld_row_end ).
 
-    WHILE ld_column_start_int <= ld_column_end_int.
-      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start_int ).
+    ld_column_int = ld_column_start_int.
+    WHILE ld_column_int <= ld_column_end_int.
+      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
       ld_current_row = ld_row_start.
       WHILE ld_current_row <= ld_row_end.
         me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
                             ip_style = ip_style ).
         ADD 1 TO ld_current_row.
       ENDWHILE.
-      ADD 1 TO ld_column_start_int.
+      ADD 1 TO ld_column_int.
     ENDWHILE.
     IF ip_merge IS SUPPLIED AND ip_merge = abap_true.
-      me->set_merge( ip_column_start = ip_column_start ip_row = ld_row_start
-                     ip_column_end   = ld_current_column    ip_row_to = ld_row_end ).
+      me->set_merge( ip_column_start = ld_column_start_int ip_row = ld_row_start
+                     ip_column_end   = ld_column_end_int   ip_row_to = ld_row_end ).
     ENDIF.
   ENDMETHOD.                    "SET_AREA_STYLE
 
@@ -3256,6 +3342,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lv_column        TYPE zexcel_cell_column,
           ls_sheet_content TYPE zexcel_s_cell_data,
+          lv_row           TYPE zexcel_cell_row,
           lv_row_alpha     TYPE string,
           lv_col_alpha     TYPE zexcel_cell_column_alpha,
           lv_value         TYPE zexcel_cell_value,
@@ -3282,19 +3369,23 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       zcx_excel=>raise_text( 'Please provide the value or formula' ).
     ENDIF.
 
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
+
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
-*  lv_style_guid = ip_style.
-    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
     IF ip_column_formula_id <> 0.
       check_cell_column_formula(
           it_column_formulas   = column_formulas
           ip_column_formula_id = ip_column_formula_id
           ip_formula           = ip_formula
           ip_value             = ip_value
-          ip_row               = ip_row
+          ip_row               = lv_row
           ip_column            = lv_column ).
     ENDIF.
-    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = ip_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
+    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = lv_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
                                                                          cell_column = lv_column.
     IF sy-subrc = 0.
       IF ip_style IS INITIAL.
@@ -3302,11 +3393,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         lv_style_guid = <fs_sheet_content>-cell_style.
       ELSE.
         " Style provided as method-parameter --> use this
-        lv_style_guid = ip_style.
+        lv_style_guid = normalize_style_parameter( ip_style ).
       ENDIF.
     ELSE.
       " No cell found --> use supplied style even if empty
-      lv_style_guid = ip_style.
+      lv_style_guid = normalize_style_parameter( ip_style ).
     ENDIF.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
@@ -3408,8 +3499,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     IF ip_hyperlink IS BOUND.
-      ip_hyperlink->set_cell_reference( ip_column = ip_column
-                                        ip_row = ip_row ).
+      ip_hyperlink->set_cell_reference( ip_column = lv_column
+                                        ip_row = lv_row ).
       me->hyperlinks->add( ip_hyperlink ).
     ENDIF.
 
@@ -3426,12 +3517,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
 * Read table moved up, so that current style may be evaluated
-*  lv_column = zcl_excel_common=>convert_column2int( ip_column ).
 
-*  READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
-*                                                                 cell_column = lv_column.
-*
-*  IF sy-subrc EQ 0.
     IF <fs_sheet_content> IS ASSIGNED.
 * End of change issue #152 - don't touch exisiting style if only value is passed
       <fs_sheet_content>-cell_value   = lv_value.
@@ -3440,23 +3526,18 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       <fs_sheet_content>-cell_style   = lv_style_guid.
       <fs_sheet_content>-data_type    = lv_data_type.
     ELSE.
-      ls_sheet_content-cell_row     = ip_row.
+      ls_sheet_content-cell_row     = lv_row.
       ls_sheet_content-cell_column  = lv_column.
       ls_sheet_content-cell_value   = lv_value.
       ls_sheet_content-cell_formula = ip_formula.
       ls_sheet_content-column_formula_id = ip_column_formula_id.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
-      lv_row_alpha = ip_row.
-*    SHIFT lv_row_alpha RIGHT DELETING TRAILING space."del #152 - replaced with condense - should be faster
-*    SHIFT lv_row_alpha LEFT DELETING LEADING space.  "del #152 - replaced with condense - should be faster
+      lv_row_alpha = lv_row.
       CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
-      lv_col_alpha = zcl_excel_common=>convert_column2alpha( ip_column ).       " issue #155 - less restrictive typing for ip_column
+      lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_column ).       " issue #155 - less restrictive typing for ip_column
       CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
-*    APPEND ls_sheet_content TO sheet_content.
-*    SORT sheet_content BY cell_row cell_column.
-      " me->update_dimension_range( ).
 
     ENDIF.
 
@@ -3486,8 +3567,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
         ENDIF.
-        me->change_cell_style( ip_column                      = ip_column
-                               ip_row                         = ip_row
+        me->change_cell_style( ip_column                      = lv_column
+                               ip_row                         = lv_row
                                ip_number_format_format_code   = lo_format_code_datetime ).
 
       WHEN cl_abap_typedescr=>typekind_time.
@@ -3501,8 +3582,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
         ENDIF.
-        me->change_cell_style( ip_column                      = ip_column
-                               ip_row                         = ip_row
+        me->change_cell_style( ip_column                      = lv_column
+                               ip_row                         = lv_row
                                ip_number_format_format_code   = lo_format_code_datetime ).
 
     ENDCASE.
@@ -3511,8 +3592,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * Fix issue #162
     lv_value = ip_value.
     IF lv_value CS cl_abap_char_utilities=>cr_lf.
-      me->change_cell_style( ip_column               = ip_column
-                             ip_row                  = ip_row
+      me->change_cell_style( ip_column               = lv_column
+                             ip_row                  = lv_row
                              ip_alignment_wraptext   = abap_true ).
     ENDIF.
 * End of Fix issue #162
@@ -3523,6 +3604,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD set_cell_formula.
     DATA:
       lv_column        TYPE zexcel_cell_column,
+      lv_row           TYPE zexcel_cell_row,
       ls_sheet_content LIKE LINE OF me->sheet_content.
 
     FIELD-SYMBOLS:
@@ -3531,12 +3613,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Get cell to set formula into
 *--------------------------------------------------------------------*
-    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
-    READ TABLE me->sheet_content ASSIGNING <sheet_content> WITH TABLE KEY cell_row    = ip_row
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
+
+    READ TABLE me->sheet_content ASSIGNING <sheet_content> WITH TABLE KEY cell_row    = lv_row
                                                                           cell_column = lv_column.
     IF sy-subrc <> 0.                   " Create new entry in sheet_content if necessary
       CHECK ip_formula IS NOT INITIAL.  " only create new entry in sheet_content when a formula is passed
-      ls_sheet_content-cell_row    = ip_row.
+      ls_sheet_content-cell_row    = lv_row.
       ls_sheet_content-cell_column = lv_column.
       INSERT ls_sheet_content INTO TABLE me->sheet_content ASSIGNING <sheet_content>.
     ENDIF.
@@ -3553,15 +3640,20 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD set_cell_style.
 
     DATA: lv_column     TYPE zexcel_cell_column,
+          lv_row        TYPE zexcel_cell_row,
           lv_style_guid TYPE zexcel_cell_style.
 
     FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
-    lv_style_guid = ip_style.
+    lv_style_guid = normalize_style_parameter( ip_style ).
 
-    lv_column = zcl_excel_common=>convert_column2int( ip_column ).
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow
+                                             ip_column    = ip_column
+                                             ip_row       = ip_row
+                                   IMPORTING ep_column    = lv_column
+                                             ep_row       = lv_row ).
 
-    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = ip_row
+    READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH KEY cell_row    = lv_row
                                                                    cell_column = lv_column.
 
     IF sy-subrc EQ 0.
@@ -3575,7 +3667,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD set_column_width.
     DATA: lo_column  TYPE REF TO zcl_excel_column.
-    DATA: width             TYPE float.
+    DATA: width             TYPE f.
 
     lo_column = me->get_column( ip_column ).
 
@@ -3619,53 +3711,44 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD set_merge.
 
     DATA: ls_merge        TYPE mty_merge,
+          lv_column_start TYPE zexcel_cell_column,
+          lv_column_end   TYPE zexcel_cell_column,
+          lv_row          TYPE zexcel_cell_row,
+          lv_row_to       TYPE zexcel_cell_row,
           lv_errormessage TYPE string.
 
-    ...
-    "just after variables definition
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start ip_column_end = ip_column_end
+                                         ip_row          = ip_row          ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = lv_column_start ep_column_end = lv_column_end
+                                         ep_row          = lv_row          ep_row_to     = lv_row_to ).
+
     IF ip_value IS SUPPLIED OR ip_formula IS SUPPLIED.
       " if there is a value or formula set the value to the top-left cell
       "maybe it is necessary to support other paramters for set_cell
       IF ip_value IS SUPPLIED.
-        me->set_cell( ip_row = ip_row ip_column = ip_column_start
+        me->set_cell( ip_row = lv_row ip_column = lv_column_start
                       ip_value = ip_value ).
       ENDIF.
       IF ip_formula IS SUPPLIED.
-        me->set_cell( ip_row = ip_row ip_column = ip_column_start
+        me->set_cell( ip_row = lv_row ip_column = lv_column_start
                       ip_value = ip_formula ).
       ENDIF.
     ENDIF.
     "call to set_merge_style to apply the style to all cells at the matrix
     IF ip_style IS SUPPLIED.
-      me->set_merge_style( ip_row = ip_row ip_column_start = ip_column_start
-                           ip_row_to = ip_row_to ip_column_end = ip_column_end
+      me->set_merge_style( ip_row = lv_row ip_column_start = lv_column_start
+                           ip_row_to = lv_row_to ip_column_end = lv_column_end
                            ip_style = ip_style ).
     ENDIF.
     ...
 *--------------------------------------------------------------------*
 * Build new range area to insert into range table
 *--------------------------------------------------------------------*
-    ls_merge-row_from = ip_row.
-    IF ip_row IS SUPPLIED AND ip_row IS NOT INITIAL AND ip_row_to IS NOT SUPPLIED.
-      ls_merge-row_to   = ls_merge-row_from.
-    ELSE.
-      ls_merge-row_to   = ip_row_to.
-    ENDIF.
-    IF ls_merge-row_from > ls_merge-row_to.
-      lv_errormessage = 'Merge: First row larger then last row'(405).
-      zcx_excel=>raise_text( lv_errormessage ).
-    ENDIF.
-
-    ls_merge-col_from = zcl_excel_common=>convert_column2int( ip_column_start ).
-    IF ip_column_start IS SUPPLIED AND ip_column_start IS NOT INITIAL AND ip_column_end IS NOT SUPPLIED.
-      ls_merge-col_to   = ls_merge-col_from.
-    ELSE.
-      ls_merge-col_to   = zcl_excel_common=>convert_column2int( ip_column_end ).
-    ENDIF.
-    IF ls_merge-col_from > ls_merge-col_to.
-      lv_errormessage = 'Merge: First column larger then last column'(406).
-      zcx_excel=>raise_text( lv_errormessage ).
-    ENDIF.
+    ls_merge-row_from = lv_row.
+    ls_merge-row_to   = lv_row_to.
+    ls_merge-col_from = lv_column_start.
+    ls_merge-col_to   = lv_column_end.
 
 *--------------------------------------------------------------------*
 * Check merge not overlapping with existing merges
@@ -3690,31 +3773,29 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD set_merge_style.
     DATA: ld_row_start      TYPE zexcel_cell_row,
           ld_row_end        TYPE zexcel_cell_row,
+          ld_column_int     TYPE zexcel_cell_column,
           ld_column_start   TYPE zexcel_cell_column,
           ld_column_end     TYPE zexcel_cell_column,
           ld_current_column TYPE zexcel_cell_column_alpha,
           ld_current_row    TYPE zexcel_cell_row.
 
-    ld_row_end = ip_row_to.
-    ld_row_start = ip_row.
-    IF ld_row_end IS INITIAL.
-      ld_row_end = ld_row_start.
-    ENDIF.
-    ld_column_start = zcl_excel_common=>convert_column2int( ip_column_start ).
-    ld_column_end   = zcl_excel_common=>convert_column2int( ip_column_end ).
-    IF ld_column_end IS INITIAL.
-      ld_column_end = ld_column_start.
-    ENDIF.
+    normalize_range_parameter( EXPORTING ip_range        = ip_range
+                                         ip_column_start = ip_column_start ip_column_end = ip_column_end
+                                         ip_row          = ip_row          ip_row_to     = ip_row_to
+                               IMPORTING ep_column_start = ld_column_start ep_column_end = ld_column_end
+                                         ep_row          = ld_row_start    ep_row_to     = ld_row_end ).
+
     "set the style cell by cell
-    WHILE ld_column_start <= ld_column_end.
-      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_start ).
+    ld_column_int = ld_column_start.
+    WHILE ld_column_int <= ld_column_end.
+      ld_current_column = zcl_excel_common=>convert_column2alpha( ld_column_int ).
       ld_current_row = ld_row_start.
       WHILE ld_current_row <= ld_row_end.
         me->set_cell_style( ip_row = ld_current_row ip_column = ld_current_column
                             ip_style = ip_style ).
         ADD 1 TO ld_current_row.
       ENDWHILE.
-      ADD 1 TO ld_column_start.
+      ADD 1 TO ld_column_int.
     ENDWHILE.
   ENDMETHOD.                    "set_merge_style
 
@@ -3726,16 +3807,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD set_row_height.
     DATA: lo_row  TYPE REF TO zcl_excel_row.
-    DATA: height  TYPE float.
+    DATA: height  TYPE f.
 
     lo_row = me->get_row( ip_row ).
 
 * if a fix size is supplied use this
     TRY.
         height = ip_height_fix.
-        IF height <= 0.
-          zcx_excel=>raise_text( 'Please supply a positive number as row-height' ).
-        ENDIF.
         lo_row->set_row_height( height ).
         RETURN.
       CATCH cx_sy_conversion_no_number.

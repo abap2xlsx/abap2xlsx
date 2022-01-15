@@ -13,6 +13,7 @@ CLASS zcl_excel DEFINITION
     DATA legacy_palette TYPE REF TO zcl_excel_legacy_palette READ-ONLY .
     DATA security TYPE REF TO zcl_excel_security .
     DATA use_template TYPE abap_bool .
+    CONSTANTS version TYPE c LENGTH 10 VALUE '7.15.0'.      "#EC NOTEXT
 
     METHODS add_new_autofilter
       IMPORTING
@@ -36,6 +37,8 @@ CLASS zcl_excel DEFINITION
     METHODS add_new_style
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style OPTIONAL
+        !io_clone_of    TYPE REF TO zcl_excel_style OPTIONAL
+          PREFERRED PARAMETER !ip_guid
       RETURNING
         VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS add_new_worksheet
@@ -98,7 +101,7 @@ CLASS zcl_excel DEFINITION
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style
       RETURNING
-        VALUE(ep_index) TYPE sytabix
+        VALUE(ep_index) TYPE i
       RAISING
         zcx_excel .
     METHODS get_style_to_guid
@@ -156,7 +159,6 @@ CLASS zcl_excel DEFINITION
     DATA worksheets TYPE REF TO zcl_excel_worksheets .
   PRIVATE SECTION.
 
-    CONSTANTS version TYPE c LENGTH 10 VALUE '7.14.0'.      "#EC NOTEXT
     DATA autofilters TYPE REF TO zcl_excel_autofilters .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA default_style TYPE zexcel_cell_style .
@@ -234,7 +236,8 @@ CLASS zcl_excel IMPLEMENTATION.
 * Create default style
     CREATE OBJECT eo_style
       EXPORTING
-        ip_guid = ip_guid.
+        ip_guid     = ip_guid
+        io_clone_of = io_clone_of.
     styles->add( eo_style ).
 
     DATA: style2 TYPE zexcel_s_stylemapping.
@@ -460,9 +463,6 @@ CLASS zcl_excel IMPLEMENTATION.
     IF sy-subrc <> 0.
       style-complete_style  = ip_cstyle_complete.
       style-complete_stylex = ip_cstylex_complete.
-*    CALL FUNCTION 'GUID_CREATE'                               " del issue #379 - function is outdated in newer releases
-*      IMPORTING
-*        ev_guid_16 = style-guid.
       style-guid = zcl_excel_obsolete_func_wrap=>guid_create( ). " ins issue #379 - replacement for outdated function call
       INSERT style INTO TABLE me->t_stylemapping1.
       INSERT style INTO TABLE me->t_stylemapping2.
@@ -498,7 +498,7 @@ CLASS zcl_excel IMPLEMENTATION.
 
 
   METHOD get_style_index_in_styles.
-    DATA: index TYPE syindex.
+    DATA: index TYPE i.
     DATA: lo_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_style    TYPE REF TO zcl_excel_style.
 

@@ -81,8 +81,8 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
           lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
     DATA: lt_cell_data TYPE zexcel_t_cell_data_unsorted,
-          lv_row       TYPE sytabix,
-          lv_col       TYPE sytabix,
+          lv_row       TYPE i,
+          lv_col       TYPE i,
           lv_string    TYPE string,
           lc_value     TYPE string,
           lv_attrname  TYPE seocmpname.
@@ -93,7 +93,6 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
     FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
 * --- Retrieve supported cell format
-    REFRESH lt_format.
     SELECT * INTO CORRESPONDING FIELDS OF TABLE lt_format
       FROM seocompodf
      WHERE clsname  = 'ZCL_EXCEL_STYLE_NUMBER_FORMAT'
@@ -202,8 +201,6 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
 
 * --- Add empty rows
       WHILE lv_row < <fs_sheet_content>-cell_row.
-*      CONCATENATE lv_string cl_abap_char_utilities=>newline INTO lv_string.
-*      CONCATENATE lv_string cl_abap_char_utilities=>cr_lf INTO lv_string.
         CONCATENATE lv_string zcl_excel_writer_csv=>eol INTO lv_string.
         lv_row = lv_row + 1.
         lv_col = 1.
@@ -211,15 +208,12 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
 
 * --- Add empty columns
       WHILE lv_col < <fs_sheet_content>-cell_column.
-*      CONCATENATE lv_string ';' INTO lv_string.
         CONCATENATE lv_string zcl_excel_writer_csv=>delimiter INTO lv_string.
         lv_col = lv_col + 1.
       ENDWHILE.
 
 * ----- Use format to determine the data type and display format.
       CASE <fs_sheet_content>-data_type.
-*      WHEN 'n' OR 'N'.
-*        lc_value = zcl_excel_common=>excel_number_to_string( ip_value = <fs_sheet_content>-cell_value ).
 
         WHEN 'd' OR 'D'.
           lc_value = zcl_excel_common=>excel_string_to_date( ip_value = <fs_sheet_content>-cell_value ).
@@ -250,12 +244,10 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
 
       ENDCASE.
 
-*    REPLACE ALL OCCURRENCES OF '"' in lc_value with '""'.
       CONCATENATE zcl_excel_writer_csv=>enclosure zcl_excel_writer_csv=>enclosure INTO lv_tmp.
       CONDENSE lv_tmp.
       REPLACE ALL OCCURRENCES OF zcl_excel_writer_csv=>enclosure IN lc_value WITH lv_tmp.
 
-*    FIND FIRST OCCURRENCE OF ';' IN lc_value.
       FIND FIRST OCCURRENCE OF zcl_excel_writer_csv=>delimiter IN lc_value.
       IF sy-subrc = 0.
         CONCATENATE lv_string zcl_excel_writer_csv=>enclosure lc_value zcl_excel_writer_csv=>enclosure INTO lv_string.
@@ -263,15 +255,13 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
         CONCATENATE lv_string lc_value INTO lv_string.
       ENDIF.
 
-    ENDLOOP. " AT lt_cell_data
+    ENDLOOP.
 
     CLEAR ep_content.
 
     CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
       EXPORTING
         text   = lv_string
-*       MIMETYPE       = ' '
-*       ENCODING       =
       IMPORTING
         buffer = ep_content
       EXCEPTIONS

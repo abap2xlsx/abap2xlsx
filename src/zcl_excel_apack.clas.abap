@@ -23,7 +23,7 @@ CLASS zcl_excel_apack IMPLEMENTATION.
 
     descriptor-group_id        = 'github.com/abap2xlsx/abap2xlsx'.
     descriptor-artifact_id     = 'abap2xlsx'.
-    descriptor-version         = '7.14.0'.
+    descriptor-version         = zcl_excel=>version.
     descriptor-repository_type = 'abapGit'.
     descriptor-git_url         = 'https://github.com/abap2xlsx/abap2xlsx.git'.
 

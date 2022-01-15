@@ -1,5 +1,11 @@
+CLASS ltc_normalize_columnrow_param DEFINITION DEFERRED.
+CLASS ltc_normalize_range_param DEFINITION DEFERRED.
+CLASS ltc_normalize_style_param DEFINITION DEFERRED.
 CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
+    ltc_normalize_columnrow_param
+    ltc_normalize_range_param
+    ltc_normalize_style_param
     ltc_check_cell_column_formula.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
@@ -51,6 +57,119 @@ CLASS ltc_check_cell_column_formula DEFINITION FOR TESTING
 
     DATA: mt_column_formulas TYPE zcl_excel_worksheet=>mty_th_column_formula,
           c_messages         LIKE zcl_excel_worksheet=>c_messages.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_columnrow_param DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    TYPES : BEGIN OF ty_parameters,
+              BEGIN OF input,
+                columnrow TYPE string,
+                column    TYPE string,
+                row       TYPE zexcel_cell_row,
+              END OF input,
+              BEGIN OF output,
+                fails  TYPE abap_bool,
+                column TYPE zexcel_cell_column,
+                row    TYPE zexcel_cell_row,
+              END OF output,
+            END OF ty_parameters.
+    DATA:
+      cut TYPE REF TO zcl_excel_worksheet.  "class under test
+
+    METHODS setup.
+    METHODS:
+      test FOR TESTING RAISING cx_static_check,
+      all_parameters_passed FOR TESTING RAISING cx_static_check,
+      none_parameter_passed FOR TESTING RAISING cx_static_check.
+
+    METHODS assert
+      IMPORTING
+        input TYPE ty_parameters-input
+        exp   TYPE ty_parameters-output
+      RAISING
+        cx_static_check.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_range_param DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    TYPES : BEGIN OF ty_parameters,
+              BEGIN OF input,
+                range        TYPE string,
+                column_start TYPE string,
+                column_end   TYPE string,
+                row          TYPE zexcel_cell_row,
+                row_to       TYPE zexcel_cell_row,
+              END OF input,
+              BEGIN OF output,
+                fails        TYPE abap_bool,
+                column_start TYPE zexcel_cell_column,
+                column_end   TYPE zexcel_cell_column,
+                row_start    TYPE zexcel_cell_row,
+                row_end      TYPE zexcel_cell_row,
+              END OF output,
+            END OF ty_parameters.
+    DATA:
+      cut TYPE REF TO zcl_excel_worksheet.  "class under test
+
+    METHODS setup.
+    METHODS:
+      range_one_cell FOR TESTING RAISING cx_static_check,
+      relative_range FOR TESTING RAISING cx_static_check,
+      invalid_range FOR TESTING RAISING cx_static_check,
+      absolute_range FOR TESTING RAISING cx_static_check,
+      reverse_range_not_supported FOR TESTING RAISING cx_static_check,
+      all_parameters_passed FOR TESTING RAISING cx_static_check,
+      none_parameter_passed FOR TESTING RAISING cx_static_check,
+      start_without_end FOR TESTING RAISING cx_static_check.
+
+    METHODS assert
+      IMPORTING
+        input TYPE ty_parameters-input
+        exp   TYPE ty_parameters-output
+      RAISING
+        cx_static_check.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_style_param DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    TYPES : BEGIN OF ty_parameters_output,
+              fails TYPE abap_bool,
+              guid  TYPE zexcel_cell_style,
+            END OF ty_parameters_output.
+    DATA:
+      excel TYPE REF TO zcl_excel,
+      cut   TYPE REF TO zcl_excel_worksheet,  "class under test
+      exp   TYPE ty_parameters_output.
+
+
+    METHODS setup.
+    METHODS:
+      ref_to_zcl_excel_style FOR TESTING RAISING cx_static_check,
+      zexcel_cell_style FOR TESTING RAISING cx_static_check,
+      raw_16_bytes FOR TESTING RAISING cx_static_check,
+      other FOR TESTING RAISING cx_static_check.
+
+    METHODS assert
+      IMPORTING
+        input TYPE any
+        exp   TYPE ty_parameters_output
+      RAISING
+        cx_static_check.
 
 ENDCLASS.
 
@@ -536,6 +655,341 @@ CLASS ltc_check_cell_column_formula IMPLEMENTATION.
       CATCH zcx_excel INTO lo_exception.
         cl_abap_unit_assert=>assert_equals( act = lo_exception->get_text( ) exp = ip_exp msg = ip_exp ).
     ENDTRY.
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_columnrow_param IMPLEMENTATION.
+
+  METHOD setup.
+
+    DATA: lo_excel TYPE REF TO zcl_excel.
+
+    CREATE OBJECT lo_excel.
+
+    TRY.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = lo_excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD test.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-columnrow = 'B4'.
+    exp-column = 2.
+    exp-row = 4.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD all_parameters_passed.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-columnrow = 'B4'.
+    input-column = 'B'.
+    input-row = 4.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD none_parameter_passed.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: act        TYPE ty_parameters-output,
+          error      TYPE REF TO zcx_excel,
+          input_text TYPE string,
+          message    TYPE string.
+
+    TRY.
+
+        cut->normalize_columnrow_parameter( EXPORTING ip_columnrow = input-columnrow
+                                                      ip_column    = input-column
+                                                      ip_row       = input-row
+                                            IMPORTING ep_column    = act-column
+                                                      ep_row       = act-row ).
+        IF exp-fails = abap_true.
+          message = |Should have failed for { input_text }|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+
+      CATCH zcx_excel INTO error.
+        IF exp-fails = abap_false.
+          RAISE EXCEPTION error.
+        ENDIF.
+        RETURN.
+    ENDTRY.
+
+    input_text = |input column/row { input-columnrow }, column { input-column }, row { input-row }|.
+    message = |Invalid column for { input_text }|.
+    cl_abap_unit_assert=>assert_equals( msg = message exp = exp-column act = act-column ).
+    message = |Invalid row for { input_text }|.
+    cl_abap_unit_assert=>assert_equals( msg = message exp = exp-row    act = act-row ).
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_range_param IMPLEMENTATION.
+
+  METHOD setup.
+
+    DATA: lo_excel TYPE REF TO zcl_excel.
+
+    CREATE OBJECT lo_excel.
+
+    TRY.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = lo_excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD range_one_cell.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    CLEAR: input, exp.
+    input-range = 'B4:B4'.
+    exp-column_start = 2.
+    exp-column_end = 2.
+    exp-row_start = 4.
+    exp-row_end = 4.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD relative_range.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    CLEAR: input, exp.
+    input-range = 'B4:AA10'.
+    exp-column_start = 2.
+    exp-column_end = 27.
+    exp-row_start = 4.
+    exp-row_end = 10.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD absolute_range.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    CLEAR: input, exp.
+    input-range = '$B$4:$AA$10'.
+    exp-column_start = 2.
+    exp-column_end = 27.
+    exp-row_start = 4.
+    exp-row_end = 10.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD invalid_range.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    CLEAR: input, exp.
+    input-range = 'B4'.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD reverse_range_not_supported.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    CLEAR: input, exp.
+    input-range = 'B4:A1'.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD all_parameters_passed.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-range = 'B4:B4'.
+    input-column_start = 'B'.
+    input-row = 4.
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD none_parameter_passed.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    exp-fails = abap_true.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD start_without_end.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output.
+
+    input-column_start = 'B'.
+    input-row = 4.
+    exp-column_start = 2.
+    exp-column_end = 2.
+    exp-row_start = 4.
+    exp-row_end = 4.
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: act        TYPE ty_parameters-output,
+          error      TYPE REF TO zcx_excel,
+          input_text TYPE string,
+          message    TYPE string.
+
+    input_text = |input range { input-range }, column start { input-column_start }, column end { input-column_end }|.
+
+    TRY.
+
+        cut->normalize_range_parameter( EXPORTING ip_range        = input-range
+                                                  ip_column_start = input-column_start  ip_column_end = input-column_end
+                                                  ip_row          = input-row           ip_row_to     = input-row_to
+                                        IMPORTING ep_column_start = act-column_start    ep_column_end = act-column_end
+                                                  ep_row          = act-row_start       ep_row_to     = act-row_end ).
+        IF exp-fails = abap_true.
+          message = |Should have failed for { input_text }|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+
+      CATCH zcx_excel INTO error.
+        IF exp-fails = abap_false.
+          RAISE EXCEPTION error.
+        ENDIF.
+        RETURN.
+    ENDTRY.
+
+    message = |Invalid column start for { input_text }|.
+    cl_abap_unit_assert=>assert_equals( msg = message exp = exp-column_start  act = act-column_start ).
+    message = |Invalid column end for { input_text }|.
+    cl_abap_unit_assert=>assert_equals( msg = message exp = exp-column_end    act = act-column_end ).
+    message = |Invalid row start for { input_text }|.
+    cl_abap_unit_assert=>assert_equals( msg = message exp = exp-row_start     act = act-row_start ).
+    message = |Invalid row start for { input_text }|.
+    cl_abap_unit_assert=>assert_equals( msg = message exp = exp-row_end       act = act-row_end ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_normalize_style_param IMPLEMENTATION.
+
+  METHOD setup.
+
+    CREATE OBJECT excel.
+
+    TRY.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD ref_to_zcl_excel_style.
+    DATA: style TYPE REF TO zcl_excel_style.
+
+    style = excel->add_new_style( ).
+    exp-fails = abap_false.
+    exp-guid = style->get_guid( ).
+    assert( input = style exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD zexcel_cell_style.
+    DATA: style TYPE REF TO zcl_excel_style.
+
+    style = excel->add_new_style( ).
+    exp-fails = abap_false.
+    exp-guid = style->get_guid( ).
+    assert( input = exp-guid exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD raw_16_bytes.
+    DATA: raw_16_bytes TYPE x LENGTH 16.
+
+    raw_16_bytes = 'A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1'.
+    exp-fails = abap_false.
+    exp-guid = raw_16_bytes.
+    assert( input = raw_16_bytes exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD other.
+
+    exp-fails = abap_true.
+    assert( input = 'A' exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: rtti       TYPE REF TO cl_abap_typedescr,
+          message    TYPE string,
+          act        TYPE zexcel_cell_style,
+          error      TYPE REF TO zcx_excel,
+          input_text TYPE string.
+
+    rtti = cl_abap_typedescr=>describe_by_data( input ).
+    IF rtti->type_kind = rtti->typekind_oref.
+      rtti = cl_abap_typedescr=>describe_by_object_ref( input ).
+      input_text = |REF TO { rtti->absolute_name }|.
+    ELSE.
+      input_text = rtti->absolute_name.
+    ENDIF.
+
+    TRY.
+
+        act = cut->normalize_style_parameter( input ).
+
+        IF exp-fails = abap_true.
+          message = |Input type { input_text } accepted but only REF TO \\CLASS=ZCL_EXCEL_STYLE, \\TYPE=ZEXCEL_CELL_STYLE or any X type are supported|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+
+      CATCH zcx_excel INTO error.
+        IF exp-fails = abap_false.
+          message = |Input type { input_text } made it fail but it should succeed with result { exp-guid }|.
+          cl_abap_unit_assert=>fail( msg = message ).
+        ENDIF.
+        RETURN.
+    ENDTRY.
+
+    cl_abap_unit_assert=>assert_equals( exp = exp-guid act = act ).
 
   ENDMETHOD.
 

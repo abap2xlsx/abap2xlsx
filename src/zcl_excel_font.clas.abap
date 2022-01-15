@@ -39,7 +39,7 @@ CLASS zcl_excel_font DEFINITION
         !iv_flag_italic TYPE abap_bool
         !iv_cell_value  TYPE zexcel_cell_value
       RETURNING
-        VALUE(rv_width) TYPE float .
+        VALUE(rv_width) TYPE f .
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -51,7 +51,7 @@ CLASS zcl_excel_font IMPLEMENTATION.
 
   METHOD calculate_text_width.
 
-    CONSTANTS lc_excel_cell_padding TYPE float VALUE '0.75'.
+    CONSTANTS lc_excel_cell_padding TYPE f VALUE '0.75'.
 
     DATA: ld_current_character       TYPE c LENGTH 1,
           lt_itcfc                   TYPE STANDARD TABLE OF itcfc,

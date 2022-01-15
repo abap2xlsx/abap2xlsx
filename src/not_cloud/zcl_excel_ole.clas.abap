@@ -878,8 +878,8 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 * SESSION 4: WRITE TO EXCEL
 *--------------------------------------------------------------------*
 
-    CLEAR: wa_tcurx.
-    REFRESH: lt_tcurx.
+    CLEAR wa_tcurx.
+    CLEAR lt_tcurx.
 
 *   if spreadsheet dun have proxy yet
 
@@ -1094,9 +1094,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         contents = contents
         no_flush = no_flush.
 
-    REFRESH:
-       ranges,
-       contents.
+    CLEAR: ranges, contents.
 
     rows = rowmax + li_commentary_rows + 1.
 
@@ -1948,7 +1946,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         EXPORTING
           formattable = lt_format
           no_flush    = no_flush.
-      REFRESH: lt_format.
+      CLEAR lt_format.
     ENDIF.
 *--------------------------------------------------------------------*
     CALL METHOD lo_spreadsheet->screen_update
@@ -1959,11 +1957,6 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 
     lo_error_w = l_error.
     lc_retcode = lo_error_w->error_code.
-
-** catch no_flush -> led to dump ( optional )
-*    go_error = l_error.
-*    gc_retcode = go_error->error_code.
-*    error_doi.
 
     CLEAR:
       lt_sema,
@@ -2051,8 +2044,6 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 
       IF l_is_closed IS INITIAL.
         CALL METHOD lo_proxy->close_document
-*        EXPORTING
-*          do_save = do_save
           IMPORTING
             error   = lo_error
             retcode = lc_retcode.

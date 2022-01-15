@@ -6,8 +6,6 @@ CLASS zcl_excel_converter_alv DEFINITION
 *"* public components of class ZCL_EXCEL_CONVERTER_ALV
 *"* do not include other source files here!!!
   PUBLIC SECTION.
-    TYPE-POOLS abap .
-    TYPE-POOLS kkblo .
 
     INTERFACES zif_excel_converter
       ALL METHODS ABSTRACT .
@@ -410,7 +408,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
                    <fs_trange> TYPE STANDARD TABLE.
 
     IF ws_option-filter = abap_false.
-      REFRESH et_filter.
+      CLEAR et_filter.
       RETURN.
     ENDIF.
 
@@ -425,7 +423,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
         ASSIGN COMPONENT ls_filt-fieldname OF STRUCTURE <fs_stab> TO <fs>.
         IF sy-subrc = 0.
           IF l_line = 1.
-            REFRESH lt_components_tab.
+            CLEAR lt_components_tab.
             ls_components-name   = 'SIGN'.
             lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-sign ).
             ls_components-type   = lo_addit           .
@@ -457,7 +455,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
             ASSIGN lo_trange->* TO <fs_trange>.
             ASSIGN lo_srange->* TO <fs_srange>.
           ENDIF.
-          REFRESH <fs_trange>.
+          CLEAR <fs_trange>.
           ASSIGN COMPONENT 'SIGN'   OF STRUCTURE  <fs_srange> TO <fs1>.
           <fs1> = ls_filt-sign.
           ASSIGN COMPONENT 'OPTION' OF STRUCTURE  <fs_srange> TO <fs1>.
@@ -480,7 +478,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
       ENDLOOP.
       IF ws_option-filter = abap_undefined.
         <fs_tab> = <fs_ltab>.
-        REFRESH <fs_ltab>.
+        CLEAR <fs_ltab>.
       ENDIF.
     ENDLOOP.
 
@@ -580,11 +578,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
         READ TABLE wt_sort INTO ls_sort WITH KEY fieldname = ls_fcat-fieldname.
         IF sy-subrc = 0 AND  ws_option-subtot <> abap_false.
           ls_fieldcatalog-sort_level      = 0 .
-*        IF  ls_fieldcatalog-totals_function IS INITIAL.  " Not clear why not
-*          CLEAR ls_fieldcatalog-is_subtotalled.
-*        ELSE.
           ls_fieldcatalog-is_subtotalled  = ls_sort-subtot.
-*        ENDIF.
           ls_fieldcatalog-is_collapsed    = ls_sort-expa.
           IF ls_fieldcatalog-is_subtotalled = abap_true.
             ls_fieldcatalog-sort_level      = ls_sort-spos.
