@@ -3605,7 +3605,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     WHILE lo_node_comment IS BOUND.
 
       CLEAR lv_comment_text.
-      lo_attr = CAST if_ixml_element( lo_node_comment )->get_attribute_node_ns( name = 'ref' ).
+      lo_attr = lo_node_comment->get_attribute_node_ns( name = 'ref' ).
       lv_attr_value  = lo_attr->get_value( ).
 
       lo_node_comment_child ?= lo_node_comment->get_first_child( ).
