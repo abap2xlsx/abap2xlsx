@@ -17,7 +17,9 @@ Create a branch for this new release and change these files:
     - `!`: feature modification
     - `-`: feature removed
 - `zcl_excel_version`
-  - Indicate the new version number
+  - Indicate the new version number (NB: the abap2xlsx APACK class uses this version number)
+- Restart abapGit to consider the latest version of the changed APACK class, to make the file `.apack-manifest.xml` contain this latest version
+  - Push the changes to the repository
 
 With GitHub Desktop (or any Git console or Git user interface), [add the tag](https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/managing-commits/managing-tags) `7.15.0` to this branch.
 
