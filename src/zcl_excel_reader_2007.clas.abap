@@ -3612,7 +3612,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       IF lo_node_comment_child IS BOUND.
         lv_tag_name = lo_node_comment_child->get_name( ).
         IF lv_tag_name = 't'. "simple strings
-          lv_node_value = lo_node_comment_child->get_value( ).
+          lv_comment_text = lo_node_comment_child->get_value( ).
         ELSE. "rich text formatted strings
           WHILE lo_node_comment_child IS BOUND.
             " There might be rPr nodes here, but we do not support them
