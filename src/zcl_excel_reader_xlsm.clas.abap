@@ -73,7 +73,7 @@ CLASS zcl_excel_reader_xlsm IMPLEMENTATION.
 
     rels_workbook = me->get_ixml_from_zip_archive( rels_workbook_path ).
 
-    node ?= rels_workbook->find_from_name( 'Relationship' ).
+    node ?= rels_workbook->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ).
     WHILE node IS BOUND.
       me->fill_struct_from_attributes( EXPORTING ip_element = node CHANGING cp_structure = relationship ).
 
@@ -91,7 +91,7 @@ CLASS zcl_excel_reader_xlsm IMPLEMENTATION.
 
     " Read Workbook codeName
     workbook = me->get_ixml_from_zip_archive( iv_workbook_full_filename ).
-    node ?=  workbook->find_from_name( 'fileVersion' ).
+    node ?=  workbook->find_from_name_ns( name = 'fileVersion' uri = namespace-main ).
     IF node IS BOUND.
 
       fill_struct_from_attributes( EXPORTING ip_element   = node
@@ -102,7 +102,7 @@ CLASS zcl_excel_reader_xlsm IMPLEMENTATION.
 
     " Read Workbook codeName
     workbook = me->get_ixml_from_zip_archive( iv_workbook_full_filename ).
-    node ?=  workbook->find_from_name( 'workbookPr' ).
+    node ?=  workbook->find_from_name_ns( name = 'workbookPr' uri = namespace-main ).
     IF node IS BOUND.
 
       fill_struct_from_attributes( EXPORTING ip_element   = node
@@ -125,7 +125,7 @@ CLASS zcl_excel_reader_xlsm IMPLEMENTATION.
 
     " Read Workbook codeName
     worksheet = me->get_ixml_from_zip_archive( ip_path ).
-    node ?=  worksheet->find_from_name( 'sheetPr' ).
+    node ?=  worksheet->find_from_name_ns( name = 'sheetPr' uri = namespace-main ).
     IF node IS BOUND.
 
       fill_struct_from_attributes( EXPORTING ip_element   = node

@@ -39,7 +39,6 @@ CLASS zcl_excel_theme_objectdefaults IMPLEMENTATION.
 
 
   METHOD load.
-    "! so far copy only existing values
-    objectdefaults ?= io_object_def.
+    objectdefaults = zcl_excel_common=>clone_ixml_with_namespaces( io_object_def ).
   ENDMETHOD.                    "load
 ENDCLASS.
