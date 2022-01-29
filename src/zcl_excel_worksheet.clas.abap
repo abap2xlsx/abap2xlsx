@@ -3504,7 +3504,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         CASE lv_value_type.
           WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
             OR <fs_typekind_int8>. "Allow INT8 types columns
-            lo_addit = cl_abap_elemdescr=>get_i( ).
+            IF lv_value_type = <fs_typekind_int8>.
+              CALL METHOD cl_abap_elemdescr=>('GET_INT8') RECEIVING p_result = lo_addit.
+            ELSE.
+              lo_addit = cl_abap_elemdescr=>get_i( ).
+            ENDIF.
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
             IF sy-subrc = 0.
