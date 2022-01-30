@@ -1,18 +1,18 @@
-class ZCL_EXCEL_CONVERTER_ALV definition
-  public
-  abstract
-  create public .
+CLASS zcl_excel_converter_alv DEFINITION
+  PUBLIC
+  ABSTRACT
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_CONVERTER_ALV
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_CONVERTER_ALV
 *"* do not include other source files here!!!
-public section.
+  PUBLIC SECTION.
 
-  interfaces ZIF_EXCEL_CONVERTER
-      all methods abstract .
+    INTERFACES zif_excel_converter
+      ALL METHODS ABSTRACT .
 
-  class-methods CLASS_CONSTRUCTOR .
+    CLASS-METHODS class_constructor .
   PROTECTED SECTION.
 
     DATA wt_sort TYPE lvc_t_sort .
@@ -49,7 +49,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_CONVERTER_ALV IMPLEMENTATION.
+CLASS zcl_excel_converter_alv IMPLEMENTATION.
 
 
   METHOD apply_sort.

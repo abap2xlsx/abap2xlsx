@@ -1,7 +1,3 @@
-*CLASS ltc_get_filter DEFINITION DEFERRED.
-*CLASS zcl_excel_converter_alv DEFINITION LOCAL FRIENDS
-*    ltc_get_filter.
-
 CLASS ltc_converter_alv DEFINITION FOR TESTING INHERITING FROM zcl_excel_converter_alv.
 
   PUBLIC SECTION.
@@ -86,6 +82,7 @@ CLASS ltc_converter_alv IMPLEMENTATION.
   ENDMETHOD.
 
 ENDCLASS.
+
 
 CLASS ltc_get_filter DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
