@@ -852,7 +852,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
       ENDIF.
 
       IF i_table = abap_true.
-        l_freeze_col = bind_table( i_style_table = i_style_table ).
+        l_freeze_col = bind_table( i_style_table = i_style_table ) .
       ELSEIF wt_filter IS NOT INITIAL.
 * Let's check for filter.
         wo_autofilter = wo_excel->add_new_autofilter( io_sheet = wo_worksheet ).
