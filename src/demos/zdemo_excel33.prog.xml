@@ -14,13 +14,13 @@
     <item>
      <ID>R</ID>
      <ENTRY>abap2xlsx Demo: Autofilter</ENTRY>
-     <LENGTH>27</LENGTH>
+     <LENGTH>26</LENGTH>
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_EMPTY</KEY>
-     <ENTRY>Leave Table Empty</ENTRY>
-     <LENGTH>25</LENGTH>
+     <KEY>P_CONVEX</KEY>
+     <ENTRY>Output length for conv. exits</ENTRY>
+     <LENGTH>37</LENGTH>
     </item>
     <item>
      <ID>S</ID>
