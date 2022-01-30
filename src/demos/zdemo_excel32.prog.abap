@@ -38,6 +38,8 @@ DATA: lo_excel     TYPE REF TO zcl_excel,
       lo_salv      TYPE REF TO cl_salv_table,
       gr_events    TYPE REF TO lcl_handle_events,
       lr_events    TYPE REF TO cl_salv_events_table,
+      lo_layout    TYPE REF TO cl_salv_layout,
+      ls_layoutkey TYPE salv_s_layout_key,
       gt_sbook     TYPE TABLE OF sbook.
 
 DATA: l_path            TYPE string,  " local dir
@@ -87,6 +89,12 @@ START-OF-SELECTION.
   lr_events = lo_salv->get_event( ).
   CREATE OBJECT gr_events.
   SET HANDLER gr_events->on_user_command FOR lr_events.
+
+  lo_layout = lo_salv->get_layout( ).
+  ls_layoutkey-report = sy-repid.
+  lo_layout->set_key( ls_layoutkey ).
+  lo_layout->set_save_restriction( cl_salv_layout=>restrict_none ).
+  lo_layout->set_default( cl_salv_layout=>true ).
 
   lo_salv->display( ).
 

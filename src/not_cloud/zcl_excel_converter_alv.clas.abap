@@ -1,18 +1,18 @@
-CLASS zcl_excel_converter_alv DEFINITION
-  PUBLIC
-  ABSTRACT
-  CREATE PUBLIC .
+class ZCL_EXCEL_CONVERTER_ALV definition
+  public
+  abstract
+  create public .
 
 *"* public components of class ZCL_EXCEL_CONVERTER_ALV
 *"* do not include other source files here!!!
-  PUBLIC SECTION.
-
-    INTERFACES zif_excel_converter
-      ALL METHODS ABSTRACT .
-
-    CLASS-METHODS class_constructor .
 *"* protected components of class ZCL_EXCEL_CONVERTER_ALV
 *"* do not include other source files here!!!
+public section.
+
+  interfaces ZIF_EXCEL_CONVERTER
+      all methods abstract .
+
+  class-methods CLASS_CONSTRUCTOR .
   PROTECTED SECTION.
 
     DATA wt_sort TYPE lvc_t_sort .
@@ -49,7 +49,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_converter_alv IMPLEMENTATION.
+CLASS ZCL_EXCEL_CONVERTER_ALV IMPLEMENTATION.
 
 
   METHOD apply_sort.
@@ -407,22 +407,118 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
                    <fs_srange> TYPE any,
                    <fs_trange> TYPE STANDARD TABLE.
 
-    IF ws_option-filter = abap_false.
-      CLEAR et_filter.
-      RETURN.
-    ENDIF.
+    CASE 2.
 
-    ASSIGN xo_table->* TO <fs_tab>.
+      WHEN 1.
 
-    CREATE DATA lo_ltabdata LIKE <fs_tab>.
-    ASSIGN lo_ltabdata->* TO <fs_ltab>.
+        IF ws_option-filter = abap_false.
+          CLEAR et_filter.
+          RETURN.
+        ENDIF.
 
-    LOOP AT wt_filt INTO ls_filt.
-      LOOP AT <fs_tab> ASSIGNING <fs_stab>.
-        l_line = sy-tabix.
-        ASSIGN COMPONENT ls_filt-fieldname OF STRUCTURE <fs_stab> TO <fs>.
-        IF sy-subrc = 0.
-          IF l_line = 1.
+        ASSIGN xo_table->* TO <fs_tab>.
+
+        CREATE DATA lo_ltabdata LIKE <fs_tab>.
+        ASSIGN lo_ltabdata->* TO <fs_ltab>.
+
+        LOOP AT wt_filt INTO ls_filt.
+          LOOP AT <fs_tab> ASSIGNING <fs_stab>.
+            l_line = sy-tabix.
+            ASSIGN COMPONENT ls_filt-fieldname OF STRUCTURE <fs_stab> TO <fs>.
+            IF sy-subrc = 0.
+              IF l_line = 1.
+                CLEAR lt_components_tab.
+                ls_components-name   = 'SIGN'.
+                lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-sign ).
+                ls_components-type   = lo_addit           .
+                INSERT ls_components INTO TABLE lt_components_tab.
+                ls_components-name   = 'OPTION'.
+                lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-option ).
+                ls_components-type   = lo_addit           .
+                INSERT ls_components INTO TABLE lt_components_tab.
+                ls_components-name   = 'LOW'.
+                lo_addit            ?= cl_abap_typedescr=>describe_by_data( <fs> ).
+                ls_components-type   = lo_addit           .
+                INSERT ls_components INTO TABLE lt_components_tab.
+                ls_components-name   = 'HIGH'.
+                lo_addit            ?= cl_abap_typedescr=>describe_by_data( <fs> ).
+                ls_components-type   = lo_addit           .
+                INSERT ls_components INTO TABLE lt_components_tab.
+                "create new line type
+                TRY.
+                    lo_struc = cl_abap_structdescr=>create( p_components = lt_components_tab
+                                                            p_strict     = abap_false ).
+                  CATCH cx_sy_struct_creation.
+                    CONTINUE.
+                ENDTRY.
+                lo_table = cl_abap_tabledescr=>create( lo_struc ).
+
+                CREATE DATA lo_trange  TYPE HANDLE lo_table.
+                CREATE DATA lo_srange  TYPE HANDLE lo_struc.
+
+                ASSIGN lo_trange->* TO <fs_trange>.
+                ASSIGN lo_srange->* TO <fs_srange>.
+              ENDIF.
+              CLEAR <fs_trange>.
+              ASSIGN COMPONENT 'SIGN'   OF STRUCTURE  <fs_srange> TO <fs1>.
+              <fs1> = ls_filt-sign.
+              ASSIGN COMPONENT 'OPTION' OF STRUCTURE  <fs_srange> TO <fs1>.
+              <fs1> = ls_filt-option.
+              ASSIGN COMPONENT 'LOW'   OF STRUCTURE  <fs_srange> TO <fs1>.
+              <fs1> = ls_filt-low.
+              ASSIGN COMPONENT 'HIGH'   OF STRUCTURE  <fs_srange> TO <fs1>.
+              <fs1> = ls_filt-high.
+              INSERT <fs_srange> INTO TABLE <fs_trange>.
+              IF <fs> IN <fs_trange>.
+                IF ws_option-filter = abap_true.
+                  ls_filter-rownumber   = l_line.
+                  ls_filter-columnname  = ls_filt-fieldname.
+                  INSERT ls_filter INTO TABLE et_filter.
+                ELSE.
+                  INSERT <fs_stab> INTO TABLE <fs_ltab>.
+                ENDIF.
+              ENDIF.
+            ENDIF.
+          ENDLOOP.
+          IF ws_option-filter = abap_undefined.
+            <fs_tab> = <fs_ltab>.
+            CLEAR <fs_ltab>.
+          ENDIF.
+        ENDLOOP.
+
+
+      WHEN 2.
+
+        TYPES: BEGIN OF ty_field_range,
+                 fieldname TYPE lvc_fname,
+                 range_tab TYPE REF TO data,
+                 range_wa  TYPE REF TO data,
+               END OF   ty_field_range.
+        DATA: lt_field_range TYPE HASHED TABLE OF ty_field_range WITH UNIQUE KEY fieldname,
+              ls_field_range LIKE LINE OF lt_field_range.
+        FIELD-SYMBOLS: <fs_field_range> LIKE LINE OF lt_field_range.
+
+        IF ws_option-filter = abap_false.
+          CLEAR et_filter.
+          RETURN.
+        ENDIF.
+
+        ASSIGN xo_table->* TO <fs_tab>.
+
+        CREATE DATA lo_ltabdata LIKE <fs_tab>.
+        ASSIGN lo_ltabdata->* TO <fs_ltab>.
+
+* Range creation and range comparison must be done in two steps:
+* This is due to the fact, that range values might be applied
+* all together at once not value after value for a specific fieldname
+* --> Having multiple excluding values is a problem that would otherwise
+* occur...
+
+* 1. Step: Create a the combined ranges for each fieldname...
+        LOOP AT wt_filt INTO ls_filt.
+
+          READ TABLE lt_field_range WITH TABLE KEY fieldname = ls_filt-fieldname ASSIGNING <fs_field_range>.
+          IF sy-subrc <> 0.
             CLEAR lt_components_tab.
             ls_components-name   = 'SIGN'.
             lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-sign ).
@@ -432,14 +528,23 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
             lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-option ).
             ls_components-type   = lo_addit           .
             INSERT ls_components INTO TABLE lt_components_tab.
+
+            lo_table ?= cl_abap_tabledescr=>describe_by_data( <fs_tab> ).
+            TRY.
+                lo_struc ?= lo_table->get_table_line_type( ).
+                ls_components-type = lo_struc->get_component_type( p_name = ls_filt-fieldname ).
+              CATCH cx_sy_move_cast_error.
+*  Unstructured table. Might never occur...
+                ls_components-type = lo_table->get_table_line_type( ).
+            ENDTRY.
+
+            CHECK ls_components-type IS NOT INITIAL.
+
             ls_components-name   = 'LOW'.
-            lo_addit            ?= cl_abap_typedescr=>describe_by_data( <fs> ).
-            ls_components-type   = lo_addit           .
             INSERT ls_components INTO TABLE lt_components_tab.
             ls_components-name   = 'HIGH'.
-            lo_addit            ?= cl_abap_typedescr=>describe_by_data( <fs> ).
-            ls_components-type   = lo_addit           .
             INSERT ls_components INTO TABLE lt_components_tab.
+
             "create new line type
             TRY.
                 lo_struc = cl_abap_structdescr=>create( p_components = lt_components_tab
@@ -449,13 +554,16 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
             ENDTRY.
             lo_table = cl_abap_tabledescr=>create( lo_struc ).
 
-            CREATE DATA lo_trange  TYPE HANDLE lo_table.
-            CREATE DATA lo_srange  TYPE HANDLE lo_struc.
+            ls_field_range-fieldname = ls_filt-fieldname.
+            CREATE DATA ls_field_range-range_tab TYPE HANDLE lo_table.
+            CREATE DATA ls_field_range-range_wa  TYPE HANDLE lo_struc.
+            INSERT ls_field_range INTO TABLE lt_field_range ASSIGNING <fs_field_range>.
 
-            ASSIGN lo_trange->* TO <fs_trange>.
-            ASSIGN lo_srange->* TO <fs_srange>.
           ENDIF.
-          CLEAR <fs_trange>.
+
+          ASSIGN <fs_field_range>-range_tab->* TO <fs_trange>.
+          ASSIGN <fs_field_range>-range_wa->* TO <fs_srange>.
+
           ASSIGN COMPONENT 'SIGN'   OF STRUCTURE  <fs_srange> TO <fs1>.
           <fs1> = ls_filt-sign.
           ASSIGN COMPONENT 'OPTION' OF STRUCTURE  <fs_srange> TO <fs1>.
@@ -465,22 +573,37 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
           ASSIGN COMPONENT 'HIGH'   OF STRUCTURE  <fs_srange> TO <fs1>.
           <fs1> = ls_filt-high.
           INSERT <fs_srange> INTO TABLE <fs_trange>.
-          IF <fs> IN <fs_trange>.
-            IF ws_option-filter = abap_true.
-              ls_filter-rownumber   = l_line.
-              ls_filter-columnname  = ls_filt-fieldname.
-              INSERT ls_filter INTO TABLE et_filter.
+
+        ENDLOOP.
+
+* 2. Step: Now apply the fieldname ranges afterwards...
+        LOOP AT <fs_tab> ASSIGNING <fs_stab>.
+          ls_filter-rownumber = sy-tabix.
+          DATA selected TYPE abap_bool.
+          selected = abap_true.
+          LOOP AT lt_field_range ASSIGNING <fs_field_range>.
+            ASSIGN COMPONENT ls_filt-fieldname OF STRUCTURE <fs_stab> TO <fs>.
+            ASSIGN <fs_field_range>-range_tab->* TO <fs_trange>.
+            IF <fs> IN <fs_trange>.
+              IF ws_option-filter = abap_true.
+                ls_filter-columnname = <fs_field_range>-fieldname.
+                INSERT ls_filter INTO TABLE et_filter.
+              ENDIF.
             ELSE.
-              INSERT <fs_stab> INTO TABLE <fs_ltab>.
+              selected = abap_false.
             ENDIF.
+          ENDLOOP.
+          IF selected = abap_true AND ws_option-filter = abap_undefined.
+            INSERT <fs_stab> INTO TABLE <fs_ltab>.
           ENDIF.
+        ENDLOOP.
+
+        IF wt_filt IS NOT INITIAL AND ws_option-filter = abap_undefined.
+          <fs_tab> = <fs_ltab>.
+          CLEAR <fs_ltab>.
         ENDIF.
-      ENDLOOP.
-      IF ws_option-filter = abap_undefined.
-        <fs_tab> = <fs_ltab>.
-        CLEAR <fs_ltab>.
-      ENDIF.
-    ENDLOOP.
+
+    ENDCASE.
 
   ENDMETHOD.
 
