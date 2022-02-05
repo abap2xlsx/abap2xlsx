@@ -80,10 +80,10 @@ START-OF-SELECTION.
   SUBMIT zdemo_excel40 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Demo Printsettings
   SUBMIT zdemo_excel41 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Inheritance
   SUBMIT zdemo_excel44 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: No line if empty
-  SUBMIT zdemo_excel49 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: No line if empty
+  SUBMIT zdemo_excel49 WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path    = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Bind Table with field having Conversion Exit
 
   SUBMIT zdemo_excel_comments     WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Comments
-  SUBMIT ztest_excel_image_header WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Bind Table with field having Conversion Exit
+  SUBMIT ztest_excel_image_header WITH rb_down = abap_true WITH rb_show = abap_false WITH  p_path = p_path AND RETURN. "#EC CI_SUBMIT abap2xlsx Demo: Image in Header and Footer
   "
   " Reader/Writer Demo must always run at the end
   " to make sure all documents where created
