@@ -254,7 +254,7 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
         IF <lv_display> = abap_false AND <lv_data> = abap_true.
           rv_result = abap_true.
         ENDIF.
-      CATCH cx_sy_create_data_error cx_sy_dyn_call_error.
+      CATCH cx_sy_create_data_error cx_sy_dyn_call_error cx_salv_bs_sc_runtime_info.
         rv_result = abap_false.
     ENDTRY.
 
