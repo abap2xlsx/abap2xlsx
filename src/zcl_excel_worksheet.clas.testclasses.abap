@@ -5,6 +5,7 @@ CLASS ltc_calculate_table_bottom_rig DEFINITION DEFERRED.
 CLASS ltc_normalize_style_param DEFINITION DEFERRED.
 CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
 CLASS ltc_check_overlapping DEFINITION DEFERRED.
+CLASS ltc_set_cell_value_types DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_normalize_column_heading
     ltc_normalize_columnrow_param
@@ -12,7 +13,8 @@ CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_calculate_table_bottom_rig
     ltc_check_overlapping
     ltc_normalize_style_param
-    ltc_check_cell_column_formula.
+    ltc_check_cell_column_formula
+    ltc_set_cell_value_types.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
@@ -264,6 +266,29 @@ CLASS ltc_normalize_style_param DEFINITION FOR TESTING
       IMPORTING
         input TYPE any
         exp   TYPE ty_parameters_output
+      RAISING
+        cx_static_check.
+
+ENDCLASS.
+
+
+CLASS ltc_set_cell_value_types DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    DATA:
+      excel TYPE REF TO zcl_excel,
+      cut   TYPE REF TO zcl_excel_worksheet.  "class under test
+
+    METHODS setup.
+    METHODS:
+      int8 FOR TESTING RAISING cx_static_check.
+
+    METHODS assert
+      IMPORTING
+        input TYPE any
+        exp   TYPE string
       RAISING
         cx_static_check.
 
@@ -1530,6 +1555,58 @@ CLASS ltc_normalize_style_param IMPLEMENTATION.
     ENDTRY.
 
     cl_abap_unit_assert=>assert_equals( exp = exp-guid act = act ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_set_cell_value_types IMPLEMENTATION.
+
+  METHOD setup.
+
+    CREATE OBJECT excel.
+
+    TRY.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD int8.
+    DATA: ref_int8 TYPE REF TO data,
+          int8     TYPE int8 VALUE 33400000000.
+    FIELD-SYMBOLS: <value>         TYPE simple,
+                   <typekind_int8> TYPE abap_typekind.
+
+    ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_INT8') TO <typekind_int8>.
+    IF sy-subrc <> 0.
+      cl_abap_unit_assert=>fail( msg = 'Test skipped with old kernel (INT8 not supported)' level = if_aunit_constants=>tolerable ).
+      RETURN.
+    ENDIF.
+
+    CREATE DATA ref_int8 TYPE ('INT8').
+    ASSIGN ref_int8->* TO <value>.
+    <value> = 33400000000.
+    assert( input = <value> exp = '33400000000' ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: act     TYPE string,
+          message TYPE string.
+
+    cut->set_cell( ip_column = 'A' ip_row = 1 ip_value = input ).
+    cut->get_cell( EXPORTING ip_column = 'A' ip_row = 1 IMPORTING ep_value = act ).
+
+    IF act <> exp.
+      message = |Input value '{ input }' turns into { act } instead of { exp }|.
+      cl_abap_unit_assert=>fail( msg = message ).
+    ENDIF.
 
   ENDMETHOD.
 

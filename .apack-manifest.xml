@@ -4,7 +4,7 @@
   <DATA>
    <GROUP_ID>github.com/abap2xlsx/abap2xlsx</GROUP_ID>
    <ARTIFACT_ID>abap2xlsx</ARTIFACT_ID>
-   <VERSION>7.14.0</VERSION>
+   <VERSION>7.15.0</VERSION>
    <REPOSITORY_TYPE>abapGit</REPOSITORY_TYPE>
    <GIT_URL>https://github.com/abap2xlsx/abap2xlsx.git</GIT_URL>
   </DATA>
