@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_W3MI" serializer_version="v2.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <NAME>ZDEMO_EXCEL29_INPUT</NAME>
+   <TEXT>abap2xlsx resources/TestMacro.xlsm</TEXT>
+   <PARAMS>
+    <WWWPARAMS>
+     <RELID>MI</RELID>
+     <OBJID>ZDEMO_EXCEL29_INPUT</OBJID>
+     <NAME>fileextension</NAME>
+     <VALUE>.xlsm</VALUE>
+    </WWWPARAMS>
+    <WWWPARAMS>
+     <RELID>MI</RELID>
+     <OBJID>ZDEMO_EXCEL29_INPUT</OBJID>
+     <NAME>filename</NAME>
+     <VALUE>TestMacro.xlsm</VALUE>
+    </WWWPARAMS>
+    <WWWPARAMS>
+     <RELID>MI</RELID>
+     <OBJID>ZDEMO_EXCEL29_INPUT</OBJID>
+     <NAME>mimetype</NAME>
+     <VALUE>application/vnd.ms-excel.sheet.macroEnabled</VALUE>
+    </WWWPARAMS>
+   </PARAMS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
