@@ -991,7 +991,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     IF it_field_catalog IS NOT SUPPLIED.
-      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table ).
+      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table
+                                                             ip_conv_exit_length = ip_conv_exit_length ).
     ELSE.
       lt_field_catalog = it_field_catalog.
     ENDIF.
@@ -2092,7 +2093,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                               EXCEPTIONS not_found    = 1
                                          no_ddic_type = 2
                                          OTHERS       = 3 ) .
-    IF sy-subrc = 0.
+    IF sy-subrc = 0 AND ls_dfies-convexit IS NOT INITIAL.
       CREATE DATA ep_value TYPE c LENGTH ls_dfies-outputlen.
     ELSE.
       CREATE DATA ep_value LIKE ip_value.
