@@ -24,7 +24,7 @@ Implement SAP OSS Notes:
  
 * Macro-Enabled workbook
  
-Run report ZDEMO_EXCEL29 and use as VBA source file [TestMacro.xlsm](https://github.com/ivanfemia/abap2xlsx/blob/master/resources/TestMacro.xlsm) attached.
+Run report ZDEMO_EXCEL29 and use as VBA source file [TestMacro.xlsm](https://github.com/abap2xlsx/abap2xlsx/blob/master/resources/TestMacro.xlsm) attached.
 Basically abap2xlsx works using an existing VBA binary (we do not want to create a VBA editor).
 
 * Download XLSX files in Background
