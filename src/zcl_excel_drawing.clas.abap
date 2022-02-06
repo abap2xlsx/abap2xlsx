@@ -405,6 +405,7 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
         CREATE OBJECT lo_linechart.
         me->graph = lo_linechart.
       WHEN OTHERS.
+        RETURN.
     ENDCASE.
 
     "Fill properties

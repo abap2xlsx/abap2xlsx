@@ -803,6 +803,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         ip_height = ls_size-height ).
 
     IF drawing_type = zcl_excel_drawing=>type_chart.
+      lo_drawing->graph_type = 255.
 *  Begin fix for Issue #551
       DATA: lo_tmp_node_2                TYPE REF TO if_ixml_element.
       lo_tmp_node_2 ?= rel_drawing-content_xml->find_from_name_ns( name = 'pieChart' uri = namespace-c ).
