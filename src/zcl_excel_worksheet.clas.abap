@@ -2976,7 +2976,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         <ls_field_catalog>-scrtext_l = 'Column'.  " default value as Excel does
       ENDIF.
 
-      WHILE 1 = 1.
+      DO.
         lv_value_lowercase = <ls_field_catalog>-scrtext_l.
         TRANSLATE lv_value_lowercase TO LOWER CASE.
         READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
@@ -2987,7 +2987,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_syindex = sy-index.
           CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO <ls_field_catalog>-scrtext_l.
         ENDIF.
-      ENDWHILE.
+      ENDDO.
 
     ENDLOOP.
 
