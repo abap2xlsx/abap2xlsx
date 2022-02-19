@@ -19,12 +19,14 @@ DATA lt_test TYPE ty_t005t_lines.
 
 DATA: l_cell_value TYPE zexcel_cell_value,
       ls_area      TYPE zexcel_s_autofilter_area.
+DATA: ls_option TYPE zexcel_s_converter_option.
 
 CONSTANTS: c_airlines TYPE string VALUE 'Airlines'.
 
 CONSTANTS: gc_save_file_name TYPE string VALUE '33_autofilter.xlsx'.
 INCLUDE zdemo_excel_outputopt_incl.
 
+PARAMETERS p_convex AS CHECKBOX.
 
 START-OF-SELECTION.
 
@@ -39,6 +41,8 @@ START-OF-SELECTION.
 
   CREATE OBJECT lo_converter.
 
+  ls_option-conv_exit_length = p_convex.
+  lo_converter->set_option( ls_option ).
   lo_converter->convert( EXPORTING
                             it_table     = lt_test
                             i_row_int    = 1

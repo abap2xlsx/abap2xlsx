@@ -119,6 +119,7 @@ CLASS zcl_excel_common DEFINITION
       IMPORTING
         !ip_table              TYPE STANDARD TABLE
         !iv_hide_mandt         TYPE abap_bool DEFAULT abap_true
+        !ip_conv_exit_length   TYPE abap_bool DEFAULT abap_false
       RETURNING
         VALUE(ep_fieldcatalog) TYPE zexcel_t_fieldcatalog .
     CLASS-METHODS number_to_excel_string
@@ -922,7 +923,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
       <fcat>-scrtext_s = ls_salv_t_column_ref-r_column->get_short_text( ).
       <fcat>-scrtext_m = ls_salv_t_column_ref-r_column->get_medium_text( ).
       <fcat>-scrtext_l = ls_salv_t_column_ref-r_column->get_long_text( ).
-      <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
+      IF ip_conv_exit_length = abap_false.
+        <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
+      ENDIF.
 
       <fcat>-dynpfld   = 'X'.  " What in the world would we exclude here?
       " except for the MANDT-field of most tables ( 1st column that is )
