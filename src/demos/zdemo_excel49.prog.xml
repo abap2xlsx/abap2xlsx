@@ -3,29 +3,18 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZDEMO_EXCEL43</NAME>
+    <NAME>ZDEMO_EXCEL49</NAME>
+    <DBAPL>S</DBAPL>
     <SUBC>1</SUBC>
-    <RLOAD>E</RLOAD>
     <FIXPT>X</FIXPT>
+    <LDBNAME>D$S</LDBNAME>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>abap2xlsx Demo: Demo 43 GET_TABLE</ENTRY>
-     <LENGTH>33</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_FILE</KEY>
-     <ENTRY>Excel file</ENTRY>
-     <LENGTH>18</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_SKIP_B</KEY>
-     <ENTRY>Skip bottom empty rows</ENTRY>
-     <LENGTH>30</LENGTH>
+     <ENTRY>abap2xlsx Demo: Bind Table with field having Conversion Exit</ENTRY>
+     <LENGTH>60</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

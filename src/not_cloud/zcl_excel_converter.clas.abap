@@ -1253,7 +1253,8 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           wo_worksheet->set_cell( ip_column    = l_col_alpha
                                   ip_row       = l_row_int
                                   ip_value     = <fs_fldval>
-                                  ip_style     = l_style ).
+                                  ip_style     = l_style
+                                  ip_conv_exit_length = ws_option-conv_exit_length ).
           CLEAR l_s_color.
         ELSE.
           l_style = get_color_style( i_row       = l_table_row
@@ -1262,7 +1263,8 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           wo_worksheet->set_cell( ip_column    = l_col_alpha
                                   ip_row       = l_row_int
                                   ip_value     = <fs_fldval>
-                                  ip_style     = l_style  ).
+                                  ip_style     = l_style
+                                  ip_conv_exit_length = ws_option-conv_exit_length  ).
           l_s_color = abap_true.
         ENDIF.
         READ TABLE wt_filter TRANSPORTING NO FIELDS WITH TABLE KEY rownumber  = l_table_row
@@ -1551,7 +1553,8 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           wo_worksheet->set_cell( ip_column    = l_col_alpha
                                   ip_row       = l_row_int
                                   ip_value     = <fs_fldval>
-                                  ip_style     = l_style ).
+                                  ip_style     = l_style
+                                  ip_conv_exit_length = ws_option-conv_exit_length ).
           CLEAR l_s_color.
         ELSE.
           l_style = get_color_style( i_row       = l_table_row
@@ -1560,7 +1563,8 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           wo_worksheet->set_cell( ip_column    = l_col_alpha
                                   ip_row       = l_row_int
                                   ip_value     = <fs_fldval>
-                                  ip_style     = l_style   ).
+                                  ip_style     = l_style
+                                  ip_conv_exit_length = ws_option-conv_exit_length   ).
           l_s_color = abap_true.
         ENDIF.
         READ TABLE wt_filter TRANSPORTING NO FIELDS WITH TABLE KEY rownumber  = l_table_row

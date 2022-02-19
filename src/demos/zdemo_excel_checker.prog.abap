@@ -890,6 +890,10 @@ CLASS lcl_app IMPLEMENTATION.
     line-objid = 'ZDEMO_EXCEL41'.
     line-filename = 'ABAP2XLSX Inheritance.xlsx'.
     APPEND line TO result.
+    line-program = 'ZDEMO_EXCEL49'.
+    line-objid = 'ZDEMO_EXCEL49'.
+    line-filename = '49_Bind_Table_Conversion_Exit.xlsx'.
+    APPEND line TO result.
     line-program = 'ZDEMO_EXCEL_COMMENTS'.
     line-objid = 'ZDEMO_EXCEL_COMMENTS'.
     line-filename = 'Comments.xlsx'.

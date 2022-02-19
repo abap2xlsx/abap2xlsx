@@ -172,6 +172,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !is_table_settings      TYPE zexcel_s_table_settings OPTIONAL
         VALUE(iv_default_descr) TYPE c OPTIONAL
         !iv_no_line_if_empty    TYPE abap_bool DEFAULT abap_false
+        !ip_conv_exit_length    TYPE abap_bool DEFAULT abap_false
       EXPORTING
         !es_table_settings      TYPE zexcel_s_table_settings
       RAISING
@@ -501,6 +502,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_abap_type         TYPE abap_typekind OPTIONAL
         !it_rtf               TYPE zexcel_t_rtf OPTIONAL
         !ip_column_formula_id TYPE mty_s_column_formula-id OPTIONAL
+        !ip_conv_exit_length  TYPE abap_bool DEFAULT abap_false
       RAISING
         zcx_excel .
     METHODS set_cell_formula
@@ -590,12 +592,13 @@ CLASS zcl_excel_worksheet DEFINITION
         zcx_excel .
     METHODS get_table
       IMPORTING
-        !iv_skipped_rows TYPE int4 DEFAULT 0
-        !iv_skipped_cols TYPE int4 DEFAULT 0
-        !iv_max_col      TYPE int4 OPTIONAL
-        !iv_max_row      TYPE int4 OPTIONAL
+        !iv_skipped_rows           TYPE int4 DEFAULT 0
+        !iv_skipped_cols           TYPE int4 DEFAULT 0
+        !iv_max_col                TYPE int4 OPTIONAL
+        !iv_max_row                TYPE int4 OPTIONAL
+        !iv_skip_bottom_empty_rows TYPE abap_bool DEFAULT abap_false
       EXPORTING
-        !et_table        TYPE STANDARD TABLE
+        !et_table                  TYPE STANDARD TABLE
       RAISING
         zcx_excel .
     METHODS set_merge_style
@@ -667,6 +670,7 @@ CLASS zcl_excel_worksheet DEFINITION
 
 *"* private components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
+    TYPES ty_table_settings TYPE STANDARD TABLE OF zexcel_s_table_settings WITH DEFAULT KEY.
     DATA active_cell TYPE zexcel_s_cell_data .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA columns TYPE REF TO zcl_excel_columns .
@@ -705,6 +709,14 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_width) TYPE f
       RAISING
         zcx_excel .
+    CLASS-METHODS calculate_table_bottom_right
+      IMPORTING
+        ip_table         TYPE STANDARD TABLE
+        it_field_catalog TYPE zexcel_t_fieldcatalog
+      CHANGING
+        cs_settings      TYPE zexcel_s_table_settings
+      RAISING
+        zcx_excel.
     CLASS-METHODS check_cell_column_formula
       IMPORTING
         it_column_formulas   TYPE mty_th_column_formula
@@ -723,11 +735,22 @@ CLASS zcl_excel_worksheet DEFINITION
         !ct_rtf         TYPE zexcel_t_rtf
       RAISING
         zcx_excel .
+    CLASS-METHODS check_table_overlapping
+      IMPORTING
+        is_table_settings       TYPE zexcel_s_table_settings
+        it_other_table_settings TYPE ty_table_settings
+      RAISING
+        zcx_excel.
     METHODS clear_initial_colorxfields
       IMPORTING
         is_color  TYPE zexcel_s_style_color
       CHANGING
         cs_xcolor TYPE zexcel_s_cstylex_color.
+    METHODS create_data_conv_exit_length
+      IMPORTING
+        !ip_value       TYPE simple
+      RETURNING
+        VALUE(ep_value) TYPE REF TO data.
     METHODS generate_title
       RETURNING
         VALUE(ep_title) TYPE zexcel_sheet_title .
@@ -746,6 +769,12 @@ CLASS zcl_excel_worksheet DEFINITION
       CHANGING
         cs_complete_style_border  TYPE zexcel_s_cstyle_border
         cs_complete_stylex_border TYPE zexcel_s_cstylex_border.
+    METHODS normalize_column_heading_texts
+      IMPORTING
+        iv_default_descr TYPE c
+        it_field_catalog TYPE zexcel_t_fieldcatalog
+      RETURNING
+        VALUE(result) TYPE zexcel_t_fieldcatalog.
     METHODS normalize_columnrow_parameter
       IMPORTING
         ip_columnrow  TYPE csequence OPTIONAL
@@ -926,30 +955,22 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lc_top_left_row    TYPE zexcel_cell_row VALUE 1.
 
     DATA:
-      lv_row_int            TYPE zexcel_cell_row,
-      lv_first_row          TYPE zexcel_cell_row,
-      lv_last_row           TYPE zexcel_cell_row,
-      lv_column_int         TYPE zexcel_cell_column,
-      lv_column_alpha       TYPE zexcel_cell_column_alpha,
-      lt_field_catalog      TYPE zexcel_t_fieldcatalog,
-      lv_id                 TYPE i,
-      lv_rows               TYPE i,
-      lv_formula            TYPE string,
-      ls_settings           TYPE zexcel_s_table_settings,
-      lo_table              TYPE REF TO zcl_excel_table,
-      lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
-      lv_value              TYPE string,
-      lv_value_lowercase    TYPE string,
-      lv_syindex            TYPE c LENGTH 3,
-      lv_errormessage       TYPE string,                                            "ins issue #237
-
-      lv_columns            TYPE i,
-      lt_columns            TYPE zexcel_t_fieldcatalog,
-      lv_maxcol             TYPE i,
-      lv_maxrow             TYPE i,
-      lo_iterator           TYPE REF TO zcl_excel_collection_iterator,
-      lo_style_cond         TYPE REF TO zcl_excel_style_cond,
-      lo_curtable           TYPE REF TO zcl_excel_table.
+      lv_row_int              TYPE zexcel_cell_row,
+      lv_first_row            TYPE zexcel_cell_row,
+      lv_last_row             TYPE zexcel_cell_row,
+      lv_column_int           TYPE zexcel_cell_column,
+      lv_column_alpha         TYPE zexcel_cell_column_alpha,
+      lt_field_catalog        TYPE zexcel_t_fieldcatalog,
+      lv_id                   TYPE i,
+      lv_formula              TYPE string,
+      ls_settings             TYPE zexcel_s_table_settings,
+      lo_table                TYPE REF TO zcl_excel_table,
+      lv_value_lowercase      TYPE string,
+      lv_syindex              TYPE c LENGTH 3,
+      lo_iterator             TYPE REF TO zcl_excel_collection_iterator,
+      lo_style_cond           TYPE REF TO zcl_excel_style_cond,
+      lo_curtable             TYPE REF TO zcl_excel_table,
+      lt_other_table_settings TYPE ty_table_settings.
     DATA: ls_column_formula TYPE mty_s_column_formula,
           lv_mincol         TYPE i.
 
@@ -974,57 +995,34 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     IF it_field_catalog IS NOT SUPPLIED.
-      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table ).
+      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table
+                                                             ip_conv_exit_length = ip_conv_exit_length ).
     ELSE.
       lt_field_catalog = it_field_catalog.
     ENDIF.
 
     SORT lt_field_catalog BY position.
 
-*--------------------------------------------------------------------*
-*  issue #237   Check if overlapping areas exist  Start
-*--------------------------------------------------------------------*
-    "Get the number of columns for the current table
-    lt_columns = lt_field_catalog.
-    DELETE lt_columns WHERE dynpfld NE abap_true.
-    DESCRIBE TABLE lt_columns LINES lv_columns.
+    calculate_table_bottom_right(
+      EXPORTING
+        ip_table         = ip_table
+        it_field_catalog = lt_field_catalog
+      CHANGING
+        cs_settings      = ls_settings ).
 
-    "Calculate the top left row of the current table
-    lv_column_int = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
-    lv_row_int    = ls_settings-top_left_row.
-
-    "Get number of row for the current table
-    DESCRIBE TABLE ip_table LINES lv_rows.
-
-    "Calculate the bottom right row for the current table
-    lv_maxcol                       = lv_column_int + lv_columns - 1.
-    lv_maxrow                       = lv_row_int    + lv_rows - 1.
-    ls_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( lv_maxcol ).
-    ls_settings-bottom_right_row    = lv_maxrow.
-
-    lv_column_int                   = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
+* Check if overlapping areas exist
 
     lo_iterator = me->tables->get_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
-
       lo_curtable ?= lo_iterator->get_next( ).
-      IF  (    (  ls_settings-top_left_row     GE lo_curtable->settings-top_left_row                             AND ls_settings-top_left_row     LE lo_curtable->settings-bottom_right_row )
-            OR
-               (  ls_settings-bottom_right_row GE lo_curtable->settings-top_left_row                             AND ls_settings-bottom_right_row LE lo_curtable->settings-bottom_right_row )
-          )
-        AND
-          (    (  lv_column_int GE zcl_excel_common=>convert_column2int( lo_curtable->settings-top_left_column ) AND lv_column_int LE zcl_excel_common=>convert_column2int( lo_curtable->settings-bottom_right_column ) )
-            OR
-               (  lv_maxcol     GE zcl_excel_common=>convert_column2int( lo_curtable->settings-top_left_column ) AND lv_maxcol     LE zcl_excel_common=>convert_column2int( lo_curtable->settings-bottom_right_column ) )
-          ).
-        lv_errormessage = 'Table overlaps with previously bound table and will not be added to worksheet.'(400).
-        zcx_excel=>raise_text( lv_errormessage ).
-      ENDIF.
-
+      APPEND lo_curtable->settings TO lt_other_table_settings.
     ENDWHILE.
-*--------------------------------------------------------------------*
-*  issue #237   Check if overlapping areas exist  End
-*--------------------------------------------------------------------*
+
+    check_table_overlapping(
+        is_table_settings       = ls_settings
+        it_other_table_settings = lt_other_table_settings ).
+
+* Start filling the table
 
     CREATE OBJECT lo_table.
     lo_table->settings = ls_settings.
@@ -1034,75 +1032,28 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     me->tables->add( lo_table ).
 
+    lv_column_int = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
+    lv_row_int = ls_settings-top_left_row.
+
+    lt_field_catalog = normalize_column_heading_texts(
+          iv_default_descr = iv_default_descr
+          it_field_catalog = lt_field_catalog ).
+
 * It is better to loop column by column (only visible column)
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
       lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
-      " Due restrinction of new table object we cannot have two column with the same name
-      " Check if a column with the same name exists, if exists add a counter
-      " If no medium description is provided we try to use small or long
-      FIELD-SYMBOLS: <scrtxt1> TYPE any,
-                     <scrtxt2> TYPE any,
-                     <scrtxt3> TYPE any.
-
-      CASE iv_default_descr.
-        WHEN 'M'.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'S'.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'L'.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
-        WHEN OTHERS.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-      ENDCASE.
-
-
-      IF <scrtxt1> IS NOT INITIAL.
-        lv_value = <scrtxt1>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ELSEIF <scrtxt2> IS NOT INITIAL.
-        lv_value = <scrtxt2>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ELSEIF <scrtxt3> IS NOT INITIAL.
-        lv_value = <scrtxt3>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ELSE.
-        lv_value = 'Column'.  " default value as Excel does
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ENDIF.
-      WHILE 1 = 1.
-        lv_value_lowercase = lv_value.
-        TRANSLATE lv_value_lowercase TO LOWER CASE.
-        READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
-        IF sy-subrc <> 0.
-          <ls_field_catalog>-scrtext_l = lv_value.
-          INSERT lv_value_lowercase INTO TABLE lt_column_name_buffer.
-          EXIT.
-        ELSE.
-          lv_syindex = sy-index.
-          CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO lv_value.
-        ENDIF.
-
-      ENDWHILE.
       " First of all write column header
       IF <ls_field_catalog>-style_header IS NOT INITIAL.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = lv_value
+                      ip_value  = <ls_field_catalog>-scrtext_l
                       ip_style  = <ls_field_catalog>-style_header ).
       ELSE.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = lv_value ).
+                      ip_value  = <ls_field_catalog>-scrtext_l ).
       ENDIF.
 
       IF <ls_field_catalog>-column_formula IS NOT INITIAL.
@@ -1112,7 +1063,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ls_column_formula-table_top_left_row     = lo_table->settings-top_left_row.
         ls_column_formula-table_bottom_right_row = lo_table->settings-bottom_right_row.
         ls_column_formula-table_left_column_int  = lv_mincol.
-        ls_column_formula-table_right_column_int = lv_maxcol.
+        ls_column_formula-table_right_column_int = zcl_excel_common=>convert_column2int( lo_table->settings-bottom_right_column ).
         INSERT ls_column_formula INTO TABLE column_formulas.
       ENDIF.
 
@@ -1177,23 +1128,27 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                           ip_row    = lv_row_int
                           ip_value  = <fs_fldval>
                           ip_abap_type = <ls_field_catalog>-abap_type
-                          ip_style  = <ls_field_catalog>-style ).
+                          ip_style  = <ls_field_catalog>-style
+                          ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
                             ip_value  = <fs_fldval>
-                            ip_style  = <ls_field_catalog>-style ).
+                            ip_style  = <ls_field_catalog>-style
+                            ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
           ELSE.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
               me->set_cell( ip_column = lv_column_alpha
                           ip_row    = lv_row_int
                           ip_abap_type = <ls_field_catalog>-abap_type
-                          ip_value  = <fs_fldval> ).
+                          ip_value  = <fs_fldval>
+                          ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
-                            ip_value  = <fs_fldval> ).
+                            ip_value  = <fs_fldval>
+                            ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
           ENDIF.
         ENDIF.
@@ -1232,7 +1187,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
       IF <ls_field_catalog>-style_cond IS NOT INITIAL.
         lv_first_row    = ls_settings-top_left_row + 1. " +1 to exclude header
-        lv_last_row     = ls_settings-top_left_row + lv_rows.
+        lv_last_row     = ls_settings-bottom_right_row.
         lo_style_cond = me->get_style_cond( <ls_field_catalog>-style_cond ).
         lo_style_cond->set_range( ip_start_column  = lv_column_alpha
                                   ip_start_row     = lv_first_row
@@ -1253,7 +1208,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     IF ip_table IS INITIAL.
       es_table_settings-bottom_right_row    = ls_settings-top_left_row + 2.           "Last rows
     ELSE.
-      es_table_settings-bottom_right_row    = ls_settings-top_left_row + lv_rows + 1. "Last rows
+      es_table_settings-bottom_right_row    = ls_settings-bottom_right_row + 1. "Last rows
     ENDIF.
     " << Issue #291
 
@@ -1442,6 +1397,40 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.                    "CALCULATE_COLUMN_WIDTHS
+
+
+  METHOD calculate_table_bottom_right.
+
+    DATA: lv_errormessage TYPE string,
+          lv_columns      TYPE i,
+          lt_columns      TYPE zexcel_t_fieldcatalog,
+          lv_maxrow       TYPE i,
+          lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
+          lo_curtable     TYPE REF TO zcl_excel_table,
+          lv_row_int      TYPE zexcel_cell_row,
+          lv_column_int   TYPE zexcel_cell_column,
+          lv_rows         TYPE i,
+          lv_maxcol       TYPE i.
+
+    "Get the number of columns for the current table
+    lt_columns = it_field_catalog.
+    DELETE lt_columns WHERE dynpfld NE abap_true.
+    DESCRIBE TABLE lt_columns LINES lv_columns.
+
+    "Calculate the top left row of the current table
+    lv_column_int = zcl_excel_common=>convert_column2int( cs_settings-top_left_column ).
+    lv_row_int    = cs_settings-top_left_row.
+
+    "Get number of row for the current table
+    DESCRIBE TABLE ip_table LINES lv_rows.
+
+    "Calculate the bottom right row for the current table
+    lv_maxcol                       = lv_column_int + lv_columns - 1.
+    lv_maxrow                       = lv_row_int    + lv_rows.
+    cs_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( lv_maxcol ).
+    cs_settings-bottom_right_row    = lv_maxrow.
+
+  ENDMETHOD.
 
 
   METHOD change_area_style.
@@ -1938,6 +1927,41 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD check_table_overlapping.
+
+    DATA: lv_errormessage TYPE string,
+          lv_column_int   TYPE zexcel_cell_column,
+          lv_maxcol       TYPE i.
+    FIELD-SYMBOLS:
+          <ls_table_settings> TYPE zexcel_s_table_settings.
+
+    lv_column_int = zcl_excel_common=>convert_column2int( is_table_settings-top_left_column ).
+    lv_maxcol = zcl_excel_common=>convert_column2int( is_table_settings-bottom_right_column ).
+
+    LOOP AT it_other_table_settings ASSIGNING <ls_table_settings>.
+
+      IF  (    (  is_table_settings-top_left_row     GE <ls_table_settings>-top_left_row
+              AND is_table_settings-top_left_row     LE <ls_table_settings>-bottom_right_row )
+            OR
+               (  is_table_settings-bottom_right_row GE <ls_table_settings>-top_left_row
+              AND is_table_settings-bottom_right_row LE <ls_table_settings>-bottom_right_row )
+          )
+        AND
+          (    (  lv_column_int GE zcl_excel_common=>convert_column2int( <ls_table_settings>-top_left_column )
+              AND lv_column_int LE zcl_excel_common=>convert_column2int( <ls_table_settings>-bottom_right_column ) )
+            OR
+               (  lv_maxcol     GE zcl_excel_common=>convert_column2int( <ls_table_settings>-top_left_column )
+              AND lv_maxcol     LE zcl_excel_common=>convert_column2int( <ls_table_settings>-bottom_right_column ) )
+          ).
+        lv_errormessage = 'Table overlaps with previously bound table and will not be added to worksheet.'(400).
+        zcx_excel=>raise_text( lv_errormessage ).
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
   METHOD class_constructor.
 
     c_messages-formula_id_only_is_possible = |{ 'If Formula ID is used, value and formula must be empty'(008) }|.
@@ -2011,6 +2035,26 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     upper_cell-cell_column  = 1.
 
   ENDMETHOD.                    "CONSTRUCTOR
+
+
+  METHOD create_data_conv_exit_length.
+    DATA: lo_addit    TYPE REF TO cl_abap_elemdescr,
+          ls_dfies    TYPE dfies,
+          l_function  TYPE funcname,
+          l_value(50) TYPE c.
+
+    lo_addit ?= cl_abap_typedescr=>describe_by_data( ip_value ).
+    lo_addit->get_ddic_field( RECEIVING  p_flddescr   = ls_dfies
+                              EXCEPTIONS not_found    = 1
+                                         no_ddic_type = 2
+                                         OTHERS       = 3 ) .
+    IF sy-subrc = 0 AND ls_dfies-convexit IS NOT INITIAL.
+      CREATE DATA ep_value TYPE c LENGTH ls_dfies-outputlen.
+    ELSE.
+      CREATE DATA ep_value LIKE ip_value.
+    ENDIF.
+
+  ENDMETHOD.
 
 
   METHOD delete_merge.
@@ -2643,6 +2687,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA lx_conversion_error TYPE REF TO cx_sy_conversion_error.
     DATA lv_float TYPE f.
     DATA lv_type.
+    DATA lv_tabix TYPE i.
 
     lv_max_col =  me->get_highest_column( ).
     IF iv_max_col IS SUPPLIED AND iv_max_col < lv_max_col.
@@ -2747,6 +2792,20 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               ENDWHILE.
               ADD 1 TO lv_actual_row.
             ENDWHILE.
+
+            IF iv_skip_bottom_empty_rows = abap_true.
+              lv_tabix = lines( et_table ).
+              WHILE lv_tabix >= 1.
+                READ TABLE et_table INDEX lv_tabix ASSIGNING <ls_line>.
+                ASSERT sy-subrc = 0.
+                IF <ls_line> IS NOT INITIAL.
+                  EXIT.
+                ENDIF.
+                DELETE et_table INDEX lv_tabix.
+                lv_tabix = lv_tabix - 1.
+              ENDWHILE.
+            ENDIF.
+
           ENDIF.
 
 
@@ -2897,6 +2956,74 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       MOVE-CORRESPONDING is_border  TO cs_complete_style_border.
       MOVE-CORRESPONDING ls_borderx TO cs_complete_stylex_border.
     ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD normalize_column_heading_texts.
+
+    DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
+          lv_value_lowercase    TYPE string,
+          lv_syindex            TYPE c LENGTH 3,
+          lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line.
+    FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
+                   <scrtxt1> TYPE any,
+                   <scrtxt2> TYPE any,
+                   <scrtxt3> TYPE any.
+
+    " Due restrinction of new table object we cannot have two column with the same name
+    " Check if a column with the same name exists, if exists add a counter
+    " If no medium description is provided we try to use small or long
+
+    lt_field_catalog = it_field_catalog.
+
+    LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
+
+      CASE iv_default_descr.
+        WHEN 'M'.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        WHEN 'S'.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        WHEN 'L'.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
+        WHEN OTHERS.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+      ENDCASE.
+
+      IF <scrtxt1> IS NOT INITIAL.
+        <ls_field_catalog>-scrtext_l = <scrtxt1>.
+      ELSEIF <scrtxt2> IS NOT INITIAL.
+        <ls_field_catalog>-scrtext_l = <scrtxt2>.
+      ELSEIF <scrtxt3> IS NOT INITIAL.
+        <ls_field_catalog>-scrtext_l = <scrtxt3>.
+      ELSE.
+        <ls_field_catalog>-scrtext_l = 'Column'.  " default value as Excel does
+      ENDIF.
+
+      DO.
+        lv_value_lowercase = <ls_field_catalog>-scrtext_l.
+        TRANSLATE lv_value_lowercase TO LOWER CASE.
+        READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
+        IF sy-subrc <> 0.
+          INSERT lv_value_lowercase INTO TABLE lt_column_name_buffer.
+          EXIT.
+        ELSE.
+          lv_syindex = sy-index.
+          CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO <ls_field_catalog>-scrtext_l.
+        ENDIF.
+      ENDDO.
+
+    ENDLOOP.
+
+    result = lt_field_catalog.
 
   ENDMETHOD.
 
@@ -3343,8 +3470,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lv_column        TYPE zexcel_cell_column,
           ls_sheet_content TYPE zexcel_s_cell_data,
           lv_row           TYPE zexcel_cell_row,
-          lv_row_alpha     TYPE string,
-          lv_col_alpha     TYPE zexcel_cell_column_alpha,
           lv_value         TYPE zexcel_cell_value,
           lv_data_type     TYPE zexcel_cell_data_type,
           lv_value_type    TYPE abap_typekind,
@@ -3405,7 +3530,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       "if data type is passed just write the value. Otherwise map abap type to excel and perform conversion
       "IP_DATA_TYPE is passed by excel reader so source types are preserved
 *First we get reference into local var.
-      CREATE DATA lo_value LIKE ip_value.
+      IF ip_conv_exit_length = abap_true.
+        lo_value = create_data_conv_exit_length( ip_value ).
+      ELSE.
+        CREATE DATA lo_value LIKE ip_value.
+      ENDIF.
       ASSIGN lo_value->* TO <fs_value>.
       <fs_value> = ip_value.
       IF ip_data_type IS SUPPLIED.
@@ -3432,7 +3561,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         CASE lv_value_type.
           WHEN cl_abap_typedescr=>typekind_int OR cl_abap_typedescr=>typekind_int1 OR cl_abap_typedescr=>typekind_int2
             OR <fs_typekind_int8>. "Allow INT8 types columns
-            lo_addit = cl_abap_elemdescr=>get_i( ).
+            IF lv_value_type = <fs_typekind_int8>.
+              CALL METHOD cl_abap_elemdescr=>('GET_INT8') RECEIVING p_result = lo_addit.
+            ELSE.
+              lo_addit = cl_abap_elemdescr=>get_i( ).
+            ENDIF.
             CREATE DATA lo_value_new TYPE HANDLE lo_addit.
             ASSIGN lo_value_new->* TO <fs_numeric>.
             IF sy-subrc = 0.
@@ -3533,10 +3666,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-column_formula_id = ip_column_formula_id.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
-      lv_row_alpha = lv_row.
-      CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
-      lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_column ).       " issue #155 - less restrictive typing for ip_column
-      CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
+      ls_sheet_content-cell_coords  = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
 
     ENDIF.
@@ -3625,6 +3755,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       CHECK ip_formula IS NOT INITIAL.  " only create new entry in sheet_content when a formula is passed
       ls_sheet_content-cell_row    = lv_row.
       ls_sheet_content-cell_column = lv_column.
+      ls_sheet_content-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE me->sheet_content ASSIGNING <sheet_content>.
     ENDIF.
 
@@ -4069,17 +4200,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    lv_row_alpha = upper_cell-cell_row.
-    lv_column_alpha = zcl_excel_common=>convert_column2alpha( upper_cell-cell_column ).
-    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-    SHIFT lv_row_alpha LEFT DELETING LEADING space.
-    CONCATENATE lv_column_alpha lv_row_alpha INTO upper_cell-cell_coords.
+    upper_cell-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = upper_cell-cell_column i_row = upper_cell-cell_row ).
 
-    lv_row_alpha = lower_cell-cell_row.
-    lv_column_alpha = zcl_excel_common=>convert_column2alpha( lower_cell-cell_column ).
-    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-    SHIFT lv_row_alpha LEFT DELETING LEADING space.
-    CONCATENATE lv_column_alpha lv_row_alpha INTO lower_cell-cell_coords.
+    lower_cell-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lower_cell-cell_column i_row = lower_cell-cell_row ).
 
   ENDMETHOD.                    "UPDATE_DIMENSION_RANGE
 
