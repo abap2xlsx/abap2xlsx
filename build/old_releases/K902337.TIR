@@ -1,7 +1,0 @@
-FEMIA        K WIR        1 191 312   0   0   2   0   0   0 330  731   .  0   0   0   0   0 800
-#A
-#/1/                          A   G   D   -   R   C   T   -   Z RELE EX.  _   _   _   _   _ CLI
-TIR f 0000 20170516214711 yukon       tiradm
-TIR e 0000 20170516214720 yukon       tiradm
-WIR < 0000 20170516214748 yukon       tiradm
-TIR E 0000 20170516214748 yukon       tiradm
