@@ -762,6 +762,12 @@ CLASS zcl_excel_worksheet DEFINITION
       CHANGING
         cs_complete_style_border  TYPE zexcel_s_cstyle_border
         cs_complete_stylex_border TYPE zexcel_s_cstylex_border.
+    METHODS normalize_column_heading_texts
+      IMPORTING
+        iv_default_descr TYPE c
+        it_field_catalog TYPE zexcel_t_fieldcatalog
+      RETURNING
+        VALUE(result) TYPE zexcel_t_fieldcatalog.
     METHODS normalize_columnrow_parameter
       IMPORTING
         ip_columnrow  TYPE csequence OPTIONAL
@@ -952,8 +958,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lv_formula              TYPE string,
       ls_settings             TYPE zexcel_s_table_settings,
       lo_table                TYPE REF TO zcl_excel_table,
-      lt_column_name_buffer   TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line,
-      lv_value                TYPE string,
       lv_value_lowercase      TYPE string,
       lv_syindex              TYPE c LENGTH 3,
       lo_iterator             TYPE REF TO zcl_excel_collection_iterator,
@@ -1022,75 +1026,26 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     lv_column_int = zcl_excel_common=>convert_column2int( ls_settings-top_left_column ).
     lv_row_int = ls_settings-top_left_row.
+
+    lt_field_catalog = normalize_column_heading_texts(
+          iv_default_descr = iv_default_descr
+          it_field_catalog = lt_field_catalog ).
+
 * It is better to loop column by column (only visible column)
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
       lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
-      " Due restrinction of new table object we cannot have two column with the same name
-      " Check if a column with the same name exists, if exists add a counter
-      " If no medium description is provided we try to use small or long
-      FIELD-SYMBOLS: <scrtxt1> TYPE any,
-                     <scrtxt2> TYPE any,
-                     <scrtxt3> TYPE any.
-
-      CASE iv_default_descr.
-        WHEN 'M'.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'S'.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'L'.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
-        WHEN OTHERS.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-      ENDCASE.
-
-
-      IF <scrtxt1> IS NOT INITIAL.
-        lv_value = <scrtxt1>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ELSEIF <scrtxt2> IS NOT INITIAL.
-        lv_value = <scrtxt2>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ELSEIF <scrtxt3> IS NOT INITIAL.
-        lv_value = <scrtxt3>.
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ELSE.
-        lv_value = 'Column'.  " default value as Excel does
-        <ls_field_catalog>-scrtext_l = lv_value.
-      ENDIF.
-      WHILE 1 = 1.
-        lv_value_lowercase = lv_value.
-        TRANSLATE lv_value_lowercase TO LOWER CASE.
-        READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
-        IF sy-subrc <> 0.
-          <ls_field_catalog>-scrtext_l = lv_value.
-          INSERT lv_value_lowercase INTO TABLE lt_column_name_buffer.
-          EXIT.
-        ELSE.
-          lv_syindex = sy-index.
-          CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO lv_value.
-        ENDIF.
-
-      ENDWHILE.
       " First of all write column header
       IF <ls_field_catalog>-style_header IS NOT INITIAL.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = lv_value
+                      ip_value  = <ls_field_catalog>-scrtext_l
                       ip_style  = <ls_field_catalog>-style_header ).
       ELSE.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = lv_value ).
+                      ip_value  = <ls_field_catalog>-scrtext_l ).
       ENDIF.
 
       IF <ls_field_catalog>-column_formula IS NOT INITIAL.
@@ -2969,6 +2924,74 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       MOVE-CORRESPONDING is_border  TO cs_complete_style_border.
       MOVE-CORRESPONDING ls_borderx TO cs_complete_stylex_border.
     ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD normalize_column_heading_texts.
+
+    DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
+          lv_value_lowercase    TYPE string,
+          lv_syindex            TYPE c LENGTH 3,
+          lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line.
+    FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
+                   <scrtxt1> TYPE any,
+                   <scrtxt2> TYPE any,
+                   <scrtxt3> TYPE any.
+
+    " Due restrinction of new table object we cannot have two column with the same name
+    " Check if a column with the same name exists, if exists add a counter
+    " If no medium description is provided we try to use small or long
+
+    lt_field_catalog = it_field_catalog.
+
+    LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
+
+      CASE iv_default_descr.
+        WHEN 'M'.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        WHEN 'S'.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        WHEN 'L'.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
+        WHEN OTHERS.
+          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+      ENDCASE.
+
+      IF <scrtxt1> IS NOT INITIAL.
+        <ls_field_catalog>-scrtext_l = <scrtxt1>.
+      ELSEIF <scrtxt2> IS NOT INITIAL.
+        <ls_field_catalog>-scrtext_l = <scrtxt2>.
+      ELSEIF <scrtxt3> IS NOT INITIAL.
+        <ls_field_catalog>-scrtext_l = <scrtxt3>.
+      ELSE.
+        <ls_field_catalog>-scrtext_l = 'Column'.  " default value as Excel does
+      ENDIF.
+
+      DO.
+        lv_value_lowercase = <ls_field_catalog>-scrtext_l.
+        TRANSLATE lv_value_lowercase TO LOWER CASE.
+        READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
+        IF sy-subrc <> 0.
+          INSERT lv_value_lowercase INTO TABLE lt_column_name_buffer.
+          EXIT.
+        ELSE.
+          lv_syindex = sy-index.
+          CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO <ls_field_catalog>-scrtext_l.
+        ENDIF.
+      ENDDO.
+
+    ENDLOOP.
+
+    result = lt_field_catalog.
 
   ENDMETHOD.
 

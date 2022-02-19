@@ -13,14 +13,32 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>abap2xlsx Demo: Marco-Enabled workbook</ENTRY>
+     <ENTRY>abap2xlsx Demo: Macro-Enabled workbook</ENTRY>
      <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_FILE</KEY>
+     <ENTRY>Load template from file</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_OBJID</KEY>
+     <ENTRY>Object ID</ENTRY>
+     <LENGTH>17</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>P_PATH</KEY>
      <ENTRY>Macro-enabled Workbook</ENTRY>
      <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_SMW0</KEY>
+     <ENTRY>Load template from SMW0</ENTRY>
+     <LENGTH>31</LENGTH>
     </item>
    </TPOOL>
   </asx:values>
