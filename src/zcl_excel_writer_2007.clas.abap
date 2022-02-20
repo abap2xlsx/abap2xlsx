@@ -265,7 +265,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_writer_2007 IMPLEMENTATION.
+CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
 
 
   METHOD add_1_val_child_node.
@@ -2532,7 +2532,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lt_drawings = io_worksheet->get_header_footer_drawings( ).
     LOOP AT lt_drawings ASSIGNING <fs_drawings>. "Header or footer image exist
       ADD 1 TO lv_relation_id.
-      lv_value = <fs_drawings>-drawing->get_index( ).
+      lo_drawing ?= <fs_drawings>-drawing.
+      lv_value = lo_drawing->get_index( ).
       READ TABLE lt_temp WITH KEY str = lv_value TRANSPORTING NO FIELDS.
       IF sy-subrc NE 0.
         APPEND INITIAL LINE TO lt_temp ASSIGNING <fs_temp>.
@@ -2548,7 +2549,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                       value = lc_xml_node_rid_image_tp ).
 
         lv_value = '../media/#'.
-        REPLACE '#' IN lv_value WITH <fs_drawings>-drawing->get_media_name( ).
+        REPLACE '#' IN lv_value WITH lo_drawing->get_media_name( ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_target
                                       value = lv_value ).
         lo_element_root->append_child( new_child = lo_element ).
@@ -7969,12 +7970,14 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_content_image_center TYPE string,
           lv_content_image_right  TYPE string,
           lv_value                TYPE string,
-          ls_drawing_position     TYPE zexcel_drawing_position.
+          ls_drawing_position     TYPE zexcel_drawing_position,
+          lo_drawing              TYPE REF TO zcl_excel_drawing.
 
     IF is_footer-left_image IS NOT INITIAL.
       lv_content_left = lc_shape.
       REPLACE '{ID}' IN lv_content_left WITH lc_shape_footer_left.
-      ls_drawing_position = is_footer-left_image->get_position( ).
+      lo_drawing ?= is_footer-left_image.
+      ls_drawing_position = lo_drawing->get_position( ).
       IF ls_drawing_position-size-height IS NOT INITIAL.
         lv_value = ls_drawing_position-size-height.
       ELSE.
@@ -7990,7 +7993,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       CONDENSE lv_value.
       REPLACE '{WIDTH}' IN lv_content_left WITH lv_value.
       lv_content_image_left = lc_shape_image.
-      lv_value = is_footer-left_image->get_index( ).
+      lv_value = lo_drawing->get_index( ).
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       REPLACE '{RID}' IN lv_content_image_left WITH lv_value.
@@ -7998,7 +8001,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     IF is_footer-center_image IS NOT INITIAL.
       lv_content_center = lc_shape.
       REPLACE '{ID}' IN lv_content_center WITH lc_shape_footer_center.
-      ls_drawing_position = is_footer-left_image->get_position( ).
+      lo_drawing ?= is_footer-center_image.
+      ls_drawing_position = lo_drawing->get_position( ).
       IF ls_drawing_position-size-height IS NOT INITIAL.
         lv_value = ls_drawing_position-size-height.
       ELSE.
@@ -8014,7 +8018,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       CONDENSE lv_value.
       REPLACE '{WIDTH}' IN lv_content_center WITH lv_value.
       lv_content_image_center = lc_shape_image.
-      lv_value = is_footer-center_image->get_index( ).
+      lv_value = lo_drawing->get_index( ).
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       REPLACE '{RID}' IN lv_content_image_center WITH lv_value.
@@ -8022,7 +8026,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     IF is_footer-right_image IS NOT INITIAL.
       lv_content_right = lc_shape.
       REPLACE '{ID}' IN lv_content_right WITH lc_shape_footer_right.
-      ls_drawing_position = is_footer-left_image->get_position( ).
+      lo_drawing ?= is_footer-right_image.
+      ls_drawing_position = lo_drawing->get_position( ).
       IF ls_drawing_position-size-height IS NOT INITIAL.
         lv_value = ls_drawing_position-size-height.
       ELSE.
@@ -8038,7 +8043,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       CONDENSE lv_value.
       REPLACE '{WIDTH}' IN lv_content_right WITH lv_value.
       lv_content_image_right = lc_shape_image.
-      lv_value = is_footer-right_image->get_index( ).
+      lv_value = lo_drawing->get_index( ).
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       REPLACE '{RID}' IN lv_content_image_right WITH lv_value.
@@ -8074,14 +8079,16 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_content_image_center TYPE string,
           lv_content_image_right  TYPE string,
           lv_value                TYPE string,
-          ls_drawing_position     TYPE zexcel_drawing_position.
+          ls_drawing_position     TYPE zexcel_drawing_position,
+          lo_drawing              TYPE REF TO zcl_excel_drawing.
 
     CLEAR ep_content.
 
     IF is_header-left_image IS NOT INITIAL.
       lv_content_left = lc_shape.
       REPLACE '{ID}' IN lv_content_left WITH lc_shape_header_left.
-      ls_drawing_position = is_header-left_image->get_position( ).
+      lo_drawing ?= is_header-left_image.
+      ls_drawing_position = lo_drawing->get_position( ).
       IF ls_drawing_position-size-height IS NOT INITIAL.
         lv_value = ls_drawing_position-size-height.
       ELSE.
@@ -8097,7 +8104,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       CONDENSE lv_value.
       REPLACE '{WIDTH}' IN lv_content_left WITH lv_value.
       lv_content_image_left = lc_shape_image.
-      lv_value = is_header-left_image->get_index( ).
+      lv_value = lo_drawing->get_index( ).
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       REPLACE '{RID}' IN lv_content_image_left WITH lv_value.
@@ -8105,7 +8112,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     IF is_header-center_image IS NOT INITIAL.
       lv_content_center = lc_shape.
       REPLACE '{ID}' IN lv_content_center WITH lc_shape_header_center.
-      ls_drawing_position = is_header-center_image->get_position( ).
+      lo_drawing ?= is_header-center_image.
+      ls_drawing_position = lo_drawing->get_position( ).
       IF ls_drawing_position-size-height IS NOT INITIAL.
         lv_value = ls_drawing_position-size-height.
       ELSE.
@@ -8121,7 +8129,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       CONDENSE lv_value.
       REPLACE '{WIDTH}' IN lv_content_center WITH lv_value.
       lv_content_image_center = lc_shape_image.
-      lv_value = is_header-center_image->get_index( ).
+      lv_value = lo_drawing->get_index( ).
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       REPLACE '{RID}' IN lv_content_image_center WITH lv_value.
@@ -8129,7 +8137,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     IF is_header-right_image IS NOT INITIAL.
       lv_content_right = lc_shape.
       REPLACE '{ID}' IN lv_content_right WITH lc_shape_header_right.
-      ls_drawing_position = is_header-right_image->get_position( ).
+      lo_drawing ?= is_header-right_image.
+      ls_drawing_position = lo_drawing->get_position( ).
       IF ls_drawing_position-size-height IS NOT INITIAL.
         lv_value = ls_drawing_position-size-height.
       ELSE.
@@ -8145,7 +8154,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       CONDENSE lv_value.
       REPLACE '{WIDTH}' IN lv_content_right WITH lv_value.
       lv_content_image_right = lc_shape_image.
-      lv_value = is_header-right_image->get_index( ).
+      lv_value = lo_drawing->get_index( ).
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       REPLACE '{RID}' IN lv_content_image_right WITH lv_value.
