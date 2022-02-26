@@ -2259,6 +2259,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
              fittoheight TYPE string,
              fittowidth  TYPE string,
              papersize   TYPE string,
+             paperwidth  TYPE string,
+             paperheight TYPE string,
            END OF lty_page_setup.
 
     TYPES: BEGIN OF lty_sheetformatpr,
@@ -2823,6 +2825,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       io_worksheet->sheet_setup->orientation = ls_pagesetup-orientation.
       io_worksheet->sheet_setup->scale = ls_pagesetup-scale.
       io_worksheet->sheet_setup->paper_size = ls_pagesetup-papersize.
+      io_worksheet->sheet_setup->paper_height = ls_pagesetup-paperheight.
+      io_worksheet->sheet_setup->paper_width = ls_pagesetup-paperwidth.
       IF io_worksheet->sheet_setup->fit_to_page = 'X'.
         IF ls_pagesetup-fittowidth IS NOT INITIAL.
           io_worksheet->sheet_setup->fit_to_width = ls_pagesetup-fittowidth.
