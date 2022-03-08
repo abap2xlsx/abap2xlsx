@@ -38,6 +38,14 @@ CLASS zcl_excel_common DEFINITION
         VALUE(ep_column) TYPE zexcel_cell_column
       RAISING
         zcx_excel .
+    CLASS-METHODS convert_column_a_row2columnrow
+      IMPORTING
+        !i_column          TYPE simple
+        !i_row             TYPE zexcel_cell_row
+      RETURNING
+        VALUE(e_columnrow) TYPE string
+      RAISING
+        zcx_excel.
     CLASS-METHODS convert_columnrow2column_a_row
       IMPORTING
         !i_columnrow TYPE clike
@@ -67,6 +75,11 @@ CLASS zcl_excel_common DEFINITION
       EXPORTING
         !e_column    TYPE zexcel_cell_column_alpha
         !e_row       TYPE zexcel_cell_row .
+    CLASS-METHODS clone_ixml_with_namespaces
+      IMPORTING
+        element TYPE REF TO if_ixml_element
+      RETURNING
+        VALUE(result) TYPE REF TO if_ixml_element.
     CLASS-METHODS date_to_excel_string
       IMPORTING
         !ip_value       TYPE d
@@ -114,6 +127,7 @@ CLASS zcl_excel_common DEFINITION
       IMPORTING
         !ip_table              TYPE STANDARD TABLE
         !iv_hide_mandt         TYPE abap_bool DEFAULT abap_true
+        !ip_conv_exit_length   TYPE abap_bool DEFAULT abap_false
       RETURNING
         VALUE(ep_fieldcatalog) TYPE zexcel_t_fieldcatalog .
     CLASS-METHODS number_to_excel_string
@@ -483,6 +497,19 @@ CLASS zcl_excel_common IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD convert_column_a_row2columnrow.
+    DATA: lv_row_alpha     TYPE string,
+          lv_column_alpha  TYPE zexcel_cell_column_alpha.
+
+    lv_row_alpha = i_row.
+    lv_column_alpha = zcl_excel_common=>convert_column2alpha( i_column ).
+    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
+    SHIFT lv_row_alpha LEFT DELETING LEADING space.
+    CONCATENATE lv_column_alpha lv_row_alpha INTO e_columnrow.
+
+  ENDMETHOD.
+
+
   METHOD convert_columnrow2column_a_row.
 *--------------------------------------------------------------------*
     "issue #256 - replacing char processing with regex
@@ -621,6 +648,32 @@ CLASS zcl_excel_common IMPLEMENTATION.
                                                       row.
 
     e_row = row.
+
+  ENDMETHOD.
+
+
+  METHOD clone_ixml_with_namespaces.
+
+    DATA: iterator    TYPE REF TO if_ixml_node_iterator,
+          node        TYPE REF TO if_ixml_node,
+          xmlns       TYPE ihttpnvp,
+          xmlns_table TYPE TABLE OF ihttpnvp.
+    FIELD-SYMBOLS:
+      <xmlns> TYPE ihttpnvp.
+
+    iterator = element->create_iterator( ).
+    result ?= element->clone( ).
+    node = iterator->get_next( ).
+    WHILE node IS BOUND.
+      xmlns-name = node->get_namespace_prefix( ).
+      xmlns-value = node->get_namespace_uri( ).
+      COLLECT xmlns INTO xmlns_table.
+      node = iterator->get_next( ).
+    ENDWHILE.
+
+    LOOP AT xmlns_table ASSIGNING <xmlns>.
+      result->set_attribute_ns( prefix = 'xmlns' name = <xmlns>-name value = <xmlns>-value ).
+    ENDLOOP.
 
   ENDMETHOD.
 
@@ -891,7 +944,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
       <fcat>-scrtext_s = ls_salv_t_column_ref-r_column->get_short_text( ).
       <fcat>-scrtext_m = ls_salv_t_column_ref-r_column->get_medium_text( ).
       <fcat>-scrtext_l = ls_salv_t_column_ref-r_column->get_long_text( ).
-      <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
+      IF ip_conv_exit_length = abap_false.
+        <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
+      ENDIF.
 
       <fcat>-dynpfld   = 'X'.  " What in the world would we exclude here?
       " except for the MANDT-field of most tables ( 1st column that is )
