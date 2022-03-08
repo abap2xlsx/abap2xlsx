@@ -172,6 +172,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !is_table_settings      TYPE zexcel_s_table_settings OPTIONAL
         VALUE(iv_default_descr) TYPE c OPTIONAL
         !iv_no_line_if_empty    TYPE abap_bool DEFAULT abap_false
+        !ip_conv_exit_length    TYPE abap_bool DEFAULT abap_false
       EXPORTING
         !es_table_settings      TYPE zexcel_s_table_settings
       RAISING
@@ -501,6 +502,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_abap_type         TYPE abap_typekind OPTIONAL
         !it_rtf               TYPE zexcel_t_rtf OPTIONAL
         !ip_column_formula_id TYPE mty_s_column_formula-id OPTIONAL
+        !ip_conv_exit_length  TYPE abap_bool DEFAULT abap_false
       RAISING
         zcx_excel .
     METHODS set_cell_formula
@@ -744,6 +746,11 @@ CLASS zcl_excel_worksheet DEFINITION
         is_color  TYPE zexcel_s_style_color
       CHANGING
         cs_xcolor TYPE zexcel_s_cstylex_color.
+    METHODS create_data_conv_exit_length
+      IMPORTING
+        !ip_value       TYPE simple
+      RETURNING
+        VALUE(ep_value) TYPE REF TO data.
     METHODS generate_title
       RETURNING
         VALUE(ep_title) TYPE zexcel_sheet_title .
@@ -988,7 +995,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     IF it_field_catalog IS NOT SUPPLIED.
-      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table ).
+      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table
+                                                             ip_conv_exit_length = ip_conv_exit_length ).
     ELSE.
       lt_field_catalog = it_field_catalog.
     ENDIF.
@@ -1120,23 +1128,27 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                           ip_row    = lv_row_int
                           ip_value  = <fs_fldval>
                           ip_abap_type = <ls_field_catalog>-abap_type
-                          ip_style  = <ls_field_catalog>-style ).
+                          ip_style  = <ls_field_catalog>-style
+                          ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
                             ip_value  = <fs_fldval>
-                            ip_style  = <ls_field_catalog>-style ).
+                            ip_style  = <ls_field_catalog>-style
+                            ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
           ELSE.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
               me->set_cell( ip_column = lv_column_alpha
                           ip_row    = lv_row_int
                           ip_abap_type = <ls_field_catalog>-abap_type
-                          ip_value  = <fs_fldval> ).
+                          ip_value  = <fs_fldval>
+                          ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
-                            ip_value  = <fs_fldval> ).
+                            ip_value  = <fs_fldval>
+                            ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
           ENDIF.
         ENDIF.
@@ -2023,6 +2035,26 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     upper_cell-cell_column  = 1.
 
   ENDMETHOD.                    "CONSTRUCTOR
+
+
+  METHOD create_data_conv_exit_length.
+    DATA: lo_addit    TYPE REF TO cl_abap_elemdescr,
+          ls_dfies    TYPE dfies,
+          l_function  TYPE funcname,
+          l_value(50) TYPE c.
+
+    lo_addit ?= cl_abap_typedescr=>describe_by_data( ip_value ).
+    lo_addit->get_ddic_field( RECEIVING  p_flddescr   = ls_dfies
+                              EXCEPTIONS not_found    = 1
+                                         no_ddic_type = 2
+                                         OTHERS       = 3 ) .
+    IF sy-subrc = 0 AND ls_dfies-convexit IS NOT INITIAL.
+      CREATE DATA ep_value TYPE c LENGTH ls_dfies-outputlen.
+    ELSE.
+      CREATE DATA ep_value LIKE ip_value.
+    ENDIF.
+
+  ENDMETHOD.
 
 
   METHOD delete_merge.
@@ -3438,8 +3470,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lv_column        TYPE zexcel_cell_column,
           ls_sheet_content TYPE zexcel_s_cell_data,
           lv_row           TYPE zexcel_cell_row,
-          lv_row_alpha     TYPE string,
-          lv_col_alpha     TYPE zexcel_cell_column_alpha,
           lv_value         TYPE zexcel_cell_value,
           lv_data_type     TYPE zexcel_cell_data_type,
           lv_value_type    TYPE abap_typekind,
@@ -3500,7 +3530,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       "if data type is passed just write the value. Otherwise map abap type to excel and perform conversion
       "IP_DATA_TYPE is passed by excel reader so source types are preserved
 *First we get reference into local var.
-      CREATE DATA lo_value LIKE ip_value.
+      IF ip_conv_exit_length = abap_true.
+        lo_value = create_data_conv_exit_length( ip_value ).
+      ELSE.
+        CREATE DATA lo_value LIKE ip_value.
+      ENDIF.
       ASSIGN lo_value->* TO <fs_value>.
       <fs_value> = ip_value.
       IF ip_data_type IS SUPPLIED.
@@ -3632,10 +3666,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-column_formula_id = ip_column_formula_id.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
-      lv_row_alpha = lv_row.
-      CONDENSE lv_row_alpha NO-GAPS.                    "ins #152 - replaced 2 shifts      - should be faster
-      lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_column ).       " issue #155 - less restrictive typing for ip_column
-      CONCATENATE lv_col_alpha lv_row_alpha INTO ls_sheet_content-cell_coords.  " issue #155 - less restrictive typing for ip_column
+      ls_sheet_content-cell_coords  = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
 
     ENDIF.
@@ -3724,6 +3755,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       CHECK ip_formula IS NOT INITIAL.  " only create new entry in sheet_content when a formula is passed
       ls_sheet_content-cell_row    = lv_row.
       ls_sheet_content-cell_column = lv_column.
+      ls_sheet_content-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE me->sheet_content ASSIGNING <sheet_content>.
     ENDIF.
 
@@ -4168,17 +4200,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    lv_row_alpha = upper_cell-cell_row.
-    lv_column_alpha = zcl_excel_common=>convert_column2alpha( upper_cell-cell_column ).
-    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-    SHIFT lv_row_alpha LEFT DELETING LEADING space.
-    CONCATENATE lv_column_alpha lv_row_alpha INTO upper_cell-cell_coords.
+    upper_cell-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = upper_cell-cell_column i_row = upper_cell-cell_row ).
 
-    lv_row_alpha = lower_cell-cell_row.
-    lv_column_alpha = zcl_excel_common=>convert_column2alpha( lower_cell-cell_column ).
-    SHIFT lv_row_alpha RIGHT DELETING TRAILING space.
-    SHIFT lv_row_alpha LEFT DELETING LEADING space.
-    CONCATENATE lv_column_alpha lv_row_alpha INTO lower_cell-cell_coords.
+    lower_cell-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lower_cell-cell_column i_row = lower_cell-cell_row ).
 
   ENDMETHOD.                    "UPDATE_DIMENSION_RANGE
 

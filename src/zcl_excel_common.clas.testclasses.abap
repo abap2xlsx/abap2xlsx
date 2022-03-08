@@ -37,6 +37,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS convert_column2int_maxcol FOR TESTING.
     METHODS convert_column2int_oob_empty FOR TESTING.
     METHODS convert_column2int_oob_invalid FOR TESTING.
+    METHODS convert_column_a_row2columnrow FOR TESTING RAISING cx_static_check.
     METHODS convert_columnrow2column_a_row FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string1 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string2 FOR TESTING RAISING cx_static_check.
@@ -336,6 +337,22 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                          level = if_aunit_constants=>fatal ).
     ENDTRY.
   ENDMETHOD.       "convert_column2int_oob_invalid.
+
+
+  METHOD convert_column_a_row2columnrow.
+
+   DATA: cell_coords TYPE string.
+
+   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 'B' i_row = 6 ).
+
+   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+
+
+   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 2 i_row = 6 ).
+
+   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+
+  ENDMETHOD.
 
 
   METHOD convert_columnrow2column_a_row.
