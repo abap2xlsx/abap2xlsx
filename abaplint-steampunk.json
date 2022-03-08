@@ -5,7 +5,7 @@
   },
   "dependencies": [
     {
-      "url": "https://github.com/abapedia/steampunk-2111-api",
+      "url": "https://github.com/abapedia/steampunk-2202-api",
       "files": "/src/**/*.*"
     }
   ],
