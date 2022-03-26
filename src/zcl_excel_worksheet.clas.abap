@@ -170,6 +170,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_table               TYPE STANDARD TABLE
         !it_field_catalog       TYPE zexcel_t_fieldcatalog OPTIONAL
         !is_table_settings      TYPE zexcel_s_table_settings OPTIONAL
+        !is_show_headerline     TYPE abap_bool DEFAULT abap_true
         VALUE(iv_default_descr) TYPE c OPTIONAL
         !iv_no_line_if_empty    TYPE abap_bool DEFAULT abap_false
         !ip_conv_exit_length    TYPE abap_bool DEFAULT abap_false
@@ -1044,16 +1045,22 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
       lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
-      " First of all write column header
-      IF <ls_field_catalog>-style_header IS NOT INITIAL.
-        me->set_cell( ip_column = lv_column_alpha
-                      ip_row    = lv_row_int
-                      ip_value  = <ls_field_catalog>-scrtext_l
-                      ip_style  = <ls_field_catalog>-style_header ).
+      IF is_show_headerline = abap_true.
+        " First of all write column header
+        IF <ls_field_catalog>-style_header IS NOT INITIAL.
+          me->set_cell( ip_column = lv_column_alpha
+                        ip_row    = lv_row_int
+                        ip_value  = <ls_field_catalog>-scrtext_l
+                        ip_style  = <ls_field_catalog>-style_header ).
+        ELSE.
+          me->set_cell( ip_column = lv_column_alpha
+                        ip_row    = lv_row_int
+                        ip_value  = <ls_field_catalog>-scrtext_l ).
+        ENDIF.
+        ADD 1 TO lv_row_int.
       ELSE.
-        me->set_cell( ip_column = lv_column_alpha
-                      ip_row    = lv_row_int
-                      ip_value  = <ls_field_catalog>-scrtext_l ).
+        " override filters if headerline is suppressed
+        lo_table->settings-nofilters = abap_true.
       ENDIF.
 
       IF <ls_field_catalog>-column_formula IS NOT INITIAL.
@@ -1067,7 +1074,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         INSERT ls_column_formula INTO TABLE column_formulas.
       ENDIF.
 
-      ADD 1 TO lv_row_int.
       LOOP AT ip_table ASSIGNING <fs_table_line>.
 
         ASSIGN COMPONENT <ls_field_catalog>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
