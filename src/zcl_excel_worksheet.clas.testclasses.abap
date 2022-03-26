@@ -1578,8 +1578,7 @@ CLASS ltc_set_cell_value_types IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD int8.
-    DATA: ref_int8 TYPE REF TO data,
-          int8     TYPE int8 VALUE 33400000000.
+    DATA: ref_int8 TYPE REF TO data.
     FIELD-SYMBOLS: <value>         TYPE simple,
                    <typekind_int8> TYPE abap_typekind.
 
