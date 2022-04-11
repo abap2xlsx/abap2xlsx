@@ -1,7 +1,8 @@
 CLASS zcl_excel_ranges DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_RANGES
 *"* do not include other source files here!!!
@@ -29,6 +30,7 @@ CLASS zcl_excel_ranges DEFINITION
     METHODS size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -55,7 +57,7 @@ CLASS zcl_excel_ranges IMPLEMENTATION.
 
 
   METHOD constructor.
-
+    super->constructor( ).
 
     CREATE OBJECT ranges.
 
@@ -85,4 +87,15 @@ CLASS zcl_excel_ranges IMPLEMENTATION.
   METHOD size.
     ep_size = ranges->size( ).
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_ranges) = NEW zcl_excel_ranges( ).
+
+    DATA(lo_ranges_clone) = ranges->clone( ).
+    lo_excel_ranges->ranges = CAST zcl_excel_collection( lo_ranges_clone ).
+
+    ro_object = lo_excel_ranges.
+  ENDMETHOD.
+
 ENDCLASS.

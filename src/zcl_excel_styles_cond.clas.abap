@@ -1,7 +1,8 @@
 CLASS zcl_excel_styles_cond DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_STYLES_COND
 *"* do not include other source files here!!!
@@ -29,6 +30,7 @@ CLASS zcl_excel_styles_cond DEFINITION
     METHODS size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -55,6 +57,7 @@ CLASS zcl_excel_styles_cond IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
 
     CREATE OBJECT styles_cond.
 
@@ -86,4 +89,15 @@ CLASS zcl_excel_styles_cond IMPLEMENTATION.
   METHOD size.
     ep_size = styles_cond->size( ).
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_styles_cond) = NEW zcl_excel_styles_cond( ).
+
+    DATA(lo_styles_cond_clone) = styles_cond->clone( ).
+    lo_excel_styles_cond->styles_cond = CAST zcl_excel_collection( lo_styles_cond_clone ).
+
+    ro_object = lo_excel_styles_cond.
+  ENDMETHOD.
+
 ENDCLASS.

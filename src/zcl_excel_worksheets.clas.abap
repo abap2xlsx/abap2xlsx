@@ -1,7 +1,8 @@
 CLASS zcl_excel_worksheets DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
@@ -32,6 +33,7 @@ CLASS zcl_excel_worksheets DEFINITION
     METHODS size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -62,7 +64,7 @@ CLASS zcl_excel_worksheets IMPLEMENTATION.
 
 
   METHOD constructor.
-
+    super->constructor( ).
     CREATE OBJECT worksheets.
 
   ENDMETHOD.
@@ -103,4 +105,18 @@ CLASS zcl_excel_worksheets IMPLEMENTATION.
     ep_size = worksheets->size( ).
 
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_worksheets) = NEW zcl_excel_worksheets( ).
+
+    DATA(lo_worksheets_clone) = worksheets->clone( ).
+    lo_excel_worksheets->worksheets = CAST zcl_excel_collection( lo_worksheets_clone ).
+
+    lo_excel_worksheets->active_worksheet = active_worksheet.
+    lo_excel_worksheets->name             = name.
+
+    ro_object = lo_excel_worksheets.
+  ENDMETHOD.
+
 ENDCLASS.

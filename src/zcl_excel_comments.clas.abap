@@ -1,7 +1,8 @@
 CLASS zcl_excel_comments DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 
@@ -30,6 +31,7 @@ CLASS zcl_excel_comments DEFINITION
     METHODS size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS clone REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -57,6 +59,7 @@ CLASS zcl_excel_comments IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
     CREATE OBJECT comments.
 
   ENDMETHOD.
@@ -97,4 +100,15 @@ CLASS zcl_excel_comments IMPLEMENTATION.
 
     ep_size = comments->size( ).
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_comments) = NEW zcl_excel_comments( ).
+
+    DATA(lo_comments_clone) = comments->clone( ).
+    lo_excel_comments->comments = CAST zcl_excel_collection( lo_comments_clone ).
+
+    ro_object = lo_excel_comments.
+  ENDMETHOD.
+
 ENDCLASS.

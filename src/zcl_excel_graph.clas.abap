@@ -1,6 +1,7 @@
 CLASS zcl_excel_graph DEFINITION
   PUBLIC
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 
@@ -321,6 +322,7 @@ CLASS zcl_excel_graph DEFINITION
     METHODS set_title
       IMPORTING
         VALUE(ip_value) TYPE string .
+    METHODS clone REDEFINITION.
   PROTECTED SECTION.
 *"* protected components of class ZCL_EXCEL_GRAPH
 *"* do not include other source files here!!!
@@ -335,6 +337,7 @@ CLASS zcl_excel_graph IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
     "Load default values
     me->pagemargins-b = '0.75'.
     me->pagemargins-l = '0.7'.
@@ -406,5 +409,26 @@ CLASS zcl_excel_graph IMPLEMENTATION.
 
   METHOD set_title.
     me->title = ip_value.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_graph) = NEW zcl_excel_graph( ).
+
+    lo_excel_graph->ns_1904val              = ns_1904val.
+    lo_excel_graph->ns_autotitledeletedval  = ns_autotitledeletedval.
+    lo_excel_graph->ns_c14styleval          = ns_c14styleval.
+    lo_excel_graph->ns_dispblanksasval      = ns_dispblanksasval.
+    lo_excel_graph->ns_langval              = ns_langval.
+    lo_excel_graph->ns_plotvisonlyval       = ns_plotvisonlyval.
+    lo_excel_graph->ns_roundedcornersval    = ns_roundedcornersval.
+    lo_excel_graph->ns_showdlblsovermaxval  = ns_showdlblsovermaxval.
+    lo_excel_graph->ns_styleval             = ns_styleval.
+    lo_excel_graph->pagemargins             = pagemargins.
+    lo_excel_graph->print_label             = print_label.
+    lo_excel_graph->series                  = series.
+    lo_excel_graph->title                   = title.
+
+    ro_object = lo_excel_graph.
   ENDMETHOD.
 ENDCLASS.

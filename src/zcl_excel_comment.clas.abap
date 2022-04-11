@@ -1,7 +1,8 @@
 CLASS zcl_excel_comment DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 
@@ -20,8 +21,9 @@ CLASS zcl_excel_comment DEFINITION
         VALUE(rp_text) TYPE string .
     METHODS set_text
       IMPORTING
-        !ip_text TYPE string
-        !ip_ref  TYPE string OPTIONAL .
+        ip_text TYPE string
+        ip_ref  TYPE string OPTIONAL .
+    METHODS clone REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -36,7 +38,7 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD constructor.
-
+    super->constructor( ).
   ENDMETHOD.
 
 
@@ -67,4 +69,16 @@ CLASS zcl_excel_comment IMPLEMENTATION.
       me->ref = ip_ref.
     ENDIF.
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_comment) = NEW zcl_excel_comment( ).
+
+    lo_excel_comment->index = index.
+    lo_excel_comment->ref   = ref.
+    lo_excel_comment->text  = text.
+
+    ro_object = lo_excel_comment.
+  ENDMETHOD.
+
 ENDCLASS.

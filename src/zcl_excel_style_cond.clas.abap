@@ -1,7 +1,8 @@
 CLASS zcl_excel_style_cond DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
     CLASS zcl_excel_style_conditional DEFINITION LOAD .
@@ -120,6 +121,7 @@ CLASS zcl_excel_style_cond DEFINITION
     METHODS get_guid
       RETURNING
         VALUE(ep_guid) TYPE zexcel_cell_style .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
@@ -182,8 +184,10 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
 
 
   METHOD constructor.
+    DATA ls_iconset TYPE zexcel_conditional_iconset.
 
-    DATA: ls_iconset TYPE zexcel_conditional_iconset.
+    super->constructor( ).
+
     ls_iconset-iconset     = zcl_excel_style_cond=>c_iconset_3trafficlights.
     ls_iconset-cfvo1_type  = zcl_excel_style_cond=>c_cfvo_type_percent.
     ls_iconset-cfvo1_value = '0'.
@@ -240,4 +244,23 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
                    ip_stop_column  = ip_stop_column ).
 
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_style_cond) = NEW zcl_excel_style_cond( ip_dimension_range = mv_rule_range ).
+
+    lo_excel_style_cond->mode_above_average = mode_above_average.
+    lo_excel_style_cond->mode_cellis        = mode_cellis.
+    lo_excel_style_cond->mode_colorscale    = mode_colorscale.
+    lo_excel_style_cond->mode_databar       = mode_databar.
+    lo_excel_style_cond->mode_expression    = mode_expression.
+    lo_excel_style_cond->mode_iconset       = mode_iconset.
+    lo_excel_style_cond->mode_textfunction  = mode_textfunction.
+    lo_excel_style_cond->mode_top10         = mode_top10.
+    lo_excel_style_cond->priority           = priority.
+    lo_excel_style_cond->rule               = rule.
+
+    ro_object = lo_excel_style_cond.
+  ENDMETHOD.
+
 ENDCLASS.

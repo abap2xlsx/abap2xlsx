@@ -1,7 +1,8 @@
 CLASS zcl_excel_drawings DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 
@@ -39,6 +40,7 @@ CLASS zcl_excel_drawings DEFINITION
     METHODS get_type
       RETURNING
         VALUE(rp_type) TYPE zexcel_drawing_type .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_DRAWINGS
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_DRAWINGS
@@ -73,6 +75,7 @@ CLASS zcl_excel_drawings IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
 
     CREATE OBJECT drawings.
     type = ip_type.
@@ -120,4 +123,15 @@ CLASS zcl_excel_drawings IMPLEMENTATION.
 
     ep_size = drawings->size( ).
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_drawings) = NEW zcl_excel_drawings( ip_type = me->type ).
+
+    DATA(lo_drawings_clone) = drawings->clone( ).
+    lo_excel_drawings->drawings = CAST zcl_excel_collection( lo_drawings_clone ).
+
+    ro_object = lo_excel_drawings.
+  ENDMETHOD.
+
 ENDCLASS.

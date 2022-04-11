@@ -1,12 +1,13 @@
 CLASS zcl_excel_collection DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 
     TYPES:
-      ty_collection TYPE STANDARD TABLE OF REF TO object .
+      ty_collection TYPE STANDARD TABLE OF REF TO zcl_excel_base.
 
     DATA collection TYPE ty_collection READ-ONLY .
 
@@ -20,17 +21,18 @@ CLASS zcl_excel_collection DEFINITION
       IMPORTING
         !index        TYPE i
       RETURNING
-        VALUE(object) TYPE REF TO object .
+        VALUE(object) TYPE REF TO zcl_excel_base.
     METHODS get_iterator
       RETURNING
         VALUE(iterator) TYPE REF TO zcl_excel_collection_iterator .
     METHODS add
       IMPORTING
-        !element TYPE REF TO object .
+        !element TYPE REF TO zcl_excel_base.
     METHODS remove
       IMPORTING
-        !element TYPE REF TO object .
+        !element TYPE REF TO zcl_excel_base.
     METHODS clear .
+    METHODS clone REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -81,4 +83,16 @@ CLASS zcl_excel_collection IMPLEMENTATION.
   METHOD size.
     size = lines( collection ).
   ENDMETHOD.
+
+  METHOD clone.
+    DATA(lo_excel_collection) = NEW zcl_excel_collection( ).
+
+    LOOP AT me->collection INTO DATA(lo_element).
+      DATA(lo_clone) = lo_element->clone( ).
+      INSERT lo_clone INTO TABLE lo_excel_collection->collection.
+    ENDLOOP.
+
+    ro_object = lo_excel_collection.
+  ENDMETHOD.
+
 ENDCLASS.

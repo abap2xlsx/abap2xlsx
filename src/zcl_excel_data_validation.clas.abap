@@ -1,7 +1,8 @@
 CLASS zcl_excel_data_validation DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_DATA_VALIDATION
@@ -45,6 +46,7 @@ CLASS zcl_excel_data_validation DEFINITION
     DATA prompt TYPE string .
 
     METHODS constructor .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATION
@@ -61,6 +63,7 @@ CLASS zcl_excel_data_validation IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
     " Initialise instance variables
     formula1          = ''.
     formula2          = ''.
@@ -79,4 +82,30 @@ CLASS zcl_excel_data_validation IMPLEMENTATION.
     cell_row     = 1.
     cell_column  = 'A'.
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA(lo_excel_data_validation) = NEW zcl_excel_data_validation( ).
+
+    lo_excel_data_validation->allowblank        = allowblank.
+    lo_excel_data_validation->cell_column       = cell_column.
+    lo_excel_data_validation->cell_column_to    = cell_column_to.
+    lo_excel_data_validation->cell_row          = cell_row.
+    lo_excel_data_validation->cell_row_to       = cell_row_to.
+    lo_excel_data_validation->error             = error.
+    lo_excel_data_validation->errorstyle        = errorstyle.
+    lo_excel_data_validation->errortitle        = errortitle.
+    lo_excel_data_validation->formula1          = formula1.
+    lo_excel_data_validation->formula2          = formula2.
+    lo_excel_data_validation->operator          = operator.
+    lo_excel_data_validation->prompt            = prompt.
+    lo_excel_data_validation->prompttitle       = prompttitle.
+    lo_excel_data_validation->showdropdown      = showdropdown.
+    lo_excel_data_validation->showerrormessage  = showerrormessage.
+    lo_excel_data_validation->showinputmessage  = showinputmessage.
+    lo_excel_data_validation->type              = type.
+
+    ro_object = lo_excel_data_validation.
+  ENDMETHOD.
+
 ENDCLASS.

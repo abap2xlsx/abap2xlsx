@@ -1,6 +1,7 @@
 CLASS zcl_excel_worksheet DEFINITION
   PUBLIC
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_WORKSHEET
@@ -656,15 +657,16 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(rt_drawings) TYPE zexcel_t_drawings .
     METHODS set_area_hyperlink
       IMPORTING
-        !ip_range        TYPE csequence OPTIONAL
-        !ip_column_start TYPE simple OPTIONAL
-        !ip_column_end   TYPE simple OPTIONAL
-        !ip_row          TYPE zexcel_cell_row OPTIONAL
-        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        !ip_url          TYPE string
-        !ip_is_internal  TYPE abap_bool
+        ip_range        TYPE csequence OPTIONAL
+        ip_column_start TYPE simple OPTIONAL
+        ip_column_end   TYPE simple OPTIONAL
+        ip_row          TYPE zexcel_cell_row OPTIONAL
+        ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        ip_url          TYPE string
+        ip_is_internal  TYPE abap_bool
       RAISING
         zcx_excel .
+    METHODS clone REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -700,6 +702,7 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA upper_cell TYPE zexcel_s_cell_data .
     DATA mt_ignored_errors TYPE mty_th_ignored_errors.
     DATA right_to_left TYPE abap_bool.
+    DATA mv_clones TYPE i VALUE 0.
 
     METHODS calculate_cell_width
       IMPORTING
@@ -774,15 +777,15 @@ CLASS zcl_excel_worksheet DEFINITION
         iv_default_descr TYPE c
         it_field_catalog TYPE zexcel_t_fieldcatalog
       RETURNING
-        VALUE(result) TYPE zexcel_t_fieldcatalog.
+        VALUE(result)    TYPE zexcel_t_fieldcatalog.
     METHODS normalize_columnrow_parameter
       IMPORTING
-        ip_columnrow  TYPE csequence OPTIONAL
-        ip_column     TYPE simple OPTIONAL
-        ip_row        TYPE zexcel_cell_row OPTIONAL
+        ip_columnrow TYPE csequence OPTIONAL
+        ip_column    TYPE simple OPTIONAL
+        ip_row       TYPE zexcel_cell_row OPTIONAL
       EXPORTING
-        ep_column     TYPE zexcel_cell_column
-        ep_row        TYPE zexcel_cell_row
+        ep_column    TYPE zexcel_cell_column
+        ep_row       TYPE zexcel_cell_row
       RAISING
         zcx_excel.
     METHODS normalize_range_parameter
@@ -1993,6 +1996,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD constructor.
     DATA: lv_title TYPE zexcel_sheet_title.
 
+    super->constructor( ).
+
     me->excel = ip_excel.
 
     me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).        " ins issue #379 - replacement for outdated function call
@@ -2967,9 +2972,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_syindex            TYPE c LENGTH 3,
           lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line.
     FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
-                   <scrtxt1> TYPE any,
-                   <scrtxt2> TYPE any,
-                   <scrtxt3> TYPE any.
+                   <scrtxt1>          TYPE any,
+                   <scrtxt2>          TYPE any,
+                   <scrtxt3>          TYPE any.
 
     " Due restrinction of new table object we cannot have two column with the same name
     " Check if a column with the same name exists, if exists add a counter
@@ -4089,15 +4094,15 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *              - Stefan Schmoecker,                          2012-12-02
 * changes: added additional check for ' as first character
 *--------------------------------------------------------------------*
-    DATA: lo_worksheets_iterator TYPE REF TO zcl_excel_collection_iterator,
-          lo_worksheet           TYPE REF TO zcl_excel_worksheet,
-          errormessage           TYPE string,
-          lv_rangesheetname_old  TYPE string,
-          lv_rangesheetname_new  TYPE string,
-          lo_ranges_iterator     TYPE REF TO zcl_excel_collection_iterator,
-          lo_range               TYPE REF TO zcl_excel_range,
-          lv_range_value         TYPE zexcel_range_value,
-          lv_errormessage        TYPE string.                          " Can't pass '...'(abc) to exception-class
+    DATA: lo_worksheets_iterator   TYPE REF TO zcl_excel_collection_iterator,
+          lo_worksheet             TYPE REF TO zcl_excel_worksheet,
+          errormessage             TYPE string,
+          lv_rangesheetname_old    TYPE string,
+          lo_excel_ranges_iterator TYPE REF TO zcl_excel_collection_iterator,
+          lo_range                 TYPE REF TO zcl_excel_range,
+          lv_errormessage          TYPE string,
+          ls_range_sheet_title     TYPE zcl_excel_range=>ts_sheet_title.
+    " Can't pass '...'(abc) to exception-class
 
 
 *--------------------------------------------------------------------*
@@ -4133,34 +4138,28 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     ENDWHILE.
 
-*--------------------------------------------------------------------*
-* Remember old sheetname and rename sheet to desired name
-*--------------------------------------------------------------------*
-    CONCATENATE me->title '!' INTO lv_rangesheetname_old.
+    lv_rangesheetname_old = title.
     me->title = ip_title.
 
-*--------------------------------------------------------------------*
-* After changing this worksheet's title we have to adjust
-* all ranges that are referring to this worksheet.
-*--------------------------------------------------------------------*
-* 2do §1  -  Check if the following quickfix is solid
-*           I fear it isn't - but this implementation is better then
-*           nothing at all since it handles a supposed majority of cases
-*--------------------------------------------------------------------*
-    CONCATENATE me->title '!' INTO lv_rangesheetname_new.
-
-    lo_ranges_iterator = me->excel->get_ranges_iterator( ).
-    WHILE lo_ranges_iterator->has_next( ) = 'X'.
-
-      lo_range ?= lo_ranges_iterator->get_next( ).
-      lv_range_value = lo_range->get_value( ).
-      REPLACE ALL OCCURRENCES OF lv_rangesheetname_old IN lv_range_value WITH lv_rangesheetname_new.
-      IF sy-subrc = 0.
-        lo_range->set_range_value( lv_range_value ).
+    lo_excel_ranges_iterator = me->excel->get_ranges_iterator( ).
+    WHILE lo_excel_ranges_iterator->has_next( ) = abap_true.
+      lo_range ?= lo_excel_ranges_iterator->get_next( ).
+      ls_range_sheet_title = lo_range->get_sheet_title( ).
+      IF ls_range_sheet_title-title <> lv_rangesheetname_old.
+        CONTINUE.
       ENDIF.
-
+      lo_range->replace_sheet_title( ip_title ).
     ENDWHILE.
 
+    IF ranges IS NOT BOUND.
+      RETURN.
+    ENDIF.
+
+    DATA(lo_sheet_ranges_iterator) = ranges->get_iterator( ).
+    WHILE lo_sheet_ranges_iterator->has_next( ) = abap_true.
+      lo_range = CAST #( lo_sheet_ranges_iterator->get_next( ) ).
+      lo_range->replace_sheet_title( ip_title ).
+    ENDWHILE.
 
   ENDMETHOD.                    "SET_TITLE
 
@@ -4407,4 +4406,119 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD zif_excel_sheet_vba_project~set_codename_pr.
     me->zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR
+
+
+  METHOD clone.
+    DATA lv_sheet_title TYPE zexcel_sheet_title.
+
+    mv_clones = mv_clones + 1.
+    lv_sheet_title = |Clone{ mv_clones }_{ title }|.
+
+    DATA(lo_excel_worksheet) = NEW zcl_excel_worksheet( ip_excel  = excel
+                                                        ip_title  = lv_sheet_title ).
+
+    IF charts IS BOUND.
+      DATA(lo_charts_clone) = charts->clone( ).
+      lo_excel_worksheet->charts = CAST zcl_excel_drawings( lo_charts_clone ).
+    ENDIF.
+
+    IF columns IS BOUND.
+      DATA(lo_columns_clone) = columns->clone( ).
+      lo_excel_worksheet->columns = CAST zcl_excel_columns( lo_columns_clone ).
+    ENDIF.
+
+    IF column_default IS BOUND.
+      DATA(lo_column_default_clone) = column_default->clone( ).
+      lo_excel_worksheet->column_default = CAST zcl_excel_column( lo_column_default_clone ).
+    ENDIF.
+
+    IF comments IS BOUND.
+      DATA(lo_comments_clone) = comments->clone( ).
+      lo_excel_worksheet->comments = CAST zcl_excel_comments( lo_comments_clone ).
+    ENDIF.
+
+    IF data_validations IS BOUND.
+      DATA(lo_data_validations_clone) = data_validations->clone( ).
+      lo_excel_worksheet->data_validations = CAST zcl_excel_data_validations( lo_data_validations_clone ).
+    ENDIF.
+
+    IF drawings IS BOUND.
+      DATA(lo_drawings_clone) = drawings->clone( ).
+      lo_excel_worksheet->drawings = CAST zcl_excel_drawings( lo_drawings_clone ).
+    ENDIF.
+
+    IF hyperlinks IS BOUND.
+      DATA(lo_hyperlinks_clone) = hyperlinks->clone( ).
+      lo_excel_worksheet->hyperlinks = CAST zcl_excel_collection( lo_hyperlinks_clone ).
+    ENDIF.
+
+    IF mo_pagebreaks IS BOUND.
+      DATA(lo_pagebreaks_clone) = mo_pagebreaks->clone( ).
+      lo_excel_worksheet->mo_pagebreaks = CAST zcl_excel_worksheet_pagebreaks( lo_pagebreaks_clone ).
+    ENDIF.
+
+    IF ranges IS BOUND.
+      DATA(lo_ranges_clone) = ranges->clone( ).
+      lo_excel_worksheet->ranges = CAST zcl_excel_ranges( lo_ranges_clone ).
+
+      DATA(lo_range_iterator) = lo_excel_worksheet->ranges->get_iterator( ).
+
+      WHILE lo_range_iterator->has_next( ) = abap_true.
+        DATA(lo_range) = CAST zcl_excel_range( lo_range_iterator->get_next( ) ).
+        lo_range->replace_sheet_title( lv_sheet_title ).
+      ENDWHILE.
+    ENDIF.
+
+    IF rows IS BOUND.
+      DATA(lo_rows_clone) = rows->clone( ).
+      lo_excel_worksheet->rows = CAST zcl_excel_rows( lo_rows_clone ).
+    ENDIF.
+
+    IF row_default IS BOUND.
+      DATA(lo_row_default_clone) = row_default->clone( ).
+      lo_excel_worksheet->row_default = CAST zcl_excel_row( lo_row_default_clone ).
+    ENDIF.
+
+    IF sheet_setup IS BOUND.
+      DATA(lo_sheet_setup_clone) = sheet_setup->clone( ).
+      lo_excel_worksheet->sheet_setup = CAST zcl_excel_sheet_setup( lo_sheet_setup_clone ).
+    ENDIF.
+
+    IF styles_cond IS BOUND.
+      DATA(lo_styles_cond_clone) = styles_cond->clone( ).
+      lo_excel_worksheet->styles_cond = CAST zcl_excel_styles_cond( lo_styles_cond_clone ).
+    ENDIF.
+
+    IF tables IS BOUND.
+      DATA(lo_tables_clone) = tables->clone( ).
+      lo_excel_worksheet->tables = CAST zcl_excel_collection( lo_tables_clone ).
+    ENDIF.
+
+    lo_excel_worksheet->active_cell               = active_cell.
+    lo_excel_worksheet->column_formulas           = column_formulas.
+    lo_excel_worksheet->default_excel_date_format = default_excel_date_format.
+    lo_excel_worksheet->default_excel_time_format = default_excel_time_format.
+    lo_excel_worksheet->excel                     = excel.
+    lo_excel_worksheet->freeze_pane_cell_column   = freeze_pane_cell_column.
+    lo_excel_worksheet->freeze_pane_cell_row      = freeze_pane_cell_row.
+    lo_excel_worksheet->lower_cell                = lower_cell.
+    lo_excel_worksheet->mt_ignored_errors         = mt_ignored_errors.
+    lo_excel_worksheet->mt_merged_cells           = mt_merged_cells.
+    lo_excel_worksheet->mt_row_outlines           = mt_row_outlines.
+    lo_excel_worksheet->print_gridlines           = print_gridlines.
+    lo_excel_worksheet->print_title_col_from      = print_title_col_from.
+    lo_excel_worksheet->print_title_col_to        = print_title_col_to.
+    lo_excel_worksheet->print_title_row_from      = print_title_row_from.
+    lo_excel_worksheet->print_title_row_to        = print_title_row_to.
+    lo_excel_worksheet->right_to_left             = right_to_left.
+    lo_excel_worksheet->sheet_content             = sheet_content.
+    lo_excel_worksheet->show_gridlines            = show_gridlines.
+    lo_excel_worksheet->show_rowcolheaders        = show_rowcolheaders.
+    lo_excel_worksheet->styles                    = styles.
+    lo_excel_worksheet->tabcolor                  = tabcolor.
+    lo_excel_worksheet->upper_cell                = upper_cell.
+
+    ro_object = lo_excel_worksheet.
+  ENDMETHOD.
+
 ENDCLASS.
