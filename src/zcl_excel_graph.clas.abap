@@ -413,7 +413,9 @@ CLASS zcl_excel_graph IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_graph) = NEW zcl_excel_graph( ).
+    DATA lo_excel_graph TYPE REF TO zcl_excel_graph.
+
+    CREATE OBJECT lo_excel_graph.
 
     lo_excel_graph->ns_1904val              = ns_1904val.
     lo_excel_graph->ns_autotitledeletedval  = ns_autotitledeletedval.

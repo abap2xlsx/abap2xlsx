@@ -85,10 +85,14 @@ CLASS zcl_excel_collection IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD clone.
-    DATA(lo_excel_collection) = NEW zcl_excel_collection( ).
+    DATA lo_excel_collection TYPE REF TO zcl_excel_collection.
+    DATA lo_element TYPE REF TO zcl_excel_base.
+    DATA lo_clone TYPE REF TO zcl_excel_base.
 
-    LOOP AT me->collection INTO DATA(lo_element).
-      DATA(lo_clone) = lo_element->clone( ).
+    CREATE OBJECT lo_excel_collection.
+
+    LOOP AT me->collection INTO lo_element.
+      lo_clone = lo_element->clone( ).
       INSERT lo_clone INTO TABLE lo_excel_collection->collection.
     ENDLOOP.
 

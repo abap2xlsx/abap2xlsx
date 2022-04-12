@@ -109,7 +109,9 @@ CLASS zcl_excel_hyperlink IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_hyperlink) = NEW zcl_excel_hyperlink( ).
+    DATA lo_excel_hyperlink TYPE REF TO zcl_excel_hyperlink.
+
+    CREATE OBJECT lo_excel_hyperlink.
 
     lo_excel_hyperlink->cell_reference  = cell_reference.
     lo_excel_hyperlink->column          = column.

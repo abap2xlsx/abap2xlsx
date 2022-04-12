@@ -92,10 +92,11 @@ CLASS zcl_excel_styles_cond IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_styles_cond) = NEW zcl_excel_styles_cond( ).
+    DATA lo_excel_styles_cond TYPE REF TO zcl_excel_styles_cond.
 
-    DATA(lo_styles_cond_clone) = styles_cond->clone( ).
-    lo_excel_styles_cond->styles_cond = CAST zcl_excel_collection( lo_styles_cond_clone ).
+    CREATE OBJECT lo_excel_styles_cond.
+
+    lo_excel_styles_cond->styles_cond ?= styles_cond->clone( ).
 
     ro_object = lo_excel_styles_cond.
   ENDMETHOD.

@@ -72,7 +72,9 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_comment) = NEW zcl_excel_comment( ).
+    DATA lo_excel_comment TYPE REF TO zcl_excel_comment.
+
+    CREATE OBJECT lo_excel_comment.
 
     lo_excel_comment->index = index.
     lo_excel_comment->ref   = ref.

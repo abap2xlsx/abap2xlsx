@@ -118,10 +118,11 @@ CLASS zcl_excel_styles IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_styles) = NEW zcl_excel_styles( ).
+    DATA lo_excel_styles TYPE REF TO zcl_excel_styles.
 
-    DATA(lo_styles_clone) = styles->clone( ).
-    lo_excel_styles->styles = CAST zcl_excel_collection( lo_styles_clone ).
+    CREATE OBJECT lo_excel_styles.
+
+    lo_excel_styles->styles ?= styles->clone( ).
 
     ro_object = lo_excel_styles.
   ENDMETHOD.

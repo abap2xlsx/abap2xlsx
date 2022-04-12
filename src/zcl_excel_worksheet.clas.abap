@@ -4099,6 +4099,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           errormessage             TYPE string,
           lv_rangesheetname_old    TYPE string,
           lo_excel_ranges_iterator TYPE REF TO zcl_excel_collection_iterator,
+          lo_sheet_ranges_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_range                 TYPE REF TO zcl_excel_range,
           lv_errormessage          TYPE string,
           ls_range_sheet_title     TYPE zcl_excel_range=>ts_sheet_title.
@@ -4155,9 +4156,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    DATA(lo_sheet_ranges_iterator) = ranges->get_iterator( ).
+    lo_sheet_ranges_iterator = ranges->get_iterator( ).
     WHILE lo_sheet_ranges_iterator->has_next( ) = abap_true.
-      lo_range = CAST #( lo_sheet_ranges_iterator->get_next( ) ).
+      lo_range ?= lo_sheet_ranges_iterator->get_next( ).
       lo_range->replace_sheet_title( ip_title ).
     ENDWHILE.
 
@@ -4410,88 +4411,78 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD clone.
     DATA lv_sheet_title TYPE zexcel_sheet_title.
+    DATA lo_excel_worksheet TYPE REF TO zcl_excel_worksheet.
+    DATA lo_range_iterator TYPE REF TO zcl_excel_collection_iterator.
+    DATA lo_range TYPE REF TO zcl_excel_range.
 
     mv_clones = mv_clones + 1.
     lv_sheet_title = |Clone{ mv_clones }_{ title }|.
 
-    DATA(lo_excel_worksheet) = NEW zcl_excel_worksheet( ip_excel  = excel
-                                                        ip_title  = lv_sheet_title ).
+    CREATE OBJECT lo_excel_worksheet
+      EXPORTING
+        ip_excel = excel
+        ip_title = lv_sheet_title.
 
     IF charts IS BOUND.
-      DATA(lo_charts_clone) = charts->clone( ).
-      lo_excel_worksheet->charts = CAST zcl_excel_drawings( lo_charts_clone ).
+      lo_excel_worksheet->charts ?= charts->clone( ).
     ENDIF.
 
     IF columns IS BOUND.
-      DATA(lo_columns_clone) = columns->clone( ).
-      lo_excel_worksheet->columns = CAST zcl_excel_columns( lo_columns_clone ).
+      lo_excel_worksheet->columns ?= columns->clone( ).
     ENDIF.
 
     IF column_default IS BOUND.
-      DATA(lo_column_default_clone) = column_default->clone( ).
-      lo_excel_worksheet->column_default = CAST zcl_excel_column( lo_column_default_clone ).
+      lo_excel_worksheet->column_default ?= column_default->clone( ).
     ENDIF.
 
     IF comments IS BOUND.
-      DATA(lo_comments_clone) = comments->clone( ).
-      lo_excel_worksheet->comments = CAST zcl_excel_comments( lo_comments_clone ).
+      lo_excel_worksheet->comments ?= comments->clone( ).
     ENDIF.
 
     IF data_validations IS BOUND.
-      DATA(lo_data_validations_clone) = data_validations->clone( ).
-      lo_excel_worksheet->data_validations = CAST zcl_excel_data_validations( lo_data_validations_clone ).
+      lo_excel_worksheet->data_validations ?= data_validations->clone( ).
     ENDIF.
 
     IF drawings IS BOUND.
-      DATA(lo_drawings_clone) = drawings->clone( ).
-      lo_excel_worksheet->drawings = CAST zcl_excel_drawings( lo_drawings_clone ).
+      lo_excel_worksheet->drawings ?= drawings->clone( ).
     ENDIF.
 
     IF hyperlinks IS BOUND.
-      DATA(lo_hyperlinks_clone) = hyperlinks->clone( ).
-      lo_excel_worksheet->hyperlinks = CAST zcl_excel_collection( lo_hyperlinks_clone ).
+      lo_excel_worksheet->hyperlinks ?= hyperlinks->clone( ).
     ENDIF.
 
     IF mo_pagebreaks IS BOUND.
-      DATA(lo_pagebreaks_clone) = mo_pagebreaks->clone( ).
-      lo_excel_worksheet->mo_pagebreaks = CAST zcl_excel_worksheet_pagebreaks( lo_pagebreaks_clone ).
+      lo_excel_worksheet->mo_pagebreaks ?= mo_pagebreaks->clone( ).
     ENDIF.
 
     IF ranges IS BOUND.
-      DATA(lo_ranges_clone) = ranges->clone( ).
-      lo_excel_worksheet->ranges = CAST zcl_excel_ranges( lo_ranges_clone ).
-
-      DATA(lo_range_iterator) = lo_excel_worksheet->ranges->get_iterator( ).
+      lo_excel_worksheet->ranges ?= ranges->clone( ).
+      lo_range_iterator = lo_excel_worksheet->ranges->get_iterator( ).
 
       WHILE lo_range_iterator->has_next( ) = abap_true.
-        DATA(lo_range) = CAST zcl_excel_range( lo_range_iterator->get_next( ) ).
+        lo_range ?= lo_range_iterator->get_next( ).
         lo_range->replace_sheet_title( lv_sheet_title ).
       ENDWHILE.
     ENDIF.
 
     IF rows IS BOUND.
-      DATA(lo_rows_clone) = rows->clone( ).
-      lo_excel_worksheet->rows = CAST zcl_excel_rows( lo_rows_clone ).
+      lo_excel_worksheet->rows ?= rows->clone( ).
     ENDIF.
 
     IF row_default IS BOUND.
-      DATA(lo_row_default_clone) = row_default->clone( ).
-      lo_excel_worksheet->row_default = CAST zcl_excel_row( lo_row_default_clone ).
+      lo_excel_worksheet->row_default ?= row_default->clone( ).
     ENDIF.
 
     IF sheet_setup IS BOUND.
-      DATA(lo_sheet_setup_clone) = sheet_setup->clone( ).
-      lo_excel_worksheet->sheet_setup = CAST zcl_excel_sheet_setup( lo_sheet_setup_clone ).
+      lo_excel_worksheet->sheet_setup ?= sheet_setup->clone( ).
     ENDIF.
 
     IF styles_cond IS BOUND.
-      DATA(lo_styles_cond_clone) = styles_cond->clone( ).
-      lo_excel_worksheet->styles_cond = CAST zcl_excel_styles_cond( lo_styles_cond_clone ).
+      lo_excel_worksheet->styles_cond ?= styles_cond->clone( ).
     ENDIF.
 
     IF tables IS BOUND.
-      DATA(lo_tables_clone) = tables->clone( ).
-      lo_excel_worksheet->tables = CAST zcl_excel_collection( lo_tables_clone ).
+      lo_excel_worksheet->tables ?= tables->clone( ).
     ENDIF.
 
     lo_excel_worksheet->active_cell               = active_cell.

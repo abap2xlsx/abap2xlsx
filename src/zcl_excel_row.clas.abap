@@ -242,7 +242,9 @@ CLASS zcl_excel_row IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_row) = NEW zcl_excel_row( ).
+    DATA lo_excel_row TYPE REF TO zcl_excel_row.
+
+    CREATE OBJECT lo_excel_row.
 
     lo_excel_row->collapsed     = collapsed.
     lo_excel_row->custom_height = custom_height.

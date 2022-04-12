@@ -110,10 +110,11 @@ CLASS zcl_excel_columns IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_columns) = NEW zcl_excel_columns( ).
+    DATA lo_excel_columns TYPE REF TO zcl_excel_columns.
 
-    DATA(lo_columns_clone) = columns->clone( ).
-    lo_excel_columns->columns = CAST zcl_excel_collection( lo_columns_clone ).
+    CREATE OBJECT lo_excel_columns.
+
+    lo_excel_columns->columns ?= columns->clone( ).
 
     lo_excel_columns->columns_hashed = columns_hashed.
 

@@ -108,10 +108,11 @@ CLASS zcl_excel_worksheets IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_worksheets) = NEW zcl_excel_worksheets( ).
+    DATA lo_excel_worksheets TYPE REF TO zcl_excel_worksheets.
 
-    DATA(lo_worksheets_clone) = worksheets->clone( ).
-    lo_excel_worksheets->worksheets = CAST zcl_excel_collection( lo_worksheets_clone ).
+    CREATE OBJECT lo_excel_worksheets.
+
+    lo_excel_worksheets->worksheets ?= worksheets->clone( ).
 
     lo_excel_worksheets->active_worksheet = active_worksheet.
     lo_excel_worksheets->name             = name.

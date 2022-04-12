@@ -106,7 +106,8 @@ CLASS zcl_excel_style IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_style) = NEW zcl_excel_style( io_clone_of = me ).
+    DATA lo_excel_style TYPE REF TO zcl_excel_style.
+    CREATE OBJECT lo_excel_style EXPORTING io_clone_of = me.
     ro_object = lo_excel_style.
   ENDMETHOD.
 

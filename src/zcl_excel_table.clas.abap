@@ -305,7 +305,9 @@ CLASS zcl_excel_table IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_table) = NEW zcl_excel_table( ).
+    DATA lo_excel_table TYPE REF TO zcl_excel_table.
+
+    CREATE OBJECT lo_excel_table.
 
     lo_excel_table->fieldcat    = fieldcat.
     lo_excel_table->id          = id.

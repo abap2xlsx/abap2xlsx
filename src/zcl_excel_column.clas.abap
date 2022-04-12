@@ -233,10 +233,16 @@ CLASS zcl_excel_column IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_column) = NEW zcl_excel_column(
-      ip_index     = CONV zexcel_cell_column_alpha( column_index )
-      ip_worksheet = worksheet
-      ip_excel     = excel ).
+    DATA lo_excel_column TYPE REF TO zcl_excel_column.
+    DATA lv_index TYPE zexcel_cell_column_alpha.
+
+    lv_index = column_index.
+
+    CREATE OBJECT lo_excel_column
+      EXPORTING
+        ip_index     = lv_index
+        ip_worksheet = worksheet
+        ip_excel     = excel.
 
     lo_excel_column->width          = width.
     lo_excel_column->auto_size      = auto_size.

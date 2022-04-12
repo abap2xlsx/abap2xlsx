@@ -80,10 +80,11 @@ CLASS zcl_excel_data_validations IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_data_validations) = NEW zcl_excel_data_validations( ).
+    DATA lo_excel_data_validations TYPE REF TO zcl_excel_data_validations.
 
-    DATA(lo_data_validations_clone) = data_validations->clone( ).
-    lo_excel_data_validations->data_validations = CAST zcl_excel_collection( lo_data_validations_clone ).
+    CREATE OBJECT lo_excel_data_validations.
+
+    lo_excel_data_validations->data_validations ?= data_validations->clone( ).
 
     ro_object = lo_excel_data_validations.
   ENDMETHOD.

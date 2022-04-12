@@ -271,27 +271,31 @@ CLASS zcl_excel IMPLEMENTATION.
 
 
   METHOD clone_worksheet.
+    DATA lo_worksheet_clone TYPE REF TO zcl_excel_worksheet.
+    DATA lv_old_title TYPE zexcel_sheet_title.
+    DATA lv_new_title TYPE zexcel_sheet_title.
+    DATA lo_ranges_iterator TYPE REF TO zcl_excel_collection_iterator.
     DATA lo_range TYPE REF TO zcl_excel_range.
     DATA ls_range_sheet_title TYPE zcl_excel_range=>ts_sheet_title.
     DATA lo_range_clone TYPE REF TO zcl_excel_range.
     DATA lo_range_clones TYPE STANDARD TABLE OF REF TO zcl_excel_range.
 
-    DATA(lo_worksheet_clone) = CAST zcl_excel_worksheet( io_worksheet->clone( ) ).
+    lo_worksheet_clone ?= io_worksheet->clone( ).
 
-    DATA(lv_old_title) = io_worksheet->get_title( ).
-    DATA(lv_new_title) = lo_worksheet_clone->get_title( ).
+    lv_old_title = io_worksheet->get_title( ).
+    lv_new_title = lo_worksheet_clone->get_title( ).
 
-    DATA(lo_ranges_iterator) = get_ranges_iterator( ).
+    lo_ranges_iterator = get_ranges_iterator( ).
 
     WHILE lo_ranges_iterator->has_next( ) = abap_true.
-      lo_range = CAST #( lo_ranges_iterator->get_next( ) ).
+      lo_range ?= lo_ranges_iterator->get_next( ).
       ls_range_sheet_title = lo_range->get_sheet_title( ).
 
       IF ls_range_sheet_title-title <> lv_old_title.
         CONTINUE.
       ENDIF.
 
-      lo_range_clone = CAST #( lo_range->clone( ) ).
+      lo_range_clone ?= lo_range->clone( ).
       lo_range_clone->replace_sheet_title( lv_new_title ).
 
       INSERT lo_range_clone INTO TABLE lo_range_clones.

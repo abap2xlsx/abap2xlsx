@@ -90,10 +90,11 @@ CLASS zcl_excel_ranges IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_ranges) = NEW zcl_excel_ranges( ).
+    DATA lo_excel_ranges TYPE REF TO zcl_excel_ranges.
 
-    DATA(lo_ranges_clone) = ranges->clone( ).
-    lo_excel_ranges->ranges = CAST zcl_excel_collection( lo_ranges_clone ).
+    CREATE OBJECT lo_excel_ranges.
+
+    lo_excel_ranges->ranges ?= ranges->clone( ).
 
     ro_object = lo_excel_ranges.
   ENDMETHOD.

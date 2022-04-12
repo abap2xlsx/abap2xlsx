@@ -143,10 +143,11 @@ CLASS zcl_excel_rows IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_rows) = NEW zcl_excel_rows( ).
+    DATA lo_excel_rows TYPE REF TO zcl_excel_rows.
 
-    DATA(lo_rows_cloned) = rows->clone( ).
-    lo_excel_rows->rows = CAST zcl_excel_collection( lo_rows_cloned ).
+    CREATE OBJECT lo_excel_rows.
+
+    lo_excel_rows->rows ?= rows->clone( ).
 
     lo_excel_rows->rows_hashed = rows_hashed.
 

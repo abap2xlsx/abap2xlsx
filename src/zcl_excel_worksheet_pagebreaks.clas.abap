@@ -52,7 +52,9 @@ CLASS zcl_excel_worksheet_pagebreaks IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_worksheet_pagebreaks) = NEW zcl_excel_worksheet_pagebreaks( ).
+    DATA lo_excel_worksheet_pagebreaks TYPE REF TO zcl_excel_worksheet_pagebreaks.
+
+    CREATE OBJECT lo_excel_worksheet_pagebreaks.
 
     lo_excel_worksheet_pagebreaks->mt_pagebreaks = mt_pagebreaks.
 

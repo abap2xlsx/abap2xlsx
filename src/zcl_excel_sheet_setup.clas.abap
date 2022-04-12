@@ -482,7 +482,9 @@ CLASS zcl_excel_sheet_setup IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_sheet_setup) = NEW zcl_excel_sheet_setup( ).
+    DATA lo_excel_sheet_setup TYPE REF TO zcl_excel_sheet_setup.
+
+    CREATE OBJECT lo_excel_sheet_setup.
 
     lo_excel_sheet_setup->black_and_white           = black_and_white.
     lo_excel_sheet_setup->cell_comments             = cell_comments.

@@ -126,10 +126,11 @@ CLASS zcl_excel_drawings IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_drawings) = NEW zcl_excel_drawings( ip_type = me->type ).
+    DATA lo_excel_drawings TYPE REF TO zcl_excel_drawings.
 
-    DATA(lo_drawings_clone) = drawings->clone( ).
-    lo_excel_drawings->drawings = CAST zcl_excel_collection( lo_drawings_clone ).
+    CREATE OBJECT lo_excel_drawings EXPORTING ip_type = type.
+
+    lo_excel_drawings->drawings ?= drawings->clone( ).
 
     ro_object = lo_excel_drawings.
   ENDMETHOD.

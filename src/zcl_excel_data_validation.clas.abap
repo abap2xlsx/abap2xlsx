@@ -85,7 +85,9 @@ CLASS zcl_excel_data_validation IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_data_validation) = NEW zcl_excel_data_validation( ).
+    DATA lo_excel_data_validation TYPE REF TO zcl_excel_data_validation.
+
+    CREATE OBJECT lo_excel_data_validation.
 
     lo_excel_data_validation->allowblank        = allowblank.
     lo_excel_data_validation->cell_column       = cell_column.

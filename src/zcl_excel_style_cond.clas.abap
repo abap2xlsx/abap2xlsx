@@ -247,7 +247,9 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_style_cond) = NEW zcl_excel_style_cond( ip_dimension_range = mv_rule_range ).
+    DATA lo_excel_style_cond TYPE REF TO zcl_excel_style_cond.
+
+    CREATE OBJECT lo_excel_style_cond EXPORTING ip_dimension_range = mv_rule_range.
 
     lo_excel_style_cond->mode_above_average = mode_above_average.
     lo_excel_style_cond->mode_cellis        = mode_cellis.

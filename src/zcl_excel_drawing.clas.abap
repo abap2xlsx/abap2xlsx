@@ -1146,10 +1146,11 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_drawing) = NEW zcl_excel_drawing( ).
+    DATA lo_excel_drawing TYPE REF TO zcl_excel_drawing.
 
-    DATA(lo_graph_clone) = graph->clone( ).
-    lo_excel_drawing->graph = CAST zcl_excel_graph( lo_graph_clone ).
+    CREATE OBJECT lo_excel_drawing.
+
+    lo_excel_drawing->graph ?= graph->clone( ).
 
     lo_excel_drawing->anchor        = anchor.
     lo_excel_drawing->from_loc      = from_loc.

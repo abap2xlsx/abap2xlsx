@@ -103,10 +103,11 @@ CLASS zcl_excel_comments IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA(lo_excel_comments) = NEW zcl_excel_comments( ).
+    DATA lo_excel_comments TYPE REF TO zcl_excel_comments.
 
-    DATA(lo_comments_clone) = comments->clone( ).
-    lo_excel_comments->comments = CAST zcl_excel_collection( lo_comments_clone ).
+    CREATE OBJECT lo_excel_comments.
+
+    lo_excel_comments->comments ?= comments->clone( ).
 
     ro_object = lo_excel_comments.
   ENDMETHOD.

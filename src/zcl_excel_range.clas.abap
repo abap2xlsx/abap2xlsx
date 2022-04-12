@@ -111,9 +111,9 @@ CLASS zcl_excel_range IMPLEMENTATION.
 
 
   METHOD clone.
-    DATA lv_range_name TYPE zexcel_range_name.
+    DATA lo_excel_range TYPE REF TO zcl_excel_range.
 
-    DATA(lo_excel_range) = NEW zcl_excel_range( ).
+    CREATE OBJECT lo_excel_range.
 
     lo_excel_range->name  = name.
     lo_excel_range->value = value.
