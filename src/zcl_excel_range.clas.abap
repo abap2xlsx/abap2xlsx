@@ -60,7 +60,19 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_range IMPLEMENTATION.
+CLASS ZCL_EXCEL_RANGE IMPLEMENTATION.
+
+
+  METHOD clone.
+    DATA lo_excel_range TYPE REF TO zcl_excel_range.
+
+    CREATE OBJECT lo_excel_range.
+
+    lo_excel_range->name  = name.
+    lo_excel_range->value = value.
+
+    ro_object = lo_excel_range.
+  ENDMETHOD.
 
 
   METHOD get_guid.
@@ -70,10 +82,55 @@ CLASS zcl_excel_range IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD get_sheet_title.
+    CONSTANTS lc_title_submatch_index TYPE i VALUE 1.
+
+    DATA ls_sheet_title TYPE ts_sheet_title.
+    DATA lo_regex TYPE REF TO cl_abap_regex.
+    DATA lo_matcher TYPE REF TO cl_abap_matcher.
+    DATA lv_matches TYPE abap_bool.
+
+    IF ms_sheet_title IS NOT INITIAL.
+      rs_sheet_title = ms_sheet_title.
+      RETURN.
+    ENDIF.
+
+    CREATE OBJECT lo_regex
+      EXPORTING
+        pattern = `^([^\\\[\]\*\?\:]{1,31})(?:\!\$)(?:[a-zA-Z0-9]+|[a-zA-Z0-9]+\:\$[a-zA-Z0-9]+)$`.
+
+    lo_matcher = lo_regex->create_matcher( text = value ).
+    lv_matches = lo_matcher->match( ).
+
+    IF lv_matches = abap_false.
+      zcx_excel=>raise_text( `Failed to match the regular expression.` ).
+    ENDIF.
+
+    ls_sheet_title-title   = lo_matcher->get_submatch( lc_title_submatch_index ).
+    ls_sheet_title-offset  = lo_matcher->get_offset( lc_title_submatch_index ).
+    ls_sheet_title-length  = lo_matcher->get_length( lc_title_submatch_index ).
+
+    ms_sheet_title = ls_sheet_title.
+    rs_sheet_title = ls_sheet_title.
+  ENDMETHOD.
+
+
   METHOD get_value.
 
     ep_value = me->value.
 
+  ENDMETHOD.
+
+
+  METHOD replace_sheet_title.
+    DATA ls_sheet_title TYPE ts_sheet_title.
+
+    ls_sheet_title = get_sheet_title( ).
+    REPLACE SECTION OFFSET ls_sheet_title-offset LENGTH ls_sheet_title-length OF value WITH iv_new_sheet_title.
+
+    ms_sheet_title-title  = iv_new_sheet_title.
+    ms_sheet_title-offset = 0.
+    ms_sheet_title-length = strlen( iv_new_sheet_title ).
   ENDMETHOD.
 
 
@@ -108,54 +165,4 @@ CLASS zcl_excel_range IMPLEMENTATION.
 
     ms_sheet_title = ls_sheet_title.
   ENDMETHOD.
-
-
-  METHOD clone.
-    DATA lo_excel_range TYPE REF TO zcl_excel_range.
-
-    CREATE OBJECT lo_excel_range.
-
-    lo_excel_range->name  = name.
-    lo_excel_range->value = value.
-
-    ro_object = lo_excel_range.
-  ENDMETHOD.
-
-  METHOD get_sheet_title.
-    CONSTANTS lc_title_submatch_index TYPE i VALUE 1.
-
-    DATA ls_sheet_title TYPE ts_sheet_title.
-
-    IF ms_sheet_title IS NOT INITIAL.
-      rs_sheet_title = ms_sheet_title.
-      RETURN.
-    ENDIF.
-
-    DATA(lo_regex) =
-      NEW cl_abap_regex( pattern = `^([^\\\[\]\*\?\:]{1,31})(?:\!\$)(?:[a-zA-Z0-9]+|[a-zA-Z0-9]+\:\$[a-zA-Z0-9]+)$` ).
-
-    DATA(lo_matcher) = lo_regex->create_matcher( text = value ).
-    DATA(lv_matches) = lo_matcher->match( ).
-
-    IF lv_matches = abap_false.
-      zcx_excel=>raise_text( `Failed to match the regular expression.` ).
-    ENDIF.
-
-    ls_sheet_title-title   = lo_matcher->get_submatch( lc_title_submatch_index ).
-    ls_sheet_title-offset  = lo_matcher->get_offset( lc_title_submatch_index ).
-    ls_sheet_title-length  = lo_matcher->get_length( lc_title_submatch_index ).
-
-    ms_sheet_title = ls_sheet_title.
-    rs_sheet_title = ls_sheet_title.
-  ENDMETHOD.
-
-  METHOD replace_sheet_title.
-    DATA(ls_sheet_title) = get_sheet_title( ).
-    REPLACE SECTION OFFSET ls_sheet_title-offset LENGTH ls_sheet_title-length OF value WITH iv_new_sheet_title.
-
-    ms_sheet_title-title  = iv_new_sheet_title.
-    ms_sheet_title-offset = 0.
-    ms_sheet_title-length = strlen( iv_new_sheet_title ).
-  ENDMETHOD.
-
 ENDCLASS.
