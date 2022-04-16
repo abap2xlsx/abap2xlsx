@@ -875,13 +875,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD bind_alv.
-    DATA: lo_converter TYPE REF TO zcl_excel_converter.
+    DATA: lo_converter TYPE REF TO zcl_excel_converter,
+          lo_option    TYPE zexcel_s_converter_option.
 
     CREATE OBJECT lo_converter.
+    lo_option-filter = abap_true.
 
     TRY.
         lo_converter->convert(
           EXPORTING
+            is_option      = lo_option
             io_alv         = io_alv
             it_table       = it_table
             i_row_int      = i_top
