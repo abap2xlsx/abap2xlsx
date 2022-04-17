@@ -54,7 +54,8 @@ CLASS zcl_excel_reader_huge_file DEFINITION
       RETURNING
         VALUE(es_cell) TYPE t_cell
       RAISING
-        lcx_not_found .
+        lcx_not_found
+        zcx_excel.
     METHODS read_shared_strings
       IMPORTING
         !io_reader               TYPE REF TO if_sxml_reader
@@ -64,7 +65,9 @@ CLASS zcl_excel_reader_huge_file DEFINITION
       IMPORTING
         !iv_coord       TYPE string
       RETURNING
-        VALUE(es_coord) TYPE t_cell_coord .
+        VALUE(es_coord) TYPE t_cell_coord
+      RAISING
+        zcx_excel.
     METHODS put_cell_to_worksheet
       IMPORTING
         !io_worksheet TYPE REF TO zcl_excel_worksheet
