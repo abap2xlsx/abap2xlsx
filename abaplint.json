@@ -36,7 +36,7 @@
     "prefer_raise_exception_new": true,
     "select_add_order_by": false,
     "select_performance": false,
-    "uncaught_exception": false,
+    "uncaught_exception": true,
     "unsecure_fae": false,
     "use_class_based_exceptions": false,
     "call_transaction_authority_check": true,
