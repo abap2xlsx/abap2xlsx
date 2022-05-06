@@ -119,5 +119,4 @@ CLASS zcl_excel_worksheets IMPLEMENTATION.
 
     ro_object = lo_excel_worksheets.
   ENDMETHOD.
-
 ENDCLASS.

@@ -35,7 +35,7 @@ CLASS zcl_excel_range DEFINITION
         VALUE(ep_value) TYPE zexcel_range_value .
     METHODS set_range_value
       IMPORTING
-        ip_value TYPE zexcel_range_value .
+        !ip_value TYPE zexcel_range_value .
     METHODS clone REDEFINITION.
     METHODS get_sheet_title
       RETURNING

@@ -32,7 +32,7 @@ CLASS zcl_excel_styles DEFINITION
         VALUE(ep_size) TYPE i .
     METHODS register_new_style
       IMPORTING
-        io_style             TYPE REF TO zcl_excel_style
+        !io_style            TYPE REF TO zcl_excel_style
       RETURNING
         VALUE(ep_style_code) TYPE i .
     METHODS clone REDEFINITION.

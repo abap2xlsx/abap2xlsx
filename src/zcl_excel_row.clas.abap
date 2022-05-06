@@ -60,7 +60,7 @@ CLASS zcl_excel_row DEFINITION
         !ip_visible TYPE abap_bool .
     METHODS set_xf_index
       IMPORTING
-        ip_xf_index TYPE int4 .
+        !ip_xf_index TYPE int4 .
     METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!

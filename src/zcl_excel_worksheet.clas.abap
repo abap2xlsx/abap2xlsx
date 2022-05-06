@@ -657,13 +657,13 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(rt_drawings) TYPE zexcel_t_drawings .
     METHODS set_area_hyperlink
       IMPORTING
-        ip_range        TYPE csequence OPTIONAL
-        ip_column_start TYPE simple OPTIONAL
-        ip_column_end   TYPE simple OPTIONAL
-        ip_row          TYPE zexcel_cell_row OPTIONAL
-        ip_row_to       TYPE zexcel_cell_row OPTIONAL
-        ip_url          TYPE string
-        ip_is_internal  TYPE abap_bool
+        !ip_range        TYPE csequence OPTIONAL
+        !ip_column_start TYPE simple OPTIONAL
+        !ip_column_end   TYPE simple OPTIONAL
+        !ip_row          TYPE zexcel_cell_row OPTIONAL
+        !ip_row_to       TYPE zexcel_cell_row OPTIONAL
+        !ip_url          TYPE string
+        !ip_is_internal  TYPE abap_bool
       RAISING
         zcx_excel .
     METHODS clone REDEFINITION.
@@ -777,15 +777,15 @@ CLASS zcl_excel_worksheet DEFINITION
         iv_default_descr TYPE c
         it_field_catalog TYPE zexcel_t_fieldcatalog
       RETURNING
-        VALUE(result)    TYPE zexcel_t_fieldcatalog.
+        VALUE(result) TYPE zexcel_t_fieldcatalog.
     METHODS normalize_columnrow_parameter
       IMPORTING
-        ip_columnrow TYPE csequence OPTIONAL
-        ip_column    TYPE simple OPTIONAL
-        ip_row       TYPE zexcel_cell_row OPTIONAL
+        ip_columnrow  TYPE csequence OPTIONAL
+        ip_column     TYPE simple OPTIONAL
+        ip_row        TYPE zexcel_cell_row OPTIONAL
       EXPORTING
-        ep_column    TYPE zexcel_cell_column
-        ep_row       TYPE zexcel_cell_row
+        ep_column     TYPE zexcel_cell_column
+        ep_row        TYPE zexcel_cell_row
       RAISING
         zcx_excel.
     METHODS normalize_range_parameter
@@ -2972,9 +2972,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_syindex            TYPE c LENGTH 3,
           lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line.
     FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
-                   <scrtxt1>          TYPE any,
-                   <scrtxt2>          TYPE any,
-                   <scrtxt3>          TYPE any.
+                   <scrtxt1> TYPE any,
+                   <scrtxt2> TYPE any,
+                   <scrtxt3> TYPE any.
 
     " Due restrinction of new table object we cannot have two column with the same name
     " Check if a column with the same name exists, if exists add a counter

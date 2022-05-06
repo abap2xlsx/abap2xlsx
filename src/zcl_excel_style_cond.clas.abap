@@ -184,7 +184,8 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
 
 
   METHOD constructor.
-    DATA ls_iconset TYPE zexcel_conditional_iconset.
+
+    DATA: ls_iconset TYPE zexcel_conditional_iconset.
 
     super->constructor( ).
 
@@ -264,5 +265,4 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
 
     ro_object = lo_excel_style_cond.
   ENDMETHOD.
-
 ENDCLASS.

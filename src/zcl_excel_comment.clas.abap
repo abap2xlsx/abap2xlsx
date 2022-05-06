@@ -21,8 +21,8 @@ CLASS zcl_excel_comment DEFINITION
         VALUE(rp_text) TYPE string .
     METHODS set_text
       IMPORTING
-        ip_text TYPE string
-        ip_ref  TYPE string OPTIONAL .
+        !ip_text TYPE string
+        !ip_ref  TYPE string OPTIONAL .
     METHODS clone REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.

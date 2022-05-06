@@ -146,10 +146,10 @@ CLASS zcl_excel_sheet_setup DEFINITION
         !ep_even_footer TYPE string .
     METHODS get_header_footer
       EXPORTING
-        ep_odd_header  TYPE zexcel_s_worksheet_head_foot
-        ep_odd_footer  TYPE zexcel_s_worksheet_head_foot
-        ep_even_header TYPE zexcel_s_worksheet_head_foot
-        ep_even_footer TYPE zexcel_s_worksheet_head_foot .
+        !ep_odd_header  TYPE zexcel_s_worksheet_head_foot
+        !ep_odd_footer  TYPE zexcel_s_worksheet_head_foot
+        !ep_even_header TYPE zexcel_s_worksheet_head_foot
+        !ep_even_footer TYPE zexcel_s_worksheet_head_foot .
     METHODS clone REDEFINITION.
   PROTECTED SECTION.
 
@@ -521,5 +521,4 @@ CLASS zcl_excel_sheet_setup IMPLEMENTATION.
 
     ro_object = lo_excel_sheet_setup.
   ENDMETHOD.
-
 ENDCLASS.
