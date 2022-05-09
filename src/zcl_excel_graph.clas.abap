@@ -320,7 +320,7 @@ CLASS zcl_excel_graph DEFINITION
         !ip_value TYPE c .
     METHODS set_title
       IMPORTING
-        VALUE(ip_value) TYPE string .
+        ip_value TYPE string .
   PROTECTED SECTION.
 *"* protected components of class ZCL_EXCEL_GRAPH
 *"* do not include other source files here!!!
