@@ -40,18 +40,27 @@ CLASS lcl_test IMPLEMENTATION.
 
 *
   METHOD test_number.
-    DATA lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string.
     lo_reader = get_reader(
       `<c r="A1" t="n"><v>17</v></c>`
       ).
-    out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-    assert_value_equals( `17` ).
-    assert_datatype_equals( `n` ).
+    TRY.
+        out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        assert_value_equals( `17` ).
+        assert_datatype_equals( `n` ).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
+        cl_abap_unit_assert=>fail( lv_text ).
+    ENDTRY.
   ENDMETHOD.                    "test_shared_string
 
 *
   METHOD test_shared_string.
-    DATA lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string.
     DATA: ls_shared_string TYPE zcl_excel_reader_huge_file=>t_shared_string.
     ls_shared_string-value = `Test1`.
     APPEND ls_shared_string TO out->shared_strings.
@@ -60,13 +69,17 @@ CLASS lcl_test IMPLEMENTATION.
     lo_reader = get_reader(
       `<c r="A1" t="s"><v>1</v></c>`
       ).
-    out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-    assert_value_equals( `Test2` ).
-    assert_datatype_equals( `s` ).
+    TRY.
+        out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        assert_value_equals( `Test2` ).
+        assert_datatype_equals( `s` ).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
+        cl_abap_unit_assert=>fail( lv_text ).
+    ENDTRY.
   ENDMETHOD.                    "test_shared_string
 *
   METHOD test_shared_string_missing.
-
     DATA: lo_reader TYPE REF TO if_sxml_reader,
           lo_ex     TYPE REF TO lcx_not_found,
           lv_text   TYPE string.
@@ -87,43 +100,65 @@ CLASS lcl_test IMPLEMENTATION.
   ENDMETHOD.
 *
   METHOD test_inline_string.
-    DATA lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string.
     lo_reader = get_reader(
       `<c r="A1" t="inlineStr"><is><t>Alpha</t></is></c>`
       ).
-    out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-    assert_value_equals( `Alpha` ).
-    assert_datatype_equals( `inlineStr` ).
+    TRY.
+        out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        assert_value_equals( `Alpha` ).
+        assert_datatype_equals( `inlineStr` ).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
+        cl_abap_unit_assert=>fail( lv_text ).
+    ENDTRY.
   ENDMETHOD.                    "test_inline_string
 
 *
   METHOD test_boolean.
-    DATA lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string.
     lo_reader = get_reader(
       `<c r="A1" t="b"><v>1</v></c>`
       ).
-    out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-    assert_value_equals( `1` ).
-    assert_datatype_equals( `b` ).
+    TRY.
+        out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        assert_value_equals( `1` ).
+        assert_datatype_equals( `b` ).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
+        cl_abap_unit_assert=>fail( lv_text ).
+    ENDTRY.
   ENDMETHOD.                    "test_boolean
 
 *
   METHOD test_formula.
-    DATA lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string.
     lo_reader = get_reader(
       `<c r="A1" t="n"><f>A2*A2</f></c>`
       ).
-    out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-    assert_formula_equals( `A2*A2` ).
-    assert_datatype_equals( `n` ).
+    TRY.
+        out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        assert_formula_equals( `A2*A2` ).
+        assert_datatype_equals( `n` ).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
+        cl_abap_unit_assert=>fail( lv_text ).
+    ENDTRY.
   ENDMETHOD.                    "test_formula
 
 *
   METHOD test_empty_cells.
 
 * There is no need to store an empty cell in the ABAP worksheet structure
-
-    DATA: lo_reader TYPE REF TO if_sxml_reader.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string.
     DATA: ls_shared_string TYPE zcl_excel_reader_huge_file=>t_shared_string.
     ls_shared_string-value = ``.
     APPEND ls_shared_string TO out->shared_strings.
@@ -135,20 +170,25 @@ CLASS lcl_test IMPLEMENTATION.
       `<c r="A3" t="s"><v>1</v></c>`
       ).
 
-    out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+    TRY.
+        out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
 
-    assert_value_equals( iv_row = 1 iv_col = 1 iv_value = `` ).
-    assert_value_equals( iv_row = 2 iv_col = 1 iv_value = `` ).
-    assert_value_equals( iv_row = 3 iv_col = 1 iv_value = `t` ).
-
+        assert_value_equals( iv_row = 1 iv_col = 1 iv_value = `` ).
+        assert_value_equals( iv_row = 2 iv_col = 1 iv_value = `` ).
+        assert_value_equals( iv_row = 3 iv_col = 1 iv_value = `t` ).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
+        cl_abap_unit_assert=>fail( lv_text ).
+    ENDTRY.
   ENDMETHOD.
 
 *
   METHOD test_style.
-    DATA:
-      lo_reader TYPE REF TO if_sxml_reader,
-      lo_style  TYPE REF TO zcl_excel_style,
-      lv_guid   TYPE zexcel_cell_style.
+    DATA: lo_reader TYPE REF TO if_sxml_reader,
+          lo_ex     TYPE REF TO lcx_not_found,
+          lv_text   TYPE string,
+          lo_style  TYPE REF TO zcl_excel_style,
+          lv_guid   TYPE zexcel_cell_style.
     CREATE OBJECT lo_style.
     APPEND lo_style TO out->styles.
     lv_guid = lo_style->get_guid( ).
@@ -156,9 +196,13 @@ CLASS lcl_test IMPLEMENTATION.
     lo_reader = get_reader(
       `<c r="A1" s="0"><v>18</v></c>`
       ).
-    out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
-
-    assert_style_equals( lv_guid ).
+    TRY.
+        out->read_worksheet_data( io_reader = lo_reader io_worksheet = worksheet ).
+        assert_style_equals( lv_guid ).
+      CATCH lcx_not_found INTO lo_ex.
+        lv_text = lo_ex->get_text( ). " >>> May inspect the message in the debugger
+        cl_abap_unit_assert=>fail( lv_text ).
+    ENDTRY.
 
   ENDMETHOD.                    "test_style
 
