@@ -60,7 +60,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_RANGE IMPLEMENTATION.
+CLASS zcl_excel_range IMPLEMENTATION.
 
 
   METHOD clone.
@@ -89,15 +89,17 @@ CLASS ZCL_EXCEL_RANGE IMPLEMENTATION.
     DATA lo_regex TYPE REF TO cl_abap_regex.
     DATA lo_matcher TYPE REF TO cl_abap_matcher.
     DATA lv_matches TYPE abap_bool.
+    DATA lv_pattern TYPE string.
 
     IF ms_sheet_title IS NOT INITIAL.
       rs_sheet_title = ms_sheet_title.
       RETURN.
     ENDIF.
 
-    CREATE OBJECT lo_regex
-      EXPORTING
-        pattern = `^([^\\\[\]\*\?\:]{1,31})(?:\!\$)(?:[a-zA-Z0-9]+|[a-zA-Z0-9]+\:\$[a-zA-Z0-9]+)$`.
+    lv_pattern =
+      `^([^\\\[\]\*\?\:]{1,31})(?:\!\${0,1})(?:[a-zA-Z]+[0-9]+|[a-zA-Z]+\${0,1}[0-9]+\:\${0,1}[a-zA-Z]+\${0,1}[0-9]+)$`.
+
+    CREATE OBJECT lo_regex EXPORTING pattern = lv_pattern.
 
     lo_matcher = lo_regex->create_matcher( text = value ).
     lv_matches = lo_matcher->match( ).

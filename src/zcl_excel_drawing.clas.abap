@@ -1150,7 +1150,9 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
 
     CREATE OBJECT lo_excel_drawing.
 
-    lo_excel_drawing->graph ?= graph->clone( ).
+    IF graph IS BOUND.
+      lo_excel_drawing->graph ?= graph->clone( ).
+    ENDIF.
 
     lo_excel_drawing->anchor        = anchor.
     lo_excel_drawing->from_loc      = from_loc.
