@@ -3685,9 +3685,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lo_format_code_datetime TYPE zexcel_number_format.
     DATA: stylemapping    TYPE zexcel_s_stylemapping.
     IF <fs_sheet_content>-cell_style IS INITIAL.
-      DATA(default_style_uuid) = me->excel->get_default_style( ).
-      DATA(cloned_style) = NEW zcl_excel_style( ip_guid = default_style_uuid ).
-      <fs_sheet_content>-cell_style = cloned_style->get_guid( ).
+      <fs_sheet_content>-cell_style = me->excel->get_default_style( ).
     ENDIF.
     CASE lv_value_type.
       WHEN cl_abap_typedescr=>typekind_date.
