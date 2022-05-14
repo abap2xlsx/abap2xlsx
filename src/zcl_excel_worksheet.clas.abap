@@ -3130,7 +3130,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       rv_guid = ip_style_or_guid.
 
     ELSE.
-      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_tyle or zexcel_cell_style'.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_style or zexcel_cell_style'.
     ENDIF.
 
   ENDMETHOD.
