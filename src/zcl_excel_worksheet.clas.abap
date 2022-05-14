@@ -92,7 +92,6 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA sheet_setup TYPE REF TO zcl_excel_sheet_setup .
     DATA show_gridlines TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
     DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
-    DATA styles TYPE zexcel_t_sheet_style .
     DATA tabcolor TYPE zexcel_s_tabcolor READ-ONLY .
     DATA column_formulas TYPE mty_th_column_formula READ-ONLY .
     CLASS-DATA:
