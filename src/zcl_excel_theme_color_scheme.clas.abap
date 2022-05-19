@@ -44,10 +44,10 @@ CLASS zcl_excel_theme_color_scheme DEFINITION
         !io_color_scheme TYPE REF TO if_ixml_element .
     METHODS set_color
       IMPORTING
-        VALUE(iv_type)         TYPE string
-        VALUE(iv_srgb)         TYPE t_srgb OPTIONAL
-        VALUE(iv_syscolorname) TYPE string OPTIONAL
-        VALUE(iv_syscolorlast) TYPE t_srgb .
+        iv_type         TYPE string
+        iv_srgb         TYPE t_srgb OPTIONAL
+        iv_syscolorname TYPE string OPTIONAL
+        iv_syscolorlast TYPE t_srgb .
     METHODS build_xml
       IMPORTING
         !io_document TYPE REF TO if_ixml_document .
