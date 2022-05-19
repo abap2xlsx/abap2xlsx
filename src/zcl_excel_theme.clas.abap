@@ -30,12 +30,12 @@ CLASS zcl_excel_theme DEFINITION
         VALUE(iv_syscolorlast) TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL .
     METHODS set_color_scheme_name
       IMPORTING
-        VALUE(iv_name) TYPE string .
+        iv_name TYPE string .
     METHODS set_font
       IMPORTING
-        VALUE(iv_type)     TYPE string
-        VALUE(iv_script)   TYPE string
-        VALUE(iv_typeface) TYPE string .
+        iv_type     TYPE string
+        iv_script   TYPE string
+        iv_typeface TYPE string .
     METHODS set_latin_font
       IMPORTING
         VALUE(iv_type)        TYPE string
