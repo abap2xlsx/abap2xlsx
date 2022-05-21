@@ -9,17 +9,7 @@ Version numbering is based on [Semantic Versioning 2.0.0](https://semver.org/):
 - `15`: a minor release
 - `0`: patch level (bug fixes)
 
-Create a branch for this new release and change these files:
-- `changelog.txt`
-  - Type from scratch the list of commits since the last version, and add as prefix for each commit:
-    - `+`: new feature
-    - `*`: bug fix
-    - `!`: feature modification
-    - `-`: feature removed
-- `zcl_excel_version`
-  - Indicate the new version number (NB: the abap2xlsx APACK class uses this version number)
-- Restart abapGit to consider the latest version of the changed APACK class, to make the file `.apack-manifest.xml` contain this latest version
-  - Push the changes to the repository
+Create a branch for this new release, change `zcl_excel_version` to indicate the new version number and push the changes to the repository
 
 With GitHub Desktop (or any Git console or Git user interface), [add the tag](https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/managing-commits/managing-tags) `7.15.0` to this branch.
 
@@ -31,7 +21,11 @@ Now [create the release in GitHub](https://docs.github.com/en/repositories/relea
 - Click "Releases"
 - Click "Draft a new release"
 - Click "Choose a tag"
-- Type the title, click "Auto-generate release notes" and click "Prview" to verify
-- Click "Publish release"
+- Type the title, click "Auto-generate release notes" and click "Prview" to verify; you should have a list with the following items, edit as required:
+    - `+`: new feature
+    - `*`: bug fix
+    - `!`: feature modification
+    - `-`: feature removed
+- Click "Publish release" 
 - It's done, zip and tar.gz files are automatically assigned to the release
-- The new release appears in the Code home page
+- The new release appears in the Code home page, with the changelog in the release page itself.
