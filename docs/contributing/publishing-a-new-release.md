@@ -21,7 +21,7 @@ Now [create the release in GitHub](https://docs.github.com/en/repositories/relea
 - Click "Releases"
 - Click "Draft a new release"
 - Click "Choose a tag"
-- Type the title, click "Auto-generate release notes" and click "Prview" to verify; you should have a list with the following items, edit as required:
+- Type the title, click "Auto-generate release notes" and click "Preview" to verify; you should have a list with the following items, edit as required:
     - `+`: new feature
     - `*`: bug fix
     - `!`: feature modification
