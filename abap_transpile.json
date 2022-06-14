@@ -83,7 +83,7 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty",      "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "infinite loop"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "Void type: TABFDPOS"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "Void type: TABFDPOS, https://github.com/abap2xlsx/abap2xlsx/pull/1034"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_charblanks", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_extref", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_leftup", "note": ""},
@@ -101,7 +101,7 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_sheet_special", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_stringblanks", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_stringlitconc", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file",         "note": "Void type: TEXT255"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file",         "note": "Void type: CHAR10"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string1", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string2", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string4", "note": ""}
