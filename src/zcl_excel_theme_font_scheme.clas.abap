@@ -52,7 +52,7 @@ CLASS zcl_excel_theme_font_scheme DEFINITION
         !io_font_scheme TYPE REF TO if_ixml_element .
     METHODS set_name
       IMPORTING
-        VALUE(iv_name) TYPE string .
+        iv_name TYPE string .
     METHODS build_xml
       IMPORTING
         !io_document TYPE REF TO if_ixml_document .
