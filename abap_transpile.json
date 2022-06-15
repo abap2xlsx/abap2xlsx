@@ -84,17 +84,6 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "infinite loop"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "Void type: TABFDPOS, https://github.com/abap2xlsx/abap2xlsx/pull/1034"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_referr_colunder", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_referr_rowcolund", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_referr_rowcolund", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_referr_rowunder", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_resp_blanks_2", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_rightdown", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_sheet_nodig", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_sheet_nodigit", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_sheet_special", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_stringblanks", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_stringlitconc", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file",         "note": "Void type: CHAR10"}
     ]
   }
