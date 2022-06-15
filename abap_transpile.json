@@ -36,7 +36,7 @@
     "zcl_excel_theme_objectdefaults",
     "zcl_excel_worksheet_pagebreaks",
     "zcl_excel_worksheets",
-    "zcx_excel",
+    "zcx_*",
     "zexcel_.*doma",
     "zexcel_.*dtel",
     "zif_*"
