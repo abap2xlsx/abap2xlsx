@@ -54,7 +54,7 @@ CLASS zcl_excel_theme_color_scheme DEFINITION
     METHODS constructor .
     METHODS set_name
       IMPORTING
-        VALUE(iv_name) TYPE string .
+        iv_name TYPE string .
   PROTECTED SECTION.
 
     DATA name TYPE string .
