@@ -102,7 +102,6 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_stringblanks", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "shift_formula_stringlitconc", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file",         "note": "Void type: CHAR10"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string2", "note": ""},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "time_to_excel_string4", "note": ""}
     ]
   }
