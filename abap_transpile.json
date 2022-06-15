@@ -3,6 +3,9 @@
   "input_filter": [
     "zcl_excel_autofilter",
     "zcl_excel_autofilters",
+    "zcl_excel_collection_iterator",
+    "zcl_excel_collection",
+    "zcl_excel_column",
     "zcl_excel_columns",
     "zcl_excel_comment",
     "zcl_excel_comments",
@@ -59,16 +62,7 @@
     "zexcel_style_font_name",
     "zexcel_table_style",
     "zexcel_table_totals_function",
-    "zif_excel_book_properties",
-    "zif_excel_book_protection",
-    "zif_excel_book_vba_project",
-    "zif_excel_converter",
-    "zif_excel_reader",
-    "zif_excel_sheet_printsettings",
-    "zif_excel_sheet_properties",
-    "zif_excel_sheet_protection",
-    "zif_excel_sheet_vba_project",
-    "zif_excel_writer"
+    "zif_*"
   ],
   "output_folder": "output",
   "lib": "https://github.com/open-abap/open-abap",
@@ -83,8 +77,7 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty",      "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "infinite loop"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "Void type: TABFDPOS, https://github.com/abap2xlsx/abap2xlsx/pull/1034"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "split_file",         "note": "Void type: CHAR10"}
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "Void type: TABFDPOS, https://github.com/abap2xlsx/abap2xlsx/pull/1034"}
     ]
   }
 }
