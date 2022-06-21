@@ -22,7 +22,12 @@ CLASS zcl_excel_worksheet DEFINITION
         collapsed TYPE abap_bool,
       END OF mty_s_outline_row .
     TYPES:
-      mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
+* Begin of ATC fix-issue-1014-part1
+*      mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
+ mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key
+                                        COMPONENTS  row_from row_to
+                                        WITH NON-UNIQUE SORTED KEY collapsed  COMPONENTS collapsed.
+* End of ATC fix-issue-1014-part1                                  .
     TYPES:
       BEGIN OF mty_s_ignored_errors,
         "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
@@ -73,10 +78,11 @@ CLASS zcl_excel_worksheet DEFINITION
         col_from TYPE i,
         col_to   TYPE i,
       END OF mty_merge .
-  TYPES:
-      mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
-*  mty_ts_merge TYPE  TABLE OF mty_merge WITH UNIQUE SORTED KEY sort_key COMPONENTS row_from row_to.
-
+    TYPES:
+* Begin of ATC fix-issue-1014-part1
+*      mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
+    mty_ts_merge TYPE  TABLE OF mty_merge WITH UNIQUE SORTED KEY sort_key COMPONENTS row_from row_to.
+* End of ATC fix-issue-1014-part1
     TYPES:
       ty_area TYPE c LENGTH 1 .
 
@@ -776,15 +782,15 @@ CLASS zcl_excel_worksheet DEFINITION
         iv_default_descr TYPE c
         it_field_catalog TYPE zexcel_t_fieldcatalog
       RETURNING
-        VALUE(result) TYPE zexcel_t_fieldcatalog.
+        VALUE(result)    TYPE zexcel_t_fieldcatalog.
     METHODS normalize_columnrow_parameter
       IMPORTING
-        ip_columnrow  TYPE csequence OPTIONAL
-        ip_column     TYPE simple OPTIONAL
-        ip_row        TYPE zexcel_cell_row OPTIONAL
+        ip_columnrow TYPE csequence OPTIONAL
+        ip_column    TYPE simple OPTIONAL
+        ip_row       TYPE zexcel_cell_row OPTIONAL
       EXPORTING
-        ep_column     TYPE zexcel_cell_column
-        ep_row        TYPE zexcel_cell_row
+        ep_column    TYPE zexcel_cell_column
+        ep_row       TYPE zexcel_cell_row
       RAISING
         zcx_excel.
     METHODS normalize_range_parameter
@@ -816,7 +822,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
+CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD add_comment.
@@ -2969,9 +2975,9 @@ CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
           lv_syindex            TYPE c LENGTH 3,
           lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line.
     FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
-                   <scrtxt1> TYPE any,
-                   <scrtxt2> TYPE any,
-                   <scrtxt3> TYPE any.
+                   <scrtxt1>          TYPE any,
+                   <scrtxt2>          TYPE any,
+                   <scrtxt3>          TYPE any.
 
     " Due restrinction of new table object we cannot have two column with the same name
     " Check if a column with the same name exists, if exists add a counter

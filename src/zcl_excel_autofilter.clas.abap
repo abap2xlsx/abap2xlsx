@@ -192,7 +192,7 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
 
     DATA: ls_filter LIKE LINE OF rt_filter.
 
-    LOOP AT me->mt_filters ASSIGNING <ls_filter> WHERE rule = mc_filter_rule_single_values.
+    LOOP AT me->mt_filters ASSIGNING <ls_filter> WHERE rule = mc_filter_rule_single_values. "#EC CI_HASHSEQ
 
       ls_filter-column = <ls_filter>-column.
       LOOP AT <ls_filter>-t_values ASSIGNING <ls_value>.

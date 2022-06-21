@@ -5924,7 +5924,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_table               TYPE REF TO zcl_excel_table,
-          lt_table_areas         TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
+* Begin of ATC fix-issue-1014-part1
+*          lt_table_areas         TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
+          lt_table_areas         TYPE STANDARD TABLE OF lty_table_area WITH
+                                 NON-UNIQUE SORTED KEY sort_key
+                                 COMPONENTS  left right top bottom,
+* End of ATC fix-issue-1014-part1
           ls_table_area          LIKE LINE OF lt_table_areas,
           lo_column              TYPE REF TO zcl_excel_column,
 
@@ -6264,7 +6269,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
     ENDIF.
-    DELETE io_worksheet->sheet_content WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries
+    DELETE io_worksheet->sheet_content  WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries
 
   ENDMETHOD.
 
