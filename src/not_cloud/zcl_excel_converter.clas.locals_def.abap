@@ -43,7 +43,7 @@ TYPES: BEGIN OF ts_styles,
        END OF ts_styles,
 * Begin of ATC fix-issue-1014-part1
 *       tt_styles TYPE HASHED TABLE OF ts_styles  WITH UNIQUE KEY type alignment inttype decimals.
-        tt_styles TYPE HASHED TABLE OF ts_styles with UNIQUE KEY primary_key
+        tt_styles TYPE HASHED TABLE OF ts_styles WITH UNIQUE KEY primary_key
                                 COMPONENTS type alignment inttype decimals
                                 WITH NON-UNIQUE SORTED KEY guid  COMPONENTS  guid .
         .
