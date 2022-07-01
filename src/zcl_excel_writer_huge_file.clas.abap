@@ -415,7 +415,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
 
       IF lv_freeze_cell_column > 1.
         lv_value = lv_freeze_cell_column - 1.
-        l_worksheet-xsplit = lv_freeze_cell_row - 1.
+        l_worksheet-xsplit = lv_freeze_cell_column - 1.
       ENDIF.
 
       lv_freeze_cell_column_alpha = zcl_excel_common=>convert_column2alpha( ip_column = lv_freeze_cell_column ).
