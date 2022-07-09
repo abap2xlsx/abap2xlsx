@@ -1,16 +1,16 @@
 CLASS cl_excel_test DEFINITION PUBLIC.
   PUBLIC SECTION.
-    CLASS-METHODS run.
+    CLASS-METHODS run RAISING cx_static_check.
 ENDCLASS.
 
 CLASS cl_excel_test IMPLEMENTATION.
   METHOD run.
-    DATA: lo_excel     TYPE REF TO zcl_excel,
-    lo_worksheet TYPE REF TO zcl_excel_worksheet,
-    lo_hyperlink TYPE REF TO zcl_excel_hyperlink,
-    lo_column    TYPE REF TO zcl_excel_column,
-    lv_date      TYPE d,
-    lv_time      TYPE t.
+    DATA lo_excel     TYPE REF TO zcl_excel.
+    DATA lo_worksheet TYPE REF TO zcl_excel_worksheet.
+    DATA lo_hyperlink TYPE REF TO zcl_excel_hyperlink.
+    DATA lo_column    TYPE REF TO zcl_excel_column.
+    DATA lv_date      TYPE d.
+    DATA lv_time      TYPE t.
 
     CREATE OBJECT lo_excel.
     lo_worksheet = lo_excel->get_active_worksheet( ).
