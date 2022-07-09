@@ -1,6 +1,7 @@
 {
-  "input_folder": "src",
+  "input_folder": "{src,test}",
   "input_filter": [
+    "test/",
     "src/zcl_excel_a",
     "src/zcl_excel_c",
     "src/zcl_excel_d",
@@ -75,9 +76,11 @@
     "addCommonJS": true,
     "unknownTypes": "runtimeError",
     "skip": [
+      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test",      "note": "cl_abap_elemdescr.get_ddic_field"},
+
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "get_dimension_range",      "note": "cl_abap_elemdescr.get_ddic_field"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "set_merge",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge",      "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "get_dimension_range",      "note": "transpiler todo, IS NOT SUPPLIED"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_calculate_table_bottom_rig", "method": "simple",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_calculate_table_bottom_rig", "method": "empty_table",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_calculate_table_bottom_rig", "method": "column_not_selected",      "note": "??"},
@@ -108,7 +111,7 @@
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty",      "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "raises exception"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "cl_abap_structdescr.is_ddic_type()"}
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "??"}
     ]
   }
 }
