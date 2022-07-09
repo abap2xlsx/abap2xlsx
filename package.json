@@ -6,11 +6,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sapmentors/abap2xlsx.git"
+    "url": "git+https://github.com/abap2xlsx/abap2xlsx.git"
   },
   "devDependencies": {
     "@abaplint/cli": "^2.91.7",
-    "@abaplint/transpiler-cli": "^2.0.57",
-    "@abaplint/runtime": "^2.0.57"
+    "@abaplint/transpiler-cli": "^2.0.58",
+    "@abaplint/runtime": "^2.0.58"
   }
 }
