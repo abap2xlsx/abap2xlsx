@@ -4,6 +4,8 @@
     "src/zcl_excel_a",
     "src/zcl_excel_c",
     "src/zcl_excel_d",
+    "src/zcl_excel_fill_template",
+    "src/zcl_excel_font TODO",
     "src/zcl_excel_g",
     "src/zcl_excel_h",
     "src/zcl_excel_l",
