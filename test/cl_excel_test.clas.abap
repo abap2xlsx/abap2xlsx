@@ -11,6 +11,8 @@ CLASS cl_excel_test IMPLEMENTATION.
     DATA lo_column    TYPE REF TO zcl_excel_column.
     DATA lv_date      TYPE d.
     DATA lv_time      TYPE t.
+    DATA xdata        TYPE xstring.
+    DATA li_writer    TYPE REF TO zif_excel_writer.
 
     CREATE OBJECT lo_excel.
     lo_worksheet = lo_excel->get_active_worksheet( ).
@@ -27,5 +29,8 @@ CLASS cl_excel_test IMPLEMENTATION.
     lo_worksheet->set_cell( ip_column = 'C' ip_row =  7 ip_value = '(Hindi)' ).
     lo_column = lo_worksheet->get_column( ip_column = 'B' ).
     lo_column->set_width( ip_width = 11 ).
+
+    CREATE OBJECT li_writer TYPE zcl_excel_writer_2007.
+    xdata = li_writer->write_file( lo_excel ).
   ENDMETHOD.
 ENDCLASS.
