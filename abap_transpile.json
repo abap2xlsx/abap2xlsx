@@ -80,14 +80,13 @@
     "skip": [
       {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test",      "note": "??"},
 
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "set_merge",      "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge",      "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_small_text",      "note": "Void type: ZEXCEL_T_FIELDCATALOG"},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "set_merge",      "note": "??"},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "delete_merge",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_medium_text",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_long_text",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "default_text_if_none",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "invalid_default_descr",      "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_set_cell_value_types", "method": "int8",      "note": "??"},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_set_cell_value_types",     "method": "int8",      "note": "??"},
 
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",      "note": "??"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string",      "note": "??"},
