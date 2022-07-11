@@ -85,8 +85,8 @@
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "default_text_if_none",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_set_cell_value_types",     "method": "int8",      "note": "??"},
 
-      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",      "note": "??"},
-      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string",      "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",      "note": "SXML in open-abap currently only handles json, todo"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string",      "note": "SXML in open-abap currently only handles json, todo"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string_missing",      "note": "??"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_inline_string",      "note": "??"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_empty_cells",      "note": "??"},
@@ -102,10 +102,10 @@
       {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "one_column_formula",      "note": "open-abap todo in if_ixml_element->set_attribute()"},
       {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "two_column_formulas",      "note": "??"},
 
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty",      "note": "??"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row", "note": "raises exception"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6", "note": ""},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure", "note": "https://github.com/open-abap/open-abap/pull/356"}
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "??"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row",   "note": "raises exception"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6",        "note": ""},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "describe_structure",           "note": "https://github.com/open-abap/open-abap/pull/357"}
     ]
   }
 }
