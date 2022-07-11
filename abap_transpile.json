@@ -76,9 +76,8 @@
     "addCommonJS": true,
     "unknownTypes": "runtimeError",
     "skip": [
-      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test",      "note": "https://github.com/abaplint/transpiler/issues/784"},
+      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test",      "note": "??"},
 
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "get_dimension_range",      "note": "cl_abap_elemdescr.get_ddic_field"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "set_merge",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge",      "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_calculate_table_bottom_rig", "method": "simple",      "note": "??"},
