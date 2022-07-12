@@ -2965,6 +2965,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
           lv_value_lowercase    TYPE string,
           lv_scrtext_l_initial  TYPE scrtext_l,
+          lv_long_text          TYPE string,
+          lv_max_length         TYPE i,
+          lv_temp_length        TYPE i,
           lv_syindex            TYPE c LENGTH 3,
           lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line.
     FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
@@ -3010,9 +3013,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
 
       lv_scrtext_l_initial = <ls_field_catalog>-scrtext_l.
-      IF strlen( lv_scrtext_l_initial ) > 38.
-        lv_scrtext_l_initial = substring( val = lv_scrtext_l_initial len = 38 ).
-      ENDIF.
+      DESCRIBE FIELD <ls_field_catalog>-scrtext_l LENGTH lv_max_length IN CHARACTER MODE.
       DO.
         lv_value_lowercase = <ls_field_catalog>-scrtext_l.
         TRANSLATE lv_value_lowercase TO LOWER CASE.
@@ -3022,7 +3023,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           EXIT.
         ELSE.
           lv_syindex = sy-index.
-          CONCATENATE lv_scrtext_l_initial lv_syindex INTO <ls_field_catalog>-scrtext_l.
+          CONCATENATE lv_scrtext_l_initial lv_syindex INTO lv_long_text.
+          IF strlen( lv_long_text ) <= lv_max_length.
+            <ls_field_catalog>-scrtext_l = lv_long_text.
+          ELSE.
+            lv_temp_length = strlen( lv_scrtext_l_initial ) - 1.
+            lv_scrtext_l_initial = substring( val = lv_scrtext_l_initial len = lv_temp_length ).
+            CONCATENATE lv_scrtext_l_initial lv_syindex INTO <ls_field_catalog>-scrtext_l.
+          ENDIF.
         ENDIF.
       ENDDO.
 
