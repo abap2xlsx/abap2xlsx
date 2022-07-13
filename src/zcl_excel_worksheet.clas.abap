@@ -2975,7 +2975,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <scrtxt2>          TYPE any,
                    <scrtxt3>          TYPE any.
 
-    " Due restrinction of new table object we cannot have two column with the same name
+    " Due to restrictions in new table object we cannot have two columns with the same name
     " Check if a column with the same name exists, if exists add a counter
     " If no medium description is provided we try to use small or long
 
