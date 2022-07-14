@@ -66,7 +66,7 @@
     "addCommonJS": true,
     "unknownTypes": "runtimeError",
     "skip": [
-      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test", "note": "if_ixml_document$create_simple_element"},
+      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test", "note": "if_ixml_document$create_simple_element_ns"},
 
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "set_merge",            "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "delete_merge",         "note": "??"},
