@@ -92,7 +92,6 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA sheet_setup TYPE REF TO zcl_excel_sheet_setup .
     DATA show_gridlines TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
     DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
-    DATA styles TYPE zexcel_t_sheet_style .
     DATA tabcolor TYPE zexcel_s_tabcolor READ-ONLY .
     DATA column_formulas TYPE mty_th_column_formula READ-ONLY .
     CLASS-DATA:
@@ -3144,7 +3143,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       rv_guid = ip_style_or_guid.
 
     ELSE.
-      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_tyle or zexcel_cell_style'.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_style or zexcel_cell_style'.
     ENDIF.
 
   ENDMETHOD.
@@ -3698,6 +3697,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *                      If not, use default
     DATA: lo_format_code_datetime TYPE zexcel_number_format.
     DATA: stylemapping    TYPE zexcel_s_stylemapping.
+    IF <fs_sheet_content>-cell_style IS INITIAL.
+      <fs_sheet_content>-cell_style = me->excel->get_default_style( ).
+    ENDIF.
     CASE lv_value_type.
       WHEN cl_abap_typedescr=>typekind_date.
         TRY.
