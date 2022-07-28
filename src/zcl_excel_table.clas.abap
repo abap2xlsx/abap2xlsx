@@ -37,8 +37,10 @@ CLASS zcl_excel_table DEFINITION
     CONSTANTS builtinstyle_light11 TYPE zexcel_table_style VALUE 'TableStyleLight11'. "#EC NOTEXT
     CONSTANTS totals_function_sum TYPE zexcel_table_totals_function VALUE 'sum'. "#EC NOTEXT
     CONSTANTS builtinstyle_light12 TYPE zexcel_table_style VALUE 'TableStyleLight12'. "#EC NOTEXT
+    DATA fieldcat TYPE zexcel_t_fieldcatalog .
     CONSTANTS builtinstyle_light13 TYPE zexcel_table_style VALUE 'TableStyleLight13'. "#EC NOTEXT
     CONSTANTS builtinstyle_light14 TYPE zexcel_table_style VALUE 'TableStyleLight14'. "#EC NOTEXT
+    DATA settings TYPE zexcel_s_table_settings .
     CONSTANTS builtinstyle_light15 TYPE zexcel_table_style VALUE 'TableStyleLight15'. "#EC NOTEXT
     CONSTANTS builtinstyle_light16 TYPE zexcel_table_style VALUE 'TableStyleLight16'. "#EC NOTEXT
     CONSTANTS builtinstyle_light17 TYPE zexcel_table_style VALUE 'TableStyleLight17'. "#EC NOTEXT
@@ -72,8 +74,6 @@ CLASS zcl_excel_table DEFINITION
     CONSTANTS builtinstyle_medium24 TYPE zexcel_table_style VALUE 'TableStyleMedium24'. "#EC NOTEXT
     CONSTANTS builtinstyle_medium25 TYPE zexcel_table_style VALUE 'TableStyleMedium26'. "#EC NOTEXT
     CONSTANTS builtinstyle_medium27 TYPE zexcel_table_style VALUE 'TableStyleMedium27'. "#EC NOTEXT
-    DATA fieldcat TYPE zexcel_t_fieldcatalog.
-    DATA settings TYPE zexcel_s_table_settings.
 
     METHODS get_totals_formula
       IMPORTING
