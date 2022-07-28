@@ -701,7 +701,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
           ls_component  TYPE abap_componentdescr,
           lo_elemdescr  TYPE REF TO cl_abap_elemdescr,
           ls_dfies      TYPE dfies,
-          l_position    TYPE tabfdpos.
+          l_position    LIKE ls_dfies-position.
 
     "for DDIC structure get the info directly
     IF io_struct->is_ddic_type( ) = abap_true.
