@@ -1003,7 +1003,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     IF it_field_catalog IS NOT SUPPLIED.
-      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table            = ip_table
+      lt_field_catalog = zcl_excel_common=>get_fieldcatalog( ip_table = ip_table
                                                              ip_conv_exit_length = ip_conv_exit_length ).
     ELSE.
       lt_field_catalog = it_field_catalog.
@@ -1027,8 +1027,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDWHILE.
 
     check_table_overlapping(
-      is_table_settings       = ls_settings
-      it_other_table_settings = lt_other_table_settings ).
+        is_table_settings       = ls_settings
+        it_other_table_settings = lt_other_table_settings ).
 
 * Start filling the table
 
@@ -1044,8 +1044,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     lv_row_int = ls_settings-top_left_row.
 
     lt_field_catalog = normalize_column_heading_texts(
-      iv_default_descr = iv_default_descr
-      it_field_catalog = lt_field_catalog ).
+          iv_default_descr = iv_default_descr
+          it_field_catalog = lt_field_catalog ).
 
 * It is better to loop column by column (only visible column)
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
@@ -1089,26 +1089,26 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         IF <ls_field_catalog>-formula EQ abap_true.
           IF <ls_field_catalog>-style IS NOT INITIAL.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
-              me->set_cell( ip_column    = lv_column_alpha
-                            ip_row       = lv_row_int
-                            ip_formula   = <fs_fldval>
-                            ip_abap_type = <ls_field_catalog>-abap_type
-                            ip_style     = <ls_field_catalog>-style ).
+              me->set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = <fs_fldval>
+                          ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_style    = <ls_field_catalog>-style ).
             ELSE.
-              me->set_cell( ip_column  = lv_column_alpha
-                            ip_row     = lv_row_int
-                            ip_formula = <fs_fldval>
-                            ip_style   = <ls_field_catalog>-style ).
+              me->set_cell( ip_column   = lv_column_alpha
+                            ip_row      = lv_row_int
+                            ip_formula  = <fs_fldval>
+                            ip_style    = <ls_field_catalog>-style ).
             ENDIF.
           ELSEIF <ls_field_catalog>-abap_type IS NOT INITIAL.
-            me->set_cell( ip_column    = lv_column_alpha
-                          ip_row       = lv_row_int
-                          ip_formula   = <fs_fldval>
+            me->set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = <fs_fldval>
                           ip_abap_type = <ls_field_catalog>-abap_type ).
           ELSE.
-            me->set_cell( ip_column  = lv_column_alpha
-                          ip_row     = lv_row_int
-                          ip_formula = <fs_fldval> ).
+            me->set_cell( ip_column   = lv_column_alpha
+                          ip_row      = lv_row_int
+                          ip_formula  = <fs_fldval> ).
           ENDIF.
         ELSEIF <ls_field_catalog>-column_formula IS NOT INITIAL.
           " Column formulas
@@ -1126,10 +1126,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                             ip_style             = <ls_field_catalog>-style ).
             ENDIF.
           ELSEIF <ls_field_catalog>-abap_type IS NOT INITIAL.
-            me->set_cell( ip_column            = lv_column_alpha
-                          ip_row               = lv_row_int
-                          ip_column_formula_id = ls_column_formula-id
-                          ip_abap_type         = <ls_field_catalog>-abap_type ).
+            me->set_cell( ip_column             = lv_column_alpha
+                          ip_row                = lv_row_int
+                          ip_column_formula_id  = ls_column_formula-id
+                          ip_abap_type          = <ls_field_catalog>-abap_type ).
           ELSE.
             me->set_cell( ip_column            = lv_column_alpha
                           ip_row               = lv_row_int
@@ -1138,30 +1138,30 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           IF <ls_field_catalog>-style IS NOT INITIAL.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
-              me->set_cell( ip_column           = lv_column_alpha
-                            ip_row              = lv_row_int
-                            ip_value            = <fs_fldval>
-                            ip_abap_type        = <ls_field_catalog>-abap_type
-                            ip_style            = <ls_field_catalog>-style
-                            ip_conv_exit_length = ip_conv_exit_length ).
+              me->set_cell( ip_column = lv_column_alpha
+                          ip_row    = lv_row_int
+                          ip_value  = <fs_fldval>
+                          ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_style  = <ls_field_catalog>-style
+                          ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
-              me->set_cell( ip_column           = lv_column_alpha
-                            ip_row              = lv_row_int
-                            ip_value            = <fs_fldval>
-                            ip_style            = <ls_field_catalog>-style
+              me->set_cell( ip_column = lv_column_alpha
+                            ip_row    = lv_row_int
+                            ip_value  = <fs_fldval>
+                            ip_style  = <ls_field_catalog>-style
                             ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
           ELSE.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
-              me->set_cell( ip_column           = lv_column_alpha
-                            ip_row              = lv_row_int
-                            ip_abap_type        = <ls_field_catalog>-abap_type
-                            ip_value            = <fs_fldval>
-                            ip_conv_exit_length = ip_conv_exit_length ).
+              me->set_cell( ip_column = lv_column_alpha
+                          ip_row    = lv_row_int
+                          ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_value  = <fs_fldval>
+                          ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
-              me->set_cell( ip_column           = lv_column_alpha
-                            ip_row              = lv_row_int
-                            ip_value            = <fs_fldval>
+              me->set_cell( ip_column = lv_column_alpha
+                            ip_row    = lv_row_int
+                            ip_value  = <fs_fldval>
                             ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
           ENDIF.
@@ -1182,14 +1182,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       IF <ls_field_catalog>-totals_function IS NOT INITIAL.
         lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-scrtext_l ip_function = <ls_field_catalog>-totals_function ).
         IF <ls_field_catalog>-style_total IS NOT INITIAL.
-          me->set_cell( ip_column  = lv_column_alpha
-                        ip_row     = lv_row_int
-                        ip_formula = lv_formula
-                        ip_style   = <ls_field_catalog>-style_total ).
+          me->set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = lv_formula
+                        ip_style    = <ls_field_catalog>-style_total ).
         ELSE.
-          me->set_cell( ip_column  = lv_column_alpha
-                        ip_row     = lv_row_int
-                        ip_formula = lv_formula ).
+          me->set_cell( ip_column   = lv_column_alpha
+                        ip_row      = lv_row_int
+                        ip_formula  = lv_formula ).
         ENDIF.
       ENDIF.
 
@@ -1203,10 +1203,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         lv_first_row    = ls_settings-top_left_row + 1. " +1 to exclude header
         lv_last_row     = ls_settings-bottom_right_row.
         lo_style_cond = me->get_style_cond( <ls_field_catalog>-style_cond ).
-        lo_style_cond->set_range( ip_start_column = lv_column_alpha
-                                  ip_start_row    = lv_first_row
-                                  ip_stop_column  = lv_column_alpha
-                                  ip_stop_row     = lv_last_row ).
+        lo_style_cond->set_range( ip_start_column  = lv_column_alpha
+                                  ip_start_row     = lv_first_row
+                                  ip_stop_column   = lv_column_alpha
+                                  ip_stop_row      = lv_last_row ).
       ENDIF.
 
     ENDLOOP.
@@ -2997,26 +2997,27 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
-      CASE iv_default_descr.
-        WHEN 'M'.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'S'.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'L'.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
-        WHEN OTHERS.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-      ENDCASE.
-
       IF <ls_field_catalog>-column_name IS INITIAL.
+
+        CASE iv_default_descr.
+          WHEN 'M'.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+          WHEN 'S'.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+          WHEN 'L'.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
+          WHEN OTHERS.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        ENDCASE.
+
         IF <scrtxt1> IS NOT INITIAL.
           <ls_field_catalog>-column_name = <scrtxt1>.
         ELSEIF <scrtxt2> IS NOT INITIAL.
@@ -3532,12 +3533,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
     IF ip_column_formula_id <> 0.
       check_cell_column_formula(
-        it_column_formulas   = column_formulas
-        ip_column_formula_id = ip_column_formula_id
-        ip_formula           = ip_formula
-        ip_value             = ip_value
-        ip_row               = lv_row
-        ip_column            = lv_column ).
+          it_column_formulas   = column_formulas
+          ip_column_formula_id = ip_column_formula_id
+          ip_formula           = ip_formula
+          ip_value             = ip_value
+          ip_row               = lv_row
+          ip_column            = lv_column ).
     ENDIF.
     READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = lv_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
                                                                          cell_column = lv_column.
@@ -3568,8 +3569,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       <fs_value> = ip_value.
       IF ip_data_type IS SUPPLIED.
         IF ip_abap_type IS NOT SUPPLIED.
-          get_value_type( EXPORTING ip_value = ip_value
-                          IMPORTING ep_value = <fs_value> ).
+          get_value_type( EXPORTING ip_value      = ip_value
+                          IMPORTING ep_value      = <fs_value> ) .
         ENDIF.
         lv_value = <fs_value>.
         lv_data_type = ip_data_type.
@@ -3672,7 +3673,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     IF ip_hyperlink IS BOUND.
       ip_hyperlink->set_cell_reference( ip_column = lv_column
-                                        ip_row    = lv_row ).
+                                        ip_row = lv_row ).
       me->hyperlinks->add( ip_hyperlink ).
     ENDIF.
 
@@ -3739,9 +3740,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
         ENDIF.
-        me->change_cell_style( ip_column                    = lv_column
-                               ip_row                       = lv_row
-                               ip_number_format_format_code = lo_format_code_datetime ).
+        me->change_cell_style( ip_column                      = lv_column
+                               ip_row                         = lv_row
+                               ip_number_format_format_code   = lo_format_code_datetime ).
 
       WHEN cl_abap_typedescr=>typekind_time.
         TRY.
@@ -3754,9 +3755,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
         ENDIF.
-        me->change_cell_style( ip_column                    = lv_column
-                               ip_row                       = lv_row
-                               ip_number_format_format_code = lo_format_code_datetime ).
+        me->change_cell_style( ip_column                      = lv_column
+                               ip_row                         = lv_row
+                               ip_number_format_format_code   = lo_format_code_datetime ).
 
     ENDCASE.
 * End of change issue #152 - don't touch exisiting style if only value is passed
@@ -3764,9 +3765,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * Fix issue #162
     lv_value = ip_value.
     IF lv_value CS cl_abap_char_utilities=>cr_lf.
-      me->change_cell_style( ip_column             = lv_column
-                             ip_row                = lv_row
-                             ip_alignment_wraptext = abap_true ).
+      me->change_cell_style( ip_column               = lv_column
+                             ip_row                  = lv_row
+                             ip_alignment_wraptext   = abap_true ).
     ENDIF.
 * End of Fix issue #162
 

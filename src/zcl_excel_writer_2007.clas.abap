@@ -7349,11 +7349,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 **********************************************************************
 * STEP 3: Create main node table
-    lo_element_root = lo_document->create_simple_element( name   = lc_xml_node_table
-                                                          parent = lo_document ).
+    lo_element_root  = lo_document->create_simple_element( name   = lc_xml_node_table
+                                                           parent = lo_document ).
 
     lo_element_root->set_attribute_ns( name  = 'xmlns'
-                                       value = lc_xml_node_table_ns ).
+                                       value = lc_xml_node_table_ns  ).
 
     lv_id = io_table->get_id( ).
     lv_value = zcl_excel_common=>number_to_excel_string( ip_value = lv_id ).
@@ -7388,10 +7388,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                        value = lv_ref ).
     IF io_table->has_totals( ) = abap_true.
       lo_element_root->set_attribute_ns( name  = 'totalsRowCount'
-                                         value = '1' ).
+                                             value = '1' ).
     ELSE.
       lo_element_root->set_attribute_ns( name  = lc_xml_attr_totals
-                                         value = '0' ).
+                                           value = '0' ).
     ENDIF.
 
 **********************************************************************
@@ -7411,7 +7411,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     "columns
     lo_element = lo_document->create_simple_element( name   = 'tableColumns'
-                                                     parent = lo_document ).
+                                                            parent = lo_document ).
 
     LOOP AT io_table->fieldcat INTO ls_fieldcat WHERE dynpfld = abap_true.
       ADD 1 TO lv_num_columns.
@@ -7431,7 +7431,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lv_value = ls_fieldcat-position.
       SHIFT lv_value LEFT DELETING LEADING '0'.
       lo_element2->set_attribute_ns( name  = 'id'
-                                     value = lv_value ).
+                                    value = lv_value ).
 
       lv_value = ls_fieldcat-column_name.
 
@@ -7450,11 +7450,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       REPLACE ALL OCCURRENCES OF cl_abap_char_utilities=>horizontal_tab IN lv_value WITH '_x0009_'.
 
       lo_element2->set_attribute_ns( name  = 'name'
-                                     value = lv_value ).
+                                    value = lv_value ).
 
       IF ls_fieldcat-totals_function IS NOT INITIAL.
         lo_element2->set_attribute_ns( name  = 'totalsRowFunction'
-                                       value = ls_fieldcat-totals_function ).
+                                         value = ls_fieldcat-totals_function ).
       ENDIF.
 
       IF ls_fieldcat-column_formula IS NOT INITIAL.
@@ -7474,13 +7474,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                      parent = lo_element_root ).
 
     lo_element->set_attribute_ns( name  = 'name'
-                                  value = io_table->settings-table_style ).
+                                       value = io_table->settings-table_style ).
 
     lo_element->set_attribute_ns( name  = 'showFirstColumn'
-                                  value = '0' ).
+                                       value = '0' ).
 
     lo_element->set_attribute_ns( name  = 'showLastColumn'
-                                  value = '0' ).
+                                       value = '0' ).
 
     IF io_table->settings-show_row_stripes = abap_true.
       lv_value = '1'.
@@ -7489,7 +7489,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDIF.
 
     lo_element->set_attribute_ns( name  = 'showRowStripes'
-                                  value = lv_value ).
+                                       value = lv_value ).
 
     IF io_table->settings-show_column_stripes = abap_true.
       lv_value = '1'.
@@ -7498,7 +7498,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDIF.
 
     lo_element->set_attribute_ns( name  = 'showColumnStripes'
-                                  value = lv_value ).
+                                       value = lv_value ).
 
     lo_element_root->append_child( new_child = lo_element ).
 **********************************************************************
