@@ -3662,9 +3662,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         READ TABLE <fs_sheet_content>-table->fieldcat ASSIGNING <ls_fieldcat> WITH KEY fieldname = <fs_sheet_content>-table_fieldname.
         IF sy-subrc = 0.
           <ls_fieldcat>-column_name = lv_value.
-          if <ls_fieldcat>-column_name <> lv_value.
+          IF <ls_fieldcat>-column_name <> lv_value.
             zcx_excel=>raise_text( 'Cell is table column header - this value is not allowed' ).
-          endif.
+          ENDIF.
         ENDIF.
       ENDIF.
 
