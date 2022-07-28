@@ -669,7 +669,7 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !ip_column    TYPE zexcel_cell_column
         !ip_row       TYPE zexcel_cell_row
-        !ir_table     type ref to zcl_excel_table
+        !ir_table     TYPE REF TO zcl_excel_table
         !ip_fieldname type zexcel_fieldname
         !ip_header    type abap_bool
       RAISING
