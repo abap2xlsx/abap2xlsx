@@ -2978,7 +2978,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
           lv_value_lowercase    TYPE string,
-          lv_scrtext_l_initial  TYPE scrtext_l,
+          lv_scrtext_l_initial  TYPE zexcel_column_name,
           lv_long_text          TYPE string,
           lv_max_length         TYPE i,
           lv_temp_length        TYPE i,
@@ -3515,7 +3515,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <fs_value>         TYPE simple,
                    <fs_typekind_int8> TYPE abap_typekind.
     FIELD-SYMBOLS: <fs_column_formula> TYPE mty_s_column_formula.
-
+    FIELD-SYMBOLS: <ls_fieldcat>       TYPE zexcel_s_fieldcatalog.
 
     IF ip_value  IS NOT SUPPLIED
         AND ip_formula IS NOT SUPPLIED
@@ -3532,12 +3532,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * Begin of change issue #152 - don't touch exisiting style if only value is passed
     IF ip_column_formula_id <> 0.
       check_cell_column_formula(
-          it_column_formulas   = column_formulas
-          ip_column_formula_id = ip_column_formula_id
-          ip_formula           = ip_formula
-          ip_value             = ip_value
-          ip_row               = lv_row
-          ip_column            = lv_column ).
+        it_column_formulas   = column_formulas
+        ip_column_formula_id = ip_column_formula_id
+        ip_formula           = ip_formula
+        ip_value             = ip_value
+        ip_row               = lv_row
+        ip_column            = lv_column ).
     ENDIF.
     READ TABLE sheet_content ASSIGNING <fs_sheet_content> WITH TABLE KEY cell_row    = lv_row      " Changed to access via table key , Stefan Schmöcker, 2013-08-03
                                                                          cell_column = lv_column.
@@ -3568,8 +3568,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       <fs_value> = ip_value.
       IF ip_data_type IS SUPPLIED.
         IF ip_abap_type IS NOT SUPPLIED.
-          get_value_type( EXPORTING ip_value      = ip_value
-                          IMPORTING ep_value      = <fs_value> ) .
+          get_value_type( EXPORTING ip_value = ip_value
+                          IMPORTING ep_value = <fs_value> ).
         ENDIF.
         lv_value = <fs_value>.
         lv_data_type = ip_data_type.
@@ -3658,11 +3658,21 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ENDCASE.
       ENDIF.
 
+      IF <fs_sheet_content> IS ASSIGNED AND <fs_sheet_content>-table_header IS NOT INITIAL AND lv_value IS NOT INITIAL.
+        READ TABLE <fs_sheet_content>-table->fieldcat ASSIGNING <ls_fieldcat> WITH KEY fieldname = <fs_sheet_content>-table_fieldname.
+        IF sy-subrc = 0.
+          <ls_fieldcat>-column_name = lv_value.
+          if <ls_fieldcat>-column_name <> lv_value.
+            zcx_excel=>raise_text( 'Cell is table column header - this value is not allowed' ).
+          endif.
+        ENDIF.
+      ENDIF.
+
     ENDIF.
 
     IF ip_hyperlink IS BOUND.
       ip_hyperlink->set_cell_reference( ip_column = lv_column
-                                        ip_row = lv_row ).
+                                        ip_row    = lv_row ).
       me->hyperlinks->add( ip_hyperlink ).
     ENDIF.
 
@@ -3695,7 +3705,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ls_sheet_content-column_formula_id = ip_column_formula_id.
       ls_sheet_content-cell_style   = lv_style_guid.
       ls_sheet_content-data_type    = lv_data_type.
-      ls_sheet_content-cell_coords  = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
+      ls_sheet_content-cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_column i_row = lv_row ).
       INSERT ls_sheet_content INTO TABLE sheet_content ASSIGNING <fs_sheet_content>. "ins #152 - Now <fs_sheet_content> always holds the data
 
     ENDIF.
@@ -3729,9 +3739,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
         ENDIF.
-        me->change_cell_style( ip_column                      = lv_column
-                               ip_row                         = lv_row
-                               ip_number_format_format_code   = lo_format_code_datetime ).
+        me->change_cell_style( ip_column                    = lv_column
+                               ip_row                       = lv_row
+                               ip_number_format_format_code = lo_format_code_datetime ).
 
       WHEN cl_abap_typedescr=>typekind_time.
         TRY.
@@ -3744,9 +3754,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
         ENDIF.
-        me->change_cell_style( ip_column                      = lv_column
-                               ip_row                         = lv_row
-                               ip_number_format_format_code   = lo_format_code_datetime ).
+        me->change_cell_style( ip_column                    = lv_column
+                               ip_row                       = lv_row
+                               ip_number_format_format_code = lo_format_code_datetime ).
 
     ENDCASE.
 * End of change issue #152 - don't touch exisiting style if only value is passed
@@ -3754,9 +3764,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * Fix issue #162
     lv_value = ip_value.
     IF lv_value CS cl_abap_char_utilities=>cr_lf.
-      me->change_cell_style( ip_column               = lv_column
-                             ip_row                  = lv_row
-                             ip_alignment_wraptext   = abap_true ).
+      me->change_cell_style( ip_column             = lv_column
+                             ip_row                = lv_row
+                             ip_alignment_wraptext = abap_true ).
     ENDIF.
 * End of Fix issue #162
 
