@@ -7411,7 +7411,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     "columns
     lo_element = lo_document->create_simple_element( name   = 'tableColumns'
-                                                            parent = lo_document ).
+                                                     parent = lo_document ).
 
     LOOP AT io_table->fieldcat INTO ls_fieldcat WHERE dynpfld = abap_true.
       ADD 1 TO lv_num_columns.
@@ -7426,7 +7426,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     LOOP AT io_table->fieldcat INTO ls_fieldcat WHERE dynpfld = abap_true.
       lo_element2 = lo_document->create_simple_element_ns( name   = 'tableColumn'
-                                                           parent = lo_element ).
+                                                                  parent = lo_element ).
 
       lv_value = ls_fieldcat-position.
       SHIFT lv_value LEFT DELETING LEADING '0'.
@@ -7454,7 +7454,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       IF ls_fieldcat-totals_function IS NOT INITIAL.
         lo_element2->set_attribute_ns( name  = 'totalsRowFunction'
-                                         value = ls_fieldcat-totals_function ).
+                                          value = ls_fieldcat-totals_function ).
       ENDIF.
 
       IF ls_fieldcat-column_formula IS NOT INITIAL.
@@ -7471,10 +7471,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
     lo_element = lo_document->create_simple_element( name   = 'tableStyleInfo'
-                                                     parent = lo_element_root ).
+                                                          parent = lo_element_root ).
 
     lo_element->set_attribute_ns( name  = 'name'
-                                       value = io_table->settings-table_style ).
+                                       value = io_table->settings-table_style  ).
 
     lo_element->set_attribute_ns( name  = 'showFirstColumn'
                                        value = '0' ).
