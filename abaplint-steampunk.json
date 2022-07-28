@@ -1,0 +1,54 @@
+{
+  "global": {
+    "files": "/src/**/*.*",
+    "noIssues": ["/demos/", "/not_cloud/"]
+  },
+  "dependencies": [
+    {
+      "url": "https://github.com/abapedia/steampunk-2205-api",
+      "files": "/src/**/*.*"
+    }
+  ],
+  "syntax": {
+    "version": "Cloud",
+    "errorNamespace": "."
+  },
+  "rules": {
+    "begin_end_names": {
+      "severity": "Warning"
+    },
+    "check_ddic": {
+      "severity": "Warning"
+    },
+    "check_include": {
+      "severity": "Warning"
+    },
+    "check_syntax": {
+      "severity": "Warning"
+    },
+    "global_class": {
+      "severity": "Warning"
+    },
+    "implement_methods": {
+      "severity": "Warning"
+    },
+    "method_implemented_twice": {
+      "severity": "Warning"
+    },
+    "parser_error": {
+      "severity": "Warning"
+    },
+    "parser_missing_space": {
+      "severity": "Warning"
+    },
+    "superclass_final": {
+      "severity": "Warning"
+    },
+    "unknown_types": {
+      "severity": "Warning"
+    },
+    "xml_consistency": {
+      "severity": "Warning"
+    }
+  }
+}

@@ -5,15 +5,6 @@ CLASS zcl_excel_drawing DEFINITION
   INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
-*"* public components of class ZCL_EXCEL_DRAWING
-*"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_DRAWING
-*"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_DRAWING
-*"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_DRAWING
-*"* do not include other source files here!!!
-
     CONSTANTS c_graph_pie TYPE zexcel_graph_type VALUE 1.   "#EC NOTEXT
     CONSTANTS c_graph_line TYPE zexcel_graph_type VALUE 2.  "#EC NOTEXT
     CONSTANTS c_graph_bars TYPE zexcel_graph_type VALUE 0.  "#EC NOTEXT
@@ -152,6 +143,8 @@ CLASS zcl_excel_drawing DEFINITION
     DATA from_loc TYPE zexcel_drawing_location .
     DATA to_loc TYPE zexcel_drawing_location .
     DATA size TYPE zexcel_drawing_size .
+    CONSTANTS c_ixml_iid_element TYPE i VALUE 130.
+
 ENDCLASS.
 
 
@@ -468,7 +461,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
             rval = lo_iterator.
         lo_node = lo_iterator->get_next( ).
         IF lo_node IS BOUND.
-          node2 ?= lo_node->query_interface( ixml_iid_element ).
+          node2 ?= lo_node->query_interface( c_ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
           node3 ?= node2->find_from_name_ns( name = 'idx' uri = namespace-c ).
@@ -504,7 +497,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
               ip_sername          = lv_sername.
           lo_node = lo_iterator->get_next( ).
           IF lo_node IS BOUND.
-            node2 ?= lo_node->query_interface( ixml_iid_element ).
+            node2 ?= lo_node->query_interface( c_ixml_iid_element ).
           ENDIF.
         ENDWHILE.
         "note: numCache avoided
@@ -544,7 +537,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
             rval = lo_iterator.
         lo_node = lo_iterator->get_next( ).
         IF lo_node IS BOUND.
-          node2 ?= lo_node->query_interface( ixml_iid_element ).
+          node2 ?= lo_node->query_interface( c_ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
@@ -660,7 +653,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
           ENDIF.
           lo_node = lo_iterator->get_next( ).
           IF lo_node IS BOUND.
-            node2 ?= lo_node->query_interface( ixml_iid_element ).
+            node2 ?= lo_node->query_interface( c_ixml_iid_element ).
           ENDIF.
         ENDWHILE.
 
@@ -682,7 +675,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
             rval = lo_iterator.
         lo_node = lo_iterator->get_next( ).
         IF lo_node IS BOUND.
-          node2 ?= lo_node->query_interface( ixml_iid_element ).
+          node2 ?= lo_node->query_interface( c_ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
           node3 ?= node2->find_from_name_ns( name = 'idx' uri = namespace-c ).
@@ -714,7 +707,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
               ip_sername = lv_sername.
           lo_node = lo_iterator->get_next( ).
           IF lo_node IS BOUND.
-            node2 ?= lo_node->query_interface( ixml_iid_element ).
+            node2 ?= lo_node->query_interface( c_ixml_iid_element ).
           ENDIF.
         ENDWHILE.
 
@@ -764,7 +757,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
             rval = lo_iterator.
         lo_node = lo_iterator->get_next( ).
         IF lo_node IS BOUND.
-          node2 ?= lo_node->query_interface( ixml_iid_element ).
+          node2 ?= lo_node->query_interface( c_ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
           node3 ?= node2->find_from_name_ns( name = 'idx' uri = namespace-c ).
@@ -804,7 +797,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
               ip_sername = lv_sername.
           lo_node = lo_iterator->get_next( ).
           IF lo_node IS BOUND.
-            node2 ?= lo_node->query_interface( ixml_iid_element ).
+            node2 ?= lo_node->query_interface( c_ixml_iid_element ).
           ENDIF.
         ENDWHILE.
         "note: numCache avoided
@@ -853,7 +846,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
             rval = lo_iterator.
         lo_node = lo_iterator->get_next( ).
         IF lo_node IS BOUND.
-          node2 ?= lo_node->query_interface( ixml_iid_element ).
+          node2 ?= lo_node->query_interface( c_ixml_iid_element ).
         ENDIF.
         WHILE lo_node IS BOUND.
           zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
@@ -965,7 +958,7 @@ CLASS zcl_excel_drawing IMPLEMENTATION.
           ENDIF.
           lo_node = lo_iterator->get_next( ).
           IF lo_node IS BOUND.
-            node2 ?= lo_node->query_interface( ixml_iid_element ).
+            node2 ?= lo_node->query_interface( c_ixml_iid_element ).
           ENDIF.
         ENDWHILE.
       WHEN OTHERS.

@@ -93,7 +93,6 @@ CLASS zcl_excel_worksheet DEFINITION
     DATA sheet_setup TYPE REF TO zcl_excel_sheet_setup .
     DATA show_gridlines TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
     DATA show_rowcolheaders TYPE zexcel_show_gridlines READ-ONLY VALUE abap_true ##NO_TEXT.
-    DATA styles TYPE zexcel_t_sheet_style .
     DATA tabcolor TYPE zexcel_s_tabcolor READ-ONLY .
     DATA column_formulas TYPE mty_th_column_formula READ-ONLY .
     CLASS-DATA:
@@ -2969,14 +2968,18 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
           lv_value_lowercase    TYPE string,
+          lv_scrtext_l_initial  TYPE scrtext_l,
+          lv_long_text          TYPE string,
+          lv_max_length         TYPE i,
+          lv_temp_length        TYPE i,
           lv_syindex            TYPE c LENGTH 3,
           lt_column_name_buffer TYPE SORTED TABLE OF string WITH UNIQUE KEY table_line.
     FIELD-SYMBOLS: <ls_field_catalog> TYPE zexcel_s_fieldcatalog,
-                   <scrtxt1> TYPE any,
-                   <scrtxt2> TYPE any,
-                   <scrtxt3> TYPE any.
+                   <scrtxt1>          TYPE any,
+                   <scrtxt2>          TYPE any,
+                   <scrtxt3>          TYPE any.
 
-    " Due restrinction of new table object we cannot have two column with the same name
+    " Due to restrictions in new table object we cannot have two columns with the same name
     " Check if a column with the same name exists, if exists add a counter
     " If no medium description is provided we try to use small or long
 
@@ -3013,6 +3016,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         <ls_field_catalog>-scrtext_l = 'Column'.  " default value as Excel does
       ENDIF.
 
+      lv_scrtext_l_initial = <ls_field_catalog>-scrtext_l.
+      DESCRIBE FIELD <ls_field_catalog>-scrtext_l LENGTH lv_max_length IN CHARACTER MODE.
       DO.
         lv_value_lowercase = <ls_field_catalog>-scrtext_l.
         TRANSLATE lv_value_lowercase TO LOWER CASE.
@@ -3022,7 +3027,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           EXIT.
         ELSE.
           lv_syindex = sy-index.
-          CONCATENATE <ls_field_catalog>-scrtext_l lv_syindex INTO <ls_field_catalog>-scrtext_l.
+          CONCATENATE lv_scrtext_l_initial lv_syindex INTO lv_long_text.
+          IF strlen( lv_long_text ) <= lv_max_length.
+            <ls_field_catalog>-scrtext_l = lv_long_text.
+          ELSE.
+            lv_temp_length = strlen( lv_scrtext_l_initial ) - 1.
+            lv_scrtext_l_initial = substring( val = lv_scrtext_l_initial len = lv_temp_length ).
+            CONCATENATE lv_scrtext_l_initial lv_syindex INTO <ls_field_catalog>-scrtext_l.
+          ENDIF.
         ENDIF.
       ENDDO.
 
@@ -3136,7 +3148,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       rv_guid = ip_style_or_guid.
 
     ELSE.
-      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_tyle or zexcel_cell_style'.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'IP_GUID type must be either REF TO zcl_excel_style or zexcel_cell_style'.
     ENDIF.
 
   ENDMETHOD.
@@ -3690,6 +3702,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *                      If not, use default
     DATA: lo_format_code_datetime TYPE zexcel_number_format.
     DATA: stylemapping    TYPE zexcel_s_stylemapping.
+    IF <fs_sheet_content>-cell_style IS INITIAL.
+      <fs_sheet_content>-cell_style = me->excel->get_default_style( ).
+    ENDIF.
     CASE lv_value_type.
       WHEN cl_abap_typedescr=>typekind_date.
         TRY.
