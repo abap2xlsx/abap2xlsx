@@ -670,8 +670,8 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_column    TYPE zexcel_cell_column
         !ip_row       TYPE zexcel_cell_row
         !ir_table     TYPE REF TO zcl_excel_table
-        !ip_fieldname type zexcel_fieldname
-        !ip_header    type abap_bool
+        !ip_fieldname TYPE zexcel_fieldname
+        !ip_header    TYPE abap_bool
       RAISING
         zcx_excel .
   PRIVATE SECTION.
