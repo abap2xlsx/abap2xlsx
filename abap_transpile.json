@@ -16,7 +16,7 @@
     "src/zcl_excel_t",
     "src/zcl_excel_worksheet",
     "src/zcl_excel_writer_2007",
-    "src/zcl_excel_writer_csv TODO, select loop in transpiler",
+    "src/zcl_excel_writer_csv",
     "src/zcl_excel_writer_huge_file",
     "src/zcl_excel_writer_xlsm",
     "src/zcl_excel.clas",
