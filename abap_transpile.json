@@ -19,7 +19,7 @@
     "src/zcx_",
     "src/zexcel_.*doma",
     "src/zexcel_.*dtel",
-    "src/zexcel_pane.tabl",
+    "src/zexcel_p",
     "src/zexcel_s_cell_data",
     "src/zexcel_s_cstyle_alignment",
     "src/zexcel_s_cstyle_border",
