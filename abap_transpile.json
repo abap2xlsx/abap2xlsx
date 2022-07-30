@@ -88,7 +88,7 @@
       {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "two_column_formulas", "note": "??"},
 
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "??"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row",   "note": "raises exception 'Input not properly escaped'"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row",   "note": "probably https://github.com/abaplint/transpiler/issues/646 "},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "date_to_excel_string6",        "note": "??"}
     ]
   }
