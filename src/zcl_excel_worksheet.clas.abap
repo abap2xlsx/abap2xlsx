@@ -1180,7 +1180,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       " totals
 *--------------------------------------------------------------------*
       IF <ls_field_catalog>-totals_function IS NOT INITIAL.
-        lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-scrtext_l ip_function = <ls_field_catalog>-totals_function ).
+        lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-column_name ip_function = <ls_field_catalog>-totals_function ).
         IF <ls_field_catalog>-style_total IS NOT INITIAL.
           me->set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
