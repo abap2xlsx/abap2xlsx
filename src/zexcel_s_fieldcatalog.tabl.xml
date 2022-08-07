@@ -111,6 +111,12 @@
      <MASK>  STRG</MASK>
      <DDTEXT>Column Formula</DDTEXT>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>COLUMN_NAME</FIELDNAME>
+     <ROLLNAME>ZEXCEL_COLUMN_NAME</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
   </asx:values>
  </asx:abap>
