@@ -665,6 +665,15 @@ CLASS zcl_excel_worksheet DEFINITION
       RAISING
         zcx_excel .
   PROTECTED SECTION.
+    METHODS set_table_reference
+      IMPORTING
+        !ip_column    TYPE zexcel_cell_column
+        !ip_row       TYPE zexcel_cell_row
+        !ir_table     TYPE REF TO zcl_excel_table
+        !ip_fieldname TYPE zexcel_fieldname
+        !ip_header    TYPE abap_bool
+      RAISING
+        zcx_excel .
   PRIVATE SECTION.
 
 *"* private components of class ZCL_EXCEL_WORKSHEET
@@ -1047,13 +1056,19 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       IF <ls_field_catalog>-style_header IS NOT INITIAL.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = <ls_field_catalog>-scrtext_l
+                      ip_value  = <ls_field_catalog>-column_name
                       ip_style  = <ls_field_catalog>-style_header ).
       ELSE.
         me->set_cell( ip_column = lv_column_alpha
                       ip_row    = lv_row_int
-                      ip_value  = <ls_field_catalog>-scrtext_l ).
+                      ip_value  = <ls_field_catalog>-column_name ).
       ENDIF.
+
+      me->set_table_reference( ip_column    = lv_column_int
+                               ip_row       = lv_row_int
+                               ir_table     = lo_table
+                               ip_fieldname = <ls_field_catalog>-fieldname
+                               ip_header    = abap_true ).
 
       IF <ls_field_catalog>-column_formula IS NOT INITIAL.
         ls_column_formula-id                     = lines( column_formulas ) + 1.
@@ -1165,7 +1180,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       " totals
 *--------------------------------------------------------------------*
       IF <ls_field_catalog>-totals_function IS NOT INITIAL.
-        lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-scrtext_l ip_function = <ls_field_catalog>-totals_function ).
+        lv_formula = lo_table->get_totals_formula( ip_column = <ls_field_catalog>-column_name ip_function = <ls_field_catalog>-totals_function ).
         IF <ls_field_catalog>-style_total IS NOT INITIAL.
           me->set_cell( ip_column   = lv_column_alpha
                         ip_row      = lv_row_int
@@ -2963,7 +2978,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
           lv_value_lowercase    TYPE string,
-          lv_scrtext_l_initial  TYPE scrtext_l,
+          lv_scrtext_l_initial  TYPE zexcel_column_name,
           lv_long_text          TYPE string,
           lv_max_length         TYPE i,
           lv_temp_length        TYPE i,
@@ -2982,39 +2997,42 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
-      CASE iv_default_descr.
-        WHEN 'M'.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'S'.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-        WHEN 'L'.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
-        WHEN OTHERS.
-          ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
-          ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
-          ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
-      ENDCASE.
+      IF <ls_field_catalog>-column_name IS INITIAL.
 
-      IF <scrtxt1> IS NOT INITIAL.
-        <ls_field_catalog>-scrtext_l = <scrtxt1>.
-      ELSEIF <scrtxt2> IS NOT INITIAL.
-        <ls_field_catalog>-scrtext_l = <scrtxt2>.
-      ELSEIF <scrtxt3> IS NOT INITIAL.
-        <ls_field_catalog>-scrtext_l = <scrtxt3>.
-      ELSE.
-        <ls_field_catalog>-scrtext_l = 'Column'.  " default value as Excel does
+        CASE iv_default_descr.
+          WHEN 'M'.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+          WHEN 'S'.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+          WHEN 'L'.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt3>.
+          WHEN OTHERS.
+            ASSIGN <ls_field_catalog>-scrtext_m TO <scrtxt1>.
+            ASSIGN <ls_field_catalog>-scrtext_s TO <scrtxt2>.
+            ASSIGN <ls_field_catalog>-scrtext_l TO <scrtxt3>.
+        ENDCASE.
+
+        IF <scrtxt1> IS NOT INITIAL.
+          <ls_field_catalog>-column_name = <scrtxt1>.
+        ELSEIF <scrtxt2> IS NOT INITIAL.
+          <ls_field_catalog>-column_name = <scrtxt2>.
+        ELSEIF <scrtxt3> IS NOT INITIAL.
+          <ls_field_catalog>-column_name = <scrtxt3>.
+        ELSE.
+          <ls_field_catalog>-column_name = 'Column'.  " default value as Excel does
+        ENDIF.
       ENDIF.
 
-      lv_scrtext_l_initial = <ls_field_catalog>-scrtext_l.
-      DESCRIBE FIELD <ls_field_catalog>-scrtext_l LENGTH lv_max_length IN CHARACTER MODE.
+      lv_scrtext_l_initial = <ls_field_catalog>-column_name.
+      DESCRIBE FIELD <ls_field_catalog>-column_name LENGTH lv_max_length IN CHARACTER MODE.
       DO.
-        lv_value_lowercase = <ls_field_catalog>-scrtext_l.
+        lv_value_lowercase = <ls_field_catalog>-column_name.
         TRANSLATE lv_value_lowercase TO LOWER CASE.
         READ TABLE lt_column_name_buffer TRANSPORTING NO FIELDS WITH KEY table_line = lv_value_lowercase BINARY SEARCH.
         IF sy-subrc <> 0.
@@ -3024,11 +3042,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           lv_syindex = sy-index.
           CONCATENATE lv_scrtext_l_initial lv_syindex INTO lv_long_text.
           IF strlen( lv_long_text ) <= lv_max_length.
-            <ls_field_catalog>-scrtext_l = lv_long_text.
+            <ls_field_catalog>-column_name = lv_long_text.
           ELSE.
             lv_temp_length = strlen( lv_scrtext_l_initial ) - 1.
             lv_scrtext_l_initial = substring( val = lv_scrtext_l_initial len = lv_temp_length ).
-            CONCATENATE lv_scrtext_l_initial lv_syindex INTO <ls_field_catalog>-scrtext_l.
+            CONCATENATE lv_scrtext_l_initial lv_syindex INTO <ls_field_catalog>-column_name.
           ENDIF.
         ENDIF.
       ENDDO.
@@ -3498,7 +3516,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <fs_value>         TYPE simple,
                    <fs_typekind_int8> TYPE abap_typekind.
     FIELD-SYMBOLS: <fs_column_formula> TYPE mty_s_column_formula.
-
+    FIELD-SYMBOLS: <ls_fieldcat>       TYPE zexcel_s_fieldcatalog.
 
     IF ip_value  IS NOT SUPPLIED
         AND ip_formula IS NOT SUPPLIED
@@ -3639,6 +3657,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           WHEN OTHERS.
             zcx_excel=>raise_text( 'Invalid data type of input value' ).
         ENDCASE.
+      ENDIF.
+
+      IF <fs_sheet_content> IS ASSIGNED AND <fs_sheet_content>-table_header IS NOT INITIAL AND lv_value IS NOT INITIAL.
+        READ TABLE <fs_sheet_content>-table->fieldcat ASSIGNING <ls_fieldcat> WITH KEY fieldname = <fs_sheet_content>-table_fieldname.
+        IF sy-subrc = 0.
+          <ls_fieldcat>-column_name = lv_value.
+          IF <ls_fieldcat>-column_name <> lv_value.
+            zcx_excel=>raise_text( 'Cell is table column header - this value is not allowed' ).
+          ENDIF.
+        ENDIF.
       ENDIF.
 
     ENDIF.
@@ -3809,6 +3837,23 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.                    "SET_CELL_STYLE
+
+
+  METHOD set_table_reference.
+
+    FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data.
+
+    READ TABLE sheet_content ASSIGNING <ls_sheet_content> WITH KEY cell_row    = ip_row
+                                                                   cell_column = ip_column.
+    IF sy-subrc = 0.
+      <ls_sheet_content>-table           = ir_table.
+      <ls_sheet_content>-table_fieldname = ip_fieldname.
+      <ls_sheet_content>-table_header    = ip_header.
+    ELSE.
+      zcx_excel=>raise_text( 'Cell not found' ).
+    ENDIF.
+
+  ENDMETHOD.
 
 
   METHOD set_column_width.
