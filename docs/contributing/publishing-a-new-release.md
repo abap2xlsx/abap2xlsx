@@ -9,7 +9,7 @@ Version numbering is based on [Semantic Versioning 2.0.0](https://semver.org/):
 - `15`: a minor release
 - `0`: patch level (bug fixes)
 
-Create a branch for this new release, change `zcl_excel_version` to indicate the new version number and push the changes to the repository
+Create a branch for this new release, change `version` in `zcl_excel` to indicate the new version number and push the changes to the repository
 
 With GitHub Desktop (or any Git console or Git user interface), [add the tag](https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/managing-commits/managing-tags) `7.15.0` to this branch.
 

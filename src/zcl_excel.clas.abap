@@ -13,7 +13,7 @@ CLASS zcl_excel DEFINITION
     DATA legacy_palette TYPE REF TO zcl_excel_legacy_palette READ-ONLY .
     DATA security TYPE REF TO zcl_excel_security .
     DATA use_template TYPE abap_bool .
-    CONSTANTS version TYPE c LENGTH 10 VALUE '7.15.0'.      "#EC NOTEXT
+    CONSTANTS version TYPE c LENGTH 10 VALUE '7.16.0'.      "#EC NOTEXT
 
     METHODS add_new_autofilter
       IMPORTING
