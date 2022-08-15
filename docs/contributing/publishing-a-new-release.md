@@ -24,7 +24,7 @@ Now [create the release in GitHub](https://docs.github.com/en/repositories/relea
 - Click "Releases"
 - Click "Draft a new release"
 - Click "Choose a tag"
-- Type the title, select the previous tag, click "Auto-generate release notes" and click "Preview" to verify; you should have a list with the changes from the previous release, edit as required: 
+- Type the title, select the previous tag, click "Auto-generate release notes" and click "Preview" to verify; you should have a list with the changes from the previous release, edit as required and remember to include the list below as explanation: 
     - `+`: new feature
     - `*`: bug fix
     - `!`: feature modification
@@ -32,3 +32,6 @@ Now [create the release in GitHub](https://docs.github.com/en/repositories/relea
 - Click "Publish release" 
 - It's done, zip and tar.gz files are automatically assigned to the release
 - The new release appears in the Code home page, with the changelog in the release page itself.
+
+Now create a release for the [demos](https://github.com/abap2xlsx/demos) repository as well: use the same process and tag the latest commit available at the time the main library is released, to ensure users will always have a matching set of demo programs.
+
