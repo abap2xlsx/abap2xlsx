@@ -6,7 +6,7 @@ Below are the notes taken while publishing the release `7.16.0`.
 
 Version numbering is based on [Semantic Versioning 2.0.0](https://semver.org/):
 - `7`: a major release. NB: it will probably not change as we don't want to "make incompatible API changes".
-- `15`: a minor release
+- `16`: a minor release
 - `0`: patch level (bug fixes)
 
 Working directly on the upstream repository:
