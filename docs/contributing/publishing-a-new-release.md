@@ -1,6 +1,7 @@
 # Publishing a new release
 
 Let's create a release from time to time, every 1 or 2 months for instance, to contain enough changes, but not too much.
+Before beginning, you should ensure that ZDEMO_EXCEL_CHECKER (in the demos repo) shows all green checkmarks.
 
 Below are the notes taken while publishing the release `7.16.0`.
 
