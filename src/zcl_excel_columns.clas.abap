@@ -1,7 +1,8 @@
 CLASS zcl_excel_columns DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_COLUMNS
 *"* do not include other source files here!!!
@@ -28,6 +29,7 @@ CLASS zcl_excel_columns DEFINITION
     METHODS size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -69,6 +71,7 @@ CLASS zcl_excel_columns IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
 
     CREATE OBJECT columns.
 
@@ -104,4 +107,18 @@ CLASS zcl_excel_columns IMPLEMENTATION.
   METHOD size.
     ep_size = columns->size( ).
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_columns TYPE REF TO zcl_excel_columns.
+
+    CREATE OBJECT lo_excel_columns.
+
+    lo_excel_columns->columns ?= columns->clone( ).
+
+    lo_excel_columns->columns_hashed = columns_hashed.
+
+    ro_object = lo_excel_columns.
+  ENDMETHOD.
+
 ENDCLASS.

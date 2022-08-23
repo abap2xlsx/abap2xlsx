@@ -1,7 +1,8 @@
 CLASS zcl_excel_row DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
@@ -60,6 +61,7 @@ CLASS zcl_excel_row DEFINITION
     METHODS set_xf_index
       IMPORTING
         !ip_xf_index TYPE int4 .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -82,6 +84,8 @@ CLASS zcl_excel_row IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
+
     " Initialise values
     me->row_index    = ip_index.
     me->row_height   = -1.
@@ -235,4 +239,22 @@ CLASS zcl_excel_row IMPLEMENTATION.
   METHOD set_xf_index.
     me->xf_index = ip_xf_index.
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_row TYPE REF TO zcl_excel_row.
+
+    CREATE OBJECT lo_excel_row.
+
+    lo_excel_row->collapsed     = collapsed.
+    lo_excel_row->custom_height = custom_height.
+    lo_excel_row->outline_level = outline_level.
+    lo_excel_row->row_height    = row_height.
+    lo_excel_row->row_index     = row_index.
+    lo_excel_row->visible       = visible.
+    lo_excel_row->xf_index      = xf_index.
+
+    ro_object = lo_excel_row.
+  ENDMETHOD.
+
 ENDCLASS.

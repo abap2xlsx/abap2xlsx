@@ -1,7 +1,8 @@
 CLASS zcl_excel_styles DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_STYLES
 *"* do not include other source files here!!!
@@ -34,6 +35,7 @@ CLASS zcl_excel_styles DEFINITION
         !io_style            TYPE REF TO zcl_excel_style
       RETURNING
         VALUE(ep_style_code) TYPE i .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
@@ -66,7 +68,7 @@ CLASS zcl_excel_styles IMPLEMENTATION.
 
 
   METHOD constructor.
-
+    super->constructor( ).
 
     CREATE OBJECT styles.
   ENDMETHOD.
@@ -113,4 +115,16 @@ CLASS zcl_excel_styles IMPLEMENTATION.
 
     ep_size = styles->size( ).
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_styles TYPE REF TO zcl_excel_styles.
+
+    CREATE OBJECT lo_excel_styles.
+
+    lo_excel_styles->styles ?= styles->clone( ).
+
+    ro_object = lo_excel_styles.
+  ENDMETHOD.
+
 ENDCLASS.

@@ -1,7 +1,8 @@
 CLASS zcl_excel_sheet_setup DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_SHEET_SETUP
@@ -149,6 +150,7 @@ CLASS zcl_excel_sheet_setup DEFINITION
         !ep_odd_footer  TYPE zexcel_s_worksheet_head_foot
         !ep_even_header TYPE zexcel_s_worksheet_head_foot
         !ep_even_footer TYPE zexcel_s_worksheet_head_foot .
+    METHODS clone REDEFINITION.
   PROTECTED SECTION.
 
 *"* protected components of class ZCL_EXCEL_SHEET_SETUP
@@ -170,6 +172,8 @@ CLASS zcl_excel_sheet_setup IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
+
     orientation = me->c_orientation_default.
 
 * default margins
@@ -474,5 +478,47 @@ CLASS zcl_excel_sheet_setup IMPLEMENTATION.
     IF ip_right IS SUPPLIED.  margin_right  = lv_coef * ip_right. ENDIF.
     IF ip_top IS SUPPLIED.    margin_top    = lv_coef * ip_top. ENDIF.
 
+  ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_sheet_setup TYPE REF TO zcl_excel_sheet_setup.
+
+    CREATE OBJECT lo_excel_sheet_setup.
+
+    lo_excel_sheet_setup->black_and_white           = black_and_white.
+    lo_excel_sheet_setup->cell_comments             = cell_comments.
+    lo_excel_sheet_setup->copies                    = copies.
+    lo_excel_sheet_setup->diff_oddeven_headerfooter = diff_oddeven_headerfooter.
+    lo_excel_sheet_setup->draft                     = draft.
+    lo_excel_sheet_setup->errors                    = errors.
+    lo_excel_sheet_setup->even_footer               = even_footer.
+    lo_excel_sheet_setup->even_header               = even_header.
+    lo_excel_sheet_setup->first_page_number         = first_page_number.
+    lo_excel_sheet_setup->fit_to_height             = fit_to_height.
+    lo_excel_sheet_setup->fit_to_page               = fit_to_page.
+    lo_excel_sheet_setup->fit_to_width              = fit_to_width.
+    lo_excel_sheet_setup->horizontal_centered       = horizontal_centered.
+    lo_excel_sheet_setup->horizontal_dpi            = horizontal_dpi.
+    lo_excel_sheet_setup->margin_bottom             = margin_bottom.
+    lo_excel_sheet_setup->margin_footer             = margin_footer.
+    lo_excel_sheet_setup->margin_header             = margin_header.
+    lo_excel_sheet_setup->margin_left               = margin_left.
+    lo_excel_sheet_setup->margin_right              = margin_right.
+    lo_excel_sheet_setup->margin_top                = margin_top.
+    lo_excel_sheet_setup->odd_footer                = odd_footer.
+    lo_excel_sheet_setup->odd_header                = odd_header.
+    lo_excel_sheet_setup->orientation               = orientation.
+    lo_excel_sheet_setup->page_order                = page_order.
+    lo_excel_sheet_setup->paper_height              = paper_height.
+    lo_excel_sheet_setup->paper_size                = paper_size.
+    lo_excel_sheet_setup->paper_width               = paper_width.
+    lo_excel_sheet_setup->scale                     = scale.
+    lo_excel_sheet_setup->use_first_page_num        = use_first_page_num.
+    lo_excel_sheet_setup->use_printer_defaults      = use_printer_defaults.
+    lo_excel_sheet_setup->vertical_centered         = vertical_centered.
+    lo_excel_sheet_setup->vertical_dpi              = vertical_dpi.
+
+    ro_object = lo_excel_sheet_setup.
   ENDMETHOD.
 ENDCLASS.

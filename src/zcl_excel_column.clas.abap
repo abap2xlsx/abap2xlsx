@@ -1,7 +1,8 @@
 CLASS zcl_excel_column DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
@@ -82,6 +83,7 @@ CLASS zcl_excel_column DEFINITION
         VALUE(ep_style_guid) TYPE zexcel_cell_style
       RAISING
         zcx_excel .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -107,6 +109,8 @@ CLASS zcl_excel_column IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
+
     me->column_index = zcl_excel_common=>convert_column2int( ip_index ).
     me->width         = -1.
     me->auto_size     = abap_false.
@@ -226,4 +230,29 @@ CLASS zcl_excel_column IMPLEMENTATION.
     me->xf_index = ip_xf_index.
     io_column = me.
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_column TYPE REF TO zcl_excel_column.
+    DATA lv_index TYPE zexcel_cell_column_alpha.
+
+    lv_index = column_index.
+
+    CREATE OBJECT lo_excel_column
+      EXPORTING
+        ip_index     = lv_index
+        ip_worksheet = worksheet
+        ip_excel     = excel.
+
+    lo_excel_column->width          = width.
+    lo_excel_column->auto_size      = auto_size.
+    lo_excel_column->visible        = visible.
+    lo_excel_column->outline_level  = outline_level.
+    lo_excel_column->collapsed      = collapsed.
+    lo_excel_column->xf_index       = xf_index.
+    lo_excel_column->style_guid     = style_guid.
+
+    ro_object = lo_excel_column.
+  ENDMETHOD.
+
 ENDCLASS.

@@ -1,7 +1,8 @@
 CLASS zcl_excel_style DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_STYLE
 *"* do not include other source files here!!!
@@ -21,6 +22,7 @@ CLASS zcl_excel_style DEFINITION
     METHODS get_guid
       RETURNING
         VALUE(ep_guid) TYPE zexcel_cell_style .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZABAP_EXCEL_STYLE
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -37,7 +39,7 @@ CLASS zcl_excel_style IMPLEMENTATION.
 
 
   METHOD constructor.
-
+    super->constructor( ).
 
     CREATE OBJECT font.
     CREATE OBJECT fill.
@@ -101,4 +103,12 @@ CLASS zcl_excel_style IMPLEMENTATION.
 
     ep_guid = me->guid.
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_style TYPE REF TO zcl_excel_style.
+    CREATE OBJECT lo_excel_style EXPORTING io_clone_of = me.
+    ro_object = lo_excel_style.
+  ENDMETHOD.
+
 ENDCLASS.

@@ -1,7 +1,8 @@
 CLASS zcl_excel_drawing DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
   PUBLIC SECTION.
     CONSTANTS c_graph_pie TYPE zexcel_graph_type VALUE 1.   "#EC NOTEXT
@@ -120,6 +121,7 @@ CLASS zcl_excel_drawing DEFINITION
     METHODS load_chart_attributes
       IMPORTING
         VALUE(ip_chart) TYPE REF TO if_ixml_document .
+    METHODS clone REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -147,10 +149,11 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
+CLASS zcl_excel_drawing IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
 
     me->guid = zcl_excel_obsolete_func_wrap=>guid_create( ).      " ins issue #379 - replacement for outdated function call
 
@@ -1133,4 +1136,33 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     me->anchor = lv_anchor.
 
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_drawing TYPE REF TO zcl_excel_drawing.
+
+    CREATE OBJECT lo_excel_drawing.
+
+    IF graph IS BOUND.
+      lo_excel_drawing->graph ?= graph->clone( ).
+    ENDIF.
+
+    lo_excel_drawing->anchor        = anchor.
+    lo_excel_drawing->from_loc      = from_loc.
+    lo_excel_drawing->graph_type    = graph_type.
+    lo_excel_drawing->index         = index.
+    lo_excel_drawing->io            = io.
+    lo_excel_drawing->media         = media.
+    lo_excel_drawing->media_key_www = media_key_www.
+    lo_excel_drawing->media_name    = media_name.
+    lo_excel_drawing->media_source  = media_source.
+    lo_excel_drawing->media_type    = media_type.
+    lo_excel_drawing->size          = size.
+    lo_excel_drawing->title         = title.
+    lo_excel_drawing->to_loc        = to_loc.
+    lo_excel_drawing->type          = type.
+
+    ro_object = lo_excel_drawing.
+  ENDMETHOD.
+
 ENDCLASS.

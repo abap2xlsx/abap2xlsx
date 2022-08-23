@@ -1,7 +1,8 @@
 CLASS zcl_excel_data_validations DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_DATA_VALIDATIONS
 *"* do not include other source files here!!!
@@ -24,6 +25,7 @@ CLASS zcl_excel_data_validations DEFINITION
     METHODS size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATIONS
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -50,6 +52,7 @@ CLASS zcl_excel_data_validations IMPLEMENTATION.
 
 
   METHOD constructor.
+    super->constructor( ).
 
     CREATE OBJECT data_validations.
 
@@ -74,4 +77,16 @@ CLASS zcl_excel_data_validations IMPLEMENTATION.
   METHOD size.
     ep_size = data_validations->size( ).
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_data_validations TYPE REF TO zcl_excel_data_validations.
+
+    CREATE OBJECT lo_excel_data_validations.
+
+    lo_excel_data_validations->data_validations ?= data_validations->clone( ).
+
+    ro_object = lo_excel_data_validations.
+  ENDMETHOD.
+
 ENDCLASS.

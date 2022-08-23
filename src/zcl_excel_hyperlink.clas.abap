@@ -1,7 +1,8 @@
 CLASS zcl_excel_hyperlink DEFINITION
   PUBLIC
   FINAL
-  CREATE PRIVATE .
+  CREATE PRIVATE
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_HYPERLINK
 *"* do not include other source files here!!!
@@ -32,6 +33,7 @@ CLASS zcl_excel_hyperlink DEFINITION
     METHODS get_url
       RETURNING
         VALUE(ev_url) TYPE string .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_HYPERLINK
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -104,4 +106,20 @@ CLASS zcl_excel_hyperlink IMPLEMENTATION.
     me->column = zcl_excel_common=>convert_column2alpha( ip_column ). " issue #155 - less restrictive typing for ip_column
     me->row = ip_row.
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_hyperlink TYPE REF TO zcl_excel_hyperlink.
+
+    CREATE OBJECT lo_excel_hyperlink.
+
+    lo_excel_hyperlink->cell_reference  = cell_reference.
+    lo_excel_hyperlink->column          = column.
+    lo_excel_hyperlink->internal        = internal.
+    lo_excel_hyperlink->location        = location.
+    lo_excel_hyperlink->row             = row.
+
+    ro_object = lo_excel_hyperlink.
+  ENDMETHOD.
+
 ENDCLASS.

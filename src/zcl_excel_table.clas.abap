@@ -1,7 +1,8 @@
 CLASS zcl_excel_table DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  INHERITING FROM zcl_excel_base.
 
 *"* public components of class ZCL_EXCEL_TABLE
 *"* do not include other source files here!!!
@@ -113,6 +114,7 @@ CLASS zcl_excel_table DEFINITION
         VALUE(ev_column) TYPE i
       RAISING
         zcx_excel .
+    METHODS clone REDEFINITION.
 *"* protected components of class ZCL_EXCEL_TABLE
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_TABLE
@@ -301,4 +303,20 @@ CLASS zcl_excel_table IMPLEMENTATION.
   METHOD set_id.
     id = iv_id.
   ENDMETHOD.
+
+
+  METHOD clone.
+    DATA lo_excel_table TYPE REF TO zcl_excel_table.
+
+    CREATE OBJECT lo_excel_table.
+
+    lo_excel_table->fieldcat    = fieldcat.
+    lo_excel_table->id          = id.
+    lo_excel_table->name        = name.
+    lo_excel_table->settings    = settings.
+    lo_excel_table->table_data  = table_data.
+
+    ro_object = lo_excel_table.
+  ENDMETHOD.
+
 ENDCLASS.
