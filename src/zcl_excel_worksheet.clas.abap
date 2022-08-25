@@ -2168,8 +2168,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
 
       SORT lt_ddic_object BY fieldname.
-      MOVE-CORRESPONDING lt_field_catalog TO lt_field_conv.
-      LOOP AT lt_field_conv ASSIGNING <ls_field_conv>.
+      LOOP AT lt_field_catalog INTO ls_field_catalog.
+        APPEND INITIAL LINE TO lt_field_conv ASSIGNING <ls_field_conv>.
+        MOVE-CORRESPONDING ls_field_catalog TO <ls_field_conv>.
         READ TABLE lt_ddic_object ASSIGNING <ls_ddic_object> WITH KEY fieldname = <ls_field_conv>-fieldname BINARY SEARCH.
         CHECK: sy-subrc EQ 0.
         CASE <ls_ddic_object>-exid.
@@ -2300,7 +2301,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
     IF et_data IS SUPPLIED.
-      MOVE-CORRESPONDING <lt_data> TO et_data.
+*      MOVE-CORRESPONDING <lt_data> TO et_data.
+      LOOP AT <lt_data> ASSIGNING <ls_data>.
+        APPEND INITIAL LINE TO et_data ASSIGNING <ls_data2>.
+        MOVE-CORRESPONDING <ls_data> TO <ls_data2>.
+      ENDLOOP.
     ENDIF.
 
 
@@ -2308,7 +2313,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *    IF et_error_log IS SUPPLIED.
 *      CREATE DATA lr_data LIKE <lt_data>.
 *      ASSIGN lr_data->* TO <lt_data2>.
-*      MOVE-CORRESPONDING et_data TO <lt_data2>.
+**      MOVE-CORRESPONDING et_data TO <lt_data2>.
+*      LOOP AT et_data ASSIGNING <ls_data>.
+*        APPEND INITIAL LINE TO <lt_data2> ASSIGNING <ls_data2>.
+*        MOVE-CORRESPONDING <ls_data> TO <ls_data2>.
+*      ENDLOOP.
 *      LOOP AT lt_field_conv ASSIGNING <ls_field_conv>
 *       WHERE convexit = cl_abap_typedescr=>typekind_float.
 *        LOOP AT <lt_data2> ASSIGNING <ls_data2>.
