@@ -2324,52 +2324,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
 
-    " Find errors
-*    IF et_error_log IS SUPPLIED.
-*      CREATE DATA lr_data LIKE <lt_data>.
-*      ASSIGN lr_data->* TO <lt_data2>.
-**      MOVE-CORRESPONDING et_data TO <lt_data2>.
-*      LOOP AT et_data ASSIGNING <ls_data>.
-*        APPEND INITIAL LINE TO <lt_data2> ASSIGNING <ls_data2>.
-*        MOVE-CORRESPONDING <ls_data> TO <ls_data2>.
-*      ENDLOOP.
-*      LOOP AT lt_field_conv ASSIGNING <ls_field_conv>
-*       WHERE convexit = cl_abap_typedescr=>typekind_float.
-*        LOOP AT <lt_data2> ASSIGNING <ls_data2>.
-*          ASSIGN COMPONENT <ls_field_conv>-fieldname OF STRUCTURE <ls_data2> TO <lv_data2>.
-*          CHECK: sy-subrc EQ 0 AND <lv_data> IS NOT INITIAL.
-*          lv_float = <lv_data2>.
-*          <lv_data2> = |{ lv_float NUMBER = RAW }|.
-*        ENDLOOP.
-*      ENDLOOP.
-*
-*      IF <lt_data> NE <lt_data2>.
-*        LOOP AT <lt_data> ASSIGNING <ls_data>.
-*          lv_index = sy-tabix.
-*          READ TABLE <lt_data2> ASSIGNING <ls_data2> INDEX lv_index.
-*          IF <ls_data> NE <ls_data2>.
-*            LOOP AT lt_field_conv ASSIGNING <ls_field_conv>.
-*              lv_index_col = sy-tabix.
-*              ASSIGN COMPONENT <ls_field_conv>-fieldname OF STRUCTURE <ls_data> TO <lv_data>.
-*              CHECK: sy-subrc EQ 0.
-*              ASSIGN COMPONENT <ls_field_conv>-fieldname OF STRUCTURE <ls_data2> TO <lv_data2>.
-*              CHECK: sy-subrc EQ 0.
-*              IF <lv_data> NE <lv_data2>.
-*                CLEAR: ls_error_log.
-*                ls_error_log-row = lv_index.
-*                ls_error_log-fieldname = <ls_field_conv>-fieldname.
-*                ls_error_log-abap_value = <lv_data2>.
-*                ls_error_log-excel_value = <lv_data>.
-*                READ TABLE lt_map_excel_row INTO lv_index INDEX lv_index.
-*                READ TABLE me->sheet_content ASSIGNING <ls_sheet_content> WITH TABLE KEY cell_row = lv_index cell_column = lv_index_col.
-*                ls_error_log-excel_coords = <ls_sheet_content>-cell_coords.
-*                APPEND ls_error_log TO et_error_log.
-*              ENDIF.
-*            ENDLOOP.
-*          ENDIF.
-*        ENDLOOP.
-*      ENDIF.
-*    ENDIF.
 
 
     " Apply conversion exit.
