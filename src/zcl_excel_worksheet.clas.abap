@@ -2246,7 +2246,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
 
-
 *--------------------------------------------------------------------*
 * Start of convert content
 *--------------------------------------------------------------------*
@@ -2323,9 +2322,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         MOVE-CORRESPONDING <ls_data> TO <ls_data2>.
       ENDLOOP.
     ENDIF.
-
-
-
 
     " Apply conversion exit.
     LOOP AT lt_field_conv ASSIGNING <ls_field_conv>
