@@ -2066,10 +2066,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD convert_to_table.
-* For excel upload, This is counterpart to BIND_TABLE
-* This method has 2 exporting parameters.
-* ER_DATA is a reference to internal table of string columns. intend to get raw data without conversion loss.
-* ET_DATA is an internal table supplied. There may be losses in the conversion(MOVE-CORRESPONDING).
 
     TYPES:
       BEGIN OF ts_field_conv,
