@@ -7432,7 +7432,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       SHIFT lv_value LEFT DELETING LEADING '0'.
       lo_element2->set_attribute_ns( name  = 'id'
                                     value = lv_value ).
-      lv_value = ls_fieldcat-scrtext_l.
+
+      lv_value = ls_fieldcat-column_name.
 
       " The text "_x...._", with "_x" not "_X", with exactly 4 ".", each being 0-9 a-f or A-F (case insensitive), is interpreted
       " like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.
@@ -7469,8 +7470,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDLOOP.
 
 
-    lo_element  = lo_document->create_simple_element( name   = 'tableStyleInfo'
-                                                           parent = lo_element_root ).
+    lo_element = lo_document->create_simple_element( name   = 'tableStyleInfo'
+                                                          parent = lo_element_root ).
 
     lo_element->set_attribute_ns( name  = 'name'
                                        value = io_table->settings-table_style  ).
