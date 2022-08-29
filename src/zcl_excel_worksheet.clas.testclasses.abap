@@ -1,3 +1,4 @@
+CLASS ltc_normalize_column_heading DEFINITION DEFERRED.
 CLASS ltc_normalize_columnrow_param DEFINITION DEFERRED.
 CLASS ltc_normalize_range_param DEFINITION DEFERRED.
 CLASS ltc_calculate_table_bottom_rig DEFINITION DEFERRED.
@@ -6,6 +7,7 @@ CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
 CLASS ltc_check_overlapping DEFINITION DEFERRED.
 CLASS ltc_set_cell_value_types DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
+    ltc_normalize_column_heading
     ltc_normalize_columnrow_param
     ltc_normalize_range_param
     ltc_calculate_table_bottom_rig
@@ -119,6 +121,41 @@ CLASS ltc_check_overlapping DEFINITION FOR TESTING
         exp   TYPE ty_parameters-output
       RAISING
         cx_static_check.
+ENDCLASS.
+
+
+CLASS ltc_normalize_column_heading DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    TYPES : BEGIN OF ty_parameters,
+              BEGIN OF input,
+                default_descr TYPE c LENGTH 1,
+                field_catalog TYPE zexcel_t_fieldcatalog,
+              END OF input,
+              BEGIN OF output,
+                field_catalog TYPE zexcel_t_fieldcatalog,
+              END OF output,
+            END OF ty_parameters.
+    DATA:
+      cut TYPE REF TO zcl_excel_worksheet.  "class under test
+
+    METHODS setup.
+    METHODS:
+      prefer_small_text FOR TESTING RAISING cx_static_check,
+      prefer_medium_text FOR TESTING RAISING cx_static_check,
+      prefer_long_text FOR TESTING RAISING cx_static_check,
+      default_text_if_none FOR TESTING RAISING cx_static_check,
+      invalid_default_descr FOR TESTING RAISING cx_static_check.
+
+    METHODS assert
+      IMPORTING
+        input TYPE ty_parameters-input
+        exp   TYPE ty_parameters-output
+      RAISING
+        cx_static_check.
+
 ENDCLASS.
 
 
@@ -973,6 +1010,222 @@ CLASS ltc_check_overlapping IMPLEMENTATION.
 ENDCLASS.
 
 
+CLASS ltc_normalize_column_heading IMPLEMENTATION.
+
+  METHOD setup.
+
+    DATA: lo_excel TYPE REF TO zcl_excel.
+
+    CREATE OBJECT lo_excel.
+
+    TRY.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = lo_excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD prefer_small_text.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output,
+          field TYPE zexcel_s_fieldcatalog.
+
+    input-default_descr = 'S'.
+
+    field-dynpfld   = abap_true.
+
+    field-scrtext_s = 'Column1_S'.
+    field-scrtext_m = 'Column1_M'.
+    field-scrtext_l = 'Column1_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column1_S'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = ''.
+    field-scrtext_m = 'Column2_M'.
+    field-scrtext_l = 'Column2_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column2_M'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = ''.
+    field-scrtext_m = 'Column3_M'.
+    field-scrtext_l = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column3_M'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = ''.
+    field-scrtext_m = ''.
+    field-scrtext_l = 'Column4_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column4_L'.
+    APPEND field TO exp-field_catalog.
+
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD prefer_medium_text.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output,
+          field TYPE zexcel_s_fieldcatalog.
+
+    input-default_descr = 'M'.
+
+    field-dynpfld   = abap_true.
+
+    field-scrtext_s = 'Column1_S'.
+    field-scrtext_m = 'Column1_M'.
+    field-scrtext_l = 'Column1_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column1_M'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column2_S'.
+    field-scrtext_m = ''.
+    field-scrtext_l = 'Column2_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column2_S'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column3_S'.
+    field-scrtext_m = ''.
+    field-scrtext_l = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column3_S'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = ''.
+    field-scrtext_m = ''.
+    field-scrtext_l = 'Column4_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column4_L'.
+    APPEND field TO exp-field_catalog.
+
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD prefer_long_text.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output,
+          field TYPE zexcel_s_fieldcatalog.
+
+    input-default_descr = 'L'.
+
+    field-dynpfld   = abap_true.
+
+    field-scrtext_s = 'Column1_S'.
+    field-scrtext_m = 'Column1_M'.
+    field-scrtext_l = 'Column1_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column1_L'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column2_S'.
+    field-scrtext_m = 'Column2_M'.
+    field-scrtext_l = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column2_M'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column3_S'.
+    field-scrtext_m = ''.
+    field-scrtext_l = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column3_S'.
+    APPEND field TO exp-field_catalog.
+
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD default_text_if_none.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output,
+          field TYPE zexcel_s_fieldcatalog.
+
+    input-default_descr = 'S'.
+
+    field-dynpfld   = abap_true.
+
+    field-scrtext_s = ''.
+    field-scrtext_m = ''.
+    field-scrtext_l = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = ''.
+    field-scrtext_m = ''.
+    field-scrtext_l = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column 1'.
+    APPEND field TO exp-field_catalog.
+
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD invalid_default_descr.
+    DATA: input TYPE ty_parameters-input,
+          exp   TYPE ty_parameters-output,
+          field TYPE zexcel_s_fieldcatalog.
+
+    input-default_descr = '?'.
+
+    field-dynpfld   = abap_true.
+
+    field-scrtext_s = 'Column1_S'.
+    field-scrtext_m = 'Column1_M'.
+    field-scrtext_l = 'Column1_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column1_M'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column2_S'.
+    field-scrtext_m = ''.
+    field-scrtext_l = 'Column2_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column2_S'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = 'Column3_S'.
+    field-scrtext_m = ''.
+    field-scrtext_l = ''.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column3_S'.
+    APPEND field TO exp-field_catalog.
+
+    field-scrtext_s = ''.
+    field-scrtext_m = ''.
+    field-scrtext_l = 'Column4_L'.
+    APPEND field TO input-field_catalog.
+    field-scrtext_l = 'Column4_L'.
+    APPEND field TO exp-field_catalog.
+
+    assert( input = input exp = exp ).
+
+  ENDMETHOD.
+
+  METHOD assert.
+    DATA: act TYPE ty_parameters-output.
+
+    act-field_catalog = cut->normalize_column_heading_texts(
+                            iv_default_descr = input-default_descr
+                            it_field_catalog = input-field_catalog ).
+
+    cl_abap_unit_assert=>assert_equals( exp = exp-field_catalog act = act-field_catalog ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
 CLASS ltc_normalize_columnrow_param IMPLEMENTATION.
 
   METHOD setup.
@@ -1325,8 +1578,7 @@ CLASS ltc_set_cell_value_types IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD int8.
-    DATA: ref_int8 TYPE REF TO data,
-          int8     TYPE int8 VALUE 33400000000.
+    DATA: ref_int8 TYPE REF TO data.
     FIELD-SYMBOLS: <value>         TYPE simple,
                    <typekind_int8> TYPE abap_typekind.
 

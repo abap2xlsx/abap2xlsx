@@ -282,32 +282,32 @@ CLASS zcl_excel_reader_2007 DEFINITION
         VALUE(rv_style_guid) TYPE zexcel_cell_style .
     METHODS load_theme
       IMPORTING
-        VALUE(iv_path) TYPE string
-        !ip_excel      TYPE REF TO zcl_excel
+        iv_path   TYPE string
+        !ip_excel TYPE REF TO zcl_excel
       RAISING
         zcx_excel .
 
     CONSTANTS: BEGIN OF namespace,
-                 x14ac               TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
-                 vba_project         TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
-                 c                   TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
-                 a                   TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
-                 xdr                 TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
-                 mc                  TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
-                 r                   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-                 chart               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
-                 drawing             TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
-                 hyperlink           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
-                 image               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-                 office_document     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument',
-                 printer_settings    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
-                 shared_strings      TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings',
-                 styles              TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
-                 theme               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
-                 worksheet           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
-                 relationships       TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
-                 core_properties     TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
-                 main                TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+                 x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
+                 vba_project      TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
+                 c                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
+                 a                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
+                 xdr              TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
+                 mc               TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
+                 r                TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+                 chart            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
+                 drawing          TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+                 hyperlink        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+                 image            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
+                 office_document  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument',
+                 printer_settings TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
+                 shared_strings   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings',
+                 styles           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
+                 theme            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
+                 worksheet        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
+                 relationships    TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
+                 core_properties  TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
+                 main             TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
                END OF namespace.
 
   PRIVATE SECTION.
@@ -2260,6 +2260,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
              fittoheight TYPE string,
              fittowidth  TYPE string,
              papersize   TYPE string,
+             paperwidth  TYPE string,
+             paperheight TYPE string,
            END OF lty_page_setup.
 
     TYPES: BEGIN OF lty_sheetformatpr,
@@ -2824,6 +2826,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       io_worksheet->sheet_setup->orientation = ls_pagesetup-orientation.
       io_worksheet->sheet_setup->scale = ls_pagesetup-scale.
       io_worksheet->sheet_setup->paper_size = ls_pagesetup-papersize.
+      io_worksheet->sheet_setup->paper_height = ls_pagesetup-paperheight.
+      io_worksheet->sheet_setup->paper_width = ls_pagesetup-paperwidth.
       IF io_worksheet->sheet_setup->fit_to_page = 'X'.
         IF ls_pagesetup-fittowidth IS NOT INITIAL.
           io_worksheet->sheet_setup->fit_to_width = ls_pagesetup-fittowidth.
@@ -4162,7 +4166,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * §3  Cycle through the Relationship Tags and use the ones we need
 *--------------------------------------------------------------------*
-    lo_node ?= lo_rels->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ).   "#EC NOTEXT
+    lo_node ?= lo_rels->find_from_name_ns( name = 'Relationship' uri = namespace-relationships ). "#EC NOTEXT
     WHILE lo_node IS BOUND.
 
       fill_struct_from_attributes( EXPORTING
