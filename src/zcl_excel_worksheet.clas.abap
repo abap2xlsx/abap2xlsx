@@ -664,6 +664,11 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_is_internal  TYPE abap_bool
       RAISING
         zcx_excel .
+    "! excel upload, counterpart to BIND_TABLE
+    "! @parameter it_field_catalog | field catalog, used to derive correct types
+    "! @parameter iv_begin_row | starting row, by default 2 to skip header
+    "! @parameter et_data | generic internal table, there may be conversion losses
+    "! @parameter er_data | ref to internal table of string columns, to get raw data without conversion losses.
     METHODS convert_to_table
       IMPORTING
         !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
