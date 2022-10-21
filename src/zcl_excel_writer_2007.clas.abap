@@ -6683,7 +6683,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
      DATA: lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
-          	  lv_value        TYPE string.
+             lv_value        TYPE string.
 
     lo_element_root = io_document->get_root_element( ).
 
