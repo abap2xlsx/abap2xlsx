@@ -3772,7 +3772,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_attr_fittopage    TYPE string VALUE 'fitToPage',
                lc_xml_attr_tabcolor_rgb TYPE string VALUE 'rgb'.
 
-    	DATA: lo_element_root TYPE REF TO if_ixml_element,
+     DATA: lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           lo_element_2    TYPE REF TO if_ixml_element,
           	  lv_value        TYPE string.
