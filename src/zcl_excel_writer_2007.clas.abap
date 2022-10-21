@@ -3819,7 +3819,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   ENDMETHOD.
   METHOD create_xl_sheet_subnodes.
      DATA: lo_element_root TYPE REF TO if_ixml_element,
-          	  lv_relation_id  TYPE i VALUE 0.
+             lv_relation_id  TYPE i VALUE 0.
 
     lo_element_root = io_document->get_root_element( ).
 
