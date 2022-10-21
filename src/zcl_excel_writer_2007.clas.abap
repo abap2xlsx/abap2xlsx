@@ -6681,7 +6681,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CONSTANTS: lc_xml_node_dimension TYPE string VALUE 'dimension',
                lc_xml_attr_ref       TYPE string VALUE 'ref'.
 
-    	DATA: lo_element_root TYPE REF TO if_ixml_element,
+     DATA: lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           	  lv_value        TYPE string.
 
