@@ -3,7 +3,7 @@
 *"* declarations
 CLASS lcl_create_xl_sheet DEFINITION DEFERRED.
 CLASS zcl_excel_writer_2007 DEFINITION LOCAL FRIENDS lcl_create_xl_sheet.
-CLASS lcl_create_xl_sheet DEFINITION create public .
+CLASS lcl_create_xl_sheet DEFINITION CREATE PUBLIC .
 
   PUBLIC SECTION.
     METHODS create IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
