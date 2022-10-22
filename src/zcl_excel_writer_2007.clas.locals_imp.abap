@@ -1954,4 +1954,4 @@ class lcl_create_xl_sheet implementation.
     lo_element_root->append_child( new_child = lo_element ). " sheetData node
   ENDMETHOD.
 
-endclass.
+ENDCLASS.
