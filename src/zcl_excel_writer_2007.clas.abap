@@ -5445,7 +5445,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *      lo_element_root->append_child( new_child = lo_element ).
 *
 *    ENDIF.
-DATA lo_create_xl_sheet type ref to lcl_create_xl_sheet.
+DATA lo_create_xl_sheet TYPE REF TO lcl_create_xl_sheet.
 
 CREATE OBJECT lo_create_xl_sheet.
 lo_create_xl_sheet->create( io_worksheet = io_worksheet
