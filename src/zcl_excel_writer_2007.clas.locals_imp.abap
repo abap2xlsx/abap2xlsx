@@ -1,20 +1,20 @@
 *"* use this source file for the definition and implementation of
 *"* local helper classes, interface definitions and type
 *"* declarations
-CLASS lcl_create_xl_sheet definition DEFERRED.
+CLASS lcl_create_xl_sheet DEFINITION DEFERRED.
 CLASS zcl_excel_writer_2007 DEFINITION LOCAL FRIENDS lcl_create_xl_sheet.
-CLASS lcl_create_xl_sheet definition create public .
+CLASS lcl_create_xl_sheet DEFINITION create public .
 
   PUBLIC SECTION.
     METHODS create IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
                              iv_active    TYPE flag DEFAULT ''
                              io_document  TYPE REF TO if_ixml_document
-                             io_excel_writer_2007 type REF TO zcl_excel_writer_2007
+                             io_excel_writer_2007 TYPE REF TO zcl_excel_writer_2007
                      RAISING zcx_excel.
   PROTECTED SECTION.
   PRIVATE SECTION.
     DATA:
-      o_excel_Ref TYPE REF TO zcl_excel_writer_2007.
+      o_excel_ref TYPE REF TO zcl_excel_writer_2007.
     METHODS:
       add_xl_sheet_sheetpr_subnode   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
                                                io_document  TYPE REF TO if_ixml_document,
@@ -70,9 +70,9 @@ CLASS lcl_create_xl_sheet definition create public .
       add_xl_sheet_sheetdata_subnode IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
                                                io_document  TYPE REF TO if_ixml_document
                                      RAISING   zcx_excel.
-endclass.
+ENDCLASS.
 
-class lcl_create_xl_sheet implementation.
+CLASS lcl_create_xl_sheet IMPLEMENTATION.
   METHOD create.
         DATA: lo_element_root TYPE REF TO if_ixml_element,
               lv_relation_id  TYPE i VALUE 0.
