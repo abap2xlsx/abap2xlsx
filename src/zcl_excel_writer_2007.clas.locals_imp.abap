@@ -1,21 +1,21 @@
 *"* use this source file for the definition and implementation of
 *"* local helper classes, interface definitions and type
 *"* declarations
-class lcl_create_xl_sheet definition DEFERRED.
-class zcl_excel_writer_2007 DEFINITION LOCAL FRIENDS lcl_create_xl_sheet.
-class lcl_create_xl_sheet definition create public .
+CLASS lcl_create_xl_sheet definition DEFERRED.
+CLASS zcl_excel_writer_2007 DEFINITION LOCAL FRIENDS lcl_create_xl_sheet.
+CLASS lcl_create_xl_sheet definition create public .
 
-  public section.
-    methods create IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
+  PUBLIC SECTION.
+    METHODS create IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
                              iv_active    TYPE flag DEFAULT ''
                              io_document  TYPE REF TO if_ixml_document
                              io_excel_writer_2007 type REF TO zcl_excel_writer_2007
                      RAISING zcx_excel.
-  protected section.
-  private section.
-    data:
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+    DATA:
       o_excel_Ref TYPE REF TO zcl_excel_writer_2007.
-    methods:
+    METHODS:
       add_xl_sheet_sheetpr_subnode   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
                                                io_document  TYPE REF TO if_ixml_document,
       add_xl_sheet_dimension_subnode IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
