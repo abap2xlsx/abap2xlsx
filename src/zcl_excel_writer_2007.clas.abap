@@ -3674,189 +3674,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD create_xl_sheet.
-*--------------------------------------------------------------------*
-* issue #330   - Adding ColorScale conditional formatting
-*              - Ivan Femia,                                2014-08-25
-*--------------------------------------------------------------------*
-
-    TYPES: BEGIN OF colors,
-             colorrgb TYPE zexcel_color,
-           END OF colors.
-
-*--------------------------------------------------------------------*
-* issue #237   - Error writing column-style
-*              - Stefan Schmoecker,                          2012-11-01
-*--------------------------------------------------------------------*
-
-    TYPES: BEGIN OF cfvo,
-             value TYPE zexcel_conditional_value,
-             type  TYPE zexcel_conditional_type,
-           END OF cfvo.
-
-*--------------------------------------------------------------------*
-* issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 1 - start
-*--------------------------------------------------------------------*
-    TYPES: BEGIN OF lty_table_area,
-             left   TYPE i,
-             right  TYPE i,
-             top    TYPE i,
-             bottom TYPE i,
-           END OF lty_table_area.
-*--------------------------------------------------------------------*
-* issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 1 - end
-*--------------------------------------------------------------------*
-
-    TYPES: BEGIN OF ty_condformating_range,
-             dimension_range     TYPE string,
-             condformatting_node TYPE REF TO if_ixml_element,
-           END OF ty_condformating_range,
-           ty_condformating_ranges TYPE STANDARD TABLE OF ty_condformating_range.
 
 ** Constant node name
     DATA: lc_xml_node_worksheet          TYPE string VALUE 'worksheet',
-          lc_xml_node_sheetpr            TYPE string VALUE 'sheetPr',
-          lc_xml_node_tabcolor           TYPE string VALUE 'tabColor',
-          lc_xml_node_outlinepr          TYPE string VALUE 'outlinePr',
-          lc_xml_node_dimension          TYPE string VALUE 'dimension',
-          lc_xml_node_sheetviews         TYPE string VALUE 'sheetViews',
-          lc_xml_node_sheetview          TYPE string VALUE 'sheetView',
-          lc_xml_node_selection          TYPE string VALUE 'selection',
-          lc_xml_node_pane               TYPE string VALUE 'pane',
-          lc_xml_node_sheetformatpr      TYPE string VALUE 'sheetFormatPr',
-          lc_xml_node_cols               TYPE string VALUE 'cols',
-          lc_xml_node_col                TYPE string VALUE 'col',
-          lc_xml_node_sheetprotection    TYPE string VALUE 'sheetProtection',
-          lc_xml_node_pagemargins        TYPE string VALUE 'pageMargins',
-          lc_xml_node_pagesetup          TYPE string VALUE 'pageSetup',
-          lc_xml_node_pagesetuppr        TYPE string VALUE 'pageSetUpPr',
-          lc_xml_node_condformatting     TYPE string VALUE 'conditionalFormatting',
-          lc_xml_node_cfrule             TYPE string VALUE 'cfRule',
-          lc_xml_node_color              TYPE string VALUE 'color',      " Databar by Albert Lladanosa
-          lc_xml_node_databar            TYPE string VALUE 'dataBar',    " Databar by Albert Lladanosa
-          lc_xml_node_colorscale         TYPE string VALUE 'colorScale',
-          lc_xml_node_iconset            TYPE string VALUE 'iconSet',
-          lc_xml_node_cfvo               TYPE string VALUE 'cfvo',
-          lc_xml_node_formula            TYPE string VALUE 'formula',
-          lc_xml_node_datavalidations    TYPE string VALUE 'dataValidations',
-          lc_xml_node_datavalidation     TYPE string VALUE 'dataValidation',
-          lc_xml_node_formula1           TYPE string VALUE 'formula1',
-          lc_xml_node_formula2           TYPE string VALUE 'formula2',
-          lc_xml_node_mergecell          TYPE string VALUE 'mergeCell',
-          lc_xml_node_mergecells         TYPE string VALUE 'mergeCells',
-          lc_xml_node_drawing            TYPE string VALUE 'drawing',
-          lc_xml_node_drawing_for_cmt    TYPE string VALUE 'legacyDrawing',
-
-**********************************************************************
-          lc_xml_node_drawing_for_hd_ft  TYPE string VALUE 'legacyDrawingHF',
-**********************************************************************
-
-
-          lc_xml_node_headerfooter       TYPE string VALUE 'headerFooter',
-          lc_xml_node_oddheader          TYPE string VALUE 'oddHeader',
-          lc_xml_node_oddfooter          TYPE string VALUE 'oddFooter',
-          lc_xml_node_evenheader         TYPE string VALUE 'evenHeader',
-          lc_xml_node_evenfooter         TYPE string VALUE 'evenFooter',
-          lc_xml_node_autofilter         TYPE string VALUE 'autoFilter',
-          lc_xml_node_filtercolumn       TYPE string VALUE 'filterColumn',
-          lc_xml_node_filters            TYPE string VALUE 'filters',
-          lc_xml_node_filter             TYPE string VALUE 'filter',
-          " Node attributes
-          lc_xml_attr_ref                TYPE string VALUE 'ref',
-          lc_xml_attr_summarybelow       TYPE string VALUE 'summaryBelow',
-          lc_xml_attr_summaryright       TYPE string VALUE 'summaryRight',
-          lc_xml_attr_tabselected        TYPE string VALUE 'tabSelected',
-          lc_xml_attr_showzeros          TYPE string VALUE 'showZeros',
-          lc_xml_attr_zoomscale          TYPE string VALUE 'zoomScale',
-          lc_xml_attr_zoomscalenormal    TYPE string VALUE 'zoomScaleNormal',
-          lc_xml_attr_zoomscalepageview  TYPE string VALUE 'zoomScalePageLayoutView',
-          lc_xml_attr_zoomscalesheetview TYPE string VALUE 'zoomScaleSheetLayoutView',
-          lc_xml_attr_workbookviewid     TYPE string VALUE 'workbookViewId',
-          lc_xml_attr_showgridlines      TYPE string VALUE 'showGridLines',
-          lc_xml_attr_gridlines          TYPE string VALUE 'gridLines',
-          lc_xml_attr_showrowcolheaders  TYPE string VALUE 'showRowColHeaders',
-          lc_xml_attr_activecell         TYPE string VALUE 'activeCell',
-          lc_xml_attr_sqref              TYPE string VALUE 'sqref',
-          lc_xml_attr_min                TYPE string VALUE 'min',
-          lc_xml_attr_max                TYPE string VALUE 'max',
-          lc_xml_attr_hidden             TYPE string VALUE 'hidden',
-          lc_xml_attr_width              TYPE string VALUE 'width',
-          lc_xml_attr_defaultwidth       TYPE string VALUE '9.10',
-          lc_xml_attr_style              TYPE string VALUE 'style',
-          lc_xml_attr_true               TYPE string VALUE 'true',
-          lc_xml_attr_bestfit            TYPE string VALUE 'bestFit',
-          lc_xml_attr_customheight       TYPE string VALUE 'customHeight',
-          lc_xml_attr_customwidth        TYPE string VALUE 'customWidth',
-          lc_xml_attr_collapsed          TYPE string VALUE 'collapsed',
-          lc_xml_attr_defaultrowheight   TYPE string VALUE 'defaultRowHeight',
-          lc_xml_attr_defaultcolwidth    TYPE string VALUE 'defaultColWidth',
-          lc_xml_attr_outlinelevelrow    TYPE string VALUE 'x14ac:outlineLevelRow',
-          lc_xml_attr_outlinelevelcol    TYPE string VALUE 'x14ac:outlineLevelCol',
-          lc_xml_attr_outlinelevel       TYPE string VALUE 'outlineLevel',
-          lc_xml_attr_password           TYPE string VALUE 'password',
-          lc_xml_attr_sheet              TYPE string VALUE 'sheet',
-          lc_xml_attr_objects            TYPE string VALUE 'objects',
-          lc_xml_attr_scenarios          TYPE string VALUE 'scenarios',
-          lc_xml_attr_autofilter         TYPE string VALUE 'autoFilter',
-          lc_xml_attr_deletecolumns      TYPE string VALUE 'deleteColumns',
-          lc_xml_attr_deleterows         TYPE string VALUE 'deleteRows',
-          lc_xml_attr_formatcells        TYPE string VALUE 'formatCells',
-          lc_xml_attr_formatcolumns      TYPE string VALUE 'formatColumns',
-          lc_xml_attr_formatrows         TYPE string VALUE 'formatRows',
-          lc_xml_attr_insertcolumns      TYPE string VALUE 'insertColumns',
-          lc_xml_attr_inserthyperlinks   TYPE string VALUE 'insertHyperlinks',
-          lc_xml_attr_insertrows         TYPE string VALUE 'insertRows',
-          lc_xml_attr_pivottables        TYPE string VALUE 'pivotTables',
-          lc_xml_attr_selectlockedcells  TYPE string VALUE 'selectLockedCells',
-          lc_xml_attr_selectunlockedcell TYPE string VALUE 'selectUnlockedCells',
-          lc_xml_attr_sort               TYPE string VALUE 'sort',
-          lc_xml_attr_left               TYPE string VALUE 'left',
-          lc_xml_attr_right              TYPE string VALUE 'right',
-          lc_xml_attr_top                TYPE string VALUE 'top',
-          lc_xml_attr_bottom             TYPE string VALUE 'bottom',
-          lc_xml_attr_header             TYPE string VALUE 'header',
-          lc_xml_attr_footer             TYPE string VALUE 'footer',
-          lc_xml_attr_type               TYPE string VALUE 'type',
-          lc_xml_attr_iconset            TYPE string VALUE 'iconSet',
-          lc_xml_attr_showvalue          TYPE string VALUE 'showValue',
-          lc_xml_attr_val                TYPE string VALUE 'val',
-          lc_xml_attr_dxfid              TYPE string VALUE 'dxfId',
-          lc_xml_attr_priority           TYPE string VALUE 'priority',
-          lc_xml_attr_operator           TYPE string VALUE 'operator',
-          lc_xml_attr_text               TYPE string VALUE 'text',
-          lc_xml_attr_notcontainstext    TYPE string VALUE 'notContainsText',
-          lc_xml_attr_allowblank         TYPE string VALUE 'allowBlank',
-          lc_xml_attr_showinputmessage   TYPE string VALUE 'showInputMessage',
-          lc_xml_attr_showerrormessage   TYPE string VALUE 'showErrorMessage',
-          lc_xml_attr_showdropdown       TYPE string VALUE 'ShowDropDown', " 'showDropDown' does not work
-          lc_xml_attr_errortitle         TYPE string VALUE 'errorTitle',
-          lc_xml_attr_error              TYPE string VALUE 'error',
-          lc_xml_attr_errorstyle         TYPE string VALUE 'errorStyle',
-          lc_xml_attr_prompttitle        TYPE string VALUE 'promptTitle',
-          lc_xml_attr_prompt             TYPE string VALUE 'prompt',
-          lc_xml_attr_count              TYPE string VALUE 'count',
-          lc_xml_attr_blackandwhite      TYPE string VALUE 'blackAndWhite',
-          lc_xml_attr_cellcomments       TYPE string VALUE 'cellComments',
-          lc_xml_attr_copies             TYPE string VALUE 'copies',
-          lc_xml_attr_draft              TYPE string VALUE 'draft',
-          lc_xml_attr_errors             TYPE string VALUE 'errors',
-          lc_xml_attr_firstpagenumber    TYPE string VALUE 'firstPageNumber',
-          lc_xml_attr_fittopage          TYPE string VALUE 'fitToPage',
-          lc_xml_attr_fittoheight        TYPE string VALUE 'fitToHeight',
-          lc_xml_attr_fittowidth         TYPE string VALUE 'fitToWidth',
-          lc_xml_attr_horizontaldpi      TYPE string VALUE 'horizontalDpi',
-          lc_xml_attr_orientation        TYPE string VALUE 'orientation',
-          lc_xml_attr_pageorder          TYPE string VALUE 'pageOrder',
-          lc_xml_attr_paperheight        TYPE string VALUE 'paperHeight',
-          lc_xml_attr_papersize          TYPE string VALUE 'paperSize',
-          lc_xml_attr_paperwidth         TYPE string VALUE 'paperWidth',
-          lc_xml_attr_scale              TYPE string VALUE 'scale',
-          lc_xml_attr_usefirstpagenumber TYPE string VALUE 'useFirstPageNumber',
-          lc_xml_attr_useprinterdefaults TYPE string VALUE 'usePrinterDefaults',
-          lc_xml_attr_verticaldpi        TYPE string VALUE 'verticalDpi',
-          lc_xml_attr_differentoddeven   TYPE string VALUE 'differentOddEven',
-          lc_xml_attr_colid              TYPE string VALUE 'colId',
-          lc_xml_attr_filtermode         TYPE string VALUE 'filterMode',
-          lc_xml_attr_tabcolor_rgb       TYPE string VALUE 'rgb',
           " Node namespace
           lc_xml_node_ns                 TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
           lc_xml_node_r_ns               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
@@ -3866,72 +3686,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     DATA: lo_document        TYPE REF TO if_ixml_document,
           lo_element_root    TYPE REF TO if_ixml_element,
-          lo_element         TYPE REF TO if_ixml_element,
-          lo_element_2       TYPE REF TO if_ixml_element,
-          lo_element_3       TYPE REF TO if_ixml_element,
-          lo_element_4       TYPE REF TO if_ixml_element,
-          lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
-          lo_style_cond      TYPE REF TO zcl_excel_style_cond,
-          lo_data_validation TYPE REF TO zcl_excel_data_validation,
-          lo_table           TYPE REF TO zcl_excel_table,
-          lo_column_default  TYPE REF TO zcl_excel_column,
-          lo_row_default     TYPE REF TO zcl_excel_row.
-
-    DATA: lv_value                    TYPE string,
-          lt_range_merge              TYPE string_table,
-          lv_column                   TYPE zexcel_cell_column,
-          lv_style_guid               TYPE zexcel_cell_style,
-          ls_databar                  TYPE zexcel_conditional_databar,      " Databar by Albert Lladanosa
-          ls_colorscale               TYPE zexcel_conditional_colorscale,
-          ls_iconset                  TYPE zexcel_conditional_iconset,
-          ls_cellis                   TYPE zexcel_conditional_cellis,
-          ls_textfunction             TYPE zcl_excel_style_cond=>ts_conditional_textfunction,
-          lv_column_start             TYPE zexcel_cell_column_alpha,
-          lv_row_start                TYPE zexcel_cell_row,
-          lv_cell_coords              TYPE zexcel_cell_coords,
-          ls_expression               TYPE zexcel_conditional_expression,
-          ls_conditional_top10        TYPE zexcel_conditional_top10,
-          ls_conditional_above_avg    TYPE zexcel_conditional_above_avg,
-          lt_cfvo                     TYPE TABLE OF cfvo,
-          ls_cfvo                     TYPE cfvo,
-          lt_colors                   TYPE TABLE OF colors,
-          ls_colors                   TYPE colors,
-          lv_cell_row_s               TYPE string,
-          ls_style_mapping            TYPE zexcel_s_styles_mapping,
-          lv_freeze_cell_row          TYPE zexcel_cell_row,
-          lv_freeze_cell_column       TYPE zexcel_cell_column,
-          lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha,
-          lo_column_iterator          TYPE REF TO zcl_excel_collection_iterator,
-          lo_column                   TYPE REF TO zcl_excel_column,
-          lo_row_iterator             TYPE REF TO zcl_excel_collection_iterator,
-          ls_style_cond_mapping       TYPE zexcel_s_styles_cond_mapping,
-          lv_relation_id              TYPE i VALUE 0,
-          outline_level_col           TYPE i VALUE 0,
-          lts_row_outlines            TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
-          merge_count                 TYPE int4,
-          lt_values                   TYPE zexcel_t_autofilter_values,
-          ls_values                   TYPE zexcel_s_autofilter_values,
-          lo_autofilters              TYPE REF TO zcl_excel_autofilters,
-          lo_autofilter               TYPE REF TO zcl_excel_autofilter,
-          lv_ref                      TYPE string,
-          lt_condformating_ranges     TYPE ty_condformating_ranges,
-          ls_condformating_range      TYPE ty_condformating_range,
-          ld_first_half               TYPE string,
-          ld_second_half              TYPE string.
-
-    FIELD-SYMBOLS: <ls_sheet_content>       TYPE zexcel_s_cell_data,
-                   <fs_range_merge>         LIKE LINE OF lt_range_merge,
-                   <ls_row_outline>         LIKE LINE OF lts_row_outlines,
-                   <ls_condformating_range> TYPE ty_condformating_range.
-
-*--------------------------------------------------------------------*
-* issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 2 - start
-*--------------------------------------------------------------------*
-    DATA: lt_table_areas TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom.
-
-*--------------------------------------------------------------------*
-* issue #220 - If cell in tables-area don't use default from row or column or sheet - Declarations 2 - end
-*--------------------------------------------------------------------*
+          lo_create_xl_sheet TYPE REF TO lcl_create_xl_sheet.
 
 
 
@@ -3957,13 +3712,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 **********************************************************************
 * STEP 4: Create subnodes
-DATA lo_create_xl_sheet TYPE REF TO lcl_create_xl_sheet.
 
-CREATE OBJECT lo_create_xl_sheet.
-lo_create_xl_sheet->create( io_worksheet = io_worksheet
-                            io_document  = lo_document
-                            iv_active    = iv_active
-                            io_excel_writer_2007 = me ).
+    CREATE OBJECT lo_create_xl_sheet.
+    lo_create_xl_sheet->create( io_worksheet         = io_worksheet
+                                io_document          = lo_document
+                                iv_active            = iv_active
+                                io_excel_writer_2007 = me ).
+
 **********************************************************************
 * STEP 5: Create xstring stream
     ep_content = render_xml_document( lo_document ).

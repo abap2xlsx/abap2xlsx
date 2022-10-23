@@ -6,11 +6,11 @@ CLASS zcl_excel_writer_2007 DEFINITION LOCAL FRIENDS lcl_create_xl_sheet.
 CLASS lcl_create_xl_sheet DEFINITION CREATE PUBLIC .
 
   PUBLIC SECTION.
-    METHODS create IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                             iv_active    TYPE flag DEFAULT ''
-                             io_document  TYPE REF TO if_ixml_document
+    METHODS create IMPORTING io_worksheet         TYPE REF TO zcl_excel_worksheet
+                             iv_active            TYPE flag DEFAULT ''
+                             io_document          TYPE REF TO if_ixml_document
                              io_excel_writer_2007 TYPE REF TO zcl_excel_writer_2007
-                     RAISING zcx_excel.
+                   RAISING   zcx_excel.
   PROTECTED SECTION.
   PRIVATE SECTION.
     DATA:
@@ -74,8 +74,8 @@ ENDCLASS.
 
 CLASS lcl_create_xl_sheet IMPLEMENTATION.
   METHOD create.
-        DATA: lo_element_root TYPE REF TO if_ixml_element,
-              lv_relation_id  TYPE i VALUE 0.
+    DATA: lo_element_root TYPE REF TO if_ixml_element,
+          lv_relation_id  TYPE i VALUE 0.
 
     o_excel_ref = io_excel_writer_2007.
 
@@ -188,10 +188,10 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                lc_xml_attr_fittopage    TYPE string VALUE 'fitToPage',
                lc_xml_attr_tabcolor_rgb TYPE string VALUE 'rgb'.
 
-        DATA: lo_element_root TYPE REF TO if_ixml_element,
+    DATA: lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           lo_element_2    TYPE REF TO if_ixml_element,
-              lv_value        TYPE string.
+          lv_value        TYPE string.
 
     lo_element_root = io_document->get_root_element( ).
     " sheetPr
@@ -238,9 +238,9 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     CONSTANTS: lc_xml_node_dimension TYPE string VALUE 'dimension',
                lc_xml_attr_ref       TYPE string VALUE 'ref'.
 
-        DATA: lo_element_root TYPE REF TO if_ixml_element,
+    DATA: lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
-              lv_value        TYPE string.
+          lv_value        TYPE string.
 
     lo_element_root = io_document->get_root_element( ).
 
