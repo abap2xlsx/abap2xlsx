@@ -12,139 +12,116 @@
    </VSEOINTERF>
    <DESCRIPTIONS>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>AUTO_FILTER</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Autofilters are locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>C_ACTIVE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sheet protection indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>C_NOACTIVE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sheet protection indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>C_PROTECTED</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sheet protection indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>C_UNPROTECTED</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sheet protection indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>DELETE_COLUMNS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Deleting columns is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>DELETE_ROWS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Deleting rows is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>FORMAT_CELLS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Formatting cells is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>FORMAT_COLUMNS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Formatting columns is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>FORMAT_ROWS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Formatting rows is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>INITIALIZE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Initialize protection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>INSERT_COLUMNS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Inserting columns is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>INSERT_HYPERLINKS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Inserting hyperlinks is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>INSERT_ROWS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Inserting rows is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>OBJECTS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Objects are locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>PASSWORD</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>AES Password</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>PIVOT_TABLES</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Pivot tables are locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>PROTECTED</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sheet protection indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>SCENARIOS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Scenarios are locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>SELECT_LOCKED_CELLS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Selection of locked cells is locked when the sheet is protec</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>SELECT_UNLOCKED_CELLS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Selection of unlocked cells is locked when the sheet is prot</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>SHEET</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sheet is locked when the sheet is protected</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZIF_EXCEL_SHEET_PROTECTION</CLSNAME>
      <CMPNAME>SORT</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sorting is locked when the sheet is protected</DESCRIPT>
