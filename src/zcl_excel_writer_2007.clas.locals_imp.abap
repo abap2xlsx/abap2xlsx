@@ -25,7 +25,6 @@ CLASS lcl_create_xl_sheet DEFINITION CREATE PUBLIC .
              condformatting_node TYPE REF TO if_ixml_element,
            END OF ty_condformating_range,
            ty_condformating_ranges TYPE STANDARD TABLE OF ty_condformating_range.
-           
     CONSTANTS:
       lc_xml_node_sheetpr           TYPE string VALUE 'sheetPr',
       lc_xml_node_tabcolor          TYPE string VALUE 'tabColor',
