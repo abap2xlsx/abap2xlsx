@@ -13,284 +13,315 @@ CLASS lcl_create_xl_sheet DEFINITION CREATE PUBLIC .
                    RAISING   zcx_excel.
   PROTECTED SECTION.
   PRIVATE SECTION.
+    TYPES: BEGIN OF colors,
+             colorrgb TYPE zexcel_color,
+           END OF colors,
+           BEGIN OF cfvo,
+             value TYPE zexcel_conditional_value,
+             type  TYPE zexcel_conditional_type,
+           END OF cfvo,
+           BEGIN OF ty_condformating_range,
+             dimension_range     TYPE string,
+             condformatting_node TYPE REF TO if_ixml_element,
+           END OF ty_condformating_range,
+           ty_condformating_ranges TYPE STANDARD TABLE OF ty_condformating_range.
+           
+    CONSTANTS:
+      lc_xml_node_sheetpr           TYPE string VALUE 'sheetPr',
+      lc_xml_node_tabcolor          TYPE string VALUE 'tabColor',
+      lc_xml_node_outlinepr         TYPE string VALUE 'outlinePr',
+      lc_xml_node_pagesetuppr       TYPE string VALUE 'pageSetUpPr',
+      lc_xml_node_dimension         TYPE string VALUE 'dimension',
+      lc_xml_node_sheetviews        TYPE string VALUE 'sheetViews',
+      lc_xml_node_sheetview         TYPE string VALUE 'sheetView',
+      lc_xml_node_selection         TYPE string VALUE 'selection',
+      lc_xml_node_pane              TYPE string VALUE 'pane',
+      lc_xml_node_sheetformatpr     TYPE string VALUE 'sheetFormatPr',
+      lc_xml_node_cols              TYPE string VALUE 'cols',
+      lc_xml_node_col               TYPE string VALUE 'col',
+      lc_xml_node_sheetprotection   TYPE string VALUE 'sheetProtection',
+      lc_xml_node_autofilter        TYPE string VALUE 'autoFilter',
+      lc_xml_node_filtercolumn      TYPE string VALUE 'filterColumn',
+      lc_xml_node_filters           TYPE string VALUE 'filters',
+      lc_xml_node_filter            TYPE string VALUE 'filter',
+      lc_xml_node_mergecell         TYPE string VALUE 'mergeCell',
+      lc_xml_node_mergecells        TYPE string VALUE 'mergeCells',
+      lc_xml_node_condformatting    TYPE string VALUE 'conditionalFormatting',
+      lc_xml_node_cfrule            TYPE string VALUE 'cfRule',
+      lc_xml_node_color             TYPE string VALUE 'color',      " Databar by Albert Lladanosa
+      lc_xml_node_databar           TYPE string VALUE 'dataBar',    " Databar by Albert Lladanosa
+      lc_xml_node_colorscale        TYPE string VALUE 'colorScale',
+      lc_xml_node_iconset           TYPE string VALUE 'iconSet',
+      lc_xml_node_cfvo              TYPE string VALUE 'cfvo',
+      lc_xml_node_formula           TYPE string VALUE 'formula',
+      lc_xml_node_datavalidations   TYPE string VALUE 'dataValidations',
+      lc_xml_node_datavalidation    TYPE string VALUE 'dataValidation',
+      lc_xml_node_formula1          TYPE string VALUE 'formula1',
+      lc_xml_node_formula2          TYPE string VALUE 'formula2',
+      lc_xml_node_pagemargins       TYPE string VALUE 'pageMargins',
+      lc_xml_node_pagesetup         TYPE string VALUE 'pageSetup',
+      lc_xml_node_headerfooter      TYPE string VALUE 'headerFooter',
+      lc_xml_node_oddheader         TYPE string VALUE 'oddHeader',
+      lc_xml_node_oddfooter         TYPE string VALUE 'oddFooter',
+      lc_xml_node_evenheader        TYPE string VALUE 'evenHeader',
+      lc_xml_node_evenfooter        TYPE string VALUE 'evenFooter',
+      lc_xml_node_drawing           TYPE string VALUE 'drawing',
+      lc_xml_node_drawing_for_cmt   TYPE string VALUE 'legacyDrawing',
+      lc_xml_node_drawing_for_hd_ft TYPE string VALUE 'legacyDrawingHF'.
+    CONSTANTS:
+      lc_xml_attr_summarybelow       TYPE string VALUE 'summaryBelow',
+      lc_xml_attr_summaryright       TYPE string VALUE 'summaryRight',
+      lc_xml_attr_fittopage          TYPE string VALUE 'fitToPage',
+      lc_xml_attr_tabcolor_rgb       TYPE string VALUE 'rgb',
+      lc_xml_attr_ref                TYPE string VALUE 'ref',
+      lc_xml_attr_tabselected        TYPE string VALUE 'tabSelected',
+      lc_xml_attr_showzeros          TYPE string VALUE 'showZeros',
+      lc_xml_attr_zoomscale          TYPE string VALUE 'zoomScale',
+      lc_xml_attr_zoomscalenormal    TYPE string VALUE 'zoomScaleNormal',
+      lc_xml_attr_zoomscalepageview  TYPE string VALUE 'zoomScalePageLayoutView',
+      lc_xml_attr_zoomscalesheetview TYPE string VALUE 'zoomScaleSheetLayoutView',
+      lc_xml_attr_workbookviewid     TYPE string VALUE 'workbookViewId',
+      lc_xml_attr_showgridlines      TYPE string VALUE 'showGridLines',
+      lc_xml_attr_showrowcolheaders  TYPE string VALUE 'showRowColHeaders',
+      lc_xml_attr_activecell         TYPE string VALUE 'activeCell',
+      lc_xml_attr_sqref              TYPE string VALUE 'sqref',
+      lc_xml_attr_true               TYPE string VALUE 'true',
+      lc_xml_attr_customheight       TYPE string VALUE 'customHeight',
+      lc_xml_attr_defaultrowheight   TYPE string VALUE 'defaultRowHeight',
+      lc_xml_attr_defaultcolwidth    TYPE string VALUE 'defaultColWidth',
+      lc_xml_attr_outlinelevelcol    TYPE string VALUE 'x14ac:outlineLevelCol',
+      lc_xml_attr_min                TYPE string VALUE 'min',
+      lc_xml_attr_max                TYPE string VALUE 'max',
+      lc_xml_attr_hidden             TYPE string VALUE 'hidden',
+      lc_xml_attr_width              TYPE string VALUE 'width',
+      lc_xml_attr_defaultwidth       TYPE string VALUE '9.10',
+      lc_xml_attr_style              TYPE string VALUE 'style',
+      lc_xml_attr_bestfit            TYPE string VALUE 'bestFit',
+      lc_xml_attr_customwidth        TYPE string VALUE 'customWidth',
+      lc_xml_attr_collapsed          TYPE string VALUE 'collapsed',
+      lc_xml_attr_outlinelevel       TYPE string VALUE 'outlineLevel',
+      lc_xml_attr_password           TYPE string VALUE 'password',
+      lc_xml_attr_sheet              TYPE string VALUE 'sheet',
+      lc_xml_attr_objects            TYPE string VALUE 'objects',
+      lc_xml_attr_scenarios          TYPE string VALUE 'scenarios',
+      lc_xml_attr_autofilter         TYPE string VALUE 'autoFilter',
+      lc_xml_attr_deletecolumns      TYPE string VALUE 'deleteColumns',
+      lc_xml_attr_deleterows         TYPE string VALUE 'deleteRows',
+      lc_xml_attr_formatcells        TYPE string VALUE 'formatCells',
+      lc_xml_attr_formatcolumns      TYPE string VALUE 'formatColumns',
+      lc_xml_attr_formatrows         TYPE string VALUE 'formatRows',
+      lc_xml_attr_insertcolumns      TYPE string VALUE 'insertColumns',
+      lc_xml_attr_inserthyperlinks   TYPE string VALUE 'insertHyperlinks',
+      lc_xml_attr_insertrows         TYPE string VALUE 'insertRows',
+      lc_xml_attr_pivottables        TYPE string VALUE 'pivotTables',
+      lc_xml_attr_selectlockedcells  TYPE string VALUE 'selectLockedCells',
+      lc_xml_attr_selectunlockedcell TYPE string VALUE 'selectUnlockedCells',
+      lc_xml_attr_sort               TYPE string VALUE 'sort',
+      lc_xml_attr_val                TYPE string VALUE 'val',
+      lc_xml_attr_colid              TYPE string VALUE 'colId',
+      lc_xml_attr_filtermode         TYPE string VALUE 'filterMode',
+      lc_xml_attr_count              TYPE string VALUE 'count',
+      lc_xml_attr_type               TYPE string VALUE 'type',
+      lc_xml_attr_operator           TYPE string VALUE 'operator',
+      lc_xml_attr_allowblank         TYPE string VALUE 'allowBlank',
+      lc_xml_attr_showinputmessage   TYPE string VALUE 'showInputMessage',
+      lc_xml_attr_showerrormessage   TYPE string VALUE 'showErrorMessage',
+      lc_xml_attr_showdropdown       TYPE string VALUE 'ShowDropDown', " 'showDropDown' does not work
+      lc_xml_attr_errortitle         TYPE string VALUE 'errorTitle',
+      lc_xml_attr_error              TYPE string VALUE 'error',
+      lc_xml_attr_errorstyle         TYPE string VALUE 'errorStyle',
+      lc_xml_attr_prompttitle        TYPE string VALUE 'promptTitle',
+      lc_xml_attr_prompt             TYPE string VALUE 'prompt',
+      lc_xml_attr_gridlines          TYPE string VALUE 'gridLines',
+      lc_xml_attr_left               TYPE string VALUE 'left',
+      lc_xml_attr_right              TYPE string VALUE 'right',
+      lc_xml_attr_top                TYPE string VALUE 'top',
+      lc_xml_attr_bottom             TYPE string VALUE 'bottom',
+      lc_xml_attr_header             TYPE string VALUE 'header',
+      lc_xml_attr_footer             TYPE string VALUE 'footer',
+      lc_xml_attr_blackandwhite      TYPE string VALUE 'blackAndWhite',
+      lc_xml_attr_cellcomments       TYPE string VALUE 'cellComments',
+      lc_xml_attr_copies             TYPE string VALUE 'copies',
+      lc_xml_attr_draft              TYPE string VALUE 'draft',
+      lc_xml_attr_errors             TYPE string VALUE 'errors',
+      lc_xml_attr_firstpagenumber    TYPE string VALUE 'firstPageNumber',
+      lc_xml_attr_fittoheight        TYPE string VALUE 'fitToHeight',
+      lc_xml_attr_fittowidth         TYPE string VALUE 'fitToWidth',
+      lc_xml_attr_horizontaldpi      TYPE string VALUE 'horizontalDpi',
+      lc_xml_attr_orientation        TYPE string VALUE 'orientation',
+      lc_xml_attr_pageorder          TYPE string VALUE 'pageOrder',
+      lc_xml_attr_paperheight        TYPE string VALUE 'paperHeight',
+      lc_xml_attr_papersize          TYPE string VALUE 'paperSize',
+      lc_xml_attr_paperwidth         TYPE string VALUE 'paperWidth',
+      lc_xml_attr_scale              TYPE string VALUE 'scale',
+      lc_xml_attr_usefirstpagenumber TYPE string VALUE 'useFirstPageNumber',
+      lc_xml_attr_useprinterdefaults TYPE string VALUE 'usePrinterDefaults',
+      lc_xml_attr_verticaldpi        TYPE string VALUE 'verticalDpi',
+      lc_xml_attr_differentoddeven   TYPE string VALUE 'differentOddEven',
+      lc_xml_attr_iconset            TYPE string VALUE 'iconSet',
+      lc_xml_attr_showvalue          TYPE string VALUE 'showValue',
+      lc_xml_attr_dxfid              TYPE string VALUE 'dxfId',
+      lc_xml_attr_priority           TYPE string VALUE 'priority',
+      lc_xml_attr_text               TYPE string VALUE 'text'.
     DATA:
-      o_excel_ref TYPE REF TO zcl_excel_writer_2007.
+      o_excel_ref    TYPE REF TO zcl_excel_writer_2007,
+      o_worksheet    TYPE REF TO zcl_excel_worksheet,
+      o_document     TYPE REF TO if_ixml_document,
+      o_element_root TYPE REF TO if_ixml_element,
+      v_active       TYPE flag,
+      v_relation_id  TYPE i VALUE 0.
     METHODS:
-      add_xl_sheet_sheetpr_subnode   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document,
-      add_xl_sheet_dimension_subnode IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                     RAISING   zcx_excel,
-      add_xl_sheet_shtviews_subnode  IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                               iv_active    TYPE flag DEFAULT ''
-                                     RAISING   zcx_excel,
-      add_xl_sheet_shtfrmtpr_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                     RAISING   zcx_excel,
-      add_xl_sheet_cols_subnode      IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                     RAISING   zcx_excel,
-      add_xl_sheet_shtprtctn_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document,
-      add_xl_sheet_autoflter_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                     RAISING   zcx_excel,
-      add_xl_sheet_mrgedcell_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                     RAISING   zcx_excel,
-      add_xl_sheet_condfrmat_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                     RAISING   zcx_excel,
-      add_xl_sheet_datavldtn_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document,
-      add_xl_sheet_hyperlink_sbnod   IMPORTING io_worksheet   TYPE REF TO zcl_excel_worksheet
-                                               io_document    TYPE REF TO if_ixml_document
-                                     CHANGING  cv_relation_id TYPE i,
-      add_xl_sheet_prnt_optn_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document,
-      add_xl_sheet_page_mrgn_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document,
-      add_xl_sheet_page_stup_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document,
-      add_xl_sheet_hedr_fter_sbnod   IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document,
-      add_xl_sheet_drawing_subnode   IMPORTING io_worksheet   TYPE REF TO zcl_excel_worksheet
-                                               io_document    TYPE REF TO if_ixml_document
-                                     CHANGING  cv_relation_id TYPE i,
-      add_xl_sheet_drwng4cmt_sbnde   IMPORTING io_worksheet   TYPE REF TO zcl_excel_worksheet
-                                               io_document    TYPE REF TO if_ixml_document
-                                     CHANGING  cv_relation_id TYPE i,
-      add_xl_sheet_drwng4hdft_sbnd   IMPORTING io_worksheet   TYPE REF TO zcl_excel_worksheet
-                                               io_document    TYPE REF TO if_ixml_document
-                                     CHANGING  cv_relation_id TYPE i,
-      add_xl_sheet_table_parts_subnd   IMPORTING io_worksheet   TYPE REF TO zcl_excel_worksheet
-                                                 io_document    TYPE REF TO if_ixml_document
-                                       CHANGING  cv_relation_id TYPE i,
-      add_xl_sheet_sheetdata_subnode IMPORTING io_worksheet TYPE REF TO zcl_excel_worksheet
-                                               io_document  TYPE REF TO if_ixml_document
-                                     RAISING   zcx_excel.
+      add_sheetpr,
+      add_dimension                   RAISING zcx_excel,
+      add_sheet_views                 RAISING zcx_excel,
+      add_sheetformatpr               RAISING zcx_excel,
+      add_cols                        RAISING zcx_excel,
+      add_sheet_protection,
+      add_autofilter                  RAISING zcx_excel,
+      add_merge_cells                 RAISING zcx_excel,
+      add_conditional_formatting      RAISING zcx_excel,
+      add_data_validations,
+      add_hyperlinks,
+      add_print_options,
+      add_page_margins,
+      add_page_setup,
+      add_header_footer,
+      add_drawing,
+      add_drawing_for_comments,
+      add_drawing_for_header_footer,
+      add_table_parts,
+      add_sheet_data                  RAISING zcx_excel,
+      add_page_breaks,
+      add_ignored_errors.
 ENDCLASS.
 
 CLASS lcl_create_xl_sheet IMPLEMENTATION.
   METHOD create.
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lv_relation_id  TYPE i VALUE 0.
+    o_excel_ref    = io_excel_writer_2007.
+    o_worksheet    = io_worksheet.
+    o_document     = io_document.
+    v_active       = iv_active.
+    o_element_root = o_document->get_root_element( ).
 
-    o_excel_ref = io_excel_writer_2007.
-
-    lo_element_root = io_document->get_root_element( ).
-
-    add_xl_sheet_sheetpr_subnode( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
+    add_sheetpr( ).
     " dimension node
-    add_xl_sheet_dimension_subnode( io_worksheet = io_worksheet
-                                    io_document  = io_document
-                                    ).
+    add_dimension( ).
     " sheetViews node
-    add_xl_sheet_shtviews_subnode( io_worksheet = io_worksheet
-                                   iv_active    = iv_active
-                                   io_document  = io_document
-                                   ).
-
-    add_xl_sheet_shtfrmtpr_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
-
-    add_xl_sheet_cols_subnode( io_worksheet = io_worksheet
-                               io_document  = io_document
-                               ).
+    add_sheet_views( ).
+    add_sheetformatpr( ).
+    add_cols( ).
 *--------------------------------------------------------------------*
 * Sheet content - use own method to create this
 *--------------------------------------------------------------------*
-    add_xl_sheet_sheetdata_subnode( io_worksheet = io_worksheet
-                                    io_document  = io_document
-                                    ).
-
-    add_xl_sheet_shtprtctn_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
-
-    add_xl_sheet_autoflter_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
+    add_sheet_data( ).
+    add_sheet_protection( ).
+    add_autofilter( ).
     " Merged cells
-    add_xl_sheet_mrgedcell_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
+    add_merge_cells(  ).
     " Conditional formatting node
-    add_xl_sheet_condfrmat_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
-
-    add_xl_sheet_datavldtn_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
+    add_conditional_formatting( ).
+    add_data_validations( ).
     " Hyperlinks
-    add_xl_sheet_hyperlink_sbnod( EXPORTING io_worksheet   = io_worksheet
-                                            io_document    = io_document
-                                  CHANGING  cv_relation_id = lv_relation_id
-                                          ).
+    add_hyperlinks( ).
     " PrintOptions
-    add_xl_sheet_prnt_optn_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
+    add_print_options( ).
     " pageMargins node
-    add_xl_sheet_page_mrgn_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
+    add_page_margins( ).
 * pageSetup node
-    add_xl_sheet_page_stup_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
+    add_page_setup( ).
 * { headerFooter necessary?   >
-    add_xl_sheet_hedr_fter_sbnod( io_worksheet = io_worksheet
-                                  io_document  = io_document
-                                  ).
-    TRY.
-        o_excel_ref->create_xl_sheet_pagebreaks( io_document  = io_document
-                                    io_parent    = lo_element_root
-                                    io_worksheet = io_worksheet ).
-      CATCH zcx_excel. " Ignore Hyperlink reading errors - pass everything we were able to identify
-    ENDTRY.
+    add_header_footer( ).
+    add_page_breaks( ).
 * drawing
-    add_xl_sheet_drawing_subnode( EXPORTING io_worksheet   = io_worksheet
-                                            io_document    = io_document
-                                  CHANGING  cv_relation_id = lv_relation_id
-                                          ).
-    add_xl_sheet_drwng4cmt_sbnde( EXPORTING io_worksheet   = io_worksheet
-                                            io_document    = io_document
-                                  CHANGING  cv_relation_id = lv_relation_id
-                                          ).
-
-    add_xl_sheet_drwng4hdft_sbnd( EXPORTING io_worksheet   = io_worksheet
-                                            io_document    = io_document
-                                  CHANGING  cv_relation_id = lv_relation_id
-                                          ).
+    add_drawing( ).
+    add_drawing_for_comments( ).
+    add_drawing_for_header_footer( ).
 * ignoredErrors
-    o_excel_ref->create_xl_sheet_ignored_errors( io_worksheet    = io_worksheet
-                                    io_document     = io_document
-                                    io_element_root = lo_element_root ).
-
-    add_xl_sheet_table_parts_subnd( EXPORTING io_worksheet   = io_worksheet
-                                              io_document    = io_document
-                                    CHANGING  cv_relation_id = lv_relation_id
-                                            ).
+    add_ignored_errors( ).
+    add_table_parts( ).
   ENDMETHOD.
-  METHOD add_xl_sheet_sheetpr_subnode.
-    CONSTANTS: lc_xml_node_sheetpr      TYPE string VALUE 'sheetPr',
-               lc_xml_node_tabcolor     TYPE string VALUE 'tabColor',
-               lc_xml_node_outlinepr    TYPE string VALUE 'outlinePr',
-               lc_xml_node_pagesetuppr  TYPE string VALUE 'pageSetUpPr',
-               lc_xml_attr_summarybelow TYPE string VALUE 'summaryBelow',
-               lc_xml_attr_summaryright TYPE string VALUE 'summaryRight',
-               lc_xml_attr_fittopage    TYPE string VALUE 'fitToPage',
-               lc_xml_attr_tabcolor_rgb TYPE string VALUE 'rgb'.
+  METHOD add_sheetpr.
 
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_element_2    TYPE REF TO if_ixml_element,
-          lv_value        TYPE string.
+    DATA:
+      lo_element   TYPE REF TO if_ixml_element,
+      lo_element_2 TYPE REF TO if_ixml_element,
+      lv_value     TYPE string.
 
-    lo_element_root = io_document->get_root_element( ).
     " sheetPr
-    lo_element = io_document->create_simple_element( name   = lc_xml_node_sheetpr
-                                                     parent = io_document ).
+    lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetpr
+                                                    parent = o_document ).
     " TODO tabColor
-    IF io_worksheet->tabcolor IS NOT INITIAL.
-      lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_tabcolor
-                                                         parent = lo_element ).
+    IF o_worksheet->tabcolor IS NOT INITIAL.
+      lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_tabcolor
+                                                        parent = lo_element ).
 * Theme not supported yet - start with RGB
-      lv_value = io_worksheet->tabcolor-rgb.
+      lv_value = o_worksheet->tabcolor-rgb.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_tabcolor_rgb
                                       value = lv_value ).
     ENDIF.
 
     " outlinePr
-    lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_outlinepr
-                                                       parent = io_document ).
+    lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_outlinepr
+                                                      parent = o_document ).
 
-    lv_value = io_worksheet->zif_excel_sheet_properties~summarybelow.
+    lv_value = o_worksheet->zif_excel_sheet_properties~summarybelow.
     CONDENSE lv_value.
     lo_element_2->set_attribute_ns( name  = lc_xml_attr_summarybelow
                                     value = lv_value ).
 
-    lv_value = io_worksheet->zif_excel_sheet_properties~summaryright.
+    lv_value = o_worksheet->zif_excel_sheet_properties~summaryright.
     CONDENSE lv_value.
     lo_element_2->set_attribute_ns( name  = lc_xml_attr_summaryright
                                     value = lv_value ).
 
     lo_element->append_child( new_child = lo_element_2 ).
 
-    IF io_worksheet->sheet_setup->fit_to_page IS NOT INITIAL.
-      lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_pagesetuppr
-                                                         parent = io_document ).
+    IF o_worksheet->sheet_setup->fit_to_page IS NOT INITIAL.
+      lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_pagesetuppr
+                                                        parent = o_document ).
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_fittopage
                                       value = `1` ).
       lo_element->append_child( new_child = lo_element_2 ). " pageSetupPr node
     ENDIF.
 
-    lo_element_root->append_child( new_child = lo_element ).
+    o_element_root->append_child( new_child = lo_element ).
   ENDMETHOD.
-  METHOD add_xl_sheet_dimension_subnode.
+  METHOD add_dimension.
+    DATA:
+      lo_element TYPE REF TO if_ixml_element,
+      lv_value   TYPE string.
 
-    CONSTANTS: lc_xml_node_dimension TYPE string VALUE 'dimension',
-               lc_xml_attr_ref       TYPE string VALUE 'ref'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lv_value        TYPE string.
-
-    lo_element_root = io_document->get_root_element( ).
-
-    lo_element = io_document->create_simple_element( name   = lc_xml_node_dimension
-                                                     parent = io_document ).
-    lv_value = io_worksheet->get_dimension_range( ).
+    lo_element = o_document->create_simple_element( name   = lc_xml_node_dimension
+                                                    parent = o_document ).
+    lv_value = o_worksheet->get_dimension_range( ).
     lo_element->set_attribute_ns( name  = lc_xml_attr_ref
                                   value = lv_value ).
-    lo_element_root->append_child( new_child = lo_element ).
+    o_element_root->append_child( new_child = lo_element ).
   ENDMETHOD.
-  METHOD add_xl_sheet_shtviews_subnode.
-    CONSTANTS: lc_xml_node_sheetviews         TYPE string VALUE 'sheetViews',
-               lc_xml_node_sheetview          TYPE string VALUE 'sheetView',
-               lc_xml_node_selection          TYPE string VALUE 'selection',
-               lc_xml_node_pane               TYPE string VALUE 'pane',
-               lc_xml_attr_tabselected        TYPE string VALUE 'tabSelected',
-               lc_xml_attr_showzeros          TYPE string VALUE 'showZeros',
-               lc_xml_attr_zoomscale          TYPE string VALUE 'zoomScale',
-               lc_xml_attr_zoomscalenormal    TYPE string VALUE 'zoomScaleNormal',
-               lc_xml_attr_zoomscalepageview  TYPE string VALUE 'zoomScalePageLayoutView',
-               lc_xml_attr_zoomscalesheetview TYPE string VALUE 'zoomScaleSheetLayoutView',
-               lc_xml_attr_workbookviewid     TYPE string VALUE 'workbookViewId',
-               lc_xml_attr_showgridlines      TYPE string VALUE 'showGridLines',
-               lc_xml_attr_showrowcolheaders  TYPE string VALUE 'showRowColHeaders',
-               lc_xml_attr_activecell         TYPE string VALUE 'activeCell',
-               lc_xml_attr_sqref              TYPE string VALUE 'sqref'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_element_2    TYPE REF TO if_ixml_element,
-          lo_element_3    TYPE REF TO if_ixml_element.
+  METHOD add_sheet_views.
+    DATA:
+      lo_element   TYPE REF TO if_ixml_element,
+      lo_element_2 TYPE REF TO if_ixml_element,
+      lo_element_3 TYPE REF TO if_ixml_element.
 
     DATA: lv_value                    TYPE string,
           lv_freeze_cell_row          TYPE zexcel_cell_row,
           lv_freeze_cell_column       TYPE zexcel_cell_column,
           lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha.
 
-    lo_element_root = io_document->get_root_element( ).
+    o_element_root = o_document->get_root_element( ).
 
-    lo_element = io_document->create_simple_element( name   = lc_xml_node_sheetviews
-                                                     parent = io_document ).
+    lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetviews
+                                                    parent = o_document ).
     " sheetView node
-    lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_sheetview
-                                                       parent = io_document ).
-    IF io_worksheet->zif_excel_sheet_properties~show_zeros EQ abap_false.
+    lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_sheetview
+                                                      parent = o_document ).
+    IF o_worksheet->zif_excel_sheet_properties~show_zeros EQ abap_false.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_showzeros
                                       value = '0' ).
     ENDIF.
-    IF   iv_active = abap_true
-      OR io_worksheet->zif_excel_sheet_properties~selected EQ abap_true.
+    IF   v_active = abap_true
+      OR o_worksheet->zif_excel_sheet_properties~selected EQ abap_true.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_tabselected
                                       value = '1' ).
     ELSE.
@@ -298,56 +329,56 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                                       value = '0' ).
     ENDIF.
     " Zoom scale
-    IF io_worksheet->zif_excel_sheet_properties~zoomscale GT 400.
-      io_worksheet->zif_excel_sheet_properties~zoomscale = 400.
-    ELSEIF io_worksheet->zif_excel_sheet_properties~zoomscale LT 10.
-      io_worksheet->zif_excel_sheet_properties~zoomscale = 10.
+    IF o_worksheet->zif_excel_sheet_properties~zoomscale GT 400.
+      o_worksheet->zif_excel_sheet_properties~zoomscale = 400.
+    ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale LT 10.
+      o_worksheet->zif_excel_sheet_properties~zoomscale = 10.
     ENDIF.
-    lv_value = io_worksheet->zif_excel_sheet_properties~zoomscale.
+    lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale.
     CONDENSE lv_value.
     lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscale
                                     value = lv_value ).
-    IF io_worksheet->zif_excel_sheet_properties~zoomscale_normal NE 0.
-      IF io_worksheet->zif_excel_sheet_properties~zoomscale_normal GT 400.
-        io_worksheet->zif_excel_sheet_properties~zoomscale_normal = 400.
-      ELSEIF io_worksheet->zif_excel_sheet_properties~zoomscale_normal LT 10.
-        io_worksheet->zif_excel_sheet_properties~zoomscale_normal = 10.
+    IF o_worksheet->zif_excel_sheet_properties~zoomscale_normal NE 0.
+      IF o_worksheet->zif_excel_sheet_properties~zoomscale_normal GT 400.
+        o_worksheet->zif_excel_sheet_properties~zoomscale_normal = 400.
+      ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale_normal LT 10.
+        o_worksheet->zif_excel_sheet_properties~zoomscale_normal = 10.
       ENDIF.
-      lv_value = io_worksheet->zif_excel_sheet_properties~zoomscale_normal.
+      lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale_normal.
       CONDENSE lv_value.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscalenormal
                                       value = lv_value ).
     ENDIF.
-    IF io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview NE 0.
-      IF io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview GT 400.
-        io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview = 400.
-      ELSEIF io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview LT 10.
-        io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview = 10.
+    IF o_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview NE 0.
+      IF o_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview GT 400.
+        o_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview = 400.
+      ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview LT 10.
+        o_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview = 10.
       ENDIF.
-      lv_value = io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview.
+      lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview.
       CONDENSE lv_value.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscalepageview
                                       value = lv_value ).
     ENDIF.
-    IF io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview NE 0.
-      IF io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview GT 400.
-        io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = 400.
-      ELSEIF io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview LT 10.
-        io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = 10.
+    IF o_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview NE 0.
+      IF o_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview GT 400.
+        o_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = 400.
+      ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview LT 10.
+        o_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = 10.
       ENDIF.
-      lv_value = io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview.
+      lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview.
       CONDENSE lv_value.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscalesheetview
                                       value = lv_value ).
     ENDIF.
-    IF io_worksheet->zif_excel_sheet_properties~get_right_to_left( ) EQ abap_true.
+    IF o_worksheet->zif_excel_sheet_properties~get_right_to_left( ) EQ abap_true.
       lo_element_2->set_attribute_ns( name  = 'rightToLeft'
                                       value = '1' ).
     ENDIF.
     lo_element_2->set_attribute_ns( name  = lc_xml_attr_workbookviewid
                                     value = '0' ).
     " showGridLines attribute
-    IF io_worksheet->show_gridlines = abap_true.
+    IF o_worksheet->show_gridlines = abap_true.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_showgridlines
                                       value = '1' ).
     ELSE.
@@ -356,7 +387,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     ENDIF.
 
     " showRowColHeaders attribute
-    IF io_worksheet->show_rowcolheaders = abap_true.
+    IF o_worksheet->show_rowcolheaders = abap_true.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_showrowcolheaders
                                       value = '1' ).
     ELSE.
@@ -365,12 +396,12 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     ENDIF.
 
     " freeze panes
-    io_worksheet->get_freeze_cell( IMPORTING ep_row    = lv_freeze_cell_row
-                                             ep_column = lv_freeze_cell_column ).
+    o_worksheet->get_freeze_cell( IMPORTING ep_row    = lv_freeze_cell_row
+                                            ep_column = lv_freeze_cell_column ).
 
     IF lv_freeze_cell_row IS NOT INITIAL AND lv_freeze_cell_column IS NOT INITIAL.
-      lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_pane
-                                                         parent = lo_element_2 ).
+      lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_pane
+                                                        parent = lo_element_2 ).
 
       IF lv_freeze_cell_row > 1.
         lv_value = lv_freeze_cell_row - 1.
@@ -401,9 +432,9 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element_2->append_child( new_child = lo_element_3 ).
     ENDIF.
     " selection node
-    lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_selection
-                                                       parent = io_document ).
-    lv_value = io_worksheet->get_active_cell( ).
+    lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_selection
+                                                      parent = o_document ).
+    lv_value = o_worksheet->get_active_cell( ).
     lo_element_3->set_attribute_ns( name  = lc_xml_attr_activecell
                                     value = lv_value ).
 
@@ -414,18 +445,11 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
     lo_element->append_child( new_child = lo_element_2 ). " sheetView node
 
-    lo_element_root->append_child( new_child = lo_element ). " sheetViews node
+    o_element_root->append_child( new_child = lo_element ). " sheetViews node
   ENDMETHOD.
 
-  METHOD add_xl_sheet_shtfrmtpr_sbnod.
-    CONSTANTS: lc_xml_node_sheetformatpr    TYPE string VALUE 'sheetFormatPr',
-               lc_xml_attr_true             TYPE string VALUE 'true',
-               lc_xml_attr_customheight     TYPE string VALUE 'customHeight',
-               lc_xml_attr_defaultrowheight TYPE string VALUE 'defaultRowHeight',
-               lc_xml_attr_defaultcolwidth  TYPE string VALUE 'defaultColWidth',
-               lc_xml_attr_outlinelevelcol  TYPE string VALUE 'x14ac:outlineLevelCol'.
-
-    DATA: lo_element_root    TYPE REF TO if_ixml_element,
+  METHOD add_sheetformatpr.
+    DATA: o_element_root     TYPE REF TO if_ixml_element,
           lo_element         TYPE REF TO if_ixml_element,
           lo_column_default  TYPE REF TO zcl_excel_column,
           lo_row_default     TYPE REF TO zcl_excel_row,lv_value           TYPE string,
@@ -434,20 +458,20 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_row_iterator    TYPE REF TO zcl_excel_collection_iterator,
           outline_level_col  TYPE i VALUE 0.
 
-    lo_element_root = io_document->get_root_element( ).
-    lo_column_iterator = io_worksheet->get_columns_iterator( ).
-    lo_row_iterator = io_worksheet->get_rows_iterator( ).
+    o_element_root = o_document->get_root_element( ).
+    lo_column_iterator = o_worksheet->get_columns_iterator( ).
+    lo_row_iterator = o_worksheet->get_rows_iterator( ).
     " Calculate col
     IF NOT lo_column_iterator IS BOUND.
-      io_worksheet->calculate_column_widths( ).
-      lo_column_iterator = io_worksheet->get_columns_iterator( ).
+      o_worksheet->calculate_column_widths( ).
+      lo_column_iterator = o_worksheet->get_columns_iterator( ).
     ENDIF.
 
     " sheetFormatPr node
-    lo_element = io_document->create_simple_element( name   = lc_xml_node_sheetformatpr
-                                                     parent = io_document ).
+    lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetformatpr
+                                                    parent = o_document ).
     " defaultRowHeight
-    lo_row_default = io_worksheet->get_default_row( ).
+    lo_row_default = o_worksheet->get_default_row( ).
     IF lo_row_default IS BOUND.
       IF lo_row_default->get_row_height( ) >= 0.
         lo_element->set_attribute_ns( name  = lc_xml_attr_customheight
@@ -464,7 +488,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     lo_element->set_attribute_ns( name  = lc_xml_attr_defaultrowheight
                                   value = lv_value ).
     " defaultColWidth
-    lo_column_default = io_worksheet->get_default_column( ).
+    lo_column_default = o_worksheet->get_default_column( ).
     IF lo_column_default IS BOUND AND lo_column_default->get_width( ) >= 0.
       lv_value = lo_column_default->get_width( ).
       SHIFT lv_value RIGHT DELETING TRAILING space.
@@ -487,25 +511,11 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     lo_element->set_attribute_ns( name  = lc_xml_attr_outlinelevelcol
                                   value = lv_value ).
 
-    lo_element_root->append_child( new_child = lo_element ). " sheetFormatPr node
+    o_element_root->append_child( new_child = lo_element ). " sheetFormatPr node
   ENDMETHOD.
 
-  METHOD add_xl_sheet_cols_subnode.
-    CONSTANTS: lc_xml_node_cols         TYPE string VALUE 'cols',
-               lc_xml_node_col          TYPE string VALUE 'col',
-               lc_xml_attr_min          TYPE string VALUE 'min',
-               lc_xml_attr_max          TYPE string VALUE 'max',
-               lc_xml_attr_hidden       TYPE string VALUE 'hidden',
-               lc_xml_attr_width        TYPE string VALUE 'width',
-               lc_xml_attr_defaultwidth TYPE string VALUE '9.10',
-               lc_xml_attr_style        TYPE string VALUE 'style',
-               lc_xml_attr_true         TYPE string VALUE 'true',
-               lc_xml_attr_bestfit      TYPE string VALUE 'bestFit',
-               lc_xml_attr_customwidth  TYPE string VALUE 'customWidth',
-               lc_xml_attr_collapsed    TYPE string VALUE 'collapsed',
-               lc_xml_attr_outlinelevel TYPE string VALUE 'outlineLevel'.
-
-    DATA: lo_element_root    TYPE REF TO if_ixml_element,
+  METHOD add_cols.
+    DATA: o_element_root     TYPE REF TO if_ixml_element,
           lo_element         TYPE REF TO if_ixml_element,
           lo_element_2       TYPE REF TO if_ixml_element,
           lo_column_default  TYPE REF TO zcl_excel_column,
@@ -516,21 +526,21 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_column          TYPE REF TO zcl_excel_column.
 
-    lo_element_root = io_document->get_root_element( ).
+    o_element_root = o_document->get_root_element( ).
 * Reset column iterator
-    lo_column_iterator = io_worksheet->get_columns_iterator( ).
-    IF io_worksheet->zif_excel_sheet_properties~get_style( ) IS NOT INITIAL OR lo_column_iterator->has_next( ) = abap_true.
+    lo_column_iterator = o_worksheet->get_columns_iterator( ).
+    IF o_worksheet->zif_excel_sheet_properties~get_style( ) IS NOT INITIAL OR lo_column_iterator->has_next( ) = abap_true.
       " cols node
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_cols
-                                                       parent = io_document ).
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_cols
+                                                      parent = o_document ).
       " This code have to be enhanced in order to manage also column style properties
       " Now it is an out/out
       IF lo_column_iterator->has_next( ) = abap_true.
         WHILE lo_column_iterator->has_next( ) = abap_true.
           lo_column ?= lo_column_iterator->get_next( ).
           " col node
-          lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_col
-                                                             parent = io_document ).
+          lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_col
+                                                            parent = o_document ).
           lv_value = lo_column->get_column_index( ).
           SHIFT lv_value RIGHT DELETING TRAILING space.
           SHIFT lv_value LEFT DELETING LEADING space.
@@ -599,7 +609,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
       ENDIF.
 * Always pass through this coding
-      IF io_worksheet->zif_excel_sheet_properties~get_style( ) IS NOT INITIAL.
+      IF o_worksheet->zif_excel_sheet_properties~get_style( ) IS NOT INITIAL.
         DATA: lts_sorted_columns TYPE SORTED TABLE OF zexcel_cell_column WITH UNIQUE KEY table_line.
         TYPES: BEGIN OF ty_missing_columns,
                  first_column TYPE zexcel_cell_column,
@@ -609,7 +619,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
               missing_column    LIKE LINE OF t_missing_columns.
 
 * First collect columns that were already handled before.  The rest has to be inserted now
-        lo_column_iterator = io_worksheet->get_columns_iterator( ).
+        lo_column_iterator = o_worksheet->get_columns_iterator( ).
         WHILE lo_column_iterator->has_next( ) = abap_true.
           lo_column ?= lo_column_iterator->get_next( ).
           lv_column = zcl_excel_common=>convert_column2int( lo_column->get_column_index( ) ).
@@ -630,8 +640,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 * Now apply stylesetting ( and other defaults - I copy it from above.  Whoever programmed that seems to know what to do  :o)
         LOOP AT t_missing_columns INTO missing_column.
 * End of insertion issue #157 -  set column style
-          lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_col
-                                                             parent = io_document ).
+          lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_col
+                                                            parent = o_document ).
           lv_value = missing_column-first_column.             "ins issue #157  -  set sheet style ( add missing columns
           CONDENSE lv_value.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_min
@@ -643,7 +653,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                                           value = lv_value ).
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_width
                                           value = lc_xml_attr_defaultwidth ).
-          lv_style_guid = io_worksheet->zif_excel_sheet_properties~get_style( ).
+          lv_style_guid = o_worksheet->zif_excel_sheet_properties~get_style( ).
           READ TABLE o_excel_ref->styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
           lv_value = ls_style_mapping-style.
           CONDENSE lv_value.
@@ -656,10 +666,10 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * issue #367 add feature hide columns from
 *--------------------------------------------------------------------*
-      IF io_worksheet->zif_excel_sheet_properties~hide_columns_from IS NOT INITIAL.
-        lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_col
-                                                           parent = io_document ).
-        lv_value = zcl_excel_common=>convert_column2int( io_worksheet->zif_excel_sheet_properties~hide_columns_from ).
+      IF o_worksheet->zif_excel_sheet_properties~hide_columns_from IS NOT INITIAL.
+        lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_col
+                                                          parent = o_document ).
+        lv_value = zcl_excel_common=>convert_column2int( o_worksheet->zif_excel_sheet_properties~hide_columns_from ).
         CONDENSE lv_value NO-GAPS.
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_min
                                         value = lv_value ).
@@ -670,146 +680,115 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
         lo_element->append_child( new_child = lo_element_2 ). " col node
       ENDIF.
 
-      lo_element_root->append_child( new_child = lo_element ). " cols node
+      o_element_root->append_child( new_child = lo_element ). " cols node
     ENDIF.
   ENDMETHOD.
 
+  METHOD add_sheet_protection.
+    DATA:
+      lo_element TYPE REF TO if_ixml_element,
+      lv_value   TYPE string.
 
-  METHOD add_xl_sheet_shtprtctn_sbnod.
-    CONSTANTS: lc_xml_node_sheetprotection    TYPE string VALUE 'sheetProtection',
-               lc_xml_attr_password           TYPE string VALUE 'password',
-               lc_xml_attr_sheet              TYPE string VALUE 'sheet',
-               lc_xml_attr_objects            TYPE string VALUE 'objects',
-               lc_xml_attr_scenarios          TYPE string VALUE 'scenarios',
-               lc_xml_attr_autofilter         TYPE string VALUE 'autoFilter',
-               lc_xml_attr_deletecolumns      TYPE string VALUE 'deleteColumns',
-               lc_xml_attr_deleterows         TYPE string VALUE 'deleteRows',
-               lc_xml_attr_formatcells        TYPE string VALUE 'formatCells',
-               lc_xml_attr_formatcolumns      TYPE string VALUE 'formatColumns',
-               lc_xml_attr_formatrows         TYPE string VALUE 'formatRows',
-               lc_xml_attr_insertcolumns      TYPE string VALUE 'insertColumns',
-               lc_xml_attr_inserthyperlinks   TYPE string VALUE 'insertHyperlinks',
-               lc_xml_attr_insertrows         TYPE string VALUE 'insertRows',
-               lc_xml_attr_pivottables        TYPE string VALUE 'pivotTables',
-               lc_xml_attr_selectlockedcells  TYPE string VALUE 'selectLockedCells',
-               lc_xml_attr_selectunlockedcell TYPE string VALUE 'selectUnlockedCells',
-               lc_xml_attr_sort               TYPE string VALUE 'sort'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lv_value        TYPE string.
-
-    lo_element_root = io_document->get_root_element( ).
+    o_element_root = o_document->get_root_element( ).
 *< Begin of insertion Issue #572 - Protect sheet with filter caused Excel error
 * Autofilter must be set AFTER sheet protection in XML
-    IF io_worksheet->zif_excel_sheet_protection~protected EQ abap_true.
+    IF o_worksheet->zif_excel_sheet_protection~protected EQ abap_true.
       " sheetProtection node
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_sheetprotection
-                                                       parent = io_document ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~password.
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetprotection
+                                                      parent = o_document ).
+      lv_value = o_worksheet->zif_excel_sheet_protection~password.
       IF lv_value IS NOT INITIAL.
         lo_element->set_attribute_ns( name  = lc_xml_attr_password
                                       value = lv_value ).
       ENDIF.
-      lv_value = io_worksheet->zif_excel_sheet_protection~auto_filter.
+      lv_value = o_worksheet->zif_excel_sheet_protection~auto_filter.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_autofilter
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~delete_columns.
+      lv_value = o_worksheet->zif_excel_sheet_protection~delete_columns.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_deletecolumns
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~delete_rows.
+      lv_value = o_worksheet->zif_excel_sheet_protection~delete_rows.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_deleterows
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~format_cells.
+      lv_value = o_worksheet->zif_excel_sheet_protection~format_cells.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_formatcells
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~format_columns.
+      lv_value = o_worksheet->zif_excel_sheet_protection~format_columns.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_formatcolumns
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~format_rows.
+      lv_value = o_worksheet->zif_excel_sheet_protection~format_rows.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_formatrows
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~insert_columns.
+      lv_value = o_worksheet->zif_excel_sheet_protection~insert_columns.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_insertcolumns
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~insert_hyperlinks.
+      lv_value = o_worksheet->zif_excel_sheet_protection~insert_hyperlinks.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_inserthyperlinks
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~insert_rows.
+      lv_value = o_worksheet->zif_excel_sheet_protection~insert_rows.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_insertrows
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~objects.
+      lv_value = o_worksheet->zif_excel_sheet_protection~objects.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_objects
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~pivot_tables.
+      lv_value = o_worksheet->zif_excel_sheet_protection~pivot_tables.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_pivottables
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~scenarios.
+      lv_value = o_worksheet->zif_excel_sheet_protection~scenarios.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_scenarios
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~select_locked_cells.
+      lv_value = o_worksheet->zif_excel_sheet_protection~select_locked_cells.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_selectlockedcells
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~select_unlocked_cells.
+      lv_value = o_worksheet->zif_excel_sheet_protection~select_unlocked_cells.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_selectunlockedcell
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~sheet.
+      lv_value = o_worksheet->zif_excel_sheet_protection~sheet.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_sheet
                                     value = lv_value ).
-      lv_value = io_worksheet->zif_excel_sheet_protection~sort.
+      lv_value = o_worksheet->zif_excel_sheet_protection~sort.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_sort
                                     value = lv_value ).
 
-      lo_element_root->append_child( new_child = lo_element ).
+      o_element_root->append_child( new_child = lo_element ).
     ENDIF.
 *> End of insertion Issue #572 - Protect sheet with filter caused Excel error
   ENDMETHOD.
 
+  METHOD add_autofilter.
+    DATA:
+      lo_element    TYPE REF TO if_ixml_element,
+      lo_element_2  TYPE REF TO if_ixml_element,
+      lo_element_3  TYPE REF TO if_ixml_element,
+      lo_element_4  TYPE REF TO if_ixml_element,
+      lv_value      TYPE string,
+      lv_column     TYPE zexcel_cell_column,
+      lt_values     TYPE zexcel_t_autofilter_values,
+      ls_values     TYPE zexcel_s_autofilter_values,
+      lo_autofilter TYPE REF TO zcl_excel_autofilter,
+      lv_ref        TYPE string.
 
-  METHOD add_xl_sheet_autoflter_sbnod.
-    CONSTANTS: lc_xml_node_sheetpr      TYPE string VALUE 'sheetPr',
-               lc_xml_node_autofilter   TYPE string VALUE 'autoFilter',
-               lc_xml_node_filtercolumn TYPE string VALUE 'filterColumn',
-               lc_xml_node_filters      TYPE string VALUE 'filters',
-               lc_xml_node_filter       TYPE string VALUE 'filter',
-               lc_xml_attr_ref          TYPE string VALUE 'ref',
-               lc_xml_attr_val          TYPE string VALUE 'val',
-               lc_xml_attr_colid        TYPE string VALUE 'colId',
-               lc_xml_attr_filtermode   TYPE string VALUE 'filterMode'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_element_2    TYPE REF TO if_ixml_element,
-          lo_element_3    TYPE REF TO if_ixml_element,
-          lo_element_4    TYPE REF TO if_ixml_element,
-          lv_value        TYPE string,
-          lv_column       TYPE zexcel_cell_column,
-          lt_values       TYPE zexcel_t_autofilter_values,
-          ls_values       TYPE zexcel_s_autofilter_values,
-          lo_autofilter   TYPE REF TO zcl_excel_autofilter,
-          lv_ref          TYPE string.
-
-    lo_element_root = io_document->get_root_element( ).
+    o_element_root = o_document->get_root_element( ).
     IF lo_autofilter IS BOUND.
 * Create node autofilter
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_autofilter
-                                                       parent = io_document ).
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_autofilter
+                                                      parent = o_document ).
       lv_ref = lo_autofilter->get_filter_range( ) .
       CONDENSE lv_ref NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_ref
@@ -817,7 +796,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lt_values = lo_autofilter->get_values( ) .
       IF lt_values IS NOT INITIAL.
 * If we filter we need to set the filter mode to 1.
-        lo_element_2 = io_document->find_from_name( name = lc_xml_node_sheetpr ).
+        lo_element_2 = o_document->find_from_name( name = lc_xml_node_sheetpr ).
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_filtermode
                                         value = '1' ).
 * Create node filtercolumn
@@ -828,19 +807,19 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
               lo_element_2->append_child( new_child = lo_element_3 ).
               lo_element->append_child( new_child = lo_element_2 ).
             ENDIF.
-            lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_filtercolumn
-                                                               parent = lo_element ).
+            lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_filtercolumn
+                                                              parent = lo_element ).
             lv_column   = ls_values-column - lo_autofilter->filter_area-col_start.
             lv_value = lv_column.
             CONDENSE lv_value NO-GAPS.
             lo_element_2->set_attribute_ns( name  = lc_xml_attr_colid
                                             value = lv_value ).
-            lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_filters
-                                                               parent = lo_element_2 ).
+            lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_filters
+                                                              parent = lo_element_2 ).
             lv_column = ls_values-column.
           ENDIF.
-          lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_filter
-                                                             parent = lo_element_3 ).
+          lo_element_4 = o_document->create_simple_element( name   = lc_xml_node_filter
+                                                            parent = lo_element_3 ).
           lo_element_4->set_attribute_ns( name  = lc_xml_attr_val
                                           value = ls_values-value ).
           lo_element_3->append_child( new_child = lo_element_4 ). " value node
@@ -848,85 +827,45 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
         lo_element_2->append_child( new_child = lo_element_3 ).
         lo_element->append_child( new_child = lo_element_2 ).
       ENDIF.
-      lo_element_root->append_child( new_child = lo_element ).
+      o_element_root->append_child( new_child = lo_element ).
     ENDIF.
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_mrgedcell_sbnod.
-    CONSTANTS: lc_xml_node_mergecell  TYPE string VALUE 'mergeCell',
-               lc_xml_node_mergecells TYPE string VALUE 'mergeCells',
-               lc_xml_attr_ref        TYPE string VALUE 'ref',
-               lc_xml_attr_count      TYPE string VALUE 'count'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_element_2    TYPE REF TO if_ixml_element,
-          lv_value        TYPE string,
-          lt_range_merge  TYPE string_table,
-          merge_count     TYPE int4.
+  METHOD add_merge_cells.
+    DATA:
+      lo_element     TYPE REF TO if_ixml_element,
+      lo_element_2   TYPE REF TO if_ixml_element,
+      lv_value       TYPE string,
+      lt_range_merge TYPE string_table,
+      merge_count    TYPE int4.
 
     FIELD-SYMBOLS: <fs_range_merge>         LIKE LINE OF lt_range_merge.
 
-    lo_element_root = io_document->get_root_element( ).
-    lt_range_merge = io_worksheet->get_merge( ).
+    o_element_root = o_document->get_root_element( ).
+    lt_range_merge = o_worksheet->get_merge( ).
     IF lt_range_merge IS NOT INITIAL.
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_mergecells
-                                                       parent = io_document ).
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_mergecells
+                                                      parent = o_document ).
       DESCRIBE TABLE lt_range_merge LINES merge_count.
       lv_value = merge_count.
       CONDENSE lv_value.
       lo_element->set_attribute_ns( name  = lc_xml_attr_count
                                     value = lv_value ).
       LOOP AT lt_range_merge ASSIGNING <fs_range_merge>.
-        lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_mergecell
-                                                           parent = io_document ).
+        lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_mergecell
+                                                          parent = o_document ).
 
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_ref
                                         value = <fs_range_merge> ).
         lo_element->append_child( new_child = lo_element_2 ).
-        lo_element_root->append_child( new_child = lo_element ).
-        io_worksheet->delete_merge( ).
+        o_element_root->append_child( new_child = lo_element ).
+        o_worksheet->delete_merge( ).
       ENDLOOP.
     ENDIF.
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_condfrmat_sbnod.
-    TYPES: BEGIN OF colors,
-             colorrgb TYPE zexcel_color,
-           END OF colors.
-    TYPES: BEGIN OF cfvo,
-             value TYPE zexcel_conditional_value,
-             type  TYPE zexcel_conditional_type,
-           END OF cfvo.
-    TYPES: BEGIN OF ty_condformating_range,
-             dimension_range     TYPE string,
-             condformatting_node TYPE REF TO if_ixml_element,
-           END OF ty_condformating_range,
-           ty_condformating_ranges TYPE STANDARD TABLE OF ty_condformating_range.
-
-*   < ** Constant node name
-    CONSTANTS: lc_xml_node_condformatting TYPE string VALUE 'conditionalFormatting',
-               lc_xml_node_cfrule         TYPE string VALUE 'cfRule',
-               lc_xml_node_color          TYPE string VALUE 'color',      " Databar by Albert Lladanosa
-               lc_xml_node_databar        TYPE string VALUE 'dataBar',    " Databar by Albert Lladanosa
-               lc_xml_node_colorscale     TYPE string VALUE 'colorScale',
-               lc_xml_node_iconset        TYPE string VALUE 'iconSet',
-               lc_xml_node_cfvo           TYPE string VALUE 'cfvo',
-               lc_xml_node_formula        TYPE string VALUE 'formula',
-               lc_xml_attr_sqref          TYPE string VALUE 'sqref',
-               lc_xml_attr_type           TYPE string VALUE 'type',
-               lc_xml_attr_iconset        TYPE string VALUE 'iconSet',
-               lc_xml_attr_showvalue      TYPE string VALUE 'showValue',
-               lc_xml_attr_val            TYPE string VALUE 'val',
-               lc_xml_attr_dxfid          TYPE string VALUE 'dxfId',
-               lc_xml_attr_priority       TYPE string VALUE 'priority',
-               lc_xml_attr_operator       TYPE string VALUE 'operator',
-               lc_xml_attr_text           TYPE string VALUE 'text',
-               lc_xml_attr_tabcolor_rgb   TYPE string VALUE 'rgb'.
-
-    DATA: lo_element_root          TYPE REF TO if_ixml_element,
+  METHOD add_conditional_formatting.
+    DATA: o_element_root           TYPE REF TO if_ixml_element,
           lo_element               TYPE REF TO if_ixml_element,
           lo_element_2             TYPE REF TO if_ixml_element,
           lo_element_3             TYPE REF TO if_ixml_element,
@@ -955,8 +894,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_condformating_range> TYPE ty_condformating_range.
 
-    lo_element_root = io_document->get_root_element( ).
-    lo_iterator = io_worksheet->get_style_cond_iterator( ).
+    o_element_root = o_document->get_root_element( ).
+    lo_iterator = o_worksheet->get_style_cond_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_style_cond ?= lo_iterator->get_next( ).
       IF lo_style_cond->rule IS INITIAL.
@@ -969,8 +908,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       IF sy-subrc = 0.
         lo_element = <ls_condformating_range>-condformatting_node.
       ELSE.
-        lo_element = io_document->create_simple_element( name   = lc_xml_node_condformatting
-                                                         parent = io_document ).
+        lo_element = o_document->create_simple_element( name   = lc_xml_node_condformatting
+                                                        parent = o_document ).
         lo_element->set_attribute_ns( name  = lc_xml_attr_sqref
                                       value = lv_value ).
 
@@ -981,8 +920,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       ENDIF.
 
       " cfRule node
-      lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_cfrule
-                                                         parent = io_document ).
+      lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_cfrule
+                                                        parent = o_document ).
       IF lo_style_cond->rule = zcl_excel_style_cond=>c_rule_textfunction.
         IF lo_style_cond->mode_textfunction-textfunction = zcl_excel_style_cond=>c_textfunction_notcontains.
           lv_value = `notContainsText`.
@@ -1007,8 +946,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           ls_databar = lo_style_cond->mode_databar.
 
           CLEAR lt_cfvo.
-          lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_databar
-                                                             parent = io_document ).
+          lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_databar
+                                                            parent = o_document ).
 
           ls_cfvo-value = ls_databar-cfvo1_value.
           ls_cfvo-type = ls_databar-cfvo1_type.
@@ -1020,8 +959,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
           LOOP AT lt_cfvo INTO ls_cfvo.
             " cfvo node
-            lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_cfvo
-                                                               parent = io_document ).
+            lo_element_4 = o_document->create_simple_element( name   = lc_xml_node_cfvo
+                                                              parent = o_document ).
             lv_value = ls_cfvo-type.
             lo_element_4->set_attribute_ns( name  = lc_xml_attr_type
                                             value = lv_value ).
@@ -1031,8 +970,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
             lo_element_3->append_child( new_child = lo_element_4 ). " cfvo node
           ENDLOOP.
 
-          lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_color
-                                                             parent = io_document ).
+          lo_element_4 = o_document->create_simple_element( name   = lc_xml_node_color
+                                                            parent = o_document ).
           lv_value = ls_databar-colorrgb.
           lo_element_4->set_attribute_ns( name  = lc_xml_attr_tabcolor_rgb
                                           value = lv_value ).
@@ -1047,8 +986,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           ls_colorscale = lo_style_cond->mode_colorscale.
 
           CLEAR: lt_cfvo, lt_colors.
-          lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_colorscale
-                                                             parent = io_document ).
+          lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_colorscale
+                                                            parent = o_document ).
 
           ls_cfvo-value = ls_colorscale-cfvo1_value.
           ls_cfvo-type = ls_colorscale-cfvo1_type.
@@ -1073,8 +1012,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
             ENDIF.
 
             " cfvo node
-            lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_cfvo
-                                                               parent = io_document ).
+            lo_element_4 = o_document->create_simple_element( name   = lc_xml_node_cfvo
+                                                              parent = o_document ).
             lv_value = ls_cfvo-type.
             lo_element_4->set_attribute_ns( name  = lc_xml_attr_type
                                             value = lv_value ).
@@ -1089,8 +1028,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
               CONTINUE.
             ENDIF.
 
-            lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_color
-                                                               parent = io_document ).
+            lo_element_4 = o_document->create_simple_element( name   = lc_xml_node_color
+                                                              parent = o_document ).
             lv_value = ls_colors-colorrgb.
             lo_element_4->set_attribute_ns( name  = lc_xml_attr_tabcolor_rgb
                                             value = lv_value ).
@@ -1106,8 +1045,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
           CLEAR lt_cfvo.
           " iconset node
-          lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_iconset
-                                                             parent = io_document ).
+          lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_iconset
+                                                            parent = o_document ).
           IF ls_iconset-iconset NE zcl_excel_style_cond=>c_iconset_3trafficlights.
             lv_value = ls_iconset-iconset.
             lo_element_3->set_attribute_ns( name  = lc_xml_attr_iconset
@@ -1180,8 +1119,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
           LOOP AT lt_cfvo INTO ls_cfvo.
             " cfvo node
-            lo_element_4 = io_document->create_simple_element( name   = lc_xml_node_cfvo
-                                                               parent = io_document ).
+            lo_element_4 = o_document->create_simple_element( name   = lc_xml_node_cfvo
+                                                              parent = o_document ).
             lv_value = ls_cfvo-type.
             lo_element_4->set_attribute_ns( name  = lc_xml_attr_type
                                             value = lv_value ).
@@ -1205,15 +1144,15 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_operator
                                           value = lv_value ).
           " formula node
-          lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_formula
-                                                             parent = io_document ).
+          lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_formula
+                                                            parent = o_document ).
           lv_value = ls_cellis-formula.
           lo_element_3->set_value( value = lv_value ).
           lo_element_2->append_child( new_child = lo_element_3 ). " formula node
           IF ls_cellis-formula2 IS NOT INITIAL.
             lv_value = ls_cellis-formula2.
-            lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_formula
-                                                               parent = io_document ).
+            lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_formula
+                                                              parent = o_document ).
             lo_element_3->set_value( value = lv_value ).
             lo_element_2->append_child( new_child = lo_element_3 ). " 2nd formula node
           ENDIF.
@@ -1262,8 +1201,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
               lv_value = |ISERROR(SEARCH("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }",{ lv_cell_coords }))|.
             WHEN OTHERS.
           ENDCASE.
-          lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_formula
-                                                             parent = io_document ).
+          lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_formula
+                                                            parent = o_document ).
           lo_element_3->set_value( value = lv_value ).
           lo_element_2->append_child( new_child = lo_element_3 ). " formula node
 
@@ -1275,8 +1214,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_dxfid
                                           value = lv_value ).
           " formula node
-          lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_formula
-                                                             parent = io_document ).
+          lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_formula
+                                                            parent = o_document ).
           lv_value = ls_expression-formula.
           lo_element_3->set_value( value = lv_value ).
           lo_element_2->append_child( new_child = lo_element_3 ). " formula node
@@ -1330,30 +1269,12 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
       lo_element->append_child( new_child = lo_element_2 ). " cfRule node
 
-      lo_element_root->append_child( new_child = lo_element ). " Conditional formatting node
+      o_element_root->append_child( new_child = lo_element ). " Conditional formatting node
     ENDWHILE.
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_datavldtn_sbnod.
-    CONSTANTS: lc_xml_node_datavalidations  TYPE string VALUE 'dataValidations',
-               lc_xml_node_datavalidation   TYPE string VALUE 'dataValidation',
-               lc_xml_node_formula1         TYPE string VALUE 'formula1',
-               lc_xml_node_formula2         TYPE string VALUE 'formula2',
-               lc_xml_attr_sqref            TYPE string VALUE 'sqref',
-               lc_xml_attr_type             TYPE string VALUE 'type',
-               lc_xml_attr_operator         TYPE string VALUE 'operator',
-               lc_xml_attr_allowblank       TYPE string VALUE 'allowBlank',
-               lc_xml_attr_showinputmessage TYPE string VALUE 'showInputMessage',
-               lc_xml_attr_showerrormessage TYPE string VALUE 'showErrorMessage',
-               lc_xml_attr_showdropdown     TYPE string VALUE 'ShowDropDown', " 'showDropDown' does not work
-               lc_xml_attr_errortitle       TYPE string VALUE 'errorTitle',
-               lc_xml_attr_error            TYPE string VALUE 'error',
-               lc_xml_attr_errorstyle       TYPE string VALUE 'errorStyle',
-               lc_xml_attr_prompttitle      TYPE string VALUE 'promptTitle',
-               lc_xml_attr_prompt           TYPE string VALUE 'prompt'.
-
-    DATA: lo_element_root    TYPE REF TO if_ixml_element,
+  METHOD add_data_validations.
+    DATA: o_element_root     TYPE REF TO if_ixml_element,
           lo_element         TYPE REF TO if_ixml_element,
           lo_element_2       TYPE REF TO if_ixml_element,
           lo_element_3       TYPE REF TO if_ixml_element,
@@ -1362,18 +1283,18 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lv_value           TYPE string,
           lv_cell_row_s      TYPE string.
 
-    lo_element_root = io_document->get_root_element( ).
-    IF io_worksheet->get_data_validations_size( ) GT 0.
+    o_element_root = o_document->get_root_element( ).
+    IF o_worksheet->get_data_validations_size( ) GT 0.
       " dataValidations node
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_datavalidations
-                                                       parent = io_document ).
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_datavalidations
+                                                      parent = o_document ).
       " Conditional formatting node
-      lo_iterator = io_worksheet->get_data_validations_iterator( ).
+      lo_iterator = o_worksheet->get_data_validations_iterator( ).
       WHILE lo_iterator->has_next( ) EQ abap_true.
         lo_data_validation ?= lo_iterator->get_next( ).
         " dataValidation node
-        lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_datavalidation
-                                                           parent = io_document ).
+        lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_datavalidation
+                                                          parent = o_document ).
         lv_value = lo_data_validation->type.
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_type
                                         value = lv_value ).
@@ -1446,16 +1367,16 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
         lo_element_2->set_attribute_ns( name  = lc_xml_attr_sqref
                                         value = lv_value ).
         " formula1 node
-        lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_formula1
-                                                           parent = io_document ).
+        lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_formula1
+                                                          parent = o_document ).
         lv_value = lo_data_validation->formula1.
         lo_element_3->set_value( value = lv_value ).
 
         lo_element_2->append_child( new_child = lo_element_3 ). " formula1 node
         " formula2 node
         IF NOT lo_data_validation->formula2 IS INITIAL.
-          lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_formula2
-                                                             parent = io_document ).
+          lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_formula2
+                                                            parent = o_document ).
           lv_value = lo_data_validation->formula2.
           lo_element_3->set_value( value = lv_value ).
 
@@ -1464,13 +1385,12 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
         lo_element->append_child( new_child = lo_element_2 ). " dataValidation node
       ENDWHILE.
-      lo_element_root->append_child( new_child = lo_element ). " dataValidations node
+      o_element_root->append_child( new_child = lo_element ). " dataValidations node
     ENDIF.
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_hyperlink_sbnod.
-    DATA: lo_element_root     TYPE REF TO if_ixml_element,
+  METHOD add_hyperlinks.
+    DATA: o_element_root      TYPE REF TO if_ixml_element,
           lo_element          TYPE REF TO if_ixml_element,
           lo_element_2        TYPE REF TO if_ixml_element,
           lo_iterator         TYPE REF TO zcl_excel_collection_iterator,
@@ -1478,18 +1398,18 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lv_hyperlinks_count TYPE i,
           lo_link             TYPE REF TO zcl_excel_hyperlink.
 
-    lo_element_root = io_document->get_root_element( ).
-    lv_hyperlinks_count = io_worksheet->get_hyperlinks_size( ).
+    o_element_root = o_document->get_root_element( ).
+    lv_hyperlinks_count = o_worksheet->get_hyperlinks_size( ).
     IF lv_hyperlinks_count > 0.
-      lo_element = io_document->create_simple_element( name   = 'hyperlinks'
-                                                       parent = io_document ).
+      lo_element = o_document->create_simple_element( name   = 'hyperlinks'
+                                                      parent = o_document ).
 
-      lo_iterator = io_worksheet->get_hyperlinks_iterator( ).
+      lo_iterator = o_worksheet->get_hyperlinks_iterator( ).
       WHILE lo_iterator->has_next( ) EQ abap_true.
         lo_link ?= lo_iterator->get_next( ).
 
-        lo_element_2 = io_document->create_simple_element( name   = 'hyperlink'
-                                                           parent = lo_element ).
+        lo_element_2 = o_document->create_simple_element( name   = 'hyperlink'
+                                                          parent = lo_element ).
 
         lv_value = lo_link->get_ref( ).
         lo_element_2->set_attribute_ns( name  = 'ref'
@@ -1500,9 +1420,9 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_element_2->set_attribute_ns( name  = 'location'
                                           value = lv_value ).
         ELSE.
-          ADD 1 TO cv_relation_id.
+          ADD 1 TO v_relation_id.
 
-          lv_value = cv_relation_id.
+          lv_value = v_relation_id.
           CONDENSE lv_value.
           CONCATENATE 'rId' lv_value INTO lv_value.
 
@@ -1514,444 +1434,411 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
         lo_element->append_child( new_child = lo_element_2 ).
       ENDWHILE.
 
-      lo_element_root->append_child( new_child = lo_element ).
+      o_element_root->append_child( new_child = lo_element ).
     ENDIF.
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_prnt_optn_sbnod.
-    CONSTANTS: lc_xml_attr_gridlines          TYPE string VALUE 'gridLines'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
+  METHOD add_print_options.
+    DATA:
           lo_element      TYPE REF TO if_ixml_element.
 
-    lo_element_root = io_document->get_root_element( ).
-    IF io_worksheet->print_gridlines                  = abap_true
-      OR io_worksheet->sheet_setup->vertical_centered   = abap_true
-      OR io_worksheet->sheet_setup->horizontal_centered = abap_true.
-      lo_element = io_document->create_simple_element( name   = 'printOptions'
-                                                       parent = io_document ).
+    o_element_root = o_document->get_root_element( ).
+    IF o_worksheet->print_gridlines                  = abap_true
+      OR o_worksheet->sheet_setup->vertical_centered   = abap_true
+      OR o_worksheet->sheet_setup->horizontal_centered = abap_true.
+      lo_element = o_document->create_simple_element( name   = 'printOptions'
+                                                      parent = o_document ).
 
-      IF io_worksheet->print_gridlines = abap_true.
+      IF o_worksheet->print_gridlines = abap_true.
         lo_element->set_attribute_ns( name  = lc_xml_attr_gridlines
                                       value = 'true' ).
       ENDIF.
 
-      IF io_worksheet->sheet_setup->horizontal_centered = abap_true.
+      IF o_worksheet->sheet_setup->horizontal_centered = abap_true.
         lo_element->set_attribute_ns( name  = 'horizontalCentered'
                                       value = 'true' ).
       ENDIF.
 
-      IF io_worksheet->sheet_setup->vertical_centered = abap_true.
+      IF o_worksheet->sheet_setup->vertical_centered = abap_true.
         lo_element->set_attribute_ns( name  = 'verticalCentered'
                                       value = 'true' ).
       ENDIF.
 
-      lo_element_root->append_child( new_child = lo_element ).
+      o_element_root->append_child( new_child = lo_element ).
     ENDIF.
   ENDMETHOD.
 
+  METHOD add_page_margins.
+    DATA:
+      lo_element TYPE REF TO if_ixml_element,
+      lv_value   TYPE string.
 
-  METHOD add_xl_sheet_page_mrgn_sbnod.
-    CONSTANTS: lc_xml_node_pagemargins TYPE string VALUE 'pageMargins',
-               lc_xml_attr_left        TYPE string VALUE 'left',
-               lc_xml_attr_right       TYPE string VALUE 'right',
-               lc_xml_attr_top         TYPE string VALUE 'top',
-               lc_xml_attr_bottom      TYPE string VALUE 'bottom',
-               lc_xml_attr_header      TYPE string VALUE 'header',
-               lc_xml_attr_footer      TYPE string VALUE 'footer'.
+    o_element_root = o_document->get_root_element( ).
+    lo_element = o_document->create_simple_element( name   = lc_xml_node_pagemargins
+                                                    parent = o_document ).
 
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lv_value        TYPE string.
-
-    lo_element_root = io_document->get_root_element( ).
-    lo_element = io_document->create_simple_element( name   = lc_xml_node_pagemargins
-                                                     parent = io_document ).
-
-    lv_value = io_worksheet->sheet_setup->margin_left.
+    lv_value = o_worksheet->sheet_setup->margin_left.
     CONDENSE lv_value NO-GAPS.
     lo_element->set_attribute_ns( name  = lc_xml_attr_left
                                   value = lv_value ).
-    lv_value = io_worksheet->sheet_setup->margin_right.
+    lv_value = o_worksheet->sheet_setup->margin_right.
     CONDENSE lv_value NO-GAPS.
     lo_element->set_attribute_ns( name  = lc_xml_attr_right
                                   value = lv_value ).
-    lv_value = io_worksheet->sheet_setup->margin_top.
+    lv_value = o_worksheet->sheet_setup->margin_top.
     CONDENSE lv_value NO-GAPS.
     lo_element->set_attribute_ns( name  = lc_xml_attr_top
                                   value = lv_value ).
-    lv_value = io_worksheet->sheet_setup->margin_bottom.
+    lv_value = o_worksheet->sheet_setup->margin_bottom.
     CONDENSE lv_value NO-GAPS.
     lo_element->set_attribute_ns( name  = lc_xml_attr_bottom
                                   value = lv_value ).
-    lv_value = io_worksheet->sheet_setup->margin_header.
+    lv_value = o_worksheet->sheet_setup->margin_header.
     CONDENSE lv_value NO-GAPS.
     lo_element->set_attribute_ns( name  = lc_xml_attr_header
                                   value = lv_value ).
-    lv_value = io_worksheet->sheet_setup->margin_footer.
+    lv_value = o_worksheet->sheet_setup->margin_footer.
     CONDENSE lv_value NO-GAPS.
     lo_element->set_attribute_ns( name  = lc_xml_attr_footer
                                   value = lv_value ).
-    lo_element_root->append_child( new_child = lo_element ). " pageMargins node
+    o_element_root->append_child( new_child = lo_element ). " pageMargins node
   ENDMETHOD.
 
+  METHOD add_page_setup.
+    DATA:
+      lo_element TYPE REF TO if_ixml_element,
+      lv_value   TYPE string.
 
-  METHOD add_xl_sheet_page_stup_sbnod.
-    CONSTANTS: lc_xml_node_pagesetup          TYPE string VALUE 'pageSetup',
-               lc_xml_attr_blackandwhite      TYPE string VALUE 'blackAndWhite',
-               lc_xml_attr_cellcomments       TYPE string VALUE 'cellComments',
-               lc_xml_attr_copies             TYPE string VALUE 'copies',
-               lc_xml_attr_draft              TYPE string VALUE 'draft',
-               lc_xml_attr_errors             TYPE string VALUE 'errors',
-               lc_xml_attr_firstpagenumber    TYPE string VALUE 'firstPageNumber',
-               lc_xml_attr_fittoheight        TYPE string VALUE 'fitToHeight',
-               lc_xml_attr_fittowidth         TYPE string VALUE 'fitToWidth',
-               lc_xml_attr_horizontaldpi      TYPE string VALUE 'horizontalDpi',
-               lc_xml_attr_orientation        TYPE string VALUE 'orientation',
-               lc_xml_attr_pageorder          TYPE string VALUE 'pageOrder',
-               lc_xml_attr_paperheight        TYPE string VALUE 'paperHeight',
-               lc_xml_attr_papersize          TYPE string VALUE 'paperSize',
-               lc_xml_attr_paperwidth         TYPE string VALUE 'paperWidth',
-               lc_xml_attr_scale              TYPE string VALUE 'scale',
-               lc_xml_attr_usefirstpagenumber TYPE string VALUE 'useFirstPageNumber',
-               lc_xml_attr_useprinterdefaults TYPE string VALUE 'usePrinterDefaults',
-               lc_xml_attr_verticaldpi        TYPE string VALUE 'verticalDpi'.
+    o_element_root = o_document->get_root_element( ).
+    lo_element = o_document->create_simple_element( name   = lc_xml_node_pagesetup
+                                                    parent = o_document ).
 
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lv_value        TYPE string.
-
-    lo_element_root = io_document->get_root_element( ).
-    lo_element = io_document->create_simple_element( name   = lc_xml_node_pagesetup
-                                                     parent = io_document ).
-
-    IF io_worksheet->sheet_setup->black_and_white IS NOT INITIAL.
+    IF o_worksheet->sheet_setup->black_and_white IS NOT INITIAL.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_blackandwhite
                                     value = `1` ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->cell_comments IS NOT INITIAL.
+    IF o_worksheet->sheet_setup->cell_comments IS NOT INITIAL.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_cellcomments
-                                    value = io_worksheet->sheet_setup->cell_comments ).
+                                    value = o_worksheet->sheet_setup->cell_comments ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->copies IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->copies.
+    IF o_worksheet->sheet_setup->copies IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->copies.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_copies
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->draft IS NOT INITIAL.
+    IF o_worksheet->sheet_setup->draft IS NOT INITIAL.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_draft
                                     value = `1` ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->errors IS NOT INITIAL.
+    IF o_worksheet->sheet_setup->errors IS NOT INITIAL.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_errors
-                                    value = io_worksheet->sheet_setup->errors ).
+                                    value = o_worksheet->sheet_setup->errors ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->first_page_number IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->first_page_number.
+    IF o_worksheet->sheet_setup->first_page_number IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->first_page_number.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_firstpagenumber
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->fit_to_page IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->fit_to_height.
+    IF o_worksheet->sheet_setup->fit_to_page IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->fit_to_height.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_fittoheight
                                     value = lv_value ).
-      lv_value = io_worksheet->sheet_setup->fit_to_width.
+      lv_value = o_worksheet->sheet_setup->fit_to_width.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_fittowidth
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->horizontal_dpi IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->horizontal_dpi.
+    IF o_worksheet->sheet_setup->horizontal_dpi IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->horizontal_dpi.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_horizontaldpi
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->orientation IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->orientation.
+    IF o_worksheet->sheet_setup->orientation IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->orientation.
       lo_element->set_attribute_ns( name  = lc_xml_attr_orientation
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->page_order IS NOT INITIAL.
+    IF o_worksheet->sheet_setup->page_order IS NOT INITIAL.
       lo_element->set_attribute_ns( name  = lc_xml_attr_pageorder
-                                    value = io_worksheet->sheet_setup->page_order ).
+                                    value = o_worksheet->sheet_setup->page_order ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->paper_height IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->paper_height.
+    IF o_worksheet->sheet_setup->paper_height IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->paper_height.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_paperheight
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->paper_size IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->paper_size.
+    IF o_worksheet->sheet_setup->paper_size IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->paper_size.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_papersize
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->paper_width IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->paper_width.
+    IF o_worksheet->sheet_setup->paper_width IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->paper_width.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_paperwidth
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->scale IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->scale.
+    IF o_worksheet->sheet_setup->scale IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->scale.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_scale
                                     value = lv_value ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->use_first_page_num IS NOT INITIAL.
+    IF o_worksheet->sheet_setup->use_first_page_num IS NOT INITIAL.
       lo_element->set_attribute_ns( name  = lc_xml_attr_usefirstpagenumber
                                     value = `1` ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->use_printer_defaults IS NOT INITIAL.
+    IF o_worksheet->sheet_setup->use_printer_defaults IS NOT INITIAL.
       lo_element->set_attribute_ns( name  = lc_xml_attr_useprinterdefaults
                                     value = `1` ).
     ENDIF.
 
-    IF io_worksheet->sheet_setup->vertical_dpi IS NOT INITIAL.
-      lv_value = io_worksheet->sheet_setup->vertical_dpi.
+    IF o_worksheet->sheet_setup->vertical_dpi IS NOT INITIAL.
+      lv_value = o_worksheet->sheet_setup->vertical_dpi.
       CONDENSE lv_value NO-GAPS.
       lo_element->set_attribute_ns( name  = lc_xml_attr_verticaldpi
                                     value = lv_value ).
     ENDIF.
 
-    lo_element_root->append_child( new_child = lo_element ). " pageSetup node
+    o_element_root->append_child( new_child = lo_element ). " pageSetup node
   ENDMETHOD.
 
+  METHOD add_header_footer.
+    DATA:
+      lo_element   TYPE REF TO if_ixml_element,
+      lo_element_2 TYPE REF TO if_ixml_element,
+      lv_value     TYPE string.
 
-  METHOD add_xl_sheet_hedr_fter_sbnod.
-    CONSTANTS: lc_xml_node_headerfooter     TYPE string VALUE 'headerFooter',
-               lc_xml_node_oddheader        TYPE string VALUE 'oddHeader',
-               lc_xml_node_oddfooter        TYPE string VALUE 'oddFooter',
-               lc_xml_node_evenheader       TYPE string VALUE 'evenHeader',
-               lc_xml_node_evenfooter       TYPE string VALUE 'evenFooter',
-               lc_xml_attr_differentoddeven TYPE string VALUE 'differentOddEven'.
+    o_element_root = o_document->get_root_element( ).
+    IF    o_worksheet->sheet_setup->odd_header IS NOT INITIAL
+       OR o_worksheet->sheet_setup->odd_footer IS NOT INITIAL
+       OR o_worksheet->sheet_setup->diff_oddeven_headerfooter = abap_true.
 
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_element_2    TYPE REF TO if_ixml_element,
-          lv_value        TYPE string.
-
-    lo_element_root = io_document->get_root_element( ).
-    IF    io_worksheet->sheet_setup->odd_header IS NOT INITIAL
-       OR io_worksheet->sheet_setup->odd_footer IS NOT INITIAL
-       OR io_worksheet->sheet_setup->diff_oddeven_headerfooter = abap_true.
-
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_headerfooter
-                                                       parent = io_document ).
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_headerfooter
+                                                      parent = o_document ).
 
       " Different header/footer for odd/even pages?
-      IF io_worksheet->sheet_setup->diff_oddeven_headerfooter = abap_true.
+      IF o_worksheet->sheet_setup->diff_oddeven_headerfooter = abap_true.
         lo_element->set_attribute_ns( name  = lc_xml_attr_differentoddeven
                                       value = '1' ).
       ENDIF.
 
       " OddHeader
       CLEAR: lv_value.
-      io_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_odd_header = lv_value ) .
+      o_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_odd_header = lv_value ) .
       IF lv_value IS NOT INITIAL.
-        lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_oddheader
-                                                           parent = io_document ).
+        lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_oddheader
+                                                          parent = o_document ).
         lo_element_2->set_value( value = lv_value ).
         lo_element->append_child( new_child = lo_element_2 ).
       ENDIF.
 
       " OddFooter
       CLEAR: lv_value.
-      io_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_odd_footer = lv_value ) .
+      o_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_odd_footer = lv_value ) .
       IF lv_value IS NOT INITIAL.
-        lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_oddfooter
-                                                           parent = io_document ).
+        lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_oddfooter
+                                                          parent = o_document ).
         lo_element_2->set_value( value = lv_value ).
         lo_element->append_child( new_child = lo_element_2 ).
       ENDIF.
 
       " evenHeader
       CLEAR: lv_value.
-      io_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_even_header = lv_value ) .
+      o_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_even_header = lv_value ) .
       IF lv_value IS NOT INITIAL.
-        lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_evenheader
-                                                           parent = io_document ).
+        lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_evenheader
+                                                          parent = o_document ).
         lo_element_2->set_value( value = lv_value ).
         lo_element->append_child( new_child = lo_element_2 ).
       ENDIF.
 
       " evenFooter
       CLEAR: lv_value.
-      io_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_even_footer = lv_value ) .
+      o_worksheet->sheet_setup->get_header_footer_string( IMPORTING ep_even_footer = lv_value ) .
       IF lv_value IS NOT INITIAL.
-        lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_evenfooter
-                                                           parent = io_document ).
+        lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_evenfooter
+                                                          parent = o_document ).
         lo_element_2->set_value( value = lv_value ).
         lo_element->append_child( new_child = lo_element_2 ).
       ENDIF.
 
-      lo_element_root->append_child( new_child = lo_element ). " headerFooter
+      o_element_root->append_child( new_child = lo_element ). " headerFooter
 
     ENDIF.
   ENDMETHOD.
 
+  METHOD add_drawing.
+    DATA:
+      lo_element  TYPE REF TO if_ixml_element,
+      lv_value    TYPE string,
+      lo_drawings TYPE REF TO zcl_excel_drawings.
 
-  METHOD add_xl_sheet_drawing_subnode.
-    CONSTANTS: lc_xml_node_drawing            TYPE string VALUE 'drawing'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lv_value        TYPE string,
-          lo_drawings     TYPE REF TO zcl_excel_drawings.
-
-    lo_element_root = io_document->get_root_element( ).
-    lo_drawings = io_worksheet->get_drawings( ).
+    o_element_root = o_document->get_root_element( ).
+    lo_drawings = o_worksheet->get_drawings( ).
     IF lo_drawings->is_empty( ) = abap_false.
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_drawing
-                                                       parent = io_document ).
-      ADD 1 TO cv_relation_id.
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_drawing
+                                                      parent = o_document ).
+      ADD 1 TO v_relation_id.
 
-      lv_value = cv_relation_id.
+      lv_value = v_relation_id.
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       lo_element->set_attribute( name  = 'r:id'
                                  value = lv_value ).
-      lo_element_root->append_child( new_child = lo_element ).
+      o_element_root->append_child( new_child = lo_element ).
     ENDIF.
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_drwng4cmt_sbnde.
-    CONSTANTS: lc_xml_node_drawing_for_cmt    TYPE string VALUE 'legacyDrawing'.
-
-    DATA: lo_element_root         TYPE REF TO if_ixml_element,
+  METHOD add_drawing_for_comments.
+    DATA: o_element_root          TYPE REF TO if_ixml_element,
           lo_element              TYPE REF TO if_ixml_element,
           lv_value                TYPE string,
           lo_drawing_for_comments TYPE REF TO zcl_excel_comments.
     " (Legacy) drawings for comments
 
-    lo_element_root = io_document->get_root_element( ).
-    lo_drawing_for_comments = io_worksheet->get_comments( ).
+    o_element_root = o_document->get_root_element( ).
+    lo_drawing_for_comments = o_worksheet->get_comments( ).
     IF lo_drawing_for_comments->is_empty( ) = abap_false.
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_drawing_for_cmt
-                                                       parent = io_document ).
-      ADD 1 TO cv_relation_id.  " +1 for legacyDrawings
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_drawing_for_cmt
+                                                      parent = o_document ).
+      ADD 1 TO v_relation_id.  " +1 for legacyDrawings
 
-      lv_value = cv_relation_id.
+      lv_value = v_relation_id.
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       lo_element->set_attribute( name  = 'r:id'
                                  value = lv_value ).
-      lo_element_root->append_child( new_child = lo_element ).
+      o_element_root->append_child( new_child = lo_element ).
 
-      ADD 1 TO cv_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
+      ADD 1 TO v_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
     ENDIF.
 * End   - Add - Issue #180
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_drwng4hdft_sbnd.
-    CONSTANTS: lc_xml_node_drawing_for_hd_ft TYPE string VALUE 'legacyDrawingHF'.
-
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lv_value        TYPE string,
-          lt_drawings     TYPE zexcel_t_drawings.
+  METHOD add_drawing_for_header_footer.
+    DATA:
+      lo_element  TYPE REF TO if_ixml_element,
+      lv_value    TYPE string,
+      lt_drawings TYPE zexcel_t_drawings.
 * Header/Footer Image
 
-    lo_element_root = io_document->get_root_element( ).
-    lt_drawings = io_worksheet->get_header_footer_drawings( ).
+    o_element_root = o_document->get_root_element( ).
+    lt_drawings = o_worksheet->get_header_footer_drawings( ).
     IF lines( lt_drawings ) > 0. "Header or footer image exist
-      lo_element = io_document->create_simple_element( name   = lc_xml_node_drawing_for_hd_ft
-                                                       parent = io_document ).
-      ADD 1 TO cv_relation_id.  " +1 for legacyDrawings
-      lv_value = cv_relation_id.
+      lo_element = o_document->create_simple_element( name   = lc_xml_node_drawing_for_hd_ft
+                                                      parent = o_document ).
+      ADD 1 TO v_relation_id.  " +1 for legacyDrawings
+      lv_value = v_relation_id.
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
       lo_element->set_attribute( name  = 'r:id'
                                  value = lv_value ).
-      lo_element_root->append_child( new_child = lo_element ).
-      ADD 1 TO cv_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
+      o_element_root->append_child( new_child = lo_element ).
+      ADD 1 TO v_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
     ENDIF.
 *
   ENDMETHOD.
 
-
-  METHOD add_xl_sheet_table_parts_subnd.
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_element_2    TYPE REF TO if_ixml_element,
-          lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
-          lo_table        TYPE REF TO zcl_excel_table,
-          lv_table_count  TYPE i,
-          lv_value        TYPE string.
+  METHOD add_table_parts.
+    DATA:
+      lo_element     TYPE REF TO if_ixml_element,
+      lo_element_2   TYPE REF TO if_ixml_element,
+      lo_iterator    TYPE REF TO zcl_excel_collection_iterator,
+      lo_table       TYPE REF TO zcl_excel_table,
+      lv_table_count TYPE i,
+      lv_value       TYPE string.
 
 * tables
 
-    lo_element_root = io_document->get_root_element( ).
-    lv_table_count = io_worksheet->get_tables_size( ).
+    o_element_root = o_document->get_root_element( ).
+    lv_table_count = o_worksheet->get_tables_size( ).
     IF lv_table_count > 0.
-      lo_element = io_document->create_simple_element( name   = 'tableParts'
-                                                       parent = io_document ).
+      lo_element = o_document->create_simple_element( name   = 'tableParts'
+                                                      parent = o_document ).
       lv_value = lv_table_count.
       CONDENSE lv_value.
       lo_element->set_attribute_ns( name  = 'count'
                                     value = lv_value ).
 
-      lo_iterator = io_worksheet->get_tables_iterator( ).
+      lo_iterator = o_worksheet->get_tables_iterator( ).
       WHILE lo_iterator->has_next( ) EQ abap_true.
         lo_table ?= lo_iterator->get_next( ).
-        ADD 1 TO cv_relation_id.
+        ADD 1 TO v_relation_id.
 
-        lv_value = cv_relation_id.
+        lv_value = v_relation_id.
         CONDENSE lv_value.
         CONCATENATE 'rId' lv_value INTO lv_value.
-        lo_element_2 = io_document->create_simple_element( name   = 'tablePart'
-                                                           parent = lo_element ).
+        lo_element_2 = o_document->create_simple_element( name   = 'tablePart'
+                                                          parent = lo_element ).
         lo_element_2->set_attribute_ns( name  = 'r:id'
                                         value = lv_value ).
         lo_element->append_child( new_child = lo_element_2 ).
 
       ENDWHILE.
 
-      lo_element_root->append_child( new_child = lo_element ).
+      o_element_root->append_child( new_child = lo_element ).
 
     ENDIF.
   ENDMETHOD.
 
+  METHOD add_sheet_data.
+    DATA:
+      lo_element     TYPE REF TO if_ixml_element,
+      lo_autofilters TYPE REF TO zcl_excel_autofilters,
+      lo_autofilter  TYPE REF TO zcl_excel_autofilter.
 
-  METHOD add_xl_sheet_sheetdata_subnode.
-    DATA: lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_autofilters  TYPE REF TO zcl_excel_autofilters,
-          lo_autofilter   TYPE REF TO zcl_excel_autofilter.
-
-    lo_element_root = io_document->get_root_element( ).
-    lo_element = o_excel_ref->create_xl_sheet_sheet_data( io_worksheet = io_worksheet
-                                             io_document  = io_document ).
+    o_element_root = o_document->get_root_element( ).
+    lo_element = o_excel_ref->create_xl_sheet_sheet_data( io_worksheet = o_worksheet
+                                                          io_document  = o_document ).
 
     lo_autofilters = o_excel_ref->excel->get_autofilters_reference( ).
-    lo_autofilter = lo_autofilters->get( io_worksheet = io_worksheet ) .
-    lo_element_root->append_child( new_child = lo_element ). " sheetData node
+    lo_autofilter = lo_autofilters->get( io_worksheet = o_worksheet ) .
+    o_element_root->append_child( new_child = lo_element ). " sheetData node
+  ENDMETHOD.
+
+  METHOD add_page_breaks.
+
+    TRY.
+        o_excel_ref->create_xl_sheet_pagebreaks( io_document  = o_document
+                                                 io_parent    = o_element_root
+                                                 io_worksheet = o_worksheet ).
+      CATCH zcx_excel. " Ignore Hyperlink reading errors - pass everything we were able to identify
+    ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD add_ignored_errors.
+
+    o_excel_ref->create_xl_sheet_ignored_errors( io_worksheet    = o_worksheet
+                                                 io_document     = o_document
+                                                 io_element_root = o_element_root ).
+
   ENDMETHOD.
 
 ENDCLASS.
