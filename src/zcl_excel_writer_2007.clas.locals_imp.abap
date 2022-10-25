@@ -308,7 +308,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lv_freeze_cell_column       TYPE zexcel_cell_column,
           lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha.
 
-    o_element_root = o_document->get_root_element( ).
 
     lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetviews
                                                     parent = o_document ).
@@ -448,8 +447,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_sheetformatpr.
-    DATA: o_element_root     TYPE REF TO if_ixml_element,
-          lo_element         TYPE REF TO if_ixml_element,
+    DATA: lo_element         TYPE REF TO if_ixml_element,
           lo_column_default  TYPE REF TO zcl_excel_column,
           lo_row_default     TYPE REF TO zcl_excel_row,lv_value           TYPE string,
           lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
@@ -457,7 +455,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_row_iterator    TYPE REF TO zcl_excel_collection_iterator,
           outline_level_col  TYPE i VALUE 0.
 
-    o_element_root = o_document->get_root_element( ).
     lo_column_iterator = o_worksheet->get_columns_iterator( ).
     lo_row_iterator = o_worksheet->get_rows_iterator( ).
     " Calculate col
@@ -514,8 +511,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_cols.
-    DATA: o_element_root     TYPE REF TO if_ixml_element,
-          lo_element         TYPE REF TO if_ixml_element,
+    DATA: lo_element         TYPE REF TO if_ixml_element,
           lo_element_2       TYPE REF TO if_ixml_element,
           lo_column_default  TYPE REF TO zcl_excel_column,
           lv_value           TYPE string,
@@ -525,7 +521,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_column          TYPE REF TO zcl_excel_column.
 
-    o_element_root = o_document->get_root_element( ).
 * Reset column iterator
     lo_column_iterator = o_worksheet->get_columns_iterator( ).
     IF o_worksheet->zif_excel_sheet_properties~get_style( ) IS NOT INITIAL OR lo_column_iterator->has_next( ) = abap_true.
@@ -688,7 +683,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element TYPE REF TO if_ixml_element,
       lv_value   TYPE string.
 
-    o_element_root = o_document->get_root_element( ).
 *< Begin of insertion Issue #572 - Protect sheet with filter caused Excel error
 * Autofilter must be set AFTER sheet protection in XML
     IF o_worksheet->zif_excel_sheet_protection~protected EQ abap_true.
@@ -783,7 +777,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_autofilter TYPE REF TO zcl_excel_autofilter,
       lv_ref        TYPE string.
 
-    o_element_root = o_document->get_root_element( ).
     IF lo_autofilter IS BOUND.
 * Create node autofilter
       lo_element = o_document->create_simple_element( name   = lc_xml_node_autofilter
@@ -840,7 +833,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
     FIELD-SYMBOLS: <fs_range_merge>         LIKE LINE OF lt_range_merge.
 
-    o_element_root = o_document->get_root_element( ).
     lt_range_merge = o_worksheet->get_merge( ).
     IF lt_range_merge IS NOT INITIAL.
       lo_element = o_document->create_simple_element( name   = lc_xml_node_mergecells
@@ -864,8 +856,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_conditional_formatting.
-    DATA: o_element_root           TYPE REF TO if_ixml_element,
-          lo_element               TYPE REF TO if_ixml_element,
+    DATA: lo_element               TYPE REF TO if_ixml_element,
           lo_element_2             TYPE REF TO if_ixml_element,
           lo_element_3             TYPE REF TO if_ixml_element,
           lo_element_4             TYPE REF TO if_ixml_element,
@@ -893,7 +884,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_condformating_range> TYPE ty_condformating_range.
 
-    o_element_root = o_document->get_root_element( ).
     lo_iterator = o_worksheet->get_style_cond_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_style_cond ?= lo_iterator->get_next( ).
@@ -1273,8 +1263,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_data_validations.
-    DATA: o_element_root     TYPE REF TO if_ixml_element,
-          lo_element         TYPE REF TO if_ixml_element,
+    DATA: lo_element         TYPE REF TO if_ixml_element,
           lo_element_2       TYPE REF TO if_ixml_element,
           lo_element_3       TYPE REF TO if_ixml_element,
           lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
@@ -1282,7 +1271,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lv_value           TYPE string,
           lv_cell_row_s      TYPE string.
 
-    o_element_root = o_document->get_root_element( ).
     IF o_worksheet->get_data_validations_size( ) GT 0.
       " dataValidations node
       lo_element = o_document->create_simple_element( name   = lc_xml_node_datavalidations
@@ -1389,15 +1377,13 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_hyperlinks.
-    DATA: o_element_root      TYPE REF TO if_ixml_element,
-          lo_element          TYPE REF TO if_ixml_element,
+    DATA: lo_element          TYPE REF TO if_ixml_element,
           lo_element_2        TYPE REF TO if_ixml_element,
           lo_iterator         TYPE REF TO zcl_excel_collection_iterator,
           lv_value            TYPE string,
           lv_hyperlinks_count TYPE i,
           lo_link             TYPE REF TO zcl_excel_hyperlink.
 
-    o_element_root = o_document->get_root_element( ).
     lv_hyperlinks_count = o_worksheet->get_hyperlinks_size( ).
     IF lv_hyperlinks_count > 0.
       lo_element = o_document->create_simple_element( name   = 'hyperlinks'
@@ -1441,7 +1427,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     DATA:
           lo_element      TYPE REF TO if_ixml_element.
 
-    o_element_root = o_document->get_root_element( ).
     IF o_worksheet->print_gridlines                  = abap_true
       OR o_worksheet->sheet_setup->vertical_centered   = abap_true
       OR o_worksheet->sheet_setup->horizontal_centered = abap_true.
@@ -1472,7 +1457,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element TYPE REF TO if_ixml_element,
       lv_value   TYPE string.
 
-    o_element_root = o_document->get_root_element( ).
     lo_element = o_document->create_simple_element( name   = lc_xml_node_pagemargins
                                                     parent = o_document ).
 
@@ -1508,7 +1492,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element TYPE REF TO if_ixml_element,
       lv_value   TYPE string.
 
-    o_element_root = o_document->get_root_element( ).
     lo_element = o_document->create_simple_element( name   = lc_xml_node_pagesetup
                                                     parent = o_document ).
 
@@ -1633,7 +1616,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element_2 TYPE REF TO if_ixml_element,
       lv_value     TYPE string.
 
-    o_element_root = o_document->get_root_element( ).
     IF    o_worksheet->sheet_setup->odd_header IS NOT INITIAL
        OR o_worksheet->sheet_setup->odd_footer IS NOT INITIAL
        OR o_worksheet->sheet_setup->diff_oddeven_headerfooter = abap_true.
@@ -1698,7 +1680,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lv_value    TYPE string,
       lo_drawings TYPE REF TO zcl_excel_drawings.
 
-    o_element_root = o_document->get_root_element( ).
     lo_drawings = o_worksheet->get_drawings( ).
     IF lo_drawings->is_empty( ) = abap_false.
       lo_element = o_document->create_simple_element( name   = lc_xml_node_drawing
@@ -1715,13 +1696,11 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_drawing_for_comments.
-    DATA: o_element_root          TYPE REF TO if_ixml_element,
-          lo_element              TYPE REF TO if_ixml_element,
+    DATA: lo_element              TYPE REF TO if_ixml_element,
           lv_value                TYPE string,
           lo_drawing_for_comments TYPE REF TO zcl_excel_comments.
     " (Legacy) drawings for comments
 
-    o_element_root = o_document->get_root_element( ).
     lo_drawing_for_comments = o_worksheet->get_comments( ).
     IF lo_drawing_for_comments->is_empty( ) = abap_false.
       lo_element = o_document->create_simple_element( name   = lc_xml_node_drawing_for_cmt
@@ -1747,7 +1726,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lt_drawings TYPE zexcel_t_drawings.
 * Header/Footer Image
 
-    o_element_root = o_document->get_root_element( ).
     lt_drawings = o_worksheet->get_header_footer_drawings( ).
     IF lines( lt_drawings ) > 0. "Header or footer image exist
       lo_element = o_document->create_simple_element( name   = lc_xml_node_drawing_for_hd_ft
@@ -1775,7 +1753,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
 * tables
 
-    o_element_root = o_document->get_root_element( ).
     lv_table_count = o_worksheet->get_tables_size( ).
     IF lv_table_count > 0.
       lo_element = o_document->create_simple_element( name   = 'tableParts'
@@ -1812,7 +1789,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_autofilters TYPE REF TO zcl_excel_autofilters,
       lo_autofilter  TYPE REF TO zcl_excel_autofilter.
 
-    o_element_root = o_document->get_root_element( ).
     lo_element = o_excel_ref->create_xl_sheet_sheet_data( io_worksheet = o_worksheet
                                                           io_document  = o_document ).
 
