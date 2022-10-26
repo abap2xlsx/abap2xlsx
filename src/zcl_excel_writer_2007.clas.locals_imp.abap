@@ -523,6 +523,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
 * Reset column iterator
     lo_column_iterator = o_worksheet->get_columns_iterator( ).
+    lo_column_default = o_worksheet->get_default_column( ).
     IF o_worksheet->zif_excel_sheet_properties~get_style( ) IS NOT INITIAL OR lo_column_iterator->has_next( ) = abap_true.
       " cols node
       lo_element = o_document->create_simple_element( name   = lc_xml_node_cols
@@ -766,16 +767,20 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_autofilter.
     DATA:
-      lo_element    TYPE REF TO if_ixml_element,
-      lo_element_2  TYPE REF TO if_ixml_element,
-      lo_element_3  TYPE REF TO if_ixml_element,
-      lo_element_4  TYPE REF TO if_ixml_element,
-      lv_value      TYPE string,
-      lv_column     TYPE zexcel_cell_column,
-      lt_values     TYPE zexcel_t_autofilter_values,
-      ls_values     TYPE zexcel_s_autofilter_values,
-      lo_autofilter TYPE REF TO zcl_excel_autofilter,
-      lv_ref        TYPE string.
+      lo_element     TYPE REF TO if_ixml_element,
+      lo_element_2   TYPE REF TO if_ixml_element,
+      lo_element_3   TYPE REF TO if_ixml_element,
+      lo_element_4   TYPE REF TO if_ixml_element,
+      lv_value       TYPE string,
+      lv_column      TYPE zexcel_cell_column,
+      lt_values      TYPE zexcel_t_autofilter_values,
+      ls_values      TYPE zexcel_s_autofilter_values,
+      lo_autofilters TYPE REF TO zcl_excel_autofilters,
+      lo_autofilter  TYPE REF TO zcl_excel_autofilter,
+      lv_ref         TYPE string.
+
+    lo_autofilters = o_excel_ref->excel->get_autofilters_reference( ).
+    lo_autofilter = lo_autofilters->get( io_worksheet = o_worksheet ) .
 
     IF lo_autofilter IS BOUND.
 * Create node autofilter
@@ -1785,15 +1790,11 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_sheet_data.
     DATA:
-      lo_element     TYPE REF TO if_ixml_element,
-      lo_autofilters TYPE REF TO zcl_excel_autofilters,
-      lo_autofilter  TYPE REF TO zcl_excel_autofilter.
+      lo_element     TYPE REF TO if_ixml_element.
 
     lo_element = o_excel_ref->create_xl_sheet_sheet_data( io_worksheet = o_worksheet
                                                           io_document  = o_document ).
 
-    lo_autofilters = o_excel_ref->excel->get_autofilters_reference( ).
-    lo_autofilter = lo_autofilters->get( io_worksheet = o_worksheet ) .
     o_element_root->append_child( new_child = lo_element ). " sheetData node
   ENDMETHOD.
 
