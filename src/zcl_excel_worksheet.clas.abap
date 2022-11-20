@@ -2115,7 +2115,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       <lv_data2>         TYPE data,
       <ls_field_conv>    TYPE ts_field_conv,
       <ls_ddic_object>   TYPE x031l,
-      <ls_sheet_content> TYPE zexcel_s_cell_data.
+      <ls_sheet_content> TYPE zexcel_s_cell_data,
+      <fs_typekind_int8> TYPE abap_typekind.
 
     CLEAR: et_data, er_data.
 
@@ -2162,18 +2163,18 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lo_line_type ?= lo_tab_type->get_table_line_type( ).
       lo_line_type->get_ddic_object(
         RECEIVING
-          p_object     = lt_ddic_object
+          p_object = lt_ddic_object
         EXCEPTIONS
-          OTHERS       = 3
+          OTHERS   = 3
       ).
       IF lt_ddic_object IS INITIAL.
         lt_comp_view = lo_line_type->get_included_view( ).
         LOOP AT lt_comp_view INTO ls_comp_view.
           ls_comp_view-type->get_ddic_object(
             RECEIVING
-              p_object     = lt_ddic_object_comp
+              p_object = lt_ddic_object_comp
             EXCEPTIONS
-              OTHERS       = 3
+              OTHERS   = 3
           ).
           IF lt_ddic_object_comp IS NOT INITIAL.
             READ TABLE lt_ddic_object_comp INTO ls_ddic_object INDEX 1.
@@ -2189,10 +2190,16 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         MOVE-CORRESPONDING ls_field_catalog TO <ls_field_conv>.
         READ TABLE lt_ddic_object ASSIGNING <ls_ddic_object> WITH KEY fieldname = <ls_field_conv>-fieldname BINARY SEARCH.
         CHECK: sy-subrc EQ 0.
+
+        ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_INT8') TO <fs_typekind_int8>.
+        IF sy-subrc <> 0.
+          ASSIGN space TO <fs_typekind_int8>. "not used as typekind!
+        ENDIF.
+
         CASE <ls_ddic_object>-exid.
           WHEN cl_abap_typedescr=>typekind_int
             OR cl_abap_typedescr=>typekind_int1
-            OR cl_abap_typedescr=>typekind_int8
+            OR <fs_typekind_int8>
             OR cl_abap_typedescr=>typekind_int2
             OR cl_abap_typedescr=>typekind_packed
             OR cl_abap_typedescr=>typekind_decfloat
