@@ -13,49 +13,41 @@
    </VSEOCLASS>
    <DESCRIPTIONS>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>CELLS</CMPNAME>
      <LANGU>D</LANGU>
      <DESCRIPT>Cell data for callback from transformation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>CELLS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Cell data for callback from transformation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>GET_CELLS</CMPNAME>
      <LANGU>D</LANGU>
      <DESCRIPT>Read the cell data for a single row, called from transform.</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>GET_CELLS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Read the cell data for a single row, called from transform.</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>TY_CELL</CMPNAME>
      <LANGU>D</LANGU>
      <DESCRIPT>Cell data for callback from transformation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>TY_CELL</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Cell data for callback from transformation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>WORKSHEET</CMPNAME>
      <LANGU>D</LANGU>
      <DESCRIPT>Reference needed for GET_CELL</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_WRITER_HUGE_FILE</CLSNAME>
      <CMPNAME>WORKSHEET</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Reference needed for GET_CELL</DESCRIPT>

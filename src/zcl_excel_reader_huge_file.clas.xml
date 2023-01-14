@@ -14,55 +14,46 @@
    </VSEOCLASS>
    <DESCRIPTIONS>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>FILL_CELL_FROM_ATTRIBUTES</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Fill some cell properties from &lt;c&gt; element attributes</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>GET_CELL_COORD</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Cell coordinates from expression (like &quot;B2&quot;)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>GET_SHARED_STRING</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Read from shared string table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>GET_STYLE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Read from style table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>GET_SXML_READER</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Create an sXML reader for an XML file in the zip archive</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>PUT_CELL_TO_WORKSHEET</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Put cell data to worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>READ_SHARED_STRINGS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Reads the XML file containing the shared strings</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>READ_WORKSHEET_DATA</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Reads the data, formula and styles of the worksheet&apos;s cells</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CLSNAME>ZCL_EXCEL_READER_HUGE_FILE</CLSNAME>
      <CMPNAME>SKIP_TO</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Go ahead till element with given name is found</DESCRIPT>
