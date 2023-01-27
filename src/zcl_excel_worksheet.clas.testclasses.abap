@@ -124,7 +124,7 @@ CLASS ltc_check_overlapping DEFINITION FOR TESTING
 ENDCLASS.
 
 
-class ltc_normalize_column_heading definition for testing
+CLASS ltc_normalize_column_heading DEFINITION FOR TESTING
     risk level harmless
     duration short.
 
