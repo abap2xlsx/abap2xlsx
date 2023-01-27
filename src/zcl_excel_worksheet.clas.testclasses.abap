@@ -124,39 +124,39 @@ CLASS ltc_check_overlapping DEFINITION FOR TESTING
 ENDCLASS.
 
 
-CLASS ltc_normalize_column_heading DEFINITION FOR TESTING
-    RISK LEVEL HARMLESS
-    DURATION SHORT.
+class ltc_normalize_column_heading definition for testing
+    risk level harmless
+    duration short.
 
-  PRIVATE SECTION.
-    TYPES : BEGIN OF ty_parameters,
-              BEGIN OF input,
-                default_descr TYPE c LENGTH 1,
-                field_catalog TYPE zexcel_t_fieldcatalog,
-              END OF input,
-              BEGIN OF output,
-                field_catalog TYPE zexcel_t_fieldcatalog,
-              END OF output,
-            END OF ty_parameters.
-    DATA:
-      cut TYPE REF TO zcl_excel_worksheet.  "class under test
+  private section.
 
-    METHODS setup.
-    METHODS:
-      prefer_small_text FOR TESTING RAISING cx_static_check,
-      prefer_medium_text FOR TESTING RAISING cx_static_check,
-      prefer_long_text FOR TESTING RAISING cx_static_check,
-      default_text_if_none FOR TESTING RAISING cx_static_check,
-      invalid_default_descr FOR TESTING RAISING cx_static_check.
+    data:
+      cut           type ref to zcl_excel_worksheet,  "class under test
+      default_descr type c length 1 value '?'.
 
-    METHODS assert
-      IMPORTING
-        input TYPE ty_parameters-input
-        exp   TYPE ty_parameters-output
-      RAISING
-        cx_static_check.
+    methods:
 
-ENDCLASS.
+      prefer_small_text for testing raising cx_static_check,
+      prefer_medium_text for testing raising cx_static_check,
+      prefer_long_text for testing raising cx_static_check,
+      default_text_if_none for testing raising cx_static_check,
+      invalid_default_descr for testing raising cx_static_check,
+
+      assert
+        importing
+          ip_scrtext_s   type scrtext_s optional
+          ip_scrtext_m   type scrtext_m optional
+          ip_scrtext_l   type scrtext_l optional
+          ip_colname_exp type zexcel_column_name optional,
+
+      assert_multi
+        importing
+          it_fc          type zexcel_t_fieldcatalog optional
+          it_colname_exp type stringtab optional,
+
+     setup.
+
+endclass.
 
 
 CLASS ltc_normalize_columnrow_param DEFINITION FOR TESTING
@@ -1010,220 +1010,181 @@ CLASS ltc_check_overlapping IMPLEMENTATION.
 ENDCLASS.
 
 
-CLASS ltc_normalize_column_heading IMPLEMENTATION.
+class ltc_normalize_column_heading implementation.
 
-  METHOD setup.
+  method prefer_small_text.
 
-    DATA: lo_excel TYPE REF TO zcl_excel.
+    default_descr = 'S'.
 
-    CREATE OBJECT lo_excel.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_scrtext_m   = 'Column1_M'
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_S'
+    ).
 
-    TRY.
-        CREATE OBJECT cut
-          EXPORTING
-            ip_excel = lo_excel.
-      CATCH zcx_excel.
-        cl_abap_unit_assert=>fail( 'Could not create instance' ).
-    ENDTRY.
 
-  ENDMETHOD.
+    assert(
+      ip_scrtext_m   = 'Column1_M'
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_M'
+    ).
 
-  METHOD prefer_small_text.
-    DATA: input TYPE ty_parameters-input,
-          exp   TYPE ty_parameters-output,
-          field TYPE zexcel_s_fieldcatalog.
 
-    input-default_descr = 'S'.
+    assert(
+      ip_scrtext_m   = 'Column1_M'
+      ip_colname_exp = 'Column1_M'
+    ).
 
-    field-dynpfld   = abap_true.
+    assert(
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_L'
+    ).
 
-    field-scrtext_s = 'Column1_S'.
-    field-scrtext_m = 'Column1_M'.
-    field-scrtext_l = 'Column1_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_S'.
-    APPEND field TO exp-field_catalog.
 
-    field-scrtext_s = ''.
-    field-scrtext_m = 'Column2_M'.
-    field-scrtext_l = 'Column2_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_M'.
-    APPEND field TO exp-field_catalog.
+  endmethod.
 
-    field-scrtext_s = ''.
-    field-scrtext_m = 'Column3_M'.
-    field-scrtext_l = ''.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_M'.
-    APPEND field TO exp-field_catalog.
+  method prefer_medium_text.
 
-    field-scrtext_s = ''.
-    field-scrtext_m = ''.
-    field-scrtext_l = 'Column4_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column4_L'.
-    APPEND field TO exp-field_catalog.
+    default_descr = 'M'.
 
-    assert( input = input exp = exp ).
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_scrtext_m   = 'Column1_M'
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_M' ).
 
-  ENDMETHOD.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_S' ).
 
-  METHOD prefer_medium_text.
-    DATA: input TYPE ty_parameters-input,
-          exp   TYPE ty_parameters-output,
-          field TYPE zexcel_s_fieldcatalog.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_colname_exp = 'Column1_S' ).
 
-    input-default_descr = 'M'.
+    assert(
+      ip_scrtext_s   = 'Column1_L'
+      ip_colname_exp = 'Column1_L' ).
 
-    field-dynpfld   = abap_true.
+  endmethod.
 
-    field-scrtext_s = 'Column1_S'.
-    field-scrtext_m = 'Column1_M'.
-    field-scrtext_l = 'Column1_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_M'.
-    APPEND field TO exp-field_catalog.
+  method prefer_long_text.
 
-    field-scrtext_s = 'Column2_S'.
-    field-scrtext_m = ''.
-    field-scrtext_l = 'Column2_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_S'.
-    APPEND field TO exp-field_catalog.
+    default_descr = 'L'.
 
-    field-scrtext_s = 'Column3_S'.
-    field-scrtext_m = ''.
-    field-scrtext_l = ''.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_S'.
-    APPEND field TO exp-field_catalog.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_scrtext_m   = 'Column1_M'
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_L' ).
 
-    field-scrtext_s = ''.
-    field-scrtext_m = ''.
-    field-scrtext_l = 'Column4_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column4_L'.
-    APPEND field TO exp-field_catalog.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_scrtext_m   = 'Column1_M'
+      ip_colname_exp = 'Column1_M' ).
 
-    assert( input = input exp = exp ).
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_colname_exp = 'Column1_S' ).
 
-  ENDMETHOD.
 
-  METHOD prefer_long_text.
-    DATA: input TYPE ty_parameters-input,
-          exp   TYPE ty_parameters-output,
-          field TYPE zexcel_s_fieldcatalog.
+  endmethod.
 
-    input-default_descr = 'L'.
+  method default_text_if_none.
 
-    field-dynpfld   = abap_true.
+    default_descr = 'S'.
 
-    field-scrtext_s = 'Column1_S'.
-    field-scrtext_m = 'Column1_M'.
-    field-scrtext_l = 'Column1_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_L'.
-    APPEND field TO exp-field_catalog.
+    assert_multi(
+      it_fc = value #(  (   ) (   )  )
+      it_colname_exp = value #(
+        ( `Column`  )
+        ( `Column 1` )
+      )
+    ).
 
-    field-scrtext_s = 'Column2_S'.
-    field-scrtext_m = 'Column2_M'.
-    field-scrtext_l = ''.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_M'.
-    APPEND field TO exp-field_catalog.
 
-    field-scrtext_s = 'Column3_S'.
-    field-scrtext_m = ''.
-    field-scrtext_l = ''.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_S'.
-    APPEND field TO exp-field_catalog.
+  endmethod.
 
-    assert( input = input exp = exp ).
+  method invalid_default_descr.
 
-  ENDMETHOD.
+    default_descr = '?'.
 
-  METHOD default_text_if_none.
-    DATA: input TYPE ty_parameters-input,
-          exp   TYPE ty_parameters-output,
-          field TYPE zexcel_s_fieldcatalog.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_scrtext_m   = 'Column1_M'
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_M' ).
 
-    input-default_descr = 'S'.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_S' ).
 
-    field-dynpfld   = abap_true.
+    assert(
+      ip_scrtext_s   = 'Column1_S'
+      ip_colname_exp = 'Column1_S' ).
 
-    field-scrtext_s = ''.
-    field-scrtext_m = ''.
-    field-scrtext_l = ''.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column'.
-    APPEND field TO exp-field_catalog.
+    assert(
+      ip_scrtext_l   = 'Column1_L'
+      ip_colname_exp = 'Column1_L' ).
 
-    field-scrtext_s = ''.
-    field-scrtext_m = ''.
-    field-scrtext_l = ''.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column 1'.
-    APPEND field TO exp-field_catalog.
 
-    assert( input = input exp = exp ).
+  endmethod.
 
-  ENDMETHOD.
+  method assert.
 
-  METHOD invalid_default_descr.
-    DATA: input TYPE ty_parameters-input,
-          exp   TYPE ty_parameters-output,
-          field TYPE zexcel_s_fieldcatalog.
+    data(lt_fc) = value zexcel_t_fieldcatalog( (
+        dynpfld   = abap_true
+        scrtext_s = ip_scrtext_s
+        scrtext_m = ip_scrtext_m
+        scrtext_l = ip_scrtext_l
+    ) ).
 
-    input-default_descr = '?'.
+    data(lt_fc_result) = cut->normalize_column_heading_texts(
+      iv_default_descr = default_descr
+      it_field_catalog = lt_fc ).
 
-    field-dynpfld   = abap_true.
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_fc_result[ 1 ]-column_name
+      exp = ip_colname_exp
+      quit = if_abap_unit_constant=>quit-no
+    ).
 
-    field-scrtext_s = 'Column1_S'.
-    field-scrtext_m = 'Column1_M'.
-    field-scrtext_l = 'Column1_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column1_M'.
-    APPEND field TO exp-field_catalog.
+  endmethod.
 
-    field-scrtext_s = 'Column2_S'.
-    field-scrtext_m = ''.
-    field-scrtext_l = 'Column2_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column2_S'.
-    APPEND field TO exp-field_catalog.
+  method assert_multi.
 
-    field-scrtext_s = 'Column3_S'.
-    field-scrtext_m = ''.
-    field-scrtext_l = ''.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column3_S'.
-    APPEND field TO exp-field_catalog.
+    data(lt_fc) = it_fc.
+    modify lt_fc from value #( dynpfld = abap_true ) transporting dynpfld where dynpfld = space.
 
-    field-scrtext_s = ''.
-    field-scrtext_m = ''.
-    field-scrtext_l = 'Column4_L'.
-    APPEND field TO input-field_catalog.
-    field-scrtext_l = 'Column4_L'.
-    APPEND field TO exp-field_catalog.
+    data(lt_fc_result) = cut->normalize_column_heading_texts(
+      iv_default_descr = default_descr
+      it_field_catalog = lt_fc
+    ).
 
-    assert( input = input exp = exp ).
+    cl_abap_unit_assert=>assert_equals(
+      act = value stringtab( for r in lt_fc_result ( conv #( r-column_name ) ) )
+      exp = it_colname_exp
+      quit = if_abap_unit_constant=>quit-no
+    ).
 
-  ENDMETHOD.
+  endmethod.
 
-  METHOD assert.
-    DATA: act TYPE ty_parameters-output.
 
-    act-field_catalog = cut->normalize_column_heading_texts(
-                            iv_default_descr = input-default_descr
-                            it_field_catalog = input-field_catalog ).
+  method setup.
 
-    cl_abap_unit_assert=>assert_equals( exp = exp-field_catalog act = act-field_catalog ).
+    try.
+        data(lo_excel) = new zcl_excel( ).
+        cut = new #( lo_excel ).
+      catch zcx_excel into data(lo_ex).
+        cl_abap_unit_assert=>fail( |Could not create instance: { lo_ex->get_text(  ) }| ).
+    endtry.
 
-  ENDMETHOD.
+  endmethod.
 
-ENDCLASS.
+
+endclass.
 
 
 CLASS ltc_normalize_columnrow_param IMPLEMENTATION.
