@@ -125,38 +125,38 @@ ENDCLASS.
 
 
 CLASS ltc_normalize_column_heading DEFINITION FOR TESTING
-    risk level harmless
-    duration short.
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
 
-  private section.
+  PRIVATE SECTION.
 
-    data:
-      cut           type ref to zcl_excel_worksheet,  "class under test
-      default_descr type c length 1 value '?'.
+    DATA:
+      cut           TYPE REF TO zcl_excel_worksheet,  "class under test
+      default_descr TYPE c LENGTH 1 VALUE '?'.
 
-    methods:
+    METHODS:
 
-      prefer_small_text for testing raising cx_static_check,
-      prefer_medium_text for testing raising cx_static_check,
-      prefer_long_text for testing raising cx_static_check,
-      default_text_if_none for testing raising cx_static_check,
-      invalid_default_descr for testing raising cx_static_check,
+      prefer_small_text FOR TESTING RAISING cx_static_check,
+      prefer_medium_text FOR TESTING RAISING cx_static_check,
+      prefer_long_text FOR TESTING RAISING cx_static_check,
+      default_text_if_none FOR TESTING RAISING cx_static_check,
+      invalid_default_descr FOR TESTING RAISING cx_static_check,
 
       assert
-        importing
-          ip_scrtext_s   type scrtext_s optional
-          ip_scrtext_m   type scrtext_m optional
-          ip_scrtext_l   type scrtext_l optional
-          ip_colname_exp type zexcel_column_name optional,
+        IMPORTING
+          ip_scrtext_s   TYPE scrtext_s OPTIONAL
+          ip_scrtext_m   TYPE scrtext_m OPTIONAL
+          ip_scrtext_l   TYPE scrtext_l OPTIONAL
+          ip_colname_exp TYPE zexcel_column_name OPTIONAL,
 
       assert_multi
-        importing
-          it_fc          type zexcel_t_fieldcatalog optional
-          it_colname_exp type stringtab optional,
+        IMPORTING
+          it_fc          TYPE zexcel_t_fieldcatalog OPTIONAL
+          it_colname_exp TYPE stringtab OPTIONAL,
 
-     setup.
+      setup.
 
-endclass.
+ENDCLASS.
 
 
 CLASS ltc_normalize_columnrow_param DEFINITION FOR TESTING
@@ -1010,9 +1010,9 @@ CLASS ltc_check_overlapping IMPLEMENTATION.
 ENDCLASS.
 
 
-class ltc_normalize_column_heading implementation.
+CLASS ltc_normalize_column_heading IMPLEMENTATION.
 
-  method prefer_small_text.
+  METHOD prefer_small_text.
 
     default_descr = 'S'.
 
@@ -1042,9 +1042,9 @@ class ltc_normalize_column_heading implementation.
     ).
 
 
-  endmethod.
+  ENDMETHOD.
 
-  method prefer_medium_text.
+  METHOD prefer_medium_text.
 
     default_descr = 'M'.
 
@@ -1067,9 +1067,9 @@ class ltc_normalize_column_heading implementation.
       ip_scrtext_s   = 'Column1_L'
       ip_colname_exp = 'Column1_L' ).
 
-  endmethod.
+  ENDMETHOD.
 
-  method prefer_long_text.
+  METHOD prefer_long_text.
 
     default_descr = 'L'.
 
@@ -1089,24 +1089,24 @@ class ltc_normalize_column_heading implementation.
       ip_colname_exp = 'Column1_S' ).
 
 
-  endmethod.
+  ENDMETHOD.
 
-  method default_text_if_none.
+  METHOD default_text_if_none.
 
     default_descr = 'S'.
 
     assert_multi(
-      it_fc = value #(  (   ) (   )  )
-      it_colname_exp = value #(
+      it_fc = VALUE #(  (   ) (   )  )
+      it_colname_exp = VALUE #(
         ( `Column`  )
         ( `Column 1` )
       )
     ).
 
 
-  endmethod.
+  ENDMETHOD.
 
-  method invalid_default_descr.
+  METHOD invalid_default_descr.
 
     default_descr = '?'.
 
@@ -1130,18 +1130,18 @@ class ltc_normalize_column_heading implementation.
       ip_colname_exp = 'Column1_L' ).
 
 
-  endmethod.
+  ENDMETHOD.
 
-  method assert.
+  METHOD assert.
 
-    data(lt_fc) = value zexcel_t_fieldcatalog( (
+    DATA(lt_fc) = VALUE zexcel_t_fieldcatalog( (
         dynpfld   = abap_true
         scrtext_s = ip_scrtext_s
         scrtext_m = ip_scrtext_m
         scrtext_l = ip_scrtext_l
     ) ).
 
-    data(lt_fc_result) = cut->normalize_column_heading_texts(
+    DATA(lt_fc_result) = cut->normalize_column_heading_texts(
       iv_default_descr = default_descr
       it_field_catalog = lt_fc ).
 
@@ -1151,40 +1151,40 @@ class ltc_normalize_column_heading implementation.
       quit = if_abap_unit_constant=>quit-no
     ).
 
-  endmethod.
+  ENDMETHOD.
 
-  method assert_multi.
+  METHOD assert_multi.
 
-    data(lt_fc) = it_fc.
-    modify lt_fc from value #( dynpfld = abap_true ) transporting dynpfld where dynpfld = space.
+    DATA(lt_fc) = it_fc.
+    MODIFY lt_fc FROM VALUE #( dynpfld = abap_true ) TRANSPORTING dynpfld WHERE dynpfld = space.
 
-    data(lt_fc_result) = cut->normalize_column_heading_texts(
+    DATA(lt_fc_result) = cut->normalize_column_heading_texts(
       iv_default_descr = default_descr
       it_field_catalog = lt_fc
     ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = value stringtab( for r in lt_fc_result ( conv #( r-column_name ) ) )
+      act = VALUE stringtab( FOR r IN lt_fc_result ( CONV #( r-column_name ) ) )
       exp = it_colname_exp
       quit = if_abap_unit_constant=>quit-no
     ).
 
-  endmethod.
+  ENDMETHOD.
 
 
-  method setup.
+  METHOD setup.
 
-    try.
-        data(lo_excel) = new zcl_excel( ).
-        cut = new #( lo_excel ).
-      catch zcx_excel into data(lo_ex).
+    TRY.
+        DATA(lo_excel) = NEW zcl_excel( ).
+        cut = NEW #( lo_excel ).
+      CATCH zcx_excel INTO DATA(lo_ex).
         cl_abap_unit_assert=>fail( |Could not create instance: { lo_ex->get_text(  ) }| ).
-    endtry.
+    ENDTRY.
 
-  endmethod.
+  ENDMETHOD.
 
 
-endclass.
+ENDCLASS.
 
 
 CLASS ltc_normalize_columnrow_param IMPLEMENTATION.
