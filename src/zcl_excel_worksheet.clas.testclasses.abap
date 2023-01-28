@@ -1193,12 +1193,21 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
 
   METHOD setup.
 
+    DATA:
+      lo_ex      TYPE REF TO zcx_excel,
+      lv_ex_text TYPE string,
+      lv_msg     TYPE string.
+
     TRY.
         DATA lo_excel TYPE REF TO zcl_excel.
         CREATE OBJECT lo_excel.
         CREATE OBJECT cut EXPORTING ip_excel = lo_excel.
-      CATCH zcx_excel INTO DATA(lo_ex).
-        cl_abap_unit_assert=>fail( |Could not create instance: { lo_ex->get_text(  ) }| ).
+      CATCH zcx_excel INTO lo_ex.
+        lv_ex_text = lo_ex->get_text( ).
+        CONCATENATE `Could not create instance:` lv_ex_text
+          INTO lv_msg
+          SEPARATED BY space.
+        cl_abap_unit_assert=>fail( lv_ex_text ).
     ENDTRY.
 
   ENDMETHOD.
