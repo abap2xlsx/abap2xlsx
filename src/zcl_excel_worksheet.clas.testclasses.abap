@@ -1091,21 +1091,6 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD default_text_if_none.
-
-    default_descr = 'S'.
-
-    assert_multi(
-      it_fc = VALUE #(  (   ) (   )  )
-      it_colname_exp = VALUE #(
-        ( `Column`  )
-        ( `Column 1` )
-      )
-    ).
-
-
-  ENDMETHOD.
-
   METHOD invalid_default_descr.
 
     default_descr = '?'.
@@ -1132,16 +1117,42 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD default_text_if_none.
+
+    default_descr = 'S'.
+
+    CONSTANTS: lc_initial_line TYPE zexcel_s_fieldcatalog VALUE IS INITIAL.
+    DATA lt_fc TYPE zexcel_t_fieldcatalog.
+    APPEND lc_initial_line TO : lt_fc, lt_fc.
+
+    DATA lt_colname_exp TYPE stringtab.
+    APPEND:
+       `Column`   TO lt_colname_exp,
+       `Column 1` TO lt_colname_exp.
+
+    assert_multi(
+      it_fc          = lt_fc
+      it_colname_exp = lt_colname_exp
+    ).
+
+
+  ENDMETHOD.
+
+
   METHOD assert.
 
-    DATA(lt_fc) = VALUE zexcel_t_fieldcatalog( (
-        dynpfld   = abap_true
-        scrtext_s = ip_scrtext_s
-        scrtext_m = ip_scrtext_m
-        scrtext_l = ip_scrtext_l
-    ) ).
+    DATA:
+      ls_fc TYPE zexcel_s_fieldcatalog,
+      lt_fc TYPE zexcel_t_fieldcatalog.
+    ls_fc-dynpfld   = abap_true.
+    ls_fc-scrtext_s = ip_scrtext_s.
+    ls_fc-scrtext_m = ip_scrtext_m.
+    ls_fc-scrtext_l = ip_scrtext_l.
+    APPEND ls_fc TO lt_fc.
 
-    DATA(lt_fc_result) = cut->normalize_column_heading_texts(
+    DATA lt_fc_result TYPE zexcel_t_fieldcatalog.
+
+    lt_fc_result = cut->normalize_column_heading_texts(
       iv_default_descr = default_descr
       it_field_catalog = lt_fc ).
 
@@ -1155,16 +1166,24 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
 
   METHOD assert_multi.
 
-    DATA(lt_fc) = it_fc.
+    DATA lt_fc LIKE it_fc.
+    lt_fc = it_fc.
     MODIFY lt_fc FROM VALUE #( dynpfld = abap_true ) TRANSPORTING dynpfld WHERE dynpfld = space.
 
-    DATA(lt_fc_result) = cut->normalize_column_heading_texts(
+    DATA lt_fc_result TYPE zexcel_t_fieldcatalog.
+    lt_fc_result = cut->normalize_column_heading_texts(
       iv_default_descr = default_descr
       it_field_catalog = lt_fc
     ).
 
+    DATA lt_colname_act TYPE stringtab.
+    FIELD-SYMBOLS: <ls_fc> TYPE zexcel_s_fieldcatalog.
+    LOOP AT lt_fc_result ASSIGNING <ls_fc>.
+      APPEND <ls_fc>-column_name TO lt_colname_act.
+    ENDLOOP.
+
     cl_abap_unit_assert=>assert_equals(
-      act = VALUE stringtab( FOR r IN lt_fc_result ( CONV #( r-column_name ) ) )
+      act = lt_colname_act
       exp = it_colname_exp
       quit = if_abap_unit_constant=>quit-no
     ).
@@ -1175,14 +1194,14 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
   METHOD setup.
 
     TRY.
-        DATA(lo_excel) = NEW zcl_excel( ).
-        cut = NEW #( lo_excel ).
+        DATA lo_excel TYPE REF TO zcl_excel.
+        CREATE OBJECT lo_excel.
+        CREATE OBJECT cut EXPORTING ip_excel = lo_excel.
       CATCH zcx_excel INTO DATA(lo_ex).
         cl_abap_unit_assert=>fail( |Could not create instance: { lo_ex->get_text(  ) }| ).
     ENDTRY.
 
   ENDMETHOD.
-
 
 ENDCLASS.
 
