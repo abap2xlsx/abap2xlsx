@@ -1166,9 +1166,12 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
 
   METHOD assert_multi.
 
-    DATA lt_fc LIKE it_fc.
+    DATA:
+      lt_fc LIKE it_fc,
+      ls_fc LIKE LINE OF it_fc.
+    ls_fc-dynpfld = abap_true.
     lt_fc = it_fc.
-    MODIFY lt_fc FROM VALUE #( dynpfld = abap_true ) TRANSPORTING dynpfld WHERE dynpfld = space.
+    MODIFY lt_fc FROM ls_fc TRANSPORTING dynpfld WHERE dynpfld = space.
 
     DATA lt_fc_result TYPE zexcel_t_fieldcatalog.
     lt_fc_result = cut->normalize_column_heading_texts(
@@ -1189,7 +1192,6 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     ).
 
   ENDMETHOD.
-
 
   METHOD setup.
 
