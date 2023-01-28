@@ -1156,9 +1156,12 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
       iv_default_descr = default_descr
       it_field_catalog = lt_fc ).
 
+    FIELD-SYMBOLS <ls_fc> TYPE zexcel_s_fieldcatalog.
+    READ TABLE lt_fc_result ASSIGNING <ls_fc> INDEX 1.
+
     cl_abap_unit_assert=>assert_equals(
-      act = lt_fc_result[ 1 ]-column_name
-      exp = ip_colname_exp
+      act  = <ls_fc>-column_name
+      exp  = ip_colname_exp
       quit = if_abap_unit_constant=>quit-no
     ).
 
