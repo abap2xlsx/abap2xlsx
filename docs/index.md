@@ -7,3 +7,4 @@ This community project allows you to generate Professional Excel spreadsheets di
    * [SAPLink](SAPLink-installation) (obsolete)
 * [F.A.Q.](FAQ)
 * [abap2xlsx Calender Gallery](abap2xlsx-Calender-Gallery)
+* [Demos](https://github.com/abap2xlsx/demos)
