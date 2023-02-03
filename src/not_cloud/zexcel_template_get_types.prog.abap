@@ -166,8 +166,10 @@ FORM get_types .
     <lv_res> = 'DATA: lo_data type ref to ZCL_EXCEL_TEMPLATE_DATA.'.
   ENDIF.
 
-  cl_demo_output=>set_mode( mode = 'TEXT' ).
-  cl_demo_output=>display( lt_res ).
+  LOOP AT lt_res ASSIGNING <lv_res>.
+    cl_demo_output=>write_text( <lv_res> ).
+  ENDLOOP.
+  cl_demo_output=>display( ).
 ENDFORM.
 
 
