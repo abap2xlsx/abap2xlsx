@@ -1162,7 +1162,7 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
       act  = <ls_fc>-column_name
       exp  = ip_colname_exp
-      quit = if_aunit_constants=>no
+      quit = if_aunit_constants=>quit-no
     ).
 
   ENDMETHOD.
@@ -1191,7 +1191,7 @@ CLASS ltc_normalize_column_heading IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
       act = lt_colname_act
       exp = it_colname_exp
-      quit = if_aunit_constants=>no
+      quit = if_aunit_constants=>quit-no
     ).
 
   ENDMETHOD.
