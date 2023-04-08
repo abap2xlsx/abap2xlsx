@@ -19,15 +19,18 @@ CLASS zcl_excel_theme_fmt_scheme DEFINITION
     METHODS get_default_fmt
       RETURNING
         VALUE(rv_string) TYPE string .
+
+    METHODS parse_string
+      IMPORTING iv_string      TYPE string
+      RETURNING VALUE(ri_node) TYPE REF TO if_ixml_node.
 ENDCLASS.
 
 
 
-CLASS zcl_excel_theme_fmt_scheme IMPLEMENTATION.
+CLASS ZCL_EXCEL_THEME_FMT_SCHEME IMPLEMENTATION.
 
 
   METHOD build_xml.
-    DATA: lo_xml TYPE REF TO cl_xml_document.
     DATA: lo_node TYPE REF TO if_ixml_node.
     DATA: lo_elements TYPE REF TO if_ixml_element.
     CHECK io_document IS BOUND.
@@ -35,9 +38,7 @@ CLASS zcl_excel_theme_fmt_scheme IMPLEMENTATION.
     IF lo_elements IS BOUND.
 
       IF fmt_scheme IS INITIAL.
-        CREATE OBJECT lo_xml.
-        lo_xml->parse_string( get_default_fmt( ) ).
-        lo_node = lo_xml->get_first_node( ).
+        lo_node = parse_string( get_default_fmt( ) ).
         lo_elements->append_child( new_child = lo_node ).
       ELSE.
         lo_elements->append_child( new_child = fmt_scheme ).
@@ -191,4 +192,28 @@ CLASS zcl_excel_theme_fmt_scheme IMPLEMENTATION.
   METHOD load.
     fmt_scheme = zcl_excel_common=>clone_ixml_with_namespaces( io_fmt_scheme ).
   ENDMETHOD.                    "load
+
+
+  METHOD parse_string.
+    DATA li_stream   TYPE REF TO if_ixml_istream.
+    DATA li_ixml     TYPE REF TO if_ixml.
+    DATA li_document TYPE REF TO if_ixml_document.
+    DATA li_factory  TYPE REF TO if_ixml_stream_factory.
+    DATA li_parser   TYPE REF TO if_ixml_parser.
+    DATA li_istream  TYPE REF TO if_ixml_istream.
+
+    li_ixml = cl_ixml=>create( ).
+    li_document = li_ixml->create_document( ).
+    li_factory = li_ixml->create_stream_factory( ).
+    li_istream = li_factory->create_istream_string( iv_string ).
+    li_parser = li_ixml->create_parser(
+      stream_factory = li_factory
+      istream        = li_istream
+      document       = li_document ).
+    li_parser->add_strip_space_element( ).
+    li_parser->parse( ).
+    li_istream->close( ).
+    ri_node = li_document->get_first_child( ).
+
+  ENDMETHOD.
 ENDCLASS.
