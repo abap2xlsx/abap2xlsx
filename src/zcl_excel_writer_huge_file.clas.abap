@@ -105,7 +105,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       ls_shared_string-string_value = <sheet_content>-cell_value.
       REPLACE ALL OCCURRENCES OF REGEX lv_invalid
            IN ls_shared_string-string_value WITH ` `.
-      APPEND ls_shared_string TO shared_strings.
+      INSERT ls_shared_string INTO TABLE shared_strings.
 
     ENDLOOP.
 
