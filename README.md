@@ -5,3 +5,5 @@ Please refer to the official wiki for the [abapGit installation guide](https://a
 Note that the **Demo programs** are provided in a [separate repository](https://github.com/abap2xlsx/demos), and can be installed after abap2xlsx.
 
 For questions, bug reports and more information on contributing to the project, please refer to the [contributing guidelines](./CONTRIBUTING.md).
+
+Version support: minimum tested version is SAP_ABA 731, it might work on older versions still but we need volunteers to test it.
