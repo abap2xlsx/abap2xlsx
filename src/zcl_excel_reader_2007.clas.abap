@@ -4108,7 +4108,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
   METHOD unescape_string_value.
 
-    DATA: lt_character_positions       TYPE STANDARD TABLE OF i WITH EMPTY KEY,
+    DATA: lt_character_positions       TYPE TABLE OF i,
           lv_character_position        TYPE i,
           lv_character_position_plus_2 TYPE i,
           lv_character_position_plus_6 TYPE i,

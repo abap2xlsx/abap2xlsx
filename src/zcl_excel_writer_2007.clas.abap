@@ -295,7 +295,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD constructor.
-    DATA: lt_unicode_point_codes TYPE STANDARD TABLE OF string WITH EMPTY KEY,
+    DATA: lt_unicode_point_codes TYPE TABLE OF string,
           lv_unicode_point_code  TYPE i.
 
     me->ixml = cl_ixml=>create( ).
@@ -6135,7 +6135,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
   METHOD escape_string_value.
 
-    DATA: lt_character_positions TYPE STANDARD TABLE OF i WITH EMPTY KEY,
+    DATA: lt_character_positions TYPE TABLE OF i,
           lv_character_position  TYPE i,
           lv_escaped_value       TYPE string.
 
