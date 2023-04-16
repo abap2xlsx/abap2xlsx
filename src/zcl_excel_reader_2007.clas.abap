@@ -274,6 +274,11 @@ CLASS zcl_excel_reader_2007 DEFINITION
       RETURNING
         VALUE(rp_result) TYPE string .
     METHODS resolve_referenced_formulae .
+    METHODS unescape_string_value
+      IMPORTING
+        i_value       TYPE string
+      RETURNING
+        VALUE(result) TYPE string.
     METHODS get_dxf_style_guid
       IMPORTING
         !io_ixml_dxf         TYPE REF TO if_ixml_element
@@ -963,7 +968,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *   §1.1 - "simple" strings
 *                Example:  see above
 *--------------------------------------------------------------------*
-          <ls_shared_string>-value = lo_node_si_child->get_value( ).
+          <ls_shared_string>-value = unescape_string_value( lo_node_si_child->get_value( ) ).
         ELSE.
 *--------------------------------------------------------------------*
 *   §1.2 - rich text formatted strings
@@ -985,7 +990,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             " extract the <t>...</t> part of each <r>-tag
             lo_node_r_child_t ?= lo_node_si_child->find_from_name_ns( name = 't' uri = namespace-main ).
             IF lo_node_r_child_t IS BOUND.
-              lv_node_value = lo_node_r_child_t->get_value( ).
+              lv_node_value = unescape_string_value( lo_node_r_child_t->get_value( ) ).
               CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
               ls_rtf-length = strlen( lv_node_value ).
             ENDIF.
@@ -4098,6 +4103,42 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDLOOP.
 
     ENDLOOP.
+  ENDMETHOD.
+
+
+  METHOD unescape_string_value.
+
+    DATA: lt_character_positions       TYPE STANDARD TABLE OF i WITH EMPTY KEY,
+          lv_character_position        TYPE i,
+          lv_character_position_plus_2 TYPE i,
+          lv_character_position_plus_6 TYPE i,
+          lv_unescaped_value           TYPE string.
+
+    " The text "_x...._", with "_x" not "_X", with exactly 4 ".", each being 0-9 a-f or A-F (case insensitive), is interpreted
+    " like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.
+    " To not interpret it, Excel replaces the first "_" with "_x005f_".
+    result = i_value.
+    IF result CS '_x'.
+      CLEAR lt_character_positions.
+      APPEND sy-fdpos TO lt_character_positions.
+      lv_character_position = sy-fdpos + 1.
+      WHILE result+lv_character_position CS '_x'.
+        ADD sy-fdpos TO lv_character_position.
+        APPEND lv_character_position TO lt_character_positions.
+        ADD 1 TO lv_character_position.
+      ENDWHILE.
+      SORT lt_character_positions BY table_line DESCENDING.
+      LOOP AT lt_character_positions INTO lv_character_position.
+        lv_character_position_plus_2 = lv_character_position + 2.
+        lv_character_position_plus_6 = lv_character_position + 6.
+        IF substring( val = result off = lv_character_position_plus_2 len = 4 ) CO '0123456789ABCDEFGHIJKLMNOPQRSTUVWabcdefghijklmnopqrstuvw'
+          AND substring( val = result off = lv_character_position_plus_6 len = 1 ) = '_'.
+          lv_unescaped_value = cl_abap_conv_in_ce=>uccp( to_upper( substring( val = result off = lv_character_position_plus_2 len = 4 ) ) ).
+          REPLACE SECTION OFFSET lv_character_position LENGTH 7 OF result WITH lv_unescaped_value.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+
   ENDMETHOD.
 
 

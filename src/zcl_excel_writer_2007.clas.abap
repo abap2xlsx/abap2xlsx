@@ -42,6 +42,7 @@ CLASS zcl_excel_writer_2007 DEFINITION
     CONSTANTS cl_xl_drawing_for_comments TYPE string VALUE 'xl/drawings/vmlDrawing#.vml'. "#EC NOTEXT
     CONSTANTS c_xl_drawings_vml_rels TYPE string VALUE 'xl/drawings/_rels/vmlDrawing#.vml.rels'. "#EC NOTEXT
     DATA ixml TYPE REF TO if_ixml.
+    DATA control_characters TYPE string.
 
     METHODS create_xl_sheet_sheet_data
       IMPORTING
@@ -193,6 +194,11 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS create_xl_drawings_vml_rels
       RETURNING
         VALUE(ep_content) TYPE xstring .
+    METHODS escape_string_value
+      IMPORTING
+        !iv_value     TYPE zexcel_cell_value
+      RETURNING
+        VALUE(result) TYPE zexcel_cell_value.
     METHODS set_vml_shape_footer
       IMPORTING
         !is_footer        TYPE zexcel_s_worksheet_head_foot
@@ -289,7 +295,21 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD constructor.
+    DATA: lt_unicode_point_codes TYPE STANDARD TABLE OF string WITH EMPTY KEY,
+          lv_unicode_point_code  TYPE i.
+
     me->ixml = cl_ixml=>create( ).
+
+    SPLIT '0,1,2,3,4,5,6,7,8,' " U+0000 to U+0008
+       && '11,12,'             " U+000B, U+000C
+       && '14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,' " U+000E to U+001F
+       && '65534,65535'        " U+FFFE, U+FFFF
+      AT ',' INTO TABLE lt_unicode_point_codes.
+    control_characters = ``.
+    LOOP AT lt_unicode_point_codes INTO lv_unicode_point_code.
+      control_characters = control_characters && cl_abap_conv_in_ce=>uccpi( lv_unicode_point_code ).
+    ENDLOOP.
+
   ENDMETHOD.
 
 
@@ -3633,7 +3653,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
               OR boolc( contains( val = <fs_sheet_string>-string_value end = ` ` ) ) = abap_true.
           lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
         ENDIF.
-        lo_sub_element->set_value( value = <fs_sheet_string>-string_value ).
+        lv_value = escape_string_value( <fs_sheet_string>-string_value ).
+        lo_sub_element->set_value( value = lv_value ).
       ELSE.
         LOOP AT <fs_sheet_string>-rtf_tab ASSIGNING <fs_rtf>.
           lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
@@ -3645,6 +3666,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
             CATCH cx_sy_range_out_of_bounds.
               EXIT.
           ENDTRY.
+          lv_value = escape_string_value( lv_value ).
           IF <fs_rtf>-font IS NOT INITIAL.
             lo_font_element = lo_document->create_simple_element( name   = lc_xml_node_rpr
                                                                   parent = lo_sub_element ).
@@ -6108,6 +6130,34 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ro_document = me->ixml->create_document( ).
     ro_document->set_encoding( lo_encoding ).
     ro_document->set_standalone( abap_true ).
+  ENDMETHOD.
+
+
+  METHOD escape_string_value.
+
+    DATA: lt_character_positions TYPE STANDARD TABLE OF i WITH EMPTY KEY,
+          lv_character_position  TYPE i,
+          lv_escaped_value       TYPE string.
+
+    result = iv_value.
+    IF result CA control_characters.
+
+      CLEAR lt_character_positions.
+      APPEND sy-fdpos TO lt_character_positions.
+      lv_character_position = sy-fdpos + 1.
+      WHILE result+lv_character_position CA control_characters.
+        ADD sy-fdpos TO lv_character_position.
+        APPEND lv_character_position TO lt_character_positions.
+        ADD 1 TO lv_character_position.
+      ENDWHILE.
+      SORT lt_character_positions BY table_line DESCENDING.
+
+      LOOP AT lt_character_positions INTO lv_character_position.
+        lv_escaped_value = |_x{ cl_abap_conv_out_ce=>uccp( substring( val = result off = lv_character_position len = 1 ) ) }_|.
+        REPLACE SECTION OFFSET lv_character_position LENGTH 1 OF result WITH lv_escaped_value.
+      ENDLOOP.
+    ENDIF.
+
   ENDMETHOD.
 
 
