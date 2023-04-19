@@ -68,7 +68,7 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
     lv_intercept_data_active = is_intercept_data_active( ).
 
 * First update metadata if we can.
-    IF io_salv->is_offline( ) = abap_false.
+    IF sy-batch = abap_true AND io_salv->is_offline( ) = abap_false.
       IF lv_intercept_data_active = abap_true.
         ls_layout_key = lo_layout->get_key( ).
         ls_vari-report    = ls_layout_key-report.
@@ -88,8 +88,8 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
 
 *... get the column information
     wt_fcat = cl_salv_controller_metadata=>get_lvc_fieldcatalog(
-                           r_columns      = lo_columns
-                           r_aggregations = lo_aggregations ).
+      r_columns      = lo_columns
+      r_aggregations = lo_aggregations ).
 
 *... get the layout information
     cl_salv_controller_metadata=>get_lvc_layout(
@@ -184,7 +184,6 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-
 
   METHOD zif_excel_converter~get_supported_class.
     rv_supported_class = 'CL_SALV_TABLE'.
