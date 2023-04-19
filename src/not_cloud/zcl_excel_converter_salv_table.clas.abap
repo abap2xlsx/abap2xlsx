@@ -88,8 +88,8 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
 
 *... get the column information
     wt_fcat = cl_salv_controller_metadata=>get_lvc_fieldcatalog(
-      r_columns      = lo_columns
-      r_aggregations = lo_aggregations ).
+                           r_columns      = lo_columns
+                           r_aggregations = lo_aggregations ).
 
 *... get the layout information
     cl_salv_controller_metadata=>get_lvc_layout(
@@ -184,6 +184,7 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
+
 
   METHOD zif_excel_converter~get_supported_class.
     rv_supported_class = 'CL_SALV_TABLE'.
