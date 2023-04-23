@@ -51,30 +51,18 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       END OF ts_root.
 
     DATA:
-      lv_last_allowed_char TYPE c,
-      lv_invalid           TYPE string.
-
-    DATA:
       lo_iterator  TYPE REF TO zcl_excel_collection_iterator,
       lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
     DATA:
-      ls_root          TYPE ts_root,
-      lt_cell_data     TYPE zexcel_t_cell_data_unsorted,
-      ls_shared_string TYPE zexcel_s_shared_string,
-      lv_sytabix       TYPE i.
+      ls_root           TYPE ts_root,
+      lt_cell_data      TYPE zexcel_t_cell_data_unsorted,
+      ls_shared_string  TYPE zexcel_s_shared_string,
+      lv_sytabix        TYPE i,
+      lt_shared_strings TYPE TABLE OF zexcel_s_shared_string.
 
     FIELD-SYMBOLS:
       <sheet_content>     TYPE zexcel_s_cell_data.
-
-**********************************************************************
-* STEP 0: Build Regex for invalid characters
-    " uccpi returns 2 chars but for this specific input 1 char is enough
-    CASE cl_abap_char_utilities=>charsize.
-      WHEN 1.lv_last_allowed_char = cl_abap_conv_in_ce=>uccpi( 255 ).  " FF     in non-Unicode
-      WHEN 2.lv_last_allowed_char = cl_abap_conv_in_ce=>uccpi( 65533 )." FFFD   in Unicode
-    ENDCASE.
-    CONCATENATE '[^\n\t\r -' lv_last_allowed_char ']' INTO lv_invalid.
 
 **********************************************************************
 * STEP 1: Collect strings from each worksheet
@@ -103,8 +91,6 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       lv_sytabix = sy-tabix - 1.
       ls_shared_string-string_no = lv_sytabix.
       ls_shared_string-string_value = <sheet_content>-cell_value.
-      REPLACE ALL OCCURRENCES OF REGEX lv_invalid
-           IN ls_shared_string-string_value WITH ` `.
       INSERT ls_shared_string INTO TABLE shared_strings.
 
     ENDLOOP.
@@ -112,9 +98,16 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
 **********************************************************************
 * STEP 2: Create XML
 
+    " Escape the string values, use of standard table in order to keep same sort order as in sorted table SHARED_STRINGS.
+    CLEAR lt_shared_strings.
+    LOOP AT shared_strings INTO ls_shared_string.
+      ls_shared_string-string_value = escape_string_value( ls_shared_string-string_value ).
+      APPEND ls_shared_string TO lt_shared_strings.
+    ENDLOOP.
+
     CALL TRANSFORMATION zexcel_tr_shared_strings
       SOURCE root = ls_root
-             shared_strings = shared_strings
+             shared_strings = lt_shared_strings
       OPTIONS xml_header = 'full'
       RESULT XML ep_content.
 
@@ -807,8 +800,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       <cell>-formula = <content>-cell_formula.
       <cell>-type    = <content>-data_type.
       IF <cell>-type = 's'.
-        <cell>-value = me->get_shared_string_index( ip_cell_value = <content>-cell_value
-                                                    it_rtf        = <content>-rtf_tab ).
+        <cell>-value = me->get_shared_string_index( ip_cell_value = <content>-cell_value ).
       ELSE.
         <cell>-value = <content>-cell_value.
       ENDIF.
