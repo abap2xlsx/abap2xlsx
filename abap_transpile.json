@@ -39,10 +39,10 @@
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "set_merge",              "note": " https://github.com/abaplint/transpiler/issues/818 "},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "delete_merge",           "note": " https://github.com/abaplint/transpiler/issues/818 "},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "default_text_if_none",   "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_small_text",   "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_medium_text",   "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_long_text",   "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "invalid_default_descr",   "note": "??"},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_small_text",      "note": "??"},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_medium_text",     "note": "??"},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "prefer_long_text",       "note": "??"},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "invalid_default_descr",  "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_set_cell_value_types",     "method": "int8",                   "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_style_param",    "method": "ref_to_zcl_excel_style", "note": "RTTI, absolute class names?"},
 
@@ -62,6 +62,14 @@
 
       {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "one_column_formula",  "note": "open-abap todo in if_ixml_element->set_attribute()"},
       {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "two_column_formulas", "note": "??"},
+      {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_escape_string_value", "method": "escaped_character_inside_text", "note": "cl_abap_conv_out_ce.uccp todo"},
+      {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_escape_string_value", "method": "one_escaped_character", "note": "cl_abap_conv_out_ce.uccp todo"},
+      {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_escape_string_value", "method": "two_escaped_characters", "note": "cl_abap_conv_out_ce.uccp todo"},
+
+      {"object": "ZCL_EXCEL_READER_2007", "class": "ltc_unescape_string_value", "method": "escaped_character_inside_text", "note": "??"},
+      {"object": "ZCL_EXCEL_READER_2007", "class": "ltc_unescape_string_value", "method": "two_escaped_characters",        "note": "??"},
+
+      {"object": "ZCL_EXCEL_THEME_FMT_SCHEME", "class": "ltcl_test", "method": "build_xml", "note": "if_ixml_document$get_first_child todo"},
 
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "??"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row",   "note": "probably https://github.com/abaplint/transpiler/issues/646 "},
