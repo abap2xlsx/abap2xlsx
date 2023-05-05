@@ -2,9 +2,11 @@
 
 CLASS ltc_column_formula DEFINITION DEFERRED.
 CLASS ltc_is_formula_shareable DEFINITION DEFERRED.
+CLASS ltc_escape_string_value DEFINITION DEFERRED.
 CLASS zcl_excel_writer_2007 DEFINITION LOCAL FRIENDS
     ltc_column_formula
-    ltc_is_formula_shareable.
+    ltc_is_formula_shareable
+    ltc_escape_string_value.
 
 CLASS ltc_column_formula DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
@@ -43,6 +45,26 @@ CLASS ltc_is_formula_shareable DEFINITION FOR TESTING
   PRIVATE SECTION.
 
     METHODS is_formula_shareable FOR TESTING RAISING cx_static_check.
+
+ENDCLASS.
+
+
+CLASS ltc_escape_string_value DEFINITION
+      FOR TESTING
+      DURATION SHORT
+      RISK LEVEL HARMLESS.
+
+  PRIVATE SECTION.
+
+    METHODS escaped_character_inside_text FOR TESTING.
+    METHODS no_escaping FOR TESTING.
+    METHODS one_escaped_character FOR TESTING.
+    METHODS two_escaped_characters FOR TESTING.
+
+    METHODS run_cut
+      IMPORTING
+        input TYPE string
+        exp   TYPE string.
 
 ENDCLASS.
 
@@ -165,6 +187,54 @@ CLASS ltc_is_formula_shareable IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( act = lo_excel->is_formula_shareable( 'D2+100' ) exp = abap_true ).
     cl_abap_unit_assert=>assert_equals( act = lo_excel->is_formula_shareable( 'A1&";"&_xlfn.IFS(TRUE,NamedRange)' ) exp = abap_true ).
 
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_escape_string_value IMPLEMENTATION.
+
+  METHOD escaped_character_inside_text.
+    run_cut( input = 'start U+0000 end' exp = 'start _x0000_ end' ).
+  ENDMETHOD.
+
+  METHOD no_escaping.
+    run_cut( input = 'no escaping' exp = 'no escaping' ).
+  ENDMETHOD.
+
+  METHOD one_escaped_character.
+    run_cut( input = 'U+0000' exp = '_x0000_' ).
+  ENDMETHOD.
+
+  METHOD run_cut.
+
+    DATA: lo_excel    TYPE REF TO zcl_excel_writer_2007,
+          lv_input    TYPE string,
+          lt_matches  TYPE match_result_tab,
+          ls_match    TYPE match_result,
+          ls_submatch TYPE submatch_result,
+          lv_hexa     TYPE c LENGTH 4,
+          lv_uccp     TYPE c LENGTH 1.
+
+    CREATE OBJECT lo_excel.
+
+    lv_input = input.
+    FIND ALL OCCURRENCES OF REGEX 'U\+(....)' IN lv_input RESULTS lt_matches.
+    SORT lt_matches BY offset DESCENDING.
+    LOOP AT lt_matches INTO ls_match.
+      READ TABLE ls_match-submatches INDEX 1 INTO ls_submatch.
+      ASSERT sy-subrc = 0.
+      lv_hexa = substring( val = lv_input off = ls_submatch-offset len = ls_submatch-length ).
+      lv_uccp = cl_abap_conv_in_ce=>uccp( lv_hexa ).
+      REPLACE SECTION OFFSET ls_match-offset LENGTH ls_match-length OF lv_input WITH lv_uccp.
+    ENDLOOP.
+
+    cl_abap_unit_assert=>assert_equals( act = lo_excel->escape_string_value( lv_input ) exp = exp msg = |input: { input }| ).
+
+  ENDMETHOD.
+
+  METHOD two_escaped_characters.
+    run_cut( input = 'U+0000 and U+FFFF' exp = '_x0000_ and _xFFFF_' ).
   ENDMETHOD.
 
 ENDCLASS.
