@@ -1147,5 +1147,5 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     IF reference_drawing IS BOUND.
       ep_guid = reference_drawing->get_guid( ).
     ENDIF.
-  ENDMETHOD.  
+  ENDMETHOD.
 ENDCLASS.
