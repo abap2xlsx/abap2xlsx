@@ -125,7 +125,7 @@ CLASS zcl_excel_drawing DEFINITION
         !ip_ref TYPE REF TO zcl_excel_drawing.
     METHODS get_reference_guid
       RETURNING
-        VALUE(ep_guid) TYPE REF TO zexcel_guid.
+        VALUE(ep_guid) TYPE zexcel_guid.
   PROTECTED SECTION.
   PRIVATE SECTION.
 
