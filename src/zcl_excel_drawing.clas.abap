@@ -124,8 +124,8 @@ CLASS zcl_excel_drawing DEFINITION
       IMPORTING
         !ip_ref TYPE REF TO zcl_excel_drawing.
     METHODS get_reference_guid
-      IMPORTING
-        VALUE(ep_guid) TYPE REF TO guid_16 .        
+      RETURNING
+        VALUE(ep_guid) TYPE REF TO guid_16 .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
