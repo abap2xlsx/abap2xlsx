@@ -25,7 +25,7 @@ CLASS zcl_excel_converter_salv_model IMPLEMENTATION.
     " (due to io_salv->r_controller->r_adapter not instantiated yet). That's later fixed by SAP (no short dump in 7.57).
     " NB: r_controller is always instantiated.
     lo_model ?= io_salv.
-    result = xsdbool( lo_model->r_controller->r_adapter IS BOUND ).
+    result = boolc( lo_model->r_controller->r_adapter IS BOUND ).
   ENDMETHOD.
 
 ENDCLASS.
