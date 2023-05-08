@@ -147,7 +147,7 @@ CLASS zcl_excel_drawing DEFINITION
     DATA from_loc TYPE zexcel_drawing_location .
     DATA to_loc TYPE zexcel_drawing_location .
     DATA size TYPE zexcel_drawing_size .
-    DATA reference_drawing TYPE REF TO zcl_excel_drawing
+    DATA reference_drawing TYPE REF TO zcl_excel_drawing.
     CONSTANTS c_ixml_iid_element TYPE i VALUE 130.
 
 ENDCLASS.
