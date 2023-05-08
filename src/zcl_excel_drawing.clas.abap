@@ -1140,13 +1140,9 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     me->anchor = lv_anchor.
 
   ENDMETHOD.
-  
-  
   METHOD set_reference_drawing.
     reference_drawing = ip_ref.
   ENDMETHOD.
-  
-  
   METHOD get_reference_guid.
     IF reference_drawing IS BOUND. 
       ep_guid = reference_drawing->get_guid( ).
