@@ -75,7 +75,7 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
         ls_vari-handle    = ls_layout_key-handle.
         ls_vari-log_group = ls_layout_key-logical_group.
       ELSE.
-        IF zcl_excel_converter_salv_model=>is_alv_displayed( io_salv ) = abap_true.
+        IF zcl_excel_converter_salv_model=>is_get_metadata_callable( io_salv ) = abap_true.
           io_salv->get_metadata( ) .
         ELSE.
           " (do same as offline below)
