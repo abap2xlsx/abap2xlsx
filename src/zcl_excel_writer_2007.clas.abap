@@ -2607,7 +2607,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_drawing      TYPE REF TO zcl_excel_drawing.
 
     DATA: lv_value   TYPE string,
-          lv_guid    TYPE char32.
+          lv_guid    TYPE c LENGTH 32.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -2832,7 +2832,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_col_offset           TYPE string,
           lv_row_offset           TYPE string,
           lv_value                TYPE string,
-          lv_guid                 TYPE guid_32.
+          lv_guid                 TYPE c LENGTH 32.
 
     ls_position = io_drawing->get_position( ).
 
