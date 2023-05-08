@@ -2624,7 +2624,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * STEP 4: Create subnodes
 
     " Add sheet Relationship nodes here
-    lv_counter = 0.
     lo_drawings = io_worksheet->get_drawings( ).
     lo_iterator = lo_drawings->get_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
@@ -2966,7 +2965,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 *     blipFill
        "reference drawing
-        IF io_drawing->get_reference_guid IS INITIAL.
+        IF io_drawing->get_reference_guid( ) IS INITIAL.
           lv_guid = io_drawing->get_guid( ).
         ELSE.
           lv_guid = io_drawing->get_reference_guid( ).
