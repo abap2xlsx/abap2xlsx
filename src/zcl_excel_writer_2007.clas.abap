@@ -532,10 +532,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_iterator = me->excel->get_drawings_iterator( zcl_excel_drawing=>type_image ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_drawing ?= lo_iterator->get_next( ).
-      
+
       "do not add media from drawing with reference
       CHECK lo_drawing->get_reference_guid( ) IS INITIAL.
-      
+
       lv_content = lo_drawing->get_media( ).
       lv_value = lo_drawing->get_media_name( ).
       CONCATENATE 'xl/media/' lv_value INTO lv_value.
@@ -2628,7 +2628,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_iterator = lo_drawings->get_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_drawing ?= lo_iterator->get_next( ).
-      
+
       CHECK lo_drawing->get_reference_guid( ) IS INITIAL.
 
       lv_guid = lo_drawing->get_guid( ).
