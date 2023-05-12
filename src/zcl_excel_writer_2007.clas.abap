@@ -2970,7 +2970,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ELSE.
           lv_guid = io_drawing->get_reference_guid( ).
         ENDIF.
-        CONCATENATE 'rId' lv_value INTO lv_value.
+        CONCATENATE 'rId' lv_guid INTO lv_value.
 
         lo_element  = io_document->create_simple_element( name = lc_xml_node_blipfill
                                                           parent = io_document ).
