@@ -1548,10 +1548,13 @@ CLASS zcl_excel_ole IMPLEMENTATION.
             CLEAR contentsitem-value.
 
 * if type is not numeric -> dun display with zero
+            IF <item> CO '0123456789.,-+E '.
+                WRITE <item> TO contentsitem-value NO-ZERO.
 
-            WRITE <item> TO contentsitem-value NO-ZERO.
-
-            SHIFT contentsitem-value LEFT DELETING LEADING space.
+                SHIFT contentsitem-value LEFT DELETING LEADING space.
+            ELSE.
+                WRITE <item> TO contentsitem-value.
+            ENDIF.
 
           ENDIF.
           APPEND contentsitem TO contents.
