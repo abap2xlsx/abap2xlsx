@@ -65,8 +65,7 @@
 
       {"object": "ZCL_EXCEL_THEME_FMT_SCHEME", "class": "ltcl_test", "method": "build_xml", "note": "if_ixml_document$get_first_child todo"},
 
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "??"},
-      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_range2column_a_row",   "note": "concat of constants value https://github.com/abaplint/transpiler/issues/646 "}
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "??"}
     ]
   }
 }
