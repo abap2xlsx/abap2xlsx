@@ -58,7 +58,6 @@
 
       {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_escape_string_value", "method": "two_escaped_characters",        "note": "??"},
 
-      {"object": "ZCL_EXCEL_READER_2007", "class": "ltc_unescape_string_value", "method": "escaped_character_inside_text", "note": "??"},
       {"object": "ZCL_EXCEL_READER_2007", "class": "ltc_unescape_string_value", "method": "two_escaped_characters",        "note": "??"},
 
       {"object": "ZCL_EXCEL_THEME_FMT_SCHEME", "class": "ltcl_test", "method": "build_xml", "note": "if_ixml_document$get_first_child todo"},
