@@ -38,7 +38,6 @@
 
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "delete_merge",           "note": "??"},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_normalize_column_heading", "method": "default_text_if_none",   "note": "Void type: STRINGTAB"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "ltc_set_cell_value_types",     "method": "int8",                   "note": " https://github.com/abaplint/transpiler/pull/1265 "},
 
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",                    "note": "SXML in open-abap currently only handles json, todo"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string",             "note": "SXML in open-abap currently only handles json, todo"},
