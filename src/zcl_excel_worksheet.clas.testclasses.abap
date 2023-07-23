@@ -36,8 +36,9 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     METHODS delete_merge4 FOR TESTING RAISING cx_static_check.
     METHODS delete_merge5 FOR TESTING RAISING cx_static_check.
     METHODS delete_merge6 FOR TESTING RAISING cx_static_check.
-    METHODS: get_dimension_range FOR TESTING RAISING cx_static_check.
-ENDCLASS.       "lcl_Excel_Worksheet_Test
+    METHODS get_dimension_range FOR TESTING RAISING cx_static_check.
+    METHODS get_rows_iterator FOR TESTING RAISING cx_static_check.
+ENDCLASS.
 
 
 CLASS ltc_calculate_table_bottom_rig DEFINITION FOR TESTING
@@ -727,6 +728,18 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       msg   = 'get_dimension_range'
       level = if_aunit_constants=>critical
     ).
+  ENDMETHOD.
+
+  METHOD get_rows_iterator.
+    DATA lo_iterator TYPE REF TO zcl_excel_collection_iterator.
+    DATA lv_index    TYPE i.
+
+    f_cut->set_cell( ip_column = 'B' ip_row = 2 ip_value = 'Hello world' ).
+    lo_iterator = f_cut->get_rows_iterator( ).
+    lv_index = lo_iterator->get_index( ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lv_index
+      exp = 0 ).
   ENDMETHOD.
 
 ENDCLASS.       "lcl_Excel_Worksheet_Test
