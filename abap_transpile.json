@@ -34,9 +34,9 @@
     "addCommonJS": true,
     "unknownTypes": "runtimeError",
     "skip": [
-      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test",                                               "note": " https://github.com/abaplint/transpiler/pull/1267 "},
+      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test",                                            "note": " https://github.com/abap2xlsx/abap2xlsx/pull/1121 "},
 
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test",     "method": "delete_merge",         "note": " todo: split into multiple test methods "},
+      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge",          "note": " https://github.com/abap2xlsx/abap2xlsx/pull/1121 "},
 
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",                    "note": "SXML in open-abap currently only handles json, todo"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string",             "note": "SXML in open-abap currently only handles json, todo"},
