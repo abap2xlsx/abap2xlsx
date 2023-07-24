@@ -1,7 +1,6 @@
 {
   "input_folder": "{src,test}",
   "input_filter": [
-    "test/",
     "src/zcl_excel_a",
     "src/zcl_excel_c",
     "src/zcl_excel_d",
@@ -19,10 +18,12 @@
     "src/zcx_",
     "src/zexcel_.*doma",
     "src/zexcel_.*dtel",
+    "src/zexcel_c",
     "src/zexcel_p",
     "src/zexcel_s",
     "src/zexcel_t",
-    "src/zif_"
+    "src/zif_",
+    "test/"
   ],
   "output_folder": "output",
   "lib": "https://github.com/open-abap/open-abap",
@@ -34,8 +35,6 @@
     "addCommonJS": true,
     "unknownTypes": "runtimeError",
     "skip": [
-      {"object": "CL_EXCEL_TEST", "class": "ltcl", "method": "test",                                            "note": " https://github.com/abap2xlsx/abap2xlsx/pull/1121 "},
-
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge",          "note": " https://github.com/abap2xlsx/abap2xlsx/pull/1121 "},
 
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",                    "note": "SXML in open-abap currently only handles json, todo"},
