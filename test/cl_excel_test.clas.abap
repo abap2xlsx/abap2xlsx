@@ -1,6 +1,8 @@
 CLASS cl_excel_test DEFINITION PUBLIC.
   PUBLIC SECTION.
-    CLASS-METHODS run RAISING cx_static_check.
+    CLASS-METHODS run
+      RETURNING VALUE(xdata) TYPE xstring
+      RAISING cx_static_check.
 ENDCLASS.
 
 CLASS cl_excel_test IMPLEMENTATION.
@@ -11,7 +13,6 @@ CLASS cl_excel_test IMPLEMENTATION.
     DATA lo_column    TYPE REF TO zcl_excel_column.
     DATA lv_date      TYPE d.
     DATA lv_time      TYPE t.
-    DATA xdata        TYPE xstring.
     DATA li_writer    TYPE REF TO zif_excel_writer.
 
     CREATE OBJECT lo_excel.
