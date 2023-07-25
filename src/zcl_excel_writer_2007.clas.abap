@@ -428,7 +428,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lv_index_str = lv_sheet_index.
       CONDENSE lv_index_str NO-GAPS.
       REPLACE ALL OCCURRENCES OF '#' IN lv_xl_sheet WITH lv_index_str.
-      WRITE / lv_xl_sheet.
       lo_zip->add( name    = lv_xl_sheet
                    content = lv_content ).
 
@@ -722,7 +721,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       SHIFT lv_worksheets_numc LEFT DELETING LEADING '0'.
       lv_xml_node_worksheet_pn = lc_xml_node_worksheet_pn.
       REPLACE ALL OCCURRENCES OF '#' IN lv_xml_node_worksheet_pn WITH lv_worksheets_numc.
-      WRITE / lv_xml_node_worksheet_pn.
       lo_element->set_attribute_ns( name  = lc_xml_attr_partname
                                     value = lv_xml_node_worksheet_pn ).
       lo_element->set_attribute_ns( name  = lc_xml_attr_contenttype
