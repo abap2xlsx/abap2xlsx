@@ -5,16 +5,15 @@ CLASS zcl_excel_style_changer DEFINITION
 
   PUBLIC SECTION.
 
-    INTERFACES zif_excel_style_changer.
+    INTERFACES zif_excel_style_changer .
 
     CLASS-METHODS create
       IMPORTING
-        excel         TYPE REF TO zcl_excel
+        !excel        TYPE REF TO zcl_excel
       RETURNING
         VALUE(result) TYPE REF TO zif_excel_style_changer
       RAISING
-        zcx_excel.
-
+        zcx_excel .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
