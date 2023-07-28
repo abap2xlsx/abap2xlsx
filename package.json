@@ -2,7 +2,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "unit": "rm -rf output && abap_transpile abap_transpile.json && echo RUNNING && node output/index.mjs"
+    "test": "rm -rf output && abap_transpile abap_transpile.json && echo RUNNING && node output/index.mjs"
   },
   "repository": {
     "type": "git",
