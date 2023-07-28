@@ -36,7 +36,6 @@
     "unknownTypes": "runtimeError",
     "skip": [
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge3",         "note": "??"},
-      {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge5",         "note": " https://github.com/abaplint/transpiler/pull/1275 "},
       {"object": "ZCL_EXCEL_WORKSHEET", "class": "lcl_excel_worksheet_test", "method": "delete_merge6",         "note": "??"},
 
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",                    "note": "SXML in open-abap currently only handles json, todo"},
