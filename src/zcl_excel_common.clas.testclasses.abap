@@ -122,6 +122,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS is_cell_in_range_upperside_out FOR TESTING.
     METHODS is_cell_in_range_rightside_out FOR TESTING.
     METHODS is_cell_in_range_lowerside_out FOR TESTING.
+    METHODS recursive_struct_to_class FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -341,37 +342,37 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD convert_column_a_row2columnrow.
 
-   DATA: cell_coords TYPE string.
+    DATA: cell_coords TYPE string.
 
-   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 'B' i_row = 6 ).
+    cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 'B' i_row = 6 ).
 
-   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+    cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
 
 
-   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 2 i_row = 6 ).
+    cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 2 i_row = 6 ).
 
-   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+    cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
 
   ENDMETHOD.
 
 
   METHOD convert_columnrow2column_a_row.
 
-   DATA: column     TYPE zexcel_cell_column_alpha,
-         column_int TYPE zexcel_cell_column,
-         row        TYPE zexcel_cell_row.
+    DATA: column     TYPE zexcel_cell_column_alpha,
+          column_int TYPE zexcel_cell_column,
+          row        TYPE zexcel_cell_row.
 
-   zcl_excel_common=>convert_columnrow2column_a_row(
-     EXPORTING
-       i_columnrow  = 'B6'
-     IMPORTING
-       e_column     = column
-       e_column_int = column_int
-       e_row        = row ).
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow  = 'B6'
+      IMPORTING
+        e_column     = column
+        e_column_int = column_int
+        e_row        = row ).
 
-   cl_abap_unit_assert=>assert_equals( act = column     exp = 'B'   msg = 'Invalid column (alpha)' ).
-   cl_abap_unit_assert=>assert_equals( act = column_int exp = 2     msg = 'Invalid column (numeric)' ).
-   cl_abap_unit_assert=>assert_equals( act = row        exp = 6     msg = 'Invalid row' ).
+    cl_abap_unit_assert=>assert_equals( act = column     exp = 'B'   msg = 'Invalid column (alpha)' ).
+    cl_abap_unit_assert=>assert_equals( act = column_int exp = 2     msg = 'Invalid column (numeric)' ).
+    cl_abap_unit_assert=>assert_equals( act = row        exp = 6     msg = 'Invalid row' ).
 
   ENDMETHOD.
 
@@ -1596,5 +1597,29 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical ).
     ENDTRY.
   ENDMETHOD. "is_cell_in_range_lowerside_out.
+
+  METHOD recursive_struct_to_class.
+
+    DATA style           TYPE REF TO zcl_excel_style.
+    DATA complete_style  TYPE zexcel_s_cstyle_complete.
+    DATA complete_stylex TYPE zexcel_s_cstylex_complete.
+
+    CREATE OBJECT style.
+
+    complete_style-number_format-format_code = 'hello'.
+    complete_stylex-number_format-format_code = abap_true.
+
+    zcl_excel_common=>recursive_struct_to_class(
+      EXPORTING
+        i_source  = complete_style
+        i_sourcex = complete_stylex
+      CHANGING
+        e_target  = style ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = style->number_format->format_code
+      exp = 'hello' ).
+
+  ENDMETHOD.
 
 ENDCLASS.
