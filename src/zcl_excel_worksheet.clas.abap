@@ -1267,7 +1267,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_flag_italic               TYPE abap_bool VALUE abap_false,
           ld_date                      TYPE d,
           ld_date_char                 TYPE c LENGTH 50,
-          ld_font_height               TYPE ty_font_height VALUE zcl_excel_font=>lc_default_font_height,
+          ld_font_height               TYPE zcl_excel_font=>ty_font_height VALUE zcl_excel_font=>lc_default_font_height,
           ld_font_name                 TYPE zexcel_style_font_name VALUE zcl_excel_font=>lc_default_font_name.
 
     " Determine cell content and cell style
