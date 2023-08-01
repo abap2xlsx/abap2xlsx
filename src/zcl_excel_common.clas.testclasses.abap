@@ -1604,10 +1604,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD. "is_cell_in_range_lowerside_out.
 
   METHOD escape_string_hyphen.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
 
-    DATA(name) = `A-B`.
+    name = `A-B`.
 
-    DATA(escaped_name) = zcl_excel_common=>escape_string( name ).
+    escaped_name = zcl_excel_common=>escape_string( name ).
 
     cl_abap_unit_assert=>assert_equals( act = escaped_name
                                         exp = `'A-B'`
@@ -1616,10 +1618,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD escape_string_quote.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
 
-    DATA(name) = `A'B`.
+    name = `A'B`.
 
-    DATA(escaped_name) = zcl_excel_common=>escape_string( name ).
+    escaped_name = zcl_excel_common=>escape_string( name ).
 
     cl_abap_unit_assert=>assert_equals( act = escaped_name
                                         exp = `'A''B'`
@@ -1628,10 +1632,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD escape_string_regular.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
 
-    DATA(name) = `Ab1`.
+    name = `Ab1`.
 
-    DATA(escaped_name) = zcl_excel_common=>escape_string( name ).
+    escaped_name = zcl_excel_common=>escape_string( name ).
 
     cl_abap_unit_assert=>assert_equals( act = escaped_name
                                         exp = `Ab1`
@@ -1640,10 +1646,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD escape_string_whitespace1.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
 
-    DATA(name) = `A B`.
+    name = `A B`.
 
-    DATA(escaped_name) = zcl_excel_common=>escape_string( name ).
+    escaped_name = zcl_excel_common=>escape_string( name ).
 
     cl_abap_unit_assert=>assert_equals( act = escaped_name
                                         exp = `'A B'`
@@ -1652,10 +1660,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD escape_string_whitespace2.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
 
-    DATA(name) = `A` && cl_abap_char_utilities=>horizontal_tab && `B`.
+    name = `A` && cl_abap_char_utilities=>horizontal_tab && `B`.
 
-    DATA(escaped_name) = zcl_excel_common=>escape_string( name ).
+    escaped_name = zcl_excel_common=>escape_string( name ).
 
     cl_abap_unit_assert=>assert_equals( act = escaped_name
                                         exp = `'A` && cl_abap_char_utilities=>horizontal_tab && `B'`
@@ -1664,10 +1674,12 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD escape_string_whitespace3.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
 
-    DATA(name) = `A` && cl_abap_char_utilities=>newline && `B`.
+    name = `A` && cl_abap_char_utilities=>newline && `B`.
 
-    DATA(escaped_name) = zcl_excel_common=>escape_string( name ).
+    escaped_name = zcl_excel_common=>escape_string( name ).
 
     cl_abap_unit_assert=>assert_equals( act = escaped_name
                                         exp = `'A` && cl_abap_char_utilities=>newline && `B'`
