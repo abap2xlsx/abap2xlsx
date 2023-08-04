@@ -846,7 +846,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     lv_value = ip_value.
 
 
-    FIND REGEX `\s|'` IN lv_value.  " \s finds regular and white spaces
+    FIND REGEX `\s|'|-` IN lv_value.  " \s finds regular and white spaces
     IF sy-subrc = 0.
       REPLACE ALL OCCURRENCES OF `'` IN lv_value WITH `''`.
       CONCATENATE `'` lv_value `'` INTO lv_value .
