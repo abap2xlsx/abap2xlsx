@@ -123,6 +123,13 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS is_cell_in_range_rightside_out FOR TESTING.
     METHODS is_cell_in_range_lowerside_out FOR TESTING.
     METHODS recursive_struct_to_class FOR TESTING RAISING cx_static_check.
+    METHODS escape_string_whitespace1 FOR TESTING.
+    METHODS escape_string_whitespace2 FOR TESTING.
+    METHODS escape_string_whitespace3 FOR TESTING.
+    METHODS escape_string_quote FOR TESTING.
+    METHODS escape_string_hyphen FOR TESTING.
+    METHODS escape_string_regular FOR TESTING.
+
 ENDCLASS.
 
 
@@ -1619,6 +1626,88 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
       act = style->number_format->format_code
       exp = 'hello' ).
+
+  METHOD escape_string_hyphen.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A-B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A-B'`
+                                        msg = 'Escaping - failed' ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_quote.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A'B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A''B'`
+                                        msg = `Escaping ' failed` ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_regular.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `Ab1`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `Ab1`
+                                        msg = 'Escaped for no reason' ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_whitespace1.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A B'`
+                                        msg = `Escaping ' ' (space) failed` ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_whitespace2.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A` && cl_abap_char_utilities=>horizontal_tab && `B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A` && cl_abap_char_utilities=>horizontal_tab && `B'`
+                                        msg = `Escaping TAB failed` ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_whitespace3.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A` && cl_abap_char_utilities=>newline && `B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A` && cl_abap_char_utilities=>newline && `B'`
+                                        msg = `Escaping LF failed` ).
 
   ENDMETHOD.
 
