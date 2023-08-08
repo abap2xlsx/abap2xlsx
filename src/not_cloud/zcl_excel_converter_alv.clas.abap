@@ -388,11 +388,11 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
 
   METHOD get_filter.
     TYPES: BEGIN OF ts_field_range,
-             fieldname TYPE lvc_fname,
+             fieldname TYPE fieldname,
              range_tab TYPE REF TO data,
            END OF ts_field_range.
 
-    DATA: ls_filt           TYPE lvc_s_filt,
+    DATA: ls_filt           LIKE LINE OF wt_filt,
           ls_filter         TYPE zexcel_s_converter_fil,
           lo_addit          TYPE REF TO cl_abap_elemdescr,
           lt_components_tab TYPE cl_abap_structdescr=>component_table,
@@ -401,7 +401,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
           lo_struc          TYPE REF TO cl_abap_structdescr,
           lt_field_range    TYPE TABLE OF ts_field_range,
           ls_field_range    LIKE LINE OF lt_field_range,
-          lv_fieldname      TYPE lvc_fname.
+          lv_fieldname      TYPE fieldname.
 
     FIELD-SYMBOLS: <fs_tab>    TYPE STANDARD TABLE,
                    <fs_stab>   TYPE any,
