@@ -1717,7 +1717,7 @@ ENDCLASS.
 CLASS ltc_xlsx_date_time IMPLEMENTATION.
 
   METHOD setup.
-    cut = NEW #( ).
+    CREATE OBJECT cut.
   ENDMETHOD.
 
   METHOD teardown.

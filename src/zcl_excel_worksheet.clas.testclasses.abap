@@ -1710,8 +1710,10 @@ CLASS ltc_is_date_format IMPLEMENTATION.
 
   METHOD setup.
     TRY.
-        xlsx = NEW #( ).
-        cut = NEW #( xlsx ).
+        CREATE OBJECT xlsx.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = xlsx.
       CATCH zcx_excel INTO excel_error.
         cl_abap_unit_assert=>fail(
           msg = 'Could not create instance: ' && excel_error->get_text(  )
@@ -1738,8 +1740,10 @@ CLASS ltc_is_time_format IMPLEMENTATION.
 
   METHOD setup.
     TRY.
-        xlsx = NEW #( ).
-        cut = NEW #( xlsx ).
+        CREATE OBJECT xlsx.
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = xlsx.
       CATCH zcx_excel INTO excel_error.
         cl_abap_unit_assert=>fail(
           msg = 'Could not create instance: ' && excel_error->get_text(  )
