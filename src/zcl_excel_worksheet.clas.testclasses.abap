@@ -318,6 +318,8 @@ CLASS ltc_is_date_format DEFINITION FINAL FOR TESTING
       teardown.
     METHODS:
       date_format_iso FOR TESTING RAISING cx_static_check.
+
+    DATA excel_error TYPE REF TO zcx_excel.
 ENDCLASS.
 
 
@@ -334,6 +336,8 @@ CLASS ltc_is_time_format DEFINITION FINAL FOR TESTING
       teardown.
     METHODS:
       time_format_iso FOR TESTING RAISING cx_static_check.
+
+    DATA excel_error TYPE REF TO zcx_excel.
 ENDCLASS.
 
 
@@ -1708,9 +1712,9 @@ CLASS ltc_is_date_format IMPLEMENTATION.
     TRY.
         xlsx = NEW #( ).
         cut = NEW #( xlsx ).
-      CATCH zcx_excel INTO DATA(excel_error).
+      CATCH zcx_excel INTO excel_error.
         cl_abap_unit_assert=>fail(
-          msg = 'Could not create instance'
+          msg = 'Could not create instance: ' && excel_error->get_text(  )
           quit = if_aunit_constants=>class ).
     ENDTRY.
   ENDMETHOD.
@@ -1736,9 +1740,9 @@ CLASS ltc_is_time_format IMPLEMENTATION.
     TRY.
         xlsx = NEW #( ).
         cut = NEW #( xlsx ).
-      CATCH zcx_excel INTO DATA(excel_error).
+      CATCH zcx_excel INTO excel_error.
         cl_abap_unit_assert=>fail(
-          msg = 'Could not create instance'
+          msg = 'Could not create instance: ' && excel_error->get_text(  )
           quit = if_aunit_constants=>class ).
     ENDTRY.
   ENDMETHOD.

@@ -141,11 +141,19 @@ CLASS ltc_xlsx_date_time DEFINITION FINAL FOR TESTING
   PRIVATE SECTION.
     CONSTANTS dt_20230803_140711 TYPE string VALUE `45141.588321759256`. "Excel raw value for date & time 2023-08-03 14:07:11
 
+    DATA cut TYPE REF TO zcl_excel_common.
+
+    METHODS:
+      setup,
+      teardown.
+
     METHODS:
       from_xlsx_to_date FOR TESTING RAISING cx_static_check,
       from_xlsx_to_time FOR TESTING RAISING cx_static_check,
       from_xlsx_to_timestamp FOR TESTING RAISING cx_static_check.
-  ENDCLASS.
+
+    DATA excel_error TYPE REF TO zcx_excel.
+ENDCLASS.
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_Excel_Common_Test IMPLEMENTATION
@@ -1708,16 +1716,24 @@ ENDCLASS.
 
 CLASS ltc_xlsx_date_time IMPLEMENTATION.
 
+  METHOD setup.
+    cut = NEW #( ).
+  ENDMETHOD.
+
+  METHOD teardown.
+    CLEAR cut.
+  ENDMETHOD.
+
   METHOD from_xlsx_to_date.
     TRY.
         cl_abap_unit_assert=>assert_equals(
-            act   = zcl_excel_common=>excel_string_to_date( dt_20230803_140711 )
+            act   = cut->excel_string_to_date( dt_20230803_140711 )
             exp   = '20230803'
             msg   = 'Wrong date from conversion'
             level = if_aunit_constants=>critical ).
-      CATCH zcx_excel INTO DATA(excel_error).
+      CATCH zcx_excel INTO excel_error.
         cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception' && excel_error->get_text( )
+            msg    = 'Unexpected exception: ' && excel_error->get_text( )
             level  = if_aunit_constants=>critical ).
     ENDTRY.
   ENDMETHOD.
@@ -1725,13 +1741,13 @@ CLASS ltc_xlsx_date_time IMPLEMENTATION.
   METHOD from_xlsx_to_time.
     TRY.
         cl_abap_unit_assert=>assert_equals(
-            act   = zcl_excel_common=>excel_string_to_time( dt_20230803_140711 )
+            act   = cut->excel_string_to_time( dt_20230803_140711 )
             exp   = '140711'
             msg   = 'Wrong time from conversion'
             level = if_aunit_constants=>critical ).
-      CATCH zcx_excel INTO DATA(excel_error).
+      CATCH zcx_excel INTO excel_error.
         cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception' && excel_error->get_text( )
+            msg    = 'Unexpected exception: ' && excel_error->get_text( )
             level  = if_aunit_constants=>critical ).
     ENDTRY.
   ENDMETHOD.
@@ -1739,13 +1755,13 @@ CLASS ltc_xlsx_date_time IMPLEMENTATION.
   METHOD from_xlsx_to_timestamp.
     TRY.
         cl_abap_unit_assert=>assert_equals(
-            act   = zcl_excel_common=>excel_string_to_timestamp( dt_20230803_140711 )
+            act   = cut->excel_string_to_timestamp( dt_20230803_140711 )
             exp   = '20230803140711'
             msg   = 'Wrong time stamp from conversion'
             level = if_aunit_constants=>critical ).
-      CATCH zcx_excel INTO DATA(excel_error).
+      CATCH zcx_excel INTO excel_error.
         cl_abap_unit_assert=>fail(
-            msg    = 'unexpected exception' && excel_error->get_text( )
+            msg    = 'Unexpected exception: ' && excel_error->get_text( )
             level  = if_aunit_constants=>critical ).
     ENDTRY.
   ENDMETHOD.
