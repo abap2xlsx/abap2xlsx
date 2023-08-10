@@ -6,6 +6,8 @@ CLASS ltc_normalize_style_param DEFINITION DEFERRED.
 CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
 CLASS ltc_check_overlapping DEFINITION DEFERRED.
 CLASS ltc_set_cell_value_types DEFINITION DEFERRED.
+CLASS ltc_is_date_format DEFINITION DEFERRED.
+CLASS ltc_is_time_format DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_normalize_column_heading
     ltc_normalize_columnrow_param
@@ -14,7 +16,9 @@ CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_check_overlapping
     ltc_normalize_style_param
     ltc_check_cell_column_formula
-    ltc_set_cell_value_types.
+    ltc_set_cell_value_types
+    ltc_is_date_format
+    ltc_is_time_format.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     RISK LEVEL HARMLESS
@@ -298,6 +302,38 @@ CLASS ltc_set_cell_value_types DEFINITION FOR TESTING
       RAISING
         cx_static_check.
 
+ENDCLASS.
+
+
+CLASS ltc_is_date_format DEFINITION FINAL FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS.
+
+  PRIVATE SECTION.
+    DATA cut TYPE REF TO zcl_excel_worksheet.
+    DATA xlsx TYPE REF TO zcl_excel.
+
+    METHODS:
+      setup,
+      teardown.
+    METHODS:
+      date_format_iso FOR TESTING RAISING cx_static_check.
+ENDCLASS.
+
+
+CLASS ltc_is_time_format DEFINITION FINAL FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS.
+
+  PRIVATE SECTION.
+    DATA cut TYPE REF TO zcl_excel_worksheet.
+    DATA xlsx TYPE REF TO zcl_excel.
+
+    METHODS:
+      setup,
+      teardown.
+    METHODS:
+      time_format_iso FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -1661,6 +1697,62 @@ CLASS ltc_set_cell_value_types IMPLEMENTATION.
       cl_abap_unit_assert=>fail( msg = message ).
     ENDIF.
 
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_is_date_format IMPLEMENTATION.
+
+  METHOD setup.
+    TRY.
+        xlsx = NEW #( ).
+        cut = NEW #( xlsx ).
+      CATCH zcx_excel INTO DATA(excel_error).
+        cl_abap_unit_assert=>fail(
+          msg = 'Could not create instance'
+          quit = if_aunit_constants=>class ).
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD teardown.
+    CLEAR cut.
+    CLEAR xlsx.
+  ENDMETHOD.
+
+  METHOD date_format_iso.
+    cl_abap_unit_assert=>assert_true(
+        act              = cut->is_date_format( ip_value = 'yyyy-mm-dd' )
+        msg              = 'ISO date format not reckognized'
+        level            = if_aunit_constants=>critical ).
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_is_time_format IMPLEMENTATION.
+
+  METHOD setup.
+    TRY.
+        xlsx = NEW #( ).
+        cut = NEW #( xlsx ).
+      CATCH zcx_excel INTO DATA(excel_error).
+        cl_abap_unit_assert=>fail(
+          msg = 'Could not create instance'
+          quit = if_aunit_constants=>class ).
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD teardown.
+    CLEAR cut.
+    CLEAR xlsx.
+  ENDMETHOD.
+
+  METHOD time_format_iso.
+    cl_abap_unit_assert=>assert_true(
+        act              = cut->is_time_format( ip_value = 'hh:mm:ss' )
+        msg              = 'ISO time format not reckognized'
+        level            = if_aunit_constants=>critical ).
   ENDMETHOD.
 
 ENDCLASS.

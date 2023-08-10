@@ -693,6 +693,7 @@ CLASS zcl_excel_worksheet DEFINITION
 *"* private components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
     TYPES ty_table_settings TYPE STANDARD TABLE OF zexcel_s_table_settings WITH DEFAULT KEY.
+    CONSTANTS c_typekind_timestamp TYPE abap_typekind VALUE 'Z'.
     DATA active_cell TYPE zexcel_s_cell_data .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA columns TYPE REF TO zcl_excel_columns .
@@ -782,6 +783,16 @@ CLASS zcl_excel_worksheet DEFINITION
       EXPORTING
         !ep_value      TYPE simple
         !ep_value_type TYPE abap_typekind .
+    METHODS is_date_format
+      IMPORTING
+        !ip_value TYPE simple
+      RETURNING
+        VALUE(result) TYPE abap_bool.
+    METHODS is_time_format
+      IMPORTING
+        !ip_value TYPE simple
+      RETURNING
+        VALUE(result) TYPE abap_bool.
     METHODS move_supplied_borders
       IMPORTING
         iv_border_supplied        TYPE abap_bool
@@ -2167,7 +2178,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         EXCEPTIONS
           OTHERS   = 3
       ).
-      IF lt_ddic_object IS INITIAL.
+      IF sy-subrc = 0 AND lt_ddic_object IS INITIAL.
         lt_comp_view = lo_line_type->get_included_view( ).
         LOOP AT lt_comp_view INTO ls_comp_view.
           ls_comp_view-type->get_ddic_object(
@@ -2176,7 +2187,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             EXCEPTIONS
               OTHERS   = 3
           ).
-          IF lt_ddic_object_comp IS NOT INITIAL.
+          IF sy-subrc = 0 AND lt_ddic_object_comp IS NOT INITIAL.
             READ TABLE lt_ddic_object_comp INTO ls_ddic_object INDEX 1.
             ls_ddic_object-fieldname = ls_comp_view-name.
             APPEND ls_ddic_object TO lt_ddic_object.
@@ -2237,8 +2248,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         REPLACE ALL OCCURRENCES OF REGEX '\[\L[^]]*\]' IN lv_format_code WITH ''.
 
         IF lv_format_code CA 'yd' OR lv_format_code EQ zcl_excel_style_number_format=>c_format_date_std.
-          " DATE = yyyymmdd
-          ls_style_conv-abap_type = cl_abap_typedescr=>typekind_date.
+          "TODO kjetil-kilhavn make use of is_date_format( ) and is_time_format( )
+          IF lv_format_code CA 'hs'.
+            ls_style_conv-abap_type = c_typekind_timestamp.
+          ELSE.
+            " DATE = yyyymmdd
+            ls_style_conv-abap_type = cl_abap_typedescr=>typekind_date.
+          ENDIF.
         ELSEIF lv_format_code CA 'hs'.
           " TIME = hhmmss
           ls_style_conv-abap_type = cl_abap_typedescr=>typekind_time.
@@ -2295,6 +2311,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             READ TABLE lt_style_conv INTO ls_style_conv WITH KEY cell_style = <ls_sheet_content>-cell_style BINARY SEARCH.
             IF sy-subrc EQ 0.
               CASE ls_style_conv-abap_type.
+                WHEN c_typekind_timestamp.
+                  <lv_data> = zcl_excel_common=>excel_string_to_timestamp( <ls_sheet_content>-cell_value ).
                 WHEN cl_abap_typedescr=>typekind_date.
                   <lv_data> = zcl_excel_common=>excel_string_to_date( <ls_sheet_content>-cell_value ).
                 WHEN cl_abap_typedescr=>typekind_time.
@@ -3239,6 +3257,31 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDLOOP.
 
   ENDMETHOD.                    "IS_CELL_MERGED
+
+
+  METHOD is_date_format.
+    "TODO kjetil-kilhavn figure out how to detect all valid date formats, including mmmmm (first letter of month name)
+    result = abap_false.
+
+    CHECK ip_value CA 'ymd'.
+
+    result = abap_true.
+  ENDMETHOD. "is_date_format
+
+
+  METHOD is_time_format.
+    "TODO kjetil-kilhavn try to implement this without hardcoding too much...
+    "Note: Open Office XML: m or mm represents minutes if it is used
+    "      immediately after h or hh (for hours) or
+    "      immediately before ss (for seconds)
+    "  Source: ECMA-376 Part 1 page 1789
+    "  What about e.g. format code 'm:s' - s is also valid for seconds!?
+    result = abap_false.
+
+    CHECK ip_value CA 'hms'.
+
+    result = abap_true.
+  ENDMETHOD. "is_time_format
 
 
   METHOD move_supplied_borders.

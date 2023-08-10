@@ -7,6 +7,7 @@ CLASS zcl_excel_common DEFINITION
 *"* do not include other source files here!!!
   PUBLIC SECTION.
 
+    TYPES ty_timestamp TYPE p LENGTH 8 DECIMALS 0.
     CONSTANTS c_excel_baseline_date TYPE d VALUE '19000101'. "#EC NOTEXT
     CLASS-DATA c_excel_numfmt_offset TYPE int1 VALUE 164. "#EC NOTEXT .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . " .
     CONSTANTS c_excel_sheet_max_col TYPE int4 VALUE 16384.  "#EC NOTEXT
@@ -114,6 +115,13 @@ CLASS zcl_excel_common DEFINITION
         !ip_value       TYPE zexcel_cell_value
       RETURNING
         VALUE(ep_value) TYPE t
+      RAISING
+        zcx_excel .
+    CLASS-METHODS excel_string_to_timestamp
+      IMPORTING
+        !ip_value       TYPE zexcel_cell_value
+      RETURNING
+        VALUE(ep_value) TYPE ty_timestamp
       RAISING
         zcx_excel .
     CLASS-METHODS excel_string_to_number
@@ -863,7 +871,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     CHECK ip_value IS NOT INITIAL AND ip_value CN ' 0'.
 
     TRY.
-        lv_date_int = ip_value.
+        lv_date_int = floor( ip_value ).
         IF lv_date_int NOT BETWEEN 1 AND 2958465.
           zcx_excel=>raise_text( 'Unable to interpret date' ).
         ENDIF.
@@ -897,7 +905,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
     TRY.
 
-        lv_day_fraction = ip_value.
+        lv_day_fraction = ip_value - floor( ip_value ).
         lv_seconds_in_day = lv_day_fraction * lc_seconds_in_day.
 
         ep_value = lv_seconds_in_day.
@@ -905,6 +913,13 @@ CLASS zcl_excel_common IMPLEMENTATION.
       CATCH cx_sy_conversion_error.
         zcx_excel=>raise_text( 'Unable to interpret time' ).
     ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD excel_string_to_timestamp.
+    CONVERT DATE excel_string_to_date( ip_value )
+            TIME excel_string_to_time( ip_value )
+            INTO TIME STAMP ep_value TIME ZONE 'UTC'.
   ENDMETHOD.
 
 
