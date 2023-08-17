@@ -3874,6 +3874,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           get_value_type( EXPORTING ip_value      = ip_value
                           IMPORTING ep_value      = <fs_value>
                                     ep_value_type = lv_value_type ).
+          lv_data_type = lv_value_type.
         ENDIF.
 
         ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_INT8') TO <fs_typekind_int8>.
