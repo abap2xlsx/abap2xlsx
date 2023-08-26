@@ -4212,11 +4212,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: col_count              TYPE int4,
           lo_autofilters         TYPE REF TO zcl_excel_autofilters,
           lo_autofilter          TYPE REF TO zcl_excel_autofilter,
-          lt_values              TYPE zexcel_t_autofilter_values,
-          ls_values              TYPE zexcel_s_autofilter_values,
-          ls_area                TYPE zexcel_s_autofilter_area,
-          lt_filter_cols         TYPE SORTED TABLE OF zexcel_cell_column WITH UNIQUE KEY table_line,
-          lt_cols2match          LIKE lt_filter_cols,
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_table               TYPE REF TO zcl_excel_table,
@@ -4262,11 +4257,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_autofilters = excel->get_autofilters_reference( ).
     lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
     IF lo_autofilter IS BOUND.
-      lt_values           = lo_autofilter->get_values( ) .
-      ls_area             = lo_autofilter->get_filter_area( ) .
-      LOOP AT lt_values INTO ls_values.
-        INSERT ls_values-column INTO TABLE lt_filter_cols.
-      ENDLOOP.
+*     Validation for lo_autofilter->is_row_hidden
+      lo_autofilter->get_filter_area( ) .
     ENDIF.
 *--------------------------------------------------------------------*
 *issue #220 - If cell in tables-area don't use default from row or column or sheet - Coding 1 - start
@@ -4362,7 +4354,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           IF ls_last_row-cell_row IS NOT INITIAL.
             " Row visibility of previos row.
             IF lo_row->get_visible( io_worksheet ) = abap_false OR
-               lt_cols2match IS NOT INITIAL.
+               ( lo_autofilter IS BOUND AND
+                 lo_autofilter->is_row_hidden( ls_last_row-cell_row ) = abap_true ).
               lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
             ENDIF.
             rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
@@ -4410,28 +4403,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
             lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
             lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
           ENDIF.
-          IF lo_autofilter IS BOUND.
-            IF ls_area-row_start <  <ls_sheet_content>-cell_row AND  "One less for header
-               ls_area-row_end   >= <ls_sheet_content>-cell_row.
-              " First default is not showing
-              lt_cols2match = lt_filter_cols.
-            ELSE.
-              CLEAR lt_cols2match.
-            ENDIF.
-          ENDIF.
         ELSE.
 
         ENDIF.
         ls_last_row = <ls_sheet_content>.
       ENDWHILE.
-
-      READ TABLE lt_values TRANSPORTING NO FIELDS
-                           WITH KEY column = <ls_sheet_content>-cell_column
-                                    value  = <ls_sheet_content>-cell_value
-                           BINARY SEARCH.
-      IF sy-subrc = 0.
-        DELETE TABLE lt_cols2match WITH TABLE KEY table_line = <ls_sheet_content>-cell_column.
-      ENDIF.
 
       lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_c
                                                          parent = io_document ).
@@ -4541,7 +4517,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     IF sy-subrc = 0.
       " Row visibility of previos row.
       IF lo_row->get_visible( ) = abap_false OR
-         lt_cols2match IS NOT INITIAL.
+         ( lo_autofilter IS BOUND AND
+           lo_autofilter->is_row_hidden( ls_last_row-cell_row ) = abap_true ).
         lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
       ENDIF.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
