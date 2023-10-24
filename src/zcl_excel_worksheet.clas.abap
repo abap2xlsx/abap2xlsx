@@ -172,6 +172,7 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(iv_default_descr) TYPE c OPTIONAL
         !iv_no_line_if_empty    TYPE abap_bool DEFAULT abap_false
         !ip_conv_exit_length    TYPE abap_bool DEFAULT abap_false
+        !ip_conv_curr_amt_ext   TYPE abap_bool DEFAULT abap_false
       EXPORTING
         !es_table_settings      TYPE zexcel_s_table_settings
       RAISING
@@ -499,6 +500,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_hyperlink         TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type         TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type         TYPE abap_typekind OPTIONAL
+        !ip_currency          TYPE waers_curc OPTIONAL
         !it_rtf               TYPE zexcel_t_rtf OPTIONAL
         !ip_column_formula_id TYPE mty_s_column_formula-id OPTIONAL
         !ip_conv_exit_length  TYPE abap_bool DEFAULT abap_false
@@ -796,15 +798,15 @@ CLASS zcl_excel_worksheet DEFINITION
         iv_default_descr TYPE c
         it_field_catalog TYPE zexcel_t_fieldcatalog
       RETURNING
-        VALUE(result) TYPE zexcel_t_fieldcatalog.
+        VALUE(result)    TYPE zexcel_t_fieldcatalog.
     METHODS normalize_columnrow_parameter
       IMPORTING
-        ip_columnrow  TYPE csequence OPTIONAL
-        ip_column     TYPE simple OPTIONAL
-        ip_row        TYPE zexcel_cell_row OPTIONAL
+        ip_columnrow TYPE csequence OPTIONAL
+        ip_column    TYPE simple OPTIONAL
+        ip_row       TYPE zexcel_cell_row OPTIONAL
       EXPORTING
-        ep_column     TYPE zexcel_cell_column
-        ep_row        TYPE zexcel_cell_row
+        ep_column    TYPE zexcel_cell_column
+        ep_row       TYPE zexcel_cell_row
       RAISING
         zcx_excel.
     METHODS normalize_range_parameter
@@ -976,6 +978,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lc_top_left_column TYPE zexcel_cell_column_alpha VALUE 'A',
       lc_top_left_row    TYPE zexcel_cell_row VALUE 1.
 
+    CONSTANTS:
+      lc_waers TYPE waers_curc VALUE IS INITIAL.
+
     DATA:
       lv_row_int              TYPE zexcel_cell_row,
       lv_first_row            TYPE zexcel_cell_row,
@@ -1000,7 +1005,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       <ls_field_catalog>        TYPE zexcel_s_fieldcatalog,
       <ls_field_catalog_custom> TYPE zexcel_s_fieldcatalog,
       <fs_table_line>           TYPE any,
-      <fs_fldval>               TYPE any.
+      <fs_fldval>               TYPE any,
+      <fs_fldval_currency>      TYPE waers.
 
     ls_settings = is_table_settings.
 
@@ -1099,6 +1105,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       LOOP AT ip_table ASSIGNING <fs_table_line>.
 
         ASSIGN COMPONENT <ls_field_catalog>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
+
+        IF <ls_field_catalog>-currency_column IS INITIAL OR ip_conv_curr_amt_ext = abap_false.
+          ASSIGN lc_waers TO <fs_fldval_currency>.
+        ELSE.
+          ASSIGN COMPONENT <ls_field_catalog>-currency_column OF STRUCTURE <fs_table_line> TO <fs_fldval_currency>.
+        ENDIF.
+
         " issue #290 Add formula support in table
         IF <ls_field_catalog>-formula EQ abap_true.
           IF <ls_field_catalog>-style IS NOT INITIAL.
@@ -1156,6 +1169,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                           ip_row    = lv_row_int
                           ip_value  = <fs_fldval>
                           ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_currency = <fs_fldval_currency>
                           ip_style  = <ls_field_catalog>-style
                           ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
@@ -1170,6 +1184,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               me->set_cell( ip_column = lv_column_alpha
                           ip_row    = lv_row_int
                           ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_currency = <fs_fldval_currency>
                           ip_value  = <fs_fldval>
                           ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
@@ -3807,6 +3822,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <fs_date>          TYPE d,
                    <fs_time>          TYPE t,
                    <fs_value>         TYPE simple,
+                   <fs_amount>        TYPE p,
                    <fs_typekind_int8> TYPE abap_typekind.
     FIELD-SYMBOLS: <fs_column_formula> TYPE mty_s_column_formula.
     FIELD-SYMBOLS: <ls_fieldcat>       TYPE zexcel_s_fieldcatalog.
@@ -3901,11 +3917,24 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                cl_abap_typedescr=>typekind_decfloat16 OR
                cl_abap_typedescr=>typekind_decfloat34.
             lo_addit = cl_abap_elemdescr=>get_f( ).
-            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
-            ASSIGN lo_value_new->* TO <fs_numeric>.
-            IF sy-subrc = 0.
-              <fs_numeric> = <fs_value>.
-              lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+            IF ip_currency IS INITIAL.
+
+              CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+              ASSIGN lo_value_new->* TO <fs_numeric>.
+              IF sy-subrc = 0.
+                <fs_numeric> = <fs_value>.
+                lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+              ENDIF.
+            ELSE.
+              lo_addit = cl_abap_elemdescr=>get_p( p_length = 16
+                                       p_decimals = 2 ).
+              CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+              ASSIGN lo_value_new->* TO <fs_amount>.
+              IF sy-subrc = 0.
+                <fs_amount> = <fs_value>.
+                lv_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = <fs_amount>
+                                                                          ip_currency = ip_currency ).
+              ENDIF.
             ENDIF.
 
           WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR

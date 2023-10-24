@@ -48,7 +48,7 @@ CLASS zcl_excel_common DEFINITION
         zcx_excel.
     CLASS-METHODS convert_columnrow2column_a_row
       IMPORTING
-        !i_columnrow TYPE clike
+        !i_columnrow  TYPE clike
       EXPORTING
         !e_column     TYPE zexcel_cell_column_alpha
         !e_column_int TYPE zexcel_cell_column
@@ -77,7 +77,7 @@ CLASS zcl_excel_common DEFINITION
         !e_row       TYPE zexcel_cell_row .
     CLASS-METHODS clone_ixml_with_namespaces
       IMPORTING
-        element TYPE REF TO if_ixml_element
+        element       TYPE REF TO if_ixml_element
       RETURNING
         VALUE(result) TYPE REF TO if_ixml_element.
     CLASS-METHODS date_to_excel_string
@@ -135,6 +135,12 @@ CLASS zcl_excel_common DEFINITION
         VALUE(ip_value) TYPE numeric
       RETURNING
         VALUE(ep_value) TYPE zexcel_cell_value .
+    CLASS-METHODS curr_amount_to_excel_string
+      IMPORTING
+        VALUE(ip_value)    TYPE numeric
+        VALUE(ip_currency) TYPE waers_curc
+      RETURNING
+        VALUE(ep_value)    TYPE zexcel_cell_value .
     CLASS-METHODS recursive_class_to_struct
       IMPORTING
         !i_source  TYPE any
@@ -498,8 +504,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
 
   METHOD convert_column_a_row2columnrow.
-    DATA: lv_row_alpha     TYPE string,
-          lv_column_alpha  TYPE zexcel_cell_column_alpha.
+    DATA: lv_row_alpha    TYPE string,
+          lv_column_alpha TYPE zexcel_cell_column_alpha.
 
     lv_row_alpha = i_row.
     lv_column_alpha = zcl_excel_common=>convert_column2alpha( i_column ).
@@ -944,6 +950,13 @@ CLASS zcl_excel_common IMPLEMENTATION.
       <fcat>-scrtext_s = ls_salv_t_column_ref-r_column->get_short_text( ).
       <fcat>-scrtext_m = ls_salv_t_column_ref-r_column->get_medium_text( ).
       <fcat>-scrtext_l = ls_salv_t_column_ref-r_column->get_long_text( ).
+      <fcat>-currency_column = ls_salv_t_column_ref-r_column->get_currency_column( ).
+      " If currency column not in structure then clear the field again
+      READ TABLE lt_salv_t_column_ref WITH KEY columnname = <fcat>-currency_column TRANSPORTING NO FIELDS.
+      IF sy-subrc <> 0.
+        CLEAR <fcat>-currency_column.
+      ENDIF.
+
       IF ip_conv_exit_length = abap_false.
         <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
       ENDIF.
@@ -1691,4 +1704,22 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
 
   ENDMETHOD.
+
+  METHOD curr_amount_to_excel_string.
+
+    DATA: lv_value_c TYPE c LENGTH 100.
+    WRITE ip_value TO lv_value_c NO-GROUPING NO-SIGN CURRENCY ip_currency.
+    REPLACE ALL OCCURRENCES OF ',' IN lv_value_c WITH '.'.
+
+    ep_value = lv_value_c.
+    CONDENSE ep_value.
+
+    IF ip_value < 0.
+      CONCATENATE '-' ep_value INTO ep_value.
+    ELSEIF ip_value EQ 0.
+      ep_value = '0'.
+    ENDIF.
+
+  ENDMETHOD.
+
 ENDCLASS.

@@ -45,6 +45,9 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS date_to_excel_string4 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string5 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string6 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string1 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string2 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string3 FOR TESTING RAISING cx_static_check.
     METHODS: encrypt_password FOR TESTING.
     METHODS: excel_string_to_date FOR TESTING.
     METHODS excel_string_to_time1 FOR TESTING RAISING cx_static_check.
@@ -467,6 +470,47 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD amount_to_excel_string1.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = '1003.99'
+                                                              ip_currency = 'EUR' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '1003.99'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD amount_to_excel_string2.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = '-1003.99'
+                                                              ip_currency = 'HUF' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '-100399'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD amount_to_excel_string3.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = '0'
+                                                              ip_currency = 'HUF' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '0'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
 
   METHOD encrypt_password.
 * ========================
