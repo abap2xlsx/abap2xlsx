@@ -136,7 +136,9 @@
     "local_class_naming": false,
     "main_file_contents": true,
     "message_exists": false,
-    "msag_consistency": true,
+    "msag_consistency": {
+      "numericParamters": false
+    },
     "newline_between_methods": false,
     "no_public_attributes": false,
     "object_naming": {
