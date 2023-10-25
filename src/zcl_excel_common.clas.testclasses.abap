@@ -1626,6 +1626,7 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
       act = style->number_format->format_code
       exp = 'hello' ).
+  ENDMETHOD.
 
   METHOD escape_string_hyphen.
     DATA: name         TYPE string,
