@@ -473,8 +473,8 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   METHOD amount_to_excel_string1.
     DATA ep_value TYPE zexcel_cell_value.
 
-    ep_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = '1003.99'
-                                                              ip_currency = 'EUR' ).
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '1003.99'
+                                                         ip_currency = 'EUR' ).
 
     cl_abap_unit_assert=>assert_equals(
           act   = ep_value
@@ -487,8 +487,8 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   METHOD amount_to_excel_string2.
     DATA ep_value TYPE zexcel_cell_value.
 
-    ep_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = '-1003.99'
-                                                              ip_currency = 'HUF' ).
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '-1003.99'
+                                                         ip_currency = 'HUF' ).
 
     cl_abap_unit_assert=>assert_equals(
           act   = ep_value
@@ -501,8 +501,8 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
   METHOD amount_to_excel_string3.
     DATA ep_value TYPE zexcel_cell_value.
 
-    ep_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = '0'
-                                                              ip_currency = 'HUF' ).
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '0'
+                                                         ip_currency = 'HUF' ).
 
     cl_abap_unit_assert=>assert_equals(
           act   = ep_value

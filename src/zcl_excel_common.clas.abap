@@ -133,14 +133,9 @@ CLASS zcl_excel_common DEFINITION
     CLASS-METHODS number_to_excel_string
       IMPORTING
         VALUE(ip_value) TYPE numeric
+        ip_currency     TYPE waers_curc OPTIONAL
       RETURNING
         VALUE(ep_value) TYPE zexcel_cell_value .
-    CLASS-METHODS curr_amount_to_excel_string
-      IMPORTING
-        VALUE(ip_value)    TYPE numeric
-        VALUE(ip_currency) TYPE waers_curc
-      RETURNING
-        VALUE(ep_value)    TYPE zexcel_cell_value .
     CLASS-METHODS recursive_class_to_struct
       IMPORTING
         !i_source  TYPE any
@@ -952,9 +947,11 @@ CLASS zcl_excel_common IMPLEMENTATION.
       <fcat>-scrtext_l = ls_salv_t_column_ref-r_column->get_long_text( ).
       <fcat>-currency_column = ls_salv_t_column_ref-r_column->get_currency_column( ).
       " If currency column not in structure then clear the field again
-      READ TABLE lt_salv_t_column_ref WITH KEY columnname = <fcat>-currency_column TRANSPORTING NO FIELDS.
-      IF sy-subrc <> 0.
-        CLEAR <fcat>-currency_column.
+      IF <fcat>-currency_column IS NOT INITIAL.
+        READ TABLE lt_salv_t_column_ref WITH KEY columnname = <fcat>-currency_column TRANSPORTING NO FIELDS.
+        IF sy-subrc <> 0.
+          CLEAR <fcat>-currency_column.
+        ENDIF.
       ENDIF.
 
       IF ip_conv_exit_length = abap_false.
@@ -1020,7 +1017,11 @@ CLASS zcl_excel_common IMPLEMENTATION.
   METHOD number_to_excel_string.
     DATA: lv_value_c TYPE c LENGTH 100.
 
-    WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
+    IF ip_currency IS INITIAL.
+      WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
+    ELSE.
+      WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN CURRENCY ip_currency.
+    ENDIF.
     REPLACE ALL OCCURRENCES OF ',' IN lv_value_c WITH '.'.
 
     ep_value = lv_value_c.
@@ -1702,23 +1703,6 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
     REPLACE ALL OCCURRENCES OF `''` IN ev_unescaped_string WITH `'`.
 
-
-  ENDMETHOD.
-
-  METHOD curr_amount_to_excel_string.
-
-    DATA: lv_value_c TYPE c LENGTH 100.
-    WRITE ip_value TO lv_value_c NO-GROUPING NO-SIGN CURRENCY ip_currency.
-    REPLACE ALL OCCURRENCES OF ',' IN lv_value_c WITH '.'.
-
-    ep_value = lv_value_c.
-    CONDENSE ep_value.
-
-    IF ip_value < 0.
-      CONCATENATE '-' ep_value INTO ep_value.
-    ELSEIF ip_value EQ 0.
-      ep_value = '0'.
-    ENDIF.
 
   ENDMETHOD.
 

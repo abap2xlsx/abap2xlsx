@@ -976,10 +976,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     CONSTANTS:
       lc_top_left_column TYPE zexcel_cell_column_alpha VALUE 'A',
-      lc_top_left_row    TYPE zexcel_cell_row VALUE 1.
-
-    CONSTANTS:
-      lc_waers TYPE waers_curc VALUE IS INITIAL.
+      lc_top_left_row    TYPE zexcel_cell_row VALUE 1,
+      lc_no_currency     TYPE waers_curc VALUE IS INITIAL.
 
     DATA:
       lv_row_int              TYPE zexcel_cell_row,
@@ -1107,7 +1105,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ASSIGN COMPONENT <ls_field_catalog>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
 
         IF <ls_field_catalog>-currency_column IS INITIAL OR ip_conv_curr_amt_ext = abap_false.
-          ASSIGN lc_waers TO <fs_fldval_currency>.
+          ASSIGN lc_no_currency TO <fs_fldval_currency>.
         ELSE.
           ASSIGN COMPONENT <ls_field_catalog>-currency_column OF STRUCTURE <fs_table_line> TO <fs_fldval_currency>.
         ENDIF.
@@ -1165,17 +1163,18 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ELSE.
           IF <ls_field_catalog>-style IS NOT INITIAL.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
-              me->set_cell( ip_column = lv_column_alpha
-                          ip_row    = lv_row_int
-                          ip_value  = <fs_fldval>
-                          ip_abap_type = <ls_field_catalog>-abap_type
-                          ip_currency = <fs_fldval_currency>
-                          ip_style  = <ls_field_catalog>-style
-                          ip_conv_exit_length = ip_conv_exit_length ).
+              me->set_cell( ip_column           = lv_column_alpha
+                            ip_row              = lv_row_int
+                            ip_value            = <fs_fldval>
+                            ip_abap_type        = <ls_field_catalog>-abap_type
+                            ip_currency         = <fs_fldval_currency>
+                            ip_style            = <ls_field_catalog>-style
+                            ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
                             ip_value  = <fs_fldval>
+                            ip_currency = <fs_fldval_currency>
                             ip_style  = <ls_field_catalog>-style
                             ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
@@ -1184,12 +1183,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               me->set_cell( ip_column = lv_column_alpha
                           ip_row    = lv_row_int
                           ip_abap_type = <ls_field_catalog>-abap_type
-                          ip_currency = <fs_fldval_currency>
+                          ip_currency  = <fs_fldval_currency>
                           ip_value  = <fs_fldval>
                           ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
+                            ip_currency = <fs_fldval_currency>
                             ip_value  = <fs_fldval>
                             ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
@@ -3916,24 +3916,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                cl_abap_typedescr=>typekind_decfloat OR
                cl_abap_typedescr=>typekind_decfloat16 OR
                cl_abap_typedescr=>typekind_decfloat34.
-            lo_addit = cl_abap_elemdescr=>get_f( ).
-            IF ip_currency IS INITIAL.
-
+            IF lv_value_type = cl_abap_typedescr=>typekind_packed
+                AND ip_currency IS NOT INITIAL.
+              lv_value = zcl_excel_common=>number_to_excel_string( ip_value    = <fs_value>
+                                                                   ip_currency = ip_currency ).
+            ELSE.
+              lo_addit = cl_abap_elemdescr=>get_f( ).
               CREATE DATA lo_value_new TYPE HANDLE lo_addit.
               ASSIGN lo_value_new->* TO <fs_numeric>.
               IF sy-subrc = 0.
                 <fs_numeric> = <fs_value>.
                 lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
-              ENDIF.
-            ELSE.
-              lo_addit = cl_abap_elemdescr=>get_p( p_length = 16
-                                       p_decimals = 2 ).
-              CREATE DATA lo_value_new TYPE HANDLE lo_addit.
-              ASSIGN lo_value_new->* TO <fs_amount>.
-              IF sy-subrc = 0.
-                <fs_amount> = <fs_value>.
-                lv_value = zcl_excel_common=>curr_amount_to_excel_string( ip_value = <fs_amount>
-                                                                          ip_currency = ip_currency ).
               ENDIF.
             ENDIF.
 
