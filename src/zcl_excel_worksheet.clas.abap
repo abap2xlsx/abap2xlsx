@@ -673,6 +673,7 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
         !iv_begin_row     TYPE int4 DEFAULT 2
+        !iv_end_row       TYPE int4 DEFAULT 0
       EXPORTING
         !et_data          TYPE STANDARD TABLE
         !er_data          TYPE REF TO data
@@ -2279,6 +2280,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> FROM lv_index.
       AT NEW cell_row.
+        IF iv_end_row <> 0
+        AND <ls_sheet_content>-cell_row > iv_end_row.
+          EXIT.
+        ENDIF.
         " New line
         APPEND INITIAL LINE TO <lt_data> ASSIGNING <ls_data>.
         lv_index = sy-tabix.
