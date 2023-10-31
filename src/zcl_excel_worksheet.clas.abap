@@ -1104,12 +1104,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
         ASSIGN COMPONENT <ls_field_catalog>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
 
-        IF <ls_field_catalog>-currency_column IS INITIAL OR ip_conv_curr_amt_ext = abap_false.
-          ASSIGN lc_no_currency TO <fs_fldval_currency>.
-        ELSE.
-          ASSIGN COMPONENT <ls_field_catalog>-currency_column OF STRUCTURE <fs_table_line> TO <fs_fldval_currency>.
-        ENDIF.
-
         " issue #290 Add formula support in table
         IF <ls_field_catalog>-formula EQ abap_true.
           IF <ls_field_catalog>-style IS NOT INITIAL.
@@ -1161,6 +1155,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                           ip_column_formula_id = ls_column_formula-id ).
           ENDIF.
         ELSE.
+          IF <ls_field_catalog>-currency_column IS INITIAL OR ip_conv_curr_amt_ext = abap_false.
+            ASSIGN lc_no_currency TO <fs_fldval_currency>.
+          ELSE.
+            ASSIGN COMPONENT <ls_field_catalog>-currency_column OF STRUCTURE <fs_table_line> TO <fs_fldval_currency>.
+          ENDIF.
+
           IF <ls_field_catalog>-style IS NOT INITIAL.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
               me->set_cell( ip_column           = lv_column_alpha
@@ -3822,7 +3822,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <fs_date>          TYPE d,
                    <fs_time>          TYPE t,
                    <fs_value>         TYPE simple,
-                   <fs_amount>        TYPE p,
                    <fs_typekind_int8> TYPE abap_typekind.
     FIELD-SYMBOLS: <fs_column_formula> TYPE mty_s_column_formula.
     FIELD-SYMBOLS: <ls_fieldcat>       TYPE zexcel_s_fieldcatalog.
