@@ -2859,6 +2859,21 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         ls_odd_footer-left_value = lo_ixml_hf_value_elem->get_value( ).
       ENDIF.
 
+      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name_ns( name = 'oddHeader' uri = namespace-main ).
+      IF lo_ixml_hf_value_elem IS NOT INITIAL.
+        ls_odd_header-left_value = lo_ixml_hf_value_elem->get_value( ).
+      ENDIF.
+
+      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name_ns( name = 'evenFooter' uri = namespace-main ).
+      IF lo_ixml_hf_value_elem IS NOT INITIAL.
+        ls_even_footer-left_value = lo_ixml_hf_value_elem->get_value( ).
+      ENDIF.
+
+      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name_ns( name = 'evenHeader' uri = namespace-main ).
+      IF lo_ixml_hf_value_elem IS NOT INITIAL.
+        ls_even_header-left_value = lo_ixml_hf_value_elem->get_value( ).
+      ENDIF.
+
 *        2do§1   Header/footer
       " TODO.. get the rest.
 
