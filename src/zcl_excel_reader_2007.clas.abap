@@ -3956,7 +3956,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     FIELD-SYMBOLS <ls_table> LIKE LINE OF it_tables.
     FIELD-SYMBOLS <lt_table> TYPE STANDARD TABLE.
-    FIELD-SYMBOLS <ls_field> type zexcel_s_fieldcatalog.
+    FIELD-SYMBOLS <ls_field> TYPE zexcel_s_fieldcatalog.
 
     LOOP AT it_tables ASSIGNING <ls_table>.
 
