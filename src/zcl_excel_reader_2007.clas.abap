@@ -3956,6 +3956,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     FIELD-SYMBOLS <ls_table> LIKE LINE OF it_tables.
     FIELD-SYMBOLS <lt_table> TYPE STANDARD TABLE.
+    FIELD-SYMBOLs <ls_field> type zexcel_s_fieldcatalog.
 
     LOOP AT it_tables ASSIGNING <ls_table>.
 
@@ -4011,12 +4012,13 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDWHILE.
 
       CLEAR lt_components.
-      LOOP AT lt_field_catalog ASSIGNING FIELD-SYMBOL(<field>).
+      LOOP AT lt_field_catalog ASSIGNING <ls_field>.
         CLEAR ls_component.
-        ls_component-name = <field>-fieldname.
+        ls_component-name = <ls_field>-fieldname.
         ls_component-type = cl_abap_elemdescr=>get_string( ).
         APPEND ls_component TO lt_components.
       ENDLOOP.
+
       lo_line_type = cl_abap_structdescr=>get( lt_components ).
       lo_rtti_table = cl_abap_tabledescr=>get( lo_line_type ).
       CREATE DATA lv_dref_table TYPE HANDLE lo_rtti_table.
