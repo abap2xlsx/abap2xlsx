@@ -2524,6 +2524,16 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
+    " Read tables (must be done before loading sheet contents)
+    TRY.
+        me->load_worksheet_tables( io_ixml_worksheet = lo_ixml_worksheet
+                                   io_worksheet      = io_worksheet
+                                   iv_dirname        = lv_dirname
+                                   it_tables         = lt_tables ).
+      CATCH zcx_excel. " Ignore reading errors - pass everything we were able to identify
+    ENDTRY.
+
+    " Sheet contents
     lo_ixml_rows = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'row' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_rows->create_iterator( ).
     lo_ixml_row_elem ?= lo_ixml_iterator->get_next( ).
@@ -3003,15 +3013,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                        io_worksheet           = io_worksheet
                                        it_external_hyperlinks = lt_external_hyperlinks ).
       CATCH zcx_excel. " Ignore Hyperlink reading errors - pass everything we were able to identify
-    ENDTRY.
-
-    " Read tables
-    TRY.
-        me->load_worksheet_tables( io_ixml_worksheet = lo_ixml_worksheet
-                                   io_worksheet      = io_worksheet
-                                   iv_dirname        = lv_dirname
-                                   it_tables         = lt_tables ).
-      CATCH zcx_excel. " Ignore reading errors - pass everything we were able to identify
     ENDTRY.
 
     TRY.
