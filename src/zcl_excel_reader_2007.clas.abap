@@ -4142,18 +4142,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     " To not interpret it, Excel replaces the first "_" with "_x005f_".
     result = i_value.
 
-    "Check if passed value is really an escaped Character
-*    IF i_value CS '_x'.
-*      DATA(char_to_inspect) = sy-fdpos + 6.
-*      TRY.
-*          IF substring( val = i_value off = char_to_inspect len = 1 ) <> '_'.
-*            RETURN. "No unescaping need, bc its not escaped either
-*          ENDIF.
-*        CATCH cx_sy_range_out_of_bounds.
-*          RETURN.
-*      ENDTRY.
-*    ENDIF.
-
     IF provided_string_is_escaped( i_value ).
       CLEAR lt_character_positions.
       APPEND sy-fdpos TO lt_character_positions.
