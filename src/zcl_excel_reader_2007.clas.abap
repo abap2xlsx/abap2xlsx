@@ -4285,7 +4285,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
   METHOD provided_string_is_escaped.
 
     "Check if passed value is really an escaped Character
-    IF !value CS '_x'.
+    IF value CS '_x'.
       is_escaped = abap_true.
        TRY.
           IF substring( val = value off = sy-fdpos + 6 len = 1 ) <> '_'.
