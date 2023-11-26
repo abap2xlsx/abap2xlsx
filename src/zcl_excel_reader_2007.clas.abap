@@ -4142,7 +4142,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     " To not interpret it, Excel replaces the first "_" with "_x005f_".
     result = i_value.
 
-    IF provided_string_is_escaped( i_value ).
+    IF provided_string_is_escaped( i_value ) = abap_true.
       CLEAR lt_character_positions.
       APPEND sy-fdpos TO lt_character_positions.
       lv_character_position = sy-fdpos + 1.
