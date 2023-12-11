@@ -30,9 +30,15 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     METHODS: setup.
     METHODS: teardown.
     METHODS: set_merge FOR TESTING RAISING cx_static_check.
-    METHODS: delete_merge FOR TESTING RAISING cx_static_check.
-    METHODS: get_dimension_range FOR TESTING RAISING cx_static_check.
-ENDCLASS.       "lcl_Excel_Worksheet_Test
+    METHODS delete_merge1 FOR TESTING RAISING cx_static_check.
+    METHODS delete_merge2 FOR TESTING RAISING cx_static_check.
+    METHODS delete_merge3 FOR TESTING RAISING cx_static_check.
+    METHODS delete_merge4 FOR TESTING RAISING cx_static_check.
+    METHODS delete_merge5 FOR TESTING RAISING cx_static_check.
+    METHODS delete_merge6 FOR TESTING RAISING cx_static_check.
+    METHODS get_dimension_range FOR TESTING RAISING cx_static_check.
+    METHODS get_rows_iterator FOR TESTING RAISING cx_static_check.
+ENDCLASS.
 
 
 CLASS ltc_calculate_table_bottom_rig DEFINITION FOR TESTING
@@ -465,12 +471,11 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD delete_merge.
+  METHOD delete_merge1.
 * ====================
     DATA lt_merge TYPE string_table.
     DATA lv_merge TYPE string.
     DATA lv_size TYPE i.
-    DATA lv_index TYPE i.
 
 *  Test 1. Simple test delete all merges
 
@@ -491,6 +496,13 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       msg   = 'Expect merge table with 1 line fully cleared'
       level = if_aunit_constants=>critical
     ).
+  ENDMETHOD.
+
+  METHOD delete_merge2.
+* ====================
+    DATA lt_merge TYPE string_table.
+    DATA lv_merge TYPE string.
+    DATA lv_size TYPE i.
 
 *  Test 2. Simple test delete all merges
 
@@ -513,7 +525,14 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       msg   = 'Expect merge table with few lines fully cleared'
       level = if_aunit_constants=>critical
     ).
+  ENDMETHOD.
 
+  METHOD delete_merge3.
+* ====================
+    DATA lt_merge TYPE string_table.
+    DATA lv_merge TYPE string.
+    DATA lv_size TYPE i.
+    DATA lv_index TYPE i.
 *  Test 3. Delete concrete merge with success
 
     DO 4 TIMES.
@@ -529,10 +548,14 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       ).
 
       CASE lv_index.
-        WHEN 1. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 2 ).
-        WHEN 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 3 ).
-        WHEN 3. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 2 ).
-        WHEN 4. f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 3 ).
+        WHEN 1.
+          f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 2 ).
+        WHEN 2.
+          f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 3 ).
+        WHEN 3.
+          f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 2 ).
+        WHEN 4.
+          f_cut->delete_merge( ip_cell_column = 3 ip_cell_row = 3 ).
       ENDCASE.
 
       lt_merge = f_cut->get_merge( ).
@@ -545,7 +568,14 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
         level = if_aunit_constants=>critical
       ).
     ENDDO.
+  ENDMETHOD.
 
+  METHOD delete_merge4.
+* ====================
+    DATA lt_merge TYPE string_table.
+    DATA lv_merge TYPE string.
+    DATA lv_size TYPE i.
+    DATA lv_index TYPE i.
 *  Test 4. Delete concrete merge with fail
 
     DO 4 TIMES.
@@ -561,10 +591,14 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       ).
 
       CASE lv_index.
-        WHEN 1. f_cut->delete_merge( ip_cell_column = 1 ip_cell_row = 2 ).
-        WHEN 2. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 1 ).
-        WHEN 3. f_cut->delete_merge( ip_cell_column = 4 ip_cell_row = 2 ).
-        WHEN 4. f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 4 ).
+        WHEN 1.
+          f_cut->delete_merge( ip_cell_column = 1 ip_cell_row = 2 ).
+        WHEN 2.
+          f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 1 ).
+        WHEN 3.
+          f_cut->delete_merge( ip_cell_column = 4 ip_cell_row = 2 ).
+        WHEN 4.
+          f_cut->delete_merge( ip_cell_column = 2 ip_cell_row = 4 ).
       ENDCASE.
 
       lt_merge = f_cut->get_merge( ).
@@ -577,6 +611,13 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
         level = if_aunit_constants=>critical
       ).
     ENDDO.
+  ENDMETHOD.
+
+  METHOD delete_merge5.
+* ====================
+    DATA lt_merge TYPE string_table.
+    DATA lv_merge TYPE string.
+    DATA lv_size TYPE i.
 
 *  Test 5. Delete concrete merge #1
 
@@ -614,6 +655,13 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       msg   = 'Expect delete B2:C3 merge'
       level = if_aunit_constants=>critical
     ).
+  ENDMETHOD.
+
+  METHOD delete_merge6.
+* ====================
+    DATA lt_merge TYPE string_table.
+    DATA lv_merge TYPE string.
+    DATA lv_size TYPE i.
 
 *  Test 6. Delete concrete merge #2
 
@@ -680,6 +728,18 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
       msg   = 'get_dimension_range'
       level = if_aunit_constants=>critical
     ).
+  ENDMETHOD.
+
+  METHOD get_rows_iterator.
+    DATA lo_iterator TYPE REF TO zcl_excel_collection_iterator.
+    DATA lv_index    TYPE i.
+
+    f_cut->set_cell( ip_column = 'B' ip_row = 2 ip_value = 'Hello world' ).
+    lo_iterator = f_cut->get_rows_iterator( ).
+    lv_index = lo_iterator->get_index( ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lv_index
+      exp = 0 ).
   ENDMETHOD.
 
 ENDCLASS.       "lcl_Excel_Worksheet_Test

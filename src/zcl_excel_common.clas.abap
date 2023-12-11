@@ -48,7 +48,7 @@ CLASS zcl_excel_common DEFINITION
         zcx_excel.
     CLASS-METHODS convert_columnrow2column_a_row
       IMPORTING
-        !i_columnrow TYPE clike
+        !i_columnrow  TYPE clike
       EXPORTING
         !e_column     TYPE zexcel_cell_column_alpha
         !e_column_int TYPE zexcel_cell_column
@@ -77,7 +77,7 @@ CLASS zcl_excel_common DEFINITION
         !e_row       TYPE zexcel_cell_row .
     CLASS-METHODS clone_ixml_with_namespaces
       IMPORTING
-        element TYPE REF TO if_ixml_element
+        element       TYPE REF TO if_ixml_element
       RETURNING
         VALUE(result) TYPE REF TO if_ixml_element.
     CLASS-METHODS date_to_excel_string
@@ -133,6 +133,7 @@ CLASS zcl_excel_common DEFINITION
     CLASS-METHODS number_to_excel_string
       IMPORTING
         VALUE(ip_value) TYPE numeric
+        ip_currency     TYPE waers_curc OPTIONAL
       RETURNING
         VALUE(ep_value) TYPE zexcel_cell_value .
     CLASS-METHODS recursive_class_to_struct
@@ -498,8 +499,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
 
   METHOD convert_column_a_row2columnrow.
-    DATA: lv_row_alpha     TYPE string,
-          lv_column_alpha  TYPE zexcel_cell_column_alpha.
+    DATA: lv_row_alpha    TYPE string,
+          lv_column_alpha TYPE zexcel_cell_column_alpha.
 
     lv_row_alpha = i_row.
     lv_column_alpha = zcl_excel_common=>convert_column2alpha( i_column ).
@@ -846,7 +847,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     lv_value = ip_value.
 
 
-    FIND REGEX `\s|'` IN lv_value.  " \s finds regular and white spaces
+    FIND REGEX `\s|'|-` IN lv_value.  " \s finds regular and white spaces
     IF sy-subrc = 0.
       REPLACE ALL OCCURRENCES OF `'` IN lv_value WITH `''`.
       CONCATENATE `'` lv_value `'` INTO lv_value .
@@ -944,6 +945,15 @@ CLASS zcl_excel_common IMPLEMENTATION.
       <fcat>-scrtext_s = ls_salv_t_column_ref-r_column->get_short_text( ).
       <fcat>-scrtext_m = ls_salv_t_column_ref-r_column->get_medium_text( ).
       <fcat>-scrtext_l = ls_salv_t_column_ref-r_column->get_long_text( ).
+      <fcat>-currency_column = ls_salv_t_column_ref-r_column->get_currency_column( ).
+      " If currency column not in structure then clear the field again
+      IF <fcat>-currency_column IS NOT INITIAL.
+        READ TABLE lt_salv_t_column_ref WITH KEY columnname = <fcat>-currency_column TRANSPORTING NO FIELDS.
+        IF sy-subrc <> 0.
+          CLEAR <fcat>-currency_column.
+        ENDIF.
+      ENDIF.
+
       IF ip_conv_exit_length = abap_false.
         <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
       ENDIF.
@@ -1007,7 +1017,11 @@ CLASS zcl_excel_common IMPLEMENTATION.
   METHOD number_to_excel_string.
     DATA: lv_value_c TYPE c LENGTH 100.
 
-    WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
+    IF ip_currency IS INITIAL.
+      WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
+    ELSE.
+      WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN CURRENCY ip_currency.
+    ENDIF.
     REPLACE ALL OCCURRENCES OF ',' IN lv_value_c WITH '.'.
 
     ep_value = lv_value_c.
@@ -1691,4 +1705,5 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
 
   ENDMETHOD.
+
 ENDCLASS.

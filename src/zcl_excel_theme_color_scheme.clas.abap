@@ -100,7 +100,7 @@ CLASS zcl_excel_theme_color_scheme IMPLEMENTATION.
                                                                parent = lo_elements ).
       lo_scheme_element->set_attribute( name = c_name value = name ).
 
-      "! Adding colors to scheme
+      " Adding colors to scheme
       lo_color ?= io_document->create_simple_element_ns( prefix = zcl_excel_theme=>c_theme_prefix
                                                                   name   = c_dark1
                                                       parent = lo_scheme_element ).
