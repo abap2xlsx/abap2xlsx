@@ -3978,8 +3978,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
       ls_table_settings-table_name = ls_table-name.
       ls_table_settings-table_style = ls_table_style-name.
-      ls_table_settings-show_column_stripes = xsdbool( ls_table_style-showcolumnstripes = '1' ).
-      ls_table_settings-show_row_stripes = xsdbool( ls_table_style-showrowstripes = '1' ).
+      ls_table_settings-show_column_stripes = boolc( ls_table_style-showcolumnstripes = '1' ).
+      ls_table_settings-show_row_stripes = boolc( ls_table_style-showrowstripes = '1' ).
 
       zcl_excel_common=>convert_range2column_a_row(
         EXPORTING
