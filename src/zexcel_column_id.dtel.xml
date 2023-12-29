@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZEXCEL_COLUMN_ID</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <HEADLEN>30</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>ALV control: Column ID</DDTEXT>
+    <REPTEXT>Column ID</REPTEXT>
+    <SCRTEXT_S>Column ID</SCRTEXT_S>
+    <SCRTEXT_M>Column ID</SCRTEXT_M>
+    <SCRTEXT_L>Column ID</SCRTEXT_L>
+    <DTELMASTER>D</DTELMASTER>
+    <DATATYPE>INT4</DATATYPE>
+    <LENG>000010</LENG>
+    <OUTPUTLEN>000011</OUTPUTLEN>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>1</LANGU>
+    <LANGU>2</LANGU>
+    <LANGU>3</LANGU>
+    <LANGU>4</LANGU>
+    <LANGU>5</LANGU>
+    <LANGU>6</LANGU>
+    <LANGU>7</LANGU>
+    <LANGU>8</LANGU>
+    <LANGU>A</LANGU>
+    <LANGU>B</LANGU>
+    <LANGU>C</LANGU>
+    <LANGU>D</LANGU>
+    <LANGU>F</LANGU>
+    <LANGU>G</LANGU>
+    <LANGU>H</LANGU>
+    <LANGU>I</LANGU>
+    <LANGU>J</LANGU>
+    <LANGU>K</LANGU>
+    <LANGU>L</LANGU>
+    <LANGU>M</LANGU>
+    <LANGU>N</LANGU>
+    <LANGU>O</LANGU>
+    <LANGU>P</LANGU>
+    <LANGU>Q</LANGU>
+    <LANGU>R</LANGU>
+    <LANGU>S</LANGU>
+    <LANGU>T</LANGU>
+    <LANGU>U</LANGU>
+    <LANGU>V</LANGU>
+    <LANGU>W</LANGU>
+    <LANGU>d</LANGU>
+    <LANGU>뱋</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>1</DDLANGUAGE>
+     <DDTEXT>ALV 控制: 列 ID</DDTEXT>
+     <REPTEXT>列 ID</REPTEXT>
+     <SCRTEXT_S>列 ID</SCRTEXT_S>
+     <SCRTEXT_M>列 ID</SCRTEXT_M>
+     <SCRTEXT_L>列 ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>2</DDLANGUAGE>
+     <DDTEXT>การควบคุม ALV: คอลัมน์ ID</DDTEXT>
+     <REPTEXT>ID คอลัมน์</REPTEXT>
+     <SCRTEXT_S>ID คอลัมน์</SCRTEXT_S>
+     <SCRTEXT_M>ID คอลัมน์</SCRTEXT_M>
+     <SCRTEXT_L>ID คอลัมน์</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>3</DDLANGUAGE>
+     <DDTEXT>ALV 제어: 열 ID</DDTEXT>
+     <REPTEXT>열 ID</REPTEXT>
+     <SCRTEXT_S>열 ID</SCRTEXT_S>
+     <SCRTEXT_M>열 ID</SCRTEXT_M>
+     <SCRTEXT_L>열 ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>4</DDLANGUAGE>
+     <DDTEXT>Control ALV: ID coloană</DDTEXT>
+     <REPTEXT>ID coloană</REPTEXT>
+     <SCRTEXT_S>ID coloană</SCRTEXT_S>
+     <SCRTEXT_M>ID coloană</SCRTEXT_M>
+     <SCRTEXT_L>ID coloană</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>5</DDLANGUAGE>
+     <DDTEXT>ALV-Control: ID stolpca</DDTEXT>
+     <REPTEXT>ID stolpca</REPTEXT>
+     <SCRTEXT_S>ID stolpca</SCRTEXT_S>
+     <SCRTEXT_M>ID stolpca</SCRTEXT_M>
+     <SCRTEXT_L>ID stolpca</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>6</DDLANGUAGE>
+     <DDTEXT>ALV kontrola: ID stupca</DDTEXT>
+     <REPTEXT>ID stupca</REPTEXT>
+     <SCRTEXT_S>ID stupca</SCRTEXT_S>
+     <SCRTEXT_M>ID stupca</SCRTEXT_M>
+     <SCRTEXT_L>ID stupca</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>7</DDLANGUAGE>
+     <DDTEXT>Kawalan ALV: ID Lajur</DDTEXT>
+     <REPTEXT>ID Lajur</REPTEXT>
+     <SCRTEXT_S>ID Lajur</SCRTEXT_S>
+     <SCRTEXT_M>ID Lajur</SCRTEXT_M>
+     <SCRTEXT_L>ID Lajur</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DDTEXT>ALV control: ІД стовпчика</DDTEXT>
+     <REPTEXT>ІД стовпчика</REPTEXT>
+     <SCRTEXT_S>ІДстовпч.</SCRTEXT_S>
+     <SCRTEXT_M>ІД стовпчика</SCRTEXT_M>
+     <SCRTEXT_L>ІД стовпчика</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>A</DDLANGUAGE>
+     <DDTEXT>تحكم ALV: معرّف عمود</DDTEXT>
+     <REPTEXT>معرف العمود</REPTEXT>
+     <SCRTEXT_S>معرف عمود</SCRTEXT_S>
+     <SCRTEXT_M>معرف العمود</SCRTEXT_M>
+     <SCRTEXT_L>معرف العمود</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>B</DDLANGUAGE>
+     <DDTEXT>בקרת ALV: זהוי עמודה</DDTEXT>
+     <REPTEXT>זיהוי עמודה</REPTEXT>
+     <SCRTEXT_S>זיה.עמודה</SCRTEXT_S>
+     <SCRTEXT_M>זיהוי עמודה</SCRTEXT_M>
+     <SCRTEXT_L>זיהוי עמודה</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>C</DDLANGUAGE>
+     <DDTEXT>ALV-Control: ID sloupce</DDTEXT>
+     <REPTEXT>ID sloupce</REPTEXT>
+     <SCRTEXT_S>ID sloupce</SCRTEXT_S>
+     <SCRTEXT_M>ID sloupce</SCRTEXT_M>
+     <SCRTEXT_L>ID sloupce</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>ALV-Control: SpaltenID</DDTEXT>
+     <REPTEXT>Spalten-ID</REPTEXT>
+     <SCRTEXT_S>Spalten-ID</SCRTEXT_S>
+     <SCRTEXT_M>Spalten-ID</SCRTEXT_M>
+     <SCRTEXT_L>Spalten-ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>F</DDLANGUAGE>
+     <DDTEXT>ALV-Control : ID de colonne</DDTEXT>
+     <REPTEXT>ID de colonne</REPTEXT>
+     <SCRTEXT_S>ID colonne</SCRTEXT_S>
+     <SCRTEXT_M>ID de colonne</SCRTEXT_M>
+     <SCRTEXT_L>ID de colonne</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>G</DDLANGUAGE>
+     <DDTEXT>Ελεγχος ALV: ID Στήλης</DDTEXT>
+     <REPTEXT>ID Στήλης</REPTEXT>
+     <SCRTEXT_S>ID Στήλης</SCRTEXT_S>
+     <SCRTEXT_M>ID Στήλης</SCRTEXT_M>
+     <SCRTEXT_L>ID Στήλης</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>H</DDLANGUAGE>
+     <DDTEXT>ALV-control: oszlop-ID</DDTEXT>
+     <REPTEXT>Oszlop-ID</REPTEXT>
+     <SCRTEXT_S>Oszlop-ID</SCRTEXT_S>
+     <SCRTEXT_M>Oszlop-ID</SCRTEXT_M>
+     <SCRTEXT_L>Oszlop-ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>ALV Control: ID colonna</DDTEXT>
+     <REPTEXT>ID colonna</REPTEXT>
+     <SCRTEXT_S>ID colonna</SCRTEXT_S>
+     <SCRTEXT_M>ID colonna</SCRTEXT_M>
+     <SCRTEXT_L>ID colonna</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>J</DDLANGUAGE>
+     <DDTEXT>ALV コントロール: 列 ID</DDTEXT>
+     <REPTEXT>列 ID</REPTEXT>
+     <SCRTEXT_S>列 ID</SCRTEXT_S>
+     <SCRTEXT_M>列 ID</SCRTEXT_M>
+     <SCRTEXT_L>列 ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>K</DDLANGUAGE>
+     <DDTEXT>ALV control: Kolonne-ID</DDTEXT>
+     <REPTEXT>Kolonne-ID</REPTEXT>
+     <SCRTEXT_S>Kolonne-ID</SCRTEXT_S>
+     <SCRTEXT_M>Kolonne-ID</SCRTEXT_M>
+     <SCRTEXT_L>Kolonne-ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>L</DDLANGUAGE>
+     <DDTEXT>Obiekt ALV: ID kolumny</DDTEXT>
+     <REPTEXT>ID kolumny</REPTEXT>
+     <SCRTEXT_S>ID kolumny</SCRTEXT_S>
+     <SCRTEXT_M>ID kolumny</SCRTEXT_M>
+     <SCRTEXT_L>ID kolumny</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>M</DDLANGUAGE>
+     <DDTEXT>ALV 控制：欄 ID</DDTEXT>
+     <REPTEXT>欄 ID</REPTEXT>
+     <SCRTEXT_S>欄 ID</SCRTEXT_S>
+     <SCRTEXT_M>欄 ID</SCRTEXT_M>
+     <SCRTEXT_L>欄 ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>N</DDLANGUAGE>
+     <DDTEXT>ALV control: kolom-ID</DDTEXT>
+     <REPTEXT>Kolom-ID</REPTEXT>
+     <SCRTEXT_S>Kolom-ID</SCRTEXT_S>
+     <SCRTEXT_M>Kolom-ID</SCRTEXT_M>
+     <SCRTEXT_L>Kolom-ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>O</DDLANGUAGE>
+     <DDTEXT>ALV control: Kolonne-ID</DDTEXT>
+     <REPTEXT>Kolonne-ID</REPTEXT>
+     <SCRTEXT_S>Kolonne-ID</SCRTEXT_S>
+     <SCRTEXT_M>Kolonne-ID</SCRTEXT_M>
+     <SCRTEXT_L>Kolonne-ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Controle VLA: ID colunas</DDTEXT>
+     <REPTEXT>ID colunas</REPTEXT>
+     <SCRTEXT_S>ID colunas</SCRTEXT_S>
+     <SCRTEXT_M>ID colunas</SCRTEXT_M>
+     <SCRTEXT_L>ID colunas</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>Q</DDLANGUAGE>
+     <DDTEXT>ALV-Control: ID stĺpcov</DDTEXT>
+     <REPTEXT>ID stĺpca</REPTEXT>
+     <SCRTEXT_S>ID stĺpca</SCRTEXT_S>
+     <SCRTEXT_M>ID stĺpca</SCRTEXT_M>
+     <SCRTEXT_L>ID stĺpca</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>R</DDLANGUAGE>
+     <DDTEXT>ALV-Control: ид. столбца</DDTEXT>
+     <REPTEXT>Ид. столбца</REPTEXT>
+     <SCRTEXT_S>ИдСтолбца</SCRTEXT_S>
+     <SCRTEXT_M>Ид. столбца</SCRTEXT_M>
+     <SCRTEXT_L>Ид. столбца</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>S</DDLANGUAGE>
+     <DDTEXT>ALV-Control: ID col.</DDTEXT>
+     <REPTEXT>ID columna</REPTEXT>
+     <SCRTEXT_S>ID columna</SCRTEXT_S>
+     <SCRTEXT_M>ID columna</SCRTEXT_M>
+     <SCRTEXT_L>ID columna</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>T</DDLANGUAGE>
+     <DDTEXT>ALV kontrolü: Sütun tanıtıcısı</DDTEXT>
+     <REPTEXT>Sütün tn.</REPTEXT>
+     <SCRTEXT_S>Sütün tn.</SCRTEXT_S>
+     <SCRTEXT_M>Sütün tn.</SCRTEXT_M>
+     <SCRTEXT_L>Sütün tn.</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>U</DDLANGUAGE>
+     <DDTEXT>ALV-ohjausobjekti: saraketunnus</DDTEXT>
+     <REPTEXT>Saraketunnus</REPTEXT>
+     <SCRTEXT_S>Sar.tunnus</SCRTEXT_S>
+     <SCRTEXT_M>Saraketunnus</SCRTEXT_M>
+     <SCRTEXT_L>Saraketunnus</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>V</DDLANGUAGE>
+     <DDTEXT>ALV-Control: Kolumn-ID</DDTEXT>
+     <REPTEXT>Kolumn-ID</REPTEXT>
+     <SCRTEXT_S>Kolumn-ID</SCRTEXT_S>
+     <SCRTEXT_M>Kolumn-ID</SCRTEXT_M>
+     <SCRTEXT_L>Kolumn-ID</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>W</DDLANGUAGE>
+     <DDTEXT>ALV контрол: ИН на колона</DDTEXT>
+     <REPTEXT>ИН колона</REPTEXT>
+     <SCRTEXT_S>ИН колона</SCRTEXT_S>
+     <SCRTEXT_M>ИН колона</SCRTEXT_M>
+     <SCRTEXT_L>ИН колона</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>d</DDLANGUAGE>
+     <DDTEXT>ALV kontrola: ID kolone</DDTEXT>
+     <REPTEXT>ID kolone</REPTEXT>
+     <SCRTEXT_S>ID kolone</SCRTEXT_S>
+     <SCRTEXT_M>ID kolone</SCRTEXT_M>
+     <SCRTEXT_L>ID kolone</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>뱋</DDLANGUAGE>
+     <DDTEXT>ALV control: баған идентификаторы</DDTEXT>
+     <REPTEXT>Баған идентификаторы</REPTEXT>
+     <SCRTEXT_S>Баған ид.</SCRTEXT_S>
+     <SCRTEXT_M>Баған ид.</SCRTEXT_M>
+     <SCRTEXT_L>Баған идентификаторы</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

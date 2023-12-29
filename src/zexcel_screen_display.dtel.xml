@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZEXCEL_SCREEN_DISPLAY</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>ZEXCEL_DDIC_FLAG</DOMNAME>
+    <HEADLEN>02</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Flag: Field is displayed on dynpro</DDTEXT>
+    <REPTEXT>SF</REPTEXT>
+    <SCRTEXT_S>Dynpro</SCRTEXT_S>
+    <SCRTEXT_M>Screen field</SCRTEXT_M>
+    <SCRTEXT_L>Screen field</SCRTEXT_L>
+    <APPLCLASS>SDIC</APPLCLASS>
+    <DTELMASTER>D</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>1</LANGU>
+    <LANGU>C</LANGU>
+    <LANGU>D</LANGU>
+    <LANGU>F</LANGU>
+    <LANGU>H</LANGU>
+    <LANGU>I</LANGU>
+    <LANGU>J</LANGU>
+    <LANGU>L</LANGU>
+    <LANGU>N</LANGU>
+    <LANGU>P</LANGU>
+    <LANGU>Q</LANGU>
+    <LANGU>R</LANGU>
+    <LANGU>S</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>1</DDLANGUAGE>
+     <DDTEXT>标志：在 dynpro 上显示字段</DDTEXT>
+     <REPTEXT>SF</REPTEXT>
+     <SCRTEXT_S>Dynpro</SCRTEXT_S>
+     <SCRTEXT_M>屏幕字段</SCRTEXT_M>
+     <SCRTEXT_L>屏幕字段</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>C</DDLANGUAGE>
+     <DDTEXT>Příznak: Jedná se o pole, které se má zobrazit na dynpru</DDTEXT>
+     <REPTEXT>PD</REPTEXT>
+     <SCRTEXT_S>Pole dynp.</SCRTEXT_S>
+     <SCRTEXT_M>Pole dynpra</SCRTEXT_M>
+     <SCRTEXT_L>Pole dynpra</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Flag: handelt es sich um auf Dynpro darzustellendes Feld</DDTEXT>
+     <REPTEXT>DF</REPTEXT>
+     <SCRTEXT_S>Dynprofeld</SCRTEXT_S>
+     <SCRTEXT_M>Dynprofeld</SCRTEXT_M>
+     <SCRTEXT_L>Dynprofeld</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>F</DDLANGUAGE>
+     <DDTEXT>Témoin : zone à représenter dans dynpro</DDTEXT>
+     <REPTEXT>ZD</REPTEXT>
+     <SCRTEXT_S>Z. dynpro</SCRTEXT_S>
+     <SCRTEXT_M>Zone dynpro</SCRTEXT_M>
+     <SCRTEXT_L>Zone dynpro</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>H</DDLANGUAGE>
+     <DDTEXT>Flag: a dynprón megjelenítendő mezőről van-e szó</DDTEXT>
+     <REPTEXT>DM</REPTEXT>
+     <SCRTEXT_S>Dynpromező</SCRTEXT_S>
+     <SCRTEXT_M>Dynpromező</SCRTEXT_M>
+     <SCRTEXT_L>Dynpromező</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Flag: campo visualizzabile su dypro</DDTEXT>
+     <REPTEXT>CD</REPTEXT>
+     <SCRTEXT_S>Cmp.dynpro</SCRTEXT_S>
+     <SCRTEXT_M>Campo dynpro</SCRTEXT_M>
+     <SCRTEXT_L>Campo dynpro</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>J</DDLANGUAGE>
+     <DDTEXT>フラグ: 項目は Dynpro で表示</DDTEXT>
+     <REPTEXT>SF</REPTEXT>
+     <SCRTEXT_S>Dynpro</SCRTEXT_S>
+     <SCRTEXT_M>Dynpro 項目</SCRTEXT_M>
+     <SCRTEXT_L>Dynpro 項目</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>L</DDLANGUAGE>
+     <DDTEXT>Chodzi o pole do wyświetlenia na ekranie</DDTEXT>
+     <REPTEXT>PE</REPTEXT>
+     <SCRTEXT_S>Pole ekr.</SCRTEXT_S>
+     <SCRTEXT_M>Pole ekranu</SCRTEXT_M>
+     <SCRTEXT_L>Pole ekranu</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>N</DDLANGUAGE>
+     <DDTEXT>Teken: is dit een op scherm weer te geven veld</DDTEXT>
+     <REPTEXT>DV</REPTEXT>
+     <SCRTEXT_S>Schermveld</SCRTEXT_S>
+     <SCRTEXT_M>Schermveld</SCRTEXT_M>
+     <SCRTEXT_L>Schermveld</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Flag: campo para exibir na tela</DDTEXT>
+     <REPTEXT>CT</REPTEXT>
+     <SCRTEXT_S>Área tela</SCRTEXT_S>
+     <SCRTEXT_M>Área de tela</SCRTEXT_M>
+     <SCRTEXT_L>Área de tela</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>Q</DDLANGUAGE>
+     <DDTEXT>Znak: Jedná sa o pole, ktoré sa má zobraziť na dynpro</DDTEXT>
+     <REPTEXT>PD</REPTEXT>
+     <SCRTEXT_S>Pole dynp.</SCRTEXT_S>
+     <SCRTEXT_M>Pole dynpro</SCRTEXT_M>
+     <SCRTEXT_L>Pole dynpro</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>R</DDLANGUAGE>
+     <DDTEXT>Флаг: представляемое на экране поле</DDTEXT>
+     <REPTEXT>ПЭ</REPTEXT>
+     <SCRTEXT_S>ПолеЭкрана</SCRTEXT_S>
+     <SCRTEXT_M>Поле экрана</SCRTEXT_M>
+     <SCRTEXT_L>Поле экрана</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>S</DDLANGUAGE>
+     <DDTEXT>Indicador: Se trata de campo a representar en dynpro</DDTEXT>
+     <REPTEXT>CD</REPTEXT>
+     <SCRTEXT_S>Cpo.dynpro</SCRTEXT_S>
+     <SCRTEXT_M>Campo dynpro</SCRTEXT_M>
+     <SCRTEXT_L>Campo dynpro</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
