@@ -15,6 +15,7 @@ CLASS ltc_unescape_string_value DEFINITION
     METHODS no_escaping FOR TESTING.
     METHODS one_escaped_character FOR TESTING.
     METHODS two_escaped_characters FOR TESTING.
+    METHODS skip_when_not_escaped FOR TESTING RAISING cx_static_check.
 
     METHODS run_cut
       IMPORTING
@@ -50,6 +51,20 @@ CLASS ltc_unescape_string_value IMPLEMENTATION.
 
   METHOD two_escaped_characters.
     run_cut( input = '_x0000_ and _xFFFF_' exp = |{ cl_abap_conv_in_ce=>uccp( '0000' ) } and { cl_abap_conv_in_ce=>uccp( 'FFFF' ) }| ).
+  ENDMETHOD.
+
+  METHOD skip_when_not_escaped.
+    DATA: lo_excel TYPE REF TO zcl_excel_reader_2007,
+          value TYPE string VALUE 'TEST_X'.
+
+    CREATE OBJECT lo_excel.
+
+    "Method is used to check for "_x", but its not an escaped charcater, output should input.
+    lo_excel->unescape_string_value( i_value = value ).
+
+    cl_abap_unit_assert=>assert_equals(
+    exp = value
+    act = value ).
   ENDMETHOD.
 
 ENDCLASS.
