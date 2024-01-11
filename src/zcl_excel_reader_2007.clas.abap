@@ -306,7 +306,12 @@ CLASS zcl_excel_reader_2007 DEFINITION
         iv_path   TYPE string
         !ip_excel TYPE REF TO zcl_excel
       RAISING
-        zcx_excel .
+        zcx_excel.
+    METHODS provided_string_is_escaped
+      IMPORTING
+        !value            TYPE string
+      RETURNING
+        VALUE(is_escaped) TYPE abap_bool.
 
     CONSTANTS: BEGIN OF namespace,
                  x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
@@ -4280,17 +4285,21 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
   METHOD unescape_string_value.
 
-    DATA: lt_character_positions       TYPE TABLE OF i,
-          lv_character_position        TYPE i,
-          lv_character_position_plus_2 TYPE i,
-          lv_character_position_plus_6 TYPE i,
-          lv_unescaped_value           TYPE string.
+    DATA:
+      "Marks the Position before the searched Pattern occurs in the String
+      "For example in String A_X_TEST_X, the Table is filled with 1 and 8
+      lt_character_positions       TYPE TABLE OF i,
+      lv_character_position        TYPE i,
+      lv_character_position_plus_2 TYPE i,
+      lv_character_position_plus_6 TYPE i,
+      lv_unescaped_value           TYPE string.
 
-    " The text "_x...._", with "_x" not "_X", with exactly 4 ".", each being 0-9 a-f or A-F (case insensitive), is interpreted
-    " like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.
+    " The text "_x...._", with "_x" not "_X". Each "." represents one character, being 0-9 a-f or A-F (case insensitive),
+    " is interpreted like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.
     " To not interpret it, Excel replaces the first "_" with "_x005f_".
     result = i_value.
-    IF result CS '_x'.
+
+    IF provided_string_is_escaped( i_value ) = abap_true.
       CLEAR lt_character_positions.
       APPEND sy-fdpos TO lt_character_positions.
       lv_character_position = sy-fdpos + 1.
@@ -4303,10 +4312,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       LOOP AT lt_character_positions INTO lv_character_position.
         lv_character_position_plus_2 = lv_character_position + 2.
         lv_character_position_plus_6 = lv_character_position + 6.
-        IF substring( val = result off = lv_character_position_plus_2 len = 4 ) CO '0123456789ABCDEFGHIJKLMNOPQRSTUVWabcdefghijklmnopqrstuvw'
-          AND substring( val = result off = lv_character_position_plus_6 len = 1 ) = '_'.
-          lv_unescaped_value = cl_abap_conv_in_ce=>uccp( to_upper( substring( val = result off = lv_character_position_plus_2 len = 4 ) ) ).
-          REPLACE SECTION OFFSET lv_character_position LENGTH 7 OF result WITH lv_unescaped_value.
+        IF substring( val = result off = lv_character_position_plus_2 len = 4 ) CO '0123456789ABCDEFabcdef'.
+          IF substring( val = result off = lv_character_position_plus_6 len = 1 ) = '_'.
+            lv_unescaped_value = cl_abap_conv_in_ce=>uccp( to_upper( substring( val = result off = lv_character_position_plus_2 len = 4 ) ) ).
+            REPLACE SECTION OFFSET lv_character_position LENGTH 7 OF result WITH lv_unescaped_value.
+          ENDIF.
         ENDIF.
       ENDLOOP.
     ENDIF.
@@ -4429,4 +4439,19 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                      iv_zcl_excel_classname = iv_zcl_excel_classname ).
 
   ENDMETHOD.
+  METHOD provided_string_is_escaped.
+
+    "Check if passed value is really an escaped Character
+    IF value CS '_x'.
+      is_escaped = abap_true.
+       TRY.
+          IF substring( val = value off = sy-fdpos + 6 len = 1 ) <> '_'.
+            is_escaped = abap_false.
+          ENDIF.
+        CATCH cx_sy_range_out_of_bounds.
+          is_escaped = abap_false.
+      ENDTRY.
+    ENDIF.
+  ENDMETHOD.
+
 ENDCLASS.
