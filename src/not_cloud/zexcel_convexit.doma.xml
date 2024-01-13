@@ -11,16 +11,7 @@
     <DDTEXT>Conversion routine</DDTEXT>
     <APPLCLASS>SDIC</APPLCLASS>
     <AUTHCLASS>01</AUTHCLASS>
-   </DD01V>
-   <I18N_LANGS>
-    <LANGU>D</LANGU>
-   </I18N_LANGS>
-   <DD01_TEXTS>
-    <item>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DDTEXT>Konvertierungsroutine</DDTEXT>
-    </item>
-   </DD01_TEXTS>
+   </DD01V>   
   </asx:values>
  </asx:abap>
 </abapGit>
