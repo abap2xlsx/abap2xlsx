@@ -32,20 +32,17 @@
    <DD01_TEXTS>
     <item>
      <DDLANGUAGE>D</DDLANGUAGE>
-     <DDTEXT>Flag ( X oder Blank)</DDTEXT>
     </item>
    </DD01_TEXTS>
    <DD07_TEXTS>
     <item>
      <VALPOS>0001</VALPOS>
      <DDLANGUAGE>D</DDLANGUAGE>
-     <DDTEXT>Flag nicht setzen</DDTEXT>
     </item>
     <item>
      <VALPOS>0002</VALPOS>
      <DDLANGUAGE>D</DDLANGUAGE>
      <DOMVALUE_L>X</DOMVALUE_L>
-     <DDTEXT>Flag setzen</DDTEXT>
     </item>
    </DD07_TEXTS>
   </asx:values>

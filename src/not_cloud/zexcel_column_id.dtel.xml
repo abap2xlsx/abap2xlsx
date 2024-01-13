@@ -31,7 +31,6 @@
     <LANGU>A</LANGU>
     <LANGU>B</LANGU>
     <LANGU>C</LANGU>
-    <LANGU>D</LANGU>
     <LANGU>F</LANGU>
     <LANGU>G</LANGU>
     <LANGU>H</LANGU>
@@ -141,14 +140,6 @@
      <SCRTEXT_S>ID sloupce</SCRTEXT_S>
      <SCRTEXT_M>ID sloupce</SCRTEXT_M>
      <SCRTEXT_L>ID sloupce</SCRTEXT_L>
-    </item>
-    <item>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DDTEXT>ALV-Control: SpaltenID</DDTEXT>
-     <REPTEXT>Spalten-ID</REPTEXT>
-     <SCRTEXT_S>Spalten-ID</SCRTEXT_S>
-     <SCRTEXT_M>Spalten-ID</SCRTEXT_M>
-     <SCRTEXT_L>Spalten-ID</SCRTEXT_L>
     </item>
     <item>
      <DDLANGUAGE>F</DDLANGUAGE>
