@@ -19,7 +19,7 @@
     <AUTHCLASS>01</AUTHCLASS>
     <DTELMASTER>D</DTELMASTER>
     <REFKIND>D</REFKIND>
-   </DD04V>  
+   </DD04V>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -20,7 +20,7 @@
     <DATATYPE>NUMC</DATATYPE>
     <LENG>000004</LENG>
     <OUTPUTLEN>000004</OUTPUTLEN>
-   </DD04V>   
+   </DD04V>
   </asx:values>
  </asx:abap>
 </abapGit>

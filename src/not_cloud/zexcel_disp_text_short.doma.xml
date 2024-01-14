@@ -12,7 +12,7 @@
     <DDTEXT>Short keyword</DDTEXT>
     <APPLCLASS>SDIC</APPLCLASS>
     <AUTHCLASS>01</AUTHCLASS>
-   </DD01V>  
+   </DD01V>
   </asx:values>
  </asx:abap>
 </abapGit>
