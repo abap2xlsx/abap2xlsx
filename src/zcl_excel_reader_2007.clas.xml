@@ -254,6 +254,11 @@
      <DESCRIPT>Loads pagemargings of worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>LOAD_WORKSHEET_TABLES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Load worksheet tables</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>MT_DXF_STYLES</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Styles mapping</DESCRIPT>
