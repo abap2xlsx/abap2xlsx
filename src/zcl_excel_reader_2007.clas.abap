@@ -2253,12 +2253,15 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
            END OF lty_column.
 
     TYPES: BEGIN OF lty_sheetview,
-             showgridlines     TYPE zexcel_show_gridlines,
-             tabselected       TYPE string,
-             zoomscalenormal   TYPE string,
-             workbookviewid    TYPE string,
-             showrowcolheaders TYPE string,
-             righttoleft       TYPE string,
+             showgridlines            TYPE zexcel_show_gridlines,
+             tabselected              TYPE string,
+             zoomscale                TYPE string,
+             zoomscalenormal          TYPE string,
+             zoomscalepagelayoutview  TYPE string,
+             zoomscalesheetlayoutview TYPE string,
+             workbookviewid           TYPE string,
+             showrowcolheaders        TYPE string,
+             righttoleft              TYPE string,
            END OF lty_sheetview.
 
     TYPES: BEGIN OF lty_mergecell,
@@ -2805,7 +2808,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         OR ls_sheetview-righttoleft = lc_xml_attr_true_int.
       io_worksheet->zif_excel_sheet_properties~set_right_to_left( abap_true ).
     ENDIF.
-
+    io_worksheet->zif_excel_sheet_properties~zoomscale                 = ls_sheetview-zoomscale.
+    io_worksheet->zif_excel_sheet_properties~zoomscale_normal          = ls_sheetview-zoomscalenormal.
+    io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview  = ls_sheetview-zoomscalepagelayoutview.
+    io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = ls_sheetview-zoomscalesheetlayoutview.
 
     "Add merge cell information
     lo_ixml_mergecells = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'mergeCell' uri = namespace-main ).
