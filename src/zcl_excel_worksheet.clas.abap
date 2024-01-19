@@ -4323,8 +4323,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD set_pane_top_left_cell.
-    DATA lv_column_int type zexcel_cell_column.
-    DATA lv_row type zexcel_cell_row.
+    DATA lv_column_int TYPE zexcel_cell_column.
+    DATA lv_row TYPE zexcel_cell_row.
 
     " Validate input value
     zcl_excel_common=>convert_columnrow2column_a_row(
@@ -4398,8 +4398,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD set_sheetview_top_left_cell.
-    DATA lv_column_int type zexcel_cell_column.
-    DATA lv_row type zexcel_cell_row.
+    DATA lv_column_int TYPE zexcel_cell_column.
+    DATA lv_row TYPE zexcel_cell_row.
 
     " Validate input value
     zcl_excel_common=>convert_columnrow2column_a_row(
