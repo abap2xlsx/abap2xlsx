@@ -1,0 +1,16 @@
+{
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "rm -rf output && abap_transpile abap_transpile.json && echo RUNNING && node output/index.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abap2xlsx/abap2xlsx.git"
+  },
+  "devDependencies": {
+    "@abaplint/cli": "^2.105.14",
+    "@abaplint/transpiler-cli": "^2.7.153",
+    "@abaplint/runtime": "^2.7.153"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "input_folder": "{src,test}",
+  "input_filter": [
+    "src/zcl_excel_a",
+    "src/zcl_excel_c",
+    "src/zcl_excel_d",
+    "src/zcl_excel_fill_template",
+    "src/zcl_excel_font TODO, missing TDFONTSIZE",
+    "src/zcl_excel_g",
+    "src/zcl_excel_h",
+    "src/zcl_excel_l",
+    "src/zcl_excel_o",
+    "src/zcl_excel_r",
+    "src/zcl_excel_s",
+    "src/zcl_excel_t",
+    "src/zcl_excel_w",
+    "src/zcl_excel.clas",
+    "src/zcx_",
+    "src/zexcel_.*doma",
+    "src/zexcel_.*dtel",
+    "src/not_cloud/zexcel_.*dtel",
+    "src/not_cloud/zexcel_.*doma",
+    "src/zexcel_c",
+    "src/zexcel_p",
+    "src/zexcel_s",
+    "src/zexcel_t",
+    "src/zif_",
+    "test/"
+  ],
+  "output_folder": "output",
+  "lib": "https://github.com/open-abap/open-abap",
+  "write_unit_tests": true,
+  "write_source_map": true,
+  "options": {
+    "ignoreSyntaxCheck": false,
+    "addFilenames": true,
+    "addCommonJS": true,
+    "unknownTypes": "runtimeError",
+    "skip": [
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_number",                    "note": "SXML in open-abap currently only handles json, todo"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string",             "note": "SXML in open-abap currently only handles json, todo"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string_missing",     "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_inline_string",             "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_empty_cells",               "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_boolean",                   "note": "SXML in open-abap currently only handles json, todo"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_style",                     "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_style_missing",             "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_formula",                   "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_read_shared_strings",       "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string_some_empty",  "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string_multi_style", "note": "??"},
+      {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_skip_to_inexistent",        "note": "??"},
+
+      {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "one_column_formula",        "note": "?? CALL TRANSFORMATION xml_header = 'no'"},
+      {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "two_column_formulas",       "note": "??"},
+
+      {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "?? sy value defaults"}
+    ]
+  }
+}
