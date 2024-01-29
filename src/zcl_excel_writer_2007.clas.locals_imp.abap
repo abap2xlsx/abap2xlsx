@@ -327,15 +327,17 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                                       value = '0' ).
     ENDIF.
     " Zoom scale
-    IF o_worksheet->zif_excel_sheet_properties~zoomscale GT 400.
-      o_worksheet->zif_excel_sheet_properties~zoomscale = 400.
-    ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale LT 10.
-      o_worksheet->zif_excel_sheet_properties~zoomscale = 10.
+    IF o_worksheet->zif_excel_sheet_properties~zoomscale NE 0.
+      IF o_worksheet->zif_excel_sheet_properties~zoomscale GT 400.
+        o_worksheet->zif_excel_sheet_properties~zoomscale = 400.
+      ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale LT 10.
+        o_worksheet->zif_excel_sheet_properties~zoomscale = 10.
+      ENDIF.
+      lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale.
+      CONDENSE lv_value.
+      lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscale
+                                      value = lv_value ).
     ENDIF.
-    lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale.
-    CONDENSE lv_value.
-    lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscale
-                                    value = lv_value ).
     IF o_worksheet->zif_excel_sheet_properties~zoomscale_normal NE 0.
       IF o_worksheet->zif_excel_sheet_properties~zoomscale_normal GT 400.
         o_worksheet->zif_excel_sheet_properties~zoomscale_normal = 400.
