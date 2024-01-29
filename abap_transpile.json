@@ -18,6 +18,8 @@
     "src/zcx_",
     "src/zexcel_.*doma",
     "src/zexcel_.*dtel",
+    "src/not_cloud/zexcel_.*dtel",
+    "src/not_cloud/zexcel_.*doma",
     "src/zexcel_c",
     "src/zexcel_p",
     "src/zexcel_s",
