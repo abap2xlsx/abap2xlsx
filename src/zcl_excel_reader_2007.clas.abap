@@ -608,7 +608,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         WHEN 'fill'.
           lo_ixml_element = lo_ixml_dxf_child->find_from_name_ns( name = 'patternFill' uri = namespace-main ).
           IF lo_ixml_element IS BOUND.
-            lo_ixml_element2 = lo_ixml_dxf_child->find_from_name_ns( name = 'bgColor' uri = namespace-main ).
+            lo_ixml_element2 = lo_ixml_element->find_from_name_ns( name = 'bgColor' uri = namespace-main ).
             IF lo_ixml_element2 IS BOUND.
               CLEAR lv_val.
               lv_val  = lo_ixml_element2->get_attribute_ns( 'rgb' ).
@@ -1472,7 +1472,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Patternfill - foreground color
 *--------------------------------------------------------------------*
-          lo_node_fgcolor = lo_node_fill->find_from_name_ns( name = 'fgColor' uri = namespace-main ).
+          lo_node_fgcolor = lo_node_fill_child->find_from_name_ns( name = 'fgColor' uri = namespace-main ).
           IF lo_node_fgcolor IS BOUND.
             fill_struct_from_attributes( EXPORTING
                                            ip_element   = lo_node_fgcolor
@@ -2253,7 +2253,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
            END OF lty_column.
 
     TYPES: BEGIN OF lty_sheetview,
-             showgridlines            TYPE zexcel_show_gridlines,
+             showgridlines            TYPE string,
              tabselected              TYPE string,
              zoomscale                TYPE string,
              zoomscalenormal          TYPE string,
@@ -2474,11 +2474,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                      ip_element = lo_ixml_node
                                    CHANGING
                                      cp_structure = ls_relationship ).
-      CONCATENATE lv_dirname ls_relationship-target INTO lv_path.
-      lv_path = resolve_path( lv_path ).
 
       CASE ls_relationship-type.
         WHEN lc_rel_drawing.
+          CONCATENATE lv_dirname ls_relationship-target INTO lv_path.
+          lv_path = resolve_path( lv_path ).
           " Read Drawings
 * Issue # 339       Not all drawings are in the path mentioned below.
 *                   Some Excel elements like textfields (which we don't support ) have a drawing-part in the relationsships
@@ -2795,15 +2795,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     "Now we need to get information from the sheetView node
     lo_ixml_sheetview_elem = lo_ixml_worksheet->find_from_name_ns( name = 'sheetView' uri = namespace-main ).
     fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_sheetview_elem CHANGING cp_structure = ls_sheetview ).
-    IF ls_sheetview-showgridlines IS INITIAL OR
-       ls_sheetview-showgridlines = lc_xml_attr_true OR
-       ls_sheetview-showgridlines = lc_xml_attr_true_int.
-      "If the attribute is not specified or set to true, we will show grid lines
-      ls_sheetview-showgridlines = abap_true.
-    ELSE.
-      ls_sheetview-showgridlines = abap_false.
-    ENDIF.
-    io_worksheet->set_show_gridlines( ls_sheetview-showgridlines ).
+    "If the attribute is not specified or set to true, we will show grid lines
+    io_worksheet->set_show_gridlines( boolc( ls_sheetview-showgridlines IS INITIAL OR
+                                             ls_sheetview-showgridlines = lc_xml_attr_true OR
+                                             ls_sheetview-showgridlines = lc_xml_attr_true_int ) ).
+    "If the attribute is not specified or set to true, we will show rowcol headers
+    io_worksheet->set_show_rowcolheaders( boolc( ls_sheetview-showrowcolheaders IS INITIAL OR
+                                                 ls_sheetview-showrowcolheaders = lc_xml_attr_true OR
+                                                 ls_sheetview-showrowcolheaders = lc_xml_attr_true_int ) ).
     IF ls_sheetview-righttoleft = lc_xml_attr_true
         OR ls_sheetview-righttoleft = lc_xml_attr_true_int.
       io_worksheet->zif_excel_sheet_properties~set_right_to_left( abap_true ).
