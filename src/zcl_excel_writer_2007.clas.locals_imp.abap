@@ -919,11 +919,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_cfrule
                                                         parent = o_document ).
       IF lo_style_cond->rule = zcl_excel_style_cond=>c_rule_textfunction.
-        IF lo_style_cond->mode_textfunction-textfunction = zcl_excel_style_cond=>c_textfunction_notcontains.
-          lv_value = `notContainsText`.
-        ELSE.
-          lv_value = lo_style_cond->mode_textfunction-textfunction.
-        ENDIF.
+        lv_value = lo_style_cond->mode_textfunction-textfunction.
       ELSE.
         lv_value = lo_style_cond->rule.
       ENDIF.
