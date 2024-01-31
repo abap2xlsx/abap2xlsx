@@ -232,6 +232,10 @@ CLASS zcl_excel_reader_2007 DEFINITION
       IMPORTING
         !io_ixml_rule  TYPE REF TO if_ixml_element
         !io_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS load_worksheet_cond_format_tf
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond .
     METHODS load_worksheet_drawing
       IMPORTING
         !ip_path      TYPE string
@@ -3208,6 +3212,16 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             lo_style_cond = io_worksheet->add_new_style_cond( '' ).
             load_worksheet_cond_format_aa(  io_ixml_rule  = lo_ixml_rule
                                            io_style_cond = lo_style_cond ).
+
+          WHEN zcl_excel_style_cond=>c_textfunction_beginswith OR
+               zcl_excel_style_cond=>c_textfunction_containstext OR
+               zcl_excel_style_cond=>c_textfunction_endswith OR
+               zcl_excel_style_cond=>c_textfunction_notcontains.
+            lo_style_cond = io_worksheet->add_new_style_cond( '' ).
+            load_worksheet_cond_format_tf( io_ixml_rule  = lo_ixml_rule
+                                           io_style_cond = lo_style_cond ).
+            lv_rule = zcl_excel_style_cond=>c_rule_textfunction.  "internal rule
+
           WHEN OTHERS.
         ENDCASE.
 
@@ -3534,6 +3548,23 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
     IF sy-subrc = 0.
       io_style_cond->mode_top10-cell_style = <ls_dxf_style>-guid.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD load_worksheet_cond_format_tf.
+
+    DATA lv_dxf_style_index TYPE i.
+
+    FIELD-SYMBOLS <ls_dxf_style> LIKE LINE OF me->mt_dxf_styles.
+
+    io_style_cond->mode_textfunction-textfunction = io_ixml_rule->get_attribute_ns( 'type' ).
+    io_style_cond->mode_textfunction-text         = io_ixml_rule->get_attribute_ns( 'text' ).
+    lv_dxf_style_index                            = io_ixml_rule->get_attribute_ns( 'dxfId' ).
+    READ TABLE me->mt_dxf_styles ASSIGNING <ls_dxf_style> WITH KEY dxf = lv_dxf_style_index.
+    IF sy-subrc = 0.
+      io_style_cond->mode_textfunction-cell_style = <ls_dxf_style>-guid.
     ENDIF.
 
   ENDMETHOD.
