@@ -1167,7 +1167,11 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           CONDENSE lv_value.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_dxfid
                                           value = lv_value ).
-          lv_value = ls_textfunction-textfunction.
+          IF ls_textfunction-textfunction = zcl_excel_style_cond=>c_textfunction_notcontains.
+            lv_value = zcl_excel_style_cond=>c_operator_notcontains.
+          ELSE.
+            lv_value = ls_textfunction-textfunction.
+          ENDIF.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_operator
                                           value = lv_value ).
 
