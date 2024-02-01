@@ -71,10 +71,7 @@ CLASS zcl_excel_theme DEFINITION
     DATA extlst TYPE REF TO zcl_excel_theme_extlst .
   PRIVATE SECTION.
 
-    DATA theme_changed TYPE abap_bool .
-    DATA theme_read TYPE abap_bool .
     DATA name TYPE string .
-    DATA xmls_a TYPE string .
 ENDCLASS.
 
 
@@ -100,7 +97,6 @@ CLASS zcl_excel_theme IMPLEMENTATION.
     lo_node_theme  = io_theme_xml->get_root_element( )."   find_from_name( name = c_theme ).
     IF lo_node_theme IS BOUND.
       name = lo_node_theme->get_attribute( name = c_theme_name ).
-      xmls_a = lo_node_theme->get_attribute( name = c_theme_xmlns ).
       lo_theme_children = lo_node_theme->get_children( ).
       lo_theme_iterator = lo_theme_children->create_iterator( ).
       lo_theme_element ?= lo_theme_iterator->get_next( ).
