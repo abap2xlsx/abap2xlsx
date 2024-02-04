@@ -1918,7 +1918,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD check_rtf.
 
     DATA: lo_style           TYPE REF TO zcl_excel_style,
-          lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lv_next_rtf_offset TYPE i,
           lv_tabix           TYPE i,
           lv_value           TYPE string,
@@ -1930,14 +1929,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ip_style = excel->get_default_style( ).
     ENDIF.
 
-    lo_iterator = excel->get_styles_iterator( ).
-    WHILE lo_iterator->has_next( ) = abap_true.
-      lo_style ?= lo_iterator->get_next( ).
-      IF lo_style->get_guid( ) = ip_style.
-        EXIT.
+    " If there is no style available ls_rtf-font remains initial
+    IF ip_style IS NOT INITIAL.
+      lo_style = excel->get_style_from_guid( ip_style ).
+      IF lo_style IS BOUND.
+        ls_rtf-font = lo_style->font->get_structure( ).
       ENDIF.
-      CLEAR lo_style.
-    ENDWHILE.
+    ENDIF.
 
     lv_next_rtf_offset = 0.
     LOOP AT ct_rtf ASSIGNING <rtf>.
@@ -1945,12 +1943,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       IF lv_next_rtf_offset < <rtf>-offset.
         ls_rtf-offset = lv_next_rtf_offset.
         ls_rtf-length = <rtf>-offset - lv_next_rtf_offset.
-        ls_rtf-font   = lo_style->font->get_structure( ).
         INSERT ls_rtf INTO ct_rtf INDEX lv_tabix.
       ELSEIF lv_next_rtf_offset > <rtf>-offset.
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = 'Gaps or overlaps in RTF data offset/length specs'.
+        zcx_excel=>raise_text( 'Gaps or overlaps in RTF data offset/length specs' ).
       ENDIF.
       lv_next_rtf_offset = <rtf>-offset + <rtf>-length.
     ENDLOOP.
@@ -1960,12 +1955,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     IF lv_val_length > lv_next_rtf_offset.
       ls_rtf-offset = lv_next_rtf_offset.
       ls_rtf-length = lv_val_length - lv_next_rtf_offset.
-      ls_rtf-font   = lo_style->font->get_structure( ).
       INSERT ls_rtf INTO TABLE ct_rtf.
-    ELSEIF lv_val_length > lv_next_rtf_offset.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'RTF specs length is not equal to value length'.
+    ELSEIF lv_val_length < lv_next_rtf_offset.
+      zcx_excel=>raise_text( 'RTF specs length is not equal to value length' ).
     ENDIF.
 
   ENDMETHOD.
