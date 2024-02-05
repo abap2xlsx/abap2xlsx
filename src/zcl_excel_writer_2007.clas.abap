@@ -4786,6 +4786,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       SUBTRACT 1 FROM ls_cellxfs-alignmentid.
 
 * Compress fills
+      IF ls_fill-gradtype IS NOT INITIAL.
+*       Then filltype doesn't matter for XML Output and should not be split criteria.
+*       If you use the Reader to reload it filltype will be NONE anyway in this case.
+        ls_fill-filltype = zcl_excel_style_fill=>c_fill_none.
+      ENDIF.
       READ TABLE lt_fills FROM ls_fill TRANSPORTING NO FIELDS.
       IF sy-subrc EQ 0.
         ls_cellxfs-fillid = sy-tabix.
