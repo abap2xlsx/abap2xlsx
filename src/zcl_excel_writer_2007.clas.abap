@@ -2666,7 +2666,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   METHOD create_xl_drawings_vml.
 
     DATA:
-      lo_xml_document TYPE REF TO cl_xml_document,
       ld_stream       TYPE string.
 
 
@@ -2676,11 +2675,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 * BODY
     ld_stream = set_vml_string( ).
-
-    CREATE OBJECT lo_xml_document.
-    CALL METHOD lo_xml_document->parse_string
-      EXPORTING
-        stream = ld_stream.
 
     CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
       EXPORTING
@@ -3334,8 +3328,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ls_odd_footer   TYPE zexcel_s_worksheet_head_foot,
       ls_even_header  TYPE zexcel_s_worksheet_head_foot,
       ls_even_footer  TYPE zexcel_s_worksheet_head_foot,
-      lv_content      TYPE string,
-      lo_xml_document TYPE REF TO cl_xml_document.
+      lv_content      TYPE string.
 
 
 * INIT_RESULT
@@ -3382,11 +3375,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CONCATENATE lv_content
                 ld_7
            INTO lv_content.
-
-    CREATE OBJECT lo_xml_document.
-    CALL METHOD lo_xml_document->parse_string
-      EXPORTING
-        stream = lv_content.
 
     CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
       EXPORTING
