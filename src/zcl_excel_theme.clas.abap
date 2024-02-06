@@ -204,7 +204,6 @@ CLASS zcl_excel_theme IMPLEMENTATION.
     lo_document = lo_ixml->create_document( ).
     lo_document->set_encoding( lo_encoding ).
     lo_document->set_standalone( abap_true ).
-    lo_document->set_namespace_prefix( prefix = 'a' ).
 
     lo_element_root = lo_document->create_simple_element_ns( prefix = c_theme_prefix
                                                              name   = c_theme
