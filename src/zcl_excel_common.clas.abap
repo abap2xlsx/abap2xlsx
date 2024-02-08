@@ -1040,7 +1040,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     DATA: descr          TYPE REF TO cl_abap_structdescr,
           wa_component   LIKE LINE OF descr->components,
           attribute_name LIKE wa_component-name,
-          flag_class     TYPE flag.
+          flag_class     TYPE abap_bool.
 
     FIELD-SYMBOLS: <field>     TYPE any,
                    <fieldx>    TYPE any,
@@ -1087,7 +1087,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     DATA: descr          TYPE REF TO cl_abap_structdescr,
           wa_component   LIKE LINE OF descr->components,
           attribute_name LIKE wa_component-name,
-          flag_class     TYPE flag,
+          flag_class     TYPE abap_bool,
           o_border       TYPE REF TO zcl_excel_style_border.
 
     FIELD-SYMBOLS: <field>     TYPE any,
