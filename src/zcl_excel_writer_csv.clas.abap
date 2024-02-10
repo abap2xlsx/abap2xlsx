@@ -24,6 +24,9 @@ CLASS zcl_excel_writer_csv DEFINITION
     CLASS-METHODS set_active_sheet_index_by_name
       IMPORTING
         !i_worksheet_name TYPE zexcel_worksheets_name .
+    CLASS-METHODS set_encoding
+      IMPORTING
+        VALUE(ip_value) TYPE abap_encoding .
 *"* protected components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
   PROTECTED SECTION.
@@ -38,6 +41,7 @@ CLASS zcl_excel_writer_csv DEFINITION
       eol TYPE c LENGTH 2 VALUE cl_abap_char_utilities=>cr_lf ##NO_TEXT.
     CLASS-DATA worksheet_name TYPE zexcel_worksheets_name .
     CLASS-DATA worksheet_index TYPE zexcel_active_worksheet .
+    CLASS-DATA encoding TYPE abap_encoding .
 
     METHODS create
       RETURNING
@@ -265,12 +269,13 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
 
     CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
       EXPORTING
-        text   = lv_string
+        text     = lv_string
+        encoding = zcl_excel_writer_csv=>encoding
       IMPORTING
-        buffer = ep_content
+        buffer   = ep_content
       EXCEPTIONS
-        failed = 1
-        OTHERS = 2.
+        failed   = 1
+        OTHERS   = 2.
 
   ENDMETHOD.
 
@@ -299,6 +304,11 @@ CLASS zcl_excel_writer_csv IMPLEMENTATION.
 
   METHOD set_endofline.
     zcl_excel_writer_csv=>eol = ip_value.
+  ENDMETHOD.
+
+
+  METHOD set_encoding.
+    zcl_excel_writer_csv=>encoding = ip_value.
   ENDMETHOD.
 
 
