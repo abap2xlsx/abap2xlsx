@@ -1040,6 +1040,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     DATA: descr          TYPE REF TO cl_abap_structdescr,
           wa_component   LIKE LINE OF descr->components,
           attribute_name LIKE wa_component-name,
+          type_kind      TYPE abap_typekind,
           flag_class     TYPE abap_bool.
 
     FIELD-SYMBOLS: <field>     TYPE any,
@@ -1047,7 +1048,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
                    <attribute> TYPE any.
 
 
-    flag_class = boolc( cl_abap_datadescr=>get_data_type_kind( i_source ) = cl_abap_datadescr=>typekind_oref ).
+    DESCRIBE FIELD i_source TYPE type_kind.
+    flag_class = boolc( type_kind = cl_abap_typedescr=>typekind_oref ).
 
     descr ?= cl_abap_structdescr=>describe_by_data( e_target ).
 
@@ -1059,7 +1061,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
       IF flag_class = abap_false.
 * source is a structure - use assign component
-        ASSIGN COMPONENT wa_component-name OF STRUCTURE i_source  TO <attribute>.
+        ASSIGN COMPONENT wa_component-name OF STRUCTURE i_source TO <attribute>.
       ELSE.
 * then it is an attribute of the class - use different assign then
         CONCATENATE 'i_source->' wa_component-name INTO attribute_name.
@@ -1087,6 +1089,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     DATA: descr          TYPE REF TO cl_abap_structdescr,
           wa_component   LIKE LINE OF descr->components,
           attribute_name LIKE wa_component-name,
+          type_kind      TYPE abap_typekind,
           flag_class     TYPE abap_bool,
           o_border       TYPE REF TO zcl_excel_style_border.
 
@@ -1095,7 +1098,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
                    <attribute> TYPE any.
 
 
-    flag_class = boolc( cl_abap_datadescr=>get_data_type_kind( e_target ) = cl_abap_datadescr=>typekind_oref ).
+    DESCRIBE FIELD e_target TYPE type_kind.
+    flag_class = boolc( type_kind = cl_abap_typedescr=>typekind_oref ).
     IF flag_class = abap_true AND e_target IS INITIAL.
 * Only borders will be passed as unbound references. But since we want to set a value we have to create an instance
       CREATE OBJECT o_border.
