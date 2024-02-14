@@ -23,9 +23,9 @@ CLASS zcl_excel_writer_csv DEFINITION
     CLASS-METHODS set_active_sheet_index
       IMPORTING
         !i_active_worksheet TYPE zexcel_active_worksheet .
-    class-methods SET_ACTIVE_SHEET_INDEX_BY_NAME
-      importing
-        !I_WORKSHEET_NAME type ZEXCEL_WORKSHEETS_NAME .
+    CLASS-METHODS set_active_sheet_index_by_name
+      IMPORTING
+        !i_worksheet_name TYPE zexcel_worksheets_name .
     class-methods SET_INITIAL_EXT_DATE
       importing
         !IP_VALUE type CHAR10 default 'DEFAULT' .
