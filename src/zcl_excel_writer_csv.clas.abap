@@ -29,7 +29,7 @@ CLASS zcl_excel_writer_csv DEFINITION
     CLASS-METHODS set_initial_ext_date
       IMPORTING
         !ip_value TYPE char10 DEFAULT 'DEFAULT' .
-  protected section.
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
   private section.
