@@ -9,7 +9,7 @@ CLASS zcl_excel_writer_csv DEFINITION
 *"* do not include other source files here!!!
   PUBLIC SECTION.
 
-    interfaces ZIF_EXCEL_WRITER .
+    INTERFACES zif_excel_writer .
 
     class-methods SET_DELIMITER
       importing
