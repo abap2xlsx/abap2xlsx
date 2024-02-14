@@ -14,9 +14,9 @@ PUBLIC SECTION.
   CLASS-METHODS set_delimiter
     IMPORTING
       VALUE(ip_value) TYPE c DEFAULT ';' .
-  class-methods SET_ENCLOSURE
-    importing
-      value(IP_VALUE) type C default '"' .
+  CLASS-METHODS set_enclosure
+    IMPORTING
+      VALUE(ip_value) TYPE c DEFAULT '"' .
   class-methods SET_ENDOFLINE
     importing
       value(IP_VALUE) type ANY default CL_ABAP_CHAR_UTILITIES=>CR_LF .
