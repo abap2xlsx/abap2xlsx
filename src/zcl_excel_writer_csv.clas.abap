@@ -7,7 +7,7 @@ CLASS zcl_excel_writer_csv DEFINITION
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
-public section.
+PUBLIC SECTION.
 
   interfaces ZIF_EXCEL_WRITER .
 
