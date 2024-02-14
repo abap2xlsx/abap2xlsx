@@ -34,7 +34,7 @@ CLASS zcl_excel_writer_csv DEFINITION
 *"* do not include other source files here!!!
   PRIVATE SECTION.
 
-    data EXCEL type ref to ZCL_EXCEL .
+    DATA excel TYPE REF TO zcl_excel .
     class-data DELIMITER type C value ';' ##NO_TEXT.
     class-data ENCLOSURE type C value '"' ##NO_TEXT.
     class-data:
