@@ -1213,10 +1213,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_fill       TYPE REF TO if_ixml_element.
 
     CHECK iv_cell_style IS NOT INITIAL.
-
     READ TABLE me->styles_mapping INTO ls_styles_mapping WITH KEY guid = iv_cell_style.
-    lv_index = ls_styles_mapping-style + 1. " the numbering starts from 0
-    READ TABLE it_cellxfs INTO ls_cellxfs INDEX lv_index.
 
     READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
     IF sy-subrc EQ 0.
@@ -1232,6 +1229,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " dxf node
       lo_sub_element = io_ixml_document->create_simple_element( name   = lc_xml_node_dxf
                                                                 parent = io_ixml_document ).
+
+      lv_index = ls_styles_mapping-style + 1. " the numbering starts from 0
+      READ TABLE it_cellxfs INTO ls_cellxfs INDEX lv_index.
 
       "Conditional formatting font style correction by Alessandro Iannacci START
       lv_index = ls_cellxfs-fontid + 1. " the numbering starts from 0
