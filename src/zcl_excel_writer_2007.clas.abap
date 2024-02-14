@@ -1313,7 +1313,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       io_dxf_element->append_child( new_child = lo_sub_element ).
     ENDIF.
 
-ENDMETHOD.
+  ENDMETHOD.
 
 
   METHOD create_relationships.
