@@ -20,9 +20,9 @@ CLASS zcl_excel_writer_csv DEFINITION
     CLASS-METHODS set_endofline
       IMPORTING
         VALUE(ip_value) TYPE any DEFAULT cl_abap_char_utilities=>cr_lf .
-    class-methods SET_ACTIVE_SHEET_INDEX
-      importing
-        !I_ACTIVE_WORKSHEET type ZEXCEL_ACTIVE_WORKSHEET .
+    CLASS-METHODS set_active_sheet_index
+      IMPORTING
+        !i_active_worksheet TYPE zexcel_active_worksheet .
     class-methods SET_ACTIVE_SHEET_INDEX_BY_NAME
       importing
         !I_WORKSHEET_NAME type ZEXCEL_WORKSHEETS_NAME .
