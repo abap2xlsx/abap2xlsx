@@ -7,14 +7,14 @@ CLASS zcl_excel_theme_eclrschemelst DEFINITION
 
     METHODS load
       IMPORTING
-        !io_extra_color TYPE REF TO if_ixml_element .
+        !io_extra_color TYPE REF TO zif_excel_xml_element .
     METHODS build_xml
       IMPORTING
-        !io_document TYPE REF TO if_ixml_document .
+        !io_document TYPE REF TO zif_excel_xml_document .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    DATA extracolor TYPE REF TO if_ixml_element .
+    DATA extracolor TYPE REF TO zif_excel_xml_element .
 ENDCLASS.
 
 
@@ -23,8 +23,8 @@ CLASS zcl_excel_theme_eclrschemelst IMPLEMENTATION.
 
 
   METHOD build_xml.
-    DATA: lo_theme TYPE REF TO if_ixml_element.
-    DATA: lo_theme_objdef TYPE REF TO if_ixml_element.
+    DATA: lo_theme TYPE REF TO zif_excel_xml_element.
+    DATA: lo_theme_objdef TYPE REF TO zif_excel_xml_element.
     CHECK io_document IS BOUND.
     lo_theme ?= io_document->get_root_element( ).
     CHECK lo_theme IS BOUND.

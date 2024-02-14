@@ -41,7 +41,7 @@ CLASS zcl_excel_theme_color_scheme DEFINITION
 
     METHODS load
       IMPORTING
-        !io_color_scheme TYPE REF TO if_ixml_element .
+        !io_color_scheme TYPE REF TO zif_excel_xml_element .
     METHODS set_color
       IMPORTING
         iv_type         TYPE string
@@ -50,7 +50,7 @@ CLASS zcl_excel_theme_color_scheme DEFINITION
         iv_syscolorlast TYPE t_srgb .
     METHODS build_xml
       IMPORTING
-        !io_document TYPE REF TO if_ixml_document .
+        !io_document TYPE REF TO zif_excel_xml_document .
     METHODS constructor .
     METHODS set_name
       IMPORTING
@@ -74,7 +74,7 @@ CLASS zcl_excel_theme_color_scheme DEFINITION
 
     METHODS get_color
       IMPORTING
-        !io_object      TYPE REF TO if_ixml_element
+        !io_object      TYPE REF TO zif_excel_xml_element
       RETURNING
         VALUE(rv_color) TYPE t_color .
     METHODS set_defaults .
@@ -86,11 +86,11 @@ CLASS zcl_excel_theme_color_scheme IMPLEMENTATION.
 
 
   METHOD build_xml.
-    DATA: lo_scheme_element TYPE REF TO if_ixml_element.
-    DATA: lo_color TYPE REF TO if_ixml_element.
-    DATA: lo_syscolor TYPE REF TO if_ixml_element.
-    DATA: lo_srgb TYPE REF TO if_ixml_element.
-    DATA: lo_elements TYPE REF TO if_ixml_element.
+    DATA: lo_scheme_element TYPE REF TO zif_excel_xml_element.
+    DATA: lo_color TYPE REF TO zif_excel_xml_element.
+    DATA: lo_syscolor TYPE REF TO zif_excel_xml_element.
+    DATA: lo_srgb TYPE REF TO zif_excel_xml_element.
+    DATA: lo_elements TYPE REF TO zif_excel_xml_element.
 
     CHECK io_document IS BOUND.
     lo_elements ?= io_document->find_from_name_ns( name   = zcl_excel_theme=>c_theme_elements ).
@@ -311,9 +311,9 @@ CLASS zcl_excel_theme_color_scheme IMPLEMENTATION.
 
 
   METHOD get_color.
-    DATA: lo_color_children TYPE REF TO if_ixml_node_list.
-    DATA: lo_color_iterator TYPE REF TO if_ixml_node_iterator.
-    DATA: lo_color_element TYPE REF TO if_ixml_element.
+    DATA: lo_color_children TYPE REF TO zif_excel_xml_node_list.
+    DATA: lo_color_iterator TYPE REF TO zif_excel_xml_node_iterator.
+    DATA: lo_color_element TYPE REF TO zif_excel_xml_element.
     CHECK io_object  IS NOT INITIAL.
 
     lo_color_children = io_object->get_children( ).
@@ -332,9 +332,9 @@ CLASS zcl_excel_theme_color_scheme IMPLEMENTATION.
 
 
   METHOD load.
-    DATA: lo_scheme_children TYPE REF TO if_ixml_node_list.
-    DATA: lo_scheme_iterator TYPE REF TO if_ixml_node_iterator.
-    DATA: lo_scheme_element TYPE REF TO if_ixml_element.
+    DATA: lo_scheme_children TYPE REF TO zif_excel_xml_node_list.
+    DATA: lo_scheme_iterator TYPE REF TO zif_excel_xml_node_iterator.
+    DATA: lo_scheme_element TYPE REF TO zif_excel_xml_element.
     CHECK io_color_scheme  IS NOT INITIAL.
 
     name = io_color_scheme->get_attribute( name = c_name ).

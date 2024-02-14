@@ -7,14 +7,14 @@ CLASS zcl_excel_theme_fmt_scheme DEFINITION
 
     METHODS load
       IMPORTING
-        !io_fmt_scheme TYPE REF TO if_ixml_element .
+        !io_fmt_scheme TYPE REF TO zif_excel_xml_element .
     METHODS build_xml
       IMPORTING
-        !io_document TYPE REF TO if_ixml_document .
+        !io_document TYPE REF TO zif_excel_xml_document .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    DATA fmt_scheme TYPE REF TO if_ixml_element .
+    DATA fmt_scheme TYPE REF TO zif_excel_xml_element .
 
     METHODS get_default_fmt
       RETURNING
@@ -22,7 +22,7 @@ CLASS zcl_excel_theme_fmt_scheme DEFINITION
 
     METHODS parse_string
       IMPORTING iv_string      TYPE string
-      RETURNING VALUE(ri_node) TYPE REF TO if_ixml_node.
+      RETURNING VALUE(ri_node) TYPE REF TO zif_excel_xml_node.
 ENDCLASS.
 
 
@@ -31,8 +31,8 @@ CLASS ZCL_EXCEL_THEME_FMT_SCHEME IMPLEMENTATION.
 
 
   METHOD build_xml.
-    DATA: lo_node TYPE REF TO if_ixml_node.
-    DATA: lo_elements TYPE REF TO if_ixml_element.
+    DATA: lo_node TYPE REF TO zif_excel_xml_node.
+    DATA: lo_elements TYPE REF TO zif_excel_xml_element.
     CHECK io_document IS BOUND.
     lo_elements ?= io_document->find_from_name_ns( name = zcl_excel_theme=>c_theme_elements ).
     IF lo_elements IS BOUND.
@@ -48,7 +48,7 @@ CLASS ZCL_EXCEL_THEME_FMT_SCHEME IMPLEMENTATION.
 
 
   METHOD get_default_fmt.
-    CONCATENATE    '<a:fmtScheme name="Office">'
+    CONCATENATE    '<a:fmtScheme name="Office" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
     '      <a:fillStyleLst>'
     '        <a:solidFill>'
     '          <a:schemeClr val="phClr"/>'
@@ -195,14 +195,14 @@ CLASS ZCL_EXCEL_THEME_FMT_SCHEME IMPLEMENTATION.
 
 
   METHOD parse_string.
-    DATA li_stream   TYPE REF TO if_ixml_istream.
-    DATA li_ixml     TYPE REF TO if_ixml.
-    DATA li_document TYPE REF TO if_ixml_document.
-    DATA li_factory  TYPE REF TO if_ixml_stream_factory.
-    DATA li_parser   TYPE REF TO if_ixml_parser.
-    DATA li_istream  TYPE REF TO if_ixml_istream.
+    DATA li_stream   TYPE REF TO zif_excel_xml_istream.
+    DATA li_ixml     TYPE REF TO zif_excel_xml.
+    DATA li_document TYPE REF TO zif_excel_xml_document.
+    DATA li_factory  TYPE REF TO zif_excel_xml_stream_factory.
+    DATA li_parser   TYPE REF TO zif_excel_xml_parser.
+    DATA li_istream  TYPE REF TO zif_excel_xml_istream.
 
-    li_ixml = cl_ixml=>create( ).
+    li_ixml = zcl_excel_xml=>create( ).
     li_document = li_ixml->create_document( ).
     li_factory = li_ixml->create_stream_factory( ).
     li_istream = li_factory->create_istream_string( iv_string ).

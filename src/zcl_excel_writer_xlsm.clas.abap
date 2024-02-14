@@ -251,18 +251,19 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
           lc_xml_node_bin_ct      TYPE string VALUE 'application/vnd.ms-office.vbaProject'.
 
 
-    DATA: lo_ixml          TYPE REF TO if_ixml,
-          lo_document      TYPE REF TO if_ixml_document,
+    DATA: lo_ixml          TYPE REF TO zif_excel_xml,
+          lo_document      TYPE REF TO zif_excel_xml_document,
           lo_document_xml  TYPE REF TO cl_xml_document,
-          lo_element_root  TYPE REF TO if_ixml_node,
-          lo_element       TYPE REF TO if_ixml_element,
-          lo_collection    TYPE REF TO if_ixml_node_collection,
-          lo_iterator      TYPE REF TO if_ixml_node_iterator,
-          lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-          lo_ostream       TYPE REF TO if_ixml_ostream,
-          lo_renderer      TYPE REF TO if_ixml_renderer.
+          lo_element_root  TYPE REF TO zif_excel_xml_node,
+          lo_element       TYPE REF TO zif_excel_xml_element,
+          lo_collection    TYPE REF TO zif_excel_xml_node_collection,
+          lo_iterator      TYPE REF TO zif_excel_xml_node_iterator,
+          lo_streamfactory TYPE REF TO zif_excel_xml_stream_factory,
+          lo_ostream       TYPE REF TO zif_excel_xml_ostream,
+          lo_renderer      TYPE REF TO zif_excel_xml_renderer.
 
     DATA: lv_contenttype TYPE string.
+    DATA lr_xstring TYPE REF TO xstring.
 
 **********************************************************************
 * STEP 3: Create standard contentType
@@ -275,7 +276,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
     lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
-    lo_element_root = lo_document->if_ixml_node~get_first_child( ).
+    lo_element_root = lo_document->zif_excel_xml_node~get_first_child( ).
 
     " extension node
     lo_element = lo_document->create_simple_element( name   = lc_xml_node_default
@@ -306,9 +307,10 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 **********************************************************************
 * STEP 3: Create xstring stream
     CLEAR ep_content.
-    lo_ixml = cl_ixml=>create( ).
+    lo_ixml = zcl_excel_xml=>create( ).
     lo_streamfactory = lo_ixml->create_stream_factory( ).
-    lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+    GET REFERENCE OF ep_content INTO lr_xstring.
+    lo_ostream = lo_streamfactory->create_ostream_xstring( string = lr_xstring ).
     lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
     lo_renderer->render( ).
 
@@ -330,18 +332,19 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
           " Node target
           lc_xml_node_rid_vba_tg   TYPE string VALUE 'vbaProject.bin'.
 
-    DATA: lo_ixml          TYPE REF TO if_ixml,
-          lo_document      TYPE REF TO if_ixml_document,
+    DATA: lo_ixml          TYPE REF TO zif_excel_xml,
+          lo_document      TYPE REF TO zif_excel_xml_document,
           lo_document_xml  TYPE REF TO cl_xml_document,
-          lo_element_root  TYPE REF TO if_ixml_node,
-          lo_element       TYPE REF TO if_ixml_element,
-          lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-          lo_ostream       TYPE REF TO if_ixml_ostream,
-          lo_renderer      TYPE REF TO if_ixml_renderer.
+          lo_element_root  TYPE REF TO zif_excel_xml_node,
+          lo_element       TYPE REF TO zif_excel_xml_element,
+          lo_streamfactory TYPE REF TO zif_excel_xml_stream_factory,
+          lo_ostream       TYPE REF TO zif_excel_xml_ostream,
+          lo_renderer      TYPE REF TO zif_excel_xml_renderer.
 
     DATA: lv_xml_node_ridx_id TYPE string,
           lv_size             TYPE i,
           lv_syindex(2)       TYPE c.
+    DATA lr_xstring TYPE REF TO xstring.
 
 **********************************************************************
 * STEP 3: Create standard relationship
@@ -354,7 +357,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
     lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
-    lo_element_root = lo_document->if_ixml_node~get_first_child( ).
+    lo_element_root = lo_document->zif_excel_xml_node~get_first_child( ).
 
 
     lv_size = excel->get_worksheets_size( ).
@@ -379,9 +382,10 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 **********************************************************************
 * STEP 3: Create xstring stream
     CLEAR ep_content.
-    lo_ixml = cl_ixml=>create( ).
+    lo_ixml = zcl_excel_xml=>create( ).
     lo_streamfactory = lo_ixml->create_stream_factory( ).
-    lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+    GET REFERENCE OF ep_content INTO lr_xstring.
+    lo_ostream = lo_streamfactory->create_ostream_xstring( string = lr_xstring ).
     lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
     lo_renderer->render( ).
 
@@ -393,16 +397,17 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 ** Constant node name
     DATA: lc_xml_attr_codename      TYPE string VALUE 'codeName'.
 
-    DATA: lo_ixml          TYPE REF TO if_ixml,
-          lo_document      TYPE REF TO if_ixml_document,
+    DATA: lo_ixml          TYPE REF TO zif_excel_xml,
+          lo_document      TYPE REF TO zif_excel_xml_document,
           lo_document_xml  TYPE REF TO cl_xml_document,
-          lo_element_root  TYPE REF TO if_ixml_node,
-          lo_element       TYPE REF TO if_ixml_element,
-          lo_collection    TYPE REF TO if_ixml_node_collection,
-          lo_iterator      TYPE REF TO if_ixml_node_iterator,
-          lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-          lo_ostream       TYPE REF TO if_ixml_ostream,
-          lo_renderer      TYPE REF TO if_ixml_renderer.
+          lo_element_root  TYPE REF TO zif_excel_xml_node,
+          lo_element       TYPE REF TO zif_excel_xml_element,
+          lo_collection    TYPE REF TO zif_excel_xml_node_collection,
+          lo_iterator      TYPE REF TO zif_excel_xml_node_iterator,
+          lo_streamfactory TYPE REF TO zif_excel_xml_stream_factory,
+          lo_ostream       TYPE REF TO zif_excel_xml_ostream,
+          lo_renderer      TYPE REF TO zif_excel_xml_renderer.
+    DATA lr_xstring TYPE REF TO xstring.
 
 **********************************************************************
 * STEP 3: Create standard relationship
@@ -416,7 +421,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
     lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
-    lo_element_root = lo_document->if_ixml_node~get_first_child( ).
+    lo_element_root = lo_document->zif_excel_xml_node~get_first_child( ).
 
     lo_collection = lo_document->get_elements_by_tag_name( 'sheetPr' ).
     lo_iterator = lo_collection->create_iterator( ).
@@ -430,9 +435,10 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 **********************************************************************
 * STEP 3: Create xstring stream
     CLEAR ep_content.
-    lo_ixml = cl_ixml=>create( ).
+    lo_ixml = zcl_excel_xml=>create( ).
     lo_streamfactory = lo_ixml->create_stream_factory( ).
-    lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+    GET REFERENCE OF ep_content INTO lr_xstring.
+    lo_ostream = lo_streamfactory->create_ostream_xstring( string = lr_xstring ).
     lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
     lo_renderer->render( ).
   ENDMETHOD.
@@ -443,16 +449,17 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 ** Constant node name
     DATA: lc_xml_attr_codename      TYPE string VALUE 'codeName'.
 
-    DATA: lo_ixml          TYPE REF TO if_ixml,
-          lo_document      TYPE REF TO if_ixml_document,
+    DATA: lo_ixml          TYPE REF TO zif_excel_xml,
+          lo_document      TYPE REF TO zif_excel_xml_document,
           lo_document_xml  TYPE REF TO cl_xml_document,
-          lo_element_root  TYPE REF TO if_ixml_node,
-          lo_element       TYPE REF TO if_ixml_element,
-          lo_collection    TYPE REF TO if_ixml_node_collection,
-          lo_iterator      TYPE REF TO if_ixml_node_iterator,
-          lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-          lo_ostream       TYPE REF TO if_ixml_ostream,
-          lo_renderer      TYPE REF TO if_ixml_renderer.
+          lo_element_root  TYPE REF TO zif_excel_xml_node,
+          lo_element       TYPE REF TO zif_excel_xml_element,
+          lo_collection    TYPE REF TO zif_excel_xml_node_collection,
+          lo_iterator      TYPE REF TO zif_excel_xml_node_iterator,
+          lo_streamfactory TYPE REF TO zif_excel_xml_stream_factory,
+          lo_ostream       TYPE REF TO zif_excel_xml_ostream,
+          lo_renderer      TYPE REF TO zif_excel_xml_renderer.
+    DATA lr_xstring TYPE REF TO xstring.
 
 **********************************************************************
 * STEP 3: Create standard relationship
@@ -465,7 +472,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
     lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
-    lo_element_root = lo_document->if_ixml_node~get_first_child( ).
+    lo_element_root = lo_document->zif_excel_xml_node~get_first_child( ).
 
     lo_collection = lo_document->get_elements_by_tag_name( 'fileVersion' ).
     lo_iterator = lo_collection->create_iterator( ).
@@ -488,9 +495,10 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 **********************************************************************
 * STEP 3: Create xstring stream
     CLEAR ep_content.
-    lo_ixml = cl_ixml=>create( ).
+    lo_ixml = zcl_excel_xml=>create( ).
     lo_streamfactory = lo_ixml->create_stream_factory( ).
-    lo_ostream = lo_streamfactory->create_ostream_xstring( string = ep_content ).
+    GET REFERENCE OF ep_content INTO lr_xstring.
+    lo_ostream = lo_streamfactory->create_ostream_xstring( string = lr_xstring ).
     lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
     lo_renderer->render( ).
   ENDMETHOD.

@@ -77,9 +77,9 @@ CLASS zcl_excel_common DEFINITION
         !e_row       TYPE zexcel_cell_row .
     CLASS-METHODS clone_ixml_with_namespaces
       IMPORTING
-        element       TYPE REF TO if_ixml_element
+        element       TYPE REF TO zif_excel_xml_element
       RETURNING
-        VALUE(result) TYPE REF TO if_ixml_element.
+        VALUE(result) TYPE REF TO zif_excel_xml_element.
     CLASS-METHODS date_to_excel_string
       IMPORTING
         !ip_value       TYPE d
@@ -655,8 +655,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD clone_ixml_with_namespaces.
 
-    DATA: iterator    TYPE REF TO if_ixml_node_iterator,
-          node        TYPE REF TO if_ixml_node,
+    DATA: iterator    TYPE REF TO zif_excel_xml_node_iterator,
+          node        TYPE REF TO zif_excel_xml_node,
           xmlns       TYPE ihttpnvp,
           xmlns_table TYPE TABLE OF ihttpnvp.
     FIELD-SYMBOLS:

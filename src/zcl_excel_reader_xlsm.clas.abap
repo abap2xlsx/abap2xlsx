@@ -50,10 +50,10 @@ CLASS zcl_excel_reader_xlsm IMPLEMENTATION.
     CONSTANTS: lc_vba_project  TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject'.
 
     DATA: rels_workbook_path TYPE string,
-          rels_workbook      TYPE REF TO if_ixml_document,
+          rels_workbook      TYPE REF TO zif_excel_xml_document,
           path               TYPE string,
-          node               TYPE REF TO if_ixml_element,
-          workbook           TYPE REF TO if_ixml_document,
+          node               TYPE REF TO zif_excel_xml_element,
+          workbook           TYPE REF TO zif_excel_xml_document,
           stripped_name      TYPE chkfile,
           dirname            TYPE string,
           relationship       TYPE t_relationship,
@@ -119,8 +119,8 @@ CLASS zcl_excel_reader_xlsm IMPLEMENTATION.
     super->load_worksheet( EXPORTING ip_path      = ip_path
                                      io_worksheet = io_worksheet ).
 
-    DATA: node      TYPE REF TO if_ixml_element,
-          worksheet TYPE REF TO if_ixml_document,
+    DATA: node      TYPE REF TO zif_excel_xml_element,
+          worksheet TYPE REF TO zif_excel_xml_document,
           sheetpr   TYPE t_sheetpr.
 
     " Read Workbook codeName

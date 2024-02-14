@@ -41,15 +41,15 @@ CLASS zcl_excel_writer_2007 DEFINITION
     CONSTANTS c_xl_comments TYPE string VALUE 'xl/comments#.xml'. "#EC NOTEXT
     CONSTANTS cl_xl_drawing_for_comments TYPE string VALUE 'xl/drawings/vmlDrawing#.vml'. "#EC NOTEXT
     CONSTANTS c_xl_drawings_vml_rels TYPE string VALUE 'xl/drawings/_rels/vmlDrawing#.vml.rels'. "#EC NOTEXT
-    DATA ixml TYPE REF TO if_ixml.
+    DATA ixml TYPE REF TO zif_excel_xml.
     DATA control_characters TYPE string.
 
     METHODS create_xl_sheet_sheet_data
       IMPORTING
-        !io_document                   TYPE REF TO if_ixml_document
+        !io_document                   TYPE REF TO zif_excel_xml_document
         !io_worksheet                  TYPE REF TO zcl_excel_worksheet
       RETURNING
-        VALUE(rv_ixml_sheet_data_root) TYPE REF TO if_ixml_element
+        VALUE(rv_ixml_sheet_data_root) TYPE REF TO zif_excel_xml_element
       RAISING
         zcx_excel .
     METHODS add_further_data_to_zip
@@ -72,8 +72,8 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS create_dxf_style
       IMPORTING
         !iv_cell_style    TYPE zexcel_cell_style
-        !io_dxf_element   TYPE REF TO if_ixml_element
-        !io_ixml_document TYPE REF TO if_ixml_document
+        !io_dxf_element   TYPE REF TO zif_excel_xml_element
+        !io_ixml_document TYPE REF TO zif_excel_xml_document
         !it_cellxfs       TYPE zexcel_t_cellxfs
         !it_fonts         TYPE zexcel_t_style_font
         !it_fills         TYPE zexcel_t_style_fill
@@ -105,10 +105,10 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS create_xl_drawing_anchor
       IMPORTING
         !io_drawing      TYPE REF TO zcl_excel_drawing
-        !io_document     TYPE REF TO if_ixml_document
+        !io_document     TYPE REF TO zif_excel_xml_document
         !ip_index        TYPE i
       RETURNING
-        VALUE(ep_anchor) TYPE REF TO if_ixml_element .
+        VALUE(ep_anchor) TYPE REF TO zif_excel_xml_element .
     METHODS create_xl_drawing_for_comments
       IMPORTING
         !io_worksheet     TYPE REF TO zcl_excel_worksheet
@@ -133,12 +133,12 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS create_xl_sheet_ignored_errors
       IMPORTING
         io_worksheet    TYPE REF TO zcl_excel_worksheet
-        io_document     TYPE REF TO if_ixml_document
-        io_element_root TYPE REF TO if_ixml_element.
+        io_document     TYPE REF TO zif_excel_xml_document
+        io_element_root TYPE REF TO zif_excel_xml_element.
     METHODS create_xl_sheet_pagebreaks
       IMPORTING
-        !io_document  TYPE REF TO if_ixml_document
-        !io_parent    TYPE REF TO if_ixml_element
+        !io_document  TYPE REF TO zif_excel_xml_document
+        !io_parent    TYPE REF TO zif_excel_xml_element
         !io_worksheet TYPE REF TO zcl_excel_worksheet
       RAISING
         zcx_excel .
@@ -154,14 +154,14 @@ CLASS zcl_excel_writer_2007 DEFINITION
         VALUE(ep_content) TYPE xstring .
     METHODS create_xl_styles_color_node
       IMPORTING
-        !io_document        TYPE REF TO if_ixml_document
-        !io_parent          TYPE REF TO if_ixml_element
+        !io_document        TYPE REF TO zif_excel_xml_document
+        !io_parent          TYPE REF TO zif_excel_xml_element
         !iv_color_elem_name TYPE string DEFAULT 'color'
         !is_color           TYPE zexcel_s_style_color .
     METHODS create_xl_styles_font_node
       IMPORTING
-        !io_document TYPE REF TO if_ixml_document
-        !io_parent   TYPE REF TO if_ixml_element
+        !io_document TYPE REF TO zif_excel_xml_document
+        !io_parent   TYPE REF TO zif_excel_xml_element
         !is_font     TYPE zexcel_s_style_font
         !iv_use_rtf  TYPE abap_bool DEFAULT abap_false .
     METHODS create_xl_table
@@ -221,19 +221,19 @@ CLASS zcl_excel_writer_2007 DEFINITION
         VALUE(ep_content) TYPE xstring .
     METHODS create_xml_document
       RETURNING
-        VALUE(ro_document) TYPE REF TO if_ixml_document.
+        VALUE(ro_document) TYPE REF TO zif_excel_xml_document.
     METHODS render_xml_document
       IMPORTING
-        io_document       TYPE REF TO if_ixml_document
+        io_document       TYPE REF TO zif_excel_xml_document
       RETURNING
         VALUE(ep_content) TYPE xstring.
     METHODS create_xl_sheet_column_formula
       IMPORTING
-        io_document             TYPE REF TO if_ixml_document
+        io_document             TYPE REF TO zif_excel_xml_document
         it_column_formulas      TYPE zcl_excel_worksheet=>mty_th_column_formula
         is_sheet_content        TYPE zexcel_s_cell_data
       EXPORTING
-        eo_element              TYPE REF TO if_ixml_element
+        eo_element              TYPE REF TO zif_excel_xml_element
       CHANGING
         ct_column_formulas_used TYPE mty_column_formulas_used
         cv_si                   TYPE i
@@ -257,8 +257,8 @@ CLASS zcl_excel_writer_2007 DEFINITION
 
     METHODS add_1_val_child_node
       IMPORTING
-        io_document   TYPE REF TO if_ixml_document
-        io_parent     TYPE REF TO if_ixml_element
+        io_document   TYPE REF TO zif_excel_xml_document
+        io_parent     TYPE REF TO zif_excel_xml_element
         iv_elem_name  TYPE string
         iv_attr_name  TYPE string
         iv_attr_value TYPE string.
@@ -276,7 +276,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
   METHOD add_1_val_child_node.
 
-    DATA: lo_child TYPE REF TO if_ixml_element.
+    DATA: lo_child TYPE REF TO zif_excel_xml_element.
 
     lo_child = io_document->create_simple_element( name   = iv_elem_name
                                                    parent = io_document ).
@@ -298,7 +298,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lt_unicode_point_codes TYPE TABLE OF string,
           lv_unicode_point_code  TYPE i.
 
-    me->ixml = cl_ixml=>create( ).
+    me->ixml = zcl_excel_xml=>create( ).
 
     SPLIT '0,1,2,3,4,5,6,7,8,' " U+0000 to U+0008
        && '11,12,'             " U+000B, U+000C
@@ -616,9 +616,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_drawings_ct  TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawing+xml',
           lc_xml_node_chart_ct     TYPE string VALUE 'application/vnd.openxmlformats-officedocument.drawingml.chart+xml'.
 
-    DATA: lo_document        TYPE REF TO if_ixml_document,
-          lo_element_root    TYPE REF TO if_ixml_element,
-          lo_element         TYPE REF TO if_ixml_element,
+    DATA: lo_document        TYPE REF TO zif_excel_xml_document,
+          lo_element_root    TYPE REF TO zif_excel_xml_element,
+          lo_element         TYPE REF TO zif_excel_xml_element,
           lo_worksheet       TYPE REF TO zcl_excel_worksheet,
           lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lo_nested_iterator TYPE REF TO zcl_excel_collection_iterator,
@@ -895,13 +895,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_attr_size              TYPE string VALUE 'size',
           lc_xml_attr_basetype          TYPE string VALUE 'baseType'.
 
-    DATA: lo_document            TYPE REF TO if_ixml_document,
-          lo_element_root        TYPE REF TO if_ixml_element,
-          lo_element             TYPE REF TO if_ixml_element,
-          lo_sub_element_vector  TYPE REF TO if_ixml_element,
-          lo_sub_element_variant TYPE REF TO if_ixml_element,
-          lo_sub_element_lpstr   TYPE REF TO if_ixml_element,
-          lo_sub_element_i4      TYPE REF TO if_ixml_element,
+    DATA: lo_document            TYPE REF TO zif_excel_xml_document,
+          lo_element_root        TYPE REF TO zif_excel_xml_element,
+          lo_element             TYPE REF TO zif_excel_xml_element,
+          lo_sub_element_vector  TYPE REF TO zif_excel_xml_element,
+          lo_sub_element_variant TYPE REF TO zif_excel_xml_element,
+          lo_sub_element_lpstr   TYPE REF TO zif_excel_xml_element,
+          lo_sub_element_i4      TYPE REF TO zif_excel_xml_element,
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet           TYPE REF TO zcl_excel_worksheet.
 
@@ -968,9 +968,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                                                   parent = lo_document ).
     lv_value = excel->get_worksheets_name( ).
     lo_sub_element_lpstr->set_value( value = lv_value ).
-    lo_sub_element_variant->append_child( new_child = lo_sub_element_lpstr ). " lpstr node
+    lo_sub_element_variant->append_child( new_child = lo_sub_element_lpstr ). " lpstr as child of variant
 
-    lo_sub_element_vector->append_child( new_child = lo_sub_element_variant ). " variant node
+    lo_sub_element_vector->append_child( new_child = lo_sub_element_variant ). " variant as child of vector
 
     " ** variant node
     lo_sub_element_variant = lo_document->create_simple_element_ns( name   = lc_xml_node_variant
@@ -985,13 +985,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_sub_element_i4->set_value( value = lv_value ).
-    lo_sub_element_variant->append_child( new_child = lo_sub_element_i4 ). " lpstr node
+    lo_sub_element_variant->append_child( new_child = lo_sub_element_i4 ). " i4 as child of variant
 
-    lo_sub_element_vector->append_child( new_child = lo_sub_element_variant ). " variant node
+    lo_sub_element_vector->append_child( new_child = lo_sub_element_variant ). " variant as child of vector
 
-    lo_element->append_child( new_child = lo_sub_element_vector ). " vector node
+    lo_element->append_child( new_child = lo_sub_element_vector ). " vector as child of HeadingPairs
 
-    lo_element_root->append_child( new_child = lo_element ). " HeadingPairs
+    lo_element_root->append_child( new_child = lo_element ). " HeadingPairs as child of Properties (root)
 
 
     " TitlesOfParts
@@ -1021,12 +1021,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_worksheet ?= lo_iterator->get_next( ).
       lv_value = lo_worksheet->get_title( ).
       lo_sub_element_lpstr->set_value( value = lv_value ).
-      lo_sub_element_vector->append_child( new_child = lo_sub_element_lpstr ). " lpstr node
+      lo_sub_element_vector->append_child( new_child = lo_sub_element_lpstr ). " lpstr as child of vector
     ENDWHILE.
 
-    lo_element->append_child( new_child = lo_sub_element_vector ). " vector node
+    lo_element->append_child( new_child = lo_sub_element_vector ). " vector as child of TitlesOfParts
 
-    lo_element_root->append_child( new_child = lo_element ). " TitlesOfParts
+    lo_element_root->append_child( new_child = lo_element ). " TitlesOfParts as child of Properties (root)
 
 
 
@@ -1098,9 +1098,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_dcmitype_ns    TYPE string VALUE 'http://purl.org/dc/dcmitype/',
           lc_xml_node_xsi_ns         TYPE string VALUE 'http://www.w3.org/2001/XMLSchema-instance'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element.
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element.
 
     DATA: lv_value TYPE string,
           lv_date  TYPE d,
@@ -1203,14 +1203,14 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: ls_styles_mapping     TYPE zexcel_s_styles_mapping,
           ls_cellxfs            TYPE zexcel_s_cellxfs,
           ls_style_cond_mapping TYPE zexcel_s_styles_cond_mapping,
-          lo_sub_element        TYPE REF TO if_ixml_element,
-          lo_sub_element_2      TYPE REF TO if_ixml_element,
+          lo_sub_element        TYPE REF TO zif_excel_xml_element,
+          lo_sub_element_2      TYPE REF TO zif_excel_xml_element,
           lv_index              TYPE i,
           ls_font               TYPE zexcel_s_style_font,
-          lo_element_font       TYPE REF TO if_ixml_element,
+          lo_element_font       TYPE REF TO zif_excel_xml_element,
           lv_value              TYPE string,
           ls_fill               TYPE zexcel_s_style_fill,
-          lo_element_fill       TYPE REF TO if_ixml_element.
+          lo_element_fill       TYPE REF TO zif_excel_xml_element.
 
     CHECK iv_cell_style IS NOT INITIAL.
 
@@ -1340,9 +1340,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid2_tg       TYPE string VALUE 'docProps/core.xml',
           lc_xml_node_rid3_tg       TYPE string VALUE 'docProps/app.xml'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element.
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -1502,18 +1502,18 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_pagesetup          TYPE string VALUE 'c:pageSetup'.
 
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element.
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element.
 
 
-    DATA lo_element                               TYPE REF TO if_ixml_element.
-    DATA lo_element2                              TYPE REF TO if_ixml_element.
-    DATA lo_element3                              TYPE REF TO if_ixml_element.
-    DATA lo_el_rootchart                           TYPE REF TO if_ixml_element.
-    DATA lo_element4                              TYPE REF TO if_ixml_element.
-    DATA lo_element5                              TYPE REF TO if_ixml_element.
-    DATA lo_element6                              TYPE REF TO if_ixml_element.
-    DATA lo_element7                              TYPE REF TO if_ixml_element.
+    DATA lo_element                               TYPE REF TO zif_excel_xml_element.
+    DATA lo_element2                              TYPE REF TO zif_excel_xml_element.
+    DATA lo_element3                              TYPE REF TO zif_excel_xml_element.
+    DATA lo_el_rootchart                           TYPE REF TO zif_excel_xml_element.
+    DATA lo_element4                              TYPE REF TO zif_excel_xml_element.
+    DATA lo_element5                              TYPE REF TO zif_excel_xml_element.
+    DATA lo_element6                              TYPE REF TO zif_excel_xml_element.
+    DATA lo_element7                              TYPE REF TO zif_excel_xml_element.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -2339,22 +2339,22 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_attr_xmlspacing  TYPE string VALUE 'xml:space'.
 
 
-    DATA: lo_document            TYPE REF TO if_ixml_document,
-          lo_element_root        TYPE REF TO if_ixml_element,
-          lo_element_authors     TYPE REF TO if_ixml_element,
-          lo_element_author      TYPE REF TO if_ixml_element,
-          lo_element_commentlist TYPE REF TO if_ixml_element,
-          lo_element_comment     TYPE REF TO if_ixml_element,
-          lo_element_text        TYPE REF TO if_ixml_element,
-          lo_element_r           TYPE REF TO if_ixml_element,
-          lo_element_rpr         TYPE REF TO if_ixml_element,
-          lo_element_b           TYPE REF TO if_ixml_element,
-          lo_element_sz          TYPE REF TO if_ixml_element,
-          lo_element_color       TYPE REF TO if_ixml_element,
-          lo_element_rfont       TYPE REF TO if_ixml_element,
-*       lo_element_charset     TYPE REF TO if_ixml_element,
-          lo_element_family      TYPE REF TO if_ixml_element,
-          lo_element_t           TYPE REF TO if_ixml_element,
+    DATA: lo_document            TYPE REF TO zif_excel_xml_document,
+          lo_element_root        TYPE REF TO zif_excel_xml_element,
+          lo_element_authors     TYPE REF TO zif_excel_xml_element,
+          lo_element_author      TYPE REF TO zif_excel_xml_element,
+          lo_element_commentlist TYPE REF TO zif_excel_xml_element,
+          lo_element_comment     TYPE REF TO zif_excel_xml_element,
+          lo_element_text        TYPE REF TO zif_excel_xml_element,
+          lo_element_r           TYPE REF TO zif_excel_xml_element,
+          lo_element_rpr         TYPE REF TO zif_excel_xml_element,
+          lo_element_b           TYPE REF TO zif_excel_xml_element,
+          lo_element_sz          TYPE REF TO zif_excel_xml_element,
+          lo_element_color       TYPE REF TO zif_excel_xml_element,
+          lo_element_rfont       TYPE REF TO zif_excel_xml_element,
+*       lo_element_charset     TYPE REF TO zif_excel_xml_element,
+          lo_element_family      TYPE REF TO zif_excel_xml_element,
+          lo_element_t           TYPE REF TO zif_excel_xml_element,
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_comments            TYPE REF TO zcl_excel_comments,
           lo_comment             TYPE REF TO zcl_excel_comment.
@@ -2453,9 +2453,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_ns_xdr TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
                lc_xml_node_ns_a   TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main'.
 
-    DATA: lo_document           TYPE REF TO if_ixml_document,
-          lo_element_root       TYPE REF TO if_ixml_element,
-          lo_element_cellanchor TYPE REF TO if_ixml_element,
+    DATA: lo_document           TYPE REF TO zif_excel_xml_document,
+          lo_element_root       TYPE REF TO zif_excel_xml_element,
+          lo_element_cellanchor TYPE REF TO zif_excel_xml_element,
           lo_iterator           TYPE REF TO zcl_excel_collection_iterator,
           lo_drawings           TYPE REF TO zcl_excel_drawings,
           lo_drawing            TYPE REF TO zcl_excel_drawing.
@@ -2519,9 +2519,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
 
     DATA: lo_drawing      TYPE REF TO zcl_excel_drawing,
-          lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
+          lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element,
           lv_value        TYPE string,
           lv_relation_id  TYPE i,
           lt_temp         TYPE strtable,
@@ -2596,9 +2596,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
           lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element,
           lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_drawings     TYPE REF TO zcl_excel_drawings,
           lo_drawing      TYPE REF TO zcl_excel_drawing.
@@ -2708,9 +2708,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     DATA: lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_drawing      TYPE REF TO zcl_excel_drawing,
-          lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
+          lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element,
           lv_value        TYPE string,
           lv_relation_id  TYPE i.
 
@@ -2808,15 +2808,15 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_astretch          TYPE string VALUE 'a:stretch',
                lc_xml_node_ns_r              TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'.
 
-    DATA: lo_element_graphicframe TYPE REF TO if_ixml_element,
-          lo_element              TYPE REF TO if_ixml_element,
-          lo_element2             TYPE REF TO if_ixml_element,
-          lo_element3             TYPE REF TO if_ixml_element,
-          lo_element_from         TYPE REF TO if_ixml_element,
-          lo_element_to           TYPE REF TO if_ixml_element,
-          lo_element_ext          TYPE REF TO if_ixml_element,
-          lo_element_pic          TYPE REF TO if_ixml_element,
-          lo_element_clientdata   TYPE REF TO if_ixml_element,
+    DATA: lo_element_graphicframe TYPE REF TO zif_excel_xml_element,
+          lo_element              TYPE REF TO zif_excel_xml_element,
+          lo_element2             TYPE REF TO zif_excel_xml_element,
+          lo_element3             TYPE REF TO zif_excel_xml_element,
+          lo_element_from         TYPE REF TO zif_excel_xml_element,
+          lo_element_to           TYPE REF TO zif_excel_xml_element,
+          lo_element_ext          TYPE REF TO zif_excel_xml_element,
+          lo_element_pic          TYPE REF TO zif_excel_xml_element,
+          lo_element_clientdata   TYPE REF TO zif_excel_xml_element,
           ls_position             TYPE zexcel_drawing_position,
           lv_col                  TYPE string, " zexcel_cell_column,
           lv_row                  TYPE string, " zexcel_cell_row.
@@ -3126,28 +3126,28 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_attr_val_note        TYPE string VALUE 'Note'.
 
 
-    DATA: lo_document              TYPE REF TO if_ixml_document,
-          lo_element_root          TYPE REF TO if_ixml_element,
+    DATA: lo_document              TYPE REF TO zif_excel_xml_document,
+          lo_element_root          TYPE REF TO zif_excel_xml_element,
           "shapelayout
-          lo_element_shapelayout   TYPE REF TO if_ixml_element,
-          lo_element_idmap         TYPE REF TO if_ixml_element,
+          lo_element_shapelayout   TYPE REF TO zif_excel_xml_element,
+          lo_element_idmap         TYPE REF TO zif_excel_xml_element,
           "shapetype
-          lo_element_shapetype     TYPE REF TO if_ixml_element,
-          lo_element_stroke        TYPE REF TO if_ixml_element,
-          lo_element_path          TYPE REF TO if_ixml_element,
+          lo_element_shapetype     TYPE REF TO zif_excel_xml_element,
+          lo_element_stroke        TYPE REF TO zif_excel_xml_element,
+          lo_element_path          TYPE REF TO zif_excel_xml_element,
           "shape
-          lo_element_shape         TYPE REF TO if_ixml_element,
-          lo_element_fill          TYPE REF TO if_ixml_element,
-          lo_element_shadow        TYPE REF TO if_ixml_element,
-          lo_element_textbox       TYPE REF TO if_ixml_element,
-          lo_element_div           TYPE REF TO if_ixml_element,
-          lo_element_clientdata    TYPE REF TO if_ixml_element,
-          lo_element_movewithcells TYPE REF TO if_ixml_element,
-          lo_element_sizewithcells TYPE REF TO if_ixml_element,
-          lo_element_anchor        TYPE REF TO if_ixml_element,
-          lo_element_autofill      TYPE REF TO if_ixml_element,
-          lo_element_row           TYPE REF TO if_ixml_element,
-          lo_element_column        TYPE REF TO if_ixml_element,
+          lo_element_shape         TYPE REF TO zif_excel_xml_element,
+          lo_element_fill          TYPE REF TO zif_excel_xml_element,
+          lo_element_shadow        TYPE REF TO zif_excel_xml_element,
+          lo_element_textbox       TYPE REF TO zif_excel_xml_element,
+          lo_element_div           TYPE REF TO zif_excel_xml_element,
+          lo_element_clientdata    TYPE REF TO zif_excel_xml_element,
+          lo_element_movewithcells TYPE REF TO zif_excel_xml_element,
+          lo_element_sizewithcells TYPE REF TO zif_excel_xml_element,
+          lo_element_anchor        TYPE REF TO zif_excel_xml_element,
+          lo_element_autofill      TYPE REF TO zif_excel_xml_element,
+          lo_element_row           TYPE REF TO zif_excel_xml_element,
+          lo_element_column        TYPE REF TO zif_excel_xml_element,
           lo_iterator              TYPE REF TO zcl_excel_collection_iterator,
           lo_comments              TYPE REF TO zcl_excel_comments,
           lo_comment               TYPE REF TO zcl_excel_comment,
@@ -3416,9 +3416,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_styles_tg TYPE string VALUE 'styles.xml',
           lc_xml_node_rid_theme_tg  TYPE string VALUE 'theme/theme1.xml'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element.
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element.
 
     DATA: lv_xml_node_ridx_tg TYPE string,
           lv_xml_node_ridx_id TYPE string,
@@ -3540,12 +3540,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           " Node namespace
           lc_xml_node_ns          TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_sub_element  TYPE REF TO if_ixml_element,
-          lo_sub2_element TYPE REF TO if_ixml_element,
-          lo_font_element TYPE REF TO if_ixml_element,
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element,
+          lo_sub_element  TYPE REF TO zif_excel_xml_element,
+          lo_sub2_element TYPE REF TO zif_excel_xml_element,
+          lo_font_element TYPE REF TO zif_excel_xml_element,
           lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet    TYPE REF TO zcl_excel_worksheet.
 
@@ -3694,8 +3694,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_comp_pref          TYPE string VALUE 'x14ac',
           lc_xml_node_ig_ns              TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac'.
 
-    DATA: lo_document        TYPE REF TO if_ixml_document,
-          lo_element_root    TYPE REF TO if_ixml_element,
+    DATA: lo_document        TYPE REF TO zif_excel_xml_document,
+          lo_element_root    TYPE REF TO zif_excel_xml_element,
           lo_create_xl_sheet TYPE REF TO lcl_create_xl_sheet.
 
 
@@ -3814,8 +3814,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD create_xl_sheet_ignored_errors.
-    DATA: lo_element        TYPE REF TO if_ixml_element,
-          lo_element2       TYPE REF TO if_ixml_element,
+    DATA: lo_element        TYPE REF TO zif_excel_xml_element,
+          lo_element2       TYPE REF TO zif_excel_xml_element,
           lt_ignored_errors TYPE zcl_excel_worksheet=>mty_th_ignored_errors.
     FIELD-SYMBOLS: <ls_ignored_errors> TYPE zcl_excel_worksheet=>mty_s_ignored_errors.
 
@@ -3888,9 +3888,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lt_rows           TYPE HASHED TABLE OF int4 WITH UNIQUE KEY table_line,
           lt_columns        TYPE HASHED TABLE OF int4 WITH UNIQUE KEY table_line,
 
-          lo_node_rowbreaks TYPE REF TO if_ixml_element,
-          lo_node_colbreaks TYPE REF TO if_ixml_element,
-          lo_node_break     TYPE REF TO if_ixml_element,
+          lo_node_rowbreaks TYPE REF TO zif_excel_xml_element,
+          lo_node_colbreaks TYPE REF TO zif_excel_xml_element,
+          lo_node_break     TYPE REF TO zif_excel_xml_element,
 
           lv_value          TYPE string.
 
@@ -3981,9 +3981,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_drawing_cmt_tp TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing',      " (+) Issue #180
           lc_xml_node_rid_link_tp        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element,
           lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_table        TYPE REF TO zcl_excel_table,
           lo_link         TYPE REF TO zcl_excel_hyperlink.
@@ -4226,9 +4226,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ls_last_row            TYPE zexcel_s_cell_data,
           ls_style_mapping       TYPE zexcel_s_styles_mapping,
 
-          lo_element_2           TYPE REF TO if_ixml_element,
-          lo_element_3           TYPE REF TO if_ixml_element,
-          lo_element_4           TYPE REF TO if_ixml_element,
+          lo_element_2           TYPE REF TO zif_excel_xml_element,
+          lo_element_3           TYPE REF TO zif_excel_xml_element,
+          lo_element_4           TYPE REF TO zif_excel_xml_element,
 
           lv_value               TYPE string,
           lv_style_guid          TYPE zexcel_cell_style.
@@ -4648,20 +4648,20 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_attr_right             TYPE string VALUE 'right',
                lc_xml_attr_left              TYPE string VALUE 'left'.
 
-    DATA: lo_document        TYPE REF TO if_ixml_document,
-          lo_element_root    TYPE REF TO if_ixml_element,
-          lo_element_fonts   TYPE REF TO if_ixml_element,
-          lo_element_font    TYPE REF TO if_ixml_element,
-          lo_element_fills   TYPE REF TO if_ixml_element,
-          lo_element_fill    TYPE REF TO if_ixml_element,
-          lo_element_borders TYPE REF TO if_ixml_element,
-          lo_element_border  TYPE REF TO if_ixml_element,
-          lo_element_numfmts TYPE REF TO if_ixml_element,
-          lo_element_numfmt  TYPE REF TO if_ixml_element,
-          lo_element_cellxfs TYPE REF TO if_ixml_element,
-          lo_element         TYPE REF TO if_ixml_element,
-          lo_sub_element     TYPE REF TO if_ixml_element,
-          lo_sub_element_2   TYPE REF TO if_ixml_element,
+    DATA: lo_document        TYPE REF TO zif_excel_xml_document,
+          lo_element_root    TYPE REF TO zif_excel_xml_element,
+          lo_element_fonts   TYPE REF TO zif_excel_xml_element,
+          lo_element_font    TYPE REF TO zif_excel_xml_element,
+          lo_element_fills   TYPE REF TO zif_excel_xml_element,
+          lo_element_fill    TYPE REF TO zif_excel_xml_element,
+          lo_element_borders TYPE REF TO zif_excel_xml_element,
+          lo_element_border  TYPE REF TO zif_excel_xml_element,
+          lo_element_numfmts TYPE REF TO zif_excel_xml_element,
+          lo_element_numfmt  TYPE REF TO zif_excel_xml_element,
+          lo_element_cellxfs TYPE REF TO zif_excel_xml_element,
+          lo_element         TYPE REF TO zif_excel_xml_element,
+          lo_sub_element     TYPE REF TO zif_excel_xml_element,
+          lo_sub_element_2   TYPE REF TO zif_excel_xml_element,
           lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lo_iterator2       TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet       TYPE REF TO zcl_excel_worksheet,
@@ -5456,7 +5456,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD create_xl_styles_color_node.
-    DATA: lo_sub_element TYPE REF TO if_ixml_element,
+    DATA: lo_sub_element TYPE REF TO zif_excel_xml_element,
           lv_value       TYPE string.
 
     CONSTANTS: lc_xml_attr_theme   TYPE string VALUE 'theme',
@@ -5515,10 +5515,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_scheme TYPE string VALUE 'scheme',
                lc_xml_attr_val    TYPE string VALUE 'val'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_font TYPE REF TO if_ixml_element,
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_font TYPE REF TO zif_excel_xml_element,
           ls_font         TYPE zexcel_s_style_font,
-          lo_sub_element  TYPE REF TO if_ixml_element,
+          lo_sub_element  TYPE REF TO zif_excel_xml_element,
           lv_value        TYPE string.
 
     lo_document = io_document.
@@ -5612,11 +5612,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           " Node id
           lc_xml_node_ridx_id      TYPE string VALUE 'rId#'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_element      TYPE REF TO if_ixml_element,
-          lo_element2     TYPE REF TO if_ixml_element,
-          lo_element3     TYPE REF TO if_ixml_element,
+    DATA: lo_document     TYPE REF TO zif_excel_xml_document,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_element      TYPE REF TO zif_excel_xml_element,
+          lo_element2     TYPE REF TO zif_excel_xml_element,
+          lo_element3     TYPE REF TO zif_excel_xml_element,
           lv_table_name   TYPE string,
           lv_id           TYPE i,
           lv_match        TYPE i,
@@ -5860,11 +5860,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           " Node id
           lc_xml_node_ridx_id            TYPE string VALUE 'rId#'.
 
-    DATA: lo_document       TYPE REF TO if_ixml_document,
-          lo_element_root   TYPE REF TO if_ixml_element,
-          lo_element        TYPE REF TO if_ixml_element,
-          lo_element_range  TYPE REF TO if_ixml_element,
-          lo_sub_element    TYPE REF TO if_ixml_element,
+    DATA: lo_document       TYPE REF TO zif_excel_xml_document,
+          lo_element_root   TYPE REF TO zif_excel_xml_element,
+          lo_element        TYPE REF TO zif_excel_xml_element,
+          lo_element_range  TYPE REF TO zif_excel_xml_element,
+          lo_sub_element    TYPE REF TO zif_excel_xml_element,
           lo_iterator       TYPE REF TO zcl_excel_collection_iterator,
           lo_iterator_range TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet      TYPE REF TO zcl_excel_worksheet,
@@ -6112,8 +6112,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD create_xml_document.
-    DATA lo_encoding TYPE REF TO if_ixml_encoding.
-    lo_encoding = me->ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
+    DATA lo_encoding TYPE REF TO zif_excel_xml_encoding.
+    lo_encoding = me->ixml->create_encoding( byte_order = zif_excel_xml_encoding=>co_platform_endian
                                              character_set = 'utf-8' ).
     ro_document = me->ixml->create_document( ).
     ro_document->set_encoding( lo_encoding ).
@@ -6197,10 +6197,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD render_xml_document.
-    DATA lo_streamfactory TYPE REF TO if_ixml_stream_factory.
-    DATA lo_ostream       TYPE REF TO if_ixml_ostream.
-    DATA lo_renderer      TYPE REF TO if_ixml_renderer.
+    DATA lo_streamfactory TYPE REF TO zif_excel_xml_stream_factory.
+    DATA lo_ostream       TYPE REF TO zif_excel_xml_ostream.
+    DATA lo_renderer      TYPE REF TO zif_excel_xml_renderer.
     DATA lv_string        TYPE string.
+    DATA lr_string        TYPE REF TO string.
 
     " So that the rendering of io_document to a XML text in UTF-8 XSTRING works for all Unicode characters (Chinese,
     " emoticons, etc.) the method CREATE_OSTREAM_CSTRING must be used instead of CREATE_OSTREAM_XSTRING as explained
@@ -6236,7 +6237,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     " 1) RENDER TO XML STRING
     lo_streamfactory = me->ixml->create_stream_factory( ).
-    lo_ostream = lo_streamfactory->create_ostream_cstring( string = lv_string ).
+    GET REFERENCE OF lv_string INTO lr_string.
+    lo_ostream = lo_streamfactory->create_ostream_cstring( string = lr_string ).
     lo_renderer = me->ixml->create_renderer( ostream  = lo_ostream document = io_document ).
     lo_renderer->render( ).
 

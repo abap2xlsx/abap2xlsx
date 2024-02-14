@@ -15,10 +15,10 @@ CLASS zcl_excel_theme_elements DEFINITION
     METHODS constructor .
     METHODS load
       IMPORTING
-        !io_elements TYPE REF TO if_ixml_element .
+        !io_elements TYPE REF TO zif_excel_xml_element .
     METHODS build_xml
       IMPORTING
-        !io_document TYPE REF TO if_ixml_document .
+        !io_document TYPE REF TO zif_excel_xml_document .
   PROTECTED SECTION.
 
     DATA color_scheme TYPE REF TO zcl_excel_theme_color_scheme .
@@ -33,8 +33,8 @@ CLASS zcl_excel_theme_elements IMPLEMENTATION.
 
 
   METHOD build_xml.
-    DATA: lo_theme_element TYPE REF TO if_ixml_element.
-    DATA: lo_theme TYPE REF TO if_ixml_element.
+    DATA: lo_theme_element TYPE REF TO zif_excel_xml_element.
+    DATA: lo_theme TYPE REF TO zif_excel_xml_element.
     CHECK io_document IS BOUND.
     lo_theme ?= io_document->get_root_element( ).
     IF lo_theme IS BOUND.
@@ -57,9 +57,9 @@ CLASS zcl_excel_theme_elements IMPLEMENTATION.
 
 
   METHOD load.
-    DATA: lo_elements_children TYPE REF TO if_ixml_node_list.
-    DATA: lo_elements_iterator TYPE REF TO if_ixml_node_iterator.
-    DATA: lo_elements_element TYPE REF TO if_ixml_element.
+    DATA: lo_elements_children TYPE REF TO zif_excel_xml_node_list.
+    DATA: lo_elements_iterator TYPE REF TO zif_excel_xml_node_iterator.
+    DATA: lo_elements_element TYPE REF TO zif_excel_xml_element.
     CHECK io_elements IS NOT INITIAL.
 
     lo_elements_children = io_elements->get_children( ).

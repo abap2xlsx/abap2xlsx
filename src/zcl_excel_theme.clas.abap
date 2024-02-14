@@ -18,7 +18,7 @@ CLASS zcl_excel_theme DEFINITION
     METHODS constructor .
     METHODS read_theme
       IMPORTING
-        VALUE(io_theme_xml) TYPE REF TO if_ixml_document .
+        VALUE(io_theme_xml) TYPE REF TO zif_excel_xml_document .
     METHODS write_theme
       RETURNING
         VALUE(rv_xstring) TYPE xstring .
@@ -88,10 +88,10 @@ CLASS zcl_excel_theme IMPLEMENTATION.
 
 
   METHOD read_theme.
-    DATA: lo_node_theme TYPE REF TO if_ixml_element.
-    DATA: lo_theme_children TYPE REF TO if_ixml_node_list.
-    DATA: lo_theme_iterator TYPE REF TO if_ixml_node_iterator.
-    DATA: lo_theme_element TYPE REF TO if_ixml_element.
+    DATA: lo_node_theme TYPE REF TO zif_excel_xml_element.
+    DATA: lo_theme_children TYPE REF TO zif_excel_xml_node_list.
+    DATA: lo_theme_iterator TYPE REF TO zif_excel_xml_node_iterator.
+    DATA: lo_theme_element TYPE REF TO zif_excel_xml_element.
     CHECK io_theme_xml IS NOT INITIAL.
 
     lo_node_theme  = io_theme_xml->get_root_element( )."   find_from_name( name = c_theme ).
@@ -190,16 +190,18 @@ CLASS zcl_excel_theme IMPLEMENTATION.
 
 
   METHOD write_theme.
-    DATA: lo_ixml         TYPE REF TO if_ixml,
-          lo_element_root TYPE REF TO if_ixml_element,
-          lo_encoding     TYPE REF TO if_ixml_encoding.
-    DATA: lo_streamfactory  TYPE REF TO if_ixml_stream_factory.
-    DATA: lo_ostream TYPE REF TO if_ixml_ostream.
-    DATA: lo_renderer TYPE REF TO if_ixml_renderer.
-    DATA: lo_document TYPE REF TO if_ixml_document.
-    lo_ixml = cl_ixml=>create( ).
+    DATA: lo_ixml         TYPE REF TO zif_excel_xml,
+          lo_element_root TYPE REF TO zif_excel_xml_element,
+          lo_encoding     TYPE REF TO zif_excel_xml_encoding.
+    DATA: lo_streamfactory  TYPE REF TO zif_excel_xml_stream_factory.
+    DATA: lo_ostream TYPE REF TO zif_excel_xml_ostream.
+    DATA: lo_renderer TYPE REF TO zif_excel_xml_renderer.
+    DATA: lo_document TYPE REF TO zif_excel_xml_document.
+    DATA: lr_xstring TYPE REF TO xstring.
 
-    lo_encoding = lo_ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
+    lo_ixml = zcl_excel_xml=>create( ).
+
+    lo_encoding = lo_ixml->create_encoding( byte_order = zif_excel_xml_encoding=>co_platform_endian
                                             character_set = 'UTF-8' ).
     lo_document = lo_ixml->create_document( ).
     lo_document->set_encoding( lo_encoding ).
@@ -220,7 +222,8 @@ CLASS zcl_excel_theme IMPLEMENTATION.
     extlst->build_xml( io_document = lo_document ).
 
     lo_streamfactory = lo_ixml->create_stream_factory( ).
-    lo_ostream = lo_streamfactory->create_ostream_xstring( string = rv_xstring ).
+    GET REFERENCE OF rv_xstring INTO lr_xstring.
+    lo_ostream = lo_streamfactory->create_ostream_xstring( string = lr_xstring ).
     lo_renderer = lo_ixml->create_renderer( ostream  = lo_ostream document = lo_document ).
     lo_renderer->render( ).
 

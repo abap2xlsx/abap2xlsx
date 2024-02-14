@@ -119,7 +119,7 @@ CLASS zcl_excel_drawing DEFINITION
         VALUE(rp_index) TYPE string .
     METHODS load_chart_attributes
       IMPORTING
-        VALUE(ip_chart) TYPE REF TO if_ixml_document .
+        VALUE(ip_chart) TYPE REF TO zif_excel_xml_document .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -327,10 +327,10 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
 
 
   METHOD load_chart_attributes.
-    DATA: node                TYPE REF TO if_ixml_element.
-    DATA: node2               TYPE REF TO if_ixml_element.
-    DATA: node3               TYPE REF TO if_ixml_element.
-    DATA: node4               TYPE REF TO if_ixml_element.
+    DATA: node                TYPE REF TO zif_excel_xml_element.
+    DATA: node2               TYPE REF TO zif_excel_xml_element.
+    DATA: node3               TYPE REF TO zif_excel_xml_element.
+    DATA: node4               TYPE REF TO zif_excel_xml_element.
 
     DATA lo_barchart TYPE REF TO zcl_excel_graph_bars.
     DATA lo_piechart TYPE REF TO zcl_excel_graph_pie.
@@ -356,9 +356,9 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     DATA ls_prop TYPE t_prop.
     DATA ls_pagemargins TYPE t_pagemargins.
 
-    DATA lo_collection TYPE REF TO if_ixml_node_collection.
-    DATA lo_node       TYPE REF TO if_ixml_node.
-    DATA lo_iterator   TYPE REF TO if_ixml_node_iterator.
+    DATA lo_collection TYPE REF TO zif_excel_xml_node_collection.
+    DATA lo_node       TYPE REF TO zif_excel_xml_node.
+    DATA lo_iterator   TYPE REF TO zif_excel_xml_node_iterator.
     DATA lv_idx        TYPE i.
     DATA lv_order      TYPE i.
     DATA lv_invertifnegative      TYPE string.
@@ -384,7 +384,7 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     DATA lv_nomultilvllbl TYPE string.
     DATA lv_crossbetween TYPE string.
 
-    node ?= ip_chart->if_ixml_node~get_first_child( ).
+    node ?= ip_chart->zif_excel_xml_node~get_first_child( ).
     CHECK node IS NOT INITIAL.
 
     CASE me->graph_type.
@@ -826,7 +826,7 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
         node2 ?= node->find_from_name_ns( name = 'smooth' uri = namespace-c depth = '1' ).
         zcl_excel_reader_2007=>fill_struct_from_attributes( EXPORTING ip_element = node2 CHANGING cp_structure = ls_prop ).
         lo_linechart->ns_smoothval = ls_prop-val.
-        node ?= ip_chart->if_ixml_node~get_first_child( ).
+        node ?= ip_chart->zif_excel_xml_node~get_first_child( ).
         CHECK node IS NOT INITIAL.
 
         "Load axes

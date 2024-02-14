@@ -8,7 +8,7 @@ CLASS lcl_create_xl_sheet DEFINITION CREATE PUBLIC .
   PUBLIC SECTION.
     METHODS create IMPORTING io_worksheet         TYPE REF TO zcl_excel_worksheet
                              iv_active            TYPE flag DEFAULT ''
-                             io_document          TYPE REF TO if_ixml_document
+                             io_document          TYPE REF TO zif_excel_xml_document
                              io_excel_writer_2007 TYPE REF TO zcl_excel_writer_2007
                    RAISING   zcx_excel.
   PROTECTED SECTION.
@@ -22,7 +22,7 @@ CLASS lcl_create_xl_sheet DEFINITION CREATE PUBLIC .
            END OF cfvo,
            BEGIN OF ty_condformating_range,
              dimension_range     TYPE string,
-             condformatting_node TYPE REF TO if_ixml_element,
+             condformatting_node TYPE REF TO zif_excel_xml_element,
            END OF ty_condformating_range,
            ty_condformating_ranges TYPE STANDARD TABLE OF ty_condformating_range.
     CONSTANTS:
@@ -165,8 +165,8 @@ CLASS lcl_create_xl_sheet DEFINITION CREATE PUBLIC .
     DATA:
       o_excel_ref    TYPE REF TO zcl_excel_writer_2007,
       o_worksheet    TYPE REF TO zcl_excel_worksheet,
-      o_document     TYPE REF TO if_ixml_document,
-      o_element_root TYPE REF TO if_ixml_element,
+      o_document     TYPE REF TO zif_excel_xml_document,
+      o_element_root TYPE REF TO zif_excel_xml_element,
       v_active       TYPE flag,
       v_relation_id  TYPE i VALUE 0.
     METHODS:
@@ -242,8 +242,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   METHOD add_sheetpr.
 
     DATA:
-      lo_element   TYPE REF TO if_ixml_element,
-      lo_element_2 TYPE REF TO if_ixml_element,
+      lo_element   TYPE REF TO zif_excel_xml_element,
+      lo_element_2 TYPE REF TO zif_excel_xml_element,
       lv_value     TYPE string.
 
     " sheetPr
@@ -287,7 +287,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
   METHOD add_dimension.
     DATA:
-      lo_element TYPE REF TO if_ixml_element,
+      lo_element TYPE REF TO zif_excel_xml_element,
       lv_value   TYPE string.
 
     lo_element = o_document->create_simple_element( name   = lc_xml_node_dimension
@@ -299,9 +299,9 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
   METHOD add_sheet_views.
     DATA:
-      lo_element   TYPE REF TO if_ixml_element,
-      lo_element_2 TYPE REF TO if_ixml_element,
-      lo_element_3 TYPE REF TO if_ixml_element.
+      lo_element   TYPE REF TO zif_excel_xml_element,
+      lo_element_2 TYPE REF TO zif_excel_xml_element,
+      lo_element_3 TYPE REF TO zif_excel_xml_element.
 
     DATA: lv_value                    TYPE string,
           lv_freeze_cell_row          TYPE zexcel_cell_row,
@@ -458,7 +458,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_sheetformatpr.
-    DATA: lo_element         TYPE REF TO if_ixml_element,
+    DATA: lo_element         TYPE REF TO zif_excel_xml_element,
           lo_column_default  TYPE REF TO zcl_excel_column,
           lo_row_default     TYPE REF TO zcl_excel_row,lv_value           TYPE string,
           lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
@@ -522,8 +522,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_cols.
-    DATA: lo_element         TYPE REF TO if_ixml_element,
-          lo_element_2       TYPE REF TO if_ixml_element,
+    DATA: lo_element         TYPE REF TO zif_excel_xml_element,
+          lo_element_2       TYPE REF TO zif_excel_xml_element,
           lo_column_default  TYPE REF TO zcl_excel_column,
           lv_value           TYPE string,
           lv_column          TYPE zexcel_cell_column,
@@ -692,7 +692,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_sheet_protection.
     DATA:
-      lo_element TYPE REF TO if_ixml_element,
+      lo_element TYPE REF TO zif_excel_xml_element,
       lv_value   TYPE string.
 
 *< Begin of insertion Issue #572 - Protect sheet with filter caused Excel error
@@ -778,10 +778,10 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_autofilter.
     DATA:
-      lo_element     TYPE REF TO if_ixml_element,
-      lo_element_2   TYPE REF TO if_ixml_element,
-      lo_element_3   TYPE REF TO if_ixml_element,
-      lo_element_4   TYPE REF TO if_ixml_element,
+      lo_element     TYPE REF TO zif_excel_xml_element,
+      lo_element_2   TYPE REF TO zif_excel_xml_element,
+      lo_element_3   TYPE REF TO zif_excel_xml_element,
+      lo_element_4   TYPE REF TO zif_excel_xml_element,
       lv_value       TYPE string,
       lv_column      TYPE zexcel_cell_column,
       lt_values      TYPE zexcel_t_autofilter_values,
@@ -841,8 +841,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_merge_cells.
     DATA:
-      lo_element     TYPE REF TO if_ixml_element,
-      lo_element_2   TYPE REF TO if_ixml_element,
+      lo_element     TYPE REF TO zif_excel_xml_element,
+      lo_element_2   TYPE REF TO zif_excel_xml_element,
       lv_value       TYPE string,
       lt_range_merge TYPE string_table,
       merge_count    TYPE int4.
@@ -872,10 +872,10 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_conditional_formatting.
-    DATA: lo_element               TYPE REF TO if_ixml_element,
-          lo_element_2             TYPE REF TO if_ixml_element,
-          lo_element_3             TYPE REF TO if_ixml_element,
-          lo_element_4             TYPE REF TO if_ixml_element,
+    DATA: lo_element               TYPE REF TO zif_excel_xml_element,
+          lo_element_2             TYPE REF TO zif_excel_xml_element,
+          lo_element_3             TYPE REF TO zif_excel_xml_element,
+          lo_element_4             TYPE REF TO zif_excel_xml_element,
           lo_iterator              TYPE REF TO zcl_excel_collection_iterator,
           lo_style_cond            TYPE REF TO zcl_excel_style_cond,
           lv_value                 TYPE string,
@@ -1279,9 +1279,9 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_data_validations.
-    DATA: lo_element         TYPE REF TO if_ixml_element,
-          lo_element_2       TYPE REF TO if_ixml_element,
-          lo_element_3       TYPE REF TO if_ixml_element,
+    DATA: lo_element         TYPE REF TO zif_excel_xml_element,
+          lo_element_2       TYPE REF TO zif_excel_xml_element,
+          lo_element_3       TYPE REF TO zif_excel_xml_element,
           lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lo_data_validation TYPE REF TO zcl_excel_data_validation,
           lv_value           TYPE string,
@@ -1393,8 +1393,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_hyperlinks.
-    DATA: lo_element          TYPE REF TO if_ixml_element,
-          lo_element_2        TYPE REF TO if_ixml_element,
+    DATA: lo_element          TYPE REF TO zif_excel_xml_element,
+          lo_element_2        TYPE REF TO zif_excel_xml_element,
           lo_iterator         TYPE REF TO zcl_excel_collection_iterator,
           lv_value            TYPE string,
           lv_hyperlinks_count TYPE i,
@@ -1441,7 +1441,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_print_options.
     DATA:
-          lo_element      TYPE REF TO if_ixml_element.
+          lo_element      TYPE REF TO zif_excel_xml_element.
 
     IF o_worksheet->print_gridlines                  = abap_true
       OR o_worksheet->sheet_setup->vertical_centered   = abap_true
@@ -1470,7 +1470,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_page_margins.
     DATA:
-      lo_element TYPE REF TO if_ixml_element,
+      lo_element TYPE REF TO zif_excel_xml_element,
       lv_value   TYPE string.
 
     lo_element = o_document->create_simple_element( name   = lc_xml_node_pagemargins
@@ -1505,7 +1505,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_page_setup.
     DATA:
-      lo_element TYPE REF TO if_ixml_element,
+      lo_element TYPE REF TO zif_excel_xml_element,
       lv_value   TYPE string.
 
     lo_element = o_document->create_simple_element( name   = lc_xml_node_pagesetup
@@ -1628,8 +1628,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_header_footer.
     DATA:
-      lo_element   TYPE REF TO if_ixml_element,
-      lo_element_2 TYPE REF TO if_ixml_element,
+      lo_element   TYPE REF TO zif_excel_xml_element,
+      lo_element_2 TYPE REF TO zif_excel_xml_element,
       lv_value     TYPE string.
 
     IF    o_worksheet->sheet_setup->odd_header IS NOT INITIAL
@@ -1692,7 +1692,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_drawing.
     DATA:
-      lo_element  TYPE REF TO if_ixml_element,
+      lo_element  TYPE REF TO zif_excel_xml_element,
       lv_value    TYPE string,
       lo_drawings TYPE REF TO zcl_excel_drawings.
 
@@ -1712,7 +1712,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_drawing_for_comments.
-    DATA: lo_element              TYPE REF TO if_ixml_element,
+    DATA: lo_element              TYPE REF TO zif_excel_xml_element,
           lv_value                TYPE string,
           lo_drawing_for_comments TYPE REF TO zcl_excel_comments.
     " (Legacy) drawings for comments
@@ -1737,7 +1737,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_drawing_for_header_footer.
     DATA:
-      lo_element  TYPE REF TO if_ixml_element,
+      lo_element  TYPE REF TO zif_excel_xml_element,
       lv_value    TYPE string,
       lt_drawings TYPE zexcel_t_drawings.
 * Header/Footer Image
@@ -1760,8 +1760,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_table_parts.
     DATA:
-      lo_element     TYPE REF TO if_ixml_element,
-      lo_element_2   TYPE REF TO if_ixml_element,
+      lo_element     TYPE REF TO zif_excel_xml_element,
+      lo_element_2   TYPE REF TO zif_excel_xml_element,
       lo_iterator    TYPE REF TO zcl_excel_collection_iterator,
       lo_table       TYPE REF TO zcl_excel_table,
       lv_table_count TYPE i,
@@ -1801,7 +1801,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
   METHOD add_sheet_data.
     DATA:
-      lo_element     TYPE REF TO if_ixml_element.
+      lo_element     TYPE REF TO zif_excel_xml_element.
 
     lo_element = o_excel_ref->create_xl_sheet_sheet_data( io_worksheet = o_worksheet
                                                           io_document  = o_document ).

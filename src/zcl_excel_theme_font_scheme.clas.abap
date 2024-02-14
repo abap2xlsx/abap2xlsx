@@ -49,13 +49,13 @@ CLASS zcl_excel_theme_font_scheme DEFINITION
 
     METHODS load
       IMPORTING
-        !io_font_scheme TYPE REF TO if_ixml_element .
+        !io_font_scheme TYPE REF TO zif_excel_xml_element .
     METHODS set_name
       IMPORTING
         iv_name TYPE string .
     METHODS build_xml
       IMPORTING
-        !io_document TYPE REF TO if_ixml_document .
+        !io_document TYPE REF TO zif_excel_xml_document .
     METHODS modify_font
       IMPORTING
         VALUE(iv_type)     TYPE string
@@ -106,14 +106,14 @@ CLASS zcl_excel_theme_font_scheme IMPLEMENTATION.
 
 
   METHOD build_xml.
-    DATA: lo_scheme_element TYPE REF TO if_ixml_element.
-    DATA: lo_font TYPE REF TO if_ixml_element.
-    DATA: lo_latin TYPE REF TO if_ixml_element.
-    DATA: lo_ea TYPE REF TO if_ixml_element.
-    DATA: lo_cs TYPE REF TO if_ixml_element.
-    DATA: lo_major TYPE REF TO if_ixml_element.
-    DATA: lo_minor TYPE REF TO if_ixml_element.
-    DATA: lo_elements TYPE REF TO if_ixml_element.
+    DATA: lo_scheme_element TYPE REF TO zif_excel_xml_element.
+    DATA: lo_font TYPE REF TO zif_excel_xml_element.
+    DATA: lo_latin TYPE REF TO zif_excel_xml_element.
+    DATA: lo_ea TYPE REF TO zif_excel_xml_element.
+    DATA: lo_cs TYPE REF TO zif_excel_xml_element.
+    DATA: lo_major TYPE REF TO zif_excel_xml_element.
+    DATA: lo_minor TYPE REF TO zif_excel_xml_element.
+    DATA: lo_elements TYPE REF TO zif_excel_xml_element.
     FIELD-SYMBOLS: <font> TYPE t_font.
     CHECK io_document IS BOUND.
     lo_elements ?= io_document->find_from_name_ns( name = zcl_excel_theme=>c_theme_elements ).
@@ -240,15 +240,15 @@ CLASS zcl_excel_theme_font_scheme IMPLEMENTATION.
 
 
   METHOD load.
-    DATA: lo_scheme_children TYPE REF TO if_ixml_node_list.
-    DATA: lo_scheme_iterator TYPE REF TO if_ixml_node_iterator.
-    DATA: lo_scheme_element TYPE REF TO if_ixml_element.
-    DATA: lo_major_children TYPE REF TO if_ixml_node_list.
-    DATA: lo_major_iterator TYPE REF TO if_ixml_node_iterator.
-    DATA: lo_major_element TYPE REF TO if_ixml_element.
-    DATA: lo_minor_children TYPE REF TO if_ixml_node_list.
-    DATA: lo_minor_iterator TYPE REF TO if_ixml_node_iterator.
-    DATA: lo_minor_element TYPE REF TO if_ixml_element.
+    DATA: lo_scheme_children TYPE REF TO zif_excel_xml_node_list.
+    DATA: lo_scheme_iterator TYPE REF TO zif_excel_xml_node_iterator.
+    DATA: lo_scheme_element TYPE REF TO zif_excel_xml_element.
+    DATA: lo_major_children TYPE REF TO zif_excel_xml_node_list.
+    DATA: lo_major_iterator TYPE REF TO zif_excel_xml_node_iterator.
+    DATA: lo_major_element TYPE REF TO zif_excel_xml_element.
+    DATA: lo_minor_children TYPE REF TO zif_excel_xml_node_list.
+    DATA: lo_minor_iterator TYPE REF TO zif_excel_xml_node_iterator.
+    DATA: lo_minor_element TYPE REF TO zif_excel_xml_element.
     DATA: ls_font TYPE t_font.
     CHECK io_font_scheme IS NOT INITIAL.
     CLEAR font_scheme.

@@ -27,10 +27,10 @@ CLASS ltc_column_formula DEFINITION FOR TESTING
       RETURNING
         VALUE(rv_xml) TYPE string.
 
-    DATA lo_document TYPE REF TO if_ixml_document.
+    DATA lo_document TYPE REF TO zif_excel_xml_document.
     DATA lo_excel TYPE REF TO zcl_excel_writer_2007.
-    DATA lo_ixml TYPE REF TO if_ixml.
-    DATA lo_root TYPE REF TO if_ixml_element.
+    DATA lo_ixml TYPE REF TO zif_excel_xml.
+    DATA lo_root TYPE REF TO zif_excel_xml_element.
     DATA lt_column_formulas TYPE zcl_excel_worksheet=>mty_th_column_formula.
     DATA lt_column_formulas_used TYPE zcl_excel_writer_2007=>mty_column_formulas_used.
     DATA lv_si TYPE i.
@@ -111,8 +111,8 @@ CLASS ltc_column_formula IMPLEMENTATION.
 
   METHOD set_cell.
 
-    DATA lo_cell TYPE REF TO if_ixml_element.
-    DATA lo_formula TYPE REF TO if_ixml_element.
+    DATA lo_cell TYPE REF TO zif_excel_xml_element.
+    DATA lo_formula TYPE REF TO zif_excel_xml_element.
 
     lo_cell = lo_document->create_element( 'c' ).
     lo_cell->set_attribute( name = 'r' value = |R{ is_cell_data-cell_row }C{ is_cell_data-cell_column }| ).
@@ -135,12 +135,14 @@ CLASS ltc_column_formula IMPLEMENTATION.
 
   METHOD get_xml.
 
-    DATA lo_stream_factory TYPE REF TO if_ixml_stream_factory.
-    DATA lo_ostream TYPE REF TO if_ixml_ostream.
-    DATA lo_renderer TYPE REF TO if_ixml_renderer.
+    DATA lo_stream_factory TYPE REF TO zif_excel_xml_stream_factory.
+    DATA lo_ostream TYPE REF TO zif_excel_xml_ostream.
+    DATA lo_renderer TYPE REF TO zif_excel_xml_renderer.
+    DATA lr_string TYPE REF TO string.
 
     lo_stream_factory = lo_ixml->create_stream_factory( ).
-    lo_ostream = lo_stream_factory->create_ostream_cstring( string = rv_xml ).
+    GET REFERENCE OF rv_xml INTO lr_string.
+    lo_ostream = lo_stream_factory->create_ostream_cstring( string = lr_string ).
     lo_renderer = lo_ixml->create_renderer( ostream = lo_ostream document = lo_document ).
     lo_renderer->render( ).
     CALL TRANSFORMATION id SOURCE XML rv_xml RESULT XML rv_xml OPTIONS xml_header = 'no'.
@@ -156,7 +158,7 @@ CLASS ltc_column_formula IMPLEMENTATION.
 
     DATA ls_column_formula TYPE zcl_excel_worksheet=>mty_s_column_formula.
 
-    lo_ixml = cl_ixml=>create( ).
+    lo_ixml = zcl_excel_xml=>create( ).
     lo_document = lo_ixml->create_document( ).
     lo_root = lo_document->create_element( 'dummy' ).
     lo_document->append_child( lo_root ).
