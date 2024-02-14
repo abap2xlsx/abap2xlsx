@@ -17,9 +17,9 @@ CLASS zcl_excel_writer_csv DEFINITION
     CLASS-METHODS set_enclosure
       IMPORTING
         VALUE(ip_value) TYPE c DEFAULT '"' .
-    class-methods SET_ENDOFLINE
-      importing
-        value(IP_VALUE) type ANY default CL_ABAP_CHAR_UTILITIES=>CR_LF .
+    CLASS-METHODS set_endofline
+      IMPORTING
+        VALUE(ip_value) TYPE any DEFAULT cl_abap_char_utilities=>cr_lf .
     class-methods SET_ACTIVE_SHEET_INDEX
       importing
         !I_ACTIVE_WORKSHEET type ZEXCEL_ACTIVE_WORKSHEET .
