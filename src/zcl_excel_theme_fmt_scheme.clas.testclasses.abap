@@ -50,7 +50,7 @@ CLASS ltcl_test IMPLEMENTATION.
 
     cl_abap_unit_assert=>assert_char_cp(
       act = lv_xml
-      exp = '*<a:fmtScheme name="Office">*' ).
+      exp = '*<a:fmtScheme name="Office" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">*' ).
   ENDMETHOD.
 
 ENDCLASS.
