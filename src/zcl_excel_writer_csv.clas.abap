@@ -1,7 +1,7 @@
-class ZCL_EXCEL_WRITER_CSV definition
-  public
-  final
-  create public .
+CLASS zcl_excel_writer_csv DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
