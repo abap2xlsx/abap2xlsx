@@ -32,7 +32,7 @@ CLASS zcl_excel_writer_csv DEFINITION
   PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
-  private section.
+  PRIVATE SECTION.
 
     data EXCEL type ref to ZCL_EXCEL .
     class-data DELIMITER type C value ';' ##NO_TEXT.
