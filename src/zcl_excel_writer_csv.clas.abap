@@ -35,7 +35,7 @@ CLASS zcl_excel_writer_csv DEFINITION
   PRIVATE SECTION.
 
     DATA excel TYPE REF TO zcl_excel .
-    class-data DELIMITER type C value ';' ##NO_TEXT.
+    CLASS-DATA delimiter TYPE c VALUE ';' ##NO_TEXT.
     class-data ENCLOSURE type C value '"' ##NO_TEXT.
     class-data:
       EOL type C length 2 value CL_ABAP_CHAR_UTILITIES=>CR_LF ##NO_TEXT.
