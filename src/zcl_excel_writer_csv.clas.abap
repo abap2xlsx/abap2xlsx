@@ -1,58 +1,58 @@
-class zcl_excel_writer_csv definition
-  public
-  final
-  create public .
+CLASS zcl_excel_writer_csv DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
 *"* public components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
-  public section.
+  PUBLIC SECTION.
 
-    interfaces zif_excel_writer .
+    INTERFACES zif_excel_writer .
 
-    class-methods set_delimiter
-      importing
-        value(ip_value) type c default ';' .
-    class-methods set_enclosure
-      importing
-        value(ip_value) type c default '"' .
-    class-methods set_endofline
-      importing
-        value(ip_value) type any default cl_abap_char_utilities=>cr_lf .
-    class-methods set_active_sheet_index
-      importing
-        !i_active_worksheet type zexcel_active_worksheet .
-    class-methods set_active_sheet_index_by_name
-      importing
-        !i_worksheet_name type zexcel_worksheets_name .
-    class-methods set_initial_ext_date
-      importing
-        !ip_value type char10 default 'DEFAULT' .
-  protected section.
+    CLASS-METHODS set_delimiter
+      IMPORTING
+        VALUE(ip_value) TYPE c DEFAULT ';' .
+    CLASS-METHODS set_enclosure
+      IMPORTING
+        VALUE(ip_value) TYPE c DEFAULT '"' .
+    CLASS-METHODS set_endofline
+      IMPORTING
+        VALUE(ip_value) TYPE any DEFAULT cl_abap_char_utilities=>cr_lf .
+    CLASS-METHODS set_active_sheet_index
+      IMPORTING
+        !i_active_worksheet TYPE zexcel_active_worksheet .
+    CLASS-METHODS set_active_sheet_index_by_name
+      IMPORTING
+        !i_worksheet_name TYPE zexcel_worksheets_name .
+    CLASS-METHODS set_initial_ext_date
+      IMPORTING
+        !ip_value TYPE char10 DEFAULT 'DEFAULT' .
+  PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
-  private section.
+  PRIVATE SECTION.
 
-    data excel type ref to zcl_excel .
-    class-data delimiter type c value ';' ##NO_TEXT.
-    class-data enclosure type c value '"' ##NO_TEXT.
-    class-data:
-      eol type c length 2 value cl_abap_char_utilities=>cr_lf ##NO_TEXT.
-    class-data worksheet_name type zexcel_worksheets_name .
-    class-data worksheet_index type zexcel_active_worksheet .
-    class-data initial_ext_date type char10 value 'DEFAULT' ##NO_TEXT.
-    constants c_default type char10 value 'DEFAULT' ##NO_TEXT.
+    DATA excel TYPE REF TO zcl_excel .
+    CLASS-DATA delimiter TYPE c VALUE ';' ##NO_TEXT.
+    CLASS-DATA enclosure TYPE c VALUE '"' ##NO_TEXT.
+    CLASS-DATA:
+      eol TYPE c LENGTH 2 VALUE cl_abap_char_utilities=>cr_lf ##NO_TEXT.
+    CLASS-DATA worksheet_name TYPE zexcel_worksheets_name .
+    CLASS-DATA worksheet_index TYPE zexcel_active_worksheet .
+    CLASS-DATA initial_ext_date TYPE char10 VALUE 'DEFAULT' ##NO_TEXT.
+    CONSTANTS c_default TYPE char10 VALUE 'DEFAULT' ##NO_TEXT.
 
-    methods create
-      returning
-        value(ep_excel) type xstring
-      raising
+    METHODS create
+      RETURNING
+        VALUE(ep_excel) TYPE xstring
+      RAISING
         zcx_excel .
-    methods create_csv
-      returning
-        value(ep_content) type xstring
-      raising
+    METHODS create_csv
+      RETURNING
+        VALUE(ep_content) TYPE xstring
+      RAISING
         zcx_excel .
 ENDCLASS.
 
@@ -61,7 +61,7 @@ ENDCLASS.
 CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
 
 
-  method create.
+  METHOD create.
 
 * .csv format with ; delimiter
 
@@ -71,253 +71,253 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
 
     ep_excel = me->create_csv( ).
 
-  endmethod.
+  ENDMETHOD.
 
 
-  method create_csv.
+  METHOD create_csv.
 
-    types: begin of lty_format,
-             cmpname  type seocmpname,
-             attvalue type seovalue,
-           end of lty_format.
-    data: lt_format type standard table of lty_format,
-          ls_format like line of lt_format,
-          lv_date   type d,
-          lv_tmp    type string,
-          lv_time   type c length 8.
+    TYPES: BEGIN OF lty_format,
+             cmpname  TYPE seocmpname,
+             attvalue TYPE seovalue,
+           END OF lty_format.
+    DATA: lt_format TYPE STANDARD TABLE OF lty_format,
+          ls_format LIKE LINE OF lt_format,
+          lv_date   TYPE d,
+          lv_tmp    TYPE string,
+          lv_time   TYPE c LENGTH 8.
 
-    data: lo_iterator  type ref to zcl_excel_collection_iterator,
-          lo_worksheet type ref to zcl_excel_worksheet.
+    DATA: lo_iterator  TYPE REF TO zcl_excel_collection_iterator,
+          lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
-    data: lt_cell_data type zexcel_t_cell_data_unsorted,
-          lv_row       type i,
-          lv_col       type i,
-          lv_string    type string,
-          lc_value     type string,
-          lv_attrname  type seocmpname.
+    DATA: lt_cell_data TYPE zexcel_t_cell_data_unsorted,
+          lv_row       TYPE i,
+          lv_col       TYPE i,
+          lv_string    TYPE string,
+          lc_value     TYPE string,
+          lv_attrname  TYPE seocmpname.
 
-    data: ls_numfmt type zexcel_s_style_numfmt,
-          lo_style  type ref to zcl_excel_style.
+    DATA: ls_numfmt TYPE zexcel_s_style_numfmt,
+          lo_style  TYPE REF TO zcl_excel_style.
 
-    field-symbols: <fs_sheet_content> type zexcel_s_cell_data.
+    FIELD-SYMBOLS: <fs_sheet_content> TYPE zexcel_s_cell_data.
 
 * --- Retrieve supported cell format
-    select * into corresponding fields of table lt_format
-      from seocompodf
-     where clsname  = 'ZCL_EXCEL_STYLE_NUMBER_FORMAT'
-       and typtype  = 1
-       and type     = 'ZEXCEL_NUMBER_FORMAT'.
+    SELECT * INTO CORRESPONDING FIELDS OF TABLE lt_format
+      FROM seocompodf
+     WHERE clsname  = 'ZCL_EXCEL_STYLE_NUMBER_FORMAT'
+       AND typtype  = 1
+       AND type     = 'ZEXCEL_NUMBER_FORMAT'.
 
 * --- Retrieve SAP date format
-    clear ls_format.
-    select ddtext into ls_format-attvalue from dd07t where domname    = 'XUDATFM'
-                                                       and ddlanguage = sy-langu.
+    CLEAR ls_format.
+    SELECT ddtext INTO ls_format-attvalue FROM dd07t WHERE domname    = 'XUDATFM'
+                                                       AND ddlanguage = sy-langu.
       ls_format-cmpname = 'DATE'.
-      condense ls_format-attvalue.
-      concatenate '''' ls_format-attvalue '''' into ls_format-attvalue.
-      append ls_format to lt_format.
-    endselect.
+      CONDENSE ls_format-attvalue.
+      CONCATENATE '''' ls_format-attvalue '''' INTO ls_format-attvalue.
+      APPEND ls_format TO lt_format.
+    ENDSELECT.
 
 
-    loop at lt_format into ls_format.
-      translate ls_format-attvalue to upper case.
-      modify lt_format from ls_format.
-    endloop.
+    LOOP AT lt_format INTO ls_format.
+      TRANSLATE ls_format-attvalue TO UPPER CASE.
+      MODIFY lt_format FROM ls_format.
+    ENDLOOP.
 
 
 * STEP 1: Collect strings from the first worksheet
     lo_iterator = excel->get_worksheets_iterator( ).
-    data: current_worksheet_title type zexcel_sheet_title.
+    DATA: current_worksheet_title TYPE zexcel_sheet_title.
 
-    while lo_iterator->has_next( ) eq abap_true.
+    WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_worksheet ?= lo_iterator->get_next( ).
 
-      if worksheet_name is not initial.
+      IF worksheet_name IS NOT INITIAL.
         current_worksheet_title = lo_worksheet->get_title( ).
-        check current_worksheet_title = worksheet_name.
-      else.
-        if worksheet_index is initial.
+        CHECK current_worksheet_title = worksheet_name.
+      ELSE.
+        IF worksheet_index IS INITIAL.
           worksheet_index = 1.
-        endif.
-        check worksheet_index = sy-index.
-      endif.
-      append lines of lo_worksheet->sheet_content to lt_cell_data.
-      exit. " Take first worksheet only
-    endwhile.
+        ENDIF.
+        CHECK worksheet_index = sy-index.
+      ENDIF.
+      APPEND LINES OF lo_worksheet->sheet_content TO lt_cell_data.
+      EXIT. " Take first worksheet only
+    ENDWHILE.
 
-    delete lt_cell_data where cell_formula is not initial. " delete formula content
+    DELETE lt_cell_data WHERE cell_formula IS NOT INITIAL. " delete formula content
 
-    sort lt_cell_data by cell_row
+    SORT lt_cell_data BY cell_row
                          cell_column.
     lv_row = 1.
     lv_col = 1.
-    clear lv_string.
-    loop at lt_cell_data assigning <fs_sheet_content>.
+    CLEAR lv_string.
+    LOOP AT lt_cell_data ASSIGNING <fs_sheet_content>.
 
 *   --- Retrieve Cell Style format and data type
-      clear ls_numfmt.
-      if <fs_sheet_content>-data_type is initial and <fs_sheet_content>-cell_style is not initial.
+      CLEAR ls_numfmt.
+      IF <fs_sheet_content>-data_type IS INITIAL AND <fs_sheet_content>-cell_style IS NOT INITIAL.
         lo_iterator = excel->get_styles_iterator( ).
-        while lo_iterator->has_next( ) eq abap_true.
+        WHILE lo_iterator->has_next( ) EQ abap_true.
           lo_style ?= lo_iterator->get_next( ).
-          check lo_style->get_guid( ) = <fs_sheet_content>-cell_style.
+          CHECK lo_style->get_guid( ) = <fs_sheet_content>-cell_style.
           ls_numfmt     = lo_style->number_format->get_structure( ).
-          exit.
-        endwhile.
-      endif.
-      if <fs_sheet_content>-data_type is initial and ls_numfmt is not initial.
+          EXIT.
+        ENDWHILE.
+      ENDIF.
+      IF <fs_sheet_content>-data_type IS INITIAL AND ls_numfmt IS NOT INITIAL.
         " determine data-type
-        clear lv_attrname.
-        concatenate '''' ls_numfmt-numfmt '''' into ls_numfmt-numfmt.
-        translate ls_numfmt-numfmt to upper case.
-        read table lt_format into ls_format with key attvalue = ls_numfmt-numfmt.
-        if sy-subrc = 0.
+        CLEAR lv_attrname.
+        CONCATENATE '''' ls_numfmt-numfmt '''' INTO ls_numfmt-numfmt.
+        TRANSLATE ls_numfmt-numfmt TO UPPER CASE.
+        READ TABLE lt_format INTO ls_format WITH KEY attvalue = ls_numfmt-numfmt.
+        IF sy-subrc = 0.
           lv_attrname = ls_format-cmpname.
-        endif.
+        ENDIF.
 
-        if lv_attrname is not initial.
-          find first occurrence of 'DATETIME' in lv_attrname.
-          if sy-subrc = 0.
+        IF lv_attrname IS NOT INITIAL.
+          FIND FIRST OCCURRENCE OF 'DATETIME' IN lv_attrname.
+          IF sy-subrc = 0.
             <fs_sheet_content>-data_type = 'd'.
-          else.
-            find first occurrence of 'TIME' in lv_attrname.
-            if sy-subrc = 0.
+          ELSE.
+            FIND FIRST OCCURRENCE OF 'TIME' IN lv_attrname.
+            IF sy-subrc = 0.
               <fs_sheet_content>-data_type = 't'.
-            else.
-              find first occurrence of 'DATE' in lv_attrname.
-              if sy-subrc = 0.
+            ELSE.
+              FIND FIRST OCCURRENCE OF 'DATE' IN lv_attrname.
+              IF sy-subrc = 0.
                 <fs_sheet_content>-data_type = 'd'.
-              else.
-                find first occurrence of 'CURRENCY' in lv_attrname.
-                if sy-subrc = 0.
+              ELSE.
+                FIND FIRST OCCURRENCE OF 'CURRENCY' IN lv_attrname.
+                IF sy-subrc = 0.
                   <fs_sheet_content>-data_type = 'n'.
-                else.
-                  find first occurrence of 'NUMBER' in lv_attrname.
-                  if sy-subrc = 0.
+                ELSE.
+                  FIND FIRST OCCURRENCE OF 'NUMBER' IN lv_attrname.
+                  IF sy-subrc = 0.
                     <fs_sheet_content>-data_type = 'n'.
-                  else.
-                    find first occurrence of 'PERCENTAGE' in lv_attrname.
-                    if sy-subrc = 0.
+                  ELSE.
+                    FIND FIRST OCCURRENCE OF 'PERCENTAGE' IN lv_attrname.
+                    IF sy-subrc = 0.
                       <fs_sheet_content>-data_type = 'n'.
-                    endif. " Purcentage
-                  endif. " Number
-                endif. " Currency
-              endif. " Date
-            endif. " TIME
-          endif. " DATETIME
-        endif. " lv_attrname IS NOT INITIAL.
-      endif. " <fs_sheet_content>-data_type IS INITIAL AND ls_numfmt IS NOT INITIAL.
+                    ENDIF. " Purcentage
+                  ENDIF. " Number
+                ENDIF. " Currency
+              ENDIF. " Date
+            ENDIF. " TIME
+          ENDIF. " DATETIME
+        ENDIF. " lv_attrname IS NOT INITIAL.
+      ENDIF. " <fs_sheet_content>-data_type IS INITIAL AND ls_numfmt IS NOT INITIAL.
 
 * --- Add empty rows
-      while lv_row < <fs_sheet_content>-cell_row.
-        concatenate lv_string zcl_excel_writer_csv=>eol into lv_string.
+      WHILE lv_row < <fs_sheet_content>-cell_row.
+        CONCATENATE lv_string zcl_excel_writer_csv=>eol INTO lv_string.
         lv_row = lv_row + 1.
         lv_col = 1.
-      endwhile.
+      ENDWHILE.
 
 * --- Add empty columns
-      while lv_col < <fs_sheet_content>-cell_column.
-        concatenate lv_string zcl_excel_writer_csv=>delimiter into lv_string.
+      WHILE lv_col < <fs_sheet_content>-cell_column.
+        CONCATENATE lv_string zcl_excel_writer_csv=>delimiter INTO lv_string.
         lv_col = lv_col + 1.
-      endwhile.
+      ENDWHILE.
 
 * ----- Use format to determine the data type and display format.
-      case <fs_sheet_content>-data_type.
+      CASE <fs_sheet_content>-data_type.
 
-        when 'd' or 'D'.
-          if <fs_sheet_content>-cell_value is initial and initial_ext_date <> c_default.
+        WHEN 'd' OR 'D'.
+          IF <fs_sheet_content>-cell_value IS INITIAL AND initial_ext_date <> c_default.
             lc_value = initial_ext_date.
-          else.
+          ELSE.
             lc_value = zcl_excel_common=>excel_string_to_date( ip_value = <fs_sheet_content>-cell_value ).
-            try.
+            TRY.
                 lv_date = lc_value.
-                call function 'CONVERT_DATE_TO_EXTERNAL'
-                  exporting
+                CALL FUNCTION 'CONVERT_DATE_TO_EXTERNAL'
+                  EXPORTING
                     date_internal            = lv_date
-                  importing
+                  IMPORTING
                     date_external            = lv_tmp
-                  exceptions
+                  EXCEPTIONS
                     date_internal_is_invalid = 1
-                    others                   = 2.
-                if sy-subrc = 0.
+                    OTHERS                   = 2.
+                IF sy-subrc = 0.
                   lc_value = lv_tmp.
-                endif.
+                ENDIF.
 
-              catch cx_sy_conversion_no_number.
+              CATCH cx_sy_conversion_no_number.
 
-            endtry.
-          endif.
+            ENDTRY.
+          ENDIF.
 
-        when 't' or 'T'.
+        WHEN 't' OR 'T'.
           lc_value = zcl_excel_common=>excel_string_to_time( ip_value = <fs_sheet_content>-cell_value ).
-          write lc_value to lv_time using edit mask '__:__:__'.
+          WRITE lc_value TO lv_time USING EDIT MASK '__:__:__'.
           lc_value = lv_time.
-        when others.
+        WHEN OTHERS.
           lc_value = <fs_sheet_content>-cell_value.
 
-      endcase.
+      ENDCASE.
 
-      concatenate zcl_excel_writer_csv=>enclosure zcl_excel_writer_csv=>enclosure into lv_tmp.
-      condense lv_tmp.
-      replace all occurrences of zcl_excel_writer_csv=>enclosure in lc_value with lv_tmp.
+      CONCATENATE zcl_excel_writer_csv=>enclosure zcl_excel_writer_csv=>enclosure INTO lv_tmp.
+      CONDENSE lv_tmp.
+      REPLACE ALL OCCURRENCES OF zcl_excel_writer_csv=>enclosure IN lc_value WITH lv_tmp.
 
-      find first occurrence of zcl_excel_writer_csv=>delimiter in lc_value.
-      if sy-subrc = 0.
-        concatenate lv_string zcl_excel_writer_csv=>enclosure lc_value zcl_excel_writer_csv=>enclosure into lv_string.
-      else.
-        concatenate lv_string lc_value into lv_string.
-      endif.
+      FIND FIRST OCCURRENCE OF zcl_excel_writer_csv=>delimiter IN lc_value.
+      IF sy-subrc = 0.
+        CONCATENATE lv_string zcl_excel_writer_csv=>enclosure lc_value zcl_excel_writer_csv=>enclosure INTO lv_string.
+      ELSE.
+        CONCATENATE lv_string lc_value INTO lv_string.
+      ENDIF.
 
-    endloop.
+    ENDLOOP.
 
-    clear ep_content.
+    CLEAR ep_content.
 
-    call function 'SCMS_STRING_TO_XSTRING'
-      exporting
+    CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
+      EXPORTING
         text   = lv_string
-      importing
+      IMPORTING
         buffer = ep_content
-      exceptions
+      EXCEPTIONS
         failed = 1
-        others = 2.
+        OTHERS = 2.
 
-  endmethod.
+  ENDMETHOD.
 
 
-  method set_active_sheet_index.
-    clear worksheet_name.
+  METHOD set_active_sheet_index.
+    CLEAR worksheet_name.
     worksheet_index = i_active_worksheet.
-  endmethod.
+  ENDMETHOD.
 
 
-  method set_active_sheet_index_by_name.
-    clear worksheet_index.
+  METHOD set_active_sheet_index_by_name.
+    CLEAR worksheet_index.
     worksheet_name = i_worksheet_name.
-  endmethod.
+  ENDMETHOD.
 
 
-  method set_delimiter.
+  METHOD set_delimiter.
     delimiter = ip_value.
-  endmethod.
+  ENDMETHOD.
 
 
-  method set_enclosure.
+  METHOD set_enclosure.
     zcl_excel_writer_csv=>enclosure = ip_value.
-  endmethod.
+  ENDMETHOD.
 
 
-  method set_endofline.
+  METHOD set_endofline.
     zcl_excel_writer_csv=>eol = ip_value.
-  endmethod.
+  ENDMETHOD.
 
 
-  method zif_excel_writer~write_file.
+  METHOD zif_excel_writer~write_file.
     me->excel = io_excel.
     ep_file = me->create( ).
-  endmethod.
+  ENDMETHOD.
 
 
-  method set_initial_ext_date.
+  METHOD set_initial_ext_date.
     initial_ext_date = ip_value.
-  endmethod.
+  ENDMETHOD.
 ENDCLASS.
