@@ -11,9 +11,9 @@ PUBLIC SECTION.
 
   INTERFACES zif_excel_writer .
 
-  class-methods SET_DELIMITER
-    importing
-      value(IP_VALUE) type C default ';' .
+  CLASS-METHODS set_delimiter
+    IMPORTING
+      VALUE(ip_value) TYPE c DEFAULT ';' .
   class-methods SET_ENCLOSURE
     importing
       value(IP_VALUE) type C default '"' .
