@@ -2262,6 +2262,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
              workbookviewid           TYPE string,
              showrowcolheaders        TYPE string,
              righttoleft              TYPE string,
+             topleftcell       TYPE string,
            END OF lty_sheetview.
 
     TYPES: BEGIN OF lty_mergecell,
@@ -2812,6 +2813,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     io_worksheet->zif_excel_sheet_properties~zoomscale_normal          = ls_sheetview-zoomscalenormal.
     io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview  = ls_sheetview-zoomscalepagelayoutview.
     io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = ls_sheetview-zoomscalesheetlayoutview.
+    IF ls_sheetview-topleftcell IS NOT INITIAL.
+      io_worksheet->set_sheetview_top_left_cell( ls_sheetview-topleftcell ).
+    ENDIF.
 
     "Add merge cell information
     lo_ixml_mergecells = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'mergeCell' uri = namespace-main ).
@@ -2928,21 +2932,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     ENDIF.
 
-    " Start fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
     " Read pane
     lo_ixml_pane_elem = lo_ixml_sheetview_elem->find_from_name_ns( name = 'pane' uri = namespace-main ).
     IF lo_ixml_pane_elem IS BOUND.
       fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_pane_elem CHANGING cp_structure = ls_excel_pane ).
-      " Issue #194
-      " Replace REGEX with method from the common class
-      zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
-                                                          i_columnrow = ls_excel_pane-topleftcell
-                                                        IMPORTING
-                                                          e_column    = lv_pane_cell_col_a    " Cell Column
-                                                          e_row       = lv_pane_cell_row ).   " Natural number
-      lv_pane_cell_col = zcl_excel_common=>convert_column2int( lv_pane_cell_col_a ).
-      SUBTRACT 1 FROM: lv_pane_cell_col,
-                       lv_pane_cell_row.
+      lv_pane_cell_col = ls_excel_pane-xsplit.
+      lv_pane_cell_row = ls_excel_pane-ysplit.
       IF    lv_pane_cell_col > 0
         AND lv_pane_cell_row > 0.
         io_worksheet->freeze_panes( ip_num_rows    = lv_pane_cell_row
@@ -2952,8 +2947,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ELSE.
         io_worksheet->freeze_panes( ip_num_columns = lv_pane_cell_col ).
       ENDIF.
+      IF ls_excel_pane-topleftcell IS NOT INITIAL.
+        io_worksheet->set_pane_top_left_cell( ls_excel_pane-topleftcell ).
+      ENDIF.
     ENDIF.
-    " End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
 
     " Start fix 276 Read data validations
     lo_ixml_datavalidations = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'dataValidation' uri = namespace-main ).
