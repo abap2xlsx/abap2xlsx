@@ -4,6 +4,7 @@
     "src/zcl_excel_a",
     "src/zcl_excel_c",
     "src/zcl_excel_d",
+    "src/xml/*",
     "src/zcl_excel_fill_template",
     "src/zcl_excel_font TODO, missing TDFONTSIZE",
     "src/zcl_excel_g",
