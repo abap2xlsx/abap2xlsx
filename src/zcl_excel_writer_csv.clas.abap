@@ -5,11 +5,12 @@ CLASS zcl_excel_writer_csv DEFINITION
 
 *"* public components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_WRITER_2007
-*"* do not include other source files here!!!
   PUBLIC SECTION.
 
     INTERFACES zif_excel_writer .
+
+    "! Default value for initial dates e.g. user's format (DD.MM.YYYY, MM.DD.YYYY, etc.)
+    CONSTANTS c_default TYPE c LENGTH 10 VALUE 'DEFAULT' ##NO_TEXT.
 
     CLASS-METHODS set_delimiter
       IMPORTING
@@ -28,7 +29,9 @@ CLASS zcl_excel_writer_csv DEFINITION
         !i_worksheet_name TYPE zexcel_worksheets_name .
     CLASS-METHODS set_initial_ext_date
       IMPORTING
-        !ip_value TYPE char10 DEFAULT 'DEFAULT' .
+        !ip_value TYPE char10 DEFAULT c_default .
+*"* protected components of class ZCL_EXCEL_WRITER_CSV
+*"* do not include other source files here!!!
   PROTECTED SECTION.
 *"* private components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
@@ -41,14 +44,13 @@ CLASS zcl_excel_writer_csv DEFINITION
       eol TYPE c LENGTH 2 VALUE cl_abap_char_utilities=>cr_lf ##NO_TEXT.
     CLASS-DATA worksheet_name TYPE zexcel_worksheets_name .
     CLASS-DATA worksheet_index TYPE zexcel_active_worksheet .
-    CLASS-DATA initial_ext_date TYPE char10 VALUE 'DEFAULT' ##NO_TEXT.
-    CONSTANTS c_default TYPE char10 VALUE 'DEFAULT' ##NO_TEXT.
+    CLASS-DATA initial_ext_date TYPE char10 VALUE c_default.
 
     METHODS create
       RETURNING
         VALUE(ep_excel) TYPE xstring
       RAISING
-        zcx_excel .
+        zcx_excel.
     METHODS create_csv
       RETURNING
         VALUE(ep_content) TYPE xstring
@@ -311,13 +313,13 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD zif_excel_writer~write_file.
-    me->excel = io_excel.
-    ep_file = me->create( ).
+  METHOD set_initial_ext_date.
+    initial_ext_date = ip_value.
   ENDMETHOD.
 
 
-  METHOD set_initial_ext_date.
-    initial_ext_date = ip_value.
+  METHOD zif_excel_writer~write_file.
+    me->excel = io_excel.
+    ep_file = me->create( ).
   ENDMETHOD.
 ENDCLASS.
