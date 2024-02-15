@@ -102,6 +102,8 @@ CLASS zcl_excel_worksheet DEFINITION
         formula_in_other_column     TYPE string,
       END OF c_messages .
     DATA mt_merged_cells TYPE mty_ts_merge READ-ONLY .
+    DATA pane_top_left_cell TYPE string READ-ONLY.
+    DATA sheetview_top_left_cell TYPE string READ-ONLY.
 
     METHODS add_comment
       IMPORTING
@@ -549,6 +551,11 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_formula      TYPE zexcel_cell_formula OPTIONAL        "added parameter
       RAISING
         zcx_excel .
+    METHODS set_pane_top_left_cell
+      IMPORTING
+        !iv_columnrow TYPE csequence
+      RAISING
+        zcx_excel.
     METHODS set_print_gridlines
       IMPORTING
         !i_print_gridlines TYPE zexcel_print_gridlines .
@@ -565,6 +572,11 @@ CLASS zcl_excel_worksheet DEFINITION
         !iv_collapsed TYPE abap_bool
       RAISING
         zcx_excel .
+    METHODS set_sheetview_top_left_cell
+      IMPORTING
+        !iv_columnrow TYPE csequence
+      RAISING
+        zcx_excel.
     METHODS set_show_gridlines
       IMPORTING
         !i_show_gridlines TYPE zexcel_show_gridlines .
@@ -4301,6 +4313,25 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "set_merge_style
 
 
+  METHOD set_pane_top_left_cell.
+    DATA lv_column_int TYPE zexcel_cell_column.
+    DATA lv_row TYPE zexcel_cell_row.
+
+    " Validate input value
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow  = iv_columnrow
+      IMPORTING
+        e_column_int = lv_column_int
+        e_row        = lv_row ).
+    IF lv_column_int NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_col AND zcl_excel_common=>c_excel_sheet_max_col
+        OR lv_row NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_row AND zcl_excel_common=>c_excel_sheet_max_row.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'Invalid column/row coordinates (valid values: A1 to XFD1048576)'.
+    ENDIF.
+    pane_top_left_cell = iv_columnrow.
+  ENDMETHOD.
+
+
   METHOD set_print_gridlines.
     me->print_gridlines = i_print_gridlines.
   ENDMETHOD.                    "SET_PRINT_GRIDLINES
@@ -4355,6 +4386,25 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     ENDCASE.
   ENDMETHOD.                    "SET_ROW_OUTLINE
+
+
+  METHOD set_sheetview_top_left_cell.
+    DATA lv_column_int TYPE zexcel_cell_column.
+    DATA lv_row TYPE zexcel_cell_row.
+
+    " Validate input value
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow  = iv_columnrow
+      IMPORTING
+        e_column_int = lv_column_int
+        e_row        = lv_row ).
+    IF lv_column_int NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_col AND zcl_excel_common=>c_excel_sheet_max_col
+        OR lv_row NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_row AND zcl_excel_common=>c_excel_sheet_max_row.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'Invalid column/row coordinates (valid values: A1 to XFD1048576)'.
+    ENDIF.
+    sheetview_top_left_cell = iv_columnrow.
+  ENDMETHOD.
 
 
   METHOD set_show_gridlines.
