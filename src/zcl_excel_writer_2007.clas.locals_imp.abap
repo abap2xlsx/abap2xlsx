@@ -887,6 +887,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lv_column_start          TYPE zexcel_cell_column_alpha,
           lv_row_start             TYPE zexcel_cell_row,
           lv_cell_coords           TYPE zexcel_cell_coords,
+          lv_operator              TYPE string,
           ls_expression            TYPE zexcel_conditional_expression,
           ls_conditional_top10     TYPE zexcel_conditional_top10,
           ls_conditional_above_avg TYPE zexcel_conditional_above_avg,
@@ -928,11 +929,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element_2 = o_document->create_simple_element( name   = lc_xml_node_cfrule
                                                         parent = o_document ).
       IF lo_style_cond->rule = zcl_excel_style_cond=>c_rule_textfunction.
-        IF lo_style_cond->mode_textfunction-textfunction = zcl_excel_style_cond=>c_textfunction_notcontains.
-          lv_value = `notContainsText`.
-        ELSE.
-          lv_value = lo_style_cond->mode_textfunction-textfunction.
-        ENDIF.
+        lv_value = lo_style_cond->mode_textfunction-textfunction.
       ELSE.
         lv_value = lo_style_cond->rule.
       ENDIF.
@@ -1171,21 +1168,17 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 *--------------------------------------------------------------------------------------*
         WHEN zcl_excel_style_cond=>c_rule_textfunction.
           ls_textfunction = lo_style_cond->mode_textfunction.
-          READ TABLE o_excel_ref->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_cellis-cell_style.
+          READ TABLE o_excel_ref->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_textfunction-cell_style.
           lv_value = ls_style_cond_mapping-dxf.
           CONDENSE lv_value.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_dxfid
                                           value = lv_value ).
-          lv_value = ls_textfunction-textfunction.
-          lo_element_2->set_attribute_ns( name  = lc_xml_attr_operator
-                                          value = lv_value ).
-
           " text
           lv_value = ls_textfunction-text.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_text
                                           value = lv_value ).
 
-          " formula node
+          " operator & formula node
           zcl_excel_common=>convert_range2column_a_row(
             EXPORTING
               i_range        = lo_style_cond->get_dimension_range( )
@@ -1195,17 +1188,25 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lv_cell_coords = |{ lv_column_start }{ lv_row_start }|.
           CASE ls_textfunction-textfunction.
             WHEN zcl_excel_style_cond=>c_textfunction_beginswith.
+              lv_operator = zcl_excel_style_cond=>c_operator_beginswith.
               lv_value = |LEFT({ lv_cell_coords },LEN("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"))=|
                       && |"{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"|.
             WHEN zcl_excel_style_cond=>c_textfunction_containstext.
+              lv_operator = zcl_excel_style_cond=>c_operator_containstext.
               lv_value = |NOT(ISERROR(SEARCH("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }",{ lv_cell_coords })))|.
             WHEN zcl_excel_style_cond=>c_textfunction_endswith.
+              lv_operator = zcl_excel_style_cond=>c_operator_endswith.
               lv_value = |RIGHT({ lv_cell_coords },LEN("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"))=|
                       && |"{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }"|.
             WHEN zcl_excel_style_cond=>c_textfunction_notcontains.
+              lv_operator = zcl_excel_style_cond=>c_operator_notcontains.
               lv_value = |ISERROR(SEARCH("{ escape( val = ls_textfunction-text format = cl_abap_format=>e_html_text ) }",{ lv_cell_coords }))|.
             WHEN OTHERS.
+              lv_operator = ls_textfunction-textfunction.
+              CLEAR lv_value.
           ENDCASE.
+          lo_element_2->set_attribute_ns( name  = lc_xml_attr_operator
+                                          value = lv_operator ).
           lo_element_3 = o_document->create_simple_element( name   = lc_xml_node_formula
                                                             parent = o_document ).
           lo_element_3->set_value( value = lv_value ).
