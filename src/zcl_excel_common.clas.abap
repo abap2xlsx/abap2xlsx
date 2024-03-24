@@ -864,7 +864,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     CHECK ip_value IS NOT INITIAL AND ip_value CN ' 0'.
 
     TRY.
-        lv_date_int = ip_value.
+        lv_date_int = floor( ip_value ).
         IF lv_date_int NOT BETWEEN 1 AND 2958465.
           zcx_excel=>raise_text( 'Unable to interpret date' ).
         ENDIF.
@@ -898,7 +898,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
     TRY.
 
-        lv_day_fraction = ip_value.
+        lv_day_fraction = ip_value - floor( ip_value ).
         lv_seconds_in_day = lv_day_fraction * lc_seconds_in_day.
 
         ep_value = lv_seconds_in_day.
