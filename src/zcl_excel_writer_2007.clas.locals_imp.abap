@@ -1730,7 +1730,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                                  value = lv_value ).
       o_element_root->append_child( new_child = lo_element ).
 
-      ADD 1 TO v_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
+      ADD 1 TO v_relation_id.  "for xl/comments.xml (not referenced in XL sheet but counted in sheet rels)
     ENDIF.
 * End   - Add - Issue #180
   ENDMETHOD.
@@ -1753,7 +1753,6 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element->set_attribute( name  = 'r:id'
                                  value = lv_value ).
       o_element_root->append_child( new_child = lo_element ).
-      ADD 1 TO v_relation_id.  " +1 for comments (not referenced in XL sheet but let's reserve the rId)
     ENDIF.
 *
   ENDMETHOD.
