@@ -2504,6 +2504,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           INSERT ls_external_hyperlink INTO TABLE lt_external_hyperlinks.
 
         WHEN lc_rel_comments.
+          CONCATENATE lv_dirname ls_relationship-target INTO lv_path.
+          lv_path = resolve_path( lv_path ).
           TRY.
               me->load_comments( ip_path      = lv_path
                                  io_worksheet = io_worksheet ).
