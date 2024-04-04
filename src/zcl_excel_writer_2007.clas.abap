@@ -145,8 +145,10 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS create_xl_sheet_rels
       IMPORTING
         !io_worksheet     TYPE REF TO zcl_excel_worksheet
-        !iv_drawing_index TYPE i
-        !iv_comment_index TYPE i
+        !iv_drawing_index TYPE i optional
+        !iv_comment_index TYPE i optional
+        !iv_cmnt_vmlindex type I optional
+        !iv_hdft_vmlindex type I optional
       RETURNING
         VALUE(ep_content) TYPE xstring .
     METHODS create_xl_styles
@@ -339,8 +341,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_index_str              TYPE string,
           lv_value                  TYPE string,
           lv_sheet_index            TYPE i,
+          lv_drawing_counter        TYPE i,
+          lv_comment_counter        TYPE i,
+          lv_vml_counter            TYPE i,
           lv_drawing_index          TYPE i,
-          lv_comment_index          TYPE i.        " (+) Issue #180
+          lv_comment_index          TYPE i,        " (+) Issue #180
+          lv_cmnt_vmlindex          TYPE i,
+          lv_hdft_vmlindex          TYPE i.
 
 **********************************************************************
 
@@ -433,37 +440,44 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 * Begin - Add - Issue #180
 * Add comments **********************************
-      lo_comments = lo_worksheet->get_comments( ).
-      IF lo_comments->is_empty( ) = abap_false.
-        lv_comment_index = lv_comment_index + 1.
-
+      IF lo_worksheet->get_comments( )->is_empty( ) = abap_false.
         " Create comment itself
-        lv_content = me->create_xl_comments( lo_worksheet ).
-        lv_xl_comment = me->c_xl_comments.
+        ADD 1 TO lv_comment_counter.
+        lv_comment_index = lv_comment_counter.
         lv_index_str = lv_comment_index.
         CONDENSE lv_index_str NO-GAPS.
+
+        lv_content = me->create_xl_comments( lo_worksheet ).
+        lv_xl_comment = me->c_xl_comments.
         REPLACE ALL OCCURRENCES OF '#' IN lv_xl_comment WITH lv_index_str.
         lo_zip->add( name    = lv_xl_comment
                      content = lv_content ).
 
         " Create vmlDrawing that will host the comment
+        ADD 1 TO lv_vml_counter.
+        lv_cmnt_vmlindex = lv_vml_counter.
+        lv_index_str = lv_cmnt_vmlindex.
+        CONDENSE lv_index_str NO-GAPS.
+
         lv_content = me->create_xl_drawing_for_comments( lo_worksheet ).
         lv_xl_drawing_for_comment = me->cl_xl_drawing_for_comments.
         REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_for_comment WITH lv_index_str.
         lo_zip->add( name    = lv_xl_drawing_for_comment
                      content = lv_content ).
+      ELSE.
+        CLEAR: lv_comment_index, lv_cmnt_vmlindex.
       ENDIF.
 * End   - Add - Issue #180
 
 * Add drawings **********************************
-      lo_drawings = lo_worksheet->get_drawings( ).
-      IF lo_drawings->is_empty( ) = abap_false.
-        lv_drawing_index = lv_drawing_index + 1.
+      IF lo_worksheet->get_drawings( )->is_empty( ) = abap_false.
+        ADD 1 TO lv_drawing_counter.
+        lv_drawing_index = lv_drawing_counter.
+        lv_index_str = lv_drawing_index.
+        CONDENSE lv_index_str NO-GAPS.
 
         lv_content = me->create_xl_drawings( lo_worksheet ).
         lv_xl_drawing = me->c_xl_drawings.
-        lv_index_str = lv_drawing_index.
-        CONDENSE lv_index_str NO-GAPS.
         REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing WITH lv_index_str.
         lo_zip->add( name    = lv_xl_drawing
                      content = lv_content ).
@@ -473,15 +487,15 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_rels WITH lv_index_str.
         lo_zip->add( name    = lv_xl_drawing_rels
                      content = lv_content ).
+      ELSE.
+        CLEAR lv_drawing_index.
       ENDIF.
 
 * Add Header/Footer image
-      DATA: lt_drawings TYPE zexcel_t_drawings.
-      lt_drawings = lo_worksheet->get_header_footer_drawings( ).
-      IF lines( lt_drawings ) > 0. "Header or footer image exist
-
-        lv_comment_index = lv_comment_index + 1.
-        lv_index_str = lv_comment_index.
+      IF lines( lo_worksheet->get_header_footer_drawings( ) ) > 0. "Header or footer image exist
+        ADD 1 TO lv_vml_counter.
+        lv_hdft_vmlindex = lv_vml_counter.
+        lv_index_str = lv_hdft_vmlindex.
         CONDENSE lv_index_str NO-GAPS.
 
         " Create vmlDrawing that will host the image
@@ -497,13 +511,17 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         REPLACE ALL OCCURRENCES OF '#' IN lv_xl_drawing_rels WITH lv_index_str.
         lo_zip->add( name    = lv_xl_drawing_rels
                      content = lv_content ).
+      ELSE.
+        CLEAR lv_hdft_vmlindex.
       ENDIF.
 
 
       lv_xl_sheet_rels = me->c_xl_sheet_rels.
       lv_content = me->create_xl_sheet_rels( io_worksheet = lo_worksheet
                                              iv_drawing_index = lv_drawing_index
-                                             iv_comment_index = lv_comment_index ).      " (+) Issue #180
+                                             iv_comment_index = lv_comment_index         " (+) Issue #180
+                                             iv_cmnt_vmlindex = lv_cmnt_vmlindex
+                                             iv_hdft_vmlindex = lv_hdft_vmlindex ).
 
       lv_index_str = lv_sheet_index.
       CONDENSE lv_index_str NO-GAPS.
