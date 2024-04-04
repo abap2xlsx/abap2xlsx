@@ -145,10 +145,10 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS create_xl_sheet_rels
       IMPORTING
         !io_worksheet     TYPE REF TO zcl_excel_worksheet
-        !iv_drawing_index TYPE i optional
-        !iv_comment_index TYPE i optional
-        !iv_cmnt_vmlindex type I optional
-        !iv_hdft_vmlindex type I optional
+        !iv_drawing_index TYPE i OPTIONAL
+        !iv_comment_index TYPE i OPTIONAL
+        !iv_cmnt_vmlindex TYPE i OPTIONAL
+        !iv_hdft_vmlindex TYPE i OPTIONAL
       RETURNING
         VALUE(ep_content) TYPE xstring .
     METHODS create_xl_styles
@@ -325,10 +325,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_iterator         TYPE REF TO zcl_excel_collection_iterator,
           lo_nested_iterator  TYPE REF TO zcl_excel_collection_iterator,
           lo_table            TYPE REF TO zcl_excel_table,
-          lo_drawing          TYPE REF TO zcl_excel_drawing,
-          lo_drawings         TYPE REF TO zcl_excel_drawings,
-          lo_comment          TYPE REF TO zcl_excel_comment,   " (+) Issue #180
-          lo_comments         TYPE REF TO zcl_excel_comments.  " (+) Issue #180
+          lo_drawing          TYPE REF TO zcl_excel_drawing.
 
     DATA: lv_content                TYPE xstring,
           lv_active                 TYPE flag,
@@ -4008,8 +4005,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     DATA: lv_value         TYPE string,
           lv_relation_id   TYPE i,
-          lv_index_str     TYPE string,
-          lv_comment_index TYPE i.
+          lv_index_str     TYPE string.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -4053,10 +4049,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDWHILE.
 
 * drawing
-    DATA: lo_drawings TYPE REF TO zcl_excel_drawings.
-
-    lo_drawings = io_worksheet->get_drawings( ).
-    IF lo_drawings->is_empty( ) = abap_false.
+    IF iv_drawing_index > 0.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
                                                        parent = lo_document ).
       ADD 1 TO lv_relation_id.
@@ -4080,18 +4073,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDIF.
 
 * Begin - Add - Issue #180
-    DATA: lo_comments  TYPE REF TO zcl_excel_comments.
-
-    lv_comment_index = iv_comment_index.
-
-    lo_comments = io_worksheet->get_comments( ).
-    IF lo_comments->is_empty( ) = abap_false.
+    IF iv_cmnt_vmlindex > 0 AND iv_comment_index > 0.
       " Drawing for comment
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
                                                        parent = lo_document ).
-
       ADD 1 TO lv_relation_id.
-      ADD 1 TO lv_comment_index.
 
       lv_value = lv_relation_id.
       CONDENSE lv_value.
@@ -4101,7 +4087,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element->set_attribute_ns( name  = lc_xml_attr_type
                                     value = lc_xml_node_rid_drawing_cmt_tp ).
 
-      lv_index_str = iv_comment_index.
+      lv_index_str = iv_cmnt_vmlindex.
       CONDENSE lv_index_str NO-GAPS.
       lv_value = me->cl_xl_drawing_for_comments.
       REPLACE 'xl' WITH '..' INTO lv_value.
@@ -4136,9 +4122,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 **********************************************************************
 * header footer image
-    DATA: lt_drawings TYPE zexcel_t_drawings.
-    lt_drawings = io_worksheet->get_header_footer_drawings( ).
-    IF lines( lt_drawings ) > 0. "Header or footer image exist
+    IF iv_hdft_vmlindex > 0.. "Header or footer image exist
       ADD 1 TO lv_relation_id.
       " Drawing for comment/header/footer
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
@@ -4151,7 +4135,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element->set_attribute_ns( name  = lc_xml_attr_type
                                     value = lc_xml_node_rid_drawing_cmt_tp ).
 
-      lv_index_str = lv_comment_index.
+      lv_index_str = iv_hdft_vmlindex.
       CONDENSE lv_index_str NO-GAPS.
       lv_value = me->cl_xl_drawing_for_comments.
       REPLACE 'xl' WITH '..' INTO lv_value.
