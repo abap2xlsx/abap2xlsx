@@ -4122,11 +4122,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 **********************************************************************
 * header footer image
-    IF iv_hdft_vmlindex > 0.. "Header or footer image exist
-      ADD 1 TO lv_relation_id.
+    IF iv_hdft_vmlindex > 0. "Header or footer image exist
       " Drawing for comment/header/footer
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
                                                        parent = lo_document ).
+      ADD 1 TO lv_relation_id.
+
       lv_value = lv_relation_id.
       CONDENSE lv_value.
       CONCATENATE 'rId' lv_value INTO lv_value.
