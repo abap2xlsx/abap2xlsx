@@ -1,8 +1,5 @@
 CLASS lcl_excel_common_test DEFINITION DEFERRED.
-CLASS lcl_string_to_date_and_time DEFINITION DEFERRED.
-CLASS zcl_excel_common DEFINITION
-  LOCAL FRIENDS lcl_excel_common_test
-                lcl_string_to_date_and_time.
+CLASS zcl_excel_common DEFINITION LOCAL FRIENDS lcl_excel_common_test.
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_Excel_Common_Test DEFINITION
@@ -58,6 +55,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS excel_string_to_time3 FOR TESTING RAISING cx_static_check.
     METHODS excel_string_to_time4 FOR TESTING RAISING cx_static_check.
     METHODS excel_string_to_time5 FOR TESTING RAISING cx_static_check.
+    METHODS excel_string_to_time6 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string1 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string2 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string3 FOR TESTING RAISING cx_static_check.
@@ -691,6 +689,45 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=>fatal
         ).
     ENDTRY.
+
+* 45141.58832 (2023/08/03 14:07:11) ip_exact = abap_false -> 2023/08/04
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.58832'
+                                                           ip_exact = abap_false ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230804' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
+
+* 45141.58832 (2023/08/03 14:07:11) ip_exact = abap_true -> 2023/08/03
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.58832'
+                                                           ip_exact = abap_true ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230803' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
+
+* 45141.48832 (2023/08/03 11:43:11) ip_exact = abap_false -> 2023/08/03
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.48832'
+                                                           ip_exact = abap_false ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230803' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
   ENDMETHOD.       "excel_String_To_Date
 
 
@@ -767,6 +804,21 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           exp   = 'Unable to interpret time'
           msg   = 'Time should be a valid string'
           level = if_aunit_constants=>fatal ).
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD excel_string_to_time6.
+    DATA ep_value TYPE t.
+* 45141.58832 (2023/08/03 14:07:11) -> 14:07:11
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_time( ip_value = '45141.58832' ).
+
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_value
+            exp   = '140711' ).
+
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail( lx_excel->get_text( ) ).
     ENDTRY.
   ENDMETHOD.
 
@@ -1757,118 +1809,6 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
                                         exp = `'A` && cl_abap_char_utilities=>newline && `B'`
                                         msg = `Escaping LF failed` ).
 
-  ENDMETHOD.
-
-ENDCLASS.
-
-
-
-CLASS lcl_string_to_date_and_time DEFINITION FINAL FOR TESTING
-  DURATION SHORT
-  RISK LEVEL HARMLESS.
-
-  PRIVATE SECTION.
-    CONSTANTS date_20230803 TYPE d VALUE '20230803'.
-    CONSTANTS dbs1900_initial TYPE d VALUE '18991230'.   "Serial date 0 in (default) 1900 date base system
-    CONSTANTS dbs1900bc_initial TYPE d VALUE '18991231'. "Serial date 0 in 1900 backwards compatibility date base system
-    CONSTANTS dbs1904bc_initial TYPE d VALUE '19040101'. "Serial date 0 in 1904 backwards compatibility date base system
-    CONSTANTS time_140711 TYPE t VALUE '140711'.
-    CONSTANTS time_initial TYPE t VALUE '000000'.
-    CONSTANTS dbs1900_20230803_000000 TYPE string VALUE `45141.000000000000`. "Serial date 2023-08-03 time zero
-    CONSTANTS dbs1900_00000000_140711 TYPE string VALUE `0.588321759256`.     "Serial date zero time 14:07:11
-    CONSTANTS dbs1900_20230803_140711 TYPE string VALUE `45141.588321759256`. "Serial date 2023-08-03 time 14:07:11
-
-    DATA cut TYPE REF TO zcl_excel_common.
-    DATA excel_error TYPE REF TO zcx_excel.
-
-    METHODS:
-      setup,
-      teardown.
-
-    METHODS:
-      date_to_date FOR TESTING RAISING cx_static_check,
-      time_to_time FOR TESTING RAISING cx_static_check,
-      datetime_to_date FOR TESTING RAISING cx_static_check,
-      datetime_to_time FOR TESTING RAISING cx_static_check,
-      date_to_time FOR TESTING RAISING cx_static_check,
-      time_to_date FOR TESTING RAISING cx_static_check.
-  ENDCLASS.
-
-
-
-CLASS lcl_string_to_date_and_time IMPLEMENTATION.
-
-  METHOD setup.
-    CREATE OBJECT cut.
-  ENDMETHOD.
-
-  METHOD teardown.
-    CLEAR cut.
-    CLEAR excel_error.
-  ENDMETHOD.
-
-  METHOD date_to_date.
-    TRY.
-        cl_abap_unit_assert=>assert_equals(
-            act   = cut->excel_string_to_date( dbs1900_20230803_000000 )
-            exp   = date_20230803 ).
-      CATCH zcx_excel INTO excel_error.
-        cl_abap_unit_assert=>fail( excel_error->get_text( ) ).
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD time_to_time.
-    TRY.
-        cl_abap_unit_assert=>assert_equals(
-            act   = cut->excel_string_to_time( dbs1900_00000000_140711 )
-            exp   = time_140711 ).
-      CATCH zcx_excel INTO excel_error.
-        cl_abap_unit_assert=>fail( excel_error->get_text( ) ).
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD datetime_to_date.
-    TRY.
-        cl_abap_unit_assert=>assert_equals(
-            act   = cut->excel_string_to_date( dbs1900_20230803_140711 )
-            exp   = date_20230803 ).
-      CATCH zcx_excel INTO excel_error.
-        cl_abap_unit_assert=>fail( excel_error->get_text( ) ).
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD datetime_to_time.
-    TRY.
-        cl_abap_unit_assert=>assert_equals(
-            act   = cut->excel_string_to_time( dbs1900_20230803_140711 )
-            exp   = time_140711 ).
-      CATCH zcx_excel INTO excel_error.
-        cl_abap_unit_assert=>fail( excel_error->get_text( ) ).
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD date_to_time.
-    TRY.
-        cl_abap_unit_assert=>assert_equals(
-            act   = cut->excel_string_to_time( dbs1900_20230803_000000 )
-            exp   = time_initial ).
-      CATCH zcx_excel INTO excel_error.
-        cl_abap_unit_assert=>fail( excel_error->get_text( ) ).
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD time_to_date.
-    TRY.
-        cl_abap_unit_assert=>assert_equals(
-            act   = cut->excel_string_to_date( dbs1900_00000000_140711 )
-            exp   = dbs1900_initial ).
-        cl_abap_unit_assert=>fail( 'Until dates before 1900-01-01 are supported, an exception is expected' ).
-      CATCH zcx_excel INTO excel_error.
-*        cl_abap_unit_assert=>fail( excel_error->get_text( ) ).
-        cl_abap_unit_assert=>assert_equals(
-            act = excel_error->get_text( )
-            exp = 'Unable to interpret date' ).
-    ENDTRY.
   ENDMETHOD.
 
 ENDCLASS.
