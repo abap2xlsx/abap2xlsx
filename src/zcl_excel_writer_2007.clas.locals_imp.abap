@@ -327,15 +327,17 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                                       value = '0' ).
     ENDIF.
     " Zoom scale
-    IF o_worksheet->zif_excel_sheet_properties~zoomscale GT 400.
-      o_worksheet->zif_excel_sheet_properties~zoomscale = 400.
-    ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale LT 10.
-      o_worksheet->zif_excel_sheet_properties~zoomscale = 10.
+    IF o_worksheet->zif_excel_sheet_properties~zoomscale NE 0.
+      IF o_worksheet->zif_excel_sheet_properties~zoomscale GT 400.
+        o_worksheet->zif_excel_sheet_properties~zoomscale = 400.
+      ELSEIF o_worksheet->zif_excel_sheet_properties~zoomscale LT 10.
+        o_worksheet->zif_excel_sheet_properties~zoomscale = 10.
+      ENDIF.
+      lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale.
+      CONDENSE lv_value.
+      lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscale
+                                      value = lv_value ).
     ENDIF.
-    lv_value = o_worksheet->zif_excel_sheet_properties~zoomscale.
-    CONDENSE lv_value.
-    lo_element_2->set_attribute_ns( name  = lc_xml_attr_zoomscale
-                                    value = lv_value ).
     IF o_worksheet->zif_excel_sheet_properties~zoomscale_normal NE 0.
       IF o_worksheet->zif_excel_sheet_properties~zoomscale_normal GT 400.
         o_worksheet->zif_excel_sheet_properties~zoomscale_normal = 400.
@@ -393,6 +395,11 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                                       value = '0' ).
     ENDIF.
 
+    IF o_worksheet->sheetview_top_left_cell IS NOT INITIAL.
+      lo_element_2->set_attribute_ns( name  = 'topLeftCell'
+                                      value = o_worksheet->sheetview_top_left_cell ).
+    ENDIF.
+
     " freeze panes
     o_worksheet->get_freeze_cell( IMPORTING ep_row    = lv_freeze_cell_row
                                             ep_column = lv_freeze_cell_column ).
@@ -415,11 +422,15 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
                                         value = lv_value ).
       ENDIF.
 
-      lv_freeze_cell_column_alpha = zcl_excel_common=>convert_column2alpha( ip_column = lv_freeze_cell_column ).
-      lv_value = zcl_excel_common=>number_to_excel_string( ip_value = lv_freeze_cell_row ).
-      CONCATENATE lv_freeze_cell_column_alpha lv_value INTO lv_value.
-      lo_element_3->set_attribute_ns( name  = 'topLeftCell'
-                                      value = lv_value ).
+      IF o_worksheet->pane_top_left_cell IS NOT INITIAL.
+        lo_element_3->set_attribute_ns( name  = 'topLeftCell'
+                                        value = o_worksheet->pane_top_left_cell ).
+      ELSE.
+        lv_value = zcl_excel_common=>convert_column_a_row2columnrow( i_column = lv_freeze_cell_column
+                                                                     i_row    = lv_freeze_cell_row ).
+        lo_element_3->set_attribute_ns( name  = 'topLeftCell'
+                                        value = lv_value ).
+      ENDIF.
 
       lo_element_3->set_attribute_ns( name  = 'activePane'
                                       value = 'bottomRight' ).

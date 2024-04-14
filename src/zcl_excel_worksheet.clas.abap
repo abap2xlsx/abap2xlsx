@@ -102,6 +102,8 @@ CLASS zcl_excel_worksheet DEFINITION
         formula_in_other_column     TYPE string,
       END OF c_messages .
     DATA mt_merged_cells TYPE mty_ts_merge READ-ONLY .
+    DATA pane_top_left_cell TYPE string READ-ONLY.
+    DATA sheetview_top_left_cell TYPE string READ-ONLY.
 
     METHODS add_comment
       IMPORTING
@@ -172,6 +174,7 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(iv_default_descr) TYPE c OPTIONAL
         !iv_no_line_if_empty    TYPE abap_bool DEFAULT abap_false
         !ip_conv_exit_length    TYPE abap_bool DEFAULT abap_false
+        !ip_conv_curr_amt_ext   TYPE abap_bool DEFAULT abap_false
       EXPORTING
         !es_table_settings      TYPE zexcel_s_table_settings
       RAISING
@@ -499,6 +502,7 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_hyperlink         TYPE REF TO zcl_excel_hyperlink OPTIONAL
         !ip_data_type         TYPE zexcel_cell_data_type OPTIONAL
         !ip_abap_type         TYPE abap_typekind OPTIONAL
+        !ip_currency          TYPE waers_curc OPTIONAL
         !it_rtf               TYPE zexcel_t_rtf OPTIONAL
         !ip_column_formula_id TYPE mty_s_column_formula-id OPTIONAL
         !ip_conv_exit_length  TYPE abap_bool DEFAULT abap_false
@@ -547,6 +551,11 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_formula      TYPE zexcel_cell_formula OPTIONAL        "added parameter
       RAISING
         zcx_excel .
+    METHODS set_pane_top_left_cell
+      IMPORTING
+        !iv_columnrow TYPE csequence
+      RAISING
+        zcx_excel.
     METHODS set_print_gridlines
       IMPORTING
         !i_print_gridlines TYPE zexcel_print_gridlines .
@@ -563,6 +572,11 @@ CLASS zcl_excel_worksheet DEFINITION
         !iv_collapsed TYPE abap_bool
       RAISING
         zcx_excel .
+    METHODS set_sheetview_top_left_cell
+      IMPORTING
+        !iv_columnrow TYPE csequence
+      RAISING
+        zcx_excel.
     METHODS set_show_gridlines
       IMPORTING
         !i_show_gridlines TYPE zexcel_show_gridlines .
@@ -673,6 +687,7 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !it_field_catalog TYPE zexcel_t_fieldcatalog OPTIONAL
         !iv_begin_row     TYPE int4 DEFAULT 2
+        !iv_end_row       TYPE int4 DEFAULT 0
       EXPORTING
         !et_data          TYPE STANDARD TABLE
         !er_data          TYPE REF TO data
@@ -796,15 +811,15 @@ CLASS zcl_excel_worksheet DEFINITION
         iv_default_descr TYPE c
         it_field_catalog TYPE zexcel_t_fieldcatalog
       RETURNING
-        VALUE(result) TYPE zexcel_t_fieldcatalog.
+        VALUE(result)    TYPE zexcel_t_fieldcatalog.
     METHODS normalize_columnrow_parameter
       IMPORTING
-        ip_columnrow  TYPE csequence OPTIONAL
-        ip_column     TYPE simple OPTIONAL
-        ip_row        TYPE zexcel_cell_row OPTIONAL
+        ip_columnrow TYPE csequence OPTIONAL
+        ip_column    TYPE simple OPTIONAL
+        ip_row       TYPE zexcel_cell_row OPTIONAL
       EXPORTING
-        ep_column     TYPE zexcel_cell_column
-        ep_row        TYPE zexcel_cell_row
+        ep_column    TYPE zexcel_cell_column
+        ep_row       TYPE zexcel_cell_row
       RAISING
         zcx_excel.
     METHODS normalize_range_parameter
@@ -974,7 +989,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     CONSTANTS:
       lc_top_left_column TYPE zexcel_cell_column_alpha VALUE 'A',
-      lc_top_left_row    TYPE zexcel_cell_row VALUE 1.
+      lc_top_left_row    TYPE zexcel_cell_row VALUE 1,
+      lc_no_currency     TYPE waers_curc VALUE IS INITIAL.
 
     DATA:
       lv_row_int              TYPE zexcel_cell_row,
@@ -1000,7 +1016,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       <ls_field_catalog>        TYPE zexcel_s_fieldcatalog,
       <ls_field_catalog_custom> TYPE zexcel_s_fieldcatalog,
       <fs_table_line>           TYPE any,
-      <fs_fldval>               TYPE any.
+      <fs_fldval>               TYPE any,
+      <fs_fldval_currency>      TYPE waers.
 
     ls_settings = is_table_settings.
 
@@ -1099,6 +1116,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       LOOP AT ip_table ASSIGNING <fs_table_line>.
 
         ASSIGN COMPONENT <ls_field_catalog>-fieldname OF STRUCTURE <fs_table_line> TO <fs_fldval>.
+
         " issue #290 Add formula support in table
         IF <ls_field_catalog>-formula EQ abap_true.
           IF <ls_field_catalog>-style IS NOT INITIAL.
@@ -1150,18 +1168,26 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                           ip_column_formula_id = ls_column_formula-id ).
           ENDIF.
         ELSE.
+          IF <ls_field_catalog>-currency_column IS INITIAL OR ip_conv_curr_amt_ext = abap_false.
+            ASSIGN lc_no_currency TO <fs_fldval_currency>.
+          ELSE.
+            ASSIGN COMPONENT <ls_field_catalog>-currency_column OF STRUCTURE <fs_table_line> TO <fs_fldval_currency>.
+          ENDIF.
+
           IF <ls_field_catalog>-style IS NOT INITIAL.
             IF <ls_field_catalog>-abap_type IS NOT INITIAL.
-              me->set_cell( ip_column = lv_column_alpha
-                          ip_row    = lv_row_int
-                          ip_value  = <fs_fldval>
-                          ip_abap_type = <ls_field_catalog>-abap_type
-                          ip_style  = <ls_field_catalog>-style
-                          ip_conv_exit_length = ip_conv_exit_length ).
+              me->set_cell( ip_column           = lv_column_alpha
+                            ip_row              = lv_row_int
+                            ip_value            = <fs_fldval>
+                            ip_abap_type        = <ls_field_catalog>-abap_type
+                            ip_currency         = <fs_fldval_currency>
+                            ip_style            = <ls_field_catalog>-style
+                            ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
                             ip_value  = <fs_fldval>
+                            ip_currency = <fs_fldval_currency>
                             ip_style  = <ls_field_catalog>-style
                             ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
@@ -1170,11 +1196,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
               me->set_cell( ip_column = lv_column_alpha
                           ip_row    = lv_row_int
                           ip_abap_type = <ls_field_catalog>-abap_type
+                          ip_currency  = <fs_fldval_currency>
                           ip_value  = <fs_fldval>
                           ip_conv_exit_length = ip_conv_exit_length ).
             ELSE.
               me->set_cell( ip_column = lv_column_alpha
                             ip_row    = lv_row_int
+                            ip_currency = <fs_fldval_currency>
                             ip_value  = <fs_fldval>
                             ip_conv_exit_length = ip_conv_exit_length ).
             ENDIF.
@@ -2263,6 +2291,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> FROM lv_index.
       AT NEW cell_row.
+        IF iv_end_row <> 0
+        AND <ls_sheet_content>-cell_row > iv_end_row.
+          EXIT.
+        ENDIF.
         " New line
         APPEND INITIAL LINE TO <lt_data> ASSIGNING <ls_data>.
         lv_index = sy-tabix.
@@ -3900,12 +3932,18 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                cl_abap_typedescr=>typekind_decfloat OR
                cl_abap_typedescr=>typekind_decfloat16 OR
                cl_abap_typedescr=>typekind_decfloat34.
-            lo_addit = cl_abap_elemdescr=>get_f( ).
-            CREATE DATA lo_value_new TYPE HANDLE lo_addit.
-            ASSIGN lo_value_new->* TO <fs_numeric>.
-            IF sy-subrc = 0.
-              <fs_numeric> = <fs_value>.
-              lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+            IF lv_value_type = cl_abap_typedescr=>typekind_packed
+                AND ip_currency IS NOT INITIAL.
+              lv_value = zcl_excel_common=>number_to_excel_string( ip_value    = <fs_value>
+                                                                   ip_currency = ip_currency ).
+            ELSE.
+              lo_addit = cl_abap_elemdescr=>get_f( ).
+              CREATE DATA lo_value_new TYPE HANDLE lo_addit.
+              ASSIGN lo_value_new->* TO <fs_numeric>.
+              IF sy-subrc = 0.
+                <fs_numeric> = <fs_value>.
+                lv_value = zcl_excel_common=>number_to_excel_string( ip_value = <fs_numeric> ).
+              ENDIF.
             ENDIF.
 
           WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR
@@ -4284,6 +4322,25 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "set_merge_style
 
 
+  METHOD set_pane_top_left_cell.
+    DATA lv_column_int TYPE zexcel_cell_column.
+    DATA lv_row TYPE zexcel_cell_row.
+
+    " Validate input value
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow  = iv_columnrow
+      IMPORTING
+        e_column_int = lv_column_int
+        e_row        = lv_row ).
+    IF lv_column_int NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_col AND zcl_excel_common=>c_excel_sheet_max_col
+        OR lv_row NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_row AND zcl_excel_common=>c_excel_sheet_max_row.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'Invalid column/row coordinates (valid values: A1 to XFD1048576)'.
+    ENDIF.
+    pane_top_left_cell = iv_columnrow.
+  ENDMETHOD.
+
+
   METHOD set_print_gridlines.
     me->print_gridlines = i_print_gridlines.
   ENDMETHOD.                    "SET_PRINT_GRIDLINES
@@ -4340,6 +4397,25 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "SET_ROW_OUTLINE
 
 
+  METHOD set_sheetview_top_left_cell.
+    DATA lv_column_int TYPE zexcel_cell_column.
+    DATA lv_row TYPE zexcel_cell_row.
+
+    " Validate input value
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow  = iv_columnrow
+      IMPORTING
+        e_column_int = lv_column_int
+        e_row        = lv_row ).
+    IF lv_column_int NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_col AND zcl_excel_common=>c_excel_sheet_max_col
+        OR lv_row NOT BETWEEN zcl_excel_common=>c_excel_sheet_min_row AND zcl_excel_common=>c_excel_sheet_max_row.
+      RAISE EXCEPTION TYPE zcx_excel EXPORTING error = 'Invalid column/row coordinates (valid values: A1 to XFD1048576)'.
+    ENDIF.
+    sheetview_top_left_cell = iv_columnrow.
+  ENDMETHOD.
+
+
   METHOD set_show_gridlines.
     me->show_gridlines = i_show_gridlines.
   ENDMETHOD.                    "SET_SHOW_GRIDLINES
@@ -4357,7 +4433,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD set_table.
 
-    DATA: lo_tabdescr     TYPE REF TO cl_abap_structdescr,
+    DATA: lo_structdescr     TYPE REF TO cl_abap_structdescr,
           lr_data         TYPE REF TO data,
           lt_dfies        TYPE ddfields,
           lv_row_int      TYPE zexcel_cell_row,
@@ -4375,9 +4451,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     CREATE DATA lr_data LIKE LINE OF ip_table.
 
-    lo_tabdescr ?= cl_abap_structdescr=>describe_by_data_ref( lr_data ).
+    lo_structdescr ?= cl_abap_structdescr=>describe_by_data_ref( lr_data ).
 
-    lt_dfies = lo_tabdescr->get_ddic_field_list( ).
+    lt_dfies = zcl_excel_common=>describe_structure( io_struct = lo_structdescr ).
 
 * It is better to loop column by column
     LOOP AT lt_dfies ASSIGNING <fs_dfies>.

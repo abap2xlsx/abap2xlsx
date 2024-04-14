@@ -45,6 +45,9 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS date_to_excel_string4 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string5 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string6 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string1 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string2 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string3 FOR TESTING RAISING cx_static_check.
     METHODS: encrypt_password FOR TESTING.
     METHODS: excel_string_to_date FOR TESTING.
     METHODS excel_string_to_time1 FOR TESTING RAISING cx_static_check.
@@ -122,12 +125,14 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS is_cell_in_range_upperside_out FOR TESTING.
     METHODS is_cell_in_range_rightside_out FOR TESTING.
     METHODS is_cell_in_range_lowerside_out FOR TESTING.
+    METHODS recursive_struct_to_class FOR TESTING RAISING cx_static_check.
     METHODS escape_string_whitespace1 FOR TESTING.
     METHODS escape_string_whitespace2 FOR TESTING.
     METHODS escape_string_whitespace3 FOR TESTING.
     METHODS escape_string_quote FOR TESTING.
     METHODS escape_string_hyphen FOR TESTING.
     METHODS escape_string_regular FOR TESTING.
+
 ENDCLASS.
 
 
@@ -347,37 +352,37 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD convert_column_a_row2columnrow.
 
-   DATA: cell_coords TYPE string.
+    DATA: cell_coords TYPE string.
 
-   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 'B' i_row = 6 ).
+    cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 'B' i_row = 6 ).
 
-   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+    cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
 
 
-   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 2 i_row = 6 ).
+    cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 2 i_row = 6 ).
 
-   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+    cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
 
   ENDMETHOD.
 
 
   METHOD convert_columnrow2column_a_row.
 
-   DATA: column     TYPE zexcel_cell_column_alpha,
-         column_int TYPE zexcel_cell_column,
-         row        TYPE zexcel_cell_row.
+    DATA: column     TYPE zexcel_cell_column_alpha,
+          column_int TYPE zexcel_cell_column,
+          row        TYPE zexcel_cell_row.
 
-   zcl_excel_common=>convert_columnrow2column_a_row(
-     EXPORTING
-       i_columnrow  = 'B6'
-     IMPORTING
-       e_column     = column
-       e_column_int = column_int
-       e_row        = row ).
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow  = 'B6'
+      IMPORTING
+        e_column     = column
+        e_column_int = column_int
+        e_row        = row ).
 
-   cl_abap_unit_assert=>assert_equals( act = column     exp = 'B'   msg = 'Invalid column (alpha)' ).
-   cl_abap_unit_assert=>assert_equals( act = column_int exp = 2     msg = 'Invalid column (numeric)' ).
-   cl_abap_unit_assert=>assert_equals( act = row        exp = 6     msg = 'Invalid row' ).
+    cl_abap_unit_assert=>assert_equals( act = column     exp = 'B'   msg = 'Invalid column (alpha)' ).
+    cl_abap_unit_assert=>assert_equals( act = column_int exp = 2     msg = 'Invalid column (numeric)' ).
+    cl_abap_unit_assert=>assert_equals( act = row        exp = 6     msg = 'Invalid row' ).
 
   ENDMETHOD.
 
@@ -467,6 +472,47 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD amount_to_excel_string1.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '1003.99'
+                                                         ip_currency = 'EUR' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '1003.99'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD amount_to_excel_string2.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '-1003.99'
+                                                         ip_currency = 'HUF' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '-100399'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD amount_to_excel_string3.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '0'
+                                                         ip_currency = 'HUF' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '0'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
 
   METHOD encrypt_password.
 * ========================
@@ -1602,6 +1648,29 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
             level  = if_aunit_constants=>critical ).
     ENDTRY.
   ENDMETHOD. "is_cell_in_range_lowerside_out.
+
+  METHOD recursive_struct_to_class.
+
+    DATA style           TYPE REF TO zcl_excel_style.
+    DATA complete_style  TYPE zexcel_s_cstyle_complete.
+    DATA complete_stylex TYPE zexcel_s_cstylex_complete.
+
+    CREATE OBJECT style.
+
+    complete_style-number_format-format_code = 'hello'.
+    complete_stylex-number_format-format_code = abap_true.
+
+    zcl_excel_common=>recursive_struct_to_class(
+      EXPORTING
+        i_source  = complete_style
+        i_sourcex = complete_stylex
+      CHANGING
+        e_target  = style ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = style->number_format->format_code
+      exp = 'hello' ).
+  ENDMETHOD.
 
   METHOD escape_string_hyphen.
     DATA: name         TYPE string,

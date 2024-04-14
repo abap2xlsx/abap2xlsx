@@ -25,31 +25,31 @@
     </DD03P>
     <DD03P>
      <FIELDNAME>POSITION</FIELDNAME>
-     <ROLLNAME>TABFDPOS</ROLLNAME>
+     <ROLLNAME>ZEXCEL_COMPONENT_POSITION</ROLLNAME>
      <ADMINFIELD>0</ADMINFIELD>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
     <DD03P>
      <FIELDNAME>SCRTEXT_S</FIELDNAME>
-     <ROLLNAME>SCRTEXT_S</ROLLNAME>
+     <ROLLNAME>ZEXCEL_DISP_TEXT_SHORT</ROLLNAME>
      <ADMINFIELD>0</ADMINFIELD>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
     <DD03P>
      <FIELDNAME>SCRTEXT_M</FIELDNAME>
-     <ROLLNAME>SCRTEXT_M</ROLLNAME>
+     <ROLLNAME>ZEXCEL_DISP_TEXT_MEDIUM</ROLLNAME>
      <ADMINFIELD>0</ADMINFIELD>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
     <DD03P>
      <FIELDNAME>SCRTEXT_L</FIELDNAME>
-     <ROLLNAME>SCRTEXT_L</ROLLNAME>
+     <ROLLNAME>ZEXCEL_DISP_TEXT_LONG</ROLLNAME>
      <ADMINFIELD>0</ADMINFIELD>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
     <DD03P>
      <FIELDNAME>DYNPFLD</FIELDNAME>
-     <ROLLNAME>DYNPROFLD</ROLLNAME>
+     <ROLLNAME>ZEXCEL_SCREEN_DISPLAY</ROLLNAME>
      <ADMINFIELD>0</ADMINFIELD>
      <VALEXI>X</VALEXI>
      <SHLPORIGIN>F</SHLPORIGIN>
@@ -117,7 +117,132 @@
      <ADMINFIELD>0</ADMINFIELD>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>CURRENCY_COLUMN</FIELDNAME>
+     <ROLLNAME>ZEXCEL_FIELDNAME</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>1</LANGU>
+    <LANGU>4</LANGU>
+    <LANGU>5</LANGU>
+    <LANGU>6</LANGU>
+    <LANGU>8</LANGU>
+    <LANGU>B</LANGU>
+    <LANGU>C</LANGU>
+    <LANGU>F</LANGU>
+    <LANGU>G</LANGU>
+    <LANGU>H</LANGU>
+    <LANGU>K</LANGU>
+    <LANGU>L</LANGU>
+    <LANGU>N</LANGU>
+    <LANGU>O</LANGU>
+    <LANGU>Q</LANGU>
+    <LANGU>R</LANGU>
+    <LANGU>S</LANGU>
+    <LANGU>T</LANGU>
+    <LANGU>U</LANGU>
+    <LANGU>V</LANGU>
+    <LANGU>W</LANGU>
+    <LANGU>c</LANGU>
+    <LANGU>d</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>1</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>4</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>5</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>6</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>B</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>C</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>F</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>G</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>H</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>K</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>L</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>N</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>O</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>Q</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>R</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>S</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>T</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>U</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>V</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>W</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>c</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>d</DDLANGUAGE>
+     <DDTEXT>Fieldcatalog for Table Binding</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

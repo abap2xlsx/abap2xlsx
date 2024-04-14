@@ -33,6 +33,11 @@
      <DESCRIPT>Create CSV ; Delimited format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>C_DEFAULT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Constant for string &apos;DEFAULT&apos;</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>DELIMITER</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Delimiter</DESCRIPT>
@@ -71,6 +76,11 @@
      <CMPNAME>EXCEL</CMPNAME>
      <LANGU>I</LANGU>
      <DESCRIPT>Excel creator</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INITIAL_EXT_DATE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Initial External Date</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>SET_ACTIVE_SHEET_INDEX</CMPNAME>
@@ -121,6 +131,11 @@
      <CMPNAME>SET_ENDOFLINE</CMPNAME>
      <LANGU>I</LANGU>
      <DESCRIPT>Set End Of Line character</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_INITIAL_EXT_DATE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Set Initial External Date (replacing default &apos;00.00.0000&apos;)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>WORKSHEET_INDEX</CMPNAME>
@@ -143,6 +158,14 @@
      <DESCRIPT>Worksheets name</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_INITIAL_EXT_DATE</CMPNAME>
+     <SCONAME>IP_VALUE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Input Value</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>
