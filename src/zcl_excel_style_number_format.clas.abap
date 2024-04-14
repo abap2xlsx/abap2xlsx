@@ -25,7 +25,10 @@ CLASS zcl_excel_style_number_format DEFINITION
     CONSTANTS c_format_currency_simple2 TYPE zexcel_number_format VALUE '$#,##0.00_);($#,##0.00)'. "#EC NOTEXT
     CONSTANTS c_format_currency_simple_red2 TYPE zexcel_number_format VALUE '$#,##0.00_);[Red]($#,##0.00)'. "#EC NOTEXT
     CONSTANTS c_format_date_datetime TYPE zexcel_number_format VALUE 'd/m/y h:mm'. "#EC NOTEXT
+    "! Deprecated. Do not use this one, its value is dd/mm/yy, instead use the constant *_ddmmyyyy_new
     CONSTANTS c_format_date_ddmmyyyy TYPE zexcel_number_format VALUE 'dd/mm/yy'. "#EC NOTEXT
+    CONSTANTS c_format_date_ddmmyyyy_new TYPE zexcel_number_format VALUE 'dd/mm/yyyy'. "#EC NOTEXT
+    CONSTANTS c_format_date_ddmmyy TYPE zexcel_number_format VALUE 'dd/mm/yy'. "#EC NOTEXT
     CONSTANTS c_format_date_ddmmyyyydot TYPE zexcel_number_format VALUE 'dd\.mm\.yyyy'. "#EC NOTEXT
     CONSTANTS c_format_date_dmminus TYPE zexcel_number_format VALUE 'd-m'. "#EC NOTEXT
     CONSTANTS c_format_date_dmyminus TYPE zexcel_number_format VALUE 'd-m-y'. "#EC NOTEXT
