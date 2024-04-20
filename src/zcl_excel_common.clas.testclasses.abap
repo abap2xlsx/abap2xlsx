@@ -55,6 +55,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS excel_string_to_time3 FOR TESTING RAISING cx_static_check.
     METHODS excel_string_to_time4 FOR TESTING RAISING cx_static_check.
     METHODS excel_string_to_time5 FOR TESTING RAISING cx_static_check.
+    METHODS excel_string_to_time6 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string1 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string2 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string3 FOR TESTING RAISING cx_static_check.
@@ -688,6 +689,45 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=>fatal
         ).
     ENDTRY.
+
+* 45141.58832 (2023/08/03 14:07:11) ip_exact = abap_false -> 2023/08/04
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.58832'
+                                                           ip_exact = abap_false ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230804' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
+
+* 45141.58832 (2023/08/03 14:07:11) ip_exact = abap_true -> 2023/08/03
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.58832'
+                                                           ip_exact = abap_true ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230803' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
+
+* 45141.48832 (2023/08/03 11:43:11) ip_exact = abap_false -> 2023/08/03
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.48832'
+                                                           ip_exact = abap_false ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230803' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
   ENDMETHOD.       "excel_String_To_Date
 
 
@@ -764,6 +804,21 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           exp   = 'Unable to interpret time'
           msg   = 'Time should be a valid string'
           level = if_aunit_constants=>fatal ).
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD excel_string_to_time6.
+    DATA ep_value TYPE t.
+* 45141.58832 (2023/08/03 14:07:11) -> 14:07:11
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_time( ip_value = '45141.58832' ).
+
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_value
+            exp   = '140711' ).
+
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail( lx_excel->get_text( ) ).
     ENDTRY.
   ENDMETHOD.
 

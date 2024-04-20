@@ -102,9 +102,22 @@ CLASS zcl_excel_common DEFINITION
         VALUE(ev_unescaped_string) TYPE string
       RAISING
         zcx_excel .
+    "! <p class="shorttext synchronized" lang="en">Convert date from Excel format to SAP</p>
+    "! @parameter ip_value | String being an Excel number representing a date (e.g. 45141 means 2023/08/03,
+    "!                       45141.58832 means 2023/08/03 14:07:11). Important: if the input is date +
+    "!                       time, use the additional parameter IP_EXACT = 'X'.
+    "! @parameter ip_exact | If the input value also contains the time i.e. a fractional part exists
+    "!                       (e.g. 45141.58832 means 2023/08/03 14:07:11), ip_exact = 'X' will
+    "!                       return the exact date (e.g. 2023/08/03), while ip_exact = ' ' (default) will
+    "!                       return the rounded-up date (e.g. 2023/08/04). NB: this rounding-up doesn't
+    "!                       happen if the time is before 12:00:00.
+    "! @parameter ep_value | Date corresponding to the input Excel number. It returns a null date if
+    "!                       the input value contains non-numeric characters.
+    "! @raising zcx_excel | The numeric input corresponds to a date before 1900/1/1 or after 9999/12/31.
     CLASS-METHODS excel_string_to_date
       IMPORTING
         !ip_value       TYPE zexcel_cell_value
+        !ip_exact       TYPE abap_bool DEFAULT abap_false
       RETURNING
         VALUE(ep_value) TYPE d
       RAISING
@@ -860,11 +873,16 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD excel_string_to_date.
     DATA: lv_date_int TYPE i.
+    DATA lv_error_text TYPE string.
 
     CHECK ip_value IS NOT INITIAL AND ip_value CN ' 0'.
 
     TRY.
-        lv_date_int = ip_value.
+        IF ip_exact = abap_false.
+          lv_date_int = ip_value.
+        ELSE.
+          lv_date_int = trunc( ip_value ).
+        ENDIF.
         IF lv_date_int NOT BETWEEN 1 AND 2958465.
           zcx_excel=>raise_text( 'Unable to interpret date' ).
         ENDIF.
@@ -876,7 +894,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
           ep_value = ep_value + 1.
         ENDIF.
       CATCH cx_sy_conversion_error.
-        zcx_excel=>raise_text( 'Index out of bounds' ).
+        lv_error_text = |String "{ ip_value }" is not a valid Excel date|.
+        zcx_excel=>raise_text( lv_error_text ).
     ENDTRY.
   ENDMETHOD.
 
@@ -898,7 +917,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
     TRY.
 
-        lv_day_fraction = ip_value.
+        lv_day_fraction = frac( ip_value ).
         lv_seconds_in_day = lv_day_fraction * lc_seconds_in_day.
 
         ep_value = lv_seconds_in_day.
