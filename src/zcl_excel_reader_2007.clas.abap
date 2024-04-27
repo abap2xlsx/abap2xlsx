@@ -2778,7 +2778,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 * issue #367 - hide columns from
       IF ls_column-max = zcl_excel_common=>c_excel_sheet_max_col.     " Max = very right column
-        IF ls_column-hidden = 1     " all hidden
+        IF ( ls_column-hidden = lc_xml_attr_true
+          OR ls_column-hidden = lc_xml_attr_true_int ) " all hidden
           AND ls_column-min > 0.
           io_worksheet->zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=>convert_column2alpha( ls_column-min ).
         ELSEIF ls_column-style > ''.
