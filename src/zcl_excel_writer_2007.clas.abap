@@ -4315,7 +4315,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       INSERT ls_sheet_content_empty INTO TABLE io_worksheet->sheet_content.
     ENDIF.
 
-    CLEAR ls_sheet_content.
+    CLEAR: ls_sheet_content, ls_sheet_content_empty.
     LOOP AT io_worksheet->sheet_content INTO ls_sheet_content.
       IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
         CLEAR l_autofilter_hidden.
@@ -4339,16 +4339,19 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       WHILE lv_next_row <= ls_sheet_content-cell_row.
         lv_current_row = lv_next_row.
         lv_next_row = lv_current_row + 1.
+        IF lv_current_row <> ls_sheet_content-cell_row OR
+           ls_sheet_content-cell_value = lc_dummy_cell_content.
+*Check if empty row is really necessary - this is basically the case when we have information in row_dimension
+          lo_row_empty = io_worksheet->get_row( lv_current_row ).
+          CHECK lo_row_empty->get_row_height( )                 >= 0         OR
+                lo_row_empty->get_collapsed( io_worksheet )      = abap_true OR
+                lo_row_empty->get_outline_level( io_worksheet )  > 0         OR
+                lo_row_empty->get_xf_index( )                   <> 0.
+        ENDIF.
         IF lv_current_row = ls_sheet_content-cell_row. " cell value found in this row
           ASSIGN ls_sheet_content TO <ls_sheet_content>.
         ELSE.
-*Check if empty row is really necessary - this is basically the case when we have information in row_dimension
-          lo_row_empty = io_worksheet->get_row( lv_current_row ).
-          CHECK lo_row_empty->get_row_height( )                 >= 0          OR
-                lo_row_empty->get_collapsed( io_worksheet )      = abap_true  OR
-                lo_row_empty->get_outline_level( io_worksheet )  > 0          OR
-                lo_row_empty->get_xf_index( )                   <> 0.
-          " Dummyentry A1
+          " Dummyentry in column A
           ls_sheet_content_empty-cell_row      = lv_current_row.
           ls_sheet_content_empty-cell_column   = 1.
           ASSIGN ls_sheet_content_empty TO <ls_sheet_content>.
@@ -4419,10 +4422,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ELSE.
             l_autofilter_hidden = abap_true. " First default is not showing
           ENDIF.
-        ELSE.
-
         ENDIF.
+        ls_last_row = <ls_sheet_content>.
       ENDWHILE.
+
+      CHECK <ls_sheet_content>-cell_value <> lc_dummy_cell_content.
+*---> According to the other dummy lines from the WHILE loop above the start and end lines
+*     contain dummy content only in column A without cell_coords, which don't need a 'C' node.
 
       lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_c
                                                          parent = io_document ).
@@ -4497,8 +4503,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
             ct_column_formulas_used = lt_column_formulas_used
             cv_si                   = lv_si ).
         lo_element_3->append_child( new_child = lo_element_4 ).
-      ELSEIF <ls_sheet_content>-cell_value IS NOT INITIAL           "cell can have just style or formula
-         AND <ls_sheet_content>-cell_value <> lc_dummy_cell_content.
+      ELSEIF <ls_sheet_content>-cell_value IS NOT INITIAL.          "cell can have just style or formula
         IF <ls_sheet_content>-data_type IS NOT INITIAL.
           IF <ls_sheet_content>-data_type EQ 's_leading_blanks'.
             lo_element_3->set_attribute_ns( name  = lc_xml_attr_t
@@ -4528,7 +4533,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
 
       lo_element_2->append_child( new_child = lo_element_3 ). " column node
-      ls_last_row = <ls_sheet_content>.
     ENDLOOP.
     IF sy-subrc = 0.
       READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
