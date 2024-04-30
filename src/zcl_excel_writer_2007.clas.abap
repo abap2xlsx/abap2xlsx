@@ -4343,9 +4343,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
            ls_sheet_content-cell_value = lc_dummy_cell_content.
 *Check if empty row is really necessary - this is basically the case when we have information in row_dimension
           lo_row_empty = io_worksheet->get_row( lv_current_row ).
-          CHECK lo_row_empty->get_row_height( )                 >= 0         OR
-                lo_row_empty->get_collapsed( io_worksheet )      = abap_true OR
-                lo_row_empty->get_outline_level( io_worksheet )  > 0         OR
+          CHECK lo_row_empty->get_row_height( )                 >= 0          OR
+                lo_row_empty->get_collapsed( io_worksheet )      = abap_true  OR
+                lo_row_empty->get_outline_level( io_worksheet )  > 0          OR
                 lo_row_empty->get_xf_index( )                   <> 0.
         ENDIF.
         IF lv_current_row = ls_sheet_content-cell_row. " cell value found in this row
@@ -4428,7 +4428,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       CHECK <ls_sheet_content>-cell_value <> lc_dummy_cell_content.
 *---> According to the other dummy lines from the WHILE loop above the start and end lines
-*     contain dummy content only in column A without cell_coords, which don't need a 'C' node.
+*     contain dummy content without cell_coords in column A only, which don't need a 'C' node.
 
       lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_c
                                                          parent = io_document ).
