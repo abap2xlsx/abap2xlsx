@@ -4339,10 +4339,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       WHILE lv_next_row <= ls_sheet_content-cell_row.
         lv_current_row = lv_next_row.
         lv_next_row = lv_current_row + 1.
-        IF lv_current_row = ls_sheet_content-cell_row. " cell value found in this row
-          ASSIGN ls_sheet_content TO <ls_sheet_content>.
-        ENDIF.
-        IF lv_current_row <> ls_sheet_content-cell_row OR " greater doesn't occur here
+        IF lv_current_row <> ls_sheet_content-cell_row OR " if true it is always less here
            ls_sheet_content-cell_value = lc_dummy_cell_content.
 *Check if empty row is really necessary - this is basically the case when we have information in row_dimension
           lo_row_empty = io_worksheet->get_row( lv_current_row ).
@@ -4351,7 +4348,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                 lo_row_empty->get_outline_level( io_worksheet )  > 0          OR
                 lo_row_empty->get_xf_index( )                   <> 0.
         ENDIF.
-        IF lv_current_row <> ls_sheet_content-cell_row. " greater doesn't occur here
+        IF lv_current_row = ls_sheet_content-cell_row. " cell value found in this row
+          ASSIGN ls_sheet_content TO <ls_sheet_content>.
+        ELSE.
           " Dummyentry in column A
           ls_sheet_content_empty-cell_row      = lv_current_row.
           ls_sheet_content_empty-cell_column   = 1.
@@ -4427,7 +4426,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ls_last_row = <ls_sheet_content>.
       ENDWHILE.
 
-      CHECK <ls_sheet_content>-cell_value <> lc_dummy_cell_content.
+      CHECK ls_sheet_content-cell_value <> lc_dummy_cell_content.
 *---> According to the other dummy lines from the WHILE loop above the start and end lines
 *     contain dummy content without cell_coords in column A only, which don't need a 'C' node.
 
