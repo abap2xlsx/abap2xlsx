@@ -40,7 +40,7 @@ CLASS zcl_excel_comment DEFINITION
     DATA index TYPE string .
     DATA ref TYPE string .
     DATA text TYPE string .
-  data WIDTH type I .
+  DATA width TYPE i .
   data HEIGHT type I .
 ENDCLASS.
 
