@@ -3310,7 +3310,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
        lv_width_str  TYPE string.
 
     CONSTANTS:
-     lc_anchor_init TYPE string VALUE  '0, 1, 11, 10, &width&, 31, &height&, 9'.
+     lc_anchor_init TYPE string VALUE  '2, 15, 11, 10, &width&, 31, &height&, 9'.
 
     CALL METHOD lo_comment->get_size
       IMPORTING
