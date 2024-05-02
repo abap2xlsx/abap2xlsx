@@ -5,6 +5,9 @@ CLASS zcl_excel_comment DEFINITION
 
   PUBLIC SECTION.
 
+  constants DEFAULT_WIDTH type I value 2. "#EC NOTEXT
+  constants DEFAULT_HEIGHT type I value 15. "#EC NOTEXT
+
     METHODS constructor .
     METHODS get_name
       RETURNING
@@ -22,12 +25,23 @@ CLASS zcl_excel_comment DEFINITION
       IMPORTING
         !ip_text TYPE string
         !ip_ref  TYPE string OPTIONAL .
+  methods SET_SIZE
+    importing
+      !IP_WIDTH type I optional
+      !IP_HEIGHT type I optional .
+  methods GET_SIZE
+    exporting
+      !EP_WIDTH type I
+      !EP_HEIGHT type I .
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 
     DATA index TYPE string .
     DATA ref TYPE string .
     DATA text TYPE string .
+  data WIDTH type I .
+  data HEIGHT type I .
 ENDCLASS.
 
 
