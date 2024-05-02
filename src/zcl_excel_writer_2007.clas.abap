@@ -3326,7 +3326,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_element_anchor->set_value( lv_anchor ).
 
 *    lo_element_anchor->set_value( '2, 15, 11, 10, 4, 31, 15, 9' ). "Original line
-*--------------------------------------------------------------------*      
+*--------------------------------------------------------------------*
 
       lo_element_clientdata->append_child( new_child = lo_element_anchor ).
       lo_element_autofill = lo_document->create_simple_element( name   = lc_xml_node_autofill
