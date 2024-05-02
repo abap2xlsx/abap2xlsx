@@ -3297,7 +3297,37 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element_clientdata->append_child( new_child = lo_element_sizewithcells ).
       lo_element_anchor = lo_document->create_simple_element( name   = lc_xml_node_anchor
                                                               parent = lo_document ).
-      lo_element_anchor->set_value( '2, 15, 11, 10, 4, 31, 15, 9' ).
+
+
+*--------------------------------------------------------------------*
+* Ricardo R. - 2024.05.02
+*--------------------------------------------------------------------*
+    DATA:
+       lv_anchor     TYPE string,
+       lv_height     type i,
+       lv_width      TYPE i,
+       lv_height_str type string,
+       lv_width_str  TYPE string.
+
+    CONSTANTS:
+     lc_anchor_init TYPE string VALUE  '0, 1, 11, 10, &width&, 31, &height&, 9'.
+
+    CALL METHOD lo_comment->get_size
+      IMPORTING
+        ep_width  = lv_width
+        ep_height = lv_height.
+
+    lv_width_str  = lv_width.
+    lv_height_str = lv_height.
+
+    lv_anchor = lc_anchor_init.
+    REPLACE '&height&' WITH lv_height_str INTO lv_anchor.
+    REPLACE '&width&' WITH lv_width_str INTO lv_anchor.
+    lo_element_anchor->set_value( lv_anchor ).
+
+*    lo_element_anchor->set_value( '2, 15, 11, 10, 4, 31, 15, 9' ). "Original line
+*--------------------------------------------------------------------*      
+
       lo_element_clientdata->append_child( new_child = lo_element_anchor ).
       lo_element_autofill = lo_document->create_simple_element( name   = lc_xml_node_autofill
                                                                 parent = lo_document ).
