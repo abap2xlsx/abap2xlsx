@@ -40,8 +40,8 @@ CLASS zcl_excel_comment DEFINITION
     DATA index TYPE string .
     DATA ref TYPE string .
     DATA text TYPE string .
-  DATA width TYPE i .
-  data HEIGHT type I .
+    DATA width TYPE i .
+    DATA height TYPE I .
 ENDCLASS.
 
 
@@ -94,7 +94,7 @@ METHOD set_size.
 
 ENDMETHOD.
 
-method GET_SIZE.
+METHOD GET_SIZE.
 
   IF width IS NOT INITIAL.
     ep_width = width.
@@ -108,6 +108,6 @@ method GET_SIZE.
     ep_height = default_height. "Default height
   ENDIF.
 
-endmethod.
+ENDMETHOD.
 
 ENDCLASS.
