@@ -81,4 +81,33 @@ CLASS zcl_excel_comment IMPLEMENTATION.
       me->ref = ip_ref.
     ENDIF.
   ENDMETHOD.
+
+METHOD set_size.
+
+  IF ip_width IS SUPPLIED.
+    width = ip_width.
+  ENDIF.
+
+  IF ip_height IS SUPPLIED.
+    height = ip_height.
+  ENDIF.
+
+ENDMETHOD.
+
+method GET_SIZE.
+
+  IF width IS NOT INITIAL.
+    ep_width = width.
+  ELSE.
+    ep_width = default_width. "Default width
+  ENDIF.
+
+  IF height IS NOT INITIAL.
+    ep_height = height.
+  ELSE.
+    ep_height = default_height. "Default height
+  ENDIF.
+
+endmethod.
+
 ENDCLASS.
