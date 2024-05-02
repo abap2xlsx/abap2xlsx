@@ -24,11 +24,10 @@ CLASS zcl_excel_comment DEFINITION
     METHODS set_text
       IMPORTING
         !ip_text TYPE string
-        !ip_ref  TYPE string OPTIONAL .
-  METHODS set_size
-    IMPORTING
-      !ip_width TYPE i OPTIONAL
-      !ip_height TYPE i OPTIONAL .
+        !ip_ref  TYPE string OPTIONAL
+        !ip_width TYPE i OPTIONAL
+        !ip_height TYPE i OPTIONAL .
+
   METHODS get_size
     EXPORTING
       !ep_width TYPE i
@@ -80,19 +79,16 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     IF ip_ref IS SUPPLIED.
       me->ref = ip_ref.
     ENDIF.
-  ENDMETHOD.
-
-METHOD set_size.
 
   IF ip_width IS SUPPLIED.
-    width = ip_width.
+    me->width = ip_width.
   ENDIF.
 
   IF ip_height IS SUPPLIED.
-    height = ip_height.
+    me->height = ip_height.
   ENDIF.
 
-ENDMETHOD.
+  ENDMETHOD.
 
 METHOD get_size.
 
