@@ -3306,7 +3306,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
        lv_anchor     TYPE string,
        lv_height     TYPE i,
        lv_width      TYPE i,
-       lv_height_str type string,
+       lv_height_str TYPE string,
        lv_width_str  TYPE string.
 
     CONSTANTS:
