@@ -94,7 +94,7 @@ METHOD set_size.
 
 ENDMETHOD.
 
-METHOD GET_SIZE.
+METHOD get_size.
 
   IF width IS NOT INITIAL.
     ep_width = width.
