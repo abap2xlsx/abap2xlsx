@@ -25,10 +25,10 @@ CLASS zcl_excel_comment DEFINITION
       IMPORTING
         !ip_text TYPE string
         !ip_ref  TYPE string OPTIONAL .
-  methods SET_SIZE
-    importing
-      !IP_WIDTH type I optional
-      !IP_HEIGHT type I optional .
+  METHODS set_size
+    IMPORTING
+      !ip_width TYPE i OPTIONAL
+      !ip_height TYPE i OPTIONAL .
   methods GET_SIZE
     exporting
       !EP_WIDTH type I
