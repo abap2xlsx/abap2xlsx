@@ -29,10 +29,10 @@ CLASS zcl_excel_comment DEFINITION
     IMPORTING
       !ip_width TYPE i OPTIONAL
       !ip_height TYPE i OPTIONAL .
-  methods GET_SIZE
-    exporting
-      !EP_WIDTH type I
-      !EP_HEIGHT type I .
+  METHODS get_size
+    EXPORTING
+      !ep_width TYPE i
+      !ep_height TYPE i .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
