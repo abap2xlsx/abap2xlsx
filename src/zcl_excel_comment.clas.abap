@@ -6,7 +6,7 @@ CLASS zcl_excel_comment DEFINITION
   PUBLIC SECTION.
 
   CONSTANTS default_width TYPE i VALUE 2. "#EC NOTEXT
-  constants DEFAULT_HEIGHT type I value 15. "#EC NOTEXT
+  CONSTANTS default_height TYPE i VALUE 15. "#EC NOTEXT
 
     METHODS constructor .
     METHODS get_name
