@@ -89,7 +89,7 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
   ENDMETHOD.
 
-METHOD GET_POSITION.
+METHOD get_position.
 
   IF right_column IS NOT INITIAL.
     ep_right_column = right_column.
