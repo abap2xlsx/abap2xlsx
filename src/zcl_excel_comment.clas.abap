@@ -38,8 +38,8 @@ CLASS zcl_excel_comment DEFINITION
     DATA index TYPE string .
     DATA ref TYPE string .
     DATA text TYPE string .
-  DATA right_column TYPE i .
-  data BOTTOM_ROW type I .
+    DATA right_column TYPE i .
+    DATA bottom_row TYPE i .
 ENDCLASS.
 
 
