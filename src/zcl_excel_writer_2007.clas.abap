@@ -3303,6 +3303,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * Ricardo R. - 2024.05.02
 * https://github.com/abap2xlsx/abap2xlsx/pull/1219
 *--------------------------------------------------------------------*
+* Anchor represents 4 pairs of numbers:
+* ( left column, left offset ), ( top row, top offset ),
+* ( right column, right offset ), ( bottom row, botton offset )
+*--------------------------------------------------------------------*
     DATA:
        lv_anchor         TYPE string,
        lv_bottom_row     TYPE i,
@@ -3322,8 +3326,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lv_bottom_row_str = lv_bottom_row.
 
     lv_anchor = lc_anchor_init.
-    REPLACE '&right_col&'  WITH lv_bottom_row_str INTO lv_anchor.
-    REPLACE '&bottom_row&' WITH lv_right_col_str INTO lv_anchor.
+    REPLACE '&right_col&'  WITH lv_right_col_str INTO lv_anchor.
+    REPLACE '&bottom_row&' WITH lv_bottom_row_str INTO lv_anchor.
 
     lo_element_anchor->set_value( lv_anchor ).
 
