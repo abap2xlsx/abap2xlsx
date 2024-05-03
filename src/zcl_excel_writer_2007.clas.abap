@@ -3301,31 +3301,33 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 *--------------------------------------------------------------------*
 * Ricardo R. - 2024.05.02
+* https://github.com/abap2xlsx/abap2xlsx/pull/1219
 *--------------------------------------------------------------------*
     DATA:
-       lv_anchor     TYPE string,
-       lv_height     TYPE i,
-       lv_width      TYPE i,
-       lv_height_str TYPE string,
-       lv_width_str  TYPE string.
+       lv_anchor         TYPE string,
+       lv_bottom_row     TYPE i,
+       lv_right_col      TYPE i,
+       lv_bottom_row_str TYPE string,
+       lv_right_col_str  TYPE string.
 
     CONSTANTS:
-     lc_anchor_init TYPE string VALUE  '2, 15, 11, 10, &width&, 31, &height&, 9'.
+     lc_anchor_init TYPE string VALUE  '2, 15, 11, 10, &right_col&, 31, &bottom_row&, 9'.
 
-    CALL METHOD lo_comment->get_size
+    CALL METHOD lo_comment->get_position
       IMPORTING
-        ep_width  = lv_width
-        ep_height = lv_height.
+        ep_right_column = lv_right_col
+        ep_bottom_row   = lv_bottom_row.
 
-    lv_width_str  = lv_width.
-    lv_height_str = lv_height.
+    lv_right_col_str  = lv_right_col.
+    lv_bottom_row_str = lv_bottom_row.
 
     lv_anchor = lc_anchor_init.
-    REPLACE '&height&' WITH lv_height_str INTO lv_anchor.
-    REPLACE '&width&' WITH lv_width_str INTO lv_anchor.
+    REPLACE '&right_col&'  WITH lv_bottom_row_str INTO lv_anchor.
+    REPLACE '&bottom_row&' WITH lv_right_col_str INTO lv_anchor.
+
     lo_element_anchor->set_value( lv_anchor ).
 
-*    lo_element_anchor->set_value( '2, 15, 11, 10, 4, 31, 15, 9' ). "Original line
+**    lo_element_anchor->set_value( '2, 15, 11, 10, 4, 31, 15, 9' ). "Original line
 *--------------------------------------------------------------------*
 
       lo_element_clientdata->append_child( new_child = lo_element_anchor ).
