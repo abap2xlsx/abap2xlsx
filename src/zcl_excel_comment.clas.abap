@@ -5,8 +5,8 @@ CLASS zcl_excel_comment DEFINITION
 
   PUBLIC SECTION.
 
-  CONSTANTS default_width TYPE i VALUE 4. "#EC NOTEXT
-  CONSTANTS default_height TYPE i VALUE 15. "#EC NOTEXT
+    CONSTANTS default_right_column TYPE i VALUE 4.          "#EC NOTEXT
+    CONSTANTS default_bottom_row TYPE i VALUE 15.           "#EC NOTEXT
 
     METHODS constructor .
     METHODS get_name
@@ -25,13 +25,12 @@ CLASS zcl_excel_comment DEFINITION
       IMPORTING
         !ip_text TYPE string
         !ip_ref  TYPE string OPTIONAL
-        !ip_width TYPE i OPTIONAL
-        !ip_height TYPE i OPTIONAL .
-
-  METHODS get_size
-    EXPORTING
-      !ep_width TYPE i
-      !ep_height TYPE i .
+        !ip_right_column TYPE i OPTIONAL
+        !ip_bottom_row TYPE i OPTIONAL .
+    METHODS get_position
+      EXPORTING
+        !ep_right_column TYPE i
+        !ep_bottom_row TYPE i .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -39,8 +38,8 @@ CLASS zcl_excel_comment DEFINITION
     DATA index TYPE string .
     DATA ref TYPE string .
     DATA text TYPE string .
-    DATA width TYPE i .
-    DATA height TYPE i .
+  data RIGHT_COLUMN type I .
+  data BOTTOM_ROW type I .
 ENDCLASS.
 
 
@@ -80,28 +79,28 @@ CLASS zcl_excel_comment IMPLEMENTATION.
       me->ref = ip_ref.
     ENDIF.
 
-  IF ip_width IS SUPPLIED.
-    me->width = ip_width.
+  IF ip_right_column IS SUPPLIED.
+    me->right_column = ip_right_column.
   ENDIF.
 
-  IF ip_height IS SUPPLIED.
-    me->height = ip_height.
+  IF ip_bottom_row IS SUPPLIED.
+    me->bottom_row = ip_bottom_row.
   ENDIF.
 
   ENDMETHOD.
 
-METHOD get_size.
+METHOD GET_POSITION.
 
-  IF width IS NOT INITIAL.
-    ep_width = width.
+  IF right_column IS NOT INITIAL.
+    ep_right_column = right_column.
   ELSE.
-    ep_width = default_width. "Default width
+    ep_right_column = default_right_column. "Default right_column
   ENDIF.
 
-  IF height IS NOT INITIAL.
-    ep_height = height.
+  IF bottom_row IS NOT INITIAL.
+    ep_bottom_row = bottom_row.
   ELSE.
-    ep_height = default_height. "Default height
+    ep_bottom_row = default_bottom_row. "Default bottom_row
   ENDIF.
 
 ENDMETHOD.
