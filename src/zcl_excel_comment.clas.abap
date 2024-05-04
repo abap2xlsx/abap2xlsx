@@ -5,41 +5,43 @@ CLASS zcl_excel_comment DEFINITION
 
   PUBLIC SECTION.
 
-    CONSTANTS default_right_column TYPE i VALUE 4.          "#EC NOTEXT
-    CONSTANTS default_bottom_row TYPE i VALUE 15.           "#EC NOTEXT
+    CONSTANTS default_right_column TYPE i VALUE 4.  "#EC NOTEXT
+    CONSTANTS default_bottom_row   TYPE i VALUE 15. "#EC NOTEXT
 
     METHODS constructor .
-    METHODS get_name
+    METHODS get_bottom_row
       RETURNING
-        VALUE(r_name) TYPE string .
+        VALUE(rp_result) TYPE i .
     METHODS get_index
       RETURNING
         VALUE(rp_index) TYPE string .
+    METHODS get_name
+      RETURNING
+        VALUE(r_name) TYPE string .
     METHODS get_ref
       RETURNING
         VALUE(rp_ref) TYPE string .
+    METHODS get_right_column
+      RETURNING
+        VALUE(rp_result) TYPE i .
     METHODS get_text
       RETURNING
         VALUE(rp_text) TYPE string .
     METHODS set_text
       IMPORTING
-        !ip_text TYPE string
-        !ip_ref  TYPE string OPTIONAL
+        !ip_text         TYPE string
+        !ip_ref          TYPE string OPTIONAL
         !ip_right_column TYPE i OPTIONAL
-        !ip_bottom_row TYPE i OPTIONAL .
-    METHODS get_position
-      EXPORTING
-        !ep_right_column TYPE i
-        !ep_bottom_row TYPE i .
+        !ip_bottom_row   TYPE i OPTIONAL .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
 
+    DATA bottom_row TYPE i .
     DATA index TYPE string .
     DATA ref TYPE string .
-    DATA text TYPE string .
     DATA right_column TYPE i .
-    DATA bottom_row TYPE i .
+    DATA text TYPE string .
 ENDCLASS.
 
 
@@ -49,6 +51,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
   METHOD constructor.
 
+  ENDMETHOD.
+
+
+  METHOD get_bottom_row.
+    rp_result = bottom_row.
   ENDMETHOD.
 
 
@@ -67,6 +74,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD get_right_column.
+    rp_result = right_column.
+  ENDMETHOD.
+
+
   METHOD get_text.
     rp_text = me->text.
   ENDMETHOD.
@@ -79,30 +91,17 @@ CLASS zcl_excel_comment IMPLEMENTATION.
       me->ref = ip_ref.
     ENDIF.
 
-  IF ip_right_column IS SUPPLIED.
-    me->right_column = ip_right_column.
-  ENDIF.
+    IF ip_right_column IS NOT INITIAL.
+      me->right_column = ip_right_column.
+    ELSE.
+      me->right_column = default_right_column.
+    ENDIF.
 
-  IF ip_bottom_row IS SUPPLIED.
-    me->bottom_row = ip_bottom_row.
-  ENDIF.
-
+    IF ip_bottom_row IS NOT INITIAL.
+      me->bottom_row = ip_bottom_row.
+    ELSE.
+      me->bottom_row = default_bottom_row.
+    ENDIF.
   ENDMETHOD.
-
-METHOD get_position.
-
-  IF right_column IS NOT INITIAL.
-    ep_right_column = right_column.
-  ELSE.
-    ep_right_column = default_right_column. "Default right_column
-  ENDIF.
-
-  IF bottom_row IS NOT INITIAL.
-    ep_bottom_row = bottom_row.
-  ELSE.
-    ep_bottom_row = default_bottom_row. "Default bottom_row
-  ENDIF.
-
-ENDMETHOD.
 
 ENDCLASS.
