@@ -3139,6 +3139,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_attr_val_none        TYPE string VALUE 'none',
                lc_xml_attr_val_msodir      TYPE string VALUE 'mso-direction-alt:auto',
                lc_xml_attr_val_note        TYPE string VALUE 'Note'.
+    CONSTANTS lc_anchor_init TYPE string VALUE '2, 15, 11, 10, &right_column&, 31, &bottom_row&, 9'.
 
 
     DATA: lo_document              TYPE REF TO if_ixml_document,
@@ -3175,6 +3176,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_int_value             TYPE i,
           lv_int_value_string      TYPE string.
     DATA: lv_rel_id            TYPE i.
+    DATA lv_anchor         TYPE string.
+    DATA lv_bottom_row     TYPE i.
+    DATA lv_right_column   TYPE i.
+    DATA lv_bottom_row_str TYPE string.
+    DATA lv_right_column_str  TYPE string.
 
 
 **********************************************************************
@@ -3297,7 +3303,26 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element_clientdata->append_child( new_child = lo_element_sizewithcells ).
       lo_element_anchor = lo_document->create_simple_element( name   = lc_xml_node_anchor
                                                               parent = lo_document ).
-      lo_element_anchor->set_value( '2, 15, 11, 10, 4, 31, 15, 9' ).
+
+      " Anchor represents 4 pairs of numbers:
+      "   ( left column, left offset ), ( top row, top offset ),
+      "   ( right column, right offset ), ( bottom row, botton offset )
+      " Offsets are a number of pixels.
+      " Reference: Anchor Class at
+      "   https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.vml.spreadsheet.anchor?view=openxml-3.0.1
+      lv_right_column = lo_comment->get_right_column( ).
+      lv_bottom_row = lo_comment->get_bottom_row( ).
+
+      lv_right_column_str  = lv_right_column.
+      CONDENSE lv_right_column_str.
+      lv_bottom_row_str = lv_bottom_row.
+      CONDENSE lv_bottom_row_str.
+
+      lv_anchor = lc_anchor_init.
+      REPLACE '&right_column&'  WITH lv_right_column_str INTO lv_anchor.
+      REPLACE '&bottom_row&' WITH lv_bottom_row_str INTO lv_anchor.
+      lo_element_anchor->set_value( lv_anchor ).
+
       lo_element_clientdata->append_child( new_child = lo_element_anchor ).
       lo_element_autofill = lo_document->create_simple_element( name   = lc_xml_node_autofill
                                                                 parent = lo_document ).
