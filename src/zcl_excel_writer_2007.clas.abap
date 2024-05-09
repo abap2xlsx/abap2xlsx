@@ -4245,7 +4245,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lt_sorted_rows         TYPE SORTED TABLE OF lty_sorted_rows WITH UNIQUE KEY num,
           ls_row                 LIKE LINE OF lt_sorted_rows,
           ls_sheet_content       LIKE LINE OF io_worksheet->sheet_content,
-          lv_current_row         TYPE i.
+          lv_current_row         TYPE i,
 
 *        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
           lo_row_iterator        TYPE REF TO zcl_excel_collection_iterator,
@@ -4436,6 +4436,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
           ENDIF.
           IF lv_style_guid IS NOT INITIAL.
+            CLEAR ls_style_mapping.
             READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
 *end of change issue #157 - allow column cellstyles
             lv_value = ls_style_mapping-style.
