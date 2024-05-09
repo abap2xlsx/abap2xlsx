@@ -851,7 +851,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_worksheet IMPLEMENTATION.
+CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   METHOD add_comment.
@@ -1082,6 +1082,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     LOOP AT lt_field_catalog ASSIGNING <ls_field_catalog> WHERE dynpfld EQ abap_true.
 
       lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
+
+      IF <ls_field_catalog>-width IS NOT INITIAL.
+        set_column_width( ip_column = lv_column_alpha ip_width_fix = <ls_field_catalog>-width ).
+      ENDIF.
 
       " First of all write column header
       IF <ls_field_catalog>-style_header IS NOT INITIAL.
@@ -3300,6 +3304,30 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD normalize_columnrow_parameter.
+
+    IF ( ( ip_column IS NOT INITIAL OR ip_row IS NOT INITIAL ) AND ip_columnrow IS NOT INITIAL )
+        OR ( ip_column IS INITIAL AND ip_row IS INITIAL AND ip_columnrow IS INITIAL ).
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'Please provide either row and column, or cell reference'.
+    ENDIF.
+
+    IF ip_columnrow IS NOT INITIAL.
+      zcl_excel_common=>convert_columnrow2column_a_row(
+        EXPORTING
+          i_columnrow  = ip_columnrow
+        IMPORTING
+          e_column_int = ep_column
+          e_row        = ep_row ).
+    ELSE.
+      ep_column = zcl_excel_common=>convert_column2int( ip_column ).
+      ep_row    = ip_row.
+    ENDIF.
+
+  ENDMETHOD.
+
+
   METHOD normalize_column_heading_texts.
 
     DATA: lt_field_catalog      TYPE zexcel_t_fieldcatalog,
@@ -3380,30 +3408,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDLOOP.
 
     result = lt_field_catalog.
-
-  ENDMETHOD.
-
-
-  METHOD normalize_columnrow_parameter.
-
-    IF ( ( ip_column IS NOT INITIAL OR ip_row IS NOT INITIAL ) AND ip_columnrow IS NOT INITIAL )
-        OR ( ip_column IS INITIAL AND ip_row IS INITIAL AND ip_columnrow IS INITIAL ).
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'Please provide either row and column, or cell reference'.
-    ENDIF.
-
-    IF ip_columnrow IS NOT INITIAL.
-      zcl_excel_common=>convert_columnrow2column_a_row(
-        EXPORTING
-          i_columnrow  = ip_columnrow
-        IMPORTING
-          e_column_int = ep_column
-          e_row        = ep_row ).
-    ELSE.
-      ep_column = zcl_excel_common=>convert_column2int( ip_column ).
-      ep_row    = ip_row.
-    ENDIF.
 
   ENDMETHOD.
 
@@ -4171,23 +4175,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "SET_CELL_STYLE
 
 
-  METHOD set_table_reference.
-
-    FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data.
-
-    READ TABLE sheet_content ASSIGNING <ls_sheet_content> WITH KEY cell_row    = ip_row
-                                                                   cell_column = ip_column.
-    IF sy-subrc = 0.
-      <ls_sheet_content>-table           = ir_table.
-      <ls_sheet_content>-table_fieldname = ip_fieldname.
-      <ls_sheet_content>-table_header    = ip_header.
-    ELSE.
-      zcx_excel=>raise_text( 'Cell not found' ).
-    ENDIF.
-
-  ENDMETHOD.
-
-
   METHOD set_column_width.
     DATA: lo_column  TYPE REF TO zcl_excel_column.
     DATA: width             TYPE f.
@@ -4498,6 +4485,23 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDLOOP.
 
   ENDMETHOD.                    "SET_TABLE
+
+
+  METHOD set_table_reference.
+
+    FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data.
+
+    READ TABLE sheet_content ASSIGNING <ls_sheet_content> WITH KEY cell_row    = ip_row
+                                                                   cell_column = ip_column.
+    IF sy-subrc = 0.
+      <ls_sheet_content>-table           = ir_table.
+      <ls_sheet_content>-table_fieldname = ip_fieldname.
+      <ls_sheet_content>-table_header    = ip_header.
+    ELSE.
+      zcx_excel=>raise_text( 'Cell not found' ).
+    ENDIF.
+
+  ENDMETHOD.
 
 
   METHOD set_title.
