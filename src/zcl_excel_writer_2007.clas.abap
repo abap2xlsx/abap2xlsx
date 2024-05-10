@@ -4214,8 +4214,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
            END OF lty_table_area.
 
     TYPES: BEGIN OF lty_sorted_rows,
-             num     TYPE zexcel_cell_row,
-             content TYPE abap_bool,
+             num    TYPE zexcel_cell_row,
+             toidx  TYPE sy-tabix,
            END OF lty_sorted_rows.
 
     CONSTANTS: lc_xml_node_sheetdata TYPE string VALUE 'sheetData',   " SheetData tag
@@ -4246,6 +4246,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ls_row                 LIKE LINE OF lt_sorted_rows,
           ls_sheet_content       LIKE LINE OF io_worksheet->sheet_content,
           lv_current_row         TYPE i,
+          lv_tabix               TYPE sy-tabix,
 
 *        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
           lo_row_iterator        TYPE REF TO zcl_excel_collection_iterator,
@@ -4299,15 +4300,19 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 
 * Preparing the row loop
-    ls_row-content = abap_true.
     LOOP AT io_worksheet->sheet_content INTO ls_sheet_content.
-      AT NEW cell_row.
-        ls_row-num = ls_sheet_content-cell_row.
+      AT END OF cell_row.
+        ls_row-num   = ls_sheet_content-cell_row.
+        ls_row-toidx = sy-tabix.
         INSERT ls_row INTO TABLE lt_sorted_rows.
       ENDAT.
     ENDLOOP.
+    IF sy-subrc = 0.
+      lv_tabix = 1.
+      READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_tabix.
+      CLEAR ls_row-toidx.
+    ENDIF.
 
-    CLEAR ls_row. "w/o content mark
     lo_row_iterator = io_worksheet->get_rows_iterator( ).
     WHILE lo_row_iterator->has_next( ) = abap_true.
       lo_row ?= lo_row_iterator->get_next( ).
@@ -4380,8 +4385,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         l_autofilter_hidden = abap_true. " First default is not showing
       ENDIF.
 
-      IF ls_row-content IS NOT INITIAL.
-        LOOP AT io_worksheet->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_row = ls_row-num.
+      IF ls_row-toidx > 0.
+        WHILE lv_tabix <= ls_row-toidx.
           IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
             CLEAR l_autofilter_hidden.
           ELSE.
@@ -4495,7 +4500,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ENDIF.
 
           lo_element_2->append_child( new_child = lo_element_3 ). " column node
-        ENDLOOP.
+
+          ADD 1 TO lv_tabix.
+          READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_tabix.
+        ENDWHILE.
       ENDIF.
 
       IF lo_autofilter IS BOUND.
