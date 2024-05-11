@@ -1083,6 +1083,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
       lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
+      IF <ls_field_catalog>-width IS NOT INITIAL.
+        set_column_width( ip_column = lv_column_alpha ip_width_fix = <ls_field_catalog>-width ).
+      ENDIF.
+
       " First of all write column header
       IF <ls_field_catalog>-style_header IS NOT INITIAL.
         me->set_cell( ip_column = lv_column_alpha
