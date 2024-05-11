@@ -2328,7 +2328,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             IF sy-subrc EQ 0.
               CASE ls_style_conv-abap_type.
                 WHEN cl_abap_typedescr=>typekind_date.
-                  <lv_data> = zcl_excel_common=>excel_string_to_date( <ls_sheet_content>-cell_value ).
+                  <lv_data> = zcl_excel_common=>excel_string_to_date( ip_value = <ls_sheet_content>-cell_value
+                                                                      ip_exact = abap_true ).
                 WHEN cl_abap_typedescr=>typekind_time.
                   <lv_data> = zcl_excel_common=>excel_string_to_time( <ls_sheet_content>-cell_value ).
               ENDCASE.
