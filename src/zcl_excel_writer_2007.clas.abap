@@ -269,6 +269,11 @@ CLASS zcl_excel_writer_2007 DEFINITION
         !ip_flag          TYPE flag
       RETURNING
         VALUE(ep_boolean) TYPE tv_charbool  .
+    METHODS number2string
+      IMPORTING
+        !ip_number        TYPE numeric
+      RETURNING
+        VALUE(ep_string) TYPE string.
 ENDCLASS.
 
 
@@ -3139,7 +3144,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_attr_val_none        TYPE string VALUE 'none',
                lc_xml_attr_val_msodir      TYPE string VALUE 'mso-direction-alt:auto',
                lc_xml_attr_val_note        TYPE string VALUE 'Note'.
-    CONSTANTS lc_anchor_init TYPE string VALUE '2, 15, 11, 10, &right_column&, 31, &bottom_row&, 9'.
 
 
     DATA: lo_document              TYPE REF TO if_ixml_document,
@@ -3181,6 +3185,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA lv_right_column   TYPE i.
     DATA lv_bottom_row_str TYPE string.
     DATA lv_right_column_str  TYPE string.
+    DATA lv_top_row         TYPE i.
+    DATA lv_left_column     TYPE i.
+    DATA lv_top_row_str     TYPE string.
+    DATA lv_left_column_str TYPE string.
 
 
 **********************************************************************
@@ -3310,17 +3318,14 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " Offsets are a number of pixels.
       " Reference: Anchor Class at
       "   https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.vml.spreadsheet.anchor?view=openxml-3.0.1
-      lv_right_column = lo_comment->get_right_column( ).
-      lv_bottom_row = lo_comment->get_bottom_row( ).
-
-      lv_right_column_str  = lv_right_column.
-      CONDENSE lv_right_column_str.
-      lv_bottom_row_str = lv_bottom_row.
-      CONDENSE lv_bottom_row_str.
-
-      lv_anchor = lc_anchor_init.
-      REPLACE '&right_column&'  WITH lv_right_column_str INTO lv_anchor.
-      REPLACE '&bottom_row&' WITH lv_bottom_row_str INTO lv_anchor.
+      lv_anchor = number2string( lo_comment->get_left_column( ) )
+       && `, ` && number2string( lo_comment->get_left_offset( ) )
+       && `, ` && number2string( lo_comment->get_top_row( ) )
+       && `, ` && number2string( lo_comment->get_top_offset( ) )
+       && `, ` && number2string( lo_comment->get_right_column( ) )
+       && `, ` && number2string( lo_comment->get_right_offset( ) )
+       && `, ` && number2string( lo_comment->get_bottom_row( ) )
+       && `, ` && number2string( lo_comment->get_bottom_offset( ) ).
       lo_element_anchor->set_value( lv_anchor ).
 
       lo_element_clientdata->append_child( new_child = lo_element_anchor ).
@@ -6221,6 +6226,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ep_shareable = abap_true.
       ENDIF.
     ENDIF.
+  ENDMETHOD.
+
+
+  METHOD number2string.
+    ep_string = ip_number.
+    CONDENSE ep_string.
   ENDMETHOD.
 
 
