@@ -4252,6 +4252,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_row_iterator        TYPE REF TO zcl_excel_collection_iterator,
           lo_row                 TYPE REF TO zcl_excel_row,
           lts_row_outlines       TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
+          ls_row_outline         LIKE LINE OF lts_row_outlines,
 
           ls_style_mapping       TYPE zexcel_s_styles_mapping,
 
@@ -4264,8 +4265,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lt_column_formulas_used TYPE mty_column_formulas_used,
           lv_si                   TYPE i.
 
-    FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data,
-                   <ls_row_outline>   LIKE LINE OF lts_row_outlines.
+    FIELD-SYMBOLS: <ls_sheet_content> TYPE zexcel_s_cell_data.
 
 
     " sheetData node
@@ -4329,7 +4329,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 * Get every outline row to set outline level
     lts_row_outlines = io_worksheet->get_row_outlines( ).
-    LOOP AT lts_row_outlines ASSIGNING <ls_row_outline>.
+    LOOP AT lts_row_outlines INTO ls_row_outline.
       IF ls_row_outline-collapsed = abap_true.
 *       And include the line of the collapsed-status Symbol (+) shown below/above
         IF io_worksheet->zif_excel_sheet_properties~summarybelow = zif_excel_sheet_properties=>c_below_on.
@@ -4338,8 +4338,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           SUBTRACT 1 FROM ls_row_outline-row_from.  " collapsed-status set on previous row
         ENDIF.
       ENDIF.
-      lv_current_row = <ls_row_outline>-row_from.
-      WHILE lv_current_row LE <ls_row_outline>-row_to.
+      lv_current_row = ls_row_outline-row_from.
+      WHILE lv_current_row <= ls_row_outline-row_to.
         ls_row-num = lv_current_row.
         INSERT ls_row INTO TABLE lt_sorted_rows.
         ADD 1 TO lv_current_row.
