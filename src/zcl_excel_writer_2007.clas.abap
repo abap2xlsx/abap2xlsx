@@ -4300,6 +4300,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 
 * Preparing the row loop
+* First of all get the rows with cell content
     LOOP AT io_worksheet->sheet_content INTO ls_sheet_content.
       AT END OF cell_row.
         ls_row-num   = ls_sheet_content-cell_row.
@@ -4308,11 +4309,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDAT.
     ENDLOOP.
     IF sy-subrc = 0.
+*     Get first cell data to start the WHILE loop below
       lv_tabix = 1.
       READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_tabix.
-      CLEAR ls_row-toidx.
+      CLEAR ls_row-toidx. "for next preparations
     ENDIF.
 
+* Get every row with relevant data
     lo_row_iterator = io_worksheet->get_rows_iterator( ).
     WHILE lo_row_iterator->has_next( ) = abap_true.
       lo_row ?= lo_row_iterator->get_next( ).
@@ -4324,8 +4327,17 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       INSERT ls_row INTO TABLE lt_sorted_rows.
     ENDWHILE.
 
+* Get every outline row to set outline level
     lts_row_outlines = io_worksheet->get_row_outlines( ).
     LOOP AT lts_row_outlines ASSIGNING <ls_row_outline>.
+      IF ls_row_outline-collapsed = abap_true.
+*       And include the line of the collapsed-status Symbol (+) shown below/above
+        IF io_worksheet->zif_excel_sheet_properties~summarybelow = zif_excel_sheet_properties=>c_below_on.
+          ADD 1 TO ls_row_outline-row_to.           " collapsed-status set on following row
+        ELSEIF ls_row_outline-row_from > 1.
+          SUBTRACT 1 FROM ls_row_outline-row_from.  " collapsed-status set on previous row
+        ENDIF.
+      ENDIF.
       lv_current_row = <ls_row_outline>-row_from.
       WHILE lv_current_row LE <ls_row_outline>-row_to.
         ls_row-num = lv_current_row.
@@ -4386,6 +4398,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
 
       IF ls_row-toidx > 0.
+*       Of course the WHILE loop corresponds to
+*       LOOP AT io_worksheet->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_row = ls_row-num.
+*       but it should be faster this way
         WHILE lv_tabix <= ls_row-toidx.
           IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
             CLEAR l_autofilter_hidden.
