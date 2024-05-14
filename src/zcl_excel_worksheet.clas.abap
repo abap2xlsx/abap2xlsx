@@ -2039,7 +2039,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       lt_param     TYPE abap_parmbind_tab.
     CONSTANTS:
      c_method_name TYPE string VALUE 'CHANGE_CELL_STYLE'.
-  
     DEFINE add_parameter.
       IF &1 IS SUPPLIED.
         CLEAR: ls_param.
