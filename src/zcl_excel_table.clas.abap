@@ -74,6 +74,7 @@ CLASS zcl_excel_table DEFINITION
     CONSTANTS builtinstyle_medium24 TYPE zexcel_table_style VALUE 'TableStyleMedium24'. "#EC NOTEXT
     CONSTANTS builtinstyle_medium25 TYPE zexcel_table_style VALUE 'TableStyleMedium26'. "#EC NOTEXT
     CONSTANTS builtinstyle_medium27 TYPE zexcel_table_style VALUE 'TableStyleMedium27'. "#EC NOTEXT
+    CONSTANTS table_style_none TYPE zexcel_table_style VALUE 'None' ##NO_TEXT.
 
     METHODS get_totals_formula
       IMPORTING
