@@ -5785,38 +5785,39 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_element->append_child( new_child = lo_element2 ).
     ENDLOOP.
 
-
-    lo_element = lo_document->create_simple_element( name   = 'tableStyleInfo'
-                                                          parent = lo_element_root ).
-
-    lo_element->set_attribute_ns( name  = 'name'
-                                       value = io_table->settings-table_style  ).
-
-    lo_element->set_attribute_ns( name  = 'showFirstColumn'
-                                       value = '0' ).
-
-    lo_element->set_attribute_ns( name  = 'showLastColumn'
-                                       value = '0' ).
-
-    IF io_table->settings-show_row_stripes = abap_true.
-      lv_value = '1'.
-    ELSE.
-      lv_value = '0'.
+    IF io_table->settings-table_style NE zcl_excel_table=>table_style_none.
+      lo_element = lo_document->create_simple_element( name   = 'tableStyleInfo'
+                                                            parent = lo_element_root ).
+  
+      lo_element->set_attribute_ns( name  = 'name'
+                                         value = io_table->settings-table_style  ).
+  
+      lo_element->set_attribute_ns( name  = 'showFirstColumn'
+                                         value = '0' ).
+  
+      lo_element->set_attribute_ns( name  = 'showLastColumn'
+                                         value = '0' ).
+  
+      IF io_table->settings-show_row_stripes = abap_true.
+        lv_value = '1'.
+      ELSE.
+        lv_value = '0'.
+      ENDIF.
+  
+      lo_element->set_attribute_ns( name  = 'showRowStripes'
+                                         value = lv_value ).
+  
+      IF io_table->settings-show_column_stripes = abap_true.
+        lv_value = '1'.
+      ELSE.
+        lv_value = '0'.
+      ENDIF.
+  
+      lo_element->set_attribute_ns( name  = 'showColumnStripes'
+                                         value = lv_value ).
+  
+      lo_element_root->append_child( new_child = lo_element ).
     ENDIF.
-
-    lo_element->set_attribute_ns( name  = 'showRowStripes'
-                                       value = lv_value ).
-
-    IF io_table->settings-show_column_stripes = abap_true.
-      lv_value = '1'.
-    ELSE.
-      lv_value = '0'.
-    ENDIF.
-
-    lo_element->set_attribute_ns( name  = 'showColumnStripes'
-                                       value = lv_value ).
-
-    lo_element_root->append_child( new_child = lo_element ).
 **********************************************************************
 * STEP 5: Create xstring stream
     ep_content = render_xml_document( lo_document ).
