@@ -2048,7 +2048,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         INSERT ls_param INTO TABLE lt_param.
       ENDIF.
     END-OF-DEFINITION.
-  
   * Get Column and Row "From"
     normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow_from
                                              ip_column    = ip_column_from
