@@ -2037,7 +2037,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       cell_style   TYPE zexcel_cell_style,
       ls_param     TYPE abap_parmbind,
       lt_param     TYPE abap_parmbind_tab.
-  
     CONSTANTS:
      c_method_name TYPE string VALUE 'CHANGE_CELL_STYLE'.
   
