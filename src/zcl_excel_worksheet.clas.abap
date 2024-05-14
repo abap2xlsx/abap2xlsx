@@ -2054,7 +2054,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                                              ip_row       = ip_row_from
                                    IMPORTING ep_column    = column_from
                                              ep_row       = row_from ).
-  
   * Get Column and Row "To"
     normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow_to
                                              ip_column    = ip_column_to
