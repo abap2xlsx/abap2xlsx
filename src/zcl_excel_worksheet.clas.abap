@@ -2085,7 +2085,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
   
   * Go through each row
-    current_row = ip_row_from.
+    current_row = row_from.
     WHILE current_row LE row_to.
   
       current_col = column_from.
