@@ -306,6 +306,124 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_guid)                  TYPE zexcel_cell_style
       RAISING
         zcx_excel .
+METHODS change_range_style
+      IMPORTING
+        !ip_columnrow_from              TYPE csequence OPTIONAL
+        !ip_column_from                 TYPE simple OPTIONAL
+        !ip_row_from                    TYPE zexcel_cell_row OPTIONAL
+        !ip_columnrow_to                TYPE csequence OPTIONAL
+        !ip_column_to                   TYPE simple OPTIONAL
+        !ip_row_to                      TYPE zexcel_cell_row OPTIONAL
+        !ip_guid                        TYPE zexcel_cell_style OPTIONAL
+        !ip_complete                    TYPE zexcel_s_cstyle_complete OPTIONAL
+        !ip_xcomplete                   TYPE zexcel_s_cstylex_complete OPTIONAL
+        !ip_font                        TYPE zexcel_s_cstyle_font OPTIONAL
+        !ip_xfont                       TYPE zexcel_s_cstylex_font OPTIONAL
+        !ip_fill                        TYPE zexcel_s_cstyle_fill OPTIONAL
+        !ip_xfill                       TYPE zexcel_s_cstylex_fill OPTIONAL
+        !ip_borders                     TYPE zexcel_s_cstyle_borders OPTIONAL
+        !ip_xborders                    TYPE zexcel_s_cstylex_borders OPTIONAL
+        !ip_alignment                   TYPE zexcel_s_cstyle_alignment OPTIONAL
+        !ip_xalignment                  TYPE zexcel_s_cstylex_alignment OPTIONAL
+        !ip_number_format_format_code   TYPE zexcel_number_format OPTIONAL
+        !ip_protection                  TYPE zexcel_s_cstyle_protection OPTIONAL
+        !ip_xprotection                 TYPE zexcel_s_cstylex_protection OPTIONAL
+        !ip_font_bold                   TYPE flag OPTIONAL
+        !ip_font_color                  TYPE zexcel_s_style_color OPTIONAL
+        !ip_font_color_rgb              TYPE zexcel_style_color_argb OPTIONAL
+        !ip_font_color_indexed          TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_font_color_theme            TYPE zexcel_style_color_theme OPTIONAL
+        !ip_font_color_tint             TYPE zexcel_style_color_tint OPTIONAL
+        !ip_font_family                 TYPE zexcel_style_font_family OPTIONAL
+        !ip_font_italic                 TYPE flag OPTIONAL
+        !ip_font_name                   TYPE zexcel_style_font_name OPTIONAL
+        !ip_font_scheme                 TYPE zexcel_style_font_scheme OPTIONAL
+        !ip_font_size                   TYPE zexcel_style_font_size OPTIONAL
+        !ip_font_strikethrough          TYPE flag OPTIONAL
+        !ip_font_underline              TYPE flag OPTIONAL
+        !ip_font_underline_mode         TYPE zexcel_style_font_underline OPTIONAL
+        !ip_fill_filltype               TYPE zexcel_fill_type OPTIONAL
+        !ip_fill_rotation               TYPE zexcel_rotation OPTIONAL
+        !ip_fill_fgcolor                TYPE zexcel_s_style_color OPTIONAL
+        !ip_fill_fgcolor_rgb            TYPE zexcel_style_color_argb OPTIONAL
+        !ip_fill_fgcolor_indexed        TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_fill_fgcolor_theme          TYPE zexcel_style_color_theme OPTIONAL
+        !ip_fill_fgcolor_tint           TYPE zexcel_style_color_tint OPTIONAL
+        !ip_fill_bgcolor                TYPE zexcel_s_style_color OPTIONAL
+        !ip_fill_bgcolor_rgb            TYPE zexcel_style_color_argb OPTIONAL
+        !ip_fill_bgcolor_indexed        TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_fill_bgcolor_theme          TYPE zexcel_style_color_theme OPTIONAL
+        !ip_fill_bgcolor_tint           TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_allborders          TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_type          TYPE zexcel_s_gradient_type-type OPTIONAL
+        !ip_fill_gradtype_degree        TYPE zexcel_s_gradient_type-degree OPTIONAL
+        !ip_xborders_allborders         TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_diagonal            TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_bottom        TYPE zexcel_s_gradient_type-bottom OPTIONAL
+        !ip_fill_gradtype_top           TYPE zexcel_s_gradient_type-top OPTIONAL
+        !ip_xborders_diagonal           TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_diagonal_mode       TYPE zexcel_diagonal OPTIONAL
+        !ip_fill_gradtype_right         TYPE zexcel_s_gradient_type-right OPTIONAL
+        !ip_borders_down                TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_left          TYPE zexcel_s_gradient_type-left OPTIONAL
+        !ip_fill_gradtype_position1     TYPE zexcel_s_gradient_type-position1 OPTIONAL
+        !ip_xborders_down               TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_left                TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_fill_gradtype_position2     TYPE zexcel_s_gradient_type-position2 OPTIONAL
+        !ip_fill_gradtype_position3     TYPE zexcel_s_gradient_type-position3 OPTIONAL
+        !ip_xborders_left               TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_right               TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_xborders_right              TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_borders_top                 TYPE zexcel_s_cstyle_border OPTIONAL
+        !ip_xborders_top                TYPE zexcel_s_cstylex_border OPTIONAL
+        !ip_alignment_horizontal        TYPE zexcel_alignment OPTIONAL
+        !ip_alignment_vertical          TYPE zexcel_alignment OPTIONAL
+        !ip_alignment_textrotation      TYPE zexcel_text_rotation OPTIONAL
+        !ip_alignment_wraptext          TYPE flag OPTIONAL
+        !ip_alignment_shrinktofit       TYPE flag OPTIONAL
+        !ip_alignment_indent            TYPE zexcel_indent OPTIONAL
+        !ip_protection_hidden           TYPE zexcel_cell_protection OPTIONAL
+        !ip_protection_locked           TYPE zexcel_cell_protection OPTIONAL
+        !ip_borders_allborders_style    TYPE zexcel_border OPTIONAL
+        !ip_borders_allborders_color    TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_allbo_color_rgb     TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_allbo_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_allbo_color_theme   TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_allbo_color_tint    TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_diagonal_style      TYPE zexcel_border OPTIONAL
+        !ip_borders_diagonal_color      TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_diagonal_color_rgb  TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_diagonal_color_inde TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_diagonal_color_them TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_diagonal_color_tint TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_down_style          TYPE zexcel_border OPTIONAL
+        !ip_borders_down_color          TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_down_color_rgb      TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_down_color_indexed  TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_down_color_theme    TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_down_color_tint     TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_left_style          TYPE zexcel_border OPTIONAL
+        !ip_borders_left_color          TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_left_color_rgb      TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_left_color_indexed  TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_left_color_theme    TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_left_color_tint     TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_right_style         TYPE zexcel_border OPTIONAL
+        !ip_borders_right_color         TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_right_color_rgb     TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_right_color_indexed TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_right_color_theme   TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_right_color_tint    TYPE zexcel_style_color_tint OPTIONAL
+        !ip_borders_top_style           TYPE zexcel_border OPTIONAL
+        !ip_borders_top_color           TYPE zexcel_s_style_color OPTIONAL
+        !ip_borders_top_color_rgb       TYPE zexcel_style_color_argb OPTIONAL
+        !ip_borders_top_color_indexed   TYPE zexcel_style_color_indexed OPTIONAL
+        !ip_borders_top_color_theme     TYPE zexcel_style_color_theme OPTIONAL
+        !ip_borders_top_color_tint      TYPE zexcel_style_color_tint OPTIONAL
+      RETURNING
+        VALUE(ep_guid)                  TYPE zexcel_cell_style
+      RAISING
+        zcx_excel .
     CLASS-METHODS class_constructor .
     METHODS constructor
       IMPORTING
@@ -1906,6 +2024,235 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   ENDMETHOD.                    "CHANGE_CELL_STYLE
 
+  METHOD change_range_style.
+  
+    DATA:
+      column_from  TYPE zexcel_cell_column,
+      row_from     TYPE zexcel_cell_row,
+      column_to    TYPE zexcel_cell_column,
+      row_to       TYPE zexcel_cell_row,
+      current_row  TYPE i,
+      current_col  TYPE i,
+      aux          TYPE i,
+      column_alpha TYPE string,
+      cell_style   TYPE zexcel_cell_style,
+      ls_param     TYPE abap_parmbind,
+      lt_param     TYPE abap_parmbind_tab.
+  
+    CONSTANTS:
+     c_method_name TYPE string VALUE 'CHANGE_CELL_STYLE'.
+  
+    DEFINE add_parameter.
+      IF &1 IS SUPPLIED.
+        CLEAR: ls_param.
+        ls_param-name = &2.
+        ls_param-kind = cl_abap_objectdescr=>exporting.
+        GET REFERENCE OF &1 INTO ls_param-value.
+        INSERT ls_param INTO TABLE lt_param.
+      ENDIF.
+    END-OF-DEFINITION.
+  
+  * Get Column and Row "From"
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow_from
+                                             ip_column    = ip_column_from
+                                             ip_row       = ip_row_from
+                                   IMPORTING ep_column    = column_from
+                                             ep_row       = row_from ).
+  
+  * Get Column and Row "To"
+    normalize_columnrow_parameter( EXPORTING ip_columnrow = ip_columnrow_to
+                                             ip_column    = ip_column_to
+                                             ip_row       = ip_row_to
+                                   IMPORTING ep_column    = column_to
+                                             ep_row       = row_to ).
+  
+  * Swap values if the "to" is smaller than the "from"
+    IF column_to LT column_from.
+      aux      = column_from.
+      column_from = column_to.
+      column_to   = aux.
+    ENDIF.
+  
+    IF row_to LT row_from.
+      aux   = row_from.
+      row_from = row_to.
+      row_to   = aux.
+    ENDIF.
+  
+  * Use style if its supplied
+    IF ip_guid IS SUPPLIED.
+      cell_style = ip_guid.
+    ENDIF.
+  
+  * Go through each row
+    current_row = ip_row_from.
+    WHILE current_row LE row_to.
+  
+      current_col = column_from.
+  
+  *   Go through each Column
+      WHILE current_col LE column_to.
+  
+        column_alpha = zcl_excel_common=>convert_column2alpha( current_col ).
+  
+  *     The first time we use the CHANGE_CELL_STYLE method to get a GUID.
+  *     Next times we will use SET_CELL_STYLE with that guid.
+        IF cell_style IS INITIAL.
+  
+  *       Some parameters cannot be passed in blank, like rgb_color, etc.,
+  *       they may give download errors, so we call the method CHANGE_CELL_STYLE
+  *       dynamically with only the supplied parameters
+          CLEAR: ls_param.
+          ls_param-name = 'IP_COLUMN'.
+          ls_param-kind = cl_abap_objectdescr=>exporting.
+          GET REFERENCE OF column_alpha INTO ls_param-value.
+          INSERT ls_param INTO TABLE lt_param.
+  
+          CLEAR: ls_param.
+          ls_param-name = 'IP_ROW'.
+          ls_param-kind = cl_abap_objectdescr=>exporting.
+          GET REFERENCE OF current_row INTO ls_param-value.
+          INSERT ls_param INTO TABLE lt_param.
+  
+          CLEAR: ls_param.
+          ls_param-name = 'EP_GUID'.
+          ls_param-kind = cl_abap_objectdescr=>returning.
+          GET REFERENCE OF cell_style INTO ls_param-value.
+          INSERT ls_param INTO TABLE lt_param.
+  
+  *--------------------------------------------------------------------*
+          add_parameter ip_complete                     'IP_COMPLETE'.
+          add_parameter ip_xcomplete                    'IP_XCOMPLETE'.
+          add_parameter ip_font                         'IP_FONT'.
+          add_parameter ip_xfont                        'IP_XFONT'.
+          add_parameter ip_fill                         'IP_FILL'.
+          add_parameter ip_xfill                        'IP_XFILL'.
+          add_parameter ip_borders                      'IP_BORDERS'.
+          add_parameter ip_xborders                     'IP_XBORDERS'.
+          add_parameter ip_alignment                    'IP_ALIGNMENT'.
+          add_parameter ip_xalignment                   'IP_XALIGNMENT'.
+          add_parameter ip_number_format_format_code    'IP_NUMBER_FORMAT_FORMAT_CODE'.
+          add_parameter ip_protection                   'IP_PROTECTION'.
+          add_parameter ip_xprotection                  'IP_XPROTECTION'.
+          add_parameter ip_font_bold                    'IP_FONT_BOLD'.
+          add_parameter ip_font_color                   'IP_FONT_COLOR'.
+          add_parameter ip_font_color_rgb               'IP_FONT_COLOR_RGB'.
+          add_parameter ip_font_color_indexed           'IP_FONT_COLOR_INDEXED'.
+          add_parameter ip_font_color_theme             'IP_FONT_COLOR_THEME'.
+          add_parameter ip_font_color_tint              'IP_FONT_COLOR_TINT'.
+          add_parameter ip_font_family                  'IP_FONT_FAMILY'.
+          add_parameter ip_font_italic                  'IP_FONT_ITALIC'.
+          add_parameter ip_font_name                    'IP_FONT_NAME'.
+          add_parameter ip_font_scheme                  'IP_FONT_SCHEME'.
+          add_parameter ip_font_size                    'IP_FONT_SIZE'.
+          add_parameter ip_font_strikethrough           'IP_FONT_STRIKETHROUGH'.
+          add_parameter ip_font_underline               'IP_FONT_UNDERLINE'.
+          add_parameter ip_font_underline_mode          'IP_FONT_UNDERLINE_MODE'.
+          add_parameter ip_fill_filltype                'IP_FILL_FILLTYPE'.
+          add_parameter ip_fill_rotation                'IP_FILL_ROTATION'.
+          add_parameter ip_fill_fgcolor                 'IP_FILL_FGCOLOR'.
+          add_parameter ip_fill_fgcolor_rgb             'IP_FILL_FGCOLOR_RGB'.
+          add_parameter ip_fill_fgcolor_indexed         'IP_FILL_FGCOLOR_INDEXED'.
+          add_parameter ip_fill_fgcolor_theme           'IP_FILL_FGCOLOR_THEME'.
+          add_parameter ip_fill_fgcolor_tint            'IP_FILL_FGCOLOR_TINT'.
+          add_parameter ip_fill_bgcolor                 'IP_FILL_BGCOLOR'.
+          add_parameter ip_fill_bgcolor_rgb             'IP_FILL_BGCOLOR_RGB'.
+          add_parameter ip_fill_bgcolor_indexed         'IP_FILL_BGCOLOR_INDEXED'.
+          add_parameter ip_fill_bgcolor_theme           'IP_FILL_BGCOLOR_THEME'.
+          add_parameter ip_fill_bgcolor_tint            'IP_FILL_BGCOLOR_TINT'.
+          add_parameter ip_borders_allborders           'IP_BORDERS_ALLBORDERS'.
+          add_parameter ip_fill_gradtype_type           'IP_FILL_GRADTYPE_TYPE'.
+          add_parameter ip_fill_gradtype_degree         'IP_FILL_GRADTYPE_DEGREE'.
+          add_parameter ip_xborders_allborders          'IP_XBORDERS_ALLBORDERS'.
+          add_parameter ip_borders_diagonal             'IP_BORDERS_DIAGONAL'.
+          add_parameter ip_fill_gradtype_bottom         'IP_FILL_GRADTYPE_BOTTOM'.
+          add_parameter ip_fill_gradtype_top            'IP_FILL_GRADTYPE_TOP'.
+          add_parameter ip_xborders_diagonal            'IP_XBORDERS_DIAGONAL'.
+          add_parameter ip_borders_diagonal_mode        'IP_BORDERS_DIAGONAL_MODE'.
+          add_parameter ip_fill_gradtype_right          'IP_FILL_GRADTYPE_RIGHT'.
+          add_parameter ip_borders_down                 'IP_BORDERS_DOWN'.
+          add_parameter ip_fill_gradtype_left           'IP_FILL_GRADTYPE_LEFT'.
+          add_parameter ip_fill_gradtype_position1      'IP_FILL_GRADTYPE_POSITION1'.
+          add_parameter ip_xborders_down                'IP_XBORDERS_DOWN'.
+          add_parameter ip_borders_left                 'IP_BORDERS_LEFT'.
+          add_parameter ip_fill_gradtype_position2      'IP_FILL_GRADTYPE_POSITION2'.
+          add_parameter ip_fill_gradtype_position3      'IP_FILL_GRADTYPE_POSITION3'.
+          add_parameter ip_xborders_left                'IP_XBORDERS_LEFT'.
+          add_parameter ip_borders_right                'IP_BORDERS_RIGHT'.
+          add_parameter ip_xborders_right               'IP_XBORDERS_RIGHT'.
+          add_parameter ip_borders_top                  'IP_BORDERS_TOP'.
+          add_parameter ip_xborders_top                 'IP_XBORDERS_TOP'.
+          add_parameter ip_alignment_horizontal         'IP_ALIGNMENT_HORIZONTAL'.
+          add_parameter ip_alignment_vertical           'IP_ALIGNMENT_VERTICAL'.
+          add_parameter ip_alignment_textrotation       'IP_ALIGNMENT_TEXTROTATION'.
+          add_parameter ip_alignment_wraptext           'IP_ALIGNMENT_WRAPTEXT'.
+          add_parameter ip_alignment_shrinktofit        'IP_ALIGNMENT_SHRINKTOFIT'.
+          add_parameter ip_alignment_indent             'IP_ALIGNMENT_INDENT'.
+          add_parameter ip_protection_hidden            'IP_PROTECTION_HIDDEN'.
+          add_parameter ip_protection_locked            'IP_PROTECTION_LOCKED'.
+          add_parameter ip_borders_allborders_style     'IP_BORDERS_ALLBORDERS_STYLE'.
+          add_parameter ip_borders_allborders_color     'IP_BORDERS_ALLBORDERS_COLOR'.
+          add_parameter ip_borders_allbo_color_rgb      'IP_BORDERS_ALLBO_COLOR_RGB'.
+          add_parameter ip_borders_allbo_color_indexed  'IP_BORDERS_ALLBO_COLOR_INDEXED'.
+          add_parameter ip_borders_allbo_color_theme    'IP_BORDERS_ALLBO_COLOR_THEME'.
+          add_parameter ip_borders_allbo_color_tint     'IP_BORDERS_ALLBO_COLOR_TINT'.
+          add_parameter ip_borders_diagonal_style       'IP_BORDERS_DIAGONAL_STYLE'.
+          add_parameter ip_borders_diagonal_color       'IP_BORDERS_DIAGONAL_COLOR'.
+          add_parameter ip_borders_diagonal_color_rgb   'IP_BORDERS_DIAGONAL_COLOR_RGB'.
+          add_parameter ip_borders_diagonal_color_inde  'IP_BORDERS_DIAGONAL_COLOR_INDE'.
+          add_parameter ip_borders_diagonal_color_them  'IP_BORDERS_DIAGONAL_COLOR_THEM'.
+          add_parameter ip_borders_diagonal_color_tint  'IP_BORDERS_DIAGONAL_COLOR_TINT'.
+          add_parameter ip_borders_down_style           'IP_BORDERS_DOWN_STYLE'.
+          add_parameter ip_borders_down_color           'IP_BORDERS_DOWN_COLOR'.
+          add_parameter ip_borders_down_color_rgb       'IP_BORDERS_DOWN_COLOR_RGB'.
+          add_parameter ip_borders_down_color_indexed   'IP_BORDERS_DOWN_COLOR_INDEXED'.
+          add_parameter ip_borders_down_color_theme     'IP_BORDERS_DOWN_COLOR_THEME'.
+          add_parameter ip_borders_down_color_tint      'IP_BORDERS_DOWN_COLOR_TINT'.
+          add_parameter ip_borders_left_style           'IP_BORDERS_LEFT_STYLE'.
+          add_parameter ip_borders_left_color           'IP_BORDERS_LEFT_COLOR'.
+          add_parameter ip_borders_left_color_rgb       'IP_BORDERS_LEFT_COLOR_RGB'.
+          add_parameter ip_borders_left_color_indexed   'IP_BORDERS_LEFT_COLOR_INDEXED'.
+          add_parameter ip_borders_left_color_theme     'IP_BORDERS_LEFT_COLOR_THEME'.
+          add_parameter ip_borders_left_color_tint      'IP_BORDERS_LEFT_COLOR_TINT'.
+          add_parameter ip_borders_right_style          'IP_BORDERS_RIGHT_STYLE'.
+          add_parameter ip_borders_right_color          'IP_BORDERS_RIGHT_COLOR'.
+          add_parameter ip_borders_right_color_rgb      'IP_BORDERS_RIGHT_COLOR_RGB'.
+          add_parameter ip_borders_right_color_indexed  'IP_BORDERS_RIGHT_COLOR_INDEXED'.
+          add_parameter ip_borders_right_color_theme    'IP_BORDERS_RIGHT_COLOR_THEME'.
+          add_parameter ip_borders_right_color_tint     'IP_BORDERS_RIGHT_COLOR_TINT'.
+          add_parameter ip_borders_top_style            'IP_BORDERS_TOP_STYLE'.
+          add_parameter ip_borders_top_color            'IP_BORDERS_TOP_COLOR'.
+          add_parameter ip_borders_top_color_rgb        'IP_BORDERS_TOP_COLOR_RGB'.
+          add_parameter ip_borders_top_color_indexed    'IP_BORDERS_TOP_COLOR_INDEXED'.
+          add_parameter ip_borders_top_color_theme      'IP_BORDERS_TOP_COLOR_THEME'.
+          add_parameter ip_borders_top_color_tint       'IP_BORDERS_TOP_COLOR_TINT'.
+  *--------------------------------------------------------------------*
+  
+  *       Create a new style and retrieve its GUID
+          CALL METHOD me->(c_method_name)
+            PARAMETER-TABLE
+            lt_param.
+  
+  *     If we already have a GUID style use it
+        ELSE.
+  
+          CALL METHOD set_cell_style
+            EXPORTING
+              ip_column = column_alpha
+              ip_row    = current_row
+              ip_style  = cell_style.
+  
+        ENDIF.
+  
+        ADD 1 TO current_col.
+  
+      ENDWHILE.
+  
+      ADD 1 TO current_row.
+  
+    ENDWHILE.
+  
+  ENDMETHOD.                    "CHANGE_CELL_STYLE
 
   METHOD check_cell_column_formula.
 
