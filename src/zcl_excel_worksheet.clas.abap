@@ -2025,7 +2025,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   ENDMETHOD.                    "CHANGE_CELL_STYLE
 
   METHOD change_range_style.
-  
     DATA:
       column_from  TYPE zexcel_cell_column,
       row_from     TYPE zexcel_cell_row,
