@@ -4213,10 +4213,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
              bottom TYPE i,
            END OF lty_table_area.
 
-    TYPES: BEGIN OF lty_sorted_rows,
-             num    TYPE zexcel_cell_row,
+    TYPES: BEGIN OF lty_row_data,
+             row    TYPE zexcel_cell_row,
              toidx  TYPE sy-tabix,
-           END OF lty_sorted_rows.
+             hidden TYPE abap_bool, "X = hidden, space = not yet hidden, to check later
+           END OF lty_row_data.
 
     CONSTANTS: lc_xml_node_sheetdata TYPE string VALUE 'sheetData',   " SheetData tag
                lc_xml_node_row       TYPE string VALUE 'row',         " Row tag
@@ -4231,9 +4232,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: col_count              TYPE int4,
           lo_autofilters         TYPE REF TO zcl_excel_autofilters,
           lo_autofilter          TYPE REF TO zcl_excel_autofilter,
-          l_autofilter_hidden    TYPE flag,
-          lt_values              TYPE zexcel_t_autofilter_values,
-          ls_values              TYPE zexcel_s_autofilter_values,
           ls_area                TYPE zexcel_s_autofilter_area,
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
@@ -4242,11 +4240,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ls_table_area          LIKE LINE OF lt_table_areas,
           lo_column              TYPE REF TO zcl_excel_column,
 
-          lt_sorted_rows         TYPE SORTED TABLE OF lty_sorted_rows WITH UNIQUE KEY num,
-          ls_row                 LIKE LINE OF lt_sorted_rows,
+          ls_row_data            TYPE lty_row_data,
+          lt_sorted_rows         LIKE SORTED TABLE OF ls_row_data WITH UNIQUE KEY row,
           ls_sheet_content       LIKE LINE OF io_worksheet->sheet_content,
           lv_current_row         TYPE i,
-          lv_tabix               TYPE sy-tabix,
+          lv_sheet_index         TYPE sy-tabix,
 
 *        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
           lo_row_iterator        TYPE REF TO zcl_excel_collection_iterator,
@@ -4278,9 +4276,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_autofilters = excel->get_autofilters_reference( ).
     lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
     IF lo_autofilter IS BOUND.
-      lt_values           = lo_autofilter->get_values( ) .
-      ls_area             = lo_autofilter->get_filter_area( ) .
-      l_autofilter_hidden = abap_true. " First defautl is not showing
+      ls_area      = lo_autofilter->get_filter_area( ) .
     ENDIF.
 *--------------------------------------------------------------------*
 *issue #220 - If cell in tables-area don't use default from row or column or sheet - Coding 1 - start
@@ -4303,28 +4299,33 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * First of all get the rows with cell content
     LOOP AT io_worksheet->sheet_content INTO ls_sheet_content.
       AT END OF cell_row.
-        ls_row-num   = ls_sheet_content-cell_row.
-        ls_row-toidx = sy-tabix.
-        INSERT ls_row INTO TABLE lt_sorted_rows.
+        ls_row_data-row   = ls_sheet_content-cell_row.
+        ls_row_data-toidx = sy-tabix.
+        INSERT ls_row_data INTO TABLE lt_sorted_rows.
       ENDAT.
     ENDLOOP.
     IF sy-subrc = 0.
 *     Get first cell data to start the WHILE loop below
-      lv_tabix = 1.
-      READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_tabix.
-      CLEAR ls_row-toidx. "for next preparations
+      lv_sheet_index = 1.
+      READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_sheet_index.
+      CLEAR ls_row_data-toidx. "not set for next preparations
     ENDIF.
 
 * Get every row with relevant data
     lo_row_iterator = io_worksheet->get_rows_iterator( ).
     WHILE lo_row_iterator->has_next( ) = abap_true.
       lo_row ?= lo_row_iterator->get_next( ).
-      CHECK lo_row->get_row_height( )                 >= 0          OR
-            lo_row->get_collapsed( io_worksheet )      = abap_true  OR
-            lo_row->get_outline_level( io_worksheet )  > 0          OR
-            lo_row->get_xf_index( )                   <> 0.
-      ls_row-num = lo_row->get_row_index( ).
-      INSERT ls_row INTO TABLE lt_sorted_rows.
+      lv_current_row = lo_row->get_row_index( ).
+      READ TABLE lt_sorted_rows TRANSPORTING NO FIELDS
+                                WITH TABLE KEY row = lv_current_row.
+      CHECK: sy-subrc <> 0,
+             lo_row->get_row_height( )                 >= 0          OR
+             lo_row->get_collapsed( io_worksheet )      = abap_true  OR
+             lo_row->get_outline_level( io_worksheet )  > 0          OR
+             lo_row->get_visible( io_worksheet )        = abap_false OR
+             lo_row->get_xf_index( )                   <> 0.
+      ls_row_data-row = lv_current_row.
+      INSERT ls_row_data INTO TABLE lt_sorted_rows.
     ENDWHILE.
 
 * Get every outline row to set outline level
@@ -4340,19 +4341,35 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
       lv_current_row = ls_row_outline-row_from.
       WHILE lv_current_row <= ls_row_outline-row_to.
-        ls_row-num = lv_current_row.
-        INSERT ls_row INTO TABLE lt_sorted_rows.
+        ls_row_data-row = lv_current_row.
+        INSERT ls_row_data INTO TABLE lt_sorted_rows.
         ADD 1 TO lv_current_row.
       ENDWHILE.
     ENDLOOP.
 
+* Last of all
+    IF lo_autofilter IS BOUND.
+      ls_row_data-hidden = abap_true.
+      lv_current_row = ls_area-row_start.
+      WHILE lv_current_row <= ls_area-row_end.
+        READ TABLE lt_sorted_rows TRANSPORTING NO FIELDS
+                                  WITH TABLE KEY row = lv_current_row.
+        IF sy-subrc <> 0 AND
+           lo_autofilter->is_row_hidden( lv_current_row ) = abap_true.
+          ls_row_data-row = lv_current_row.
+          INSERT ls_row_data INTO TABLE lt_sorted_rows.
+        ENDIF.
+        ADD 1 TO lv_current_row.
+      ENDWHILE.
+    ENDIF.
+
 * Main row loop
-    LOOP AT lt_sorted_rows INTO ls_row.
+    LOOP AT lt_sorted_rows INTO ls_row_data.
       " Add new row
       lo_element_2 = io_document->create_simple_element( name   = lc_xml_node_row
                                                          parent = io_document ).
       " r
-      lv_value = ls_row-num.
+      lv_value = ls_row_data-row.
       SHIFT lv_value RIGHT DELETING TRAILING space.
       SHIFT lv_value LEFT DELETING LEADING space.
 
@@ -4365,7 +4382,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       SHIFT lv_value LEFT DELETING LEADING space.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_spans
                                       value = lv_value ).
-      lo_row = io_worksheet->get_row( ls_row-num ).
+      lo_row = io_worksheet->get_row( ls_row_data-row ).
       " Row dimensions
       IF lo_row->get_custom_height( ) = abap_true.
         lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1' ).
@@ -4385,32 +4402,25 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         SHIFT lv_value LEFT DELETING LEADING space.
         lo_element_2->set_attribute_ns( name  = 'outlineLevel' value = lv_value ).
       ENDIF.
+      " Row visibility or row hidden by autofilter
+      IF ls_row_data-hidden = abap_true OR
+         lo_row->get_visible( io_worksheet ) = abap_false OR
+         ( lo_autofilter IS BOUND AND
+           lo_autofilter->is_row_hidden( ls_row_data-row ) = abap_true ).
+        lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
+      ENDIF.
       " Style
       IF lo_row->get_xf_index( ) <> 0.
         lv_value = lo_row->get_xf_index( ).
         lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
         lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
       ENDIF.
-      IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
-        CLEAR l_autofilter_hidden.
-      ELSE.
-        l_autofilter_hidden = abap_true. " First default is not showing
-      ENDIF.
 
-      IF ls_row-toidx > 0.
+      IF ls_row_data-toidx > 0.
 *       Of course the WHILE loop corresponds to
-*       LOOP AT io_worksheet->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_row = ls_row-num.
-*       but it should be faster this way
-        WHILE lv_tabix <= ls_row-toidx.
-          IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
-            CLEAR l_autofilter_hidden.
-          ELSE.
-            READ TABLE lt_values INTO ls_values WITH KEY column = <ls_sheet_content>-cell_column.
-            IF sy-subrc = 0 AND ls_values-value = <ls_sheet_content>-cell_value.
-              CLEAR l_autofilter_hidden.
-            ENDIF.
-          ENDIF.
-
+*       LOOP AT io_worksheet->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_row = ls_row_data-row.
+*       but it should be faster this way by benefiting the consecutive loop order
+        WHILE lv_sheet_index <= ls_row_data-toidx.
           lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_c
                                                              parent = io_document ).
 
@@ -4516,24 +4526,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
           lo_element_2->append_child( new_child = lo_element_3 ). " column node
 
-          ADD 1 TO lv_tabix.
-          READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_tabix.
+          ADD 1 TO lv_sheet_index.
+          READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_sheet_index.
         ENDWHILE.
       ENDIF.
 
-      IF lo_autofilter IS BOUND.
-        IF ls_area-row_start >= ls_row-num OR " One less for header
-           ls_area-row_end   <  ls_row-num.
-          CLEAR l_autofilter_hidden.
-        ENDIF.
-      ELSE.
-        CLEAR l_autofilter_hidden.
-      ENDIF.
-      " Row visibility or row hidden by autofilter
-      IF lo_row->get_visible( ) = abap_false OR
-         l_autofilter_hidden = abap_true.
-        lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
-      ENDIF.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
     ENDLOOP.
 
