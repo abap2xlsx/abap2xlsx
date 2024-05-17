@@ -4407,13 +4407,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
          lo_row->get_visible( io_worksheet ) = abap_false OR
          ( lo_autofilter IS BOUND AND
            lo_autofilter->is_row_hidden( ls_row_data-row ) = abap_true ).
-        lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true').
+        lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
       ENDIF.
       " Style
       IF lo_row->get_xf_index( ) <> 0.
         lv_value = lo_row->get_xf_index( ).
         lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
-        lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
+        lo_element_2->set_attribute_ns( name  = 'customFormat' value = '1' ).
       ENDIF.
 
       IF ls_row_data-toidx > 0.
