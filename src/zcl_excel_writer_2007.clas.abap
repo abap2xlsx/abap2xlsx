@@ -4214,9 +4214,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
            END OF lty_table_area.
 
     TYPES: BEGIN OF lty_row_data,
-             row    TYPE zexcel_cell_row,
-             toidx  TYPE sy-tabix,
-             hidden TYPE abap_bool, "X = hidden, space = not yet hidden, to check later
+             row         TYPE zexcel_cell_row,
+             tabix_to    TYPE sy-tabix,
+             hidden_only TYPE abap_bool,
            END OF lty_row_data.
 
     CONSTANTS: lc_xml_node_sheetdata TYPE string VALUE 'sheetData',   " SheetData tag
@@ -4244,7 +4244,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lt_sorted_rows         LIKE SORTED TABLE OF ls_row_data WITH UNIQUE KEY row,
           ls_sheet_content       LIKE LINE OF io_worksheet->sheet_content,
           lv_current_row         TYPE i,
-          lv_sheet_index         TYPE sy-tabix,
+          lv_cell_tabix          TYPE sy-tabix,
 
 *        lts_row_dimensions     TYPE zexcel_t_worksheet_rowdimensio,
           lo_row_iterator        TYPE REF TO zcl_excel_collection_iterator,
@@ -4299,16 +4299,16 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * First of all get the rows with cell content
     LOOP AT io_worksheet->sheet_content INTO ls_sheet_content.
       AT END OF cell_row.
-        ls_row_data-row   = ls_sheet_content-cell_row.
-        ls_row_data-toidx = sy-tabix.
+        ls_row_data-row      = ls_sheet_content-cell_row.
+        ls_row_data-tabix_to = sy-tabix.
         INSERT ls_row_data INTO TABLE lt_sorted_rows.
       ENDAT.
     ENDLOOP.
     IF sy-subrc = 0.
 *     Get first cell data to start the WHILE loop below
-      lv_sheet_index = 1.
-      READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_sheet_index.
-      CLEAR ls_row_data-toidx. "not set for next preparations
+      lv_cell_tabix = 1.
+      READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_cell_tabix.
+      CLEAR ls_row_data-tabix_to. "not set for next preparations
     ENDIF.
 
 * Get every row with relevant data
@@ -4319,11 +4319,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       READ TABLE lt_sorted_rows TRANSPORTING NO FIELDS
                                 WITH TABLE KEY row = lv_current_row.
       CHECK: sy-subrc <> 0,
-             lo_row->get_row_height( )                 >= 0          OR
-             lo_row->get_collapsed( io_worksheet )      = abap_true  OR
-             lo_row->get_outline_level( io_worksheet )  > 0          OR
-             lo_row->get_visible( io_worksheet )        = abap_false OR
-             lo_row->get_xf_index( )                   <> 0.
+*            It is intended not to pass io_worksheet to the three concerning methods. Outline
+*            rows are collected next. Therefore it is sufficiently done in the main row loop.
+             lo_row->get_row_height( )    >= 0          OR
+             lo_row->get_collapsed( )      = abap_true  OR
+             lo_row->get_outline_level( )  > 0          OR
+             lo_row->get_xf_index( )      <> 0          OR
+             lo_row->get_visible( )        = abap_false.
       ls_row_data-row = lv_current_row.
       INSERT ls_row_data INTO TABLE lt_sorted_rows.
     ENDWHILE.
@@ -4347,9 +4349,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDWHILE.
     ENDLOOP.
 
-* Last of all
+* Last of all preparations
     IF lo_autofilter IS BOUND.
-      ls_row_data-hidden = abap_true.
+      ls_row_data-hidden_only = abap_true.
       lv_current_row = ls_area-row_start.
       WHILE lv_current_row <= ls_area-row_end.
         READ TABLE lt_sorted_rows TRANSPORTING NO FIELDS
@@ -4382,45 +4384,48 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       SHIFT lv_value LEFT DELETING LEADING space.
       lo_element_2->set_attribute_ns( name  = lc_xml_attr_spans
                                       value = lv_value ).
-      lo_row = io_worksheet->get_row( ls_row_data-row ).
-      " Row dimensions
-      IF lo_row->get_custom_height( ) = abap_true.
-        lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1' ).
-      ENDIF.
-      IF lo_row->get_row_height( ) > 0.
-        lv_value = lo_row->get_row_height( ).
-        lo_element_2->set_attribute_ns( name  = 'ht' value = lv_value ).
-      ENDIF.
-      " Collapsed
-      IF lo_row->get_collapsed( io_worksheet ) = abap_true.
-        lo_element_2->set_attribute_ns( name  = 'collapsed' value = 'true' ).
-      ENDIF.
-      " Outline level
-      IF lo_row->get_outline_level( io_worksheet ) > 0.
-        lv_value = lo_row->get_outline_level( io_worksheet ).
-        SHIFT lv_value RIGHT DELETING TRAILING space.
-        SHIFT lv_value LEFT DELETING LEADING space.
-        lo_element_2->set_attribute_ns( name  = 'outlineLevel' value = lv_value ).
-      ENDIF.
-      " Row visibility or row hidden by autofilter
-      IF ls_row_data-hidden = abap_true OR
-         lo_row->get_visible( io_worksheet ) = abap_false OR
-         ( lo_autofilter IS BOUND AND
-           lo_autofilter->is_row_hidden( ls_row_data-row ) = abap_true ).
+      IF ls_row_data-hidden_only = abap_false.
+        lo_row = io_worksheet->get_row( ls_row_data-row ).
+        " Row dimensions
+        IF lo_row->get_custom_height( ) = abap_true.
+          lo_element_2->set_attribute_ns( name  = 'customHeight' value = '1' ).
+        ENDIF.
+        IF lo_row->get_row_height( ) > 0.
+          lv_value = lo_row->get_row_height( ).
+          lo_element_2->set_attribute_ns( name  = 'ht' value = lv_value ).
+        ENDIF.
+        " Collapsed
+        IF lo_row->get_collapsed( io_worksheet ) = abap_true.
+          lo_element_2->set_attribute_ns( name  = 'collapsed' value = 'true' ).
+        ENDIF.
+        " Outline level
+        IF lo_row->get_outline_level( io_worksheet ) > 0.
+          lv_value = lo_row->get_outline_level( io_worksheet ).
+          SHIFT lv_value RIGHT DELETING TRAILING space.
+          SHIFT lv_value LEFT DELETING LEADING space.
+          lo_element_2->set_attribute_ns( name  = 'outlineLevel' value = lv_value ).
+        ENDIF.
+        " Style
+        IF lo_row->get_xf_index( ) <> 0.
+          lv_value = lo_row->get_xf_index( ).
+          lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
+          lo_element_2->set_attribute_ns( name  = 'customFormat' value = '1' ).
+        ENDIF.
+        " Row visibility or row hidden by autofilter
+        IF lo_row->get_visible( io_worksheet ) = abap_false OR
+           ( lo_autofilter IS BOUND AND
+             lo_autofilter->is_row_hidden( ls_row_data-row ) = abap_true ).
+          lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
+        ENDIF.
+      ELSE.
         lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
       ENDIF.
-      " Style
-      IF lo_row->get_xf_index( ) <> 0.
-        lv_value = lo_row->get_xf_index( ).
-        lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
-        lo_element_2->set_attribute_ns( name  = 'customFormat' value = '1' ).
-      ENDIF.
 
-      IF ls_row_data-toidx > 0.
+      IF ls_row_data-tabix_to > 0.
 *       Of course the WHILE loop corresponds to
 *       LOOP AT io_worksheet->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_row = ls_row_data-row.
 *       but it should be faster this way by benefiting the consecutive loop order
-        WHILE lv_sheet_index <= ls_row_data-toidx.
+        WHILE lv_cell_tabix <= ls_row_data-tabix_to.
           lo_element_3 = io_document->create_simple_element( name   = lc_xml_node_c
                                                              parent = io_document ).
 
@@ -4526,8 +4531,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
           lo_element_2->append_child( new_child = lo_element_3 ). " column node
 
-          ADD 1 TO lv_sheet_index.
-          READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_sheet_index.
+          ADD 1 TO lv_cell_tabix.
+          READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_cell_tabix.
         ENDWHILE.
       ENDIF.
 
