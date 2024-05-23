@@ -4396,7 +4396,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           IF ls_last_row-cell_row IS NOT INITIAL.
             " Row visibility of previos row.
             IF lo_row->get_visible( io_worksheet ) = abap_false OR
-               l_autofilter_hidden = abap_true.
+               ( lo_autofilter IS BOUND AND
+                 lo_autofilter->is_row_hidden( ls_last_row-cell_row ) = abap_true ).
               lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
             ENDIF.
             rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
@@ -4575,7 +4576,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
       " Row visibility of previos row.
       IF lo_row->get_visible( ) = abap_false OR
-         l_autofilter_hidden = abap_true.
+         ( lo_autofilter IS BOUND AND
+           lo_autofilter->is_row_hidden( ls_last_row-cell_row ) = abap_true ).
         lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
       ENDIF.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
