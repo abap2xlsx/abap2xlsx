@@ -4315,18 +4315,14 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_row_iterator = io_worksheet->get_rows_iterator( ).
     WHILE lo_row_iterator->has_next( ) = abap_true.
       lo_row ?= lo_row_iterator->get_next( ).
-      lv_current_row = lo_row->get_row_index( ).
-      READ TABLE lt_sorted_rows TRANSPORTING NO FIELDS
-                                WITH TABLE KEY row = lv_current_row.
-      CHECK: sy-subrc <> 0,
-*            It is intended not to pass io_worksheet to the three concerning methods. Outline
-*            rows are collected next. Therefore it is sufficiently done in the main row loop.
-             lo_row->get_row_height( )    >= 0          OR
-             lo_row->get_collapsed( )      = abap_true  OR
-             lo_row->get_outline_level( )  > 0          OR
-             lo_row->get_xf_index( )      <> 0          OR
-             lo_row->get_visible( )        = abap_false.
-      ls_row_data-row = lv_current_row.
+*     It is intended not to pass io_worksheet to the three concerning methods. Outline
+*     rows are collected next. Therefore it is sufficiently done in the main row loop.
+      CHECK lo_row->get_row_height( )    >= 0          OR
+            lo_row->get_collapsed( )      = abap_true  OR
+            lo_row->get_outline_level( )  > 0          OR
+            lo_row->get_xf_index( )      <> 0          OR
+            lo_row->get_visible( )        = abap_false.
+      ls_row_data-row = lo_row->get_row_index( ).
       INSERT ls_row_data INTO TABLE lt_sorted_rows.
     ENDWHILE.
 
