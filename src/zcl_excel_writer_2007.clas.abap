@@ -4529,7 +4529,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
           ADD 1 TO lv_cell_tabix.
           READ TABLE io_worksheet->sheet_content ASSIGNING <ls_sheet_content> INDEX lv_cell_tabix.
-*         sy-subrc <> 0 always corresponds with the end of the last while loop
+*         sy-subrc <> 0 always corresponds to the end of the last while loop
         ENDWHILE.
       ENDIF.
 
