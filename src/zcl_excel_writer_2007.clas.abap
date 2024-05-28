@@ -4348,7 +4348,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * Last of all preparations
     IF lo_autofilter IS BOUND.
       ls_row_data-hidden_only = abap_true.
-      lv_current_row = ls_area-row_start.
+      lv_current_row = ls_area-row_start + 1.  "without header
       WHILE lv_current_row <= ls_area-row_end.
         READ TABLE lt_sorted_rows TRANSPORTING NO FIELDS
                                   WITH TABLE KEY row = lv_current_row.
