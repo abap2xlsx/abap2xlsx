@@ -4525,7 +4525,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
     DATA: lo_worksheets_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet           TYPE REF TO zcl_excel_worksheet,
-          errormessage           TYPE string,
           lv_rangesheetname_old  TYPE string,
           lv_rangesheetname_new  TYPE string,
           lo_ranges_iterator     TYPE REF TO zcl_excel_collection_iterator,
@@ -4555,14 +4554,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * Check whether title is unique in workbook
 *--------------------------------------------------------------------*
     lo_worksheets_iterator = me->excel->get_worksheets_iterator( ).
-    WHILE lo_worksheets_iterator->has_next( ) = 'X'.
+    WHILE lo_worksheets_iterator->has_next( ) = abap_true.
 
       lo_worksheet ?= lo_worksheets_iterator->get_next( ).
       CHECK me->guid <> lo_worksheet->get_guid( ).  " Don't check against itself
       IF ip_title = lo_worksheet->get_title( ).  " Not unique --> raise exception
-        errormessage = 'Duplicate sheetname &'.
-        REPLACE '&' IN errormessage WITH ip_title.
-        zcx_excel=>raise_text( errormessage ).
+        lv_errormessage = 'Duplicate sheetname &'.
+        REPLACE '&' IN lv_errormessage WITH ip_title.
+        zcx_excel=>raise_text( lv_errormessage ).
       ENDIF.
 
     ENDWHILE.
@@ -4570,7 +4569,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Remember old sheetname and rename sheet to desired name
 *--------------------------------------------------------------------*
-    CONCATENATE me->title '!' INTO lv_rangesheetname_old.
+    lv_rangesheetname_old = zcl_excel_common=>escape_string( me->title ) && '!'.
     me->title = ip_title.
 
 *--------------------------------------------------------------------*
@@ -4581,10 +4580,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *           I fear it isn't - but this implementation is better then
 *           nothing at all since it handles a supposed majority of cases
 *--------------------------------------------------------------------*
-    CONCATENATE me->title '!' INTO lv_rangesheetname_new.
+    lv_rangesheetname_new = zcl_excel_common=>escape_string( me->title ) && '!'.
 
     lo_ranges_iterator = me->excel->get_ranges_iterator( ).
-    WHILE lo_ranges_iterator->has_next( ) = 'X'.
+    WHILE lo_ranges_iterator->has_next( ) = abap_true.
 
       lo_range ?= lo_ranges_iterator->get_next( ).
       lv_range_value = lo_range->get_value( ).
@@ -4594,6 +4593,22 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
 
     ENDWHILE.
+
+    IF me->ranges IS BOUND.  "not bound if called from worksheet's constructor
+      lo_ranges_iterator = me->get_ranges_iterator( ).
+      WHILE lo_ranges_iterator->has_next( ) = abap_true.
+
+        lo_range ?= lo_ranges_iterator->get_next( ).
+*       Note: zcl_excel_autofilters=>c_autofilter does not exist as range
+        CHECK lo_range->name <> zif_excel_sheet_printsettings=>gcv_print_title_name.
+        lv_range_value = lo_range->get_value( ).
+        REPLACE ALL OCCURRENCES OF lv_rangesheetname_old IN lv_range_value WITH lv_rangesheetname_new.
+        IF sy-subrc = 0.
+          lo_range->set_range_value( lv_range_value ).
+        ENDIF.
+
+      ENDWHILE.
+    ENDIF.
 
 
   ENDMETHOD.                    "SET_TITLE
