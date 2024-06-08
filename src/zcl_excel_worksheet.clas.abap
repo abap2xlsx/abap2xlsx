@@ -4582,7 +4582,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
     lv_rangesheetname_new = zcl_excel_common=>escape_string( me->title ) && '!'.
 
-    lo_ranges_iterator = me->excel->get_ranges_iterator( ).
+    lo_ranges_iterator = me->excel->get_ranges_iterator( ).  "workbookglobal ranges
     WHILE lo_ranges_iterator->has_next( ) = abap_true.
 
       lo_range ?= lo_ranges_iterator->get_next( ).
@@ -4594,13 +4594,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     ENDWHILE.
 
-    IF me->ranges IS BOUND.  "not bound if called from worksheet's constructor
-      lo_ranges_iterator = me->get_ranges_iterator( ).
+    IF me->ranges IS BOUND.  "not yet bound if called from worksheet's constructor
+      lo_ranges_iterator = me->get_ranges_iterator( ).  "sheetlocal ranges, repeat rows and columns
       WHILE lo_ranges_iterator->has_next( ) = abap_true.
 
         lo_range ?= lo_ranges_iterator->get_next( ).
-*       Note: zcl_excel_autofilters=>c_autofilter does not exist as range
-        CHECK lo_range->name <> zif_excel_sheet_printsettings=>gcv_print_title_name.
         lv_range_value = lo_range->get_value( ).
         REPLACE ALL OCCURRENCES OF lv_rangesheetname_old IN lv_range_value WITH lv_rangesheetname_new.
         IF sy-subrc = 0.
