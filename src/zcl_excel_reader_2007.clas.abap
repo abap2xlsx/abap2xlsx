@@ -2190,6 +2190,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               ENDIF.
 
             WHEN OTHERS.
+              lo_range = <worksheet>-worksheet->add_new_range( ).
 
           ENDCASE.
         ENDIF.
