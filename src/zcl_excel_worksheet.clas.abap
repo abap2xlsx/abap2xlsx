@@ -4505,24 +4505,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD set_title.
-*--------------------------------------------------------------------*
-* ToDos:
-*        2do §1  The current coding for replacing a named ranges name
-*                after renaming a sheet should be checked if it is
-*                really working if sheetname should be escaped
-*--------------------------------------------------------------------*
-
-*--------------------------------------------------------------------*
-* issue #230   - Pimp my Code
-*              - Stefan Schmoecker,      (wip )              2012-12-08
-*              - ...
-* changes: aligning code
-*          message made to support multilinguality
-*--------------------------------------------------------------------*
-* issue#243 - ' is not allowed as first character in sheet title
-*              - Stefan Schmoecker,                          2012-12-02
-* changes: added additional check for ' as first character
-*--------------------------------------------------------------------*
     DATA: lo_worksheets_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet           TYPE REF TO zcl_excel_worksheet,
           lv_rangesheetname_old  TYPE string,
@@ -4575,10 +4557,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * After changing this worksheet's title we have to adjust
 * all ranges that are referring to this worksheet.
-*--------------------------------------------------------------------*
-* 2do §1  -  Check if the following quickfix is solid
-*           I fear it isn't - but this implementation is better then
-*           nothing at all since it handles a supposed majority of cases
 *--------------------------------------------------------------------*
     lv_rangesheetname_new = zcl_excel_common=>escape_string( me->title ) && '!'.
 
