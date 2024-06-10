@@ -4233,9 +4233,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: col_count              TYPE int4,
           lo_autofilters         TYPE REF TO zcl_excel_autofilters,
           lo_autofilter          TYPE REF TO zcl_excel_autofilter,
-          l_autofilter_hidden    TYPE flag,
-          lt_values              TYPE zexcel_t_autofilter_values,
-          ls_values              TYPE zexcel_s_autofilter_values,
           ls_area                TYPE zexcel_s_autofilter_area,
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
@@ -4282,9 +4279,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_autofilters = excel->get_autofilters_reference( ).
     lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
     IF lo_autofilter IS BOUND.
-      lt_values           = lo_autofilter->get_values( ) .
       ls_area             = lo_autofilter->get_filter_area( ) .
-      l_autofilter_hidden = abap_true. " First defautl is not showing
     ENDIF.
 *--------------------------------------------------------------------*
 *issue #220 - If cell in tables-area don't use default from row or column or sheet - Coding 1 - start
@@ -4347,14 +4342,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CLEAR ls_sheet_content.
     LOOP AT io_worksheet->sheet_content INTO ls_sheet_content.
-      IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
-        CLEAR l_autofilter_hidden.
-      ELSE.
-        READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-        IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-          CLEAR l_autofilter_hidden.
-        ENDIF.
-      ENDIF.
       CLEAR ls_style_mapping.
 *Create row element
 *issues #346,#154, #195  - problems when we have information in row_dimension but no cell content in that row
@@ -4385,14 +4372,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ENDIF.
 
         IF ls_last_row-cell_row NE <ls_sheet_content>-cell_row.
-          IF lo_autofilter IS BOUND.
-            IF ls_area-row_start >=  ls_last_row-cell_row OR " One less for header
-              ls_area-row_end   < ls_last_row-cell_row .
-              CLEAR l_autofilter_hidden.
-            ENDIF.
-          ELSE.
-            CLEAR l_autofilter_hidden.
-          ENDIF.
           IF ls_last_row-cell_row IS NOT INITIAL.
             " Row visibility of previos row.
             IF lo_row->get_visible( io_worksheet ) = abap_false OR
@@ -4444,11 +4423,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
             lv_value = lo_row->get_xf_index( ).
             lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
             lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
-          ENDIF.
-          IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
-            CLEAR l_autofilter_hidden.
-          ELSE.
-            l_autofilter_hidden = abap_true. " First default is not showing
           ENDIF.
         ELSE.
 
@@ -4562,18 +4536,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ls_last_row = <ls_sheet_content>.
     ENDLOOP.
     IF sy-subrc = 0.
-      READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-      IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-        CLEAR l_autofilter_hidden.
-      ENDIF.
-      IF lo_autofilter IS BOUND.
-        IF ls_area-row_start >=  ls_last_row-cell_row OR " One less for header
-          ls_area-row_end   < ls_last_row-cell_row .
-          CLEAR l_autofilter_hidden.
-        ENDIF.
-      ELSE.
-        CLEAR l_autofilter_hidden.
-      ENDIF.
       " Row visibility of previos row.
       IF lo_row->get_visible( ) = abap_false OR
          ( lo_autofilter IS BOUND AND
