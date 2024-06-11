@@ -2031,7 +2031,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *       Load worksheetdata
 *--------------------------------------------------------------------*
-      READ TABLE lt_worksheets INTO ls_relationship WITH KEY id = ls_sheet-id.  "rId
+      READ TABLE lt_sheetrelations INTO ls_relationship WITH KEY id = ls_sheet-id.  "rId
       IF sy-subrc = 0.
         CONCATENATE lv_path ls_relationship-target
             INTO lv_worksheet_path.
@@ -2043,7 +2043,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_node ?= lo_node->get_next( ).
 
     ENDWHILE.
-    SORT lt_worksheets BY sheetid.                                              " needed for localSheetid -referencing
 
 *--------------------------------------------------------------------*
 *   #284: Set active worksheet - Resolve referenced formulae to
