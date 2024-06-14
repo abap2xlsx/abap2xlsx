@@ -34,7 +34,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
     TYPES:
       BEGIN OF t_sheet,
         name    TYPE string,
-        sheetid TYPE string,
+        sheetid TYPE string,            "currently not used
         id      TYPE string,
         state   TYPE string,
       END OF t_sheet .
@@ -2137,11 +2137,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                   lv_regex = `^[^!]*![^,]*,`.
                 ENDIF.
 * Split into two ranges if necessary
-                FIND REGEX lv_regex IN lv_range_value MATCH LENGTH sy-fdpos.
-                IF sy-subrc = 0 AND sy-fdpos > 0.
-                  lv_range_value_2 = lv_range_value+sy-fdpos.
-                  SUBTRACT 1 FROM sy-fdpos.
-                  lv_range_value_1 = lv_range_value(sy-fdpos).
+                FIND REGEX lv_regex IN lv_range_value MATCH LENGTH lv_position_temp.
+                IF sy-subrc = 0 AND lv_position_temp > 0.
+                  lv_range_value_2 = lv_range_value+lv_position_temp.
+                  SUBTRACT 1 FROM lv_position_temp.
+                  lv_range_value_1 = lv_range_value(lv_position_temp).
                 ELSE.
                   lv_range_value_1 = lv_range_value.
                 ENDIF.
