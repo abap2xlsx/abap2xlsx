@@ -2121,6 +2121,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * repeat print rows/columns
 *--------------------------------------------------------------------*
             WHEN zif_excel_sheet_printsettings=>gcv_print_title_name.
+*             We don't need a range object here no more, because since the
+*             parameter i_allow_1dim_range is passed below anything works
+*             fine within worksheet's method print_title_set_range, which
+*             now creates the range object and sets name and value correctly.
 *--------------------------------------------------------------------*
 * This might be a temporary solution.  Maybe ranges get be reworked
 * to support areas consisting of multiple rectangles
