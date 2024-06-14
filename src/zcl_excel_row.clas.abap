@@ -140,11 +140,15 @@ CLASS zcl_excel_row IMPLEMENTATION.
     CHECK io_worksheet IS BOUND.
 
     lt_row_outlines = io_worksheet->get_row_outlines( ).
-    LOOP AT lt_row_outlines ASSIGNING <ls_row_outline> WHERE row_from <= me->row_index
-                                                         AND row_to   >= me->row_index.
-
-      ADD 1 TO r_outline_level.
-
+* Begin of ATC fix-issue-1014-part1
+*    LOOP AT lt_row_outlines  ASSIGNING <ls_row_outline> WHERE row_from <= me->row_index
+*                                                         AND row_to   >= me->row_index.
+    LOOP AT lt_row_outlines  ASSIGNING <ls_row_outline> USING KEY collapsed .
+      IF <ls_row_outline>-row_from <= me->row_index
+           AND <ls_row_outline>-row_to   >= me->row_index.
+* End of ATC fix-issue-1014-part1
+        ADD 1 TO r_outline_level.
+      ENDIF.
     ENDLOOP.
 
   ENDMETHOD.
@@ -175,12 +179,21 @@ CLASS zcl_excel_row IMPLEMENTATION.
     CHECK io_worksheet IS BOUND.  " But we have to see the worksheet to make sure
 
     lt_row_outlines = io_worksheet->get_row_outlines( ).
-    LOOP AT lt_row_outlines ASSIGNING <ls_row_outline> WHERE row_from  <= me->row_index
-                                                         AND row_to    >= me->row_index
-                                                         AND collapsed =  abap_true.      " row is in a collapsed outline --> not visible
-      CLEAR r_visible.
-      RETURN. " one hit is enough to ensure invisibility
 
+* Begin of ATC fix-issue-1014-part1
+*    LOOP AT lt_row_outlines ASSIGNING <ls_row_outline> WHERE row_from  <= me->row_index
+*                                                         AND row_to    >= me->row_index
+*                                                         AND collapsed =  abap_true.      " row is in a collapsed outline --> not visible
+    LOOP AT lt_row_outlines ASSIGNING <ls_row_outline> USING KEY collapsed.
+
+      IF <ls_row_outline>-row_from  <= me->row_index
+       AND <ls_row_outline>-row_to    >= me->row_index
+       AND <ls_row_outline>-collapsed =  abap_true.
+
+* End of ATC fix-issue-1014-part1
+        CLEAR r_visible.
+        RETURN. " one hit is enough to ensure invisibility
+      ENDIF.         "ATC fix-issue-1014-part1
     ENDLOOP.
 
   ENDMETHOD.
