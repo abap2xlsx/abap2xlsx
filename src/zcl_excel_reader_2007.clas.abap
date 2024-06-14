@@ -2126,58 +2126,56 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * to support areas consisting of multiple rectangles
 * But for now just split the range into row and columnpart
 *--------------------------------------------------------------------*
-              IF lv_range_value IS NOT INITIAL.
-*               We don't need a range object here no more, because since the
-*               parameter i_allow_1dim_range is passed below anything works
-*               fine within worksheet's method print_title_set_range, which
-*               now creates the range object and sets name and value correctly.
+              CLEAR:lv_range_value_1,
+                    lv_range_value_2.
+              IF lv_range_value IS INITIAL.
+* Empty --> nothing to do
+              ELSE.
                 IF lv_range_value(1) = `'`.  " Escaped
                   lv_regex = `^('[^']*')+![^,]*,`.
                 ELSE.
                   lv_regex = `^[^!]*![^,]*,`.
                 ENDIF.
 * Split into two ranges if necessary
-                FIND REGEX lv_regex IN lv_range_value MATCH LENGTH lv_position_temp.
-                IF sy-subrc = 0 AND lv_position_temp > 0.
-                  lv_range_value_2 = lv_range_value+lv_position_temp.
-                  SUBTRACT 1 FROM lv_position_temp.
-                  lv_range_value_1 = lv_range_value(lv_position_temp).
+                FIND REGEX lv_regex IN lv_range_value MATCH LENGTH sy-fdpos.
+                IF sy-subrc = 0 AND sy-fdpos > 0.
+                  lv_range_value_2 = lv_range_value+sy-fdpos.
+                  SUBTRACT 1 FROM sy-fdpos.
+                  lv_range_value_1 = lv_range_value(sy-fdpos).
                 ELSE.
                   lv_range_value_1 = lv_range_value.
-                  CLEAR lv_range_value_2.
                 ENDIF.
+              ENDIF.
 * 1st range
-                zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range_value_1
-                                                                        i_allow_1dim_range = abap_true
-                                                              IMPORTING e_column_start     = lv_col_start_alpha
-                                                                        e_column_end       = lv_col_end_alpha
-                                                                        e_row_start        = lv_row_start
-                                                                        e_row_end          = lv_row_end ).
-                IF lv_col_start_alpha IS NOT INITIAL.
-                  lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
-                                                                                        iv_columns_to   = lv_col_end_alpha ).
-                ENDIF.
-                IF lv_row_start IS NOT INITIAL.
-                  lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
-                                                                                     iv_rows_to   = lv_row_end ).
-                ENDIF.
+              zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range_value_1
+                                                                      i_allow_1dim_range = abap_true
+                                                            IMPORTING e_column_start     = lv_col_start_alpha
+                                                                      e_column_end       = lv_col_end_alpha
+                                                                      e_row_start        = lv_row_start
+                                                                      e_row_end          = lv_row_end ).
+              IF lv_col_start_alpha IS NOT INITIAL.
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
+                                                                                      iv_columns_to   = lv_col_end_alpha ).
+              ENDIF.
+              IF lv_row_start IS NOT INITIAL.
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
+                                                                                   iv_rows_to   = lv_row_end ).
+              ENDIF.
+
 * 2nd range
-                zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range_value_2
-                                                                        i_allow_1dim_range = abap_true
-                                                              IMPORTING e_column_start     = lv_col_start_alpha
-                                                                        e_column_end       = lv_col_end_alpha
-                                                                        e_row_start        = lv_row_start
-                                                                        e_row_end          = lv_row_end ).
-                IF lv_col_start_alpha IS NOT INITIAL.
-                  lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
-                                                                                        iv_columns_to   = lv_col_end_alpha ).
-                ENDIF.
-                IF lv_row_start IS NOT INITIAL.
-                  lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
-                                                                                     iv_rows_to   = lv_row_end ).
-                ENDIF.
-              ELSE.
-                lo_range = lo_worksheet->add_new_range( ).
+              zcl_excel_common=>convert_range2column_a_row( EXPORTING i_range            = lv_range_value_2
+                                                                      i_allow_1dim_range = abap_true
+                                                            IMPORTING e_column_start     = lv_col_start_alpha
+                                                                      e_column_end       = lv_col_end_alpha
+                                                                      e_row_start        = lv_row_start
+                                                                      e_row_end          = lv_row_end ).
+              IF lv_col_start_alpha IS NOT INITIAL.
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
+                                                                                      iv_columns_to   = lv_col_end_alpha ).
+              ENDIF.
+              IF lv_row_start IS NOT INITIAL.
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
+                                                                                   iv_rows_to   = lv_row_end ).
               ENDIF.
 
             WHEN OTHERS.
