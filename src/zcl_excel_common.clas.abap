@@ -1120,9 +1120,18 @@ CLASS zcl_excel_common IMPLEMENTATION.
     DESCRIBE FIELD e_target TYPE type_kind.
     flag_class = boolc( type_kind = cl_abap_typedescr=>typekind_oref ).
     IF flag_class = abap_true AND e_target IS INITIAL.
+*     TRY.
+*         lo_refdescr ?= cl_abap_typedescr=>describe_by_data( e_target ).
+*         CASE lo_refdescr->get_referenced_type( )->get_relative_name( ).
+*           WHEN 'ZCL_EXCEL_STYLE_BORDER'.
 * Only borders will be passed as unbound references. But since we want to set a value we have to create an instance
       CREATE OBJECT o_border.
       e_target = o_border.
+**          WHEN 'ZCL_EXCEL_...'.  " todo, if necessary
+*           WHEN OTHERS.           " should not happen
+*         ENDCASE.
+*       CATCH cx_sy_move_cast_error.  " should not happen
+*     ENDTRY.
     ENDIF.
 
     descr ?= cl_abap_structdescr=>describe_by_data( i_source ).
