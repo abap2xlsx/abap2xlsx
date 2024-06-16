@@ -53,7 +53,7 @@ CLASS zcl_excel_style_cond DEFINITION
     CONSTANTS c_textfunction_beginswith TYPE tv_textfunction VALUE 'beginsWith'. "#EC NOTEXT
     CONSTANTS c_textfunction_containstext TYPE tv_textfunction VALUE 'containsText'. "#EC NOTEXT
     CONSTANTS c_textfunction_endswith TYPE tv_textfunction VALUE 'endsWith'. "#EC NOTEXT
-    CONSTANTS c_textfunction_notcontains TYPE tv_textfunction VALUE 'notContains'. "#EC NOTEXT
+    CONSTANTS c_textfunction_notcontains TYPE tv_textfunction VALUE 'notContainsText'. "#EC NOTEXT
     CONSTANTS c_rule_cellis TYPE zexcel_condition_rule VALUE 'cellIs'. "#EC NOTEXT
     CONSTANTS c_rule_containstext TYPE zexcel_condition_rule VALUE 'containsText'. "#EC NOTEXT
     CONSTANTS c_rule_databar TYPE zexcel_condition_rule VALUE 'dataBar'. "#EC NOTEXT

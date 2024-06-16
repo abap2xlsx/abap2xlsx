@@ -1234,10 +1234,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CHECK iv_cell_style IS NOT INITIAL.
 
+    "Don't insert guid twice or even more
+    READ TABLE me->styles_cond_mapping TRANSPORTING NO FIELDS WITH KEY guid = iv_cell_style.
+    CHECK sy-subrc NE 0.
+
     READ TABLE me->styles_mapping INTO ls_styles_mapping WITH KEY guid = iv_cell_style.
-    ADD 1 TO ls_styles_mapping-style. " the numbering starts from 0
-    READ TABLE it_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
-    ADD 1 TO ls_cellxfs-fillid.       " the numbering starts from 0
 
     READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
     IF sy-subrc EQ 0.
@@ -1254,25 +1255,28 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_sub_element = io_ixml_document->create_simple_element( name   = lc_xml_node_dxf
                                                                 parent = io_ixml_document ).
 
+      lv_index = ls_styles_mapping-style + 1. " the numbering starts from 0
+      READ TABLE it_cellxfs INTO ls_cellxfs INDEX lv_index.
+
       "Conditional formatting font style correction by Alessandro Iannacci START
-      lv_index = ls_cellxfs-fontid + 1.
-      READ TABLE it_fonts INTO ls_font INDEX lv_index.
-      IF ls_font IS NOT INITIAL.
+      IF ls_cellxfs-applyfont = 1.
+        lv_index = ls_cellxfs-fontid + 1. " the numbering starts from 0
+        READ TABLE it_fonts INTO ls_font INDEX lv_index.
         lo_element_font = io_ixml_document->create_simple_element( name   = lc_xml_node_font
-                                                              parent = io_ixml_document ).
+                                                                   parent = io_ixml_document ).
         IF ls_font-bold EQ abap_true.
           lo_sub_element_2 = io_ixml_document->create_simple_element( name   = lc_xml_node_b
-                                                               parent = io_ixml_document ).
+                                                                      parent = io_ixml_document ).
           lo_element_font->append_child( new_child = lo_sub_element_2 ).
         ENDIF.
         IF ls_font-italic EQ abap_true.
           lo_sub_element_2 = io_ixml_document->create_simple_element( name   = lc_xml_node_i
-                                                               parent = io_ixml_document ).
+                                                                      parent = io_ixml_document ).
           lo_element_font->append_child( new_child = lo_sub_element_2 ).
         ENDIF.
         IF ls_font-underline EQ abap_true.
           lo_sub_element_2 = io_ixml_document->create_simple_element( name   = lc_xml_node_u
-                                                               parent = io_ixml_document ).
+                                                                      parent = io_ixml_document ).
           lv_value = ls_font-underline_mode.
           lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_val
                                             value = lv_value ).
@@ -1280,7 +1284,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ENDIF.
         IF ls_font-strikethrough EQ abap_true.
           lo_sub_element_2 = io_ixml_document->create_simple_element( name   = lc_xml_node_strike
-                                                               parent = io_ixml_document ).
+                                                                      parent = io_ixml_document ).
           lo_element_font->append_child( new_child = lo_sub_element_2 ).
         ENDIF.
         "color
@@ -1293,14 +1297,15 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       "---Conditional formatting font style correction by Alessandro Iannacci END
 
 
-      READ TABLE it_fills INTO ls_fill INDEX ls_cellxfs-fillid.
-      IF ls_fill IS NOT INITIAL.
+      IF ls_cellxfs-applyfill = 1.
+        lv_index = ls_cellxfs-fillid + 1. " the numbering starts from 0
+        READ TABLE it_fills INTO ls_fill INDEX lv_index.
         " fill properties
         lo_element_fill = io_ixml_document->create_simple_element( name   = lc_xml_node_fill
-                                                                 parent = io_ixml_document ).
+                                                                   parent = io_ixml_document ).
         "pattern
         lo_sub_element_2 = io_ixml_document->create_simple_element( name   = lc_xml_node_patternfill
-                                                             parent = io_ixml_document ).
+                                                                    parent = io_ixml_document ).
         lv_value = ls_fill-filltype.
         lo_sub_element_2->set_attribute_ns( name  = lc_xml_attr_patterntype
                                             value = lv_value ).
@@ -1329,9 +1334,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
         lo_sub_element->append_child( new_child = lo_element_fill ).
       ENDIF.
+
+      io_dxf_element->append_child( new_child = lo_sub_element ).
     ENDIF.
 
-    io_dxf_element->append_child( new_child = lo_sub_element ).
   ENDMETHOD.
 
 
@@ -4771,6 +4777,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       SUBTRACT 1 FROM ls_cellxfs-alignmentid.
 
 * Compress fills
+      IF ls_fill-gradtype IS NOT INITIAL.
+*       Then filltype doesn't matter for XML Output and should not be split criteria.
+*       If you use the Reader to reload it filltype will be NONE anyway in this case.
+        ls_fill-filltype = zcl_excel_style_fill=>c_fill_none.
+      ENDIF.
       READ TABLE lt_fills FROM ls_fill TRANSPORTING NO FIELDS.
       IF sy-subrc EQ 0.
         ls_cellxfs-fillid = sy-tabix.
