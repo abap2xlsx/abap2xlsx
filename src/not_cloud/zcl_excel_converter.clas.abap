@@ -1698,7 +1698,8 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 
 * Let's check for filter.
     IF wo_autofilter IS BOUND.
-      ls_area-row_start = 1.
+      ls_area-row_start = w_row_int.
+      ls_area-col_start = w_col_int.  "if lt_values is empty
       lt_values = wo_autofilter->get_values( ) .
       SORT lt_values BY column ASCENDING.
       DESCRIBE TABLE lt_values LINES l_lines.
