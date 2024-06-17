@@ -4237,6 +4237,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: col_count              TYPE int4,
           lo_autofilters         TYPE REF TO zcl_excel_autofilters,
           lo_autofilter          TYPE REF TO zcl_excel_autofilter,
+          ls_area                TYPE zexcel_s_autofilter_area,
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_table               TYPE REF TO zcl_excel_table,
@@ -4280,8 +4281,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_autofilters = excel->get_autofilters_reference( ).
     lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
     IF lo_autofilter IS BOUND.
-*     Area not used here, but makes the validation for lo_autofilter->is_row_hidden
-      lo_autofilter->get_filter_area( ) .
+*     Makes the validation for lo_autofilter->is_row_hidden, too
+      ls_area = lo_autofilter->get_filter_area( ) .
     ENDIF.
 *--------------------------------------------------------------------*
 *issue #220 - If cell in tables-area don't use default from row or column or sheet - Coding 1 - start
