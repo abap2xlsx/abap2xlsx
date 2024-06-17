@@ -1110,6 +1110,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
           attribute_name LIKE wa_component-name,
           type_kind      TYPE abap_typekind,
           flag_class     TYPE abap_bool,
+*         lo_refdescr    TYPE REF TO cl_abap_refdescr,
           o_border       TYPE REF TO zcl_excel_style_border.
 
     FIELD-SYMBOLS: <field>     TYPE any,
