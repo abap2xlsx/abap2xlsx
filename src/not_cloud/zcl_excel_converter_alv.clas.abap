@@ -387,99 +387,126 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
 
 
   METHOD get_filter.
-    DATA: ls_filt   TYPE lvc_s_filt,
-          l_line    TYPE i,
-          ls_filter TYPE zexcel_s_converter_fil.
-    DATA: lo_addit          TYPE REF TO cl_abap_elemdescr,
+    TYPES: BEGIN OF ts_field_range,
+             fieldname TYPE fieldname,
+             range_tab TYPE REF TO data,
+           END OF ts_field_range.
+
+    DATA: ls_filt           LIKE LINE OF wt_filt,
+          ls_filter         TYPE zexcel_s_converter_fil,
+          lo_addit          TYPE REF TO cl_abap_elemdescr,
           lt_components_tab TYPE cl_abap_structdescr=>component_table,
           ls_components     TYPE abap_componentdescr,
           lo_table          TYPE REF TO cl_abap_tabledescr,
           lo_struc          TYPE REF TO cl_abap_structdescr,
-          lo_trange         TYPE REF TO data,
-          lo_srange         TYPE REF TO data,
-          lo_ltabdata       TYPE REF TO data.
+          lt_field_range    TYPE TABLE OF ts_field_range,
+          ls_field_range    LIKE LINE OF lt_field_range,
+          lv_fieldname      TYPE fieldname.
 
     FIELD-SYMBOLS: <fs_tab>    TYPE STANDARD TABLE,
-                   <fs_ltab>   TYPE STANDARD TABLE,
                    <fs_stab>   TYPE any,
                    <fs>        TYPE any,
-                   <fs1>       TYPE any,
                    <fs_srange> TYPE any,
-                   <fs_trange> TYPE STANDARD TABLE.
+                   <fs_trange> TYPE STANDARD TABLE,
+                   <fs_field_range> LIKE LINE OF lt_field_range.
 
-    IF ws_option-filter = abap_false.
-      CLEAR et_filter.
+    CLEAR et_filter.
+    IF wt_filt IS INITIAL OR
+       ws_option-filter = abap_false.
       RETURN.
     ENDIF.
 
     ASSIGN xo_table->* TO <fs_tab>.
+    READ TABLE <fs_tab> ASSIGNING <fs_stab> INDEX 1.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
 
-    CREATE DATA lo_ltabdata LIKE <fs_tab>.
-    ASSIGN lo_ltabdata->* TO <fs_ltab>.
+    SORT wt_filt BY fieldname.
 
+* Range creation and range comparison must be done in two steps:
+* This is due to the fact, that range values might be applied
+* all together at once not value after value for a specific fieldname
+* --> Having multiple excluding values is a problem that would otherwise
+* occur...
+
+* 1. Step: Create the combined ranges for each fieldname...
     LOOP AT wt_filt INTO ls_filt.
-      LOOP AT <fs_tab> ASSIGNING <fs_stab>.
-        l_line = sy-tabix.
+      IF ls_filt-fieldname <> lv_fieldname.
+        lv_fieldname = ls_filt-fieldname.
+        UNASSIGN <fs_trange>.
         ASSIGN COMPONENT ls_filt-fieldname OF STRUCTURE <fs_stab> TO <fs>.
-        IF sy-subrc = 0.
-          IF l_line = 1.
-            CLEAR lt_components_tab.
-            ls_components-name   = 'SIGN'.
-            lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-sign ).
-            ls_components-type   = lo_addit           .
-            INSERT ls_components INTO TABLE lt_components_tab.
-            ls_components-name   = 'OPTION'.
-            lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-option ).
-            ls_components-type   = lo_addit           .
-            INSERT ls_components INTO TABLE lt_components_tab.
-            ls_components-name   = 'LOW'.
-            lo_addit            ?= cl_abap_typedescr=>describe_by_data( <fs> ).
-            ls_components-type   = lo_addit           .
-            INSERT ls_components INTO TABLE lt_components_tab.
-            ls_components-name   = 'HIGH'.
-            lo_addit            ?= cl_abap_typedescr=>describe_by_data( <fs> ).
-            ls_components-type   = lo_addit           .
-            INSERT ls_components INTO TABLE lt_components_tab.
-            "create new line type
-            TRY.
-                lo_struc = cl_abap_structdescr=>create( p_components = lt_components_tab
-                                                        p_strict     = abap_false ).
-              CATCH cx_sy_struct_creation.
-                CONTINUE.
-            ENDTRY.
-            lo_table = cl_abap_tabledescr=>create( lo_struc ).
+        CHECK sy-subrc = 0.
 
-            CREATE DATA lo_trange  TYPE HANDLE lo_table.
-            CREATE DATA lo_srange  TYPE HANDLE lo_struc.
+        IF lt_components_tab IS INITIAL.
+          ls_components-name   = 'SIGN'.
+          lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-sign ).
+          ls_components-type   = lo_addit.
+          APPEND ls_components TO lt_components_tab.
+          ls_components-name   = 'OPTION'.
+          lo_addit            ?= cl_abap_typedescr=>describe_by_data( ls_filt-option ).
+          ls_components-type   = lo_addit.
+          APPEND ls_components TO lt_components_tab.
+        ELSE.
+          DELETE lt_components_tab FROM 3.
+        ENDIF.
 
-            ASSIGN lo_trange->* TO <fs_trange>.
-            ASSIGN lo_srange->* TO <fs_srange>.
+        lo_addit            ?= cl_abap_typedescr=>describe_by_data( <fs> ).
+        ls_components-type   = lo_addit.
+
+        ls_components-name   = 'LOW'.
+        APPEND ls_components TO lt_components_tab.
+        ls_components-name   = 'HIGH'.
+        APPEND ls_components TO lt_components_tab.
+        "create new line type
+        TRY.
+            lo_struc = cl_abap_structdescr=>create( p_components = lt_components_tab
+                                                    p_strict     = abap_false ).
+          CATCH cx_sy_struct_creation.
+            CONTINUE.
+        ENDTRY.
+        lo_table = cl_abap_tabledescr=>create( lo_struc ).
+
+        ls_field_range-fieldname = ls_filt-fieldname.
+        CREATE DATA ls_field_range-range_tab TYPE HANDLE lo_table.
+        APPEND ls_field_range TO lt_field_range.
+
+        ASSIGN ls_field_range-range_tab->* TO <fs_trange>.
+      ELSE.
+        CHECK <fs_trange> IS ASSIGNED.
+      ENDIF.
+
+      APPEND INITIAL LINE TO <fs_trange> ASSIGNING <fs_srange>.
+      ASSIGN COMPONENT 'SIGN'   OF STRUCTURE <fs_srange> TO <fs>.
+      <fs> = ls_filt-sign.
+      ASSIGN COMPONENT 'OPTION' OF STRUCTURE <fs_srange> TO <fs>.
+      <fs> = ls_filt-option.
+      ASSIGN COMPONENT 'LOW'    OF STRUCTURE <fs_srange> TO <fs>.
+      <fs> = ls_filt-low.
+      ASSIGN COMPONENT 'HIGH'   OF STRUCTURE <fs_srange> TO <fs>.
+      <fs> = ls_filt-high.
+    ENDLOOP.
+
+    IF lt_field_range IS INITIAL.
+      RETURN.
+    ENDIF.
+
+* 2. Step: Now apply the fieldname ranges afterwards...
+    LOOP AT <fs_tab> ASSIGNING <fs_stab>.
+      ls_filter-rownumber = sy-tabix.
+      LOOP AT lt_field_range ASSIGNING <fs_field_range>.
+        ASSIGN COMPONENT <fs_field_range>-fieldname OF STRUCTURE <fs_stab> TO <fs>.
+        ASSIGN <fs_field_range>-range_tab->* TO <fs_trange>.
+        IF <fs> IN <fs_trange>.
+          IF ws_option-filter = abap_true.
+            ls_filter-columnname = <fs_field_range>-fieldname.
+            INSERT ls_filter INTO TABLE et_filter.
           ENDIF.
-          CLEAR <fs_trange>.
-          ASSIGN COMPONENT 'SIGN'   OF STRUCTURE  <fs_srange> TO <fs1>.
-          <fs1> = ls_filt-sign.
-          ASSIGN COMPONENT 'OPTION' OF STRUCTURE  <fs_srange> TO <fs1>.
-          <fs1> = ls_filt-option.
-          ASSIGN COMPONENT 'LOW'   OF STRUCTURE  <fs_srange> TO <fs1>.
-          <fs1> = ls_filt-low.
-          ASSIGN COMPONENT 'HIGH'   OF STRUCTURE  <fs_srange> TO <fs1>.
-          <fs1> = ls_filt-high.
-          INSERT <fs_srange> INTO TABLE <fs_trange>.
-          IF <fs> IN <fs_trange>.
-            IF ws_option-filter = abap_true.
-              ls_filter-rownumber   = l_line.
-              ls_filter-columnname  = ls_filt-fieldname.
-              INSERT ls_filter INTO TABLE et_filter.
-            ELSE.
-              INSERT <fs_stab> INTO TABLE <fs_ltab>.
-            ENDIF.
-          ENDIF.
+        ELSEIF ws_option-filter = abap_undefined.
+          DELETE <fs_tab>.
+          EXIT.  "--> next xo_table line
         ENDIF.
       ENDLOOP.
-      IF ws_option-filter = abap_undefined.
-        <fs_tab> = <fs_ltab>.
-        CLEAR <fs_ltab>.
-      ENDIF.
     ENDLOOP.
 
   ENDMETHOD.
