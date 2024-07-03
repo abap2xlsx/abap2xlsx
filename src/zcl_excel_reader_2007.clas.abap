@@ -2190,6 +2190,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               ENDIF.
 
             WHEN OTHERS.
+              lo_range = <worksheet>-worksheet->add_new_range( ).
 
           ENDCASE.
         ENDIF.
@@ -2558,6 +2559,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         lv_max_col = lv_index.
       ENDIF.
       lv_cell_row = ls_row-r.
+      lv_cell_column = ''.
       lo_row = io_worksheet->get_row( lv_cell_row ).
       IF ls_row-customheight = '1'.
         lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_true ).
@@ -2593,6 +2595,26 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                lv_style_guid.
 
         fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_cell_elem CHANGING cp_structure = ls_cell ).
+
+        " Determine the column number
+        IF ls_cell-r IS NOT INITIAL.
+          " Note that the row should remain unchanged = the one defined by <row>
+          " i.e. in <row r="1"...><c r="A1" s="2"><v>..., ls_cell-r would be "A1",
+          "      the "1" of A1 should always be equal to the "1" of <row r="1"...
+          zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
+                                                              i_columnrow = ls_cell-r
+                                                            IMPORTING
+                                                              e_column    = lv_cell_column
+                                                              e_row       = lv_cell_row ).
+        ELSE.
+          " The column is the column after the last cell previously initialized in the same row.
+          " NB: the row is unchanged = the one defined by <row> e.g. "1" in <row r="1"...><c r="" s="2"><v>...
+          IF lv_cell_column IS INITIAL.
+            lv_cell_column = 'A'.
+          ELSE.
+            lv_cell_column = zcl_excel_common=>convert_column2alpha( zcl_excel_common=>convert_column2int( lv_cell_column ) + 1 ).
+          ENDIF.
+        ENDIF.
 
         lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name_ns( name = 'v' uri = namespace-main ).
 
@@ -2642,11 +2664,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
           fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_formula_elem CHANGING cp_structure = ls_formula_attributes ).
           IF ls_formula_attributes-t = 'shared'.
-            zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
-                                                                i_columnrow = ls_cell-r
-                                                              IMPORTING
-                                                                e_column    = lv_cell_column
-                                                                e_row       = lv_cell_row ).
 
             TRY.
                 CLEAR ls_ref_formula.
@@ -2671,11 +2688,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         IF   lv_cell_value    IS NOT INITIAL
           OR lv_cell_formula  IS NOT INITIAL
           OR lv_style_guid    IS NOT INITIAL.
-          zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
-                                                              i_columnrow = ls_cell-r
-                                                            IMPORTING
-                                                              e_column    = lv_cell_column
-                                                              e_row       = lv_cell_row ).
           io_worksheet->set_cell( ip_column     = lv_cell_column  " cell_elem Column
                                   ip_row        = lv_cell_row     " cell_elem row_elem
                                   ip_value      = lv_cell_value   " cell_elem Value
@@ -2778,7 +2790,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 * issue #367 - hide columns from
       IF ls_column-max = zcl_excel_common=>c_excel_sheet_max_col.     " Max = very right column
-        IF ls_column-hidden = 1     " all hidden
+        IF ( ls_column-hidden = lc_xml_attr_true
+          OR ls_column-hidden = lc_xml_attr_true_int ) " all hidden
           AND ls_column-min > 0.
           io_worksheet->zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=>convert_column2alpha( ls_column-min ).
         ELSEIF ls_column-style > ''.

@@ -1083,6 +1083,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
       lv_column_alpha = zcl_excel_common=>convert_column2alpha( lv_column_int ).
 
+      IF <ls_field_catalog>-width IS NOT INITIAL.
+        set_column_width( ip_column = lv_column_alpha ip_width_fix = <ls_field_catalog>-width ).
+      ENDIF.
+
       " First of all write column header
       IF <ls_field_catalog>-style_header IS NOT INITIAL.
         me->set_cell( ip_column = lv_column_alpha
@@ -2328,7 +2332,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             IF sy-subrc EQ 0.
               CASE ls_style_conv-abap_type.
                 WHEN cl_abap_typedescr=>typekind_date.
-                  <lv_data> = zcl_excel_common=>excel_string_to_date( <ls_sheet_content>-cell_value ).
+                  <lv_data> = zcl_excel_common=>excel_string_to_date( ip_value = <ls_sheet_content>-cell_value
+                                                                      ip_exact = abap_true ).
                 WHEN cl_abap_typedescr=>typekind_time.
                   <lv_data> = zcl_excel_common=>excel_string_to_time( <ls_sheet_content>-cell_value ).
               ENDCASE.
@@ -4491,27 +4496,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD set_title.
-*--------------------------------------------------------------------*
-* ToDos:
-*        2do §1  The current coding for replacing a named ranges name
-*                after renaming a sheet should be checked if it is
-*                really working if sheetname should be escaped
-*--------------------------------------------------------------------*
-
-*--------------------------------------------------------------------*
-* issue #230   - Pimp my Code
-*              - Stefan Schmoecker,      (wip )              2012-12-08
-*              - ...
-* changes: aligning code
-*          message made to support multilinguality
-*--------------------------------------------------------------------*
-* issue#243 - ' is not allowed as first character in sheet title
-*              - Stefan Schmoecker,                          2012-12-02
-* changes: added additional check for ' as first character
-*--------------------------------------------------------------------*
     DATA: lo_worksheets_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet           TYPE REF TO zcl_excel_worksheet,
-          errormessage           TYPE string,
           lv_rangesheetname_old  TYPE string,
           lv_rangesheetname_new  TYPE string,
           lo_ranges_iterator     TYPE REF TO zcl_excel_collection_iterator,
@@ -4541,14 +4527,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 * Check whether title is unique in workbook
 *--------------------------------------------------------------------*
     lo_worksheets_iterator = me->excel->get_worksheets_iterator( ).
-    WHILE lo_worksheets_iterator->has_next( ) = 'X'.
+    WHILE lo_worksheets_iterator->has_next( ) = abap_true.
 
       lo_worksheet ?= lo_worksheets_iterator->get_next( ).
       CHECK me->guid <> lo_worksheet->get_guid( ).  " Don't check against itself
       IF ip_title = lo_worksheet->get_title( ).  " Not unique --> raise exception
-        errormessage = 'Duplicate sheetname &'.
-        REPLACE '&' IN errormessage WITH ip_title.
-        zcx_excel=>raise_text( errormessage ).
+        lv_errormessage = 'Duplicate sheetname &'.
+        REPLACE '&' IN lv_errormessage WITH ip_title.
+        zcx_excel=>raise_text( lv_errormessage ).
       ENDIF.
 
     ENDWHILE.
@@ -4556,21 +4542,17 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Remember old sheetname and rename sheet to desired name
 *--------------------------------------------------------------------*
-    CONCATENATE me->title '!' INTO lv_rangesheetname_old.
+    lv_rangesheetname_old = zcl_excel_common=>escape_string( me->title ) && '!'.
     me->title = ip_title.
 
 *--------------------------------------------------------------------*
 * After changing this worksheet's title we have to adjust
 * all ranges that are referring to this worksheet.
 *--------------------------------------------------------------------*
-* 2do §1  -  Check if the following quickfix is solid
-*           I fear it isn't - but this implementation is better then
-*           nothing at all since it handles a supposed majority of cases
-*--------------------------------------------------------------------*
-    CONCATENATE me->title '!' INTO lv_rangesheetname_new.
+    lv_rangesheetname_new = zcl_excel_common=>escape_string( me->title ) && '!'.
 
-    lo_ranges_iterator = me->excel->get_ranges_iterator( ).
-    WHILE lo_ranges_iterator->has_next( ) = 'X'.
+    lo_ranges_iterator = me->excel->get_ranges_iterator( ).  "workbookglobal ranges
+    WHILE lo_ranges_iterator->has_next( ) = abap_true.
 
       lo_range ?= lo_ranges_iterator->get_next( ).
       lv_range_value = lo_range->get_value( ).
@@ -4580,6 +4562,20 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       ENDIF.
 
     ENDWHILE.
+
+    IF me->ranges IS BOUND.  "not yet bound if called from worksheet's constructor
+      lo_ranges_iterator = me->get_ranges_iterator( ).  "sheetlocal ranges, repeat rows and columns
+      WHILE lo_ranges_iterator->has_next( ) = abap_true.
+
+        lo_range ?= lo_ranges_iterator->get_next( ).
+        lv_range_value = lo_range->get_value( ).
+        REPLACE ALL OCCURRENCES OF lv_rangesheetname_old IN lv_range_value WITH lv_rangesheetname_new.
+        IF sy-subrc = 0.
+          lo_range->set_range_value( lv_range_value ).
+        ENDIF.
+
+      ENDWHILE.
+    ENDIF.
 
 
   ENDMETHOD.                    "SET_TITLE
