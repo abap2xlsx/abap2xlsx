@@ -1056,18 +1056,19 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD recursive_class_to_struct.
     " # issue 139
-* is working for me - but after looking through this coding I guess
-* I'll rewrite this to a version w/o recursion
-* This is private an no one using it so far except me, so no need to hurry
     DATA: descr          TYPE REF TO cl_abap_structdescr,
           wa_component   LIKE LINE OF descr->components,
           attribute_name LIKE wa_component-name,
+          type_kind      TYPE abap_typekind,
           flag_class     TYPE abap_bool.
 
     FIELD-SYMBOLS: <field>     TYPE any,
                    <fieldx>    TYPE any,
                    <attribute> TYPE any.
 
+
+    DESCRIBE FIELD i_source TYPE type_kind.
+    flag_class = boolc( type_kind = cl_abap_typedescr=>typekind_oref ).
 
     descr ?= cl_abap_structdescr=>describe_by_data( e_target ).
 
@@ -1076,22 +1077,19 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * Assign structure and X-structure
       ASSIGN COMPONENT wa_component-name OF STRUCTURE e_target  TO <field>.
       ASSIGN COMPONENT wa_component-name OF STRUCTURE e_targetx TO <fieldx>.
-* At least one field in the structure should be marked - otherwise continue with next field
-      CLEAR flag_class.
-* maybe source is just a structure - try assign component...
-      ASSIGN COMPONENT wa_component-name OF STRUCTURE i_source  TO <attribute>.
-      IF sy-subrc <> 0.
-* not - then it is an attribute of the class - use different assign then
+
+      IF flag_class = abap_false.
+* source is a structure - use assign component
+        ASSIGN COMPONENT wa_component-name OF STRUCTURE i_source TO <attribute>.
+      ELSE.
+* then it is an attribute of the class - use different assign then
         CONCATENATE 'i_source->' wa_component-name INTO attribute_name.
         ASSIGN (attribute_name) TO <attribute>.
-        IF sy-subrc <> 0.
-          EXIT.
-        ENDIF.  " Should not happen if structure is built properly - otherwise just exit to create no dumps
-        flag_class = abap_true.
       ENDIF.
+      IF sy-subrc <> 0.EXIT.ENDIF.  " Should not happen if structure is built properly - otherwise just exit to avoid dumps
 
       CASE wa_component-type_kind.
-        WHEN cl_abap_structdescr=>typekind_struct1 OR cl_abap_structdescr=>typekind_struct2.  " Structure --> use recursio
+        WHEN cl_abap_structdescr=>typekind_struct1 OR cl_abap_structdescr=>typekind_struct2.  " Structure --> use recursion
           zcl_excel_common=>recursive_class_to_struct( EXPORTING i_source  = <attribute>
                                                        CHANGING  e_target  = <field>
                                                                  e_targetx = <fieldx> ).
@@ -1107,19 +1105,29 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD recursive_struct_to_class.
     " # issue 139
-* is working for me - but after looking through this coding I guess
-* I'll rewrite this to a version w/o recursion
-* This is private an no one using it so far except me, so no need to hurry
     DATA: descr          TYPE REF TO cl_abap_structdescr,
+          lo_refdescr    TYPE REF TO cl_abap_refdescr,
           wa_component   LIKE LINE OF descr->components,
           attribute_name LIKE wa_component-name,
+          type_kind      TYPE abap_typekind,
           flag_class     TYPE abap_bool,
-          o_border       TYPE REF TO zcl_excel_style_border.
+          lv_clsname     TYPE seoclsname.
 
     FIELD-SYMBOLS: <field>     TYPE any,
                    <fieldx>    TYPE any,
                    <attribute> TYPE any.
 
+
+    DESCRIBE FIELD e_target TYPE type_kind.
+    flag_class = boolc( type_kind = cl_abap_typedescr=>typekind_oref ).
+    IF flag_class = abap_true AND e_target IS INITIAL.
+      lo_refdescr ?= cl_abap_typedescr=>describe_by_data( e_target ).
+* The result in lv_clsname is still always 'ZCL_EXCEL_STYLE_BORDER',
+* because currently only borders will be passed as unbound references.
+* But since we want to set a value we have to create an instance.
+      lv_clsname = lo_refdescr->get_referenced_type( )->get_relative_name( ).
+      CREATE OBJECT e_target TYPE (lv_clsname).
+    ENDIF.
 
     descr ?= cl_abap_structdescr=>describe_by_data( i_source ).
 
@@ -1130,31 +1138,19 @@ CLASS zcl_excel_common IMPLEMENTATION.
       ASSIGN COMPONENT wa_component-name OF STRUCTURE i_sourcex TO <fieldx>.
 * At least one field in the structure should be marked - otherwise continue with next field
       CHECK <fieldx> CA abap_true.
-      CLEAR flag_class.
-* maybe target is just a structure - try assign component...
-      ASSIGN COMPONENT wa_component-name OF STRUCTURE e_target  TO <attribute>.
-      IF sy-subrc <> 0.
-* not - then it is an attribute of the class - use different assign then
+
+      IF flag_class = abap_false.
+* target is a structure - use assign component
+        ASSIGN COMPONENT wa_component-name OF STRUCTURE e_target TO <attribute>.
+      ELSE.
+* then it is an attribute of the class - use different assign then
         CONCATENATE 'E_TARGET->' wa_component-name INTO attribute_name.
         ASSIGN (attribute_name) TO <attribute>.
-        IF sy-subrc <> 0.EXIT.ENDIF.  " Should not happen if structure is built properly - otherwise just exit to create no dumps
-        flag_class = abap_true.
       ENDIF.
+      IF sy-subrc <> 0.EXIT.ENDIF.  " Should not happen if structure is built properly - otherwise just exit to avoid dumps
 
       CASE wa_component-type_kind.
         WHEN cl_abap_structdescr=>typekind_struct1 OR cl_abap_structdescr=>typekind_struct2.  " Structure --> use recursion
-          " To avoid dump with attribute GRADTYPE of class ZCL_EXCEL_STYLE_FILL
-          " quick and really dirty fix -> check the attribute name
-          " Border has to be initialized somewhere else
-          IF wa_component-name EQ 'GRADTYPE'.
-            flag_class = abap_false.
-          ENDIF.
-
-          IF flag_class = abap_true AND <attribute> IS INITIAL.
-* Only borders will be passed as unbound references.  But since we want to set a value we have to create an instance
-            CREATE OBJECT o_border.
-            <attribute> = o_border.
-          ENDIF.
           zcl_excel_common=>recursive_struct_to_class( EXPORTING i_source  = <field>
                                                                  i_sourcex = <fieldx>
                                                        CHANGING  e_target  = <attribute> ).
