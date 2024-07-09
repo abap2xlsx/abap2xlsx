@@ -1106,12 +1106,11 @@ CLASS zcl_excel_common IMPLEMENTATION.
   METHOD recursive_struct_to_class.
     " # issue 139
     DATA: descr          TYPE REF TO cl_abap_structdescr,
-          lo_refdescr    TYPE REF TO cl_abap_refdescr,
           wa_component   LIKE LINE OF descr->components,
           attribute_name LIKE wa_component-name,
           type_kind      TYPE abap_typekind,
           flag_class     TYPE abap_bool,
-          lv_clsname     TYPE seoclsname.
+          o_border       TYPE REF TO zcl_excel_style_border.
 
     FIELD-SYMBOLS: <field>     TYPE any,
                    <fieldx>    TYPE any,
@@ -1121,12 +1120,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
     DESCRIBE FIELD e_target TYPE type_kind.
     flag_class = boolc( type_kind = cl_abap_typedescr=>typekind_oref ).
     IF flag_class = abap_true AND e_target IS INITIAL.
-      lo_refdescr ?= cl_abap_typedescr=>describe_by_data( e_target ).
-* The result in lv_clsname is still always 'ZCL_EXCEL_STYLE_BORDER',
-* because currently only borders will be passed as unbound references.
-* But since we want to set a value we have to create an instance.
-      lv_clsname = lo_refdescr->get_referenced_type( )->get_relative_name( ).
-      CREATE OBJECT e_target TYPE (lv_clsname).
+* Only borders will be passed as unbound references. But since we want to set a value we have to create an instance
+      CREATE OBJECT o_border.
+      e_target = o_border.
     ENDIF.
 
     descr ?= cl_abap_structdescr=>describe_by_data( i_source ).
