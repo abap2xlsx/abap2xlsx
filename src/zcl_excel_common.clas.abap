@@ -1111,6 +1111,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
           type_kind      TYPE abap_typekind,
           flag_class     TYPE abap_bool,
           o_border       TYPE REF TO zcl_excel_style_border.
+*         lo_refdescr    TYPE REF TO cl_abap_refdescr,
+*         lv_clsname     TYPE seoclsname.
 
     FIELD-SYMBOLS: <field>     TYPE any,
                    <fieldx>    TYPE any,
@@ -1123,6 +1125,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
 * Only borders will be passed as unbound references. But since we want to set a value we have to create an instance
       CREATE OBJECT o_border.
       e_target = o_border.
+*     lo_refdescr ?= cl_abap_typedescr=>describe_by_data( e_target ).
+*     lv_clsname = lo_refdescr->get_referenced_type( )->get_relative_name( ).
+*     CREATE OBJECT e_target TYPE (lv_clsname).
     ENDIF.
 
     descr ?= cl_abap_structdescr=>describe_by_data( i_source ).
