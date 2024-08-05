@@ -269,6 +269,11 @@ CLASS zcl_excel_writer_2007 DEFINITION
         !ip_flag          TYPE flag
       RETURNING
         VALUE(ep_boolean) TYPE tv_charbool  .
+    METHODS number2string
+      IMPORTING
+        !ip_number        TYPE numeric
+      RETURNING
+        VALUE(ep_string) TYPE string.
 ENDCLASS.
 
 
@@ -3139,7 +3144,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_attr_val_none        TYPE string VALUE 'none',
                lc_xml_attr_val_msodir      TYPE string VALUE 'mso-direction-alt:auto',
                lc_xml_attr_val_note        TYPE string VALUE 'Note'.
-    CONSTANTS lc_anchor_init TYPE string VALUE '2, 15, 11, 10, &right_column&, 31, &bottom_row&, 9'.
 
 
     DATA: lo_document              TYPE REF TO if_ixml_document,
@@ -3181,6 +3185,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA lv_right_column   TYPE i.
     DATA lv_bottom_row_str TYPE string.
     DATA lv_right_column_str  TYPE string.
+    DATA lv_top_row         TYPE i.
+    DATA lv_left_column     TYPE i.
+    DATA lv_top_row_str     TYPE string.
+    DATA lv_left_column_str TYPE string.
 
 
 **********************************************************************
@@ -3310,17 +3318,14 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " Offsets are a number of pixels.
       " Reference: Anchor Class at
       "   https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.vml.spreadsheet.anchor?view=openxml-3.0.1
-      lv_right_column = lo_comment->get_right_column( ).
-      lv_bottom_row = lo_comment->get_bottom_row( ).
-
-      lv_right_column_str  = lv_right_column.
-      CONDENSE lv_right_column_str.
-      lv_bottom_row_str = lv_bottom_row.
-      CONDENSE lv_bottom_row_str.
-
-      lv_anchor = lc_anchor_init.
-      REPLACE '&right_column&'  WITH lv_right_column_str INTO lv_anchor.
-      REPLACE '&bottom_row&' WITH lv_bottom_row_str INTO lv_anchor.
+      lv_anchor = number2string( lo_comment->get_left_column( ) )
+       && `, ` && number2string( lo_comment->get_left_offset( ) )
+       && `, ` && number2string( lo_comment->get_top_row( ) )
+       && `, ` && number2string( lo_comment->get_top_offset( ) )
+       && `, ` && number2string( lo_comment->get_right_column( ) )
+       && `, ` && number2string( lo_comment->get_right_offset( ) )
+       && `, ` && number2string( lo_comment->get_bottom_row( ) )
+       && `, ` && number2string( lo_comment->get_bottom_offset( ) ).
       lo_element_anchor->set_value( lv_anchor ).
 
       lo_element_clientdata->append_child( new_child = lo_element_anchor ).
@@ -4228,10 +4233,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: col_count              TYPE int4,
           lo_autofilters         TYPE REF TO zcl_excel_autofilters,
           lo_autofilter          TYPE REF TO zcl_excel_autofilter,
-          l_autofilter_hidden    TYPE flag,
-          lt_values              TYPE zexcel_t_autofilter_values,
-          ls_values              TYPE zexcel_s_autofilter_values,
-          ls_area                TYPE zexcel_s_autofilter_area,
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_table               TYPE REF TO zcl_excel_table,
@@ -4277,9 +4278,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_autofilters = excel->get_autofilters_reference( ).
     lo_autofilter  = lo_autofilters->get( io_worksheet = io_worksheet ) .
     IF lo_autofilter IS BOUND.
-      lt_values           = lo_autofilter->get_values( ) .
-      ls_area             = lo_autofilter->get_filter_area( ) .
-      l_autofilter_hidden = abap_true. " First defautl is not showing
+*     Area not used here, but makes the validation for lo_autofilter->is_row_hidden
+      lo_autofilter->get_filter_area( ) .
     ENDIF.
 *--------------------------------------------------------------------*
 *issue #220 - If cell in tables-area don't use default from row or column or sheet - Coding 1 - start
@@ -4342,14 +4342,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CLEAR ls_sheet_content.
     LOOP AT io_worksheet->sheet_content INTO ls_sheet_content.
-      IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
-        CLEAR l_autofilter_hidden.
-      ELSE.
-        READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-        IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-          CLEAR l_autofilter_hidden.
-        ENDIF.
-      ENDIF.
       CLEAR ls_style_mapping.
 *Create row element
 *issues #346,#154, #195  - problems when we have information in row_dimension but no cell content in that row
@@ -4380,18 +4372,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ENDIF.
 
         IF ls_last_row-cell_row NE <ls_sheet_content>-cell_row.
-          IF lo_autofilter IS BOUND.
-            IF ls_area-row_start >=  ls_last_row-cell_row OR " One less for header
-              ls_area-row_end   < ls_last_row-cell_row .
-              CLEAR l_autofilter_hidden.
-            ENDIF.
-          ELSE.
-            CLEAR l_autofilter_hidden.
-          ENDIF.
           IF ls_last_row-cell_row IS NOT INITIAL.
             " Row visibility of previos row.
             IF lo_row->get_visible( io_worksheet ) = abap_false OR
-               l_autofilter_hidden = abap_true.
+               ( lo_autofilter IS BOUND AND
+                 lo_autofilter->is_row_hidden( ls_last_row-cell_row ) = abap_true ).
               lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
             ENDIF.
             rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
@@ -4438,11 +4423,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
             lv_value = lo_row->get_xf_index( ).
             lo_element_2->set_attribute_ns( name  = 's' value = lv_value ).
             lo_element_2->set_attribute_ns( name  = 'customFormat'  value = '1' ).
-          ENDIF.
-          IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
-            CLEAR l_autofilter_hidden.
-          ELSE.
-            l_autofilter_hidden = abap_true. " First default is not showing
           ENDIF.
         ELSE.
 
@@ -4556,21 +4536,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ls_last_row = <ls_sheet_content>.
     ENDLOOP.
     IF sy-subrc = 0.
-      READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-      IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
-        CLEAR l_autofilter_hidden.
-      ENDIF.
-      IF lo_autofilter IS BOUND.
-        IF ls_area-row_start >=  ls_last_row-cell_row OR " One less for header
-          ls_area-row_end   < ls_last_row-cell_row .
-          CLEAR l_autofilter_hidden.
-        ENDIF.
-      ELSE.
-        CLEAR l_autofilter_hidden.
-      ENDIF.
       " Row visibility of previos row.
       IF lo_row->get_visible( ) = abap_false OR
-         l_autofilter_hidden = abap_true.
+         ( lo_autofilter IS BOUND AND
+           lo_autofilter->is_row_hidden( ls_last_row-cell_row ) = abap_true ).
         lo_element_2->set_attribute_ns( name  = 'hidden' value = 'true' ).
       ENDIF.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
@@ -6221,6 +6190,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ep_shareable = abap_true.
       ENDIF.
     ENDIF.
+  ENDMETHOD.
+
+
+  METHOD number2string.
+    ep_string = ip_number.
+    CONDENSE ep_string.
   ENDMETHOD.
 
 
