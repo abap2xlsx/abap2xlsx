@@ -708,6 +708,10 @@ CLASS zcl_excel_worksheet DEFINITION
 *"* private components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
     TYPES ty_table_settings TYPE STANDARD TABLE OF zexcel_s_table_settings WITH DEFAULT KEY.
+
+    CLASS-DATA typekind_utclong TYPE abap_typekind.
+    CLASS-DATA variable_utclong TYPE REF TO data.
+
     DATA active_cell TYPE zexcel_s_cell_data .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA columns TYPE REF TO zcl_excel_columns .
@@ -2023,11 +2027,20 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD class_constructor.
+    FIELD-SYMBOLS <lv_typekind> TYPE abap_typekind.
+    DATA lo_rtti TYPE REF TO cl_abap_datadescr.
 
     c_messages-formula_id_only_is_possible = |{ 'If Formula ID is used, value and formula must be empty'(008) }|.
     c_messages-column_formula_id_not_found = |{ 'The Column Formula does not exist'(009) }|.
     c_messages-formula_not_in_this_table = |{ 'The cell uses a Column Formula which should be part of the same table'(010) }|.
     c_messages-formula_in_other_column = |{ 'The cell uses a Column Formula which is in a different column'(011) }|.
+
+    ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_UTCLONG') TO <lv_typekind>.
+    IF sy-subrc = 0.
+      typekind_utclong = <lv_typekind>.
+      CALL METHOD cl_abap_elemdescr=>('GET_UTCLONG') RECEIVING p_result = lo_rtti.
+      CREATE DATA variable_utclong TYPE HANDLE lo_rtti.
+    ENDIF.
 
   ENDMETHOD.
 
@@ -3847,6 +3860,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
                    <fs_typekind_int8> TYPE abap_typekind.
     FIELD-SYMBOLS: <fs_column_formula> TYPE mty_s_column_formula.
     FIELD-SYMBOLS: <ls_fieldcat>       TYPE zexcel_s_fieldcatalog.
+    FIELD-SYMBOLS <lv_utclong>         TYPE simple.
 
     IF ip_value  IS NOT SUPPLIED
         AND ip_formula IS NOT SUPPLIED
@@ -3990,6 +4004,13 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *          ENDIF.
 * End of change issue #152 - don't touch exisiting style if only value is passed
 
+          WHEN typekind_utclong.
+            ASSIGN variable_utclong->* TO <lv_utclong>.
+            IF sy-subrc = 0.
+              <lv_utclong> = <fs_value>.
+              lv_value = zcl_excel_common=>utclong_to_excel_string( <lv_utclong> ).
+            ENDIF.
+
           WHEN OTHERS.
             zcx_excel=>raise_text( 'Invalid data type of input value' ).
         ENDCASE.
@@ -4088,6 +4109,21 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
            stylemapping-complete_style-number_format-format_code IS INITIAL.
           lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_time6.
+        ELSE.
+          lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
+        ENDIF.
+        me->change_cell_style( ip_column                      = lv_column
+                               ip_row                         = lv_row
+                               ip_number_format_format_code   = lo_format_code_datetime ).
+
+      WHEN typekind_utclong.
+        TRY.
+            stylemapping = me->excel->get_style_to_guid( <fs_sheet_content>-cell_style ).
+          CATCH zcx_excel .
+        ENDTRY.
+        IF stylemapping-complete_stylex-number_format-format_code IS INITIAL OR
+           stylemapping-complete_style-number_format-format_code IS INITIAL.
+          lo_format_code_datetime = zcl_excel_style_number_format=>c_format_date_datetime.
         ELSE.
           lo_format_code_datetime = stylemapping-complete_style-number_format-format_code.
         ENDIF.
