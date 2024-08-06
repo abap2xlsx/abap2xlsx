@@ -166,6 +166,11 @@ CLASS zcl_excel_common DEFINITION
         !ip_value       TYPE t
       RETURNING
         VALUE(ep_value) TYPE zexcel_cell_value .
+    CLASS-METHODS utclong_to_excel_string
+      IMPORTING
+        !ip_utclong     TYPE any
+      RETURNING
+        VALUE(ep_value) TYPE zexcel_cell_value .
     TYPES: t_char10 TYPE c LENGTH 10.
     TYPES: t_char255 TYPE c LENGTH 255.
     CLASS-METHODS split_file
@@ -1723,6 +1728,21 @@ CLASS zcl_excel_common IMPLEMENTATION.
     REPLACE ALL OCCURRENCES OF `''` IN ev_unescaped_string WITH `'`.
 
 
+  ENDMETHOD.
+
+  METHOD utclong_to_excel_string.
+    DATA lv_timestamp TYPE timestamp.
+    DATA lv_date TYPE d.
+    DATA lv_time TYPE t.
+
+    " The data type UTCLONG and the method UTCLONG2TSTMP_SHORT are not available before ABAP 7.54
+    "   -> Need of a dynamic call to avoid compilation error before ABAP 7.54
+
+    CALL METHOD cl_abap_tstmp=>('UTCLONG2TSTMP_SHORT')
+      EXPORTING utclong   = ip_utclong
+      RECEIVING timestamp = lv_timestamp.
+    CONVERT TIME STAMP lv_timestamp TIME ZONE 'UTC   ' INTO DATE lv_date TIME lv_time.
+    ep_value = |{ date_to_excel_string( lv_date ) + time_to_excel_string( lv_time ) }|.
   ENDMETHOD.
 
 ENDCLASS.
