@@ -709,7 +709,8 @@ CLASS zcl_excel_worksheet DEFINITION
 *"* do not include other source files here!!!
     TYPES ty_table_settings TYPE STANDARD TABLE OF zexcel_s_table_settings WITH DEFAULT KEY.
 
-    CLASS-DATA typekind_utclong TYPE abap_typekind.
+    CONSTANTS typekind_utclong TYPE abap_typekind VALUE 'p'.
+
     CLASS-DATA variable_utclong TYPE REF TO data.
 
     DATA active_cell TYPE zexcel_s_cell_data .
@@ -2037,7 +2038,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
     ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_UTCLONG') TO <lv_typekind>.
     IF sy-subrc = 0.
-      typekind_utclong = <lv_typekind>.
       CALL METHOD cl_abap_elemdescr=>('GET_UTCLONG') RECEIVING p_result = lo_rtti.
       CREATE DATA variable_utclong TYPE HANDLE lo_rtti.
     ENDIF.
