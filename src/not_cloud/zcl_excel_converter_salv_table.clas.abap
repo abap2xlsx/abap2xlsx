@@ -74,8 +74,18 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
         ls_vari-report    = ls_layout_key-report.
         ls_vari-handle    = ls_layout_key-handle.
         ls_vari-log_group = ls_layout_key-logical_group.
+        ls_vari-variant   = lo_layout->get_initial_layout( ).
       ELSE.
-        io_salv->get_metadata( ) .
+        IF zcl_excel_converter_salv_model=>is_get_metadata_callable( io_salv ) = abap_true.
+          io_salv->get_metadata( ) .
+        ELSE.
+          " (do same as offline below)
+          cl_salv_controller_metadata=>get_variant(
+            EXPORTING
+              r_layout  = lo_layout
+            CHANGING
+              s_variant = ls_vari ).
+        ENDIF.
       ENDIF.
     ELSE.
 * If we are offline we need to build this.

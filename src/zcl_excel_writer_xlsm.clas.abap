@@ -262,8 +262,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
           lo_ostream       TYPE REF TO if_ixml_ostream,
           lo_renderer      TYPE REF TO if_ixml_renderer.
 
-    DATA: lv_subrc       TYPE sysubrc,
-          lv_contenttype TYPE string.
+    DATA: lv_contenttype TYPE string.
 
 **********************************************************************
 * STEP 3: Create standard contentType
@@ -273,7 +272,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 * STEP 2: modify XML adding the extension bin definition
 
     CREATE OBJECT lo_document_xml.
-    lv_subrc = lo_document_xml->parse_xstring( ep_content ).
+    lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
     lo_element_root = lo_document->if_ixml_node~get_first_child( ).
@@ -342,7 +341,6 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 
     DATA: lv_xml_node_ridx_id TYPE string,
           lv_size             TYPE i,
-          lv_subrc            TYPE sysubrc,
           lv_syindex(2)       TYPE c.
 
 **********************************************************************
@@ -353,7 +351,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 * STEP 2: modify XML adding the vbaProject relation
 
     CREATE OBJECT lo_document_xml.
-    lv_subrc = lo_document_xml->parse_xstring( ep_content ).
+    lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
     lo_element_root = lo_document->if_ixml_node~get_first_child( ).
@@ -406,8 +404,6 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
           lo_ostream       TYPE REF TO if_ixml_ostream,
           lo_renderer      TYPE REF TO if_ixml_renderer.
 
-    DATA: lv_subrc      TYPE sysubrc.
-
 **********************************************************************
 * STEP 3: Create standard relationship
     ep_content = super->create_xl_sheet( io_worksheet = io_worksheet
@@ -417,7 +413,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 * STEP 2: modify XML adding the vbaProject relation
 
     CREATE OBJECT lo_document_xml.
-    lv_subrc = lo_document_xml->parse_xstring( ep_content ).
+    lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
     lo_element_root = lo_document->if_ixml_node~get_first_child( ).
@@ -458,8 +454,6 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
           lo_ostream       TYPE REF TO if_ixml_ostream,
           lo_renderer      TYPE REF TO if_ixml_renderer.
 
-    DATA: lv_subrc      TYPE sysubrc.
-
 **********************************************************************
 * STEP 3: Create standard relationship
     ep_content = super->create_xl_workbook( ).
@@ -468,7 +462,7 @@ CLASS zcl_excel_writer_xlsm IMPLEMENTATION.
 * STEP 2: modify XML adding the vbaProject relation
 
     CREATE OBJECT lo_document_xml.
-    lv_subrc = lo_document_xml->parse_xstring( ep_content ).
+    lo_document_xml->parse_xstring( ep_content ).
 
     lo_document ?= lo_document_xml->m_document.
     lo_element_root = lo_document->if_ixml_node~get_first_child( ).
