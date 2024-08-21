@@ -5,6 +5,21 @@ CLASS zcl_excel_font DEFINITION
 
   PUBLIC SECTION.
 
+    TYPES ty_font_height TYPE n LENGTH 3.
+    CONSTANTS lc_default_font_height TYPE ty_font_height VALUE '110' ##NO_TEXT.
+    CONSTANTS lc_default_font_name TYPE zexcel_style_font_name VALUE 'Calibri' ##NO_TEXT.
+
+    CLASS-METHODS calculate_text_width
+      IMPORTING
+        !iv_font_name   TYPE zexcel_style_font_name
+        !iv_font_height TYPE ty_font_height
+        !iv_flag_bold   TYPE abap_bool
+        !iv_flag_italic TYPE abap_bool
+        !iv_cell_value  TYPE zexcel_cell_value
+      RETURNING
+        VALUE(rv_width) TYPE f .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
     TYPES:
       BEGIN OF mty_s_font_metric,
         char       TYPE c LENGTH 1,
@@ -17,7 +32,7 @@ CLASS zcl_excel_font DEFINITION
     TYPES:
       BEGIN OF mty_s_font_cache,
         font_name       TYPE zexcel_style_font_name,
-        font_height     TYPE tdfontsize,
+        font_height     TYPE ty_font_height,
         flag_bold       TYPE abap_bool,
         flag_italic     TYPE abap_bool,
         th_font_metrics TYPE mty_th_font_metrics,
@@ -27,21 +42,8 @@ CLASS zcl_excel_font DEFINITION
                TYPE HASHED TABLE OF mty_s_font_cache
                WITH UNIQUE KEY font_name font_height flag_bold flag_italic .
 
-    CONSTANTS lc_default_font_height TYPE tdfontsize VALUE '110' ##NO_TEXT.
-    CONSTANTS lc_default_font_name TYPE zexcel_style_font_name VALUE 'Calibri' ##NO_TEXT.
     CLASS-DATA mth_font_cache TYPE mty_th_font_cache .
 
-    CLASS-METHODS calculate_text_width
-      IMPORTING
-        !iv_font_name   TYPE zexcel_style_font_name
-        !iv_font_height TYPE tdfontsize
-        !iv_flag_bold   TYPE abap_bool
-        !iv_flag_italic TYPE abap_bool
-        !iv_cell_value  TYPE zexcel_cell_value
-      RETURNING
-        VALUE(rv_width) TYPE f .
-  PROTECTED SECTION.
-  PRIVATE SECTION.
 ENDCLASS.
 
 

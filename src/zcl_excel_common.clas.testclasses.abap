@@ -136,6 +136,17 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
 
 ENDCLASS.
 
+CLASS ltc_utclong_to_excel_string DEFINITION
+    FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+
+    METHODS simple FOR TESTING.
+
+ENDCLASS.
+
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_Excel_Common_Test IMPLEMENTATION
@@ -1811,4 +1822,34 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
+ENDCLASS.
+
+
+CLASS ltc_utclong_to_excel_string IMPLEMENTATION.
+  METHOD simple.
+    FIELD-SYMBOLS <lv_typekind_utclong> TYPE abap_typekind.
+    FIELD-SYMBOLS <lv_utclong>          TYPE simple.
+    DATA lo_rtti_utclong     TYPE REF TO cl_abap_datadescr.
+    DATA lv_variable_utclong TYPE REF TO data.
+    DATA lv_excel_string     TYPE zexcel_cell_value.
+
+    " Skip this test before ABAP 7.54 (UTCLONG does not exist).
+    " Need of dynamic referencing and dynamic call to avoid compilation error before ABAP 7.54.
+
+    ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_UTCLONG') TO <lv_typekind_utclong>.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    CALL METHOD cl_abap_elemdescr=>('GET_UTCLONG')
+      RECEIVING p_result = lo_rtti_utclong.
+    CREATE DATA lv_variable_utclong TYPE HANDLE lo_rtti_utclong.
+    ASSIGN lv_variable_utclong->* TO <lv_utclong>.
+
+    <lv_utclong> = '2024-08-04 19:47:00.9999999'.
+    lv_excel_string = zcl_excel_common=>utclong_to_excel_string( <lv_utclong> ).
+
+    cl_abap_unit_assert=>assert_equals( exp = '45508.82430555555556'
+                                        act = lv_excel_string ).
+  ENDMETHOD.
 ENDCLASS.
