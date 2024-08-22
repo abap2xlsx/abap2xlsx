@@ -4544,7 +4544,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
     ENDIF.
-    DELETE io_worksheet->sheet_content WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries "#EC CI_SORTSEQ
+    DELETE io_worksheet->sheet_content WHERE cell_value = lc_dummy_cell_content. "#EC CI_SORTSEQ " Get rid of dummyentries
   ENDMETHOD.
 
 
