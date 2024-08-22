@@ -116,8 +116,9 @@ CLASS zcl_excel_row IMPLEMENTATION.
     ELSE.
       lv_previous_row = me->row_index - 1.
       lt_row_outlines = io_worksheet->get_row_outlines( ).
-      READ TABLE lt_row_outlines TRANSPORTING NO FIELDS WITH KEY row_to    = lv_previous_row  " last line of an outline
-                                                                 collapsed = abap_true.       " that is collapsed
+
+      READ TABLE lt_row_outlines TRANSPORTING NO FIELDS WITH KEY row_to COMPONENTS row_to    = lv_previous_row  " last line of an outline
+                                                                                   collapsed = abap_true.       " that is collapsed
     ENDIF.
     CHECK sy-subrc = 0.  " ok - we found it
     r_collapsed = abap_true.
@@ -140,15 +141,10 @@ CLASS zcl_excel_row IMPLEMENTATION.
     CHECK io_worksheet IS BOUND.
 
     lt_row_outlines = io_worksheet->get_row_outlines( ).
-* Begin of ATC fix-issue-1014-part1
-*    LOOP AT lt_row_outlines  ASSIGNING <ls_row_outline> WHERE row_from <= me->row_index
-*                                                         AND row_to   >= me->row_index.
-    LOOP AT lt_row_outlines  ASSIGNING <ls_row_outline> USING KEY collapsed .
-      IF <ls_row_outline>-row_from <= me->row_index
-           AND <ls_row_outline>-row_to   >= me->row_index.
-* End of ATC fix-issue-1014-part1
-        ADD 1 TO r_outline_level.
-      ENDIF.
+
+    LOOP AT lt_row_outlines ASSIGNING <ls_row_outline> WHERE row_from <= me->row_index
+                                                         AND row_to   >= me->row_index. "#EC CI_SORTSEQ
+      ADD 1 TO r_outline_level.
     ENDLOOP.
 
   ENDMETHOD.
@@ -172,7 +168,6 @@ CLASS zcl_excel_row IMPLEMENTATION.
   METHOD get_visible.
 
     DATA: lt_row_outlines TYPE zcl_excel_worksheet=>mty_ts_outlines_row.
-    FIELD-SYMBOLS: <ls_row_outline> LIKE LINE OF lt_row_outlines.
 
     r_visible = me->visible.
     CHECK r_visible = abap_true.  " Currently visible --> but maybe the new outline methodology will hide it implicitly
@@ -180,20 +175,11 @@ CLASS zcl_excel_row IMPLEMENTATION.
 
     lt_row_outlines = io_worksheet->get_row_outlines( ).
 
-* Begin of ATC fix-issue-1014-part1
-*    LOOP AT lt_row_outlines ASSIGNING <ls_row_outline> WHERE row_from  <= me->row_index
-*                                                         AND row_to    >= me->row_index
-*                                                         AND collapsed =  abap_true.      " row is in a collapsed outline --> not visible
-    LOOP AT lt_row_outlines ASSIGNING <ls_row_outline> USING KEY collapsed.
-
-      IF <ls_row_outline>-row_from  <= me->row_index
-       AND <ls_row_outline>-row_to    >= me->row_index
-       AND <ls_row_outline>-collapsed =  abap_true.
-
-* End of ATC fix-issue-1014-part1
+    LOOP AT lt_row_outlines TRANSPORTING NO FIELDS WHERE row_from  <= me->row_index
+                                                         AND row_to    >= me->row_index
+                                                         AND collapsed  = abap_true. "#EC CI_SORTSEQ
         CLEAR r_visible.
         RETURN. " one hit is enough to ensure invisibility
-      ENDIF.         "ATC fix-issue-1014-part1
     ENDLOOP.
 
   ENDMETHOD.

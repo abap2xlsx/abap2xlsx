@@ -21,13 +21,8 @@ CLASS zcl_excel_worksheet DEFINITION
         row_to    TYPE i,
         collapsed TYPE abap_bool,
       END OF mty_s_outline_row .
-    TYPES:
-* Begin of ATC fix-issue-1014-part1
-*      mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
- mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key
-                                        COMPONENTS  row_from row_to
-                                        WITH NON-UNIQUE SORTED KEY collapsed  COMPONENTS collapsed.
-* End of ATC fix-issue-1014-part1                                  .
+    TYPES: mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key COMPONENTS row_from row_to
+                                                                      WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to.
     TYPES:
       BEGIN OF mty_s_ignored_errors,
         "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
@@ -78,11 +73,8 @@ CLASS zcl_excel_worksheet DEFINITION
         col_from TYPE i,
         col_to   TYPE i,
       END OF mty_merge .
-    TYPES:
-* Begin of ATC fix-issue-1014-part1
-*      mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
-    mty_ts_merge TYPE  TABLE OF mty_merge WITH UNIQUE SORTED KEY sort_key COMPONENTS row_from row_to.
-* End of ATC fix-issue-1014-part1
+    TYPES: mty_ts_merge TYPE  TABLE OF mty_merge WITH UNIQUE SORTED KEY sort_key COMPONENTS row_from row_to.
+
     TYPES:
       ty_area TYPE c LENGTH 1 .
 
@@ -2277,7 +2269,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     " Date & Time in excel style
-    LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_style IS NOT INITIAL AND data_type IS INITIAL.
+    LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_style IS NOT INITIAL AND data_type IS INITIAL. "#EC CI_SORTSEQ
       ls_style_conv-cell_style = <ls_sheet_content>-cell_style.
       APPEND ls_style_conv TO lt_style_conv.
     ENDLOOP.

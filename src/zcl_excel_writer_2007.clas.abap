@@ -3362,18 +3362,18 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
     DATA:
-      ld_1            TYPE string,
-      ld_2            TYPE string,
-      ld_3            TYPE string,
-      ld_4            TYPE string,
-      ld_5            TYPE string,
-      ld_7            TYPE string,
+      ld_1           TYPE string,
+      ld_2           TYPE string,
+      ld_3           TYPE string,
+      ld_4           TYPE string,
+      ld_5           TYPE string,
+      ld_7           TYPE string,
 
-      ls_odd_header   TYPE zexcel_s_worksheet_head_foot,
-      ls_odd_footer   TYPE zexcel_s_worksheet_head_foot,
-      ls_even_header  TYPE zexcel_s_worksheet_head_foot,
-      ls_even_footer  TYPE zexcel_s_worksheet_head_foot,
-      lv_content      TYPE string.
+      ls_odd_header  TYPE zexcel_s_worksheet_head_foot,
+      ls_odd_footer  TYPE zexcel_s_worksheet_head_foot,
+      ls_even_header TYPE zexcel_s_worksheet_head_foot,
+      ls_even_footer TYPE zexcel_s_worksheet_head_foot,
+      lv_content     TYPE string.
 
 
 * INIT_RESULT
@@ -3731,13 +3731,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   METHOD create_xl_sheet.
 
 ** Constant node name
-    DATA: lc_xml_node_worksheet          TYPE string VALUE 'worksheet',
+    DATA: lc_xml_node_worksheet TYPE string VALUE 'worksheet',
           " Node namespace
-          lc_xml_node_ns                 TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-          lc_xml_node_r_ns               TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-          lc_xml_node_comp_ns            TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
-          lc_xml_node_comp_pref          TYPE string VALUE 'x14ac',
-          lc_xml_node_ig_ns              TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac'.
+          lc_xml_node_ns        TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+          lc_xml_node_r_ns      TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+          lc_xml_node_comp_ns   TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
+          lc_xml_node_comp_pref TYPE string VALUE 'x14ac',
+          lc_xml_node_ig_ns     TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac'.
 
     DATA: lo_document        TYPE REF TO if_ixml_document,
           lo_element_root    TYPE REF TO if_ixml_element,
@@ -4033,9 +4033,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_table        TYPE REF TO zcl_excel_table,
           lo_link         TYPE REF TO zcl_excel_hyperlink.
 
-    DATA: lv_value         TYPE string,
-          lv_relation_id   TYPE i,
-          lv_index_str     TYPE string.
+    DATA: lv_value       TYPE string,
+          lv_relation_id TYPE i,
+          lv_index_str   TYPE string.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -4236,12 +4236,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_table               TYPE REF TO zcl_excel_table,
-* Begin of ATC fix-issue-1014-part1
-*          lt_table_areas         TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
-          lt_table_areas         TYPE STANDARD TABLE OF lty_table_area WITH
-                                 NON-UNIQUE SORTED KEY sort_key
-                                 COMPONENTS  left right top bottom,
-* End of ATC fix-issue-1014-part1
+          lt_table_areas         TYPE SORTED TABLE OF lty_table_area WITH NON-UNIQUE KEY left right top bottom,
           ls_table_area          LIKE LINE OF lt_table_areas,
           lo_column              TYPE REF TO zcl_excel_column,
 
@@ -4452,7 +4447,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         LOOP AT lt_table_areas TRANSPORTING NO FIELDS WHERE top    <= <ls_sheet_content>-cell_row
                                                         AND bottom >= <ls_sheet_content>-cell_row
                                                         AND left   <= <ls_sheet_content>-cell_column
-                                                        AND right  >= <ls_sheet_content>-cell_column.
+                                                        AND right  >= <ls_sheet_content>-cell_column. "#EC CI_SORTSEQ
           EXIT.
         ENDLOOP.
         IF sy-subrc = 0.
@@ -4549,8 +4544,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
     ENDIF.
-    DELETE io_worksheet->sheet_content  WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries
-
+    DELETE io_worksheet->sheet_content WHERE cell_value = lc_dummy_cell_content.  " Get rid of dummyentries "#EC CI_SORTSEQ
   ENDMETHOD.
 
 

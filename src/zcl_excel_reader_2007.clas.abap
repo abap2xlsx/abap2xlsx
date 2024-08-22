@@ -97,12 +97,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
         ref     TYPE string,
         formula TYPE string,
       END   OF ty_ref_formulae .
-    TYPES:
-* Begin of ATC fix-issue-1014-part1
-*      tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE  KEY sheet row column .
-      tyt_ref_formulae TYPE TABLE OF ty_ref_formulae WITH UNIQUE HASHED  KEY hash_key COMPONENTS
-           sheet row column si ref formula.
-* End of ATC fix-issue-1014-part1
+    TYPES: tyt_ref_formulae TYPE TABLE OF ty_ref_formulae WITH UNIQUE HASHED KEY hash_key COMPONENTS sheet row column si ref formula.
     TYPES:
       BEGIN OF t_shared_string,
         value TYPE string,
@@ -391,17 +386,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
              row           TYPE i,
              outline_level TYPE i,
            END OF lts_row_data,
-* Begin of ATC fix-issue-1014-part1
-*           ltt_row_data TYPE SORTED TABLE OF lts_row_data WITH UNIQUE KEY row.
-           ltt_row_data TYPE  TABLE OF lts_row_data WITH NON-UNIQUE SORTED KEY sort_key
-           COMPONENTS outline_level.
-* End of ATC fix-issue-1014-part1
+           ltt_row_data TYPE TABLE OF lts_row_data WITH NON-UNIQUE SORTED KEY sort_key COMPONENTS outline_level.
+
     DATA: lt_row_data             TYPE ltt_row_data,
           ls_row_data             LIKE LINE OF lt_row_data,
           lt_collapse_rows        TYPE HASHED TABLE OF i WITH UNIQUE KEY table_line,
-
           lv_collapsed            TYPE abap_bool,
-
           lv_outline_level        TYPE i,
           lv_next_consecutive_row TYPE i,
           lt_outline_rows         TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
