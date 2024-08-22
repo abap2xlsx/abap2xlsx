@@ -18,13 +18,8 @@ TYPES: BEGIN OF ts_sort_values,
          sort_level   TYPE int4,
          is_collapsed TYPE flag,
        END OF ts_sort_values,
-* Begin of ATC fix-issue-1014-part1
-*       tt_sort_values TYPE HASHED TABLE OF ts_sort_values WITH UNIQUE KEY fieldname .
-        tt_sort_values TYPE HASHED TABLE OF ts_sort_values
-                       WITH UNIQUE KEY primary_key COMPONENTS fieldname
-                       WITH NON-UNIQUE SORTED KEY sort_level  COMPONENTS  sort_level is_collapsed .
-
-* End of ATC fix-issue-1014-part1
+       tt_sort_values TYPE HASHED TABLE OF ts_sort_values WITH UNIQUE KEY primary_key COMPONENTS fieldname
+                                                          WITH NON-UNIQUE SORTED KEY collapsed COMPONENTS is_collapsed .
 TYPES: BEGIN OF ts_subtotal_rows,
          row_int       TYPE zexcel_cell_row,
          row_int_start TYPE zexcel_cell_row,
@@ -41,13 +36,8 @@ TYPES: BEGIN OF ts_styles,
          style     TYPE REF TO zcl_excel_style,
          guid      TYPE zexcel_cell_style,
        END OF ts_styles,
-* Begin of ATC fix-issue-1014-part1
-*       tt_styles TYPE HASHED TABLE OF ts_styles  WITH UNIQUE KEY type alignment inttype decimals.
-        tt_styles TYPE HASHED TABLE OF ts_styles WITH UNIQUE KEY primary_key
-                                COMPONENTS type alignment inttype decimals
-                                WITH NON-UNIQUE SORTED KEY guid  COMPONENTS  guid .
-        .
-* End of ATC fix-issue-1014-part1
+       tt_styles TYPE HASHED TABLE OF ts_styles WITH UNIQUE KEY primary_key COMPONENTS type alignment inttype decimals
+                                                WITH NON-UNIQUE SORTED KEY guid COMPONENTS guid .
 
 TYPES: BEGIN OF ts_color_styles,
          guid_old  TYPE zexcel_cell_style,

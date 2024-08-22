@@ -2441,7 +2441,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
       LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS
       WHERE row_from <= ip_cell_row AND row_to >= ip_cell_row
-        AND col_from <= lv_column AND col_to >= lv_column.
+        AND col_from <= lv_column AND col_to >= lv_column. "#EC CI_SORTSEQ
         DELETE me->mt_merged_cells.
         EXIT.
       ENDLOOP.
@@ -4328,7 +4328,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS WHERE NOT (    row_from > ls_merge-row_to
                                                                    OR row_to   < ls_merge-row_from
                                                                    OR col_from > ls_merge-col_to
-                                                                   OR col_to   < ls_merge-col_from ).
+                                                                   OR col_to   < ls_merge-col_from ). "#EC CI_SORTSEQ
       lv_errormessage = 'Overlapping merges'(404).
       zcx_excel=>raise_text( lv_errormessage ).
 
