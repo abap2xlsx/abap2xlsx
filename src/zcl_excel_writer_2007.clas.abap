@@ -5401,6 +5401,17 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                     cv_dfx_count     = lv_dfx_count ).
 * begin of change issue #366 - missing conditional rules: top10, move dfx-styles to own method
 
+          WHEN zcl_excel_style_cond=>c_rule_textfunction.
+            me->create_dxf_style( EXPORTING
+                                    iv_cell_style    = lo_style_cond->mode_textfunction-cell_style
+                                    io_dxf_element   = lo_element
+                                    io_ixml_document = lo_document
+                                    it_cellxfs       = lt_cellxfs
+                                    it_fonts         = lt_fonts
+                                    it_fills         = lt_fills
+                                  CHANGING
+                                    cv_dfx_count     = lv_dfx_count ).
+
           WHEN OTHERS.
             CONTINUE.
         ENDCASE.
