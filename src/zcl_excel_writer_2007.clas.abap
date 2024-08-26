@@ -1239,9 +1239,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CHECK sy-subrc NE 0.
 
     READ TABLE me->styles_mapping INTO ls_styles_mapping WITH KEY guid = iv_cell_style.
-    ADD 1 TO ls_styles_mapping-style. " the numbering starts from 0
-    READ TABLE it_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
-    ADD 1 TO ls_cellxfs-fillid.       " the numbering starts from 0
+    CHECK sy-subrc EQ 0.
 
     READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
     IF sy-subrc EQ 0.
@@ -1253,6 +1251,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ls_style_cond_mapping-dxf   = cv_dfx_count.
       APPEND ls_style_cond_mapping TO me->styles_cond_mapping.
       ADD 1 TO cv_dfx_count.
+
+      lv_index = ls_styles_mapping-style + 1.
+      READ TABLE it_cellxfs INTO ls_cellxfs INDEX lv_index.
 
       " dxf node
       lo_sub_element = io_ixml_document->create_simple_element( name   = lc_xml_node_dxf
@@ -1297,7 +1298,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       "---Conditional formatting font style correction by Alessandro Iannacci END
 
 
-      READ TABLE it_fills INTO ls_fill INDEX ls_cellxfs-fillid.
+      lv_index = ls_cellxfs-fillid + 1.
+      READ TABLE it_fills INTO ls_fill INDEX lv_index.
       IF ls_fill IS NOT INITIAL.
         " fill properties
         lo_element_fill = io_ixml_document->create_simple_element( name   = lc_xml_node_fill
