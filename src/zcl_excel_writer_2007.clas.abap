@@ -1234,6 +1234,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CHECK iv_cell_style IS NOT INITIAL.
 
+    "Don't insert guid twice or even more
+    READ TABLE me->styles_cond_mapping TRANSPORTING NO FIELDS WITH KEY guid = iv_cell_style.
+    CHECK sy-subrc NE 0.
+
     READ TABLE me->styles_mapping INTO ls_styles_mapping WITH KEY guid = iv_cell_style.
     ADD 1 TO ls_styles_mapping-style. " the numbering starts from 0
     READ TABLE it_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
@@ -1329,9 +1333,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
         lo_sub_element->append_child( new_child = lo_element_fill ).
       ENDIF.
-    ENDIF.
 
-    io_dxf_element->append_child( new_child = lo_sub_element ).
+      io_dxf_element->append_child( new_child = lo_sub_element ).
+    ENDIF.
   ENDMETHOD.
 
 
