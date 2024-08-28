@@ -1242,6 +1242,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
     IF sy-subrc EQ 0.
+      "The content of this style is equal to an existing one. Share its dxfid.
       ls_style_cond_mapping-guid  = iv_cell_style.
       APPEND ls_style_cond_mapping TO me->styles_cond_mapping.
     ELSE.
