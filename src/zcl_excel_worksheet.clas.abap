@@ -1304,6 +1304,8 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
           ld_flag_italic               TYPE abap_bool VALUE abap_false,
           ld_date                      TYPE d,
           ld_date_char                 TYPE c LENGTH 50,
+          ld_time                      TYPE t,
+          ld_time_char                 TYPE c LENGTH 20,
           ld_font_height               TYPE zcl_excel_font=>ty_font_height VALUE zcl_excel_font=>lc_default_font_height,
           ld_font_name                 TYPE zexcel_style_font_name VALUE zcl_excel_font=>lc_default_font_name.
 
@@ -1349,20 +1351,27 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
           " If the current cell contains the default date format,
           " convert the cell value to a date and calculate its length
-          IF ls_stylemapping-complete_style-number_format-format_code =
-             zcl_excel_style_number_format=>c_format_date_std.
+          CASE ls_stylemapping-complete_style-number_format-format_code.
+            WHEN zcl_excel_style_number_format=>c_format_date_std.
 
-            " Convert excel date to ABAP date
-            ld_date =
-              zcl_excel_common=>excel_string_to_date( ld_cell_value ).
+              " Convert excel date to ABAP date
+              ld_date =
+                zcl_excel_common=>excel_string_to_date( ld_cell_value ).
 
-            " Format ABAP date using user's formatting settings
-            WRITE ld_date TO ld_date_char.
+              " Format ABAP date using user's formatting settings
+              WRITE ld_date TO ld_date_char.
 
-            " Remember the formatted date to calculate the cell size
-            ld_cell_value = ld_date_char.
+              " Remember the formatted date to calculate the cell size
+              ld_cell_value = ld_date_char.
 
-          ENDIF.
+            WHEN get_default_excel_time_format( ).
+
+              ld_time = zcl_excel_common=>excel_string_to_time( ld_cell_value ).
+              WRITE ld_time TO ld_time_char.
+              ld_cell_value = ld_time_char.
+
+          ENDCASE.
+
 
           " Read the font size and convert it to the font height
           " used by SAPscript (multiplication by 10)
@@ -4474,7 +4483,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD set_table.
 
-    DATA: lo_structdescr     TYPE REF TO cl_abap_structdescr,
+    DATA: lo_structdescr  TYPE REF TO cl_abap_structdescr,
           lr_data         TYPE REF TO data,
           lt_dfies        TYPE ddfields,
           lv_row_int      TYPE zexcel_cell_row,
