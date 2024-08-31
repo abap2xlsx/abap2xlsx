@@ -1171,7 +1171,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 *--------------------------------------------------------------------------------------*
         WHEN zcl_excel_style_cond=>c_rule_textfunction.
           ls_textfunction = lo_style_cond->mode_textfunction.
-          READ TABLE o_excel_ref->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_cellis-cell_style.
+          READ TABLE o_excel_ref->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY guid = ls_textfunction-cell_style.
           lv_value = ls_style_cond_mapping-dxf.
           CONDENSE lv_value.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_dxfid
