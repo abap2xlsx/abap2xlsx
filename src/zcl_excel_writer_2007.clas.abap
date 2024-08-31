@@ -1234,13 +1234,15 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     CHECK iv_cell_style IS NOT INITIAL.
 
+    "Don't insert guid twice or even more
+    READ TABLE me->styles_cond_mapping TRANSPORTING NO FIELDS WITH KEY guid = iv_cell_style.
+    CHECK sy-subrc NE 0.
+
     READ TABLE me->styles_mapping INTO ls_styles_mapping WITH KEY guid = iv_cell_style.
-    ADD 1 TO ls_styles_mapping-style. " the numbering starts from 0
-    READ TABLE it_cellxfs INTO ls_cellxfs INDEX ls_styles_mapping-style.
-    ADD 1 TO ls_cellxfs-fillid.       " the numbering starts from 0
 
     READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
     IF sy-subrc EQ 0.
+      "The content of this style is equal to an existing one. Share its dxfid.
       ls_style_cond_mapping-guid  = iv_cell_style.
       APPEND ls_style_cond_mapping TO me->styles_cond_mapping.
     ELSE.
@@ -1253,6 +1255,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " dxf node
       lo_sub_element = io_ixml_document->create_simple_element( name   = lc_xml_node_dxf
                                                                 parent = io_ixml_document ).
+
+      lv_index = ls_styles_mapping-style + 1.
+      READ TABLE it_cellxfs INTO ls_cellxfs INDEX lv_index.
 
       "Conditional formatting font style correction by Alessandro Iannacci START
       lv_index = ls_cellxfs-fontid + 1.
@@ -1293,7 +1298,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       "---Conditional formatting font style correction by Alessandro Iannacci END
 
 
-      READ TABLE it_fills INTO ls_fill INDEX ls_cellxfs-fillid.
+      lv_index = ls_cellxfs-fillid + 1.
+      READ TABLE it_fills INTO ls_fill INDEX lv_index.
       IF ls_fill IS NOT INITIAL.
         " fill properties
         lo_element_fill = io_ixml_document->create_simple_element( name   = lc_xml_node_fill
@@ -1329,9 +1335,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
         lo_sub_element->append_child( new_child = lo_element_fill ).
       ENDIF.
-    ENDIF.
 
-    io_dxf_element->append_child( new_child = lo_sub_element ).
+      io_dxf_element->append_child( new_child = lo_sub_element ).
+    ENDIF.
   ENDMETHOD.
 
 
@@ -5399,6 +5405,17 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                                   CHANGING
                                     cv_dfx_count     = lv_dfx_count ).
 * begin of change issue #366 - missing conditional rules: top10, move dfx-styles to own method
+
+          WHEN zcl_excel_style_cond=>c_rule_textfunction.
+            me->create_dxf_style( EXPORTING
+                                    iv_cell_style    = lo_style_cond->mode_textfunction-cell_style
+                                    io_dxf_element   = lo_element
+                                    io_ixml_document = lo_document
+                                    it_cellxfs       = lt_cellxfs
+                                    it_fonts         = lt_fonts
+                                    it_fills         = lt_fills
+                                  CHANGING
+                                    cv_dfx_count     = lv_dfx_count ).
 
           WHEN OTHERS.
             CONTINUE.
