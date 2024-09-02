@@ -31,10 +31,10 @@ CLASS zcl_excel_writer_csv DEFINITION
       IMPORTING
         !ip_value TYPE char10 DEFAULT c_default .
     CLASS-METHODS set_skip_hidden_rows
-      IMPORTING 
+      IMPORTING
         !ip_value TYPE abap_bool.
     CLASS-METHODS set_skip_hidden_columns
-      IMPORTING 
+      IMPORTING
         !ip_value TYPE abap_bool.
 *"* protected components of class ZCL_EXCEL_WRITER_CSV
 *"* do not include other source files here!!!
@@ -98,6 +98,8 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
 
     DATA: lo_iterator  TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet TYPE REF TO zcl_excel_worksheet.
+
+    DATA: lo_autofilter TYPE REF TO zcl_excel_autofilter.
 
     DATA: lt_cell_data TYPE zexcel_t_cell_data_unsorted,
           lv_row       TYPE i,
