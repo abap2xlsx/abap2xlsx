@@ -3205,9 +3205,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * STEP 2: Create main node relationships
     lo_element_root = lo_document->create_simple_element( name   = lc_xml_node_xml
                                                           parent = lo_document ).
-    lo_element_root->set_attribute_ns( : name  = 'xmlns:v'  value = lc_xml_node_ns_v ),
-                                         name  = 'xmlns:o'  value = lc_xml_node_ns_o ),
-                                         name  = 'xmlns:x'  value = lc_xml_node_ns_x ).
+    lo_element_root->set_attribute_ns( name  = 'xmlns:v'  value = lc_xml_node_ns_v ).
+    lo_element_root->set_attribute_ns( name  = 'xmlns:o'  value = lc_xml_node_ns_o ).
+    lo_element_root->set_attribute_ns( name  = 'xmlns:x'  value = lc_xml_node_ns_x ).
 
 **********************************************************************
 * STEP 3: Create o:shapeLayout
@@ -3220,8 +3220,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     lo_element_idmap = lo_document->create_simple_element( name   = lc_xml_node_idmap
                                                            parent = lo_document ).
-    lo_element_idmap->set_attribute_ns( : name  = lc_xml_attr_vext  value = lc_xml_attr_val_edit ),
-                                          name  = lc_xml_attr_data  value = '1' ).
+    lo_element_idmap->set_attribute_ns( name  = lc_xml_attr_vext  value = lc_xml_attr_val_edit ).
+    lo_element_idmap->set_attribute_ns( name  = lc_xml_attr_data  value = '1' ).
 
     lo_element_shapelayout->append_child( new_child = lo_element_idmap ).
 
@@ -3233,10 +3233,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     lo_element_shapetype = lo_document->create_simple_element( name   = lc_xml_node_shapetype
                                                                parent = lo_document ).
 
-    lo_element_shapetype->set_attribute_ns( : name  = lc_xml_attr_id         value = '_x0000_t202' ),
-                                              name  = lc_xml_attr_coordsize  value = '21600,21600' ),
-                                              name  = lc_xml_attr_ospt       value = '202' ),
-                                              name  = lc_xml_attr_path       value = 'm,l,21600r21600,l21600,xe' ).
+    lo_element_shapetype->set_attribute_ns( name  = lc_xml_attr_id         value = '_x0000_t202' ).
+    lo_element_shapetype->set_attribute_ns( name  = lc_xml_attr_coordsize  value = '21600,21600' ).
+    lo_element_shapetype->set_attribute_ns( name  = lc_xml_attr_ospt       value = '202' ).
+    lo_element_shapetype->set_attribute_ns( name  = lc_xml_attr_path       value = 'm,l,21600r21600,l21600,xe' ).
 
     lo_element_stroke = lo_document->create_simple_element( name   = lc_xml_node_stroke
                                                             parent = lo_document ).
@@ -3244,11 +3244,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     lo_element_path   = lo_document->create_simple_element( name   = lc_xml_node_path
                                                             parent = lo_document ).
-    lo_element_path->set_attribute_ns( : name  = lc_xml_attr_gradientshapeok value = lc_xml_attr_val_t ),
-                                         name  = lc_xml_attr_oconnecttype    value = lc_xml_attr_val_rect ).
+    lo_element_path->set_attribute_ns( name  = lc_xml_attr_gradientshapeok value = lc_xml_attr_val_t ).
+    lo_element_path->set_attribute_ns( name  = lc_xml_attr_oconnecttype    value = lc_xml_attr_val_rect ).
 
-    lo_element_shapetype->append_child( : new_child = lo_element_stroke ),
-                                          new_child = lo_element_path ).
+    lo_element_shapetype->append_child( new_child = lo_element_stroke ).
+    lo_element_shapetype->append_child( new_child = lo_element_path ).
 
     lo_element_root->append_child( new_child = lo_element_shapetype ).
 
@@ -3273,11 +3273,11 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lv_attr_id_index = 1024 + lv_index.
       lv_attr_id = lv_attr_id_index.
       CONCATENATE '_x0000_s' lv_attr_id INTO lv_attr_id.
-      lo_element_shape->set_attribute_ns( : name  = lc_xml_attr_id          value = lv_attr_id ),
-                                            name  = lc_xml_attr_type        value = '#_x0000_t202' ),
-                                            name  = lc_xml_attr_style       value = 'size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden' ),
-                                            name  = lc_xml_attr_fillcolor   value = '#ffffe1' ),
-                                            name  = lc_xml_attr_oinsetmode  value = lc_xml_attr_val_auto ).
+      lo_element_shape->set_attribute_ns( name  = lc_xml_attr_id          value = lv_attr_id ).
+      lo_element_shape->set_attribute_ns( name  = lc_xml_attr_type        value = '#_x0000_t202' ).
+      lo_element_shape->set_attribute_ns( name  = lc_xml_attr_style       value = 'size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden' ).
+      lo_element_shape->set_attribute_ns( name  = lc_xml_attr_fillcolor   value = '#ffffe1' ).
+      lo_element_shape->set_attribute_ns( name  = lc_xml_attr_oinsetmode  value = lc_xml_attr_val_auto ).
 
       " Fill
       lo_element_fill = lo_document->create_simple_element( name   = lc_xml_node_fill
@@ -3287,9 +3287,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       " Shadow
       lo_element_shadow = lo_document->create_simple_element( name   = lc_xml_node_shadow
                                                               parent = lo_document ).
-      lo_element_shadow->set_attribute_ns( : name = lc_xml_attr_on        value = lc_xml_attr_val_t ),
-                                             name = lc_xml_attr_color     value = lc_xml_attr_val_black ),
-                                             name = lc_xml_attr_obscured  value = lc_xml_attr_val_t ).
+      lo_element_shadow->set_attribute_ns( name = lc_xml_attr_on        value = lc_xml_attr_val_t ).
+      lo_element_shadow->set_attribute_ns( name = lc_xml_attr_color     value = lc_xml_attr_val_black ).
+      lo_element_shadow->set_attribute_ns( name = lc_xml_attr_obscured  value = lc_xml_attr_val_t ).
       lo_element_shape->append_child( new_child = lo_element_shadow ).
       " Path
       lo_element_path = lo_document->create_simple_element( name   = lc_xml_node_path
@@ -6573,4 +6573,3 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ep_file = me->create( ).
   ENDMETHOD.
 ENDCLASS.
-
