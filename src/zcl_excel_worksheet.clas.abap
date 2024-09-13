@@ -73,9 +73,8 @@ CLASS zcl_excel_worksheet DEFINITION
         col_from TYPE i,
         col_to   TYPE i,
       END OF mty_merge .
-  TYPES:
-      mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
-*  mty_ts_merge TYPE  TABLE OF mty_merge WITH UNIQUE SORTED KEY sort_key COMPONENTS row_from row_to.
+    TYPES:
+        mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line.
 
     TYPES:
       ty_area TYPE c LENGTH 1 .
@@ -858,7 +857,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
+CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD add_comment.
