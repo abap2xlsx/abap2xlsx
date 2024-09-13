@@ -24,10 +24,10 @@ CLASS zcl_excel_theme DEFINITION
         VALUE(rv_xstring) TYPE xstring .
     METHODS set_color
       IMPORTING
-        VALUE(iv_type)         TYPE string
-        VALUE(iv_srgb)         TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL
-        VALUE(iv_syscolorname) TYPE string OPTIONAL
-        VALUE(iv_syscolorlast) TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL .
+        iv_type         TYPE string
+        iv_srgb         TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL
+        iv_syscolorname TYPE string OPTIONAL
+        iv_syscolorlast TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL .
     METHODS set_color_scheme_name
       IMPORTING
         iv_name TYPE string .
@@ -38,31 +38,31 @@ CLASS zcl_excel_theme DEFINITION
         iv_typeface TYPE string .
     METHODS set_latin_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS set_ea_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS set_cs_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS set_font_scheme_name
       IMPORTING
-        VALUE(iv_name) TYPE string .
+        iv_name TYPE string .
     METHODS set_theme_name
       IMPORTING
-        VALUE(iv_name) TYPE string .
+        iv_name TYPE string .
   PROTECTED SECTION.
 
     DATA elements TYPE REF TO zcl_excel_theme_elements .
