@@ -123,7 +123,7 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
 * --- Retrieve SAP date format
     CLEAR ls_format.
     SELECT ddtext INTO ls_format-attvalue FROM dd07t WHERE domname    = 'XUDATFM'
-                                                       AND ddlanguage = sy-langu.
+                                                       AND ( ddlanguage = sy-langu OR ddlanguage = 'E' ).
       ls_format-cmpname = 'DATE'.
       CONDENSE ls_format-attvalue.
       CONCATENATE '''' ls_format-attvalue '''' INTO ls_format-attvalue.
