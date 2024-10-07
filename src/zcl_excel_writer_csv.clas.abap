@@ -125,6 +125,7 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
     SELECT ddtext INTO ls_format-attvalue FROM dd07t WHERE domname    = 'XUDATFM'
                                                        AND ( ddlanguage = sy-langu OR ddlanguage = 'E' ).
       ls_format-cmpname = 'DATE'.
+      ls_format-attvalue = ls_format-attvalue(10). " Ignore description, only use pattern
       CONDENSE ls_format-attvalue.
       CONCATENATE '''' ls_format-attvalue '''' INTO ls_format-attvalue.
       APPEND ls_format TO lt_format.
