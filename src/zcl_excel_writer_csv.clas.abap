@@ -165,6 +165,9 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
     IF skip_hidden_rows = abap_true.
 * --- Retrieve autofilters (to identify hidden rows)
       lo_autofilter = excel->get_autofilters_reference( )->get( io_worksheet = lo_worksheet ).
+      IF lo_autofilter IS NOT INITIAL.
+        lo_autofilter->get_filter_area( ). " trigger filter area validation
+      ENDIF.
     ENDIF.
 
     lv_row = 1.
