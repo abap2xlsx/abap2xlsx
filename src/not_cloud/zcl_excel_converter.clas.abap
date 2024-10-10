@@ -1670,20 +1670,8 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
                 WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
       ELSE.
-        cl_gui_frontend_services=>execute(
-          EXPORTING
-            document               = l_dir
-          EXCEPTIONS
-            cntl_error             = 1
-            error_no_gui           = 2
-            bad_parameter          = 3
-            file_not_found         = 4
-            path_not_found         = 5
-            file_extension_unknown = 6
-            error_execute_failed   = 7
-            synchronous_failed     = 8
-            not_supported_by_gui   = 9
-               ).
+        cl_gui_frontend_services=>execute( EXPORTING document = l_dir
+                                           EXCEPTIONS OTHERS  = 1 ).
         IF sy-subrc <> 0.
           MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
                      WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
