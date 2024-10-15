@@ -100,6 +100,7 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
           lo_worksheet TYPE REF TO zcl_excel_worksheet.
 
     DATA: lo_autofilter TYPE REF TO zcl_excel_autofilter.
+    DATA: lv_row_hidden TYPE abap_bool.
 
     DATA: lt_cell_data TYPE zexcel_t_cell_data_unsorted,
           lv_row       TYPE i,
@@ -176,6 +177,13 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
     CLEAR lv_string.
     LOOP AT lt_cell_data ASSIGNING <fs_sheet_content>.
 
+* --- Check, if row is hidden
+      AT NEW cell_row.
+        IF lo_autofilter IS NOT INITIAL.
+          lv_row_hidden = lo_autofilter->is_row_hidden( iv_row = <fs_sheet_content>-cell_row ).
+        ENDIF.
+      ENDAT.
+
 * --- Add empty rows
       WHILE lv_row < <fs_sheet_content>-cell_row.
         CONCATENATE lv_string zcl_excel_writer_csv=>eol INTO lv_string.
@@ -184,9 +192,7 @@ CLASS ZCL_EXCEL_WRITER_CSV IMPLEMENTATION.
       ENDWHILE.
 
 * --- Skip hidden rows
-      IF skip_hidden_rows = abap_true AND
-          lo_autofilter IS NOT INITIAL AND
-          lo_autofilter->is_row_hidden( iv_row = <fs_sheet_content>-cell_row ) = abap_true.
+      IF lv_row_hidden = abap_true.
         lv_row = <fs_sheet_content>-cell_row + 1.
         lv_col = 1.
         CONTINUE.
