@@ -1086,6 +1086,10 @@ CLASS zcl_excel_common IMPLEMENTATION.
       IF flag_class = abap_false.
 * source is a structure - use assign component
         ASSIGN COMPONENT wa_component-name OF STRUCTURE i_source TO <attribute>.
+      ELSEIF i_source IS INITIAL.
+        CLEAR <field>.
+        CLEAR <fieldx> WITH abap_true.
+        CONTINUE.
       ELSE.
 * then it is an attribute of the class - use different assign then
         CONCATENATE 'i_source->' wa_component-name INTO attribute_name.
