@@ -469,7 +469,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
 
     lo_columns = o_worksheet->get_columns( ).
     " Calculate col
-    IF lo_columns->is_empty() = abap_false.
+    IF lo_columns->is_empty( ) = abap_false.
       o_worksheet->calculate_column_widths( ).
     ENDIF.
     lo_column_iterator = lo_columns->get_iterator( ).
