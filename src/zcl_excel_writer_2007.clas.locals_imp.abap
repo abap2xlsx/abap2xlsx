@@ -460,19 +460,19 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
   METHOD add_sheetformatpr.
     DATA: lo_element         TYPE REF TO if_ixml_element,
           lo_column_default  TYPE REF TO zcl_excel_column,
-          lo_row_default     TYPE REF TO zcl_excel_row,lv_value           TYPE string,
+          lo_row_default     TYPE REF TO zcl_excel_row,
+          lv_value           TYPE string,
+          lo_columns         TYPE REF TO zcl_excel_columns,
           lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_column          TYPE REF TO zcl_excel_column,
-          lo_row_iterator    TYPE REF TO zcl_excel_collection_iterator,
           outline_level_col  TYPE i VALUE 0.
 
-    lo_column_iterator = o_worksheet->get_columns_iterator( ).
-    lo_row_iterator = o_worksheet->get_rows_iterator( ).
+    lo_columns = o_worksheet->get_columns( ).
     " Calculate col
-    IF NOT lo_column_iterator IS BOUND.
+    IF lo_columns->is_empty() = abap_false.
       o_worksheet->calculate_column_widths( ).
-      lo_column_iterator = o_worksheet->get_columns_iterator( ).
     ENDIF.
+    lo_column_iterator = lo_columns->get_iterator( ).
 
     " sheetFormatPr node
     lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetformatpr
