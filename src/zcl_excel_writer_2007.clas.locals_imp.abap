@@ -462,17 +462,15 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_column_default  TYPE REF TO zcl_excel_column,
           lo_row_default     TYPE REF TO zcl_excel_row,
           lv_value           TYPE string,
-          lo_columns         TYPE REF TO zcl_excel_columns,
           lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_column          TYPE REF TO zcl_excel_column,
           outline_level_col  TYPE i VALUE 0.
 
-    lo_columns = o_worksheet->get_columns( ).
+    lo_column_iterator = o_worksheet->get_columns_iterator( ).
     " Calculate col
-    IF lo_columns->is_empty( ) = abap_false.
+    IF lo_column_iterator->has_next( ) = abap_true.
       o_worksheet->calculate_column_widths( ).
     ENDIF.
-    lo_column_iterator = lo_columns->get_iterator( ).
 
     " sheetFormatPr node
     lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetformatpr
