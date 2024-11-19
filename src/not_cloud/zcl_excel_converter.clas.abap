@@ -104,7 +104,7 @@ CLASS zcl_excel_converter DEFINITION
     METHODS clean_fieldcatalog .
     METHODS complete_cell
       IMPORTING
-        !ip_table_row TYPE zexcel_cell_row
+        !ip_table_row TYPE i
         !ip_fieldname TYPE fieldname
         !ip_column    TYPE simple
         !ip_row       TYPE zexcel_cell_row
@@ -316,11 +316,10 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           lv_col_int       TYPE zexcel_cell_column,
           lv_col_alpha     TYPE zexcel_cell_column_alpha,
           ls_settings      TYPE zexcel_s_table_settings,
-          lv_tabix         TYPE sy-tabix,
+          lv_table_row     TYPE i,
           lv_line          TYPE i.
 
-    FIELD-SYMBOLS: <fs_tab>  TYPE ANY TABLE,
-                   <fs_stab> TYPE any.
+    FIELD-SYMBOLS: <fs_tab> TYPE ANY TABLE.
 
     ASSIGN wo_data->* TO <fs_tab> .
 
@@ -354,14 +353,14 @@ CLASS zcl_excel_converter IMPLEMENTATION.
       lv_col_int = w_col_int + ls_fcat-position - 1.
       lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_col_int ).
       lv_row_int = w_row_int + 1.  "Skip header
-      LOOP AT <fs_tab> ASSIGNING <fs_stab>.
-        lv_tabix = sy-tabix.
-        complete_cell( ip_table_row = lv_tabix
+      DO lines( <fs_tab> ) TIMES.
+        lv_table_row = sy-index.
+        complete_cell( ip_table_row = lv_table_row
                        ip_fieldname = ls_fcat-columnname
                        ip_column    = lv_col_alpha
                        ip_row       = lv_row_int ).
         ADD 1 TO lv_row_int.
-      ENDLOOP.
+      ENDDO.
 * Freeze panes
       IF ls_fcat-fix_column = abap_true.
         ADD 1 TO r_freeze_col.
