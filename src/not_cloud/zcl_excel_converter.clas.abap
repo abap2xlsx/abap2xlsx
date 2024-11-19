@@ -54,36 +54,6 @@ CLASS zcl_excel_converter DEFINITION
 *"* do not include other source files here!!!
   PROTECTED SECTION.
 
-    TYPES:
-      BEGIN OF t_relationship,
-        id     TYPE string,
-        type   TYPE string,
-        target TYPE string,
-      END OF t_relationship .
-    TYPES:
-      BEGIN OF t_fileversion,
-        appname      TYPE string,
-        lastedited   TYPE string,
-        lowestedited TYPE string,
-        rupbuild     TYPE string,
-        codename     TYPE string,
-      END OF t_fileversion .
-    TYPES:
-      BEGIN OF t_sheet,
-        name    TYPE string,
-        sheetid TYPE string,
-        id      TYPE string,
-      END OF t_sheet .
-    TYPES:
-      BEGIN OF t_workbookpr,
-        codename            TYPE string,
-        defaultthemeversion TYPE string,
-      END OF t_workbookpr .
-    TYPES:
-      BEGIN OF t_sheetpr,
-        codename TYPE string,
-      END OF t_sheetpr .
-
     DATA w_row_int TYPE zexcel_cell_row VALUE 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
     DATA w_col_int TYPE zexcel_cell_column VALUE 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
 *"* private components of class ZCL_EXCEL_CONVERTER
@@ -114,7 +84,6 @@ CLASS zcl_excel_converter DEFINITION
     CONSTANTS c_type_nor TYPE c VALUE 'N'.                  "#EC NOTEXT
     CONSTANTS c_type_sub TYPE c VALUE 'S'.                  "#EC NOTEXT
     CONSTANTS c_type_tot TYPE c VALUE 'T'.                  "#EC NOTEXT
-    DATA wt_color_styles TYPE tt_color_styles .
     CLASS-DATA ws_option TYPE zexcel_s_converter_option .
     CLASS-DATA ws_indx TYPE indx .
 
@@ -384,14 +353,14 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     LOOP AT wt_fieldcatalog INTO ls_fcat.
       lv_col_int = w_col_int + ls_fcat-position - 1.
       lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_col_int ).
-      lv_row_int = w_row_int.
+      lv_row_int = w_row_int + 1.  "Skip header
       LOOP AT <fs_tab> ASSIGNING <fs_stab>.
         lv_tabix = sy-tabix.
-        ADD 1 TO lv_row_int.
         complete_cell( ip_table_row = lv_tabix
                        ip_fieldname = ls_fcat-columnname
                        ip_column    = lv_col_alpha
                        ip_row       = lv_row_int ).
+        ADD 1 TO lv_row_int.
       ENDLOOP.
 * Freeze panes
       IF ls_fcat-fix_column = abap_true.
@@ -530,9 +499,9 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 
   METHOD complete_cell.
 
+* Now let's check for colors
     DATA: ls_colors TYPE zexcel_s_converter_col.
 
-* Now let's check for colors
     IF NOT wt_colors IS INITIAL.
 * Field has color
       READ TABLE wt_colors INTO ls_colors WITH KEY rownumber  = ip_table_row
