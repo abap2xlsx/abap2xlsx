@@ -133,14 +133,14 @@ CLASS zcl_excel_converter DEFINITION
       RAISING
         zcx_excel .
     METHODS clean_fieldcatalog .
-    methods COMPLETE_CELL
-      importing
-        !IP_TABLE_ROW type ZEXCEL_CELL_ROW
-        !IP_FIELDNAME type FIELDNAME
-        !IP_COLUMN type SIMPLE
-        !IP_ROW type ZEXCEL_CELL_ROW
-      raising
-        ZCX_EXCEL .
+    METHODS complete_cell
+      IMPORTING
+        !ip_table_row TYPE zexcel_cell_row
+        !ip_fieldname TYPE fieldname
+        !ip_column    TYPE simple
+        !ip_row       TYPE zexcel_cell_row
+      RAISING
+        zcx_excel .
     METHODS create_formular_subtotal
       IMPORTING
         !i_row_int_start   TYPE zexcel_cell_row
@@ -351,7 +351,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           lv_line          TYPE i.
 
     FIELD-SYMBOLS: <fs_tab>  TYPE ANY TABLE,
-                   <fs_stab> TYPE ANY.
+                   <fs_stab> TYPE any.
 
     ASSIGN wo_data->* TO <fs_tab> .
 
@@ -530,19 +530,9 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 
   METHOD complete_cell.
 
-*   Now let's check for colors
-    DATA: ls_color       TYPE zexcel_s_style_color,
-          ls_colors      TYPE zexcel_s_converter_col,
-          ls_colors_col  LIKE ls_colors,
-          ls_fieldcat    LIKE LINE OF wt_fieldcatalog,
-          lv_subrc       TYPE sy-subrc.
+    DATA: ls_colors TYPE zexcel_s_converter_col.
 
-    READ TABLE wt_fieldcatalog INTO ls_fieldcat WITH KEY columnname = ip_fieldname.
-
-* Gemäss ALV-Logik gilt: Farbe am Feld hat immer oberste Priorität. Sonst gilt:
-* Bei Schlüssel-Feldern übersteuert die Spaltenfarbe (dann hellblau) die Zeilenfarbe,
-* ausser dies wird durch NOKEYCOL an der Zeile explizit verboten.
-* Dann gilt hier wie sonst auch: Zeilenfarbe vor Spaltenfarbe.
+* Now let's check for colors
     IF NOT wt_colors IS INITIAL.
 * Field has color
       READ TABLE wt_colors INTO ls_colors WITH KEY rownumber  = ip_table_row
@@ -551,31 +541,17 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 * Full line has color
         READ TABLE wt_colors INTO ls_colors WITH KEY rownumber  = ip_table_row
                                                      columnname = space.
-        IF sy-subrc <> 0 OR ls_colors-nokeycol IS INITIAL.
-          lv_subrc = sy-subrc.
-* Fieldcatalog/Column has color
-          READ TABLE wt_colors INTO ls_colors_col WITH KEY rownumber  = 0
-                                                           columnname = ip_fieldname.
-          IF sy-subrc = 0 AND
-             ( NOT ls_fieldcat-keyflag IS INITIAL OR   "Use key color found
-               lv_subrc <> 0 ).   "Use column color if no line color was found
-            ls_colors = ls_colors_col.
-          ENDIF.
-        ENDIF.
       ENDIF.
-      IF NOT ls_colors IS INITIAL.
-        ls_color-rgb     = zcl_excel_style_color=>c_gray.
-        ls_color-indexed = zcl_excel_style_color=>c_indexed_not_set.
-        ls_color-theme   = zcl_excel_style_color=>c_theme_not_set.
+      IF sy-subrc = 0.
         wo_worksheet->change_cell_style( ip_column           = ip_column
                                          ip_row              = ip_row
                                          ip_font_color_rgb   = ls_colors-fontcolor
                                          ip_fill_filltype    = zcl_excel_style_fill=>c_fill_solid
-                                         ip_fill_fgcolor_rgb = ls_colors-fillcolor
-                                         ip_borders_allborders_style = zcl_excel_style_border=>c_border_thin
-                                         ip_borders_allborders_color = ls_color ).
+                                         ip_fill_fgcolor_rgb = ls_colors-fillcolor ).
       ENDIF.
     ENDIF.
+
+* todo: hyperlink support
   ENDMETHOD.
 
 
