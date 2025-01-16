@@ -999,6 +999,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
           CLEAR: lv_current_offset.
           WHILE lo_node_si_child IS BOUND.                                             " actually these children of <si> are <r>-tags
+            lv_tag_name = lo_node_si_child->get_name( ).
+            IF lv_tag_name = 'r'.
+
             CLEAR: ls_rtf.
 
             " extracting rich text formating data
@@ -1014,10 +1017,13 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               lv_node_value = unescape_string_value( lo_node_r_child_t->get_value( ) ).
               CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
               ls_rtf-length = strlen( lv_node_value ).
-            ENDIF.
 
+            IF ls_rtf-length > 0.
             lv_current_offset = strlen( <ls_shared_string>-value ).
             APPEND ls_rtf TO <ls_shared_string>-rtf.
+            ENDIF.
+            ENDIF.
+            ENDIF.
 
             lo_node_si_child ?= lo_node_si_child->get_next( ).
 
