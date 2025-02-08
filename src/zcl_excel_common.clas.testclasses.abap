@@ -45,6 +45,9 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS date_to_excel_string4 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string5 FOR TESTING RAISING cx_static_check.
     METHODS date_to_excel_string6 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string1 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string2 FOR TESTING RAISING cx_static_check.
+    METHODS amount_to_excel_string3 FOR TESTING RAISING cx_static_check.
     METHODS: encrypt_password FOR TESTING.
     METHODS: excel_string_to_date FOR TESTING.
     METHODS excel_string_to_time1 FOR TESTING RAISING cx_static_check.
@@ -52,6 +55,7 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS excel_string_to_time3 FOR TESTING RAISING cx_static_check.
     METHODS excel_string_to_time4 FOR TESTING RAISING cx_static_check.
     METHODS excel_string_to_time5 FOR TESTING RAISING cx_static_check.
+    METHODS excel_string_to_time6 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string1 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string2 FOR TESTING RAISING cx_static_check.
     METHODS time_to_excel_string3 FOR TESTING RAISING cx_static_check.
@@ -122,6 +126,25 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
     METHODS is_cell_in_range_upperside_out FOR TESTING.
     METHODS is_cell_in_range_rightside_out FOR TESTING.
     METHODS is_cell_in_range_lowerside_out FOR TESTING.
+    METHODS recursive_struct_to_class FOR TESTING RAISING cx_static_check.
+    METHODS escape_string_whitespace1 FOR TESTING.
+    METHODS escape_string_whitespace2 FOR TESTING.
+    METHODS escape_string_whitespace3 FOR TESTING.
+    METHODS escape_string_quote FOR TESTING.
+    METHODS escape_string_hyphen FOR TESTING.
+    METHODS escape_string_regular FOR TESTING.
+
+ENDCLASS.
+
+CLASS ltc_utclong_to_excel_string DEFINITION
+    FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+
+    METHODS simple FOR TESTING.
+
 ENDCLASS.
 
 
@@ -341,37 +364,37 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   METHOD convert_column_a_row2columnrow.
 
-   DATA: cell_coords TYPE string.
+    DATA: cell_coords TYPE string.
 
-   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 'B' i_row = 6 ).
+    cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 'B' i_row = 6 ).
 
-   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+    cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
 
 
-   cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 2 i_row = 6 ).
+    cell_coords = zcl_excel_common=>convert_column_a_row2columnrow( i_column = 2 i_row = 6 ).
 
-   cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
+    cl_abap_unit_assert=>assert_equals( act = cell_coords exp = 'B6' ).
 
   ENDMETHOD.
 
 
   METHOD convert_columnrow2column_a_row.
 
-   DATA: column     TYPE zexcel_cell_column_alpha,
-         column_int TYPE zexcel_cell_column,
-         row        TYPE zexcel_cell_row.
+    DATA: column     TYPE zexcel_cell_column_alpha,
+          column_int TYPE zexcel_cell_column,
+          row        TYPE zexcel_cell_row.
 
-   zcl_excel_common=>convert_columnrow2column_a_row(
-     EXPORTING
-       i_columnrow  = 'B6'
-     IMPORTING
-       e_column     = column
-       e_column_int = column_int
-       e_row        = row ).
+    zcl_excel_common=>convert_columnrow2column_a_row(
+      EXPORTING
+        i_columnrow  = 'B6'
+      IMPORTING
+        e_column     = column
+        e_column_int = column_int
+        e_row        = row ).
 
-   cl_abap_unit_assert=>assert_equals( act = column     exp = 'B'   msg = 'Invalid column (alpha)' ).
-   cl_abap_unit_assert=>assert_equals( act = column_int exp = 2     msg = 'Invalid column (numeric)' ).
-   cl_abap_unit_assert=>assert_equals( act = row        exp = 6     msg = 'Invalid row' ).
+    cl_abap_unit_assert=>assert_equals( act = column     exp = 'B'   msg = 'Invalid column (alpha)' ).
+    cl_abap_unit_assert=>assert_equals( act = column_int exp = 2     msg = 'Invalid column (numeric)' ).
+    cl_abap_unit_assert=>assert_equals( act = row        exp = 6     msg = 'Invalid row' ).
 
   ENDMETHOD.
 
@@ -461,6 +484,47 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD amount_to_excel_string1.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '1003.99'
+                                                         ip_currency = 'EUR' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '1003.99'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD amount_to_excel_string2.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '-1003.99'
+                                                         ip_currency = 'HUF' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '-100399'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
+
+  METHOD amount_to_excel_string3.
+    DATA ep_value TYPE zexcel_cell_value.
+
+    ep_value = zcl_excel_common=>number_to_excel_string( ip_value    = '0'
+                                                         ip_currency = 'HUF' ).
+
+    cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '0'
+          msg   = 'Wrong currency amount conversion'
+          level = if_aunit_constants=>critical ).
+
+  ENDMETHOD.
 
   METHOD encrypt_password.
 * ========================
@@ -636,6 +700,45 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           level = if_aunit_constants=>fatal
         ).
     ENDTRY.
+
+* 45141.58832 (2023/08/03 14:07:11) ip_exact = abap_false -> 2023/08/04
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.58832'
+                                                           ip_exact = abap_false ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230804' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
+
+* 45141.58832 (2023/08/03 14:07:11) ip_exact = abap_true -> 2023/08/03
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.58832'
+                                                           ip_exact = abap_true ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230803' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
+
+* 45141.48832 (2023/08/03 11:43:11) ip_exact = abap_false -> 2023/08/03
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_date( ip_value = '45141.48832'
+                                                           ip_exact = abap_false ).
+        cl_abap_unit_assert=>assert_equals(
+          act   = ep_value
+          exp   = '20230803' ).
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail(
+            msg    = 'unexpected exception'
+            level  = if_aunit_constants=>critical ).
+    ENDTRY.
   ENDMETHOD.       "excel_String_To_Date
 
 
@@ -712,6 +815,21 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
           exp   = 'Unable to interpret time'
           msg   = 'Time should be a valid string'
           level = if_aunit_constants=>fatal ).
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD excel_string_to_time6.
+    DATA ep_value TYPE t.
+* 45141.58832 (2023/08/03 14:07:11) -> 14:07:11
+    TRY.
+        ep_value = zcl_excel_common=>excel_string_to_time( ip_value = '45141.58832' ).
+
+        cl_abap_unit_assert=>assert_equals(
+            act   = ep_value
+            exp   = '140711' ).
+
+      CATCH zcx_excel INTO lx_excel.
+        cl_abap_unit_assert=>fail( lx_excel->get_text( ) ).
     ENDTRY.
   ENDMETHOD.
 
@@ -1597,4 +1715,141 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
     ENDTRY.
   ENDMETHOD. "is_cell_in_range_lowerside_out.
 
+  METHOD recursive_struct_to_class.
+
+    DATA style           TYPE REF TO zcl_excel_style.
+    DATA complete_style  TYPE zexcel_s_cstyle_complete.
+    DATA complete_stylex TYPE zexcel_s_cstylex_complete.
+
+    CREATE OBJECT style.
+
+    complete_style-number_format-format_code = 'hello'.
+    complete_stylex-number_format-format_code = abap_true.
+
+    zcl_excel_common=>recursive_struct_to_class(
+      EXPORTING
+        i_source  = complete_style
+        i_sourcex = complete_stylex
+      CHANGING
+        e_target  = style ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = style->number_format->format_code
+      exp = 'hello' ).
+  ENDMETHOD.
+
+  METHOD escape_string_hyphen.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A-B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A-B'`
+                                        msg = 'Escaping - failed' ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_quote.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A'B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A''B'`
+                                        msg = `Escaping ' failed` ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_regular.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `Ab1`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `Ab1`
+                                        msg = 'Escaped for no reason' ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_whitespace1.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A B'`
+                                        msg = `Escaping ' ' (space) failed` ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_whitespace2.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A` && cl_abap_char_utilities=>horizontal_tab && `B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A` && cl_abap_char_utilities=>horizontal_tab && `B'`
+                                        msg = `Escaping TAB failed` ).
+
+  ENDMETHOD.
+
+  METHOD escape_string_whitespace3.
+    DATA: name         TYPE string,
+          escaped_name TYPE string.
+
+    name = `A` && cl_abap_char_utilities=>newline && `B`.
+
+    escaped_name = zcl_excel_common=>escape_string( name ).
+
+    cl_abap_unit_assert=>assert_equals( act = escaped_name
+                                        exp = `'A` && cl_abap_char_utilities=>newline && `B'`
+                                        msg = `Escaping LF failed` ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_utclong_to_excel_string IMPLEMENTATION.
+  METHOD simple.
+    FIELD-SYMBOLS <lv_typekind_utclong> TYPE abap_typekind.
+    FIELD-SYMBOLS <lv_utclong>          TYPE simple.
+    DATA lo_rtti_utclong     TYPE REF TO cl_abap_datadescr.
+    DATA lv_variable_utclong TYPE REF TO data.
+    DATA lv_excel_string     TYPE zexcel_cell_value.
+
+    " Skip this test before ABAP 7.54 (UTCLONG does not exist).
+    " Need of dynamic referencing and dynamic call to avoid compilation error before ABAP 7.54.
+
+    ASSIGN ('CL_ABAP_TYPEDESCR=>TYPEKIND_UTCLONG') TO <lv_typekind_utclong>.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    CALL METHOD cl_abap_elemdescr=>('GET_UTCLONG')
+      RECEIVING p_result = lo_rtti_utclong.
+    CREATE DATA lv_variable_utclong TYPE HANDLE lo_rtti_utclong.
+    ASSIGN lv_variable_utclong->* TO <lv_utclong>.
+
+    <lv_utclong> = '2024-08-04 19:47:00.9999999'.
+    lv_excel_string = zcl_excel_common=>utclong_to_excel_string( <lv_utclong> ).
+
+    cl_abap_unit_assert=>assert_equals( exp = '45508.82430555555556'
+                                        act = lv_excel_string ).
+  ENDMETHOD.
 ENDCLASS.

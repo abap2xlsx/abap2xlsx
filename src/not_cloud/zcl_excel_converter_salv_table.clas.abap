@@ -74,6 +74,7 @@ CLASS zcl_excel_converter_salv_table IMPLEMENTATION.
         ls_vari-report    = ls_layout_key-report.
         ls_vari-handle    = ls_layout_key-handle.
         ls_vari-log_group = ls_layout_key-logical_group.
+        ls_vari-variant   = lo_layout->get_initial_layout( ).
       ELSE.
         IF zcl_excel_converter_salv_model=>is_get_metadata_callable( io_salv ) = abap_true.
           io_salv->get_metadata( ) .

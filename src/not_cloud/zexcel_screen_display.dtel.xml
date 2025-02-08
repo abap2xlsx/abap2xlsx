@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZEXCEL_SCREEN_DISPLAY</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>ZEXCEL_DDIC_FLAG</DOMNAME>
+    <HEADLEN>02</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Flag: Field is displayed on dynpro</DDTEXT>
+    <REPTEXT>SF</REPTEXT>
+    <SCRTEXT_S>Dynpro</SCRTEXT_S>
+    <SCRTEXT_M>Screen field</SCRTEXT_M>
+    <SCRTEXT_L>Screen field</SCRTEXT_L>
+    <APPLCLASS>SDIC</APPLCLASS>
+    <DTELMASTER>D</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>
