@@ -18,8 +18,8 @@ CLASS zcl_excel_autofilter DEFINITION
         logical_operator TYPE tv_logical_operator,
         tr_textfilter2   TYPE RANGE OF string,
       END OF ts_filter .
-    TYPES:
-      tt_filters TYPE SORTED TABLE OF ts_filter WITH UNIQUE KEY column .
+    TYPES: tt_filters TYPE SORTED TABLE OF ts_filter WITH UNIQUE KEY column
+                                                     WITH NON-UNIQUE SORTED KEY rule COMPONENTS rule.
 
     DATA filter_area TYPE zexcel_s_autofilter_area .
     CONSTANTS mc_filter_rule_single_values TYPE tv_filter_rule VALUE 'single_values'. "#EC NOTEXT
@@ -192,7 +192,7 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
 
     DATA: ls_filter LIKE LINE OF rt_filter.
 
-    LOOP AT me->mt_filters ASSIGNING <ls_filter> WHERE rule = mc_filter_rule_single_values.
+    LOOP AT me->mt_filters ASSIGNING <ls_filter> USING KEY rule WHERE rule = mc_filter_rule_single_values.
 
       ls_filter-column = <ls_filter>-column.
       LOOP AT <ls_filter>-t_values ASSIGNING <ls_value>.
@@ -223,7 +223,7 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
 
 
     LOOP AT mt_filters ASSIGNING <ls_filter> WHERE column >= me->filter_area-col_start
-                                               AND column <= me->filter_area-col_end.
+                                               AND column <= me->filter_area-col_end. "#EC CI_SORTSEQ
 
       CASE <ls_filter>-rule.
 
