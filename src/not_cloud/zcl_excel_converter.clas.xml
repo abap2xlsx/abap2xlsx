@@ -123,14 +123,14 @@
      <DESCRIPT>Convert</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_COLOR_STYLE</CMPNAME>
+     <CMPNAME>COMPLETE_CELL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create new color style based on cell style</DESCRIPT>
+     <DESCRIPT>Complete cell's attributes</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_COLOR_STYLE</CMPNAME>
+     <CMPNAME>COMPLETE_CELL</CMPNAME>
      <LANGU>I</LANGU>
-     <DESCRIPT>Create new color style based on cell style</DESCRIPT>
+     <DESCRIPT>Complete cell's attributes</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>CREATE_FORMULAR_SUBTOTAL</CMPNAME>
@@ -301,16 +301,6 @@
      <CMPNAME>EXECUTE_CONVERTER</CMPNAME>
      <LANGU>I</LANGU>
      <DESCRIPT>Execute the converter based on object provided</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_COLOR_STYLE</CMPNAME>
-     <LANGU>E</LANGU>
-     <DESCRIPT>Look up color style and create if needed</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_COLOR_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Look up color style and create if needed</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>GET_FILE</CMPNAME>
