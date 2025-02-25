@@ -501,7 +501,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 * Now let's check for colors
     DATA: ls_colors TYPE zexcel_s_converter_col.
 
-    IF NOT wt_colors IS INITIAL.
+    IF wt_colors IS NOT INITIAL.
 * Field has color
       READ TABLE wt_colors INTO ls_colors WITH KEY rownumber  = ip_table_row
                                                    columnname = ip_fieldname.
