@@ -97,7 +97,8 @@ CLASS zcl_excel_reader_2007 DEFINITION
         ref     TYPE string,
         formula TYPE string,
       END   OF ty_ref_formulae .
-    TYPES: tyt_ref_formulae TYPE TABLE OF ty_ref_formulae WITH UNIQUE HASHED KEY hash_key COMPONENTS sheet row column si ref formula.
+    TYPES:
+      tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column .
     TYPES:
       BEGIN OF t_shared_string,
         value TYPE string,
@@ -386,7 +387,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
              row           TYPE i,
              outline_level TYPE i,
            END OF lts_row_data,
-           ltt_row_data TYPE TABLE OF lts_row_data WITH NON-UNIQUE SORTED KEY sort_key COMPONENTS outline_level.
+           ltt_row_data TYPE SORTED TABLE OF lts_row_data WITH UNIQUE KEY row.
 
     DATA: lt_row_data             TYPE ltt_row_data,
           ls_row_data             LIKE LINE OF lt_row_data,
@@ -425,7 +426,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lv_outline_level = sy-index.
       CLEAR lv_next_consecutive_row.
       CLEAR ls_outline_row.
-      LOOP AT lt_row_data ASSIGNING <ls_row_data> WHERE outline_level >= lv_outline_level.
+      LOOP AT lt_row_data ASSIGNING <ls_row_data> WHERE outline_level >= lv_outline_level. "#EC CI_SORTSEQ
 
         IF lv_next_consecutive_row    <> <ls_row_data>-row   " A gap --> close all open outlines
           AND lv_next_consecutive_row IS NOT INITIAL.        " First time in loop.
@@ -4229,7 +4230,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Get referenced Cells,  Build ranges for easy lookup
 *--------------------------------------------------------------------*
-    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref <> space.
+    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref <> space. "#EC CI_HASHSEQ
 
       CLEAR ls_referenced_cell.
       ls_referenced_cell-sheet      = ls_ref_formula-sheet.
@@ -4265,7 +4266,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * For each referencing cell determine the referenced cell
 * and resolve the formula
 *--------------------------------------------------------------------*
-    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref = space.
+    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref = space. "#EC CI_HASHSEQ
 
 
       CLEAR lv_current_cell.

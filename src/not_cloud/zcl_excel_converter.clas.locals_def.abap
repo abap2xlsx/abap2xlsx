@@ -18,8 +18,10 @@ TYPES: BEGIN OF ts_sort_values,
          sort_level   TYPE int4,
          is_collapsed TYPE flag,
        END OF ts_sort_values,
+
        tt_sort_values TYPE HASHED TABLE OF ts_sort_values WITH UNIQUE KEY primary_key COMPONENTS fieldname
-                                                          WITH NON-UNIQUE SORTED KEY collapsed COMPONENTS is_collapsed .
+                                                          WITH NON-UNIQUE SORTED KEY collapsed COMPONENTS is_collapsed fieldname
+                                                          ##TABKEY[PRIMARY_KEY][COLLAPSED].
 TYPES: BEGIN OF ts_subtotal_rows,
          row_int       TYPE zexcel_cell_row,
          row_int_start TYPE zexcel_cell_row,

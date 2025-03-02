@@ -22,7 +22,7 @@ CLASS zcl_excel_worksheet DEFINITION
         collapsed TYPE abap_bool,
       END OF mty_s_outline_row .
     TYPES: mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key COMPONENTS row_from row_to
-                                                                      WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to.
+                                                                      WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to collapsed.
     TYPES:
       BEGIN OF mty_s_ignored_errors,
         "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
