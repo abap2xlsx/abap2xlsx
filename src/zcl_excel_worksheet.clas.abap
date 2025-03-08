@@ -21,8 +21,8 @@ CLASS zcl_excel_worksheet DEFINITION
         row_to    TYPE i,
         collapsed TYPE abap_bool,
       END OF mty_s_outline_row .
-    TYPES:
-      mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY row_from row_to .
+    TYPES: mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key COMPONENTS row_from row_to
+                                                                      WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to collapsed.
     TYPES:
       BEGIN OF mty_s_ignored_errors,
         "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
@@ -2270,7 +2270,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     " Date & Time in excel style
-    LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_style IS NOT INITIAL AND data_type IS INITIAL.
+    LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> WHERE cell_style IS NOT INITIAL AND data_type IS INITIAL. "#EC CI_SORTSEQ
       ls_style_conv-cell_style = <ls_sheet_content>-cell_style.
       APPEND ls_style_conv TO lt_style_conv.
     ENDLOOP.
@@ -2442,7 +2442,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
       LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS
       WHERE row_from <= ip_cell_row AND row_to >= ip_cell_row
-        AND col_from <= lv_column AND col_to >= lv_column.
+        AND col_from <= lv_column AND col_to >= lv_column. "#EC CI_SORTSEQ
         DELETE me->mt_merged_cells.
         EXIT.
       ENDLOOP.
@@ -4320,7 +4320,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     LOOP AT me->mt_merged_cells TRANSPORTING NO FIELDS WHERE NOT (    row_from > ls_merge-row_to
                                                                    OR row_to   < ls_merge-row_from
                                                                    OR col_from > ls_merge-col_to
-                                                                   OR col_to   < ls_merge-col_from ).
+                                                                   OR col_to   < ls_merge-col_from ). "#EC CI_SORTSEQ
       lv_errormessage = 'Overlapping merges'(404).
       zcx_excel=>raise_text( lv_errormessage ).
 
