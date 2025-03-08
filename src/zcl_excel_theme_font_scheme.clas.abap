@@ -58,41 +58,41 @@ CLASS zcl_excel_theme_font_scheme DEFINITION
         !io_document TYPE REF TO if_ixml_document .
     METHODS modify_font
       IMPORTING
-        VALUE(iv_type)     TYPE string
-        VALUE(iv_script)   TYPE string
-        VALUE(iv_typeface) TYPE string .
+        iv_type     TYPE string
+        iv_script   TYPE string
+        iv_typeface TYPE string .
     METHODS modify_latin_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS modify_ea_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS modify_cs_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS constructor .
   PROTECTED SECTION.
 
     METHODS modify_lec_fonts
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_font_type)   TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_font_type   TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
   PRIVATE SECTION.
 
     DATA font_scheme TYPE t_scheme .
