@@ -388,9 +388,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     DATA: lt_row_data             TYPE ltt_row_data,
           ls_row_data             LIKE LINE OF lt_row_data,
           lt_collapse_rows        TYPE HASHED TABLE OF i WITH UNIQUE KEY table_line,
-
           lv_collapsed            TYPE abap_bool,
-
           lv_outline_level        TYPE i,
           lv_next_consecutive_row TYPE i,
           lt_outline_rows         TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
@@ -424,7 +422,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lv_outline_level = sy-index.
       CLEAR lv_next_consecutive_row.
       CLEAR ls_outline_row.
-      LOOP AT lt_row_data ASSIGNING <ls_row_data> WHERE outline_level >= lv_outline_level.
+      LOOP AT lt_row_data ASSIGNING <ls_row_data> WHERE outline_level >= lv_outline_level. "#EC CI_SORTSEQ
 
         IF lv_next_consecutive_row    <> <ls_row_data>-row   " A gap --> close all open outlines
           AND lv_next_consecutive_row IS NOT INITIAL.        " First time in loop.
@@ -995,25 +993,31 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
           CLEAR: lv_current_offset.
           WHILE lo_node_si_child IS BOUND.                                             " actually these children of <si> are <r>-tags
-            CLEAR: ls_rtf.
+            lv_tag_name = lo_node_si_child->get_name( ).
+            IF lv_tag_name = 'r'.
 
-            " extracting rich text formating data
-            lo_node_r_child_rpr ?= lo_node_si_child->find_from_name_ns( name = 'rPr' uri = namespace-main ).
-            IF lo_node_r_child_rpr IS BOUND.
-              lo_font = load_style_font( lo_node_r_child_rpr ).
-              ls_rtf-font = lo_font->get_structure( ).
-            ENDIF.
-            ls_rtf-offset = lv_current_offset.
-            " extract the <t>...</t> part of each <r>-tag
-            lo_node_r_child_t ?= lo_node_si_child->find_from_name_ns( name = 't' uri = namespace-main ).
-            IF lo_node_r_child_t IS BOUND.
-              lv_node_value = unescape_string_value( lo_node_r_child_t->get_value( ) ).
-              CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
-              ls_rtf-length = strlen( lv_node_value ).
-            ENDIF.
+              CLEAR: ls_rtf.
 
-            lv_current_offset = strlen( <ls_shared_string>-value ).
-            APPEND ls_rtf TO <ls_shared_string>-rtf.
+              " extracting rich text formating data
+              lo_node_r_child_rpr ?= lo_node_si_child->find_from_name_ns( name = 'rPr' uri = namespace-main ).
+              IF lo_node_r_child_rpr IS BOUND.
+                lo_font = load_style_font( lo_node_r_child_rpr ).
+                ls_rtf-font = lo_font->get_structure( ).
+              ENDIF.
+              ls_rtf-offset = lv_current_offset.
+              " extract the <t>...</t> part of each <r>-tag
+              lo_node_r_child_t ?= lo_node_si_child->find_from_name_ns( name = 't' uri = namespace-main ).
+              IF lo_node_r_child_t IS BOUND.
+                lv_node_value = unescape_string_value( lo_node_r_child_t->get_value( ) ).
+                CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
+                ls_rtf-length = strlen( lv_node_value ).
+
+                IF ls_rtf-length > 0.
+                  lv_current_offset = strlen( <ls_shared_string>-value ).
+                  APPEND ls_rtf TO <ls_shared_string>-rtf.
+                ENDIF.
+              ENDIF.
+            ENDIF.
 
             lo_node_si_child ?= lo_node_si_child->get_next( ).
 
@@ -4218,7 +4222,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Get referenced Cells,  Build ranges for easy lookup
 *--------------------------------------------------------------------*
-    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref <> space.
+    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref <> space. "#EC CI_HASHSEQ
 
       CLEAR ls_referenced_cell.
       ls_referenced_cell-sheet      = ls_ref_formula-sheet.
@@ -4254,7 +4258,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * For each referencing cell determine the referenced cell
 * and resolve the formula
 *--------------------------------------------------------------------*
-    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref = space.
+    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref = space. "#EC CI_HASHSEQ
 
 
       CLEAR lv_current_cell.
