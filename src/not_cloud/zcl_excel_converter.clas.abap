@@ -1290,7 +1290,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     IF  l_line <= 1.
       CLEAR l_hidden.
     ELSE.
-      LOOP AT wt_sort_values INTO ls_sort_values WHERE is_collapsed = abap_false.
+      LOOP AT wt_sort_values INTO ls_sort_values USING KEY collapsed WHERE is_collapsed = abap_false.
         IF l_hidden < ls_sort_values-sort_level.
           l_hidden = ls_sort_values-sort_level.
         ENDIF.
@@ -1338,7 +1338,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
               <fs_sortval> =  <fs_fldval>.
               <fs_sortv>-new = abap_false.
               l_line = <fs_sortv>-sort_level.
-              LOOP AT wt_sort_values ASSIGNING <fs_sortv> WHERE sort_level >= l_line.
+              LOOP AT wt_sort_values ASSIGNING <fs_sortv> WHERE sort_level >= l_line. "#EC CI_HASHSEQ
                 <fs_sortv>-row_int = l_row_int.
               ENDLOOP.
             ENDIF.
