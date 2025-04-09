@@ -3270,7 +3270,7 @@ METHOD create_xl_drawing_for_comments.
     ).
 
     lo_iterator = lo_comments->get_iterator( ).
-    WHILE lo_iterator->has_next( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_anchor ?= lo_anchors->get_item( sy-index - 1 ).
       IF lo_anchor IS NOT BOUND.
         EXIT.
