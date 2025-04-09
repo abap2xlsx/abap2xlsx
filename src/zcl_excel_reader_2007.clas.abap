@@ -4503,7 +4503,7 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
       lv_total_shapes   TYPE i,
       lo_xml            TYPE REF TO if_ixml,
       lo_stream_factory TYPE REF TO if_ixml_stream_factory,
-      lo_stream         type ref to if_ixml_ostream.
+      lo_stream         TYPE REF TO if_ixml_ostream.
 
     FIELD-SYMBOLS:
       <lv_dim> TYPE i.
