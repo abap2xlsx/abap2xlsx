@@ -6498,7 +6498,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  METHOD GET_COMMENT_ANCHOR.
+  METHOD get_comment_anchor.
     ev_anchor =  number2string( io_comment->get_left_column( ) )
          && `, ` && number2string( io_comment->get_left_offset( ) )
          && `, ` && number2string( io_comment->get_top_row( ) )
@@ -6507,6 +6507,6 @@ ENDMETHOD.
          && `, ` && number2string( io_comment->get_right_offset( ) )
          && `, ` && number2string( io_comment->get_bottom_row( ) )
          && `, ` && number2string( io_comment->get_bottom_offset( ) ).
-    condense ev_anchor.
+    CONDENSE ev_anchor.
   ENDMETHOD.
 ENDCLASS.
