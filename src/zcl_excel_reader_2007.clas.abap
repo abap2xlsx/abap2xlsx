@@ -4489,18 +4489,18 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
       END OF lc_namespace.
 
     DATA:
-      lo_anchor         TYPE REF TO if_ixml_element,
-      lo_shape          TYPE REF TO if_ixml_element,
-      lo_shapes         TYPE REF TO if_ixml_node_collection,
-      lo_vml            TYPE REF TO if_ixml_document,
-      lv_vml            TYPE string,
-      ls_box            TYPE zcl_excel_comment=>ty_box,
-      lt_boxes          TYPE zcl_excel_comments=>ty_boxes,
-      lt_dims           TYPE stringtab,
-      lv_dims           TYPE string,
-      lv_dim            TYPE string,
-      lv_shape_index    TYPE i,
-      lv_total_shapes   TYPE i.
+      lo_anchor       TYPE REF TO if_ixml_element,
+      lo_shape        TYPE REF TO if_ixml_element,
+      lo_shapes       TYPE REF TO if_ixml_node_collection,
+      lo_vml          TYPE REF TO if_ixml_document,
+      lv_vml          TYPE string,
+      ls_box          TYPE zcl_excel_comment=>ty_box,
+      lt_boxes        TYPE zcl_excel_comments=>ty_boxes,
+      lt_dims         TYPE stringtab,
+      lv_dims         TYPE string,
+      lv_dim          TYPE string,
+      lv_shape_index  TYPE i,
+      lv_total_shapes TYPE i.
 
     FIELD-SYMBOLS:
       <lv_dim> TYPE i.
@@ -4535,9 +4535,9 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
     ENDWHILE.
 
 * Serialize lo_vml into a string lv_vml and pass it to the comments object
-    call transformation id
-      source xml lo_vml
-      result xml lv_vml.
+    CALL TRANSFORMATION id
+      SOURCE XML lo_vml
+      RESULT XML lv_vml.
 
     IF lt_boxes IS NOT INITIAL.
       io_worksheet->set_comment_boxes( it_boxes = lt_boxes iv_full_vml = lv_vml ).
