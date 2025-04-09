@@ -18,19 +18,29 @@
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GET_DEFAULT_STYLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Default style for formatted parts of comment</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>GET_INDEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get index</DESCRIPT>
+     <DESCRIPT>Get index (in commentlist zcl_excel_comments)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>GET_REF</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get reference</DESCRIPT>
+     <DESCRIPT>Get cell reference</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>GET_TEXT</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Get text</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_TEXT_RTF</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get text consisting of styled parts</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>INDEX</CMPNAME>
@@ -43,16 +53,71 @@
      <DESCRIPT>Reference to cell (eg. &apos;B13&apos;)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>SET_BOX</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Set box for display</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>SET_TEXT</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Set text</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TEXT</CMPNAME>
+     <CMPNAME>SET_TEXT_RTF</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Comment</DESCRIPT>
+     <DESCRIPT>Set text consisting of styled parts</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>ADD_TEXT</CMPNAME>
+     <SCONAME>IS_STYLE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Style</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_DEFAULT_STYLE</CMPNAME>
+     <SCONAME>ES_DEFAULT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cell Font</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_TEXT</CMPNAME>
+     <SCONAME>IP_REF</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cell reference (e.g. &apos;A1&apos;)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_TEXT</CMPNAME>
+     <SCONAME>IP_TEXT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Text as string</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_TEXT</CMPNAME>
+     <SCONAME>IS_STYLE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Style (for richt text comment)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_TEXT_RTF</CMPNAME>
+     <SCONAME>IP_REF</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cell reference (e.g. &apos;A1&apos;)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_TEXT_RTF</CMPNAME>
+     <SCONAME>IS_BOX</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Bounding box (optional)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_TEXT_RTF</CMPNAME>
+     <SCONAME>IT_RTF</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Comment with differently styled parts</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

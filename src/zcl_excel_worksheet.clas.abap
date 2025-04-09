@@ -3,13 +3,13 @@ CLASS zcl_excel_worksheet DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
+
 *"* public components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
-
     INTERFACES zif_excel_sheet_printsettings .
     INTERFACES zif_excel_sheet_properties .
     INTERFACES zif_excel_sheet_protection .
@@ -21,8 +21,9 @@ CLASS zcl_excel_worksheet DEFINITION
         row_to    TYPE i,
         collapsed TYPE abap_bool,
       END OF mty_s_outline_row .
-    TYPES: mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key COMPONENTS row_from row_to
-                                                                      WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to collapsed.
+    TYPES:
+      mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key COMPONENTS row_from row_to
+                                                                        WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to collapsed .
     TYPES:
       BEGIN OF mty_s_ignored_errors,
         "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
@@ -62,8 +63,8 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_s_column_formula .
     TYPES:
       mty_th_column_formula
-               TYPE HASHED TABLE OF mty_s_column_formula
-               WITH UNIQUE KEY id .
+                 TYPE HASHED TABLE OF mty_s_column_formula
+                 WITH UNIQUE KEY id .
     TYPES:
       ty_doc_url TYPE c LENGTH 255 .
     TYPES:
@@ -74,8 +75,7 @@ CLASS zcl_excel_worksheet DEFINITION
         col_to   TYPE i,
       END OF mty_merge .
     TYPES:
-        mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line.
-
+      mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
     TYPES:
       ty_area TYPE c LENGTH 1 .
 
@@ -103,8 +103,8 @@ CLASS zcl_excel_worksheet DEFINITION
         formula_in_other_column     TYPE string,
       END OF c_messages .
     DATA mt_merged_cells TYPE mty_ts_merge READ-ONLY .
-    DATA pane_top_left_cell TYPE string READ-ONLY.
-    DATA sheetview_top_left_cell TYPE string READ-ONLY.
+    DATA pane_top_left_cell TYPE string READ-ONLY .
+    DATA sheetview_top_left_cell TYPE string READ-ONLY .
 
     METHODS add_comment
       IMPORTING
@@ -548,15 +548,15 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_style        TYPE any OPTIONAL
-        !ip_value        TYPE simple OPTIONAL          "added parameter
-        !ip_formula      TYPE zexcel_cell_formula OPTIONAL        "added parameter
+        !ip_value        TYPE simple OPTIONAL                   "added parameter
+        !ip_formula      TYPE zexcel_cell_formula OPTIONAL               "added parameter
       RAISING
         zcx_excel .
     METHODS set_pane_top_left_cell
       IMPORTING
         !iv_columnrow TYPE csequence
       RAISING
-        zcx_excel.
+        zcx_excel .
     METHODS set_print_gridlines
       IMPORTING
         !i_print_gridlines TYPE zexcel_print_gridlines .
@@ -577,7 +577,7 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !iv_columnrow TYPE csequence
       RAISING
-        zcx_excel.
+        zcx_excel .
     METHODS set_show_gridlines
       IMPORTING
         !i_show_gridlines TYPE zexcel_show_gridlines .
@@ -694,6 +694,10 @@ CLASS zcl_excel_worksheet DEFINITION
         !er_data          TYPE REF TO data
       RAISING
         zcx_excel .
+    METHODS set_comment_boxes
+      IMPORTING
+        !it_boxes    TYPE zcl_excel_comments=>ty_boxes OPTIONAL
+        !iv_full_vml TYPE string OPTIONAL .
   PROTECTED SECTION.
     METHODS set_table_reference
       IMPORTING
@@ -857,7 +861,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_worksheet IMPLEMENTATION.
+CLASS ZCL_EXCEL_WORKSHEET IMPLEMENTATION.
 
 
   METHOD add_comment.
@@ -2612,16 +2616,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_comments.
-    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
-          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
 
-    CREATE OBJECT r_comments.
-
-    lo_iterator = comments->get_iterator( ).
-    WHILE lo_iterator->has_next( ) = abap_true.
-      lo_comment ?= lo_iterator->get_next( ).
-      r_comments->include( lo_comment ).
-    ENDWHILE.
+* Create a copy of the comments attribute
+    CREATE OBJECT r_comments
+      EXPORTING
+        io_from = comments.
 
   ENDMETHOD.                    "get_comments
 
@@ -4869,4 +4868,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD zif_excel_sheet_vba_project~set_codename_pr.
     me->zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR
+
+
+  method SET_COMMENT_BOXES.
+    comments->set_boxes( it_boxes = it_boxes iv_full_vml = iv_full_vml ).
+  endmethod.
 ENDCLASS.
