@@ -4590,15 +4590,15 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
     lv_ref  = lo_attr->get_value( ).
 
     DATA:
-      lo_rs            TYPE REF TO if_ixml_node_collection,
-      lo_r             TYPE REF TO if_ixml_element,
-      lo_t             TYPE REF TO if_ixml_element,
-      lo_rpr           TYPE REF TO if_ixml_element,
-      lo_font          TYPE REF TO zcl_excel_style_font,
-      ls_rtf           TYPE zcl_excel_comment=>ty_rtf_fragment,
-      lt_rtf           type zcl_excel_comment=>ty_rtf_fragments,
-      lv_r_index       TYPE i,
-      lv_total_r       TYPE i.
+      lo_rs      TYPE REF TO if_ixml_node_collection,
+      lo_r       TYPE REF TO if_ixml_element,
+      lo_t       TYPE REF TO if_ixml_element,
+      lo_rpr     TYPE REF TO if_ixml_element,
+      lo_font    TYPE REF TO zcl_excel_style_font,
+      ls_rtf     TYPE zcl_excel_comment=>ty_rtf_fragment,
+      lt_rtf     TYPE zcl_excel_comment=>ty_rtf_fragments,
+      lv_r_index TYPE i,
+      lv_total_r TYPE i.
 
     lo_rs = io_node_comment->get_elements_by_tag_name_ns( name = `r` uri = namespace-main ).
     lv_total_r = lo_rs->get_length( ).
@@ -4615,8 +4615,8 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
       IF lo_t IS BOUND.
         ls_rtf-text = lo_t->get_value( ).
       ENDIF.
-      append ls_rtf to lt_rtf.
-      add 1 to lv_r_index.
+      APPEND ls_rtf TO lt_rtf.
+      ADD 1 TO lv_r_index.
     ENDWHILE.
 
     eo_comment->set_text_rtf( ip_ref = lv_ref it_rtf = lt_rtf ).
