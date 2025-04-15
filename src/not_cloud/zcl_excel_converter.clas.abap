@@ -524,8 +524,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
   METHOD create_color_style.
     DATA: ls_styles TYPE ts_styles.
     DATA: lo_style TYPE REF TO zcl_excel_style.
-
-    READ TABLE wt_styles INTO ls_styles WITH KEY guid = i_style.
+    READ TABLE wt_styles INTO ls_styles WITH KEY guid COMPONENTS guid = i_style.
     IF sy-subrc = 0.
       lo_style                 = wo_excel->add_new_style( ).
       lo_style->font->bold                 = ls_styles-style->font->bold.
@@ -1370,7 +1369,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     IF  l_line <= 1.
       CLEAR l_hidden.
     ELSE.
-      LOOP AT wt_sort_values INTO ls_sort_values WHERE is_collapsed = abap_false.
+      LOOP AT wt_sort_values INTO ls_sort_values USING KEY collapsed WHERE is_collapsed = abap_false.
         IF l_hidden < ls_sort_values-sort_level.
           l_hidden = ls_sort_values-sort_level.
         ENDIF.
@@ -1418,7 +1417,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
               <fs_sortval> =  <fs_fldval>.
               <fs_sortv>-new = abap_false.
               l_line = <fs_sortv>-sort_level.
-              LOOP AT wt_sort_values ASSIGNING <fs_sortv> WHERE sort_level >= l_line.
+              LOOP AT wt_sort_values ASSIGNING <fs_sortv> WHERE sort_level >= l_line. "#EC CI_HASHSEQ
                 <fs_sortv>-row_int = l_row_int.
               ENDLOOP.
             ENDIF.
@@ -1664,26 +1663,19 @@ CLASS zcl_excel_converter IMPLEMENTATION.
       cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = l_bytecount
                                                         filename     = l_dir
                                                         filetype     = 'BIN'
-                                               CHANGING data_tab     = lt_file ).
-      cl_gui_frontend_services=>execute(
-        EXPORTING
-          document               = l_dir
-        EXCEPTIONS
-          cntl_error             = 1
-          error_no_gui           = 2
-          bad_parameter          = 3
-          file_not_found         = 4
-          path_not_found         = 5
-          file_extension_unknown = 6
-          error_execute_failed   = 7
-          synchronous_failed     = 8
-          not_supported_by_gui   = 9
-             ).
+                                               CHANGING data_tab     = lt_file
+                                               EXCEPTIONS OTHERS     = 1 ).
       IF sy-subrc <> 0.
         MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
-                   WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+                WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+      ELSE.
+        cl_gui_frontend_services=>execute( EXPORTING document = l_dir
+                                           EXCEPTIONS OTHERS  = 1 ).
+        IF sy-subrc <> 0.
+          MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+                     WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+        ENDIF.
       ENDIF.
-
     ENDIF.
 
 
@@ -1812,7 +1804,12 @@ CLASS zcl_excel_converter IMPLEMENTATION.
       cl_gui_frontend_services=>gui_download( EXPORTING bin_filesize = l_bytecount
                                                         filename     = l_dir
                                                         filetype     = 'BIN'
-                                               CHANGING data_tab     = lt_file ).
+                                               CHANGING data_tab     = lt_file
+                                               EXCEPTIONS OTHERS     = 1 ).
+      IF sy-subrc <> 0.
+        MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+                WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+      ENDIF.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.
