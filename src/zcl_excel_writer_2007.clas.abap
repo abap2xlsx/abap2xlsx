@@ -4549,7 +4549,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       rv_ixml_sheet_data_root->append_child( new_child = lo_element_2 ). " row node
     ENDLOOP.
 
-ENDMETHOD.
+  ENDMETHOD.
 
 
   METHOD create_xl_styles.
