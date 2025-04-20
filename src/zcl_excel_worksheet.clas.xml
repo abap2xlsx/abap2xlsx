@@ -69,18 +69,8 @@
      <DESCRIPT>Version Number Component</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ACTIVE_CELL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Version Number Component</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ADD_DRAWING</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Add drawing to the sheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ADD_DRAWING</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Add drawing to the sheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -94,18 +84,8 @@
      <DESCRIPT>Creates a new data validation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ADD_NEW_DATA_VALIDATION</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Creates a new data validation</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ADD_NEW_RANGE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create a new local range</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ADD_NEW_RANGE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create a new local range</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -124,18 +104,8 @@
      <DESCRIPT>Set cell value from ALV object</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BIND_ALV</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set cell value from ALV object</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BIND_ALV_OLE2</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set cell value from ALV object (OLE2)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BIND_ALV_OLE2</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set cell value from ALV object (OLE2)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -144,28 +114,13 @@
      <DESCRIPT>Set cell value from a table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BIND_TABLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set cell value from a table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CALCULATE_CELL_WIDTH</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Calculate width of cell</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CALCULATE_CELL_WIDTH</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Calculate width of cell</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CALCULATE_COLUMN_WIDTHS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Calculate widths for auto-size columns</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CALCULATE_COLUMN_WIDTHS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Calculate widths for auto-size columns</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -179,18 +134,8 @@
      <DESCRIPT>Change cell style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CHANGE_CELL_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Change cell style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CHARTS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Charts collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CHARTS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Charts collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -209,18 +154,8 @@
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_BREAK_COLUMN</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Worksheet Break</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_BREAK_COLUMN</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Worksheet Break</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -229,18 +164,8 @@
      <DESCRIPT>Worksheet Break</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_BREAK_NONE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Worksheet Break</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_BREAK_ROW</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Worksheet Break</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_BREAK_ROW</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Worksheet Break</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -249,18 +174,8 @@
      <DESCRIPT>Data validations collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>DATA_VALIDATIONS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validations collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>DEFAULT_EXCEL_DATE_FORMAT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Date format used in case style is not provide for D fields</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>DEFAULT_EXCEL_DATE_FORMAT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Date format used in case style is not provide for D fields</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -269,18 +184,8 @@
      <DESCRIPT>Date format used in case style is not provide for D fields</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>DEFAULT_EXCEL_TIME_FORMAT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Date format used in case style is not provide for D fields</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>DELETE_MERGE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Delete the used merges</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>DELETE_MERGE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Delete the used merges</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -294,18 +199,8 @@
      <DESCRIPT>Drawings collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>DRAWINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Drawings collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>FREEZE_PANES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Freeze panes for supplied number of rows and/or columns</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>FREEZE_PANES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Freeze panes for supplied number of rows and/or columns</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -314,18 +209,8 @@
      <DESCRIPT>Cell Column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>FREEZE_PANE_CELL_COLUMN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>FREEZE_PANE_CELL_ROW</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Cell Row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>FREEZE_PANE_CELL_ROW</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Cell Row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -334,28 +219,13 @@
      <DESCRIPT>Generate title for worksheet (called if none is supplied )</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GENERATE_TITLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Generate title for worksheet (called if none is supplied )</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_ACTIVE_CELL</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Get used range dimension</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_ACTIVE_CELL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get used range dimension</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_CELL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get cell value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_CELL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get cell value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -379,18 +249,8 @@
      <DESCRIPT>Get data validation iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_DATA_VALIDATIONS_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get conditional styles iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_DATA_VALIDATIONS_SIZE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get the number of data validation objects</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_DATA_VALIDATIONS_SIZE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get the number of data validation objects</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -404,18 +264,8 @@
      <DESCRIPT>Gets default date format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_DEFAULT_EXCEL_DATE_FORMAT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Gets default date format</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_DEFAULT_EXCEL_TIME_FORMAT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Gets default time format</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_DEFAULT_EXCEL_TIME_FORMAT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Gets default time format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -429,18 +279,8 @@
      <DESCRIPT>Get used range dimension</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_DIMENSION_RANGE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get used range dimension</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_DRAWINGS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Gets drawing attached to the sheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_DRAWINGS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Gets drawing attached to the sheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -449,28 +289,13 @@
      <DESCRIPT>Get iterator for drawings collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_DRAWINGS_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get iterator for drawings collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_FREEZE_CELL</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Gets the coordinates of cell determining freeze panes</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_FREEZE_CELL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Gets the coordinates of cell determining freeze panes</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_GUID</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get sheet guid</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_GUID</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get sheet guid</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -484,28 +309,13 @@
      <DESCRIPT>Get iterator for links collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_HYPERLINKS_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get iterator for links collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_HYPERLINKS_SIZE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Gets the size of links collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_HYPERLINKS_SIZE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Gets the size of links collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_MERGE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get the merge range</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_MERGE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get the merge range</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -516,11 +326,6 @@
     <SEOCOMPOTX>
      <CMPNAME>GET_RANGES_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get ranges iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_RANGES_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get ranges iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -559,18 +364,8 @@
      <DESCRIPT>get tabcolor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_TABCOLOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>get tabcolor</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_TABLES_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get iterator for tables collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_TABLES_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get iterator for tables collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -579,18 +374,8 @@
      <DESCRIPT>Gets the size of tables collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_TABLES_SIZE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Gets the size of tables collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_TITLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get WorkSheet Title</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_TITLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get WorkSheet Title</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -599,28 +384,13 @@
      <DESCRIPT>Get abap type kind and apply conversion routine</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_VALUE_TYPE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get abap type kind and apply conversion routine</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GUID</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>GUID in &apos;RAW&apos; format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GUID</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>GUID in &apos;RAW&apos; format</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>HYPERLINKS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Colletion of hyperlinks</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>HYPERLINKS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Colletion of hyperlinks</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -631,11 +401,6 @@
     <SEOCOMPOTX>
      <CMPNAME>LOWER_CELL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Bottom right range cell</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOWER_CELL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Bottom right range cell</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -679,18 +444,8 @@
      <DESCRIPT>Print Gridlines</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>PRINT_GRIDLINES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Print Gridlines</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>PRINT_TITLE_COL_FROM</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Cell Column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>PRINT_TITLE_COL_FROM</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Cell Column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -699,18 +454,8 @@
      <DESCRIPT>Cell Column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>PRINT_TITLE_COL_TO</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>PRINT_TITLE_ROW_FROM</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Cell Row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>PRINT_TITLE_ROW_FROM</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Cell Row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -719,28 +464,13 @@
      <DESCRIPT>Cell Row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>PRINT_TITLE_ROW_TO</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>PRINT_TITLE_SET_RANGE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Update range for print title</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>PRINT_TITLE_SET_RANGE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Update range for print title</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>RANGES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Ranges collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>RANGES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Ranges collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -759,18 +489,8 @@
      <DESCRIPT>Set cell value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_CELL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set cell value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_CELL_FORMULA</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set cell formula</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_CELL_FORMULA</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set cell formula</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -779,18 +499,8 @@
      <DESCRIPT>Set cell style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_CELL_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set cell style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_COLUMN_WIDTH</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set column width</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_COLUMN_WIDTH</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set column width</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -799,18 +509,8 @@
      <DESCRIPT>Sets default date format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_DEFAULT_EXCEL_DATE_FORMAT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Sets default date format</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_MERGE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set the merge range</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_MERGE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set the merge range</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -819,18 +519,8 @@
      <DESCRIPT>Set print gridlines</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_PRINT_GRIDLINES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set print gridlines</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_ROW_HEIGHT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set row height</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_ROW_HEIGHT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set row height</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -844,18 +534,8 @@
      <DESCRIPT>Set show gridlines</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_SHOW_GRIDLINES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set show gridlines</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_SHOW_ROWCOLHEADERS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set show colum row headers</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_SHOW_ROWCOLHEADERS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set show colum row headers</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -864,18 +544,8 @@
      <DESCRIPT>Set tabcolor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_TABCOLOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set tabcolor</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_TABLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set cell value from a table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_TABLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set cell value from a table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -884,18 +554,8 @@
      <DESCRIPT>Set WorkSheet Title</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_TITLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set WorkSheet Title</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SHEET_CONTENT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel worksheet content</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SHEET_CONTENT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel worksheet content</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -904,28 +564,13 @@
      <DESCRIPT>Sheet setup</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SHEET_SETUP</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Sheet setup</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SHOW_GRIDLINES</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Show Gridlines</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SHOW_GRIDLINES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Show Gridlines</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SHOW_ROWCOLHEADERS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Show Gridlines</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SHOW_ROWCOLHEADERS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Show Gridlines</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -939,18 +584,8 @@
      <DESCRIPT>Tabcolor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TABCOLOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Tabcolor</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TABLES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Colletion of tables</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TABLES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Colletion of tables</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -959,28 +594,13 @@
      <DESCRIPT>Title</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TITLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Title</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>UPDATE_DIMENSION_RANGE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Update dimension range</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>UPDATE_DIMENSION_RANGE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Update dimension range</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>UPPER_CELL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Top left range cell</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>UPPER_CELL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Top left range cell</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

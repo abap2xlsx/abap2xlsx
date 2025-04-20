@@ -28,18 +28,8 @@
      <DESCRIPT>Show the category name on the bar chart</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_SHOW_CAT_NAME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Show the category name on the bar chart</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_SHOW_LEGEND_KEY</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Show the legend key on the bar chart</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_SHOW_LEGEND_KEY</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Show the legend key on the bar chart</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -48,18 +38,8 @@
      <DESCRIPT>Values as percent</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_SHOW_PERCENT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Values as percent</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_SHOW_SER_NAME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Show the serie name on the bar chart</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_SHOW_SER_NAME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Show the serie name on the bar chart</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -68,18 +48,8 @@
      <DESCRIPT>Show values on the bar chart</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_SHOW_VALUES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Show values on the bar chart</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_VARYCOLOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Show vary colors</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_VARYCOLOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Show vary colors</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
