@@ -18,18 +18,8 @@
      <DESCRIPT>General Flag</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ALLOWBLANK</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>General Flag</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CELL_COLUMN</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Cell Column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CELL_COLUMN</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Cell Column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -38,18 +28,8 @@
      <DESCRIPT>Cell Column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CELL_COLUMN_TO</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CELL_ROW</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Cell Row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CELL_ROW</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Cell Row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,18 +38,8 @@
      <DESCRIPT>Cell Row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CELL_ROW_TO</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CONSTRUCTOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -78,18 +48,8 @@
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_BETWEEN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_OPERATOR_EQUAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_EQUAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -98,18 +58,8 @@
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_GREATERTHAN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_OPERATOR_GREATERTHANOREQUAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_GREATERTHANOREQUAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -118,18 +68,8 @@
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_LESSTHAN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_OPERATOR_LESSTHANOREQUAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_LESSTHANOREQUAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -138,18 +78,8 @@
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_NOTBETWEEN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_OPERATOR_NOTEQUAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_OPERATOR_NOTEQUAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -158,18 +88,8 @@
      <DESCRIPT>Data validation error style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_STYLE_INFORMATION</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation error style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_STYLE_STOP</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation error style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_STYLE_STOP</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation error style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -178,18 +98,8 @@
      <DESCRIPT>Data validation error style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_STYLE_WARNING</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation error style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_TYPE_CUSTOM</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_CUSTOM</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -198,18 +108,8 @@
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_DATE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_TYPE_DECIMAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_DECIMAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -218,18 +118,8 @@
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_LIST</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_TYPE_NONE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_NONE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -238,18 +128,8 @@
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_TEXTLENGTH</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_TYPE_TIME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_TIME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -258,18 +138,8 @@
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_WHOLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ERRORSTYLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation error style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ERRORSTYLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation error style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -278,18 +148,8 @@
      <DESCRIPT>Validation formula1</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>FORMULA1</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Validation formula1</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>FORMULA2</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Validation formula2</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>FORMULA2</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Validation formula2</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -298,18 +158,8 @@
      <DESCRIPT>Data validation operator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>OPERATOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Data validation operator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SHOWDROPDOWN</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Show DropDown</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SHOWDROPDOWN</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Show DropDown</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -318,28 +168,13 @@
      <DESCRIPT>General Flag</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SHOWERRORMESSAGE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>General Flag</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SHOWINPUTMESSAGE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>General Flag</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SHOWINPUTMESSAGE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>General Flag</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TYPE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Data validation type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TYPE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Data validation type</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

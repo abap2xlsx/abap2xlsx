@@ -18,18 +18,8 @@
      <DESCRIPT>Apply sort criteria to data table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>APPLY_SORT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Apply sort criteria to data table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CLASS_CONSTRUCTOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>CLASS_CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CLASS_CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>CLASS_CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -38,18 +28,8 @@
      <DESCRIPT>Create color table for formating</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_COLOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create color table for formating</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_FILTER</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create filter values</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_FILTER</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create filter values</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,18 +38,8 @@
      <DESCRIPT>Create fieldcatalog and layout</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>UPDATE_CATALOG</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create fieldcatalog and layout</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WS_LAYO</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>ALV control: Layout structure</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WS_LAYO</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>ALV control: Layout structure</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -78,18 +48,8 @@
      <DESCRIPT>Converter options for grid configuration</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WS_OPTION</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Converter options for grid configuration</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WT_FCAT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Field Catalog for List Viewer Control</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WT_FCAT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Field Catalog for List Viewer Control</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -98,18 +58,8 @@
      <DESCRIPT>ALV control: Table of filter conditions</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WT_FILT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>ALV control: Table of filter conditions</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WT_SORT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>ALV Control: Table of Sort Criteria</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WT_SORT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>ALV Control: Table of Sort Criteria</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

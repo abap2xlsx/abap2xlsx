@@ -17,11 +17,6 @@
      <LANGU>E</LANGU>
      <DESCRIPT>Fill internal layout tables</DESCRIPT>
     </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOAD_DATA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Fill internal layout tables</DESCRIPT>
-    </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>
  </asx:abap>
