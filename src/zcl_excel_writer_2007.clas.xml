@@ -24,18 +24,8 @@
      <DESCRIPT>Create Excel</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create Excel</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_CONTENT_TYPES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;[Content_Types].xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_CONTENT_TYPES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;[Content_Types].xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -44,18 +34,8 @@
      <DESCRIPT>Create &apos;docProps/app.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_DOCPROPS_APP</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;docProps/app.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_DOCPROPS_CORE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;docProps/core.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_DOCPROPS_CORE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;docProps/core.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -69,28 +49,13 @@
      <DESCRIPT>Create &apos;_rels/.rels&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_RELATIONSHIPS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;_rels/.rels&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_CHARTS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Create &apos;xl/charts/chart1.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_CHARTS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;xl/charts/chart1.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_DRAWINGS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;xl/drawings/drawing1.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_DRAWINGS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;xl/drawings/drawing1.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -101,11 +66,6 @@
     <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_DRAWINGS_RELS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_DRAWINGS_RELS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;xl/drawings/_rels/drawing1.xml.rels&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -124,18 +84,8 @@
      <DESCRIPT>Create &apos;xl/drawings/drawing1.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_DRAWING_ANCHOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;xl/drawings/drawing1.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_RELATIONSHIPS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;xl/_rels/workbook.xml.rels&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_RELATIONSHIPS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;xl/_rels/workbook.xml.rels&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -144,18 +94,8 @@
      <DESCRIPT>Create &apos;xl/sharedStrings.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_SHAREDSTRINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;xl/sharedStrings.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_SHEET</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;xl/sheet.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_SHEET</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;xl/sheet.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -169,11 +109,6 @@
      <DESCRIPT>Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_SHEET_RELS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;xl/workbook/_rels/sheet.xml.rels&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_SHEET_SHEET_DATA</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Create sheet-data node ( this is where the data is )</DESCRIPT>
@@ -184,18 +119,8 @@
      <DESCRIPT>Create &apos;xl/styles.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_STYLES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;xl/styles.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_STYLES_COLOR_NODE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;xl/styles.xml&apos; color node</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_STYLES_COLOR_NODE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;xl/styles.xml&apos; color node</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -204,18 +129,8 @@
      <DESCRIPT>Create &apos;xl/tables/____.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_TABLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;xl/tables/____.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_THEME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create &apos;xl/theme/theme1.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_THEME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create &apos;xl/theme/theme1.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -224,18 +139,8 @@
      <DESCRIPT>Create &apos;xl/workbook.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_XL_WORKBOOK</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create &apos;xl/workbook.xml&apos;</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_CONTENT_TYPES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Content Type XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_CONTENT_TYPES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Content Type XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -244,18 +149,8 @@
      <DESCRIPT>App XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_DOCPROPS_APP</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>App XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_DOCPROPS_CORE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Core XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_DOCPROPS_CORE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Core XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -264,18 +159,8 @@
      <DESCRIPT>Byte Value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_OFF</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Byte Value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_ON</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Byte Value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_ON</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Byte Value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -284,18 +169,8 @@
      <DESCRIPT>Rels XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_RELATIONSHIPS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Rels XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_XL_CALCCHAIN</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>xlcalcChain XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_XL_CALCCHAIN</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>xlcalcChain XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -304,18 +179,8 @@
      <DESCRIPT>xlDrawings XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_XL_DRAWINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>xlDrawings XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_XL_DRAWINGS_RELS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>xlDrawings XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_XL_DRAWINGS_RELS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>xlDrawings XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -324,18 +189,8 @@
      <DESCRIPT>xlDrawings XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_XL_PRINTERSETTINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>xlDrawings XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_XL_RELATIONSHIPS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>xlRels XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_XL_RELATIONSHIPS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>xlRels XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -344,18 +199,8 @@
      <DESCRIPT>xlSharedStrings XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_XL_SHAREDSTRINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>xlSharedStrings XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_XL_SHEET</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>xlSheet XML File Name Template</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_XL_SHEET</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>xlSheet XML File Name Template</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -364,18 +209,8 @@
      <DESCRIPT>xlSheetRels XML File Name Template</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_XL_SHEET_RELS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>xlSheetRels XML File Name Template</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_XL_STYLES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>xlStyles XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_XL_STYLES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>xlStyles XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -384,18 +219,8 @@
      <DESCRIPT>xlTheme XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_XL_THEME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>xlTheme XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_XL_WORKBOOK</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>xlWorkbook XML File Name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_XL_WORKBOOK</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>xlWorkbook XML File Name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -404,28 +229,13 @@
      <DESCRIPT>Excel creator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>EXCEL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Excel creator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>FLAG2BOOL</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Convert a FLAG to BOOLEAN value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>FLAG2BOOL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert a FLAG to BOOLEAN value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_SHARED_STRING_INDEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get shared string index</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_SHARED_STRING_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get shared string index</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -449,28 +259,13 @@
      <DESCRIPT>Shared Strings</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SHARED_STRINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Shared Strings</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>STYLES_COND_MAPPING</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Styles mapping</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>STYLES_COND_MAPPING</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Styles mapping</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>STYLES_MAPPING</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Styles mapping</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>STYLES_MAPPING</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Styles mapping</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
