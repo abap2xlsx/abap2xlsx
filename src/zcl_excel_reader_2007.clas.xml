@@ -49,11 +49,6 @@
      <DESCRIPT>Fills structure fields based on XML node attributes</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>FILL_STRUCT_FROM_ATTRIBUTES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Fills structure fields based on XML node attributes</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_DXF_STYLE_GUID</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Get guid of dxf style</DESCRIPT>
@@ -64,19 +59,9 @@
      <DESCRIPT>Read file from ZIP Archive</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_FROM_ZIP_ARCHIVE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Read file from ZIP Archive</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_IXML_FROM_ZIP_ARCHIVE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Read file from ZIP Archive and convert to ixml document</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_IXML_FROM_ZIP_ARCHIVE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Read file from ZIP Archive</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>GTS_EXTERNAL_HYPERLINK</CMPNAME>
@@ -94,11 +79,6 @@
      <DESCRIPT>Loads drawing anchor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>LOAD_DRAWING_ANCHOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Loads worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOAD_DXF_STYLES</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Loads dxf styles</DESCRIPT>
@@ -109,18 +89,8 @@
      <DESCRIPT>Loads shared strings table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>LOAD_SHARED_STRINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Loads shared strings table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOAD_STYLES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Loads styles</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOAD_STYLES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Loads styles</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -129,18 +99,8 @@
      <DESCRIPT>Loads &apos;borders&apos;  part of styles</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>LOAD_STYLE_BORDERS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Loads &apos;borders&apos;  part of styles</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOAD_STYLE_FILLS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Loads &apos;fills&apos;  part of styles</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOAD_STYLE_FILLS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Loads &apos;fills&apos;  part of styles</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -149,18 +109,8 @@
      <DESCRIPT>Loads &apos;fonts&apos;  part of styles</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>LOAD_STYLE_FONTS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Loads &apos;fonts&apos;  part of styles</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOAD_STYLE_NUM_FORMATS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Loads &apos;number format&apos; part of styles</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOAD_STYLE_NUM_FORMATS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Loads &apos;number format&apos; part of styles</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -174,18 +124,8 @@
      <DESCRIPT>Loads workbook</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>LOAD_WORKBOOK</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Loads workbook</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOAD_WORKSHEET</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Loads worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOAD_WORKSHEET</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Loads worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -234,11 +174,6 @@
      <DESCRIPT>Loads worksheet drawings</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>LOAD_WORKSHEET_DRAWING</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Loads worksheet drawings</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOAD_WORKSHEET_HYPERLINKS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Loads hyperlinks of worksheet</DESCRIPT>
@@ -269,11 +204,6 @@
      <DESCRIPT>Referenced formulae before resolving</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>MT_REF_FORMULAE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Referenced formulae before resolving</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>READ_FROM_APPLSERVER</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Load excel data from appserver</DESCRIPT>
@@ -289,18 +219,8 @@
      <DESCRIPT>Return path after ../ values are removed</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>RESOLVE_PATH</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Return path after ../ values are removed</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>RESOLVE_REFERENCED_FORMULAE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Resolve referenced formulae</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>RESOLVE_REFERENCED_FORMULAE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Resolve referenced formulae</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -309,18 +229,8 @@
      <DESCRIPT>Table with Strings</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SHARED_STRINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Table with Strings</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ZIP</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Zip Utility</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ZIP</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Zip Utility</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
