@@ -68,18 +68,8 @@
      <DESCRIPT>Ask for user option data</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ASK_OPTION</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Ask for user option data</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BIND_CELLS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create table with set cell method</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BIND_CELLS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create table with set cell method</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -88,18 +78,8 @@
      <DESCRIPT>Create table with bind table method</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BIND_TABLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create table with bind table method</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CLASS_CONSTRUCTOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>CLASS_CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CLASS_CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>CLASS_CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -108,18 +88,8 @@
      <DESCRIPT>Sort and check on fieldcatalog</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CLEAN_FIELDCATALOG</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Sort and check on fieldcatalog</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CONVERT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Convert</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CONVERT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Convert</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -128,18 +98,8 @@
      <DESCRIPT>Create new color style based on cell style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_COLOR_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create new color style based on cell style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_FORMULAR_SUBTOTAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create formular for subtotal</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_FORMULAR_SUBTOTAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create formular for subtotal</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -148,18 +108,8 @@
      <DESCRIPT>Create formular for column total</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_FORMULAR_TOTAL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create formular for column total</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_PATH</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create file path for download</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_PATH</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create file path for download</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -168,18 +118,8 @@
      <DESCRIPT>Create header  style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_STYLE_HDR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create header  style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_STYLE_NORMAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create line style for stripped</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_STYLE_NORMAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create line style for stripped</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -188,18 +128,8 @@
      <DESCRIPT>Create line style for stripped</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_STYLE_STRIPPED</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create line style for stripped</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_STYLE_SUBTOTAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create subtotals style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_STYLE_SUBTOTAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create subtotals style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -208,18 +138,8 @@
      <DESCRIPT>Create totals style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_STYLE_TOTAL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create totals style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_TABLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create table based on fieldcatalog</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_TABLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create table based on fieldcatalog</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -228,18 +148,8 @@
      <DESCRIPT>Create subtoal text for column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_TEXT_SUBTOTAL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create subtoal text for column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_WORKSHEET</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create table in worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_WORKSHEET</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create table in worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -248,18 +158,8 @@
      <DESCRIPT>Single-Character Indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_HDR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Single-Character Indicator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_TYPE_NOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Single-Character Indicator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_NOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Single-Character Indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -268,18 +168,8 @@
      <DESCRIPT>Single-Character Indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_STR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Single-Character Indicator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_TYPE_SUB</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Single-Character Indicator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_SUB</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Single-Character Indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -288,18 +178,8 @@
      <DESCRIPT>Single-Character Indicator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_TYPE_TOT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Single-Character Indicator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>EXECUTE_CONVERTER</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Execute the converter based on object provided</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>EXECUTE_CONVERTER</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Execute the converter based on object provided</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -308,18 +188,8 @@
      <DESCRIPT>Look up color style and create if needed</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_COLOR_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Look up color style and create if needed</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_FILE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create excel file</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_FILE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create excel file</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -328,18 +198,8 @@
      <DESCRIPT>Convert function name into internal number</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_FUNCTION_NUMBER</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert function name into internal number</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_OPTION</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get user option data</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_OPTION</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get user option data</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -348,18 +208,8 @@
      <DESCRIPT>Get style for cell</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get style for cell</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>INIT_OPTION</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Init option structure</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>INIT_OPTION</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Init option structure</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -368,18 +218,8 @@
      <DESCRIPT>Bind cells with normal loop</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>LOOP_NORMAL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Bind cells with normal loop</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOOP_SUBTOTAL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Bind cells with subtotal loop</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOOP_SUBTOTAL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Bind cells with subtotal loop</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -388,18 +228,8 @@
      <DESCRIPT>Open excel file</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>OPEN_FILE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Open excel file</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_AUTOFILTER_AREA</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create autofilter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_AUTOFILTER_AREA</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create autofilter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -408,18 +238,8 @@
      <DESCRIPT>SET CELL FORMAT</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_CELL_FORMAT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>SET CELL FORMAT</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_FIELDCATALOG</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set fieldcatalog from table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_FIELDCATALOG</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set fieldcatalog from table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -428,18 +248,8 @@
      <DESCRIPT>Set user option data</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_OPTION</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set user option data</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WO_AUTOFILTER</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Autofilter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WO_AUTOFILTER</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Autofilter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -448,18 +258,8 @@
      <DESCRIPT>Excel data without unwanted columns</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WO_DATA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Excel data without unwanted columns</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WO_EXCEL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel creator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WO_EXCEL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel creator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -468,18 +268,8 @@
      <DESCRIPT>Table sorted but not reduced</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WO_TABLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Table sorted but not reduced</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WO_WORKSHEET</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WO_WORKSHEET</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -488,18 +278,8 @@
      <DESCRIPT>Write excel file</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WRITE_FILE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Write excel file</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WS_INDX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>System Table INDX</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WS_INDX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>System Table INDX</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -508,18 +288,8 @@
      <DESCRIPT>Converter settings for table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WS_LAYOUT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Converter settings for table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WS_OPTION</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Converter options for grid configuration</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WS_OPTION</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Converter options for grid configuration</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -528,18 +298,8 @@
      <DESCRIPT>Table type for color information of cells for converter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WT_COLORS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Table type for color information of cells for converter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WT_FIELDCATALOG</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Conter table for tabel fields</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WT_FIELDCATALOG</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Conter table for tabel fields</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -548,18 +308,8 @@
      <DESCRIPT>Table type for filter information of cells for converter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WT_FILTER</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Table type for filter information of cells for converter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WT_OBJECTS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>ALV object list</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WT_OBJECTS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>ALV object list</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -568,28 +318,13 @@
      <DESCRIPT>Cell Column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>W_COL_INT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>W_FCOUNT</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Three digit number</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>W_FCOUNT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Three digit number</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>W_ROW_INT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Cell Row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>W_ROW_INT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Cell Row</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

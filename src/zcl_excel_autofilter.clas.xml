@@ -18,18 +18,8 @@
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>FILTER_AREA</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Autofilter area ( rows and columns )</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>FILTER_AREA</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Autofilter area ( rows and columns )</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -43,18 +33,8 @@
      <DESCRIPT>Get filter area for filter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_FILTER_AREA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get filter area for filter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_FILTER_RANGE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get Filter range for filter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_FILTER_RANGE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get Filter range for filter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -63,18 +43,8 @@
      <DESCRIPT>Get filter reference for filter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_FILTER_REFERENCE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get filter reference for filter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_VALUES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get filter values table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_VALUES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get filter values table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -128,11 +98,6 @@
      <DESCRIPT>Set filter area for filter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_FILTER_AREA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set filter area for filter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_TEXT_FILTER</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Set filter by text pattern - see method documentation</DESCRIPT>
@@ -143,18 +108,8 @@
      <DESCRIPT>Set Filter value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_VALUE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set Filter value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_VALUES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set Filter values with table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_VALUES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set Filter values with table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -183,18 +138,8 @@
      <DESCRIPT>Validates filter area</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>VALIDATE_AREA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Validates filter area</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WORKSHEET</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WORKSHEET</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Worksheet</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

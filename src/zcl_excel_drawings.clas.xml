@@ -18,18 +18,8 @@
      <DESCRIPT>Adds an Element to the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ADD</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Adds an Element to the Collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CLEAR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Initializes the Collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CLEAR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Initializes the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -38,18 +28,8 @@
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Gets Element</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Gets Element</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,18 +38,8 @@
      <DESCRIPT>Returns an iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Returns an iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_TYPE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get drawing type for collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_TYPE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get drawing type for collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -78,18 +48,8 @@
      <DESCRIPT>Adds an Element to the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>INCLUDE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Adds an Element to the Collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>IS_EMPTY</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Checks whether elements are contained</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>IS_EMPTY</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Checks whether elements are contained</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -98,28 +58,13 @@
      <DESCRIPT>Deletes an Element from the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>REMOVE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Deletes an Element from the Collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SIZE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Specifies number of contained elements</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SIZE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Specifies number of contained elements</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TYPE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel Drawing type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TYPE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel Drawing type</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
