@@ -18,18 +18,8 @@
      <DESCRIPT>Cell Column</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>COLUMN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Column</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Creates new instance of hyperlink</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Creates new instance of hyperlink</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -38,18 +28,8 @@
      <DESCRIPT>Creates new instance of external link  (URL)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_EXTERNAL_LINK</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Creates new instance of external link  (URL)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_INTERNAL_LINK</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Creates new instance of internal link</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_INTERNAL_LINK</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Creates new instance of internal link</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,18 +38,8 @@
      <DESCRIPT>Gets the reference string</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_REF</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Gets the reference string</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_URL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Gets the urls of the link</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_URL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Gets the urls of the link</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -78,28 +48,13 @@
      <DESCRIPT>Checks if link is pointing to internall location</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>IS_INTERNAL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Checks if link is pointing to internall location</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ROW</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Cell Row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ROW</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Cell Row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_CELL_REFERENCE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Sets reference to the cell</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_CELL_REFERENCE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Sets reference to the cell</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
