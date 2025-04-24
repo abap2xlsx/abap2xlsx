@@ -51,18 +51,8 @@
      <DESCRIPT>Give distance between two cells</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CALCULATE_CELL_DISTANCE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Give distance between two cells</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CHAR2HEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Character to Hexadecimal</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CHAR2HEX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Character to Hexadecimal</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -76,18 +66,8 @@
      <DESCRIPT>Convert column indicator to Alpha</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONVERT_COLUMN2ALPHA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert column indicator to Alpha</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CONVERT_COLUMN2INT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Convert column indicator to Integer</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CONVERT_COLUMN2INT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Convert column indicator to Integer</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -96,18 +76,8 @@
      <DESCRIPT>Convert ColumnRow i.e. AB34 to AB and 34</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONVERT_COLUMNROW2COLUMN_A_ROW</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert ColumnRow i.e. AB34 to AB and 34</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CONVERT_RANGE2COLUMN_A_ROW</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Converts Sheet1!AB34:CD56 to Sheet1, AB, 34, CD, 56</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CONVERT_RANGE2COLUMN_A_ROW</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Converts Sheet1!AB34:CD56 to Sheet1, AB, 34, CD, 56</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -116,18 +86,8 @@
      <DESCRIPT>Excel baseline date</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_EXCEL_1900_LEAP_YEAR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Excel baseline date</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_EXCEL_BASELINE_DATE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel baseline date</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_EXCEL_BASELINE_DATE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel baseline date</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -136,28 +96,13 @@
      <DESCRIPT>2 byte integer (signed)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_EXCEL_COL_MODULE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>2 byte integer (signed)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_EXCEL_NUMFMT_OFFSET</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>2 byte integer (signed)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_EXCEL_NUMFMT_OFFSET</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>2 byte integer (signed)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_EXCEL_SHEET_MAX_COL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>2 byte integer (signed)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_EXCEL_SHEET_MAX_COL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>2 byte integer (signed)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -171,11 +116,6 @@
      <DESCRIPT>2 byte integer (signed)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_EXCEL_SHEET_MIN_COL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>2 byte integer (signed)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_EXCEL_SHEET_MIN_ROW</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>2 byte integer (signed)</DESCRIPT>
@@ -186,18 +126,8 @@
      <DESCRIPT>Language Key</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_SPRAS_EN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Language Key</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_XLSX_FILE_FILTER</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>File filter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_XLSX_FILE_FILTER</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>File filter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -206,18 +136,8 @@
      <DESCRIPT>Convert date from SAP format to Excel</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>DATE_TO_EXCEL_STRING</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert date from SAP format to Excel</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>DESCRIBE_STRUCTURE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Describe database info of structure</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>DESCRIBE_STRUCTURE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Describe database info of structure</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -226,18 +146,8 @@
      <DESCRIPT>Determine formula if copied to another cell</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>DETERMINE_RESULTING_FORMULA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Determine formula if copied to another cell</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ENCRYPT_PASSWORD</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Encrypt password</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ENCRYPT_PASSWORD</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Encrypt password</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -246,18 +156,8 @@
      <DESCRIPT>Escape a string</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ESCAPE_STRING</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Escape a string</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>EXCEL_STRING_TO_DATE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Convert date from Excel format to SAP</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>EXCEL_STRING_TO_DATE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Convert date from Excel format to SAP</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -271,18 +171,8 @@
      <DESCRIPT>Convert time from Excel format to SAP</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>EXCEL_STRING_TO_TIME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert time from Excel format to SAP</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_FIELDCATALOG</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Creates field catalog for BIND_TABLE based on internal table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_FIELDCATALOG</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Creates field catalog for BIND_TABLE based on internal table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -296,18 +186,8 @@
      <DESCRIPT>Converts number to string representation in Excel format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>NUMBER_TO_EXCEL_STRING</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Converts number to string representation in Excel format</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>O_CONV</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Code Page and Endian Conversion (System Format -&gt; External)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>O_CONV</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Code Page and Endian Conversion (System Format -&gt; External)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -316,28 +196,13 @@
      <DESCRIPT>Move class to structure</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>RECURSIVE_CLASS_TO_STRUCT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Move class to structure</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>RECURSIVE_STRUCT_TO_CLASS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Move structure to class</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>RECURSIVE_STRUCT_TO_CLASS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Move structure to class</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SHIFT_FORMULA</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Shift formula from one cell to another</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SHIFT_FORMULA</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Shift formula from one cell to another</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -356,18 +221,8 @@
      <DESCRIPT>File &amp; Extension disconnect (clone of FM CV120_SPLIT_FILE)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SPLIT_FILE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>File &amp; Extension disconnect (clone of FM CV120_SPLIT_FILE)</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>STRUCTURE_CASE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Case stement for recursive</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>STRUCTURE_CASE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Case stement for recursive</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -376,28 +231,13 @@
      <DESCRIPT>Get structure details</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>STRUCTURE_RECURSIVE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get structure details</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TIME_TO_EXCEL_STRING</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Convert time from SAP format to Excel</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TIME_TO_EXCEL_STRING</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert time from SAP format to Excel</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>UNESCAPE_STRING</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Unescape</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>UNESCAPE_STRING</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Unescape</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

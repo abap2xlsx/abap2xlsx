@@ -18,18 +18,8 @@
      <DESCRIPT>Adds an Element to the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ADD</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Adds an Element to the Collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CLEAR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Initializes the Collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CLEAR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Initializes the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -38,18 +28,8 @@
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Returns an iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Returns an iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,28 +38,13 @@
      <DESCRIPT>Checks whether elements are contained</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>IS_EMPTY</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Checks whether elements are contained</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>REMOVE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Deletes an Element from the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>REMOVE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Deletes an Element from the Collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SIZE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Specifies number of contained elements</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SIZE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Specifies number of contained elements</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
