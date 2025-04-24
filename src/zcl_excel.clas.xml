@@ -33,18 +33,8 @@
      <DESCRIPT>Create a new autofilter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ADD_NEW_AUTOFILTER</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create a new autofilter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ADD_NEW_DRAWING</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create a new drawing</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ADD_NEW_DRAWING</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create a new drawing</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -53,18 +43,8 @@
      <DESCRIPT>Create a new range</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ADD_NEW_RANGE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create a new range</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ADD_NEW_STYLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create a new style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ADD_NEW_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create a new style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -73,18 +53,8 @@
      <DESCRIPT>Create a new worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ADD_NEW_WORKSHEET</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create a new worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ADD_STATIC_STYLES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Add static styles to styles iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ADD_STATIC_STYLES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Add static styles to styles iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -93,18 +63,8 @@
      <DESCRIPT>Autofilters collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>AUTOFILTERS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Autofilters collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CHARTS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Charts collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CHARTS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Charts collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -113,18 +73,8 @@
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>DEFAULT_STYLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Style identifier</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>DEFAULT_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Style identifier</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -148,18 +98,8 @@
      <DESCRIPT>Drawings collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>DRAWINGS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Worksheets collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_ACTIVE_SHEET_INDEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get active worksheet  index</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_ACTIVE_SHEET_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get active worksheet  index</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -168,18 +108,8 @@
      <DESCRIPT>Get active worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_ACTIVE_WORKSHEET</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get active worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_AUTOFILTERS_REFERENCE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get filter reference</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_AUTOFILTERS_REFERENCE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get filter reference</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -188,18 +118,8 @@
      <DESCRIPT>Get default style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_DEFAULT_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get default style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_DRAWINGS_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get drawing iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_DRAWINGS_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get drawing iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -208,18 +128,8 @@
      <DESCRIPT>Get table ID unique across sheets</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_NEXT_TABLE_ID</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get table ID unique across sheets</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_RANGES_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get ranges iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_RANGES_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get ranges iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -228,18 +138,8 @@
      <DESCRIPT>Get GUID for static cellstyle</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_STATIC_CELLSTYLE_GUID</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get GUID for static cellstyle</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_STYLES_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get styles iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_STYLES_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get styles iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -253,18 +153,8 @@
      <DESCRIPT>Get index of style in styles</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_STYLE_INDEX_IN_STYLES</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get index of style in styles</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_STYLE_TO_GUID</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get style(structure) for guid</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_STYLE_TO_GUID</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get style(structure) for guid</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -278,28 +168,13 @@
      <DESCRIPT>Get worksheets iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_WORKSHEETS_ITERATOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get worksheets iterator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_WORKSHEETS_NAME</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Returns the name of worksheets</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_WORKSHEETS_NAME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Returns the name of worksheets</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_WORKSHEETS_SIZE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Returns the number of worksheets</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_WORKSHEETS_SIZE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Returns the number of worksheets</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -313,18 +188,8 @@
      <DESCRIPT>Get worksheet by name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_WORKSHEET_BY_NAME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get worksheet by name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>RANGES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Ranges collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>RANGES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Ranges collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -333,18 +198,8 @@
      <DESCRIPT>Security</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SECURITY</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Security</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_ACTIVE_SHEET_INDEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set active worksheet  index</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_ACTIVE_SHEET_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set active worksheet  index</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -353,18 +208,8 @@
      <DESCRIPT>Set active worksheet index by name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_ACTIVE_SHEET_INDEX_BY_NAME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set active worksheet index by name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_DEFAULT_STYLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set default style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_DEFAULT_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set default style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -378,18 +223,8 @@
      <DESCRIPT>Convert dynamic style to static styleentry</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>STYLEMAPPING_DYNAMIC_STYLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert dynamic style to static stlyeentry</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>STYLES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Styles collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>STYLES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Styles collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -403,28 +238,13 @@
      <DESCRIPT>Stylemapping:  Values -&gt; GUID</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>T_STYLEMAPPING1</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Stylemapping:  Values -&gt; GUID</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>T_STYLEMAPPING2</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Stylemapping:  GUID -&gt; Values</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>T_STYLEMAPPING2</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Stylemapping:  GUID -&gt; Values</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>USE_TEMPLATE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Checkbox</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>USE_TEMPLATE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Checkbox</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -435,11 +255,6 @@
     <SEOCOMPOTX>
      <CMPNAME>WORKSHEETS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Worksheets collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WORKSHEETS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Worksheets collection</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
