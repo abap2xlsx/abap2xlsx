@@ -18,11 +18,6 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_DARK1</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_DARK10</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
@@ -38,18 +33,8 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_DARK2</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_DARK3</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_DARK3</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,18 +43,8 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_DARK4</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_DARK5</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_DARK5</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -95,11 +70,6 @@
     <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_LIGHT1</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_LIGHT1</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -158,11 +128,6 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_LIGHT2</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_LIGHT20</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
@@ -178,28 +143,13 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_LIGHT3</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_LIGHT4</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_LIGHT4</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_LIGHT5</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_LIGHT5</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -225,11 +175,6 @@
     <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_MEDIUM1</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_MEDIUM1</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -288,11 +233,6 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_MEDIUM2</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_MEDIUM20</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Built in table styel</DESCRIPT>
@@ -338,28 +278,13 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_MEDIUM3</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_MEDIUM4</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_MEDIUM4</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_MEDIUM5</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_MEDIUM5</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -383,18 +308,8 @@
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_MEDIUM9</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>BUILTINSTYLE_PIVOT_LIGHT16</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Built in table style</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>BUILTINSTYLE_PIVOT_LIGHT16</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Built in table style</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -403,18 +318,8 @@
      <DESCRIPT>field catalog</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>FIELDCAT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>field catalog</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_ID</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Gets the ID</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_ID</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Gets the ID</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -423,18 +328,8 @@
      <DESCRIPT>Gets the name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_NAME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Gets the name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_TOTALS_FORMULA</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Returns formula for totals row based on column  name and fun</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_TOTALS_FORMULA</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Returns formula for totals row based on column  name and fun</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -443,18 +338,8 @@
      <DESCRIPT>Determines if any column has totals function</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>HAS_TOTALS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Determines if any column has totals function</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ID</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Table ID</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ID</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Table ID</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -463,18 +348,8 @@
      <DESCRIPT>A string representing the name of the table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>NAME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>A string representing the name of the table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SETTINGS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>table settings</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SETTINGS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>table settings</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -483,18 +358,8 @@
      <DESCRIPT>Sets the reference to table data</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_DATA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Sets the reference to table data</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_ID</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Sets the ID</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_ID</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Sets the ID</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -503,18 +368,8 @@
      <DESCRIPT>Ref to data</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TABLE_DATA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Ref to data</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TOTALS_FUNCTION_AVERAGE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Totals function</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TOTALS_FUNCTION_AVERAGE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Totals function</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -523,18 +378,8 @@
      <DESCRIPT>Totals function</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TOTALS_FUNCTION_COUNT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Totals function</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TOTALS_FUNCTION_CUSTOM</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Totals function</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TOTALS_FUNCTION_CUSTOM</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Totals function</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -543,28 +388,13 @@
      <DESCRIPT>Totals function</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TOTALS_FUNCTION_MAX</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Totals function</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TOTALS_FUNCTION_MIN</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Totals function</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TOTALS_FUNCTION_MIN</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Totals function</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TOTALS_FUNCTION_SUM</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Totals function</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TOTALS_FUNCTION_SUM</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Totals function</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

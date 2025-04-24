@@ -17,11 +17,6 @@
      <LANGU>E</LANGU>
      <DESCRIPT>Get table</DESCRIPT>
     </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_TABLE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get table</DESCRIPT>
-    </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>
  </asx:abap>

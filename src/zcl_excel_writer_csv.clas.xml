@@ -18,18 +18,8 @@
      <DESCRIPT>Create</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_CSV</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create CSV ; Delimited format</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_CSV</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create CSV ; Delimited format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -43,18 +33,8 @@
      <DESCRIPT>Delimiter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>DELIMITER</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Delimiter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ENCLOSURE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Text inclusure character</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ENCLOSURE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Text inclusure character</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -63,18 +43,8 @@
      <DESCRIPT>End Of line</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>EOL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>End Of line</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>EXCEL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel creator</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>EXCEL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel creator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -88,18 +58,8 @@
      <DESCRIPT>Activate worksheet by index before the CSV file creation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_ACTIVE_SHEET_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Activate worksheet by index before the CSV file creation</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_ACTIVE_SHEET_INDEX_BY_NAME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Activate worksheet by name before the CSV file creation</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_ACTIVE_SHEET_INDEX_BY_NAME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Activate worksheet by name before the CSV file creation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -108,28 +68,13 @@
      <DESCRIPT>Set Delimiter value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_DELIMITER</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set Delimiter value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_ENCLOSURE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Set Enclosure character</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_ENCLOSURE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set Enclosure character</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_ENDOFLINE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set End Of Line character</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_ENDOFLINE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set End Of Line character</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -143,18 +88,8 @@
      <DESCRIPT>Active Worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WORKSHEET_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Active Worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WORKSHEET_NAME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Worksheets name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WORKSHEET_NAME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Worksheets name</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
