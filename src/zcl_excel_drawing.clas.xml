@@ -18,18 +18,8 @@
      <DESCRIPT>Excel Drawing anchor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ANCHOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Excel Drawing anchor</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ANCHOR_ABSOLUTE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel Drawing anchor</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ANCHOR_ABSOLUTE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel Drawing anchor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -38,18 +28,8 @@
      <DESCRIPT>Excel Drawing anchor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ANCHOR_ONE_CELL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Excel Drawing anchor</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>ANCHOR_TWO_CELL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel Drawing anchor</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>ANCHOR_TWO_CELL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel Drawing anchor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,18 +38,8 @@
      <DESCRIPT>CONSTRUCTOR</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CONSTRUCTOR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_MEDIA_NAME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Generate media name image#.ext</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_MEDIA_NAME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Generate media name image#.ext</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -78,18 +48,8 @@
      <DESCRIPT>Graph type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_GRAPH_BARS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Graph type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_GRAPH_LINE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Graph type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_GRAPH_LINE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Graph type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -98,18 +58,8 @@
      <DESCRIPT>Graph type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_GRAPH_PIE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Graph type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_MEDIA_SOURCE_MIME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>miem repository</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_MEDIA_SOURCE_MIME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>miem repository</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -118,18 +68,8 @@
      <DESCRIPT>www repository SMW0</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>C_MEDIA_SOURCE_WWW</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>www repository SMW0</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>C_MEDIA_SOURCE_XSTRING</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Binary data as XSTRING</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>C_MEDIA_SOURCE_XSTRING</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Binary data as XSTRING</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -143,18 +83,8 @@
      <DESCRIPT>Drawing location for Excel</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>FROM_LOC</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Drawing location for Excel</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_FROM_COL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>From col</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_FROM_COL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>From col</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -163,18 +93,8 @@
      <DESCRIPT>From row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_FROM_ROW</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>From row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_GUID</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get sheet guid</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_GUID</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get sheet guid</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -183,18 +103,8 @@
      <DESCRIPT>Height of bitmap in EMU as string</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_HEIGHT_EMU_STR</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Height of bitmap in EMU as string</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_INDEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get index</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get index</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -203,18 +113,8 @@
      <DESCRIPT>Returns media as XSTRING</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_MEDIA</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Returns media as XSTRING</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_POSITION</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get position of drawing</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_POSITION</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Get position of drawing</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -223,18 +123,8 @@
      <DESCRIPT>To col</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_TO_COL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>To col</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_TO_ROW</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>To row</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_TO_ROW</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>To row</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -243,18 +133,8 @@
      <DESCRIPT>Get drawing type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_TYPE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get drawing type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_WIDTH_EMU_STR</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Width of bitmap in EMU as string</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_WIDTH_EMU_STR</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Width of bitmap in EMU as string</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -263,18 +143,8 @@
      <DESCRIPT>Graphic</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GRAPH</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Graphic</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GRAPH_TYPE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Graph type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GRAPH_TYPE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Graph type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -283,18 +153,8 @@
      <DESCRIPT>GUID in &apos;RAW&apos; format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GUID</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>GUID in &apos;RAW&apos; format</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>INDEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Index in collection</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>INDEX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Index in collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -303,18 +163,8 @@
      <DESCRIPT>KW Framework: Object Key</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>IO</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>KW Framework: Object Key</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>LOAD_CHART_ATTRIBUTES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Load chart attributes</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>LOAD_CHART_ATTRIBUTES</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Load chart attributes</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -323,18 +173,8 @@
      <DESCRIPT>Contents of table WWWDATA</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>MEDIA_KEY_WWW</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Contents of table WWWDATA</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>MEDIA_NAME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Generated file name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>MEDIA_NAME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Generated file name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -343,18 +183,8 @@
      <DESCRIPT>0=XSTRING, 1=WWW</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>MEDIA_SOURCE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>0=XSTRING, 1=WWW</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>MEDIA_TYPE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Type of media, file extension</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>MEDIA_TYPE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Type of media, file extension</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -363,18 +193,8 @@
      <DESCRIPT>Convert pixel to EMU</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>PIXEL2EMU</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Convert pixel to EMU</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_MEDIA</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Add media to drawing as XSTRING</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_MEDIA</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Add media to drawing as XSTRING</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -383,18 +203,8 @@
      <DESCRIPT>Add media from mime repository</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_MEDIA_MIME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Add media from mime repository</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_MEDIA_WWW</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Add media from www repository SMW0</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_MEDIA_WWW</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Add media from www repository SMW0</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -403,18 +213,8 @@
      <DESCRIPT>Set position of drawing</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_POSITION</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set position of drawing</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_POSITION2</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set position of drawing</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_POSITION2</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set position of drawing</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -423,18 +223,8 @@
      <DESCRIPT>Drawing size for Excel</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SIZE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Drawing size for Excel</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TITLE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Title</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TITLE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Title</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -443,18 +233,8 @@
      <DESCRIPT>Drawing location for Excel</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TO_LOC</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Drawing location for Excel</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TYPE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Drawing type: image|chart</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TYPE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Drawing type: image|chart</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -463,18 +243,8 @@
      <DESCRIPT>Excel Drawing type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>TYPE_CHART</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Excel Drawing type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>TYPE_IMAGE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Excel Drawing type</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>TYPE_IMAGE</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Excel Drawing type</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
