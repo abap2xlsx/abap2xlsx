@@ -3967,7 +3967,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             ENDIF.
 
           WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR
-               cl_abap_typedescr=>typekind_hex.
+               cl_abap_typedescr=>typekind_hex OR cl_abap_typedescr=>typekind_xstring.
             lv_value = <fs_value>.
             lv_data_type = 's'.
 
