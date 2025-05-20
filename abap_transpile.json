@@ -28,7 +28,12 @@
     "test/"
   ],
   "output_folder": "output",
-  "lib": "https://github.com/open-abap/open-abap",
+  "libs": [
+    {
+      "url": "https://github.com/open-abap/open-abap-core",
+      "files": "/src/**/*.*"
+    }
+  ],
   "write_unit_tests": true,
   "write_source_map": true,
   "options": {
