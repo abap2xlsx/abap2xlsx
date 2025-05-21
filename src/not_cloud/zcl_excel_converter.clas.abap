@@ -1244,30 +1244,30 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         l_table_row = sy-tabix.
 * Now the cell values
         ASSIGN COMPONENT <fs_sfcat>-columnname OF STRUCTURE <fs_stab> TO <fs_fldval>.
-      IF <fs_fldval> IS ASSIGNED.
+        IF sy-subrc = 0.
 * Now let's write the cell values
-        IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
-          l_style = get_color_style( i_row       = l_table_row
-                                     i_fieldname = <fs_sfcat>-columnname
-                                     i_style     = <fs_sfcat>-style_stripped  ).
-          wo_worksheet->set_cell( ip_column    = l_col_alpha
-                                  ip_row       = l_row_int
-                                  ip_value     = <fs_fldval>
-                                  ip_style     = l_style
-                                  ip_conv_exit_length = ws_option-conv_exit_length ).
-          CLEAR l_s_color.
-        ELSE.
-          l_style = get_color_style( i_row       = l_table_row
-                                     i_fieldname = <fs_sfcat>-columnname
-                                     i_style     = <fs_sfcat>-style_normal  ).
-          wo_worksheet->set_cell( ip_column    = l_col_alpha
-                                  ip_row       = l_row_int
-                                  ip_value     = <fs_fldval>
-                                  ip_style     = l_style
-                                  ip_conv_exit_length = ws_option-conv_exit_length  ).
-          l_s_color = abap_true.
+          IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
+            l_style = get_color_style( i_row       = l_table_row
+                                       i_fieldname = <fs_sfcat>-columnname
+                                       i_style     = <fs_sfcat>-style_stripped  ).
+            wo_worksheet->set_cell( ip_column    = l_col_alpha
+                                    ip_row       = l_row_int
+                                    ip_value     = <fs_fldval>
+                                    ip_style     = l_style
+                                    ip_conv_exit_length = ws_option-conv_exit_length ).
+            CLEAR l_s_color.
+          ELSE.
+            l_style = get_color_style( i_row       = l_table_row
+                                       i_fieldname = <fs_sfcat>-columnname
+                                       i_style     = <fs_sfcat>-style_normal  ).
+            wo_worksheet->set_cell( ip_column    = l_col_alpha
+                                    ip_row       = l_row_int
+                                    ip_value     = <fs_fldval>
+                                    ip_style     = l_style
+                                    ip_conv_exit_length = ws_option-conv_exit_length  ).
+            l_s_color = abap_true.
+          ENDIF.
         ENDIF.
-       ENDIF.
         READ TABLE wt_filter TRANSPORTING NO FIELDS WITH TABLE KEY rownumber  = l_table_row
                                                                    columnname = <fs_sfcat>-columnname.
         IF sy-subrc = 0.
