@@ -56,7 +56,7 @@
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string_multi_style", "note": "??"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_skip_to_inexistent",        "note": "??"},
 
-      {"object": "ZCL_EXCEL_COMMON", "class": "ltc_utclong_to_excel_string", "method": "simple", "note": "?? missing method CL_ABAP_TSTMP=>UTCLONG2TSTMP_SHORT, I'm too lazy to add it today"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "ltc_utclong_to_excel_string", "method": "simple", "note": "todo CL_ABAP_TSTMP=>UTCLONG2TSTMP_SHORT"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "?? sy value defaults"}
     ]
   }
