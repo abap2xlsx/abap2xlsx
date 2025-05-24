@@ -23,7 +23,7 @@ CLASS zcl_excel_font DEFINITION
     TYPES:
       BEGIN OF mty_s_font_metric,
         char       TYPE c LENGTH 1,
-        char_width TYPE tdcwidths,
+        char_width TYPE i,
       END OF mty_s_font_metric .
     TYPES:
       mty_th_font_metrics
