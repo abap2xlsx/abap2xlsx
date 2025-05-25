@@ -673,12 +673,16 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD clone_ixml_with_namespaces.
 
+    TYPES: BEGIN OF ty_name_value,
+             name  TYPE string,
+             value TYPE string,
+           END OF ty_name_value.
+
     DATA: iterator    TYPE REF TO if_ixml_node_iterator,
           node        TYPE REF TO if_ixml_node,
-          xmlns       TYPE ihttpnvp,
-          xmlns_table TYPE TABLE OF ihttpnvp.
-    FIELD-SYMBOLS:
-      <xmlns> TYPE ihttpnvp.
+          xmlns       TYPE ty_name_value,
+          xmlns_table TYPE TABLE OF ty_name_value.
+    FIELD-SYMBOLS <xmlns> TYPE ty_name_value.
 
     iterator = element->create_iterator( ).
     result ?= element->clone( ).
