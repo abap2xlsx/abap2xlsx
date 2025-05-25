@@ -675,10 +675,10 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
     DATA: iterator    TYPE REF TO if_ixml_node_iterator,
           node        TYPE REF TO if_ixml_node,
-          xmlns       TYPE ihttpnvp,
-          xmlns_table TYPE TABLE OF ihttpnvp.
+          xmlns       TYPE string,
+          xmlns_table TYPE TABLE OF string.
     FIELD-SYMBOLS:
-      <xmlns> TYPE ihttpnvp.
+      <xmlns> TYPE string.
 
     iterator = element->create_iterator( ).
     result ?= element->clone( ).
