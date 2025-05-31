@@ -4622,7 +4622,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ADD 1 TO lv_r_index.
     ENDWHILE.
 
-    eo_comment->set_text_rtf( ip_ref = lv_ref ip_text = lv_text it_rtf = lt_rtf ).
+    TRY.
+        eo_comment->set_text_rtf( ip_ref = lv_ref ip_text = lv_text it_rtf = lt_rtf ).
+      CATCH zcx_excel.
+        " Only internal call here: program logic above should ensure consistency
+    ENDTRY.
 
   ENDMETHOD.
 ENDCLASS.

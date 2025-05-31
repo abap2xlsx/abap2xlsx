@@ -9,288 +9,288 @@ CLASS zcl_excel_writer_2007 DEFINITION
     INTERFACES zif_excel_writer .
     METHODS constructor.
 
-PROTECTED SECTION.
+  PROTECTED SECTION.
 
-  TYPES:
+    TYPES:
 *"* protected components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
-    BEGIN OF mty_column_formula_used,
-      id TYPE zexcel_s_cell_data-column_formula_id,
-      si TYPE string,
-      "! type: shared, etc.
-      t  TYPE string,
-    END OF mty_column_formula_used .
-  TYPES:
-    mty_column_formulas_used TYPE HASHED TABLE OF mty_column_formula_used WITH UNIQUE KEY id .
+      BEGIN OF mty_column_formula_used,
+        id TYPE zexcel_s_cell_data-column_formula_id,
+        si TYPE string,
+        "! type: shared, etc.
+        t  TYPE string,
+      END OF mty_column_formula_used .
+    TYPES:
+      mty_column_formulas_used TYPE HASHED TABLE OF mty_column_formula_used WITH UNIQUE KEY id .
 
-  CONSTANTS c_content_types TYPE string VALUE '[Content_Types].xml' ##NO_TEXT.
-  CONSTANTS c_docprops_app TYPE string VALUE 'docProps/app.xml' ##NO_TEXT.
-  CONSTANTS c_docprops_core TYPE string VALUE 'docProps/core.xml' ##NO_TEXT.
-  CONSTANTS c_relationships TYPE string VALUE '_rels/.rels' ##NO_TEXT.
-  CONSTANTS c_xl_calcchain TYPE string VALUE 'xl/calcChain.xml' ##NO_TEXT.
-  CONSTANTS c_xl_drawings TYPE string VALUE 'xl/drawings/drawing#.xml' ##NO_TEXT.
-  CONSTANTS c_xl_drawings_rels TYPE string VALUE 'xl/drawings/_rels/drawing#.xml.rels' ##NO_TEXT.
-  CONSTANTS c_xl_relationships TYPE string VALUE 'xl/_rels/workbook.xml.rels' ##NO_TEXT.
-  CONSTANTS c_xl_sharedstrings TYPE string VALUE 'xl/sharedStrings.xml' ##NO_TEXT.
-  CONSTANTS c_xl_sheet TYPE string VALUE 'xl/worksheets/sheet#.xml' ##NO_TEXT.
-  CONSTANTS c_xl_sheet_rels TYPE string VALUE 'xl/worksheets/_rels/sheet#.xml.rels' ##NO_TEXT.
-  CONSTANTS c_xl_styles TYPE string VALUE 'xl/styles.xml' ##NO_TEXT.
-  CONSTANTS c_xl_theme TYPE string VALUE 'xl/theme/theme1.xml' ##NO_TEXT.
-  CONSTANTS c_xl_workbook TYPE string VALUE 'xl/workbook.xml' ##NO_TEXT.
-  DATA excel TYPE REF TO zcl_excel .
-  DATA shared_strings TYPE zexcel_t_shared_string .
-  DATA styles_cond_mapping TYPE zexcel_t_styles_cond_mapping .
-  DATA styles_mapping TYPE zexcel_t_styles_mapping .
-  CONSTANTS c_xl_comments TYPE string VALUE 'xl/comments#.xml' ##NO_TEXT.
-  CONSTANTS cl_xl_drawing_for_comments TYPE string VALUE 'xl/drawings/vmlDrawing#.vml' ##NO_TEXT.
-  CONSTANTS c_xl_drawings_vml_rels TYPE string VALUE 'xl/drawings/_rels/vmlDrawing#.vml.rels' ##NO_TEXT.
-  DATA ixml TYPE REF TO if_ixml .
-  DATA control_characters TYPE string .
+    CONSTANTS c_content_types TYPE string VALUE '[Content_Types].xml' ##NO_TEXT.
+    CONSTANTS c_docprops_app TYPE string VALUE 'docProps/app.xml' ##NO_TEXT.
+    CONSTANTS c_docprops_core TYPE string VALUE 'docProps/core.xml' ##NO_TEXT.
+    CONSTANTS c_relationships TYPE string VALUE '_rels/.rels' ##NO_TEXT.
+    CONSTANTS c_xl_calcchain TYPE string VALUE 'xl/calcChain.xml' ##NO_TEXT.
+    CONSTANTS c_xl_drawings TYPE string VALUE 'xl/drawings/drawing#.xml' ##NO_TEXT.
+    CONSTANTS c_xl_drawings_rels TYPE string VALUE 'xl/drawings/_rels/drawing#.xml.rels' ##NO_TEXT.
+    CONSTANTS c_xl_relationships TYPE string VALUE 'xl/_rels/workbook.xml.rels' ##NO_TEXT.
+    CONSTANTS c_xl_sharedstrings TYPE string VALUE 'xl/sharedStrings.xml' ##NO_TEXT.
+    CONSTANTS c_xl_sheet TYPE string VALUE 'xl/worksheets/sheet#.xml' ##NO_TEXT.
+    CONSTANTS c_xl_sheet_rels TYPE string VALUE 'xl/worksheets/_rels/sheet#.xml.rels' ##NO_TEXT.
+    CONSTANTS c_xl_styles TYPE string VALUE 'xl/styles.xml' ##NO_TEXT.
+    CONSTANTS c_xl_theme TYPE string VALUE 'xl/theme/theme1.xml' ##NO_TEXT.
+    CONSTANTS c_xl_workbook TYPE string VALUE 'xl/workbook.xml' ##NO_TEXT.
+    DATA excel TYPE REF TO zcl_excel .
+    DATA shared_strings TYPE zexcel_t_shared_string .
+    DATA styles_cond_mapping TYPE zexcel_t_styles_cond_mapping .
+    DATA styles_mapping TYPE zexcel_t_styles_mapping .
+    CONSTANTS c_xl_comments TYPE string VALUE 'xl/comments#.xml' ##NO_TEXT.
+    CONSTANTS cl_xl_drawing_for_comments TYPE string VALUE 'xl/drawings/vmlDrawing#.vml' ##NO_TEXT.
+    CONSTANTS c_xl_drawings_vml_rels TYPE string VALUE 'xl/drawings/_rels/vmlDrawing#.vml.rels' ##NO_TEXT.
+    DATA ixml TYPE REF TO if_ixml .
+    DATA control_characters TYPE string .
 
-  METHODS create_xl_sheet_sheet_data
-    IMPORTING
-      !io_document                   TYPE REF TO if_ixml_document
-      !io_worksheet                  TYPE REF TO zcl_excel_worksheet
-    RETURNING
-      VALUE(rv_ixml_sheet_data_root) TYPE REF TO if_ixml_element
-    RAISING
-      zcx_excel .
-  METHODS add_further_data_to_zip
-    IMPORTING
-      !io_zip TYPE REF TO cl_abap_zip .
-  METHODS create
-    RETURNING
-      VALUE(ep_excel) TYPE xstring
-    RAISING
-      zcx_excel .
-  METHODS create_content_types
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_docprops_app
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_docprops_core
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_dxf_style
-    IMPORTING
-      !iv_cell_style    TYPE zexcel_cell_style
-      !io_dxf_element   TYPE REF TO if_ixml_element
-      !io_ixml_document TYPE REF TO if_ixml_document
-      !it_cellxfs       TYPE zexcel_t_cellxfs
-      !it_fonts         TYPE zexcel_t_style_font
-      !it_fills         TYPE zexcel_t_style_fill
-    CHANGING
-      !cv_dfx_count     TYPE i .
-  METHODS create_relationships
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_charts
-    IMPORTING
-      !io_drawing       TYPE REF TO zcl_excel_drawing
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_comments
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_drawings
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_drawings_rels
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_drawing_anchor
-    IMPORTING
-      !io_drawing      TYPE REF TO zcl_excel_drawing
-      !io_document     TYPE REF TO if_ixml_document
-      !ip_index        TYPE i
-    RETURNING
-      VALUE(ep_anchor) TYPE REF TO if_ixml_element .
-  METHODS create_xl_drawing_for_comments
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-    RETURNING
-      VALUE(ep_content) TYPE xstring
-    RAISING
-      zcx_excel .
-  METHODS create_xl_relationships
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_sharedstrings
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_sheet
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-      !iv_active        TYPE flag DEFAULT ''
-    RETURNING
-      VALUE(ep_content) TYPE xstring
-    RAISING
-      zcx_excel .
-  METHODS create_xl_sheet_ignored_errors
-    IMPORTING
-      !io_worksheet    TYPE REF TO zcl_excel_worksheet
-      !io_document     TYPE REF TO if_ixml_document
-      !io_element_root TYPE REF TO if_ixml_element .
-  METHODS create_xl_sheet_pagebreaks
-    IMPORTING
-      !io_document  TYPE REF TO if_ixml_document
-      !io_parent    TYPE REF TO if_ixml_element
-      !io_worksheet TYPE REF TO zcl_excel_worksheet
-    RAISING
-      zcx_excel .
-  METHODS create_xl_sheet_rels
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-      !iv_drawing_index TYPE i OPTIONAL
-      !iv_comment_index TYPE i OPTIONAL
-      !iv_cmnt_vmlindex TYPE i OPTIONAL
-      !iv_hdft_vmlindex TYPE i OPTIONAL
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_styles
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_styles_color_node
-    IMPORTING
-      !io_document        TYPE REF TO if_ixml_document
-      !io_parent          TYPE REF TO if_ixml_element
-      !iv_color_elem_name TYPE string DEFAULT 'color'
-      !is_color           TYPE zexcel_s_style_color .
-  METHODS create_xl_styles_font_node
-    IMPORTING
-      !io_document TYPE REF TO if_ixml_document
-      !io_parent   TYPE REF TO if_ixml_element
-      !is_font     TYPE zexcel_s_style_font
-      !iv_use_rtf  TYPE abap_bool DEFAULT abap_false .
-  METHODS create_xl_table
-    IMPORTING
-      !io_table         TYPE REF TO zcl_excel_table
-    RETURNING
-      VALUE(ep_content) TYPE xstring
-    RAISING
-      zcx_excel .
-  METHODS create_xl_theme
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_workbook
-    RETURNING
-      VALUE(ep_content) TYPE xstring
-    RAISING
-      zcx_excel .
-  METHODS get_shared_string_index
-    IMPORTING
-      !ip_cell_value  TYPE zexcel_cell_value
-      !it_rtf         TYPE zexcel_t_rtf OPTIONAL
-    RETURNING
-      VALUE(ep_index) TYPE int4 .
-  METHODS create_xl_drawings_vml
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS set_vml_string
-    RETURNING
-      VALUE(ep_content) TYPE string .
-  METHODS create_xl_drawings_vml_rels
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS escape_string_value
-    IMPORTING
-      !iv_value     TYPE zexcel_cell_value
-    RETURNING
-      VALUE(result) TYPE zexcel_cell_value .
-  METHODS set_vml_shape_footer
-    IMPORTING
-      !is_footer        TYPE zexcel_s_worksheet_head_foot
-    RETURNING
-      VALUE(ep_content) TYPE string .
-  METHODS set_vml_shape_header
-    IMPORTING
-      !is_header        TYPE zexcel_s_worksheet_head_foot
-    RETURNING
-      VALUE(ep_content) TYPE string .
-  METHODS create_xl_drawing_for_hdft_im
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xl_drawings_hdft_rels
-    IMPORTING
-      !io_worksheet     TYPE REF TO zcl_excel_worksheet
-    RETURNING
-      VALUE(ep_content) TYPE xstring .
-  METHODS create_xml_document
-    RETURNING
-      VALUE(ro_document) TYPE REF TO if_ixml_document .
-  METHODS render_xml_document
-    IMPORTING
-      !io_document           TYPE REF TO if_ixml_document OPTIONAL
-      !iv_document_as_string TYPE string OPTIONAL
-        PREFERRED PARAMETER io_document
-    RETURNING
-      VALUE(ep_content)      TYPE xstring .
-  METHODS create_xl_sheet_column_formula
-    IMPORTING
-      !io_document             TYPE REF TO if_ixml_document
-      !it_column_formulas      TYPE zcl_excel_worksheet=>mty_th_column_formula
-      !is_sheet_content        TYPE zexcel_s_cell_data
-    EXPORTING
-      !eo_element              TYPE REF TO if_ixml_element
-    CHANGING
-      !ct_column_formulas_used TYPE mty_column_formulas_used
-      !cv_si                   TYPE i
-    RAISING
-      zcx_excel .
-  METHODS is_formula_shareable
-    IMPORTING
-      !ip_formula         TYPE string
-    RETURNING
-      VALUE(ep_shareable) TYPE abap_bool
-    RAISING
-      zcx_excel .
-PRIVATE SECTION.
+    METHODS create_xl_sheet_sheet_data
+      IMPORTING
+        !io_document                   TYPE REF TO if_ixml_document
+        !io_worksheet                  TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(rv_ixml_sheet_data_root) TYPE REF TO if_ixml_element
+      RAISING
+        zcx_excel .
+    METHODS add_further_data_to_zip
+      IMPORTING
+        !io_zip TYPE REF TO cl_abap_zip .
+    METHODS create
+      RETURNING
+        VALUE(ep_excel) TYPE xstring
+      RAISING
+        zcx_excel .
+    METHODS create_content_types
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_docprops_app
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_docprops_core
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_dxf_style
+      IMPORTING
+        !iv_cell_style    TYPE zexcel_cell_style
+        !io_dxf_element   TYPE REF TO if_ixml_element
+        !io_ixml_document TYPE REF TO if_ixml_document
+        !it_cellxfs       TYPE zexcel_t_cellxfs
+        !it_fonts         TYPE zexcel_t_style_font
+        !it_fills         TYPE zexcel_t_style_fill
+      CHANGING
+        !cv_dfx_count     TYPE i .
+    METHODS create_relationships
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_charts
+      IMPORTING
+        !io_drawing       TYPE REF TO zcl_excel_drawing
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_comments
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_drawings
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_drawings_rels
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_drawing_anchor
+      IMPORTING
+        !io_drawing      TYPE REF TO zcl_excel_drawing
+        !io_document     TYPE REF TO if_ixml_document
+        !ip_index        TYPE i
+      RETURNING
+        VALUE(ep_anchor) TYPE REF TO if_ixml_element .
+    METHODS create_xl_drawing_for_comments
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
+    METHODS create_xl_relationships
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_sharedstrings
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_sheet
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+        !iv_active        TYPE flag DEFAULT ''
+      RETURNING
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
+    METHODS create_xl_sheet_ignored_errors
+      IMPORTING
+        !io_worksheet    TYPE REF TO zcl_excel_worksheet
+        !io_document     TYPE REF TO if_ixml_document
+        !io_element_root TYPE REF TO if_ixml_element .
+    METHODS create_xl_sheet_pagebreaks
+      IMPORTING
+        !io_document  TYPE REF TO if_ixml_document
+        !io_parent    TYPE REF TO if_ixml_element
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS create_xl_sheet_rels
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+        !iv_drawing_index TYPE i OPTIONAL
+        !iv_comment_index TYPE i OPTIONAL
+        !iv_cmnt_vmlindex TYPE i OPTIONAL
+        !iv_hdft_vmlindex TYPE i OPTIONAL
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_styles
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_styles_color_node
+      IMPORTING
+        !io_document        TYPE REF TO if_ixml_document
+        !io_parent          TYPE REF TO if_ixml_element
+        !iv_color_elem_name TYPE string DEFAULT 'color'
+        !is_color           TYPE zexcel_s_style_color .
+    METHODS create_xl_styles_font_node
+      IMPORTING
+        !io_document TYPE REF TO if_ixml_document
+        !io_parent   TYPE REF TO if_ixml_element
+        !is_font     TYPE zexcel_s_style_font
+        !iv_use_rtf  TYPE abap_bool DEFAULT abap_false .
+    METHODS create_xl_table
+      IMPORTING
+        !io_table         TYPE REF TO zcl_excel_table
+      RETURNING
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
+    METHODS create_xl_theme
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_workbook
+      RETURNING
+        VALUE(ep_content) TYPE xstring
+      RAISING
+        zcx_excel .
+    METHODS get_shared_string_index
+      IMPORTING
+        !ip_cell_value  TYPE zexcel_cell_value
+        !it_rtf         TYPE zexcel_t_rtf OPTIONAL
+      RETURNING
+        VALUE(ep_index) TYPE int4 .
+    METHODS create_xl_drawings_vml
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS set_vml_string
+      RETURNING
+        VALUE(ep_content) TYPE string .
+    METHODS create_xl_drawings_vml_rels
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS escape_string_value
+      IMPORTING
+        !iv_value     TYPE zexcel_cell_value
+      RETURNING
+        VALUE(result) TYPE zexcel_cell_value .
+    METHODS set_vml_shape_footer
+      IMPORTING
+        !is_footer        TYPE zexcel_s_worksheet_head_foot
+      RETURNING
+        VALUE(ep_content) TYPE string .
+    METHODS set_vml_shape_header
+      IMPORTING
+        !is_header        TYPE zexcel_s_worksheet_head_foot
+      RETURNING
+        VALUE(ep_content) TYPE string .
+    METHODS create_xl_drawing_for_hdft_im
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xl_drawings_hdft_rels
+      IMPORTING
+        !io_worksheet     TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(ep_content) TYPE xstring .
+    METHODS create_xml_document
+      RETURNING
+        VALUE(ro_document) TYPE REF TO if_ixml_document .
+    METHODS render_xml_document
+      IMPORTING
+        !io_document           TYPE REF TO if_ixml_document OPTIONAL
+        !iv_document_as_string TYPE string OPTIONAL
+          PREFERRED PARAMETER io_document
+      RETURNING
+        VALUE(ep_content)      TYPE xstring .
+    METHODS create_xl_sheet_column_formula
+      IMPORTING
+        !io_document             TYPE REF TO if_ixml_document
+        !it_column_formulas      TYPE zcl_excel_worksheet=>mty_th_column_formula
+        !is_sheet_content        TYPE zexcel_s_cell_data
+      EXPORTING
+        !eo_element              TYPE REF TO if_ixml_element
+      CHANGING
+        !ct_column_formulas_used TYPE mty_column_formulas_used
+        !cv_si                   TYPE i
+      RAISING
+        zcx_excel .
+    METHODS is_formula_shareable
+      IMPORTING
+        !ip_formula         TYPE string
+      RETURNING
+        VALUE(ep_shareable) TYPE abap_bool
+      RAISING
+        zcx_excel .
+  PRIVATE SECTION.
 
-  TYPES:
-    tv_charbool TYPE c LENGTH 5 .
+    TYPES:
+      tv_charbool TYPE c LENGTH 5 .
 
 *"* private components of class ZCL_EXCEL_WRITER_2007
 *"* do not include other source files here!!!
-  CONSTANTS c_off TYPE string VALUE '0' ##NO_TEXT.
-  CONSTANTS c_on TYPE string VALUE '1' ##NO_TEXT.
-  CONSTANTS c_xl_printersettings TYPE string VALUE 'xl/printerSettings/printerSettings#.bin' ##NO_TEXT.
+    CONSTANTS c_off TYPE string VALUE '0' ##NO_TEXT.
+    CONSTANTS c_on TYPE string VALUE '1' ##NO_TEXT.
+    CONSTANTS c_xl_printersettings TYPE string VALUE 'xl/printerSettings/printerSettings#.bin' ##NO_TEXT.
 
-  METHODS get_comment_anchor
-    IMPORTING
-      !io_comment      TYPE REF TO zcl_excel_comment
-    RETURNING
-      VALUE(ev_anchor) TYPE string .
-  METHODS add_1_val_child_node
-    IMPORTING
-      !io_document   TYPE REF TO if_ixml_document
-      !io_parent     TYPE REF TO if_ixml_element
-      !iv_elem_name  TYPE string
-      !iv_attr_name  TYPE string
-      !iv_attr_value TYPE string .
-  METHODS flag2bool
-    IMPORTING
-      !ip_flag          TYPE flag
-    RETURNING
-      VALUE(ep_boolean) TYPE tv_charbool .
-  METHODS number2string
-    IMPORTING
-      !ip_number       TYPE numeric
-    RETURNING
-      VALUE(ep_string) TYPE string .
+    METHODS get_comment_anchor
+      IMPORTING
+        !io_comment      TYPE REF TO zcl_excel_comment
+      RETURNING
+        VALUE(ev_anchor) TYPE string .
+    METHODS add_1_val_child_node
+      IMPORTING
+        !io_document   TYPE REF TO if_ixml_document
+        !io_parent     TYPE REF TO if_ixml_element
+        !iv_elem_name  TYPE string
+        !iv_attr_name  TYPE string
+        !iv_attr_value TYPE string .
+    METHODS flag2bool
+      IMPORTING
+        !ip_flag          TYPE flag
+      RETURNING
+        VALUE(ep_boolean) TYPE tv_charbool .
+    METHODS number2string
+      IMPORTING
+        !ip_number       TYPE numeric
+      RETURNING
+        VALUE(ep_string) TYPE string .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
+CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD add_1_val_child_node.
@@ -2398,8 +2398,8 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
     lo_comments = io_worksheet->get_comments( ).
 
     DATA:
-      lt_rtf TYPE zexcel_t_rtf,
-      lv_text type string.
+      lt_rtf  TYPE zexcel_t_rtf,
+      lv_text TYPE string.
     FIELD-SYMBOLS:
       <ls_rtf> TYPE zexcel_s_rtf.
 
@@ -3076,217 +3076,217 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
-METHOD create_xl_drawing_for_comments.
+  METHOD create_xl_drawing_for_comments.
 
-  DATA: lo_document              TYPE REF TO if_ixml_document,
-        lo_element_root          TYPE REF TO if_ixml_element,
-        "shapelayout
-        lo_element_shapelayout   TYPE REF TO if_ixml_element,
-        lo_element_idmap         TYPE REF TO if_ixml_element,
-        "shapetype
-        lo_element_shapetype     TYPE REF TO if_ixml_element,
-        lo_element_stroke        TYPE REF TO if_ixml_element,
-        lo_element_path          TYPE REF TO if_ixml_element,
-        "shape
-        lo_element_shape         TYPE REF TO if_ixml_element,
-        lo_element_fill          TYPE REF TO if_ixml_element,
-        lo_element_shadow        TYPE REF TO if_ixml_element,
-        lo_element_textbox       TYPE REF TO if_ixml_element,
-        lo_element_div           TYPE REF TO if_ixml_element,
-        lo_element_clientdata    TYPE REF TO if_ixml_element,
-        lo_element_movewithcells TYPE REF TO if_ixml_element,
-        lo_element_sizewithcells TYPE REF TO if_ixml_element,
-        lo_element_anchor        TYPE REF TO if_ixml_element,
-        lo_element_autofill      TYPE REF TO if_ixml_element,
-        lo_element_row           TYPE REF TO if_ixml_element,
-        lo_element_column        TYPE REF TO if_ixml_element,
-        lo_iterator              TYPE REF TO zcl_excel_collection_iterator,
-        lo_anchors               TYPE REF TO if_ixml_node_collection,
-        lo_anchor                TYPE REF TO if_ixml_element,
-        lo_comments              TYPE REF TO zcl_excel_comments,
-        lo_comment               TYPE REF TO zcl_excel_comment,
-        lv_row                   TYPE zexcel_cell_row,
-        lv_str_column            TYPE zexcel_cell_column_alpha,
-        lv_column                TYPE zexcel_cell_column,
-        lv_index                 TYPE i,
-        lv_attr_id_index         TYPE i,
-        lv_attr_id               TYPE string,
-        lv_int_value             TYPE i,
-        lv_int_value_string      TYPE string,
-        lv_anchor                TYPE string.
+    DATA: lo_document              TYPE REF TO if_ixml_document,
+          lo_element_root          TYPE REF TO if_ixml_element,
+          "shapelayout
+          lo_element_shapelayout   TYPE REF TO if_ixml_element,
+          lo_element_idmap         TYPE REF TO if_ixml_element,
+          "shapetype
+          lo_element_shapetype     TYPE REF TO if_ixml_element,
+          lo_element_stroke        TYPE REF TO if_ixml_element,
+          lo_element_path          TYPE REF TO if_ixml_element,
+          "shape
+          lo_element_shape         TYPE REF TO if_ixml_element,
+          lo_element_fill          TYPE REF TO if_ixml_element,
+          lo_element_shadow        TYPE REF TO if_ixml_element,
+          lo_element_textbox       TYPE REF TO if_ixml_element,
+          lo_element_div           TYPE REF TO if_ixml_element,
+          lo_element_clientdata    TYPE REF TO if_ixml_element,
+          lo_element_movewithcells TYPE REF TO if_ixml_element,
+          lo_element_sizewithcells TYPE REF TO if_ixml_element,
+          lo_element_anchor        TYPE REF TO if_ixml_element,
+          lo_element_autofill      TYPE REF TO if_ixml_element,
+          lo_element_row           TYPE REF TO if_ixml_element,
+          lo_element_column        TYPE REF TO if_ixml_element,
+          lo_iterator              TYPE REF TO zcl_excel_collection_iterator,
+          lo_anchors               TYPE REF TO if_ixml_node_collection,
+          lo_anchor                TYPE REF TO if_ixml_element,
+          lo_comments              TYPE REF TO zcl_excel_comments,
+          lo_comment               TYPE REF TO zcl_excel_comment,
+          lv_row                   TYPE zexcel_cell_row,
+          lv_str_column            TYPE zexcel_cell_column_alpha,
+          lv_column                TYPE zexcel_cell_column,
+          lv_index                 TYPE i,
+          lv_attr_id_index         TYPE i,
+          lv_attr_id               TYPE string,
+          lv_int_value             TYPE i,
+          lv_int_value_string      TYPE string,
+          lv_anchor                TYPE string.
 
-  lo_comments = io_worksheet->get_comments( ).
-  IF lo_comments->gv_full_vml IS INITIAL.
+    lo_comments = io_worksheet->get_comments( ).
+    IF lo_comments->gv_full_vml IS INITIAL.
 
 **********************************************************************
 * STEP 1: Create XML document
-    lo_document = me->ixml->create_document( ).
+      lo_document = me->ixml->create_document( ).
 
 ***********************************************************************
 * STEP 2: Create main node relationships
-    lo_element_root = lo_document->create_simple_element( name   = `xml` parent = lo_document ).
-    lo_element_root->set_attribute_ns( name  = `xmlns:v`  value = `urn:schemas-microsoft-com:vml` ).
-    lo_element_root->set_attribute_ns( name  = `xmlns:o`  value = `urn:schemas-microsoft-com:office:office` ).
-    lo_element_root->set_attribute_ns( name  = `xmlns:x`  value = `urn:schemas-microsoft-com:office:excel` ).
+      lo_element_root = lo_document->create_simple_element( name   = `xml` parent = lo_document ).
+      lo_element_root->set_attribute_ns( name  = `xmlns:v`  value = `urn:schemas-microsoft-com:vml` ).
+      lo_element_root->set_attribute_ns( name  = `xmlns:o`  value = `urn:schemas-microsoft-com:office:office` ).
+      lo_element_root->set_attribute_ns( name  = `xmlns:x`  value = `urn:schemas-microsoft-com:office:excel` ).
 
 **********************************************************************
 * STEP 3: Create o:shapeLayout
 * TO-DO: management of several authors
-    lo_element_shapelayout = lo_document->create_simple_element( name   = `o:shapelayout`
+      lo_element_shapelayout = lo_document->create_simple_element( name   = `o:shapelayout`
+                                                                   parent = lo_element_root ).
+
+      lo_element_shapelayout->set_attribute_ns( name  = `v:ext`
+                                                value = `edit` ).
+
+      lo_element_idmap = lo_document->create_simple_element( name   = `o:idmap`
+                                                             parent = lo_element_shapelayout ).
+      lo_element_idmap->set_attribute_ns( name  = `v:ext`  value = `edit` ).
+      lo_element_idmap->set_attribute_ns( name  = `data`  value = `1` ).
+
+**********************************************************************
+* STEP 4: Create v:shapetype
+
+      lo_element_shapetype = lo_document->create_simple_element( name   = `v:shapetype`
                                                                  parent = lo_element_root ).
 
-    lo_element_shapelayout->set_attribute_ns( name  = `v:ext`
-                                              value = `edit` ).
+      lo_element_shapetype->set_attribute_ns( name  = `id`         value = `_x0000_t202` ).
+      lo_element_shapetype->set_attribute_ns( name  = `coordsize`  value = `21600,21600` ).
+      lo_element_shapetype->set_attribute_ns( name  = `o:spt`       value = `202` ).
+      lo_element_shapetype->set_attribute_ns( name  = `path`       value = `m,l,21600r21600,l21600,xe` ).
 
-    lo_element_idmap = lo_document->create_simple_element( name   = `o:idmap`
-                                                           parent = lo_element_shapelayout ).
-    lo_element_idmap->set_attribute_ns( name  = `v:ext`  value = `edit` ).
-    lo_element_idmap->set_attribute_ns( name  = `data`  value = `1` ).
+      lo_element_stroke = lo_document->create_simple_element( name   = `v:stroke`
+                                                              parent = lo_element_shapetype ).
+      lo_element_stroke->set_attribute_ns( name  = `joinstyle`       value = `miter` ).
+
+      lo_element_path   = lo_document->create_simple_element( name   = `v:path`
+                                                              parent = lo_element_shapetype ).
+      lo_element_path->set_attribute_ns( name  = `gradientshapeok` value = `t` ).
+      lo_element_path->set_attribute_ns( name  = `o:connecttype`    value = `rect` ).
 
 **********************************************************************
 * STEP 4: Create v:shapetype
 
-    lo_element_shapetype = lo_document->create_simple_element( name   = `v:shapetype`
+
+      lo_iterator = lo_comments->get_iterator( ).
+      WHILE lo_iterator->has_next( ) EQ abap_true.
+        lv_index = sy-index.
+        lo_comment ?= lo_iterator->get_next( ).
+
+        zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow = lo_comment->get_ref( )
+                                                          IMPORTING e_column = lv_str_column
+                                                                    e_row    = lv_row ).
+        lv_column = zcl_excel_common=>convert_column2int( lv_str_column ).
+
+        lo_element_shape = lo_document->create_simple_element( name   = `v:shape`
                                                                parent = lo_element_root ).
 
-    lo_element_shapetype->set_attribute_ns( name  = `id`         value = `_x0000_t202` ).
-    lo_element_shapetype->set_attribute_ns( name  = `coordsize`  value = `21600,21600` ).
-    lo_element_shapetype->set_attribute_ns( name  = `o:spt`       value = `202` ).
-    lo_element_shapetype->set_attribute_ns( name  = `path`       value = `m,l,21600r21600,l21600,xe` ).
+        lv_attr_id_index = 1024 + lv_index.
+        lv_attr_id = lv_attr_id_index.
+        CONCATENATE `_x0000_s` lv_attr_id INTO lv_attr_id.
+        lo_element_shape->set_attribute_ns( name  = `id`          value = lv_attr_id ).
+        lo_element_shape->set_attribute_ns( name  = `type`        value = `#_x0000_t202` ).
+        lo_element_shape->set_attribute_ns( name  = `style`       value = `size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden` ).
+        lo_element_shape->set_attribute_ns( name  = `fillcolor`   value = `#ffffe1` ).
+        lo_element_shape->set_attribute_ns( name  = `o:insetmode` value = `auto` ).
 
-    lo_element_stroke = lo_document->create_simple_element( name   = `v:stroke`
-                                                            parent = lo_element_shapetype ).
-    lo_element_stroke->set_attribute_ns( name  = `joinstyle`       value = `miter` ).
-
-    lo_element_path   = lo_document->create_simple_element( name   = `v:path`
-                                                            parent = lo_element_shapetype ).
-    lo_element_path->set_attribute_ns( name  = `gradientshapeok` value = `t` ).
-    lo_element_path->set_attribute_ns( name  = `o:connecttype`    value = `rect` ).
-
-**********************************************************************
-* STEP 4: Create v:shapetype
-
-
-    lo_iterator = lo_comments->get_iterator( ).
-    WHILE lo_iterator->has_next( ) EQ abap_true.
-      lv_index = sy-index.
-      lo_comment ?= lo_iterator->get_next( ).
-
-      zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow = lo_comment->get_ref( )
-                                                        IMPORTING e_column = lv_str_column
-                                                                  e_row    = lv_row ).
-      lv_column = zcl_excel_common=>convert_column2int( lv_str_column ).
-
-      lo_element_shape = lo_document->create_simple_element( name   = `v:shape`
-                                                             parent = lo_element_root ).
-
-      lv_attr_id_index = 1024 + lv_index.
-      lv_attr_id = lv_attr_id_index.
-      CONCATENATE `_x0000_s` lv_attr_id INTO lv_attr_id.
-      lo_element_shape->set_attribute_ns( name  = `id`          value = lv_attr_id ).
-      lo_element_shape->set_attribute_ns( name  = `type`        value = `#_x0000_t202` ).
-      lo_element_shape->set_attribute_ns( name  = `style`       value = `size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden` ).
-      lo_element_shape->set_attribute_ns( name  = `fillcolor`   value = `#ffffe1` ).
-      lo_element_shape->set_attribute_ns( name  = `o:insetmode` value = `auto` ).
-
-      " Fill
-      lo_element_fill = lo_document->create_simple_element( name   = `v:fill`
-                                                            parent = lo_element_shape ).
-      lo_element_fill->set_attribute_ns( name = `color2`  value = `#ffffe1` ).
-
-      " Shadow
-      lo_element_shadow = lo_document->create_simple_element( name   = `v:shadow`
+        " Fill
+        lo_element_fill = lo_document->create_simple_element( name   = `v:fill`
                                                               parent = lo_element_shape ).
-      lo_element_shadow->set_attribute_ns( name = `on`        value = `t` ).
-      lo_element_shadow->set_attribute_ns( name = `color`     value = `black` ).
-      lo_element_shadow->set_attribute_ns( name = `obscured`  value = `t` ).
+        lo_element_fill->set_attribute_ns( name = `color2`  value = `#ffffe1` ).
 
-      " Path
-      lo_element_path = lo_document->create_simple_element( name   = `v:path`
-                                                            parent = lo_element_shape ).
-      lo_element_path->set_attribute_ns( name = `o:connecttype`  value = `none` ).
+        " Shadow
+        lo_element_shadow = lo_document->create_simple_element( name   = `v:shadow`
+                                                                parent = lo_element_shape ).
+        lo_element_shadow->set_attribute_ns( name = `on`        value = `t` ).
+        lo_element_shadow->set_attribute_ns( name = `color`     value = `black` ).
+        lo_element_shadow->set_attribute_ns( name = `obscured`  value = `t` ).
 
-      " Textbox
-      lo_element_textbox = lo_document->create_simple_element( name   = `v:textbox`
-                                                               parent = lo_element_shape ).
-      lo_element_textbox->set_attribute_ns( name = `style`  value = `mso-direction-alt:auto` ).
-      lo_element_div = lo_document->create_simple_element( name   = `div`
-                                                           parent = lo_element_div ).
-      lo_element_div->set_attribute_ns( name = `style`  value = `text-align:left` ).
+        " Path
+        lo_element_path = lo_document->create_simple_element( name   = `v:path`
+                                                              parent = lo_element_shape ).
+        lo_element_path->set_attribute_ns( name = `o:connecttype`  value = `none` ).
 
-      " ClientData
-      lo_element_clientdata = lo_document->create_simple_element( name   = `x:ClientData`
-                                                                  parent = lo_element_shape ).
-      lo_element_clientdata->set_attribute_ns( name = `ObjectType`  value = `Note` ).
-      lo_element_movewithcells = lo_document->create_simple_element( name   = `x:MoveWithCells`
-                                                                     parent = lo_element_clientdata ).
-      lo_element_sizewithcells = lo_document->create_simple_element( name   = `x:SizeWithCells`
-                                                                     parent = lo_element_clientdata ).
+        " Textbox
+        lo_element_textbox = lo_document->create_simple_element( name   = `v:textbox`
+                                                                 parent = lo_element_shape ).
+        lo_element_textbox->set_attribute_ns( name = `style`  value = `mso-direction-alt:auto` ).
+        lo_element_div = lo_document->create_simple_element( name   = `div`
+                                                             parent = lo_element_div ).
+        lo_element_div->set_attribute_ns( name = `style`  value = `text-align:left` ).
 
-      lo_element_anchor = lo_document->create_simple_element( name   = `x:Anchor`
-                                                              parent = lo_element_clientdata ).
+        " ClientData
+        lo_element_clientdata = lo_document->create_simple_element( name   = `x:ClientData`
+                                                                    parent = lo_element_shape ).
+        lo_element_clientdata->set_attribute_ns( name = `ObjectType`  value = `Note` ).
+        lo_element_movewithcells = lo_document->create_simple_element( name   = `x:MoveWithCells`
+                                                                       parent = lo_element_clientdata ).
+        lo_element_sizewithcells = lo_document->create_simple_element( name   = `x:SizeWithCells`
+                                                                       parent = lo_element_clientdata ).
 
-      " Anchor represents 4 pairs of numbers:
-      "   ( left column, left offset ), ( top row, top offset ),
-      "   ( right column, right offset ), ( bottom row, botton offset )
-      " Offsets are a number of pixels.
-      " Reference: Anchor Class at
-      "   https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.vml.spreadsheet.anchor?view=openxml-3.0.1
-      lv_anchor = get_comment_anchor( lo_comment ).
-      lo_element_anchor->set_value( lv_anchor ).
-
-      lo_element_autofill = lo_document->create_simple_element( name   = `x:AutoFill`
+        lo_element_anchor = lo_document->create_simple_element( name   = `x:Anchor`
                                                                 parent = lo_element_clientdata ).
-      lo_element_autofill->set_value( `False` ).
 
-      lo_element_row = lo_document->create_simple_element( name   = `x:Row`
-                                                           parent = lo_element_clientdata ).
-      lv_int_value = lv_row - 1.
-      lv_int_value_string = lv_int_value.
-      lo_element_row->set_value( lv_int_value_string ).
+        " Anchor represents 4 pairs of numbers:
+        "   ( left column, left offset ), ( top row, top offset ),
+        "   ( right column, right offset ), ( bottom row, botton offset )
+        " Offsets are a number of pixels.
+        " Reference: Anchor Class at
+        "   https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.vml.spreadsheet.anchor?view=openxml-3.0.1
+        lv_anchor = get_comment_anchor( lo_comment ).
+        lo_element_anchor->set_value( lv_anchor ).
 
-      lo_element_column = lo_document->create_simple_element( name   = `x:Column`
-                                                              parent = lo_element_clientdata ).
-      lv_int_value = lv_column - 1.
-      lv_int_value_string = lv_int_value.
-      lo_element_column->set_value( lv_int_value_string ).
+        lo_element_autofill = lo_document->create_simple_element( name   = `x:AutoFill`
+                                                                  parent = lo_element_clientdata ).
+        lo_element_autofill->set_value( `False` ).
 
-    ENDWHILE.
+        lo_element_row = lo_document->create_simple_element( name   = `x:Row`
+                                                             parent = lo_element_clientdata ).
+        lv_int_value = lv_row - 1.
+        lv_int_value_string = lv_int_value.
+        lo_element_row->set_value( lv_int_value_string ).
+
+        lo_element_column = lo_document->create_simple_element( name   = `x:Column`
+                                                                parent = lo_element_clientdata ).
+        lv_int_value = lv_column - 1.
+        lv_int_value_string = lv_int_value.
+        lo_element_column->set_value( lv_int_value_string ).
+
+      ENDWHILE.
 
 **********************************************************************
 * STEP 6: Create xstring stream
-    ep_content = render_xml_document( lo_document ).
+      ep_content = render_xml_document( lo_document ).
 
-  ELSE.
+    ELSE.
 
 * Replace the eight numbers in <x:Anchor> with the current values
 * (they may have been changed before calling the writer
-    lo_document = ixml->create_document( ).
-    CALL TRANSFORMATION id
-      SOURCE XML lo_comments->gv_full_vml
-      RESULT XML lo_document.
+      lo_document = ixml->create_document( ).
+      CALL TRANSFORMATION id
+        SOURCE XML lo_comments->gv_full_vml
+        RESULT XML lo_document.
 
-    lo_anchors = lo_document->get_elements_by_tag_name_ns(
-      name = `anchor`
-      uri  = `urn:schemas-microsoft-com:office:excel`
-    ).
+      lo_anchors = lo_document->get_elements_by_tag_name_ns(
+        name = `anchor`
+        uri  = `urn:schemas-microsoft-com:office:excel`
+      ).
 
-    lo_iterator = lo_comments->get_iterator( ).
-    WHILE lo_iterator->has_next( ) EQ abap_true.
-      lo_anchor ?= lo_anchors->get_item( sy-index - 1 ).
-      IF lo_anchor IS NOT BOUND.
-        EXIT.
-      ENDIF.
-      lo_comment ?= lo_iterator->get_next( ).
-      lv_anchor = get_comment_anchor( lo_comment ).
-      lo_anchor->set_value( lv_anchor ).
-    ENDWHILE.
+      lo_iterator = lo_comments->get_iterator( ).
+      WHILE lo_iterator->has_next( ) EQ abap_true.
+        lo_anchor ?= lo_anchors->get_item( sy-index - 1 ).
+        IF lo_anchor IS NOT BOUND.
+          EXIT.
+        ENDIF.
+        lo_comment ?= lo_iterator->get_next( ).
+        lv_anchor = get_comment_anchor( lo_comment ).
+        lo_anchor->set_value( lv_anchor ).
+      ENDWHILE.
 
-    ep_content = render_xml_document( lo_document ).
+      ep_content = render_xml_document( lo_document ).
 
-  ENDIF.
+    ENDIF.
 
-ENDMETHOD.
+  ENDMETHOD.
 
 
   METHOD create_xl_drawing_for_hdft_im.
