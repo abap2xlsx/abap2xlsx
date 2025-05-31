@@ -6,15 +6,6 @@ CLASS zcl_excel_comment DEFINITION
   PUBLIC SECTION.
 
     TYPES:
-      BEGIN OF ty_rtf_fragment.
-        INCLUDE TYPE zexcel_s_style_font AS rtf.
-    TYPES:
-        text TYPE string,
-      END OF ty_rtf_fragment .
-    TYPES:
-      ty_rtf_fragments TYPE STANDARD TABLE OF ty_rtf_fragment
-                WITH NON-UNIQUE DEFAULT KEY .
-    TYPES:
       BEGIN OF ty_box,
         left_column   TYPE i,
         left_offset   TYPE i,
@@ -86,6 +77,7 @@ CLASS zcl_excel_comment DEFINITION
         !ip_text          TYPE string OPTIONAL
         !is_style         TYPE zexcel_s_style_font OPTIONAL
         !ip_ref           TYPE string OPTIONAL
+        !it_rtf           TYPE zexcel_t_rtf OPTIONAL
         !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
         !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
         !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
@@ -93,32 +85,40 @@ CLASS zcl_excel_comment DEFINITION
         !ip_right_column  TYPE i DEFAULT gc_default_box-right_column
         !ip_right_offset  TYPE i DEFAULT gc_default_box-right_offset
         !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row
-        !ip_bottom_offset TYPE i DEFAULT gc_default_box-bottom_offset .
+        !ip_bottom_offset TYPE i DEFAULT gc_default_box-bottom_offset
+      RAISING
+        zcx_excel .
     METHODS get_text_rtf
       RETURNING
-        VALUE(et_rtf) TYPE ty_rtf_fragments .
+        VALUE(et_rtf) TYPE zexcel_t_rtf.
     METHODS set_text_rtf
       IMPORTING
-        !it_rtf TYPE ty_rtf_fragments OPTIONAL
-        !ip_ref TYPE string OPTIONAL
-        !is_box TYPE ty_box OPTIONAL .
+        !it_rtf  TYPE zexcel_t_rtf OPTIONAL
+        !ip_text TYPE string
+        !ip_ref  TYPE string OPTIONAL
+        !is_box  TYPE ty_box OPTIONAL
+      RAISING
+        zcx_excel .
   PROTECTED SECTION.
-PRIVATE SECTION.
+  PRIVATE SECTION.
 
-  DATA index TYPE string .
-  DATA ref TYPE string .
-  DATA gt_rtf TYPE ty_rtf_fragments .
-  DATA gs_box TYPE ty_box .
+    DATA index TYPE string .
+    DATA ref TYPE string .
+    DATA gt_rtf TYPE zexcel_t_rtf.
+    DATA gv_text TYPE string.
+    DATA gs_box TYPE ty_box .
 
-  METHODS add_text
-    IMPORTING
-      !ip_text  TYPE string
-      !is_style TYPE zexcel_s_style_font .
+    METHODS add_text
+      IMPORTING
+        !ip_text  TYPE string
+        !is_style TYPE zexcel_s_style_font
+      RAISING
+        zcx_excel .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COMMENT IMPLEMENTATION.
+CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -172,10 +172,7 @@ CLASS ZCL_EXCEL_COMMENT IMPLEMENTATION.
 
 
   METHOD get_text.
-    FIELD-SYMBOLS: <ls_rtf> LIKE LINE OF gt_rtf.
-    LOOP AT gt_rtf ASSIGNING <ls_rtf>.
-      CONCATENATE rp_text <ls_rtf>-text INTO rp_text.
-    ENDLOOP.
+    rp_text = gv_text.
   ENDMETHOD.
 
 
@@ -195,11 +192,16 @@ CLASS ZCL_EXCEL_COMMENT IMPLEMENTATION.
       ref = ip_ref.
     ENDIF.
 
-* Add a simple text with parameter IP_TEXT and style IS_STYLE
     IF ip_text IS NOT INITIAL.
-      add_text(
-        ip_text  = ip_text
-        is_style = is_style ).
+      IF it_rtf IS NOT INITIAL.
+* Add a text with differently styled formats
+        set_text_rtf( it_rtf = it_rtf ip_text = ip_text ).
+      ELSE.
+* Add a simple text with parameter IP_TEXT and style IS_STYLE
+        add_text(
+          ip_text  = ip_text
+          is_style = is_style ).
+      ENDIF.
     ENDIF.
 
 * Parameters of the containing box
@@ -226,14 +228,29 @@ CLASS ZCL_EXCEL_COMMENT IMPLEMENTATION.
 
   METHOD add_text.
 
+    CHECK ip_text IS NOT INITIAL.
+
+    DATA lv_off TYPE i.
+    lv_off = strlen( gv_text ).
+    gv_text = gv_text && ip_text.
+
     DATA ls_rtf LIKE LINE OF gt_rtf.
-    ls_rtf-text = ip_text.
+    ls_rtf-offset = lv_off.
+    ls_rtf-length = strlen( ip_text ).
     IF is_style IS INITIAL.
-      ls_rtf-rtf = get_default_style( ).
+      ls_rtf-font = get_default_style( ).
     ELSE.
-      ls_rtf-rtf = is_style.
+      ls_rtf-font = is_style.
     ENDIF.
     APPEND ls_rtf TO gt_rtf.
+
+    zcl_excel_common=>check_rtf(
+      EXPORTING
+        is_font = get_default_style(  )  " for filling fillable gaps
+        ip_value = gv_text
+      CHANGING
+        ct_rtf  = gt_rtf
+    ).
 
   ENDMETHOD.
 
@@ -258,7 +275,15 @@ CLASS ZCL_EXCEL_COMMENT IMPLEMENTATION.
   METHOD set_text_rtf.
 
 * Set a text, consisting of differently styled parts
-    gt_rtf = it_rtf.
+    gt_rtf  = it_rtf.
+    gv_text = ip_text.
+    zcl_excel_common=>check_rtf(
+      EXPORTING
+        ip_value = gv_text
+        is_font = get_default_style(  )
+      CHANGING
+        ct_rtf = gt_rtf
+    ).
 
     IF ip_ref IS SUPPLIED.
       ref = ip_ref.

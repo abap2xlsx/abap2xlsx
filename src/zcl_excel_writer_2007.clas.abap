@@ -2398,9 +2398,10 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
     lo_comments = io_worksheet->get_comments( ).
 
     DATA:
-      lt_rtf TYPE zcl_excel_comment=>ty_rtf_fragments.
+      lt_rtf TYPE zexcel_t_rtf,
+      lv_text type string.
     FIELD-SYMBOLS:
-      <ls_rtf> TYPE zcl_excel_comment=>ty_rtf_fragment.
+      <ls_rtf> TYPE zexcel_s_rtf.
 
     lo_iterator = lo_comments->get_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
@@ -2417,6 +2418,7 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
                                                             parent = lo_element_comment ).
 
       lt_rtf = lo_comment->get_text_rtf( ).
+      lv_text = lo_comment->get_text(  ).
 
       LOOP AT lt_rtf ASSIGNING <ls_rtf>.
 
@@ -2429,7 +2431,7 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
         create_xl_styles_font_node(
           io_document = lo_document
           io_parent   = lo_element_rpr
-          is_font     = <ls_rtf>-rtf
+          is_font     = <ls_rtf>-font
           iv_use_rtf  = abap_true  " generate <rFont>, not <name> element for font
         ).
 
@@ -2437,7 +2439,7 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
                                                               parent = lo_element_r ).
         lo_element_t->set_attribute_ns( name  = `xml:space`
                                         value = `preserve` ).
-        lo_element_t->set_value( <ls_rtf>-text ).
+        lo_element_t->set_value( substring( val = lv_text off = <ls_rtf>-offset len = <ls_rtf>-length ) ).
 
       ENDLOOP.
 
