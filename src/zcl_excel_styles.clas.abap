@@ -17,6 +17,7 @@ CLASS zcl_excel_styles DEFINITION
         !ip_index       TYPE i
       RETURNING
         VALUE(eo_style) TYPE REF TO zcl_excel_style .
+
     METHODS get_iterator
       RETURNING
         VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
@@ -113,4 +114,6 @@ CLASS zcl_excel_styles IMPLEMENTATION.
 
     ep_size = styles->size( ).
   ENDMETHOD.
+
+
 ENDCLASS.

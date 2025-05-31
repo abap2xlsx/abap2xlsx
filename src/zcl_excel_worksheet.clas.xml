@@ -504,6 +504,11 @@
      <DESCRIPT>Set column width</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>SET_COMMENT_BOXES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Set dimensions of info boxes for comments</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>SET_DEFAULT_EXCEL_DATE_FORMAT</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Sets default date format</DESCRIPT>

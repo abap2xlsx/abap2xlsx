@@ -5,6 +5,12 @@ CLASS zcl_excel_comments DEFINITION
 
   PUBLIC SECTION.
 
+    TYPES:
+      ty_boxes TYPE STANDARD TABLE OF zcl_excel_comment=>ty_box
+          WITH NON-UNIQUE DEFAULT KEY .
+
+    DATA gv_full_vml TYPE string READ-ONLY .
+
     METHODS add
       IMPORTING
         !ip_comment TYPE REF TO zcl_excel_comment .
@@ -12,7 +18,9 @@ CLASS zcl_excel_comments DEFINITION
       IMPORTING
         !ip_comment TYPE REF TO zcl_excel_comment .
     METHODS clear .
-    METHODS constructor .
+    METHODS constructor
+      IMPORTING
+        !io_from TYPE REF TO zcl_excel_comments OPTIONAL .
     METHODS get
       IMPORTING
         !ip_index         TYPE zexcel_active_worksheet
@@ -30,15 +38,20 @@ CLASS zcl_excel_comments DEFINITION
     METHODS size
       RETURNING
         VALUE(ep_size) TYPE i .
+    METHODS set_boxes
+      IMPORTING
+        !it_boxes    TYPE ty_boxes OPTIONAL
+        !iv_full_vml TYPE string OPTIONAL .
   PROTECTED SECTION.
-  PRIVATE SECTION.
+PRIVATE SECTION.
 
-    DATA comments TYPE REF TO zcl_excel_collection .
+  DATA comments TYPE REF TO zcl_excel_collection .
+  DATA gt_boxes TYPE ty_boxes .
 ENDCLASS.
 
 
 
-CLASS zcl_excel_comments IMPLEMENTATION.
+CLASS ZCL_EXCEL_COMMENTS IMPLEMENTATION.
 
 
   METHOD add.
@@ -57,7 +70,15 @@ CLASS zcl_excel_comments IMPLEMENTATION.
 
 
   METHOD constructor.
-    CREATE OBJECT comments.
+
+    IF io_from IS INITIAL.
+      CREATE OBJECT comments.
+    ELSE.
+* Copy constructor: copy attributes from original
+      comments    = io_from->comments.
+      gt_boxes    = io_from->gt_boxes.
+      gv_full_vml = io_from->gv_full_vml.
+    ENDIF.
 
   ENDMETHOD.
 
@@ -96,5 +117,38 @@ CLASS zcl_excel_comments IMPLEMENTATION.
   METHOD size.
 
     ep_size = comments->size( ).
+  ENDMETHOD.
+
+
+  METHOD set_boxes.
+
+    DATA:
+      lo_comments TYPE REF TO zcl_excel_collection_iterator,
+      lo_comment  TYPE REF TO zcl_excel_comment.
+
+    FIELD-SYMBOLS:
+      <ls_box> TYPE zcl_excel_comment=>ty_box.
+
+    IF it_boxes IS NOT INITIAL.
+      gt_boxes = it_boxes.
+    ENDIF.
+
+    IF iv_full_vml IS NOT INITIAL.
+      gv_full_vml = iv_full_vml.
+    ENDIF.
+
+    IF gt_boxes IS NOT INITIAL.
+
+      lo_comments = comments->get_iterator( ).
+      WHILE lo_comments->has_next( ) EQ abap_true.
+        READ TABLE gt_boxes INDEX 1 ASSIGNING <ls_box>.
+        CHECK sy-subrc EQ 0.
+        lo_comment ?= lo_comments->get_next( ).
+        lo_comment->set_box( <ls_box> ).
+        DELETE gt_boxes INDEX 1.
+      ENDWHILE.
+
+    ENDIF.
+
   ENDMETHOD.
 ENDCLASS.

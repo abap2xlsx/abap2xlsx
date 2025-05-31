@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
@@ -72,6 +72,11 @@
      <CMPNAME>GTT_EXTERNAL_HYPERLINKS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Table with external hyperlinks</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>LOAD_COMMENT_BOXES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Loads worksheet drawings</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>LOAD_DRAWING_ANCHOR</CMPNAME>
@@ -234,6 +239,20 @@
      <DESCRIPT>Zip Utility</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>LOAD_SINGLE_COMMENT</CMPNAME>
+     <SCONAME>EO_COMMENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Comment</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>LOAD_SINGLE_COMMENT</CMPNAME>
+     <SCONAME>IO_NODE_COMMENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Element of an XML Document</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>
