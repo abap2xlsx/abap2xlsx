@@ -694,6 +694,10 @@ CLASS zcl_excel_worksheet DEFINITION
         !er_data          TYPE REF TO data
       RAISING
         zcx_excel .
+    METHODS set_comment_boxes
+      IMPORTING
+        !it_boxes    TYPE zcl_excel_comments=>ty_boxes OPTIONAL
+        !iv_full_vml TYPE string OPTIONAL .
   PROTECTED SECTION.
     METHODS set_table_reference
       IMPORTING
@@ -1948,56 +1952,23 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD check_rtf.
 
-    DATA: lo_style           TYPE REF TO zcl_excel_style,
-          lo_iterator        TYPE REF TO zcl_excel_collection_iterator,
-          lv_next_rtf_offset TYPE i,
-          lv_tabix           TYPE i,
-          lv_value           TYPE string,
-          lv_val_length      TYPE i,
-          ls_rtf             LIKE LINE OF ct_rtf.
-    FIELD-SYMBOLS: <rtf> LIKE LINE OF ct_rtf.
+    DATA:
+      lo_style TYPE REF TO zcl_excel_style,
+      ls_font  TYPE zexcel_s_style_font.
 
     IF ip_style IS NOT SUPPLIED.
       ip_style = excel->get_default_style( ).
     ENDIF.
 
-    lo_iterator = excel->get_styles_iterator( ).
-    WHILE lo_iterator->has_next( ) = abap_true.
-      lo_style ?= lo_iterator->get_next( ).
-      IF lo_style->get_guid( ) = ip_style.
-        EXIT.
-      ENDIF.
-      CLEAR lo_style.
-    ENDWHILE.
+    lo_style = excel->get_style_from_guid( ip_style ).
+    ls_font = lo_style->font->get_structure(  ).
 
-    lv_next_rtf_offset = 0.
-    LOOP AT ct_rtf ASSIGNING <rtf>.
-      lv_tabix = sy-tabix.
-      IF lv_next_rtf_offset < <rtf>-offset.
-        ls_rtf-offset = lv_next_rtf_offset.
-        ls_rtf-length = <rtf>-offset - lv_next_rtf_offset.
-        ls_rtf-font   = lo_style->font->get_structure( ).
-        INSERT ls_rtf INTO ct_rtf INDEX lv_tabix.
-      ELSEIF lv_next_rtf_offset > <rtf>-offset.
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = 'Gaps or overlaps in RTF data offset/length specs'.
-      ENDIF.
-      lv_next_rtf_offset = <rtf>-offset + <rtf>-length.
-    ENDLOOP.
-
-    lv_value = ip_value.
-    lv_val_length = strlen( lv_value ).
-    IF lv_val_length > lv_next_rtf_offset.
-      ls_rtf-offset = lv_next_rtf_offset.
-      ls_rtf-length = lv_val_length - lv_next_rtf_offset.
-      ls_rtf-font   = lo_style->font->get_structure( ).
-      INSERT ls_rtf INTO TABLE ct_rtf.
-    ELSEIF lv_val_length > lv_next_rtf_offset.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'RTF specs length is not equal to value length'.
-    ENDIF.
+    zcl_excel_common=>check_rtf(
+    EXPORTING
+      ip_value = ip_value
+      is_font = ls_font
+    CHANGING
+      ct_rtf = ct_rtf ).
 
   ENDMETHOD.
 
@@ -2612,16 +2583,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_comments.
-    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
-          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
 
-    CREATE OBJECT r_comments.
-
-    lo_iterator = comments->get_iterator( ).
-    WHILE lo_iterator->has_next( ) = abap_true.
-      lo_comment ?= lo_iterator->get_next( ).
-      r_comments->include( lo_comment ).
-    ENDWHILE.
+* Create a copy of the comments attribute
+    CREATE OBJECT r_comments
+      EXPORTING
+        io_from = comments.
 
   ENDMETHOD.                    "get_comments
 
@@ -2657,7 +2623,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_default_excel_date_format.
-    CONSTANTS c_lang_e TYPE langu VALUE 'E'.
+    CONSTANTS c_lang_e TYPE lang VALUE 'E'.
 
     IF default_excel_date_format IS NOT INITIAL.
       ep_default_excel_date_format = default_excel_date_format.
@@ -3967,7 +3933,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             ENDIF.
 
           WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR
-               cl_abap_typedescr=>typekind_hex OR cl_abap_typedescr=>typekind_xstring.
+               cl_abap_typedescr=>typekind_hex.
             lv_value = <fs_value>.
             lv_data_type = 's'.
 
@@ -4869,4 +4835,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD zif_excel_sheet_vba_project~set_codename_pr.
     me->zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR
+
+
+  METHOD set_comment_boxes.
+    comments->set_boxes( it_boxes = it_boxes iv_full_vml = iv_full_vml ).
+  ENDMETHOD.
+
+
 ENDCLASS.

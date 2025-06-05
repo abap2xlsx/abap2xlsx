@@ -5,9 +5,33 @@ CLASS zcl_excel_comment DEFINITION
 
   PUBLIC SECTION.
 
-    CONSTANTS default_right_column TYPE i VALUE 4.  "#EC NOTEXT
-    CONSTANTS default_bottom_row   TYPE i VALUE 15. "#EC NOTEXT
+    TYPES:
+      BEGIN OF ty_box,
+        left_column   TYPE i,
+        left_offset   TYPE i,
+        top_row       TYPE i,
+        top_offset    TYPE i,
+        right_column  TYPE i,
+        right_offset  TYPE i,
+        bottom_row    TYPE i,
+        bottom_offset TYPE i,
+      END OF ty_box .
 
+    CONSTANTS:
+      BEGIN OF gc_default_box,
+        left_column   TYPE i VALUE 2,
+        left_offset   TYPE i VALUE 15,
+        top_row       TYPE i VALUE 11,
+        top_offset    TYPE i VALUE 10,
+        right_column  TYPE i VALUE 4,
+        right_offset  TYPE i VALUE 31,
+        bottom_row    TYPE i VALUE 15,
+        bottom_offset TYPE i VALUE 9,
+      END OF gc_default_box .
+
+    CLASS-METHODS get_default_style
+      RETURNING
+        VALUE(es_default) TYPE zexcel_s_style_font .
     METHODS constructor .
     METHODS get_bottom_offset
       RETURNING
@@ -45,33 +69,51 @@ CLASS zcl_excel_comment DEFINITION
     METHODS get_top_row
       RETURNING
         VALUE(rp_result) TYPE i .
+    METHODS set_box
+      IMPORTING
+        !is_box TYPE ty_box .
     METHODS set_text
       IMPORTING
-        !ip_text          TYPE string
+        !ip_text          TYPE string OPTIONAL
+        !is_style         TYPE zexcel_s_style_font OPTIONAL
         !ip_ref           TYPE string OPTIONAL
-        !ip_left_column   TYPE i DEFAULT 2
-        !ip_left_offset   TYPE i DEFAULT 15
-        !ip_top_row       TYPE i DEFAULT 11
-        !ip_top_offset    TYPE i DEFAULT 10
-        !ip_right_column  TYPE i DEFAULT default_right_column
-        !ip_right_offset  TYPE i DEFAULT 31
-        !ip_bottom_row    TYPE i DEFAULT default_bottom_row
-        !ip_bottom_offset TYPE i DEFAULT 9.
-
+        !it_rtf           TYPE zexcel_t_rtf OPTIONAL
+        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
+        !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
+        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
+        !ip_top_offset    TYPE i DEFAULT gc_default_box-top_offset
+        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column
+        !ip_right_offset  TYPE i DEFAULT gc_default_box-right_offset
+        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row
+        !ip_bottom_offset TYPE i DEFAULT gc_default_box-bottom_offset
+      RAISING
+        zcx_excel .
+    METHODS get_text_rtf
+      RETURNING
+        VALUE(et_rtf) TYPE zexcel_t_rtf.
+    METHODS set_text_rtf
+      IMPORTING
+        !it_rtf  TYPE zexcel_t_rtf OPTIONAL
+        !ip_text TYPE string
+        !ip_ref  TYPE string OPTIONAL
+        !is_box  TYPE ty_box OPTIONAL
+      RAISING
+        zcx_excel .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    DATA bottom_offset TYPE i .
-    DATA bottom_row TYPE i .
     DATA index TYPE string .
     DATA ref TYPE string .
-    DATA left_column TYPE i .
-    DATA left_offset TYPE i .
-    DATA right_column TYPE i .
-    DATA right_offset TYPE i .
-    DATA text TYPE string .
-    DATA top_offset TYPE i .
-    DATA top_row TYPE i .
+    DATA gt_rtf TYPE zexcel_t_rtf.
+    DATA gv_text TYPE string.
+    DATA gs_box TYPE ty_box .
+
+    METHODS add_text
+      IMPORTING
+        !ip_text  TYPE string
+        !is_style TYPE zexcel_s_style_font
+      RAISING
+        zcx_excel .
 ENDCLASS.
 
 
@@ -85,12 +127,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_bottom_offset.
-    rp_result = bottom_offset.
+    rp_result = gs_box-bottom_offset.
   ENDMETHOD.
 
 
   METHOD get_bottom_row.
-    rp_result = bottom_row.
+    rp_result = gs_box-bottom_row.
   ENDMETHOD.
 
 
@@ -100,12 +142,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_left_column.
-    rp_result = left_column.
+    rp_result = gs_box-left_column.
   ENDMETHOD.
 
 
   METHOD get_left_offset.
-    rp_result = left_offset.
+    rp_result = gs_box-left_offset.
   ENDMETHOD.
 
 
@@ -120,56 +162,137 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_right_column.
-    rp_result = right_column.
+    rp_result = gs_box-right_column.
   ENDMETHOD.
 
 
   METHOD get_right_offset.
-    rp_result = right_offset.
+    rp_result = gs_box-right_offset.
   ENDMETHOD.
 
 
   METHOD get_text.
-    rp_text = me->text.
+    rp_text = gv_text.
   ENDMETHOD.
 
 
   METHOD get_top_offset.
-    rp_result = top_offset.
+    rp_result = gs_box-top_offset.
   ENDMETHOD.
 
 
   METHOD get_top_row.
-    rp_result = top_row.
+    rp_result = gs_box-top_row.
   ENDMETHOD.
 
 
   METHOD set_text.
-    me->text = ip_text.
 
     IF ip_ref IS SUPPLIED.
-      me->ref = ip_ref.
+      ref = ip_ref.
     ENDIF.
 
-    me->left_column = ip_left_column.
-    me->left_offset = ip_left_offset.
-
-    me->top_row    = ip_top_row.
-    me->top_offset = ip_top_offset.
-
-    IF ip_right_column IS NOT INITIAL.
-      me->right_column = ip_right_column.
-    ELSE.
-      me->right_column = default_right_column.
+    IF ip_text IS NOT INITIAL.
+      IF it_rtf IS NOT INITIAL.
+* Add a text with differently styled formats
+        set_text_rtf( it_rtf = it_rtf ip_text = ip_text ).
+      ELSE.
+* Add a simple text with parameter IP_TEXT and style IS_STYLE
+        add_text(
+          ip_text  = ip_text
+          is_style = is_style ).
+      ENDIF.
     ENDIF.
-    me->right_offset = ip_right_offset.
 
-    IF ip_bottom_row IS NOT INITIAL.
-      me->bottom_row = ip_bottom_row.
-    ELSE.
-      me->bottom_row = default_bottom_row.
-    ENDIF.
-    me->bottom_offset = ip_bottom_offset.
+* Parameters of the containing box
+    DATA ls_box TYPE ty_box.
+    ls_box-left_column   = ip_left_column.
+    ls_box-left_offset   = ip_left_offset.
+    ls_box-top_row       = ip_top_row.
+    ls_box-top_offset    = ip_top_offset.
+    ls_box-right_column  = ip_right_column.
+    ls_box-right_offset  = ip_right_offset.
+    ls_box-bottom_row    = ip_bottom_row.
+    ls_box-bottom_offset = ip_bottom_offset.
+    set_box( ls_box ).
+
   ENDMETHOD.
 
+
+  METHOD set_box.
+
+    gs_box = is_box.
+
+  ENDMETHOD.
+
+
+  METHOD add_text.
+
+    CHECK ip_text IS NOT INITIAL.
+
+    DATA lv_off TYPE i.
+    lv_off = strlen( gv_text ).
+    gv_text = gv_text && ip_text.
+
+    DATA ls_rtf LIKE LINE OF gt_rtf.
+    ls_rtf-offset = lv_off.
+    ls_rtf-length = strlen( ip_text ).
+    IF is_style IS INITIAL.
+      ls_rtf-font = get_default_style( ).
+    ELSE.
+      ls_rtf-font = is_style.
+    ENDIF.
+    APPEND ls_rtf TO gt_rtf.
+
+    zcl_excel_common=>check_rtf(
+      EXPORTING
+        is_font = get_default_style(  )  " for filling fillable gaps
+        ip_value = gv_text
+      CHANGING
+        ct_rtf  = gt_rtf
+    ).
+
+  ENDMETHOD.
+
+
+  METHOD get_default_style.
+
+    es_default-bold            = abap_true.
+    es_default-size            = 9.
+    es_default-color-indexed   = 81.
+    es_default-color-theme     = zcl_excel_style_color=>c_theme_not_set.
+    es_default-name            = `Tahoma`.
+    es_default-family          = 2.
+
+  ENDMETHOD.
+
+
+  METHOD get_text_rtf.
+    et_rtf = gt_rtf.
+  ENDMETHOD.
+
+
+  METHOD set_text_rtf.
+
+* Set a text, consisting of differently styled parts
+    gt_rtf  = it_rtf.
+    gv_text = ip_text.
+    zcl_excel_common=>check_rtf(
+      EXPORTING
+        ip_value = gv_text
+        is_font = get_default_style(  )
+      CHANGING
+        ct_rtf = gt_rtf
+    ).
+
+    IF ip_ref IS SUPPLIED.
+      ref = ip_ref.
+    ENDIF.
+
+* Parameters of the containing box
+    IF is_box IS SUPPLIED.
+      set_box( is_box ).
+    ENDIF.
+
+  ENDMETHOD.
 ENDCLASS.
