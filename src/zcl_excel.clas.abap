@@ -22,6 +22,11 @@ CLASS zcl_excel DEFINITION
         VALUE(ro_autofilter) TYPE REF TO zcl_excel_autofilter
       RAISING
         zcx_excel .
+    METHODS get_style_from_guid
+      IMPORTING
+        !ip_guid        TYPE zexcel_cell_style
+      RETURNING
+        VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS add_new_comment
       RETURNING
         VALUE(eo_comment) TYPE REF TO zcl_excel_comment .
@@ -172,11 +177,6 @@ CLASS zcl_excel DEFINITION
     DATA theme TYPE REF TO zcl_excel_theme .
     DATA comments TYPE REF TO zcl_excel_comments .
 
-    METHODS get_style_from_guid
-      IMPORTING
-        !ip_guid        TYPE zexcel_cell_style
-      RETURNING
-        VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS stylemapping_dynamic_style
       IMPORTING
         !ip_style        TYPE REF TO zcl_excel_style
