@@ -95,6 +95,8 @@
       "define": true,
       "describeLines": false,
       "testSeams": true,
+      "exportToMemory": true,
+      "exportToDatabase": false,
       "statics": false,
       "defaultKey": false,
       "break": true
@@ -136,9 +138,7 @@
     "local_class_naming": false,
     "main_file_contents": true,
     "message_exists": false,
-    "msag_consistency": {
-      "numericParamters": false
-    },
+    "msag_consistency": false,
     "newline_between_methods": false,
     "no_public_attributes": false,
     "object_naming": {
@@ -181,6 +181,12 @@
     "line_only_punc": false,
     "obsolete_statement": {
       "refresh": true,
+      "compute": true,
+      "communication": true,
+      "exitFromSQL": true,
+      "formDefinition": true,
+      "formImplementation": true,
+      "freeMemory": true,
       "move": true
     },
     "start_at_tab": false,
