@@ -2657,7 +2657,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_default_excel_date_format.
-    CONSTANTS: c_lang_e TYPE lang VALUE 'E'.
+    CONSTANTS c_lang_e TYPE langu VALUE 'E'.
 
     IF default_excel_date_format IS NOT INITIAL.
       ep_default_excel_date_format = default_excel_date_format.
@@ -3967,7 +3967,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
             ENDIF.
 
           WHEN cl_abap_typedescr=>typekind_char OR cl_abap_typedescr=>typekind_string OR cl_abap_typedescr=>typekind_num OR
-               cl_abap_typedescr=>typekind_hex.
+               cl_abap_typedescr=>typekind_hex OR cl_abap_typedescr=>typekind_xstring.
             lv_value = <fs_value>.
             lv_data_type = 's'.
 
