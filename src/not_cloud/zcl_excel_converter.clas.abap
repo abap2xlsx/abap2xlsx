@@ -1168,21 +1168,23 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         l_table_row = sy-tabix.
 * Now the cell values
         ASSIGN COMPONENT <fs_sfcat>-columnname OF STRUCTURE <fs_stab> TO <fs_fldval>.
+        IF sy-subrc = 0.
 * Now let's write the cell values
-        IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
-          wo_worksheet->set_cell( ip_column    = l_col_alpha
-                                  ip_row       = l_row_int
-                                  ip_value     = <fs_fldval>
-                                  ip_style     = <fs_sfcat>-style_stripped
-                                  ip_conv_exit_length = ws_option-conv_exit_length ).
-          CLEAR l_s_color.
-        ELSE.
-          wo_worksheet->set_cell( ip_column    = l_col_alpha
-                                  ip_row       = l_row_int
-                                  ip_value     = <fs_fldval>
-                                  ip_style     = <fs_sfcat>-style_normal
-                                  ip_conv_exit_length = ws_option-conv_exit_length  ).
-          l_s_color = abap_true.
+          IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
+            wo_worksheet->set_cell( ip_column    = l_col_alpha
+                                    ip_row       = l_row_int
+                                    ip_value     = <fs_fldval>
+                                    ip_style     = <fs_sfcat>-style_stripped
+                                    ip_conv_exit_length = ws_option-conv_exit_length ).
+            CLEAR l_s_color.
+          ELSE.
+            wo_worksheet->set_cell( ip_column    = l_col_alpha
+                                    ip_row       = l_row_int
+                                    ip_value     = <fs_fldval>
+                                    ip_style     = <fs_sfcat>-style_normal
+                                    ip_conv_exit_length = ws_option-conv_exit_length  ).
+            l_s_color = abap_true.
+          ENDIF.
         ENDIF.
         complete_cell( ip_table_row = l_table_row
                        ip_fieldname = <fs_sfcat>-columnname
