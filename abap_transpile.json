@@ -5,7 +5,7 @@
     "src/zcl_excel_c",
     "src/zcl_excel_d",
     "src/zcl_excel_fill_template",
-    "src/zcl_excel_font TODO, missing TDFONTSIZE",
+    "src/zcl_excel_font",
     "src/zcl_excel_g",
     "src/zcl_excel_h",
     "src/zcl_excel_l",
@@ -28,7 +28,12 @@
     "test/"
   ],
   "output_folder": "output",
-  "lib": "https://github.com/open-abap/open-abap",
+  "libs": [
+    {
+      "url": "https://github.com/open-abap/open-abap-core",
+      "files": "/src/**/*.*"
+    }
+  ],
   "write_unit_tests": true,
   "write_source_map": true,
   "options": {
@@ -51,10 +56,9 @@
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_shared_string_multi_style", "note": "??"},
       {"object": "ZCL_EXCEL_READER_HUGE_FILE", "class": "lcl_test", "method": "test_skip_to_inexistent",        "note": "??"},
 
-      {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "one_column_formula",        "note": "?? CALL TRANSFORMATION xml_header = 'no'"},
-      {"object": "ZCL_EXCEL_WRITER_2007", "class": "ltc_column_formula", "method": "two_column_formulas",       "note": "??"},
+      {"object": "ZCL_EXCEL_FONT", "class": "ltcl_test", "method": "calculate", "note": "Error: Void type: ITCFC, this needs to be fixed anyhow for cloud compatibility"},
 
-      {"object": "ZCL_EXCEL_COMMON", "class": "ltc_utclong_to_excel_string", "method": "simple", "note": "?? missing method CL_ABAP_TSTMP=>UTCLONG2TSTMP_SHORT, I'm too lazy to add it today"},
+      {"object": "ZCL_EXCEL_COMMON", "class": "ltc_utclong_to_excel_string", "method": "simple", "note": "todo CL_ABAP_TSTMP=>UTCLONG2TSTMP_SHORT"},
       {"object": "ZCL_EXCEL_COMMON", "class": "lcl_excel_common_test", "method": "convert_column2int_oob_empty", "note": "?? sy value defaults"}
     ]
   }
