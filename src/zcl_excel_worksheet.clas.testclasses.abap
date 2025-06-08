@@ -5,6 +5,7 @@ CLASS ltc_calculate_table_bottom_rig DEFINITION DEFERRED.
 CLASS ltc_normalize_style_param DEFINITION DEFERRED.
 CLASS ltc_check_cell_column_formula DEFINITION DEFERRED.
 CLASS ltc_check_overlapping DEFINITION DEFERRED.
+CLASS ltc_check_rtf DEFINITION DEFERRED.
 CLASS ltc_set_cell_value_types DEFINITION DEFERRED.
 CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_normalize_column_heading
@@ -14,6 +15,7 @@ CLASS zcl_excel_worksheet DEFINITION LOCAL FRIENDS
     ltc_check_overlapping
     ltc_normalize_style_param
     ltc_check_cell_column_formula
+    ltc_check_rtf
     ltc_set_cell_value_types.
 
 CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
@@ -127,6 +129,34 @@ CLASS ltc_check_overlapping DEFINITION FOR TESTING
         exp   TYPE ty_parameters-output
       RAISING
         cx_static_check.
+ENDCLASS.
+
+
+CLASS ltc_check_rtf DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+    DATA excel                  TYPE REF TO zcl_excel.
+    DATA cut                    TYPE REF TO zcl_excel_worksheet. " class under test
+    DATA t_rtf                  TYPE zexcel_t_rtf.
+    DATA underline_double_style TYPE REF TO zcl_excel_style.
+    DATA s_rtf                  TYPE zexcel_s_rtf.
+    DATA act_rtf_1              TYPE zexcel_s_rtf.
+    DATA act_rtf_2              TYPE zexcel_s_rtf.
+    DATA act_rtf_3              TYPE zexcel_s_rtf.
+    DATA exp_rtf_1              TYPE zexcel_s_rtf.
+    DATA exp_rtf_2              TYPE zexcel_s_rtf.
+    DATA exp_rtf_3              TYPE zexcel_s_rtf.
+    DATA style_arial_20         TYPE REF TO zcl_excel_style.
+    DATA error                  TYPE REF TO cx_root.
+
+    METHODS invalid_length FOR TESTING RAISING cx_static_check.
+    METHODS overlap FOR TESTING RAISING cx_static_check.
+    METHODS valid_with_completion FOR TESTING RAISING cx_static_check.
+    METHODS valid_without_completion FOR TESTING RAISING cx_static_check.
+
+    METHODS setup.
 ENDCLASS.
 
 
@@ -1065,6 +1095,137 @@ CLASS ltc_check_overlapping IMPLEMENTATION.
         RETURN.
     ENDTRY.
 
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_check_rtf IMPLEMENTATION.
+
+  METHOD setup.
+    DATA style_guid TYPE zexcel_cell_style.
+
+    CREATE OBJECT excel.
+
+    style_arial_20               = excel->add_new_style( ).
+    style_arial_20->font->name   = zcl_excel_style_font=>c_name_arial.
+    style_arial_20->font->scheme = zcl_excel_style_font=>c_scheme_none.
+    style_arial_20->font->size   = 20.
+
+    TRY.
+        style_guid = style_arial_20->get_guid( ).
+        excel->set_default_style( style_guid ).
+
+        CREATE OBJECT cut
+          EXPORTING
+            ip_excel = excel.
+      CATCH zcx_excel.
+        cl_abap_unit_assert=>fail( 'Could not create instance' ).
+    ENDTRY.
+
+    " Create an underline double style
+    underline_double_style = excel->add_new_style( ).
+    underline_double_style->font->name           = zcl_excel_style_font=>c_name_roman.
+    underline_double_style->font->scheme         = zcl_excel_style_font=>c_scheme_none.
+    underline_double_style->font->family         = zcl_excel_style_font=>c_family_roman.
+    underline_double_style->font->underline      = abap_true.
+    underline_double_style->font->underline_mode = zcl_excel_style_font=>c_underline_double.
+    underline_double_style->font->name           = zcl_excel_style_font=>c_name_roman.
+    underline_double_style->font->scheme         = zcl_excel_style_font=>c_scheme_none.
+    underline_double_style->font->family         = zcl_excel_style_font=>c_family_roman.
+
+  ENDMETHOD.
+
+  METHOD invalid_length.
+    s_rtf-offset = 1.
+    s_rtf-length = 1.
+    s_rtf-font   = underline_double_style->font->get_structure( ).
+    INSERT s_rtf INTO TABLE t_rtf.
+
+    TRY.
+        cut->check_rtf( EXPORTING ip_value = 'a'
+                        CHANGING  ct_rtf   = t_rtf ).
+      CATCH cx_root INTO error ##NO_HANDLER.
+    ENDTRY.
+
+    cl_abap_unit_assert=>assert_bound( act = error
+                                       msg = 'CHECK_RTF should have raised an exception' ).
+    cl_abap_unit_assert=>assert_equals( act = error->get_text( )
+                                        exp = 'RTF specs length is not equal to value length' ).
+  ENDMETHOD.
+
+  METHOD overlap.
+    s_rtf-offset = 0.
+    s_rtf-length = 2.
+    s_rtf-font   = underline_double_style->font->get_structure( ).
+    INSERT s_rtf INTO TABLE t_rtf.
+
+    " This is overlapping the previous RTF information on the second character
+    s_rtf-offset = 1.
+    s_rtf-length = 1.
+    s_rtf-font   = underline_double_style->font->get_structure( ).
+    INSERT s_rtf INTO TABLE t_rtf.
+
+    TRY.
+        cut->check_rtf( EXPORTING ip_value = 'ab'
+                        CHANGING  ct_rtf   = t_rtf ).
+      CATCH cx_root INTO error ##NO_HANDLER.
+    ENDTRY.
+
+    cl_abap_unit_assert=>assert_bound( act = error
+                                       msg = 'CHECK_RTF should have raised an exception' ).
+    cl_abap_unit_assert=>assert_equals( act = error->get_text( )
+                                        exp = 'Gaps or overlaps in RTF data offset/length specs' ).
+  ENDMETHOD.
+
+  METHOD valid_with_completion.
+    s_rtf-offset = 1.
+    s_rtf-length = 1.
+    s_rtf-font   = underline_double_style->font->get_structure( ).
+    INSERT s_rtf INTO TABLE t_rtf.
+
+    exp_rtf_1-offset = 0.
+    exp_rtf_1-length = 1.
+    exp_rtf_1-font   = style_arial_20->font->get_structure( ).
+
+    exp_rtf_3-offset = 2.
+    exp_rtf_3-length = 1.
+    exp_rtf_3-font   = style_arial_20->font->get_structure( ).
+
+    cut->check_rtf( EXPORTING ip_value = 'abc'
+                    CHANGING  ct_rtf   = t_rtf ).
+
+    cl_abap_unit_assert=>assert_equals( act = lines( t_rtf )
+                                        exp = 3 ).
+
+    READ TABLE t_rtf INDEX 1 INTO act_rtf_1.
+    READ TABLE t_rtf INDEX 2 INTO act_rtf_2.
+    READ TABLE t_rtf INDEX 3 INTO act_rtf_3.
+
+    cl_abap_unit_assert=>assert_equals( act = act_rtf_1
+                                        exp = exp_rtf_1 ).
+    cl_abap_unit_assert=>assert_equals( act = act_rtf_2
+                                        exp = s_rtf ).
+    cl_abap_unit_assert=>assert_equals( act = act_rtf_3
+                                        exp = exp_rtf_3 ).
+  ENDMETHOD.
+
+  METHOD valid_without_completion.
+    s_rtf-offset = 0.
+    s_rtf-length = 1.
+    s_rtf-font   = underline_double_style->font->get_structure( ).
+    INSERT s_rtf INTO TABLE t_rtf.
+
+    cut->check_rtf( EXPORTING ip_value = 'a'
+                    CHANGING  ct_rtf   = t_rtf ).
+
+    cl_abap_unit_assert=>assert_equals( act = lines( t_rtf )
+                                        exp = 1 ).
+
+    READ TABLE t_rtf INDEX 1 INTO act_rtf_1.
+
+    cl_abap_unit_assert=>assert_equals( act = act_rtf_1
+                                        exp = s_rtf ).
   ENDMETHOD.
 
 ENDCLASS.

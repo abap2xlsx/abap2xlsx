@@ -5,8 +5,29 @@ CLASS zcl_excel_comment DEFINITION
 
   PUBLIC SECTION.
 
-    CONSTANTS default_right_column TYPE i VALUE 4.  "#EC NOTEXT
-    CONSTANTS default_bottom_row   TYPE i VALUE 15. "#EC NOTEXT
+    TYPES:
+      BEGIN OF ty_box,
+        left_column   TYPE i,
+        left_offset   TYPE i,
+        top_row       TYPE i,
+        top_offset    TYPE i,
+        right_column  TYPE i,
+        right_offset  TYPE i,
+        bottom_row    TYPE i,
+        bottom_offset TYPE i,
+      END OF ty_box .
+
+    CONSTANTS:
+      BEGIN OF gc_default_box,
+        left_column   TYPE i VALUE 2,
+        left_offset   TYPE i VALUE 15,
+        top_row       TYPE i VALUE 11,
+        top_offset    TYPE i VALUE 10,
+        right_column  TYPE i VALUE 4,
+        right_offset  TYPE i VALUE 31,
+        bottom_row    TYPE i VALUE 15,
+        bottom_offset TYPE i VALUE 9,
+      END OF gc_default_box .
 
     METHODS constructor .
     METHODS get_bottom_offset
@@ -45,33 +66,30 @@ CLASS zcl_excel_comment DEFINITION
     METHODS get_top_row
       RETURNING
         VALUE(rp_result) TYPE i .
+    METHODS set_box
+      IMPORTING
+        !is_box TYPE ty_box .
     METHODS set_text
       IMPORTING
         !ip_text          TYPE string
         !ip_ref           TYPE string OPTIONAL
-        !ip_left_column   TYPE i DEFAULT 2
-        !ip_left_offset   TYPE i DEFAULT 15
-        !ip_top_row       TYPE i DEFAULT 11
-        !ip_top_offset    TYPE i DEFAULT 10
-        !ip_right_column  TYPE i DEFAULT default_right_column
-        !ip_right_offset  TYPE i DEFAULT 31
-        !ip_bottom_row    TYPE i DEFAULT default_bottom_row
-        !ip_bottom_offset TYPE i DEFAULT 9.
+        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
+        !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
+        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
+        !ip_top_offset    TYPE i DEFAULT gc_default_box-top_offset
+        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column
+        !ip_right_offset  TYPE i DEFAULT gc_default_box-right_offset
+        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row
+        !ip_bottom_offset TYPE i DEFAULT gc_default_box-bottom_offset.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    DATA bottom_offset TYPE i .
-    DATA bottom_row TYPE i .
     DATA index TYPE string .
     DATA ref TYPE string .
-    DATA left_column TYPE i .
-    DATA left_offset TYPE i .
-    DATA right_column TYPE i .
-    DATA right_offset TYPE i .
     DATA text TYPE string .
-    DATA top_offset TYPE i .
-    DATA top_row TYPE i .
+    DATA gs_box TYPE ty_box .
+
 ENDCLASS.
 
 
@@ -85,12 +103,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_bottom_offset.
-    rp_result = bottom_offset.
+    rp_result = gs_box-bottom_offset.
   ENDMETHOD.
 
 
   METHOD get_bottom_row.
-    rp_result = bottom_row.
+    rp_result = gs_box-bottom_row.
   ENDMETHOD.
 
 
@@ -100,12 +118,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_left_column.
-    rp_result = left_column.
+    rp_result = gs_box-left_column.
   ENDMETHOD.
 
 
   METHOD get_left_offset.
-    rp_result = left_offset.
+    rp_result = gs_box-left_offset.
   ENDMETHOD.
 
 
@@ -120,12 +138,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_right_column.
-    rp_result = right_column.
+    rp_result = gs_box-right_column.
   ENDMETHOD.
 
 
   METHOD get_right_offset.
-    rp_result = right_offset.
+    rp_result = gs_box-right_offset.
   ENDMETHOD.
 
 
@@ -135,12 +153,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_top_offset.
-    rp_result = top_offset.
+    rp_result = gs_box-top_offset.
   ENDMETHOD.
 
 
   METHOD get_top_row.
-    rp_result = top_row.
+    rp_result = gs_box-top_row.
   ENDMETHOD.
 
 
@@ -151,25 +169,32 @@ CLASS zcl_excel_comment IMPLEMENTATION.
       me->ref = ip_ref.
     ENDIF.
 
-    me->left_column = ip_left_column.
-    me->left_offset = ip_left_offset.
-
-    me->top_row    = ip_top_row.
-    me->top_offset = ip_top_offset.
-
+* Parameters of the containing box
+    DATA ls_box TYPE ty_box.
+    ls_box-left_column   = ip_left_column.
+    ls_box-left_offset   = ip_left_offset.
+    ls_box-top_row       = ip_top_row.
+    ls_box-top_offset    = ip_top_offset.
     IF ip_right_column IS NOT INITIAL.
-      me->right_column = ip_right_column.
+      ls_box-right_column = ip_right_column.
     ELSE.
-      me->right_column = default_right_column.
+      ls_box-right_column = gc_default_box-right_column.
     ENDIF.
-    me->right_offset = ip_right_offset.
-
+    ls_box-right_offset = ip_right_offset.
     IF ip_bottom_row IS NOT INITIAL.
-      me->bottom_row = ip_bottom_row.
+      ls_box-bottom_row = ip_bottom_row.
     ELSE.
-      me->bottom_row = default_bottom_row.
+      ls_box-bottom_row = gc_default_box-bottom_row.
     ENDIF.
-    me->bottom_offset = ip_bottom_offset.
+    ls_box-bottom_offset = ip_bottom_offset.
+    set_box( ls_box ).
+
+  ENDMETHOD.
+
+  METHOD set_box.
+
+    gs_box = is_box.
+
   ENDMETHOD.
 
 ENDCLASS.
