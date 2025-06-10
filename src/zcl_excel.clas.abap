@@ -102,6 +102,11 @@ CLASS zcl_excel DEFINITION
     METHODS get_styles_iterator
       RETURNING
         VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
+    METHODS get_style_from_guid
+      IMPORTING
+        !ip_guid        TYPE zexcel_cell_style
+      RETURNING
+        VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS get_style_index_in_styles
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style
