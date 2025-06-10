@@ -94,11 +94,6 @@ CLASS zcl_excel DEFINITION
         !ip_cstylex_complete TYPE zexcel_s_cstylex_complete
       RETURNING
         VALUE(ep_guid)       TYPE zexcel_cell_style .
-    METHODS get_style_from_guid
-      IMPORTING
-        !ip_guid        TYPE zexcel_cell_style
-      RETURNING
-        VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS get_styles_iterator
       RETURNING
         VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
