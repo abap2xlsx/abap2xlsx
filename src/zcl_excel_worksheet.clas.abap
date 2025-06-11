@@ -1961,7 +1961,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
       IF lo_style IS BOUND.
         ls_font = lo_style->font->get_structure( ).
       ELSE.  "static style
-        ls_stylemapping = me->excel->get_style_to_guid( ip_guid = ip_style ip_font = abap_true ).
+        ls_stylemapping = me->excel->get_style_to_guid( ip_guid = ip_style ).
         MOVE-CORRESPONDING ls_stylemapping-complete_style-font TO ls_font.
       ENDIF.
       IF ls_font IS NOT INITIAL.
