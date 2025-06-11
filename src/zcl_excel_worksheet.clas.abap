@@ -1948,50 +1948,32 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD check_rtf.
 
-    DATA: lo_style           TYPE REF TO zcl_excel_style,
-          ls_font            TYPE zexcel_s_style_font,
-          lv_next_rtf_offset TYPE i,
-          lv_tabix           TYPE i,
-          lv_value           TYPE string,
-          lv_val_length      TYPE i,
-          ls_rtf             LIKE LINE OF ct_rtf.
-    FIELD-SYMBOLS: <rtf> LIKE LINE OF ct_rtf.
+    DATA: lo_style        TYPE REF TO zcl_excel_style,
+          ls_font         TYPE zexcel_s_style_font,
+          ls_stylemapping TYPE zexcel_s_stylemapping.
 
     IF ip_style IS NOT SUPPLIED.
-      ip_style = excel->get_default_style( ).
+      ip_style = me->zif_excel_sheet_properties~get_style( ).
     ENDIF.
 
-    lo_style = excel->get_style_from_guid( ip_style ).
-    ls_font  = lo_style->font->get_structure( ).
-
-    lv_next_rtf_offset = 0.
-    LOOP AT ct_rtf ASSIGNING <rtf>.
-      lv_tabix = sy-tabix.
-      IF lv_next_rtf_offset < <rtf>-offset.
-        ls_rtf-offset = lv_next_rtf_offset.
-        ls_rtf-length = <rtf>-offset - lv_next_rtf_offset.
-        ls_rtf-font   = ls_font.
-        INSERT ls_rtf INTO ct_rtf INDEX lv_tabix.
-      ELSEIF lv_next_rtf_offset > <rtf>-offset.
-        RAISE EXCEPTION TYPE zcx_excel
-          EXPORTING
-            error = 'Gaps or overlaps in RTF data offset/length specs'.
+    IF ip_style IS NOT INITIAL.
+      lo_style = me->excel->get_style_from_guid( ip_style ).
+      IF lo_style IS BOUND.
+        ls_font = lo_style->font->get_structure( ).
+      ELSE.  "static style
+        ls_stylemapping = me->excel->get_style_to_guid( ip_guid = ip_style ip_font = abap_true ).
+        MOVE-CORRESPONDING ls_stylemapping-complete_style-font TO ls_font.
       ENDIF.
-      lv_next_rtf_offset = <rtf>-offset + <rtf>-length.
-    ENDLOOP.
-
-    lv_value = ip_value.
-    lv_val_length = strlen( lv_value ).
-    IF lv_val_length > lv_next_rtf_offset.
-      ls_rtf-offset = lv_next_rtf_offset.
-      ls_rtf-length = lv_val_length - lv_next_rtf_offset.
-      ls_rtf-font   = ls_font.
-      INSERT ls_rtf INTO TABLE ct_rtf.
-    ELSEIF lv_val_length < lv_next_rtf_offset.
-      RAISE EXCEPTION TYPE zcx_excel
-        EXPORTING
-          error = 'RTF specs length is not equal to value length'.
+      IF ls_font IS NOT INITIAL.
+        zcl_excel_common=>check_rtf( EXPORTING ip_value = ip_value
+                                               is_font  = ls_font
+                                      CHANGING ct_rtf   = ct_rtf ).
+        RETURN.
+      ENDIF.
     ENDIF.
+
+    zcl_excel_common=>check_rtf( EXPORTING ip_value = ip_value
+                                  CHANGING ct_rtf   = ct_rtf ).
 
   ENDMETHOD.
 
