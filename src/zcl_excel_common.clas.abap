@@ -216,6 +216,14 @@ CLASS zcl_excel_common DEFINITION
         VALUE(rp_in_range) TYPE abap_bool
       RAISING
         zcx_excel .
+    CLASS-METHODS check_rtf
+      IMPORTING
+        !ip_value TYPE simple
+        !is_font  TYPE zexcel_s_style_font OPTIONAL
+      CHANGING
+        !ct_rtf   TYPE zexcel_t_rtf
+      RAISING
+        zcx_excel .
 *"* protected components of class ZCL_EXCEL_COMMON
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_COMMON
@@ -320,6 +328,42 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD class_constructor.
     c_xlsx_file_filter = 'Excel Workbook (*.xlsx)|*.xlsx|'(005).
+  ENDMETHOD.
+
+
+  METHOD check_rtf.
+
+    DATA: lv_next_rtf_offset TYPE i,
+          lv_tabix           TYPE i,
+          lv_value           TYPE string,
+          lv_val_length      TYPE i,
+          ls_rtf             LIKE LINE OF ct_rtf.
+    FIELD-SYMBOLS <rtf>      LIKE LINE OF ct_rtf.
+
+    ls_rtf-font = is_font.
+    lv_next_rtf_offset = 0.
+    LOOP AT ct_rtf ASSIGNING <rtf>.
+      lv_tabix = sy-tabix.
+      IF lv_next_rtf_offset < <rtf>-offset.
+        ls_rtf-offset = lv_next_rtf_offset.
+        ls_rtf-length = <rtf>-offset - lv_next_rtf_offset.
+        INSERT ls_rtf INTO ct_rtf INDEX lv_tabix.
+      ELSEIF lv_next_rtf_offset > <rtf>-offset.
+        zcx_excel=>raise_text( 'Gaps or overlaps in RTF data offset/length specs' ).
+      ENDIF.
+      lv_next_rtf_offset = <rtf>-offset + <rtf>-length.
+    ENDLOOP.
+
+    lv_value = ip_value.
+    lv_val_length = strlen( lv_value ).
+    IF lv_val_length > lv_next_rtf_offset.
+      ls_rtf-offset = lv_next_rtf_offset.
+      ls_rtf-length = lv_val_length - lv_next_rtf_offset.
+      INSERT ls_rtf INTO TABLE ct_rtf.
+    ELSEIF lv_val_length < lv_next_rtf_offset.
+      zcx_excel=>raise_text( 'RTF specs length is not equal to value length' ).
+    ENDIF.
+
   ENDMETHOD.
 
 
