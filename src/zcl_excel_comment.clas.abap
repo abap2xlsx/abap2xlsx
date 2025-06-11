@@ -29,6 +29,13 @@ CLASS zcl_excel_comment DEFINITION
         bottom_offset TYPE i VALUE 9,
       END OF gc_default_box .
 
+    CLASS-METHODS class_constructor .
+    CLASS-METHODS get_font
+      RETURNING
+        VALUE(rs_font) TYPE zexcel_s_style_font .
+    CLASS-METHODS set_font
+      IMPORTING
+        !is_font TYPE zexcel_s_style_font .
     METHODS constructor .
     METHODS get_bottom_offset
       RETURNING
@@ -73,14 +80,17 @@ CLASS zcl_excel_comment DEFINITION
       IMPORTING
         !ip_text          TYPE string
         !ip_ref           TYPE string OPTIONAL
-        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
-        !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
-        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
-        !ip_top_offset    TYPE i DEFAULT gc_default_box-top_offset
-        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column
-        !ip_right_offset  TYPE i DEFAULT gc_default_box-right_offset
-        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row
-        !ip_bottom_offset TYPE i DEFAULT gc_default_box-bottom_offset.
+        !is_font          TYPE zexcel_s_style_font OPTIONAL
+        !it_rtf           TYPE zexcel_t_rtf OPTIONAL
+        !ip_no_defaults   TYPE abap_bool OPTIONAL
+        !ip_left_column   TYPE i OPTIONAL
+        !ip_left_offset   TYPE i OPTIONAL
+        !ip_top_row       TYPE i OPTIONAL
+        !ip_top_offset    TYPE i OPTIONAL
+        !ip_right_column  TYPE i OPTIONAL
+        !ip_right_offset  TYPE i OPTIONAL
+        !ip_bottom_row    TYPE i OPTIONAL
+        !ip_bottom_offset TYPE i OPTIONAL .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -89,6 +99,8 @@ CLASS zcl_excel_comment DEFINITION
     DATA ref TYPE string .
     DATA text TYPE string .
     DATA gs_box TYPE ty_box .
+    CLASS-DATA s_font TYPE zexcel_s_style_font .
+    DATA mt_rtf TYPE zexcel_t_rtf .
 
 ENDCLASS.
 
@@ -97,8 +109,24 @@ ENDCLASS.
 CLASS zcl_excel_comment IMPLEMENTATION.
 
 
-  METHOD constructor.
+  METHOD class_constructor.
+    DATA ls_font LIKE s_font.
 
+    ls_font-name          = 'Tahoma'.
+    ls_font-bold          = 'X'.
+    ls_font-size          = 9.
+    ls_font-color-indexed = 81.
+    ls_font-color-theme   = zcl_excel_style_color=>c_theme_not_set.
+    ls_font-scheme        = zcl_excel_style_font=>c_scheme_none.
+    ls_font-family        = zcl_excel_style_font=>c_family_swiss.
+
+    set_font( ls_font ).
+
+  ENDMETHOD.
+
+
+  METHOD constructor.
+    MOVE-CORRESPONDING gc_default_box TO gs_box.
   ENDMETHOD.
 
 
@@ -109,6 +137,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
   METHOD get_bottom_row.
     rp_result = gs_box-bottom_row.
+  ENDMETHOD.
+
+
+  METHOD get_font.
+    rs_font = s_font.
   ENDMETHOD.
 
 
@@ -162,7 +195,18 @@ CLASS zcl_excel_comment IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD set_font.
+    IF is_font IS NOT INITIAL.
+      s_font = is_font.
+    ENDIF.
+  ENDMETHOD.
+
+
   METHOD set_text.
+    DATA: ls_rtf LIKE LINE OF mt_rtf,
+          ls_box TYPE ty_box.
+    FIELD-SYMBOLS <ls_font> LIKE s_font.
+
     me->text = ip_text.
 
     IF ip_ref IS SUPPLIED.
@@ -170,24 +214,58 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     ENDIF.
 
 * Parameters of the containing box
-    DATA ls_box TYPE ty_box.
-    ls_box-left_column   = ip_left_column.
-    ls_box-left_offset   = ip_left_offset.
-    ls_box-top_row       = ip_top_row.
-    ls_box-top_offset    = ip_top_offset.
-    IF ip_right_column IS NOT INITIAL.
+    IF ip_left_column IS SUPPLIED.
+      ls_box-left_column = ip_left_column.
+    ENDIF.
+    IF ip_left_offset IS SUPPLIED.
+      ls_box-left_offset = ip_left_offset.
+    ENDIF.
+    IF ip_top_row IS SUPPLIED.
+      ls_box-top_row = ip_top_row.
+    ENDIF.
+    IF ip_top_offset IS SUPPLIED.
+      ls_box-top_offset = ip_top_offset.
+    ENDIF.
+    IF ip_right_column IS SUPPLIED.
       ls_box-right_column = ip_right_column.
-    ELSE.
-      ls_box-right_column = gc_default_box-right_column.
     ENDIF.
-    ls_box-right_offset = ip_right_offset.
-    IF ip_bottom_row IS NOT INITIAL.
+    IF ip_right_offset IS SUPPLIED.
+      ls_box-right_offset = ip_right_offset.
+    ENDIF.
+    IF ip_bottom_row IS SUPPLIED.
       ls_box-bottom_row = ip_bottom_row.
-    ELSE.
-      ls_box-bottom_row = gc_default_box-bottom_row.
     ENDIF.
-    ls_box-bottom_offset = ip_bottom_offset.
+    IF ip_bottom_offset IS SUPPLIED.
+      ls_box-bottom_offset = ip_bottom_offset.
+    ENDIF.
     set_box( ls_box ).
+
+    IF is_font IS NOT INITIAL.
+      ASSIGN is_font TO <ls_font>.
+    ELSE.
+      ASSIGN s_font TO <ls_font>.
+    ENDIF.
+
+    IF it_rtf IS NOT INITIAL.
+      me->mt_rtf = it_rtf.
+      TRY.
+          IF ip_no_defaults = abap_false.
+            zcl_excel_common=>check_rtf( EXPORTING ip_value = me->text
+                                                   is_font  = <ls_font>
+                                          CHANGING ct_rtf   = me->mt_rtf ).
+          ELSE.
+            zcl_excel_common=>check_rtf( EXPORTING ip_value = me->text
+                                          CHANGING ct_rtf   = me->mt_rtf ).
+          ENDIF.
+          RETURN.
+        CATCH zcx_excel.
+      ENDTRY.
+    ELSEIF me->mt_rtf IS INITIAL AND
+           ip_no_defaults = abap_false.
+      ls_rtf-font   = <ls_font>.
+      ls_rtf-length = strlen( me->text ).
+      APPEND ls_rtf TO me->mt_rtf.
+    ENDIF.
 
   ENDMETHOD.
 
