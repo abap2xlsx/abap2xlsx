@@ -244,6 +244,11 @@
      <DESCRIPT>Get columns iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GET_COMMENTS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get a copy of the comments object</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>GET_DATA_VALIDATIONS_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Get data validation iterator</DESCRIPT>
@@ -474,6 +479,11 @@
      <DESCRIPT>Ranges collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>REMOVE_COMMENT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Remove a comment (by position or by its instance)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>ROWS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Ranges collection</DESCRIPT>
@@ -609,6 +619,20 @@
      <DESCRIPT>Top left range cell</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>REMOVE_COMMENT</CMPNAME>
+     <SCONAME>IO_COMMENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>The comment object (optional)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>REMOVE_COMMENT</CMPNAME>
+     <SCONAME>IP_REF</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Position (e.g. &apos;B17&apos;) (optional, default)</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>
