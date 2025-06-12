@@ -5921,10 +5921,6 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-
-
-
-
   METHOD render_xml_document.
     DATA lo_streamfactory TYPE REF TO if_ixml_stream_factory.
     DATA lo_ostream       TYPE REF TO if_ixml_ostream.
