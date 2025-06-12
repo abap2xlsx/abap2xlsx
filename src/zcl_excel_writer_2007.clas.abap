@@ -230,7 +230,7 @@ CLASS zcl_excel_writer_2007 DEFINITION
         iv_document_as_string TYPE string OPTIONAL
           PREFERRED PARAMETER io_document
       RETURNING
-        VALUE(ep_content)     TYPE xstring.
+        VALUE(ep_content) TYPE xstring.
     METHODS create_xl_sheet_column_formula
       IMPORTING
         io_document             TYPE REF TO if_ixml_document
@@ -272,16 +272,12 @@ CLASS zcl_excel_writer_2007 DEFINITION
         !ip_flag          TYPE flag
       RETURNING
         VALUE(ep_boolean) TYPE tv_charbool  .
-    METHODS number2string
-      IMPORTING
-        !ip_number       TYPE numeric
-      RETURNING
-        VALUE(ep_string) TYPE string.
+
 ENDCLASS.
 
 
 
-CLASS zcl_excel_writer_2007 IMPLEMENTATION.
+CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
 
 
   METHOD add_1_val_child_node.
@@ -5926,10 +5922,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD number2string.
-    ep_string = ip_number.
-    CONDENSE ep_string.
-  ENDMETHOD.
+
 
 
   METHOD render_xml_document.

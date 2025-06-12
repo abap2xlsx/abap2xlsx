@@ -43,15 +43,15 @@ CLASS zcl_excel_comments DEFINITION
         !it_boxes    TYPE ty_boxes OPTIONAL
         !iv_full_vml TYPE string OPTIONAL .
   PROTECTED SECTION.
-PRIVATE SECTION.
+  PRIVATE SECTION.
 
-  DATA comments TYPE REF TO zcl_excel_collection .
-  DATA gt_boxes TYPE ty_boxes .
+    DATA comments TYPE REF TO zcl_excel_collection .
+    DATA gt_boxes TYPE ty_boxes .
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_COMMENTS IMPLEMENTATION.
+CLASS zcl_excel_comments IMPLEMENTATION.
 
 
   METHOD add.
@@ -71,11 +71,19 @@ CLASS ZCL_EXCEL_COMMENTS IMPLEMENTATION.
 
   METHOD constructor.
 
-    IF io_from IS INITIAL.
-      CREATE OBJECT comments.
-    ELSE.
+    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
+          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
+
+    CREATE OBJECT comments.
+
+    IF io_from IS BOUND.
 * Copy constructor: copy attributes from original
-      comments    = io_from->comments.
+* So the receiver may change the collection without affecting the original
+      lo_iterator = io_from->comments->get_iterator( ).
+      WHILE lo_iterator->has_next( ) = abap_true.
+        lo_comment ?= lo_iterator->get_next( ).
+        include( lo_comment ).
+      ENDWHILE.
       gt_boxes    = io_from->gt_boxes.
       gv_full_vml = io_from->gv_full_vml.
     ENDIF.
@@ -151,4 +159,6 @@ CLASS ZCL_EXCEL_COMMENTS IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
+
+
 ENDCLASS.

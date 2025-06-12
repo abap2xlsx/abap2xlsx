@@ -492,6 +492,11 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(rp_is_merged) TYPE abap_bool
       RAISING
         zcx_excel .
+    METHODS remove_comment
+      IMPORTING
+        !ip_ref     TYPE string OPTIONAL
+        !io_comment TYPE REF TO zcl_excel_comment OPTIONAL
+          PREFERRED PARAMETER ip_ref.
     METHODS set_cell
       IMPORTING
         !ip_columnrow         TYPE csequence OPTIONAL
@@ -3574,6 +3579,28 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   ENDMETHOD.                    "PRINT_TITLE_SET_RANGE
+
+  METHOD remove_comment.
+    DATA:
+      lo_comments_it TYPE REF TO zcl_excel_collection_iterator,
+      lo_comment     TYPE REF TO zcl_excel_comment.
+
+    IF io_comment IS BOUND.
+      lo_comment = io_comment.
+    ELSE.
+* Search for comment with fitting ref
+      lo_comments_it = comments->get_iterator(  ).
+      WHILE lo_comments_it->has_next(   ).
+        lo_comment ?= lo_comments_it->get_next(  ).
+        IF lo_comment->get_ref(  ) EQ ip_ref.
+          EXIT.
+        ENDIF.
+      ENDWHILE.
+    ENDIF.
+    IF lo_comment IS BOUND.
+      comments->remove( lo_comment ).
+    ENDIF.
+  ENDMETHOD.
 
 
   METHOD set_area.
