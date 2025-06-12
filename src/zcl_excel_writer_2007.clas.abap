@@ -230,7 +230,7 @@ CLASS zcl_excel_writer_2007 DEFINITION
         iv_document_as_string TYPE string OPTIONAL
           PREFERRED PARAMETER io_document
       RETURNING
-        VALUE(ep_content) TYPE xstring.
+        VALUE(ep_content)     TYPE xstring.
     METHODS create_xl_sheet_column_formula
       IMPORTING
         io_document             TYPE REF TO if_ixml_document
@@ -274,14 +274,14 @@ CLASS zcl_excel_writer_2007 DEFINITION
         VALUE(ep_boolean) TYPE tv_charbool  .
     METHODS number2string
       IMPORTING
-        !ip_number        TYPE numeric
+        !ip_number       TYPE numeric
       RETURNING
         VALUE(ep_string) TYPE string.
 ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
+CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD add_1_val_child_node.
@@ -3069,11 +3069,11 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
 
   METHOD create_xl_drawing_for_comments.
 
-    data:
-      lo_vmldrawing type ref to lcl_vmldrawing_for_comments,
-      lo_document   type ref to if_ixml_document.
+    DATA:
+      lo_vmldrawing TYPE REF TO lcl_vmldrawing_for_comments,
+      lo_document   TYPE REF TO if_ixml_document.
 
-    create object lo_vmldrawing.
+    CREATE OBJECT lo_vmldrawing.
     lo_document = lo_vmldrawing->create(
       io_comments = io_worksheet->get_comments(  )
     ).
