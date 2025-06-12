@@ -260,11 +260,6 @@ CLASS zcl_excel_writer_2007 DEFINITION
     TYPES: tv_charbool TYPE c LENGTH 5.
 
 
-    METHODS get_comment_anchor
-      IMPORTING
-        !io_comment      TYPE REF TO zcl_excel_comment
-      RETURNING
-        VALUE(ev_anchor) TYPE string .
     METHODS add_1_val_child_node
       IMPORTING
         io_document   TYPE REF TO if_ixml_document
@@ -286,7 +281,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_excel_writer_2007 IMPLEMENTATION.
+CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
 
 
   METHOD add_1_val_child_node.
@@ -3074,213 +3069,16 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
   METHOD create_xl_drawing_for_comments.
 
-    DATA: lo_document              TYPE REF TO if_ixml_document,
-          lo_element_root          TYPE REF TO if_ixml_element,
-          "shapelayout
-          lo_element_shapelayout   TYPE REF TO if_ixml_element,
-          lo_element_idmap         TYPE REF TO if_ixml_element,
-          "shapetype
-          lo_element_shapetype     TYPE REF TO if_ixml_element,
-          lo_element_stroke        TYPE REF TO if_ixml_element,
-          lo_element_path          TYPE REF TO if_ixml_element,
-          "shape
-          lo_element_shape         TYPE REF TO if_ixml_element,
-          lo_element_fill          TYPE REF TO if_ixml_element,
-          lo_element_shadow        TYPE REF TO if_ixml_element,
-          lo_element_textbox       TYPE REF TO if_ixml_element,
-          lo_element_div           TYPE REF TO if_ixml_element,
-          lo_element_clientdata    TYPE REF TO if_ixml_element,
-          lo_element_movewithcells TYPE REF TO if_ixml_element,
-          lo_element_sizewithcells TYPE REF TO if_ixml_element,
-          lo_element_anchor        TYPE REF TO if_ixml_element,
-          lo_element_autofill      TYPE REF TO if_ixml_element,
-          lo_element_row           TYPE REF TO if_ixml_element,
-          lo_element_column        TYPE REF TO if_ixml_element,
-          lo_iterator              TYPE REF TO zcl_excel_collection_iterator,
-          lo_anchors               TYPE REF TO if_ixml_node_collection,
-          lo_anchor                TYPE REF TO if_ixml_element,
-          lo_comments              TYPE REF TO zcl_excel_comments,
-          lo_comment               TYPE REF TO zcl_excel_comment,
-          lv_row                   TYPE zexcel_cell_row,
-          lv_str_column            TYPE zexcel_cell_column_alpha,
-          lv_column                TYPE zexcel_cell_column,
-          lv_index                 TYPE i,
-          lv_attr_id_index         TYPE i,
-          lv_attr_id               TYPE string,
-          lv_int_value             TYPE i,
-          lv_int_value_string      TYPE string,
-          lv_anchor                TYPE string.
+    data:
+      lo_vmldrawing type ref to lcl_vmldrawing_for_comments,
+      lo_document   type ref to if_ixml_document.
 
-    lo_comments = io_worksheet->get_comments( ).
-    IF lo_comments->gv_full_vml IS INITIAL.
+    create object lo_vmldrawing.
+    lo_document = lo_vmldrawing->create(
+      io_comments = io_worksheet->get_comments(  )
+    ).
 
-**********************************************************************
-* STEP 1: Create XML document
-      lo_document = me->ixml->create_document( ).
-
-***********************************************************************
-* STEP 2: Create main node relationships
-      lo_element_root = lo_document->create_simple_element( name   = `xml` parent = lo_document ).
-      lo_element_root->set_attribute_ns( name  = `xmlns:v`  value = `urn:schemas-microsoft-com:vml` ).
-      lo_element_root->set_attribute_ns( name  = `xmlns:o`  value = `urn:schemas-microsoft-com:office:office` ).
-      lo_element_root->set_attribute_ns( name  = `xmlns:x`  value = `urn:schemas-microsoft-com:office:excel` ).
-
-**********************************************************************
-* STEP 3: Create o:shapeLayout
-* TO-DO: management of several authors
-      lo_element_shapelayout = lo_document->create_simple_element( name   = `o:shapelayout`
-                                                                   parent = lo_element_root ).
-
-      lo_element_shapelayout->set_attribute_ns( name  = `v:ext`
-                                                value = `edit` ).
-
-      lo_element_idmap = lo_document->create_simple_element( name   = `o:idmap`
-                                                             parent = lo_element_shapelayout ).
-      lo_element_idmap->set_attribute_ns( name  = `v:ext`  value = `edit` ).
-      lo_element_idmap->set_attribute_ns( name  = `data`  value = `1` ).
-
-**********************************************************************
-* STEP 4: Create v:shapetype
-
-      lo_element_shapetype = lo_document->create_simple_element( name   = `v:shapetype`
-                                                                 parent = lo_element_root ).
-
-      lo_element_shapetype->set_attribute_ns( name  = `id`         value = `_x0000_t202` ).
-      lo_element_shapetype->set_attribute_ns( name  = `coordsize`  value = `21600,21600` ).
-      lo_element_shapetype->set_attribute_ns( name  = `o:spt`       value = `202` ).
-      lo_element_shapetype->set_attribute_ns( name  = `path`       value = `m,l,21600r21600,l21600,xe` ).
-
-      lo_element_stroke = lo_document->create_simple_element( name   = `v:stroke`
-                                                              parent = lo_element_shapetype ).
-      lo_element_stroke->set_attribute_ns( name  = `joinstyle`       value = `miter` ).
-
-      lo_element_path   = lo_document->create_simple_element( name   = `v:path`
-                                                              parent = lo_element_shapetype ).
-      lo_element_path->set_attribute_ns( name  = `gradientshapeok` value = `t` ).
-      lo_element_path->set_attribute_ns( name  = `o:connecttype`    value = `rect` ).
-
-**********************************************************************
-* STEP 4: Create v:shapetype
-
-
-      lo_iterator = lo_comments->get_iterator( ).
-      WHILE lo_iterator->has_next( ) EQ abap_true.
-        lv_index = sy-index.
-        lo_comment ?= lo_iterator->get_next( ).
-
-        zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow = lo_comment->get_ref( )
-                                                          IMPORTING e_column = lv_str_column
-                                                                    e_row    = lv_row ).
-        lv_column = zcl_excel_common=>convert_column2int( lv_str_column ).
-
-        lo_element_shape = lo_document->create_simple_element( name   = `v:shape`
-                                                               parent = lo_element_root ).
-
-        lv_attr_id_index = 1024 + lv_index.
-        lv_attr_id = lv_attr_id_index.
-        CONCATENATE `_x0000_s` lv_attr_id INTO lv_attr_id.
-        lo_element_shape->set_attribute_ns( name  = `id`          value = lv_attr_id ).
-        lo_element_shape->set_attribute_ns( name  = `type`        value = `#_x0000_t202` ).
-        lo_element_shape->set_attribute_ns( name  = `style`       value = `size:auto;width:auto;height:auto;position:absolute;margin-left:117pt;margin-top:172.5pt;z-index:1;visibility:hidden` ).
-        lo_element_shape->set_attribute_ns( name  = `fillcolor`   value = `#ffffe1` ).
-        lo_element_shape->set_attribute_ns( name  = `o:insetmode` value = `auto` ).
-
-        " Fill
-        lo_element_fill = lo_document->create_simple_element( name   = `v:fill`
-                                                              parent = lo_element_shape ).
-        lo_element_fill->set_attribute_ns( name = `color2`  value = `#ffffe1` ).
-
-        " Shadow
-        lo_element_shadow = lo_document->create_simple_element( name   = `v:shadow`
-                                                                parent = lo_element_shape ).
-        lo_element_shadow->set_attribute_ns( name = `on`        value = `t` ).
-        lo_element_shadow->set_attribute_ns( name = `color`     value = `black` ).
-        lo_element_shadow->set_attribute_ns( name = `obscured`  value = `t` ).
-
-        " Path
-        lo_element_path = lo_document->create_simple_element( name   = `v:path`
-                                                              parent = lo_element_shape ).
-        lo_element_path->set_attribute_ns( name = `o:connecttype`  value = `none` ).
-
-        " Textbox
-        lo_element_textbox = lo_document->create_simple_element( name   = `v:textbox`
-                                                                 parent = lo_element_shape ).
-        lo_element_textbox->set_attribute_ns( name = `style`  value = `mso-direction-alt:auto` ).
-        lo_element_div = lo_document->create_simple_element( name   = `div`
-                                                             parent = lo_element_div ).
-        lo_element_div->set_attribute_ns( name = `style`  value = `text-align:left` ).
-
-        " ClientData
-        lo_element_clientdata = lo_document->create_simple_element( name   = `x:ClientData`
-                                                                    parent = lo_element_shape ).
-        lo_element_clientdata->set_attribute_ns( name = `ObjectType`  value = `Note` ).
-        lo_element_movewithcells = lo_document->create_simple_element( name   = `x:MoveWithCells`
-                                                                       parent = lo_element_clientdata ).
-        lo_element_sizewithcells = lo_document->create_simple_element( name   = `x:SizeWithCells`
-                                                                       parent = lo_element_clientdata ).
-
-        lo_element_anchor = lo_document->create_simple_element( name   = `x:Anchor`
-                                                                parent = lo_element_clientdata ).
-
-        " Anchor represents 4 pairs of numbers:
-        "   ( left column, left offset ), ( top row, top offset ),
-        "   ( right column, right offset ), ( bottom row, botton offset )
-        " Offsets are a number of pixels.
-        " Reference: Anchor Class at
-        "   https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.vml.spreadsheet.anchor?view=openxml-3.0.1
-        lv_anchor = get_comment_anchor( lo_comment ).
-        lo_element_anchor->set_value( lv_anchor ).
-
-        lo_element_autofill = lo_document->create_simple_element( name   = `x:AutoFill`
-                                                                  parent = lo_element_clientdata ).
-        lo_element_autofill->set_value( `False` ).
-
-        lo_element_row = lo_document->create_simple_element( name   = `x:Row`
-                                                             parent = lo_element_clientdata ).
-        lv_int_value = lv_row - 1.
-        lv_int_value_string = lv_int_value.
-        lo_element_row->set_value( lv_int_value_string ).
-
-        lo_element_column = lo_document->create_simple_element( name   = `x:Column`
-                                                                parent = lo_element_clientdata ).
-        lv_int_value = lv_column - 1.
-        lv_int_value_string = lv_int_value.
-        lo_element_column->set_value( lv_int_value_string ).
-
-      ENDWHILE.
-
-**********************************************************************
-* STEP 6: Create xstring stream
-      ep_content = render_xml_document( lo_document ).
-
-    ELSE.
-
-* Replace the eight numbers in <x:Anchor> with the current values
-* (they may have been changed before calling the writer
-      lo_document = ixml->create_document( ).
-      CALL TRANSFORMATION id
-        SOURCE XML lo_comments->gv_full_vml
-        RESULT XML lo_document.
-
-      lo_anchors = lo_document->get_elements_by_tag_name_ns(
-        name = `anchor`
-        uri  = `urn:schemas-microsoft-com:office:excel`
-      ).
-
-      lo_iterator = lo_comments->get_iterator( ).
-      WHILE lo_iterator->has_next( ) EQ abap_true.
-        lo_anchor ?= lo_anchors->get_item( sy-index - 1 ).
-        IF lo_anchor IS NOT BOUND.
-          EXIT.
-        ENDIF.
-        lo_comment ?= lo_iterator->get_next( ).
-        lv_anchor = get_comment_anchor( lo_comment ).
-        lo_anchor->set_value( lv_anchor ).
-      ENDWHILE.
-
-      ep_content = render_xml_document( lo_document ).
-
-    ENDIF.
+    ep_content = render_xml_document( lo_document ).
 
   ENDMETHOD.
 
@@ -6496,15 +6294,4 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_comment_anchor.
-    ev_anchor =  number2string( io_comment->get_left_column( ) )
-         && `, ` && number2string( io_comment->get_left_offset( ) )
-         && `, ` && number2string( io_comment->get_top_row( ) )
-         && `, ` && number2string( io_comment->get_top_offset( ) )
-         && `, ` && number2string( io_comment->get_right_column( ) )
-         && `, ` && number2string( io_comment->get_right_offset( ) )
-         && `, ` && number2string( io_comment->get_bottom_row( ) )
-         && `, ` && number2string( io_comment->get_bottom_offset( ) ).
-    CONDENSE ev_anchor.
-  ENDMETHOD.
 ENDCLASS.
