@@ -74,6 +74,11 @@
      <DESCRIPT>Table with external hyperlinks</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>LOAD_COMMENT_BOXES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Loads comment box style from xl/drawings/vmlDrawing*.vml</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>LOAD_DRAWING_ANCHOR</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Loads drawing anchor</DESCRIPT>
@@ -234,6 +239,20 @@
      <DESCRIPT>Zip Utility</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>LOAD_SINGLE_COMMENT</CMPNAME>
+     <SCONAME>EO_COMMENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Comment</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>LOAD_SINGLE_COMMENT</CMPNAME>
+     <SCONAME>IO_NODE_COMMENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Element of an XML Document</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>
