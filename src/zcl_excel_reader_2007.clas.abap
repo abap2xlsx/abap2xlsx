@@ -274,13 +274,13 @@ CLASS zcl_excel_reader_2007 DEFINITION
         io_ixml_worksheet TYPE REF TO if_ixml_document
         io_worksheet      TYPE REF TO zcl_excel_worksheet
       RAISING
-        zcx_excel .
+        zcx_excel.
     METHODS load_worksheet_pagemargins
       IMPORTING
         !io_ixml_worksheet TYPE REF TO if_ixml_document
         !io_worksheet      TYPE REF TO zcl_excel_worksheet
       RAISING
-        zcx_excel .
+        zcx_excel.
     "! <p class="shorttext synchronized" lang="en">Load worksheet tables</p>
     METHODS load_worksheet_tables
       IMPORTING
@@ -312,36 +312,35 @@ CLASS zcl_excel_reader_2007 DEFINITION
         iv_path   TYPE string
         !ip_excel TYPE REF TO zcl_excel
       RAISING
-        zcx_excel .
+        zcx_excel.
     METHODS provided_string_is_escaped
       IMPORTING
         !value            TYPE string
       RETURNING
-        VALUE(is_escaped) TYPE abap_bool .
+        VALUE(is_escaped) TYPE abap_bool.
 
-    CONSTANTS:
-      BEGIN OF namespace,
-        x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
-        vba_project      TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
-        c                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
-        a                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
-        xdr              TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
-        mc               TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
-        r                TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-        chart            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
-        drawing          TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
-        hyperlink        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
-        image            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-        office_document  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument',
-        printer_settings TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
-        shared_strings   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings',
-        styles           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
-        theme            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
-        worksheet        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
-        relationships    TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
-        core_properties  TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
-        main             TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-      END OF namespace .
+    CONSTANTS: BEGIN OF namespace,
+                 x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
+                 vba_project      TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
+                 c                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
+                 a                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
+                 xdr              TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
+                 mc               TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
+                 r                TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+                 chart            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
+                 drawing          TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+                 hyperlink        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+                 image            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
+                 office_document  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument',
+                 printer_settings TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
+                 shared_strings   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings',
+                 styles           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
+                 theme            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
+                 worksheet        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
+                 relationships    TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
+                 core_properties  TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
+                 main             TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+               END OF namespace.
 
   PRIVATE SECTION.
 
@@ -367,7 +366,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
       RETURNING
         VALUE(r_excel_data) TYPE xstring
       RAISING
-        zcx_excel .
+        zcx_excel.
     METHODS read_from_local_file
       IMPORTING
         !i_filename         TYPE csequence
@@ -4471,7 +4470,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     "Check if passed value is really an escaped Character
     IF value CS '_x'.
       is_escaped = abap_true.
-      TRY.
+       TRY.
           IF substring( val = value off = sy-fdpos + 6 len = 1 ) <> '_'.
             is_escaped = abap_false.
           ENDIF.

@@ -552,15 +552,15 @@ CLASS zcl_excel_worksheet DEFINITION
         !ip_row          TYPE zexcel_cell_row OPTIONAL
         !ip_row_to       TYPE zexcel_cell_row OPTIONAL
         !ip_style        TYPE any OPTIONAL
-        !ip_value        TYPE simple OPTIONAL                   "added parameter
-        !ip_formula      TYPE zexcel_cell_formula OPTIONAL               "added parameter
+        !ip_value        TYPE simple OPTIONAL          "added parameter
+        !ip_formula      TYPE zexcel_cell_formula OPTIONAL        "added parameter
       RAISING
         zcx_excel .
     METHODS set_pane_top_left_cell
       IMPORTING
         !iv_columnrow TYPE csequence
       RAISING
-        zcx_excel .
+        zcx_excel.
     METHODS set_print_gridlines
       IMPORTING
         !i_print_gridlines TYPE zexcel_print_gridlines .
@@ -581,7 +581,7 @@ CLASS zcl_excel_worksheet DEFINITION
       IMPORTING
         !iv_columnrow TYPE csequence
       RAISING
-        zcx_excel .
+        zcx_excel.
     METHODS set_show_gridlines
       IMPORTING
         !i_show_gridlines TYPE zexcel_show_gridlines .
