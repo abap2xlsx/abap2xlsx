@@ -76,7 +76,7 @@
     <SEOCOMPOTX>
      <CMPNAME>LOAD_COMMENT_BOXES</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Loads worksheet drawings</DESCRIPT>
+     <DESCRIPT>Loads comment box style from xl/drawings/vmlDrawing*.vml</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>LOAD_DRAWING_ANCHOR</CMPNAME>

@@ -259,7 +259,6 @@ CLASS zcl_excel_writer_2007 DEFINITION
     CONSTANTS c_xl_printersettings TYPE string VALUE 'xl/printerSettings/printerSettings#.bin'. "#EC NOTEXT
     TYPES: tv_charbool TYPE c LENGTH 5.
 
-
     METHODS add_1_val_child_node
       IMPORTING
         io_document   TYPE REF TO if_ixml_document
@@ -272,7 +271,6 @@ CLASS zcl_excel_writer_2007 DEFINITION
         !ip_flag          TYPE flag
       RETURNING
         VALUE(ep_boolean) TYPE tv_charbool  .
-
 ENDCLASS.
 
 
@@ -2408,7 +2406,6 @@ CLASS ZCL_EXCEL_WRITER_2007 IMPLEMENTATION.
       lv_text = lo_comment->get_text(  ).
 
       LOOP AT lt_rtf ASSIGNING <ls_rtf>.
-
 
         lo_element_r    = lo_document->create_simple_element( name   = `r`
                                                               parent = lo_element_text ).
