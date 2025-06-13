@@ -13,12 +13,12 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !ip_element   TYPE REF TO if_ixml_element
       CHANGING
         !cp_structure TYPE any .
-protected section.
+  PROTECTED SECTION.
 
-  types:
+    TYPES:
 *"* protected components of class ZCL_EXCEL_READER_2007
 *"* do not include other source files here!!!
-    BEGIN OF t_relationship,
+      BEGIN OF t_relationship,
         id           TYPE string,
         type         TYPE string,
         target       TYPE string,
@@ -27,69 +27,69 @@ protected section.
         sheetid      TYPE string,     "ins #235 - repeat rows/cols - needed to identify correct sheet
         localsheetid TYPE string,
       END OF t_relationship .
-  types:
-    BEGIN OF t_fileversion,
+    TYPES:
+      BEGIN OF t_fileversion,
         appname      TYPE string,
         lastedited   TYPE string,
         lowestedited TYPE string,
         rupbuild     TYPE string,
         codename     TYPE string,
       END OF t_fileversion .
-  types:
-    BEGIN OF t_sheet,
+    TYPES:
+      BEGIN OF t_sheet,
         name    TYPE string,
         sheetid TYPE string,
         id      TYPE string,
         state   TYPE string,
       END OF t_sheet .
-  types:
-    BEGIN OF t_workbookpr,
+    TYPES:
+      BEGIN OF t_workbookpr,
         codename            TYPE string,
         defaultthemeversion TYPE string,
       END OF t_workbookpr .
-  types:
-    BEGIN OF t_sheetpr,
+    TYPES:
+      BEGIN OF t_sheetpr,
         codename TYPE string,
       END OF t_sheetpr .
-  types:
-    BEGIN OF t_range,
+    TYPES:
+      BEGIN OF t_range,
         name         TYPE string,
         hidden       TYPE string,       "inserted with issue #235 because Autofilters didn't passthrough
         localsheetid TYPE string,       " issue #163
       END OF t_range .
-  types:
-    t_fills   TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    t_fonts   TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    BEGIN OF t_color,
+    TYPES:
+      t_fills   TYPE STANDARD TABLE OF REF TO zcl_excel_style_fill WITH NON-UNIQUE DEFAULT KEY .
+    TYPES:
+      t_borders TYPE STANDARD TABLE OF REF TO zcl_excel_style_borders WITH NON-UNIQUE DEFAULT KEY .
+    TYPES:
+      t_fonts   TYPE STANDARD TABLE OF REF TO zcl_excel_style_font WITH NON-UNIQUE DEFAULT KEY .
+    TYPES:
+      t_style_refs TYPE STANDARD TABLE OF REF TO zcl_excel_style WITH NON-UNIQUE DEFAULT KEY .
+    TYPES:
+      BEGIN OF t_color,
         indexed TYPE string,
         rgb     TYPE string,
         theme   TYPE string,
         tint    TYPE string,
       END OF t_color .
-  types:
-    BEGIN OF t_rel_drawing,
+    TYPES:
+      BEGIN OF t_rel_drawing,
         id          TYPE string,
         content     TYPE xstring,
         file_ext    TYPE string,
         content_xml TYPE REF TO if_ixml_document,
       END OF t_rel_drawing .
-  types:
-    t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY .
-  types:
-    BEGIN OF gts_external_hyperlink,
+    TYPES:
+      t_rel_drawings TYPE STANDARD TABLE OF t_rel_drawing WITH NON-UNIQUE DEFAULT KEY .
+    TYPES:
+      BEGIN OF gts_external_hyperlink,
         id     TYPE string,
         target TYPE string,
       END OF gts_external_hyperlink .
-  types:
-    gtt_external_hyperlinks TYPE HASHED TABLE OF gts_external_hyperlink WITH UNIQUE KEY id .
-  types:
-    BEGIN OF ty_ref_formulae,
+    TYPES:
+      gtt_external_hyperlinks TYPE HASHED TABLE OF gts_external_hyperlink WITH UNIQUE KEY id .
+    TYPES:
+      BEGIN OF ty_ref_formulae,
         sheet   TYPE REF TO zcl_excel_worksheet,
         row     TYPE i,
         column  TYPE i,
@@ -97,29 +97,229 @@ protected section.
         ref     TYPE string,
         formula TYPE string,
       END   OF ty_ref_formulae .
-  types:
-    tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column .
-  types:
-    BEGIN OF t_shared_string,
+    TYPES:
+      tyt_ref_formulae TYPE HASHED TABLE OF ty_ref_formulae WITH UNIQUE KEY sheet row column .
+    TYPES:
+      BEGIN OF t_shared_string,
         value TYPE string,
         rtf   TYPE zexcel_t_rtf,
       END OF t_shared_string .
-  types:
-    t_shared_strings TYPE STANDARD TABLE OF t_shared_string WITH DEFAULT KEY .
-  types:
-    BEGIN OF t_table,
+    TYPES:
+      t_shared_strings TYPE STANDARD TABLE OF t_shared_string WITH DEFAULT KEY .
+    TYPES:
+      BEGIN OF t_table,
         id     TYPE string,
         target TYPE string,
       END OF t_table .
-  types:
-    t_tables TYPE HASHED TABLE OF t_table WITH UNIQUE KEY id .
+    TYPES:
+      t_tables TYPE HASHED TABLE OF t_table WITH UNIQUE KEY id .
 
-  data SHARED_STRINGS type T_SHARED_STRINGS .
-  data STYLES type T_STYLE_REFS .
-  data MT_REF_FORMULAE type TYT_REF_FORMULAE .
-  data MT_DXF_STYLES type ZEXCEL_T_STYLES_COND_MAPPING .
-  constants:
-    BEGIN OF namespace,
+    DATA shared_strings TYPE t_shared_strings .
+    DATA styles TYPE t_style_refs .
+    DATA mt_ref_formulae TYPE tyt_ref_formulae .
+    DATA mt_dxf_styles TYPE zexcel_t_styles_cond_mapping .
+
+    METHODS fill_row_outlines
+      IMPORTING
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS get_from_zip_archive
+      IMPORTING
+        !i_filename      TYPE string
+      RETURNING
+        VALUE(r_content) TYPE xstring
+      RAISING
+        zcx_excel .
+    METHODS get_ixml_from_zip_archive
+      IMPORTING
+        !i_filename     TYPE string
+        !is_normalizing TYPE abap_bool DEFAULT 'X'
+      RETURNING
+        VALUE(r_ixml)   TYPE REF TO if_ixml_document
+      RAISING
+        zcx_excel .
+    METHODS load_comment_boxes
+      IMPORTING
+        !ip_path      TYPE string
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS load_drawing_anchor
+      IMPORTING
+        !io_anchor_element   TYPE REF TO if_ixml_element
+        !io_worksheet        TYPE REF TO zcl_excel_worksheet
+        !it_related_drawings TYPE t_rel_drawings .
+    METHODS load_shared_strings
+      IMPORTING
+        !ip_path TYPE string
+      RAISING
+        zcx_excel .
+    METHODS load_styles
+      IMPORTING
+        !ip_path  TYPE string
+        !ip_excel TYPE REF TO zcl_excel
+      RAISING
+        zcx_excel .
+    METHODS load_dxf_styles
+      IMPORTING
+        !iv_path  TYPE string
+        !io_excel TYPE REF TO zcl_excel
+      RAISING
+        zcx_excel .
+    METHODS load_style_borders
+      IMPORTING
+        !ip_xml           TYPE REF TO if_ixml_document
+      RETURNING
+        VALUE(ep_borders) TYPE t_borders .
+    METHODS load_style_fills
+      IMPORTING
+        !ip_xml         TYPE REF TO if_ixml_document
+      RETURNING
+        VALUE(ep_fills) TYPE t_fills .
+    METHODS load_style_font
+      IMPORTING
+        !io_xml_element TYPE REF TO if_ixml_element
+      RETURNING
+        VALUE(ro_font)  TYPE REF TO zcl_excel_style_font .
+    METHODS load_style_fonts
+      IMPORTING
+        !ip_xml         TYPE REF TO if_ixml_document
+      RETURNING
+        VALUE(ep_fonts) TYPE t_fonts .
+    METHODS load_style_num_formats
+      IMPORTING
+        !ip_xml               TYPE REF TO if_ixml_document
+      RETURNING
+        VALUE(ep_num_formats) TYPE zcl_excel_style_number_format=>t_num_formats .
+    METHODS load_workbook
+      IMPORTING
+        !iv_workbook_full_filename TYPE string
+        !io_excel                  TYPE REF TO zcl_excel
+      RAISING
+        zcx_excel .
+    METHODS load_worksheet
+      IMPORTING
+        !ip_path      TYPE string
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS load_worksheet_cond_format
+      IMPORTING
+        !io_ixml_worksheet TYPE REF TO if_ixml_document
+        !io_worksheet      TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS load_worksheet_cond_format_aa
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond.
+    METHODS load_worksheet_cond_format_ci
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS load_worksheet_cond_format_cs
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS load_worksheet_cond_format_ex
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS load_worksheet_cond_format_is
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS load_worksheet_cond_format_db
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS load_worksheet_cond_format_t10
+      IMPORTING
+        !io_ixml_rule  TYPE REF TO if_ixml_element
+        !io_style_cond TYPE REF TO zcl_excel_style_cond .
+    METHODS load_worksheet_drawing
+      IMPORTING
+        !ip_path      TYPE string
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS load_comments
+      IMPORTING
+        ip_path      TYPE string
+        io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS load_worksheet_hyperlinks
+      IMPORTING
+        !io_ixml_worksheet      TYPE REF TO if_ixml_document
+        !io_worksheet           TYPE REF TO zcl_excel_worksheet
+        !it_external_hyperlinks TYPE gtt_external_hyperlinks
+      RAISING
+        zcx_excel .
+    METHODS load_worksheet_ignored_errors
+      IMPORTING
+        !io_ixml_worksheet TYPE REF TO if_ixml_document
+        !io_worksheet      TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS load_worksheet_pagebreaks
+      IMPORTING
+        !io_ixml_worksheet TYPE REF TO if_ixml_document
+        !io_worksheet      TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    METHODS load_worksheet_autofilter
+      IMPORTING
+        io_ixml_worksheet TYPE REF TO if_ixml_document
+        io_worksheet      TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel.
+    METHODS load_worksheet_pagemargins
+      IMPORTING
+        !io_ixml_worksheet TYPE REF TO if_ixml_document
+        !io_worksheet      TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
+    "! <p class="shorttext synchronized" lang="en">Load worksheet tables</p>
+    METHODS load_worksheet_tables
+      IMPORTING
+        io_ixml_worksheet TYPE REF TO if_ixml_document
+        io_worksheet      TYPE REF TO zcl_excel_worksheet
+        iv_dirname        TYPE string
+        it_tables         TYPE t_tables
+      RAISING
+        zcx_excel .
+    CLASS-METHODS resolve_path
+      IMPORTING
+        !ip_path         TYPE string
+      RETURNING
+        VALUE(rp_result) TYPE string .
+    METHODS resolve_referenced_formulae .
+    METHODS unescape_string_value
+      IMPORTING
+        i_value       TYPE string
+      RETURNING
+        VALUE(result) TYPE string.
+    METHODS get_dxf_style_guid
+      IMPORTING
+        !io_ixml_dxf         TYPE REF TO if_ixml_element
+        !io_excel            TYPE REF TO zcl_excel
+      RETURNING
+        VALUE(rv_style_guid) TYPE zexcel_cell_style .
+    METHODS load_theme
+      IMPORTING
+        iv_path   TYPE string
+        !ip_excel TYPE REF TO zcl_excel
+      RAISING
+        zcx_excel.
+    METHODS provided_string_is_escaped
+      IMPORTING
+        !value            TYPE string
+      RETURNING
+        VALUE(is_escaped) TYPE abap_bool.
+
+    CONSTANTS: BEGIN OF namespace,
                  x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
                  vba_project      TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
                  c                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
@@ -140,207 +340,8 @@ protected section.
                  relationships    TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
                  core_properties  TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
                  main             TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-               END OF namespace .
+               END OF namespace.
 
-  methods FILL_ROW_OUTLINES
-    importing
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods GET_FROM_ZIP_ARCHIVE
-    importing
-      !I_FILENAME type STRING
-    returning
-      value(R_CONTENT) type XSTRING
-    raising
-      ZCX_EXCEL .
-  methods GET_IXML_FROM_ZIP_ARCHIVE
-    importing
-      !I_FILENAME type STRING
-      !IS_NORMALIZING type ABAP_BOOL default 'X'
-    returning
-      value(R_IXML) type ref to IF_IXML_DOCUMENT
-    raising
-      ZCX_EXCEL .
-  methods LOAD_COMMENT_BOXES
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_DRAWING_ANCHOR
-    importing
-      !IO_ANCHOR_ELEMENT type ref to IF_IXML_ELEMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IT_RELATED_DRAWINGS type T_REL_DRAWINGS .
-  methods LOAD_SHARED_STRINGS
-    importing
-      !IP_PATH type STRING
-    raising
-      ZCX_EXCEL .
-  methods LOAD_STYLES
-    importing
-      !IP_PATH type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD_DXF_STYLES
-    importing
-      !IV_PATH type STRING
-      !IO_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD_STYLE_BORDERS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_BORDERS) type T_BORDERS .
-  methods LOAD_STYLE_FILLS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_FILLS) type T_FILLS .
-  methods LOAD_STYLE_FONT
-    importing
-      !IO_XML_ELEMENT type ref to IF_IXML_ELEMENT
-    returning
-      value(RO_FONT) type ref to ZCL_EXCEL_STYLE_FONT .
-  methods LOAD_STYLE_FONTS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_FONTS) type T_FONTS .
-  methods LOAD_STYLE_NUM_FORMATS
-    importing
-      !IP_XML type ref to IF_IXML_DOCUMENT
-    returning
-      value(EP_NUM_FORMATS) type ZCL_EXCEL_STYLE_NUMBER_FORMAT=>T_NUM_FORMATS .
-  methods LOAD_WORKBOOK
-    importing
-      !IV_WORKBOOK_FULL_FILENAME type STRING
-      !IO_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_COND_FORMAT
-    importing
-      !IO_IXML_WORKSHEET type ref to IF_IXML_DOCUMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_COND_FORMAT_AA
-    importing
-      !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods LOAD_WORKSHEET_COND_FORMAT_CI
-    importing
-      !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods LOAD_WORKSHEET_COND_FORMAT_CS
-    importing
-      !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods LOAD_WORKSHEET_COND_FORMAT_EX
-    importing
-      !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods LOAD_WORKSHEET_COND_FORMAT_IS
-    importing
-      !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods LOAD_WORKSHEET_COND_FORMAT_DB
-    importing
-      !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods LOAD_WORKSHEET_COND_FORMAT_T10
-    importing
-      !IO_IXML_RULE type ref to IF_IXML_ELEMENT
-      !IO_STYLE_COND type ref to ZCL_EXCEL_STYLE_COND .
-  methods LOAD_WORKSHEET_DRAWING
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_COMMENTS
-    importing
-      !IP_PATH type STRING
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_HYPERLINKS
-    importing
-      !IO_IXML_WORKSHEET type ref to IF_IXML_DOCUMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IT_EXTERNAL_HYPERLINKS type GTT_EXTERNAL_HYPERLINKS
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_IGNORED_ERRORS
-    importing
-      !IO_IXML_WORKSHEET type ref to IF_IXML_DOCUMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_PAGEBREAKS
-    importing
-      !IO_IXML_WORKSHEET type ref to IF_IXML_DOCUMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_AUTOFILTER
-    importing
-      !IO_IXML_WORKSHEET type ref to IF_IXML_DOCUMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-  methods LOAD_WORKSHEET_PAGEMARGINS
-    importing
-      !IO_IXML_WORKSHEET type ref to IF_IXML_DOCUMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-    raising
-      ZCX_EXCEL .
-    "! <p class="shorttext synchronized" lang="en">Load worksheet tables</p>
-  methods LOAD_WORKSHEET_TABLES
-    importing
-      !IO_IXML_WORKSHEET type ref to IF_IXML_DOCUMENT
-      !IO_WORKSHEET type ref to ZCL_EXCEL_WORKSHEET
-      !IV_DIRNAME type STRING
-      !IT_TABLES type T_TABLES
-    raising
-      ZCX_EXCEL .
-  class-methods RESOLVE_PATH
-    importing
-      !IP_PATH type STRING
-    returning
-      value(RP_RESULT) type STRING .
-  methods RESOLVE_REFERENCED_FORMULAE .
-  methods UNESCAPE_STRING_VALUE
-    importing
-      !I_VALUE type STRING
-    returning
-      value(RESULT) type STRING .
-  methods GET_DXF_STYLE_GUID
-    importing
-      !IO_IXML_DXF type ref to IF_IXML_ELEMENT
-      !IO_EXCEL type ref to ZCL_EXCEL
-    returning
-      value(RV_STYLE_GUID) type ZEXCEL_CELL_STYLE .
-  methods LOAD_THEME
-    importing
-      !IV_PATH type STRING
-      !IP_EXCEL type ref to ZCL_EXCEL
-    raising
-      ZCX_EXCEL .
-  methods PROVIDED_STRING_IS_ESCAPED
-    importing
-      !VALUE type STRING
-    returning
-      value(IS_ESCAPED) type ABAP_BOOL .
   PRIVATE SECTION.
 
     DATA zip TYPE REF TO lcl_zip_archive .
@@ -377,7 +378,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
+CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 
   METHOD create_zip_archive.
@@ -3712,7 +3713,6 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD load_worksheet_hyperlinks.
 
     DATA: lo_ixml_hyperlinks TYPE REF TO if_ixml_node_collection,
@@ -4461,8 +4461,6 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
                                      iv_zcl_excel_classname = iv_zcl_excel_classname ).
 
   ENDMETHOD.
-
-
   METHOD provided_string_is_escaped.
 
     "Check if passed value is really an escaped Character
@@ -4477,7 +4475,6 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
       ENDTRY.
     ENDIF.
   ENDMETHOD.
-
 
   METHOD load_comment_boxes.
 
@@ -4544,7 +4541,6 @@ CLASS ZCL_EXCEL_READER_2007 IMPLEMENTATION.
 
 
   ENDMETHOD.
-
 
   METHOD load_single_comment.
 
