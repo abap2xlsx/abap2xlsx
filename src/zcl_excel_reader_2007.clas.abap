@@ -3689,7 +3689,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD load_comments.
 
     DATA:
