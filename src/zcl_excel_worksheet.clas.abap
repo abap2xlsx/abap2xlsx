@@ -396,6 +396,8 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_dimension_range) TYPE string
       RAISING
         zcx_excel .
+    "! <p class="shorttext synchronized" lang="en">Get a copy of the comments instance</p>
+    "! @parameter r_comments | <p class="shorttext synchronized" lang="en">Copied comments instance</p>
     METHODS get_comments
       RETURNING
         VALUE(r_comments) TYPE REF TO zcl_excel_comments .
@@ -2606,16 +2608,11 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_comments.
-    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
-          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
 
-    CREATE OBJECT r_comments.
-
-    lo_iterator = comments->get_iterator( ).
-    WHILE lo_iterator->has_next( ) = abap_true.
-      lo_comment ?= lo_iterator->get_next( ).
-      r_comments->include( lo_comment ).
-    ENDWHILE.
+* Create a copy of the comments attribute
+    CREATE OBJECT r_comments
+      EXPORTING
+        io_from = comments.
 
   ENDMETHOD.                    "get_comments
 
