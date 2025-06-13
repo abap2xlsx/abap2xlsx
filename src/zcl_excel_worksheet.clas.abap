@@ -3602,7 +3602,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-
   METHOD set_area.
 
     DATA: lv_row              TYPE zexcel_cell_row,
@@ -4862,7 +4861,6 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
   METHOD zif_excel_sheet_vba_project~set_codename_pr.
     me->zif_excel_sheet_vba_project~codename_pr = ip_codename_pr.
   ENDMETHOD.                    "ZIF_EXCEL_SHEET_VBA_PROJECT~SET_CODENAME_PR
-
 
   METHOD set_comment_boxes.
     comments->set_boxes( it_boxes = it_boxes iv_full_vml = iv_full_vml ).

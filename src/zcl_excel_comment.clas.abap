@@ -218,13 +218,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD set_box.
 
     gs_box = is_box.
 
   ENDMETHOD.
-
 
   METHOD add_text.
 

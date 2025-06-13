@@ -280,7 +280,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !io_ixml_worksheet TYPE REF TO if_ixml_document
         !io_worksheet      TYPE REF TO zcl_excel_worksheet
       RAISING
-        zcx_excel.
+        zcx_excel .
     "! <p class="shorttext synchronized" lang="en">Load worksheet tables</p>
     METHODS load_worksheet_tables
       IMPORTING
@@ -354,7 +354,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
       RETURNING
         VALUE(e_zip)         TYPE REF TO lcl_zip_archive
       RAISING
-        zcx_excel.
+        zcx_excel .
     METHODS load_single_comment
       IMPORTING
         !io_node_comment  TYPE REF TO if_ixml_element
@@ -2517,7 +2517,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             CATCH zcx_excel. "--> then ignore it (boxes will get default values)
           ENDTRY.
 
-
         WHEN lc_rel_printer.
           " Read Printer settings
 
@@ -3690,7 +3689,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD load_comments.
 
     DATA:
@@ -3713,7 +3711,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     io_worksheet->set_comment_boxes( ).
 
   ENDMETHOD.
-
 
   METHOD load_worksheet_hyperlinks.
 
@@ -4464,7 +4461,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD provided_string_is_escaped.
 
     "Check if passed value is really an escaped Character
@@ -4479,7 +4475,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDTRY.
     ENDIF.
   ENDMETHOD.
-
 
   METHOD load_comment_boxes.
 
@@ -4546,7 +4541,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 
   ENDMETHOD.
-
 
   METHOD load_single_comment.
 
