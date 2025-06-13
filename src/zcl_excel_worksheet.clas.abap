@@ -3,13 +3,13 @@ CLASS zcl_excel_worksheet DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-
 *"* public components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
+
     INTERFACES zif_excel_sheet_printsettings .
     INTERFACES zif_excel_sheet_properties .
     INTERFACES zif_excel_sheet_protection .
@@ -21,9 +21,8 @@ CLASS zcl_excel_worksheet DEFINITION
         row_to    TYPE i,
         collapsed TYPE abap_bool,
       END OF mty_s_outline_row .
-    TYPES:
-      mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key COMPONENTS row_from row_to
-                                                                        WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to collapsed .
+    TYPES: mty_ts_outlines_row TYPE SORTED TABLE OF mty_s_outline_row WITH UNIQUE KEY primary_key COMPONENTS row_from row_to
+                                                                      WITH NON-UNIQUE SORTED KEY row_to COMPONENTS row_to collapsed.
     TYPES:
       BEGIN OF mty_s_ignored_errors,
         "! Cell reference (e.g. "A1") or list like "A1 A2" or range "A1:G1"
@@ -63,8 +62,8 @@ CLASS zcl_excel_worksheet DEFINITION
       END OF mty_s_column_formula .
     TYPES:
       mty_th_column_formula
-                 TYPE HASHED TABLE OF mty_s_column_formula
-                 WITH UNIQUE KEY id .
+               TYPE HASHED TABLE OF mty_s_column_formula
+               WITH UNIQUE KEY id .
     TYPES:
       ty_doc_url TYPE c LENGTH 255 .
     TYPES:
@@ -75,7 +74,7 @@ CLASS zcl_excel_worksheet DEFINITION
         col_to   TYPE i,
       END OF mty_merge .
     TYPES:
-      mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line .
+        mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line.
     TYPES:
       ty_area TYPE c LENGTH 1 .
 
@@ -103,8 +102,8 @@ CLASS zcl_excel_worksheet DEFINITION
         formula_in_other_column     TYPE string,
       END OF c_messages .
     DATA mt_merged_cells TYPE mty_ts_merge READ-ONLY .
-    DATA pane_top_left_cell TYPE string READ-ONLY .
-    DATA sheetview_top_left_cell TYPE string READ-ONLY .
+    DATA pane_top_left_cell TYPE string READ-ONLY.
+    DATA sheetview_top_left_cell TYPE string READ-ONLY.
 
     METHODS add_comment
       IMPORTING

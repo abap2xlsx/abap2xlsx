@@ -118,29 +118,6 @@ CLASS zcl_excel_reader_2007 DEFINITION
     DATA styles TYPE t_style_refs .
     DATA mt_ref_formulae TYPE tyt_ref_formulae .
     DATA mt_dxf_styles TYPE zexcel_t_styles_cond_mapping .
-    CONSTANTS:
-      BEGIN OF namespace,
-        x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
-        vba_project      TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
-        c                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
-        a                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
-        xdr              TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
-        mc               TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
-        r                TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-        chart            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
-        drawing          TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
-        hyperlink        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
-        image            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-        office_document  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument',
-        printer_settings TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
-        shared_strings   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings',
-        styles           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
-        theme            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
-        worksheet        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
-        relationships    TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
-        core_properties  TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
-        main             TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-      END OF namespace .
 
     METHODS fill_row_outlines
       IMPORTING
@@ -160,6 +137,12 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !is_normalizing TYPE abap_bool DEFAULT 'X'
       RETURNING
         VALUE(r_ixml)   TYPE REF TO if_ixml_document
+      RAISING
+        zcx_excel .
+    METHODS load_comment_boxes
+      IMPORTING
+        !ip_path      TYPE string
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
       RAISING
         zcx_excel .
     METHODS load_drawing_anchor
@@ -230,7 +213,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS load_worksheet_cond_format_aa
       IMPORTING
         !io_ixml_rule  TYPE REF TO if_ixml_element
-        !io_style_cond TYPE REF TO zcl_excel_style_cond .
+        !io_style_cond TYPE REF TO zcl_excel_style_cond.
     METHODS load_worksheet_cond_format_ci
       IMPORTING
         !io_ixml_rule  TYPE REF TO if_ixml_element
@@ -263,8 +246,8 @@ CLASS zcl_excel_reader_2007 DEFINITION
         zcx_excel .
     METHODS load_comments
       IMPORTING
-        !ip_path      TYPE string
-        !io_worksheet TYPE REF TO zcl_excel_worksheet
+        ip_path      TYPE string
+        io_worksheet TYPE REF TO zcl_excel_worksheet
       RAISING
         zcx_excel .
     METHODS load_worksheet_hyperlinks
@@ -288,8 +271,8 @@ CLASS zcl_excel_reader_2007 DEFINITION
         zcx_excel .
     METHODS load_worksheet_autofilter
       IMPORTING
-        !io_ixml_worksheet TYPE REF TO if_ixml_document
-        !io_worksheet      TYPE REF TO zcl_excel_worksheet
+        io_ixml_worksheet TYPE REF TO if_ixml_document
+        io_worksheet      TYPE REF TO zcl_excel_worksheet
       RAISING
         zcx_excel .
     METHODS load_worksheet_pagemargins
@@ -301,10 +284,10 @@ CLASS zcl_excel_reader_2007 DEFINITION
     "! <p class="shorttext synchronized" lang="en">Load worksheet tables</p>
     METHODS load_worksheet_tables
       IMPORTING
-        !io_ixml_worksheet TYPE REF TO if_ixml_document
-        !io_worksheet      TYPE REF TO zcl_excel_worksheet
-        !iv_dirname        TYPE string
-        !it_tables         TYPE t_tables
+        io_ixml_worksheet TYPE REF TO if_ixml_document
+        io_worksheet      TYPE REF TO zcl_excel_worksheet
+        iv_dirname        TYPE string
+        it_tables         TYPE t_tables
       RAISING
         zcx_excel .
     CLASS-METHODS resolve_path
@@ -315,9 +298,9 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS resolve_referenced_formulae .
     METHODS unescape_string_value
       IMPORTING
-        !i_value      TYPE string
+        i_value       TYPE string
       RETURNING
-        VALUE(result) TYPE string .
+        VALUE(result) TYPE string.
     METHODS get_dxf_style_guid
       IMPORTING
         !io_ixml_dxf         TYPE REF TO if_ixml_element
@@ -326,7 +309,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
         VALUE(rv_style_guid) TYPE zexcel_cell_style .
     METHODS load_theme
       IMPORTING
-        !iv_path  TYPE string
+        iv_path   TYPE string
         !ip_excel TYPE REF TO zcl_excel
       RAISING
         zcx_excel .
@@ -335,22 +318,36 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !value            TYPE string
       RETURNING
         VALUE(is_escaped) TYPE abap_bool .
-    METHODS load_comment_boxes
-      IMPORTING
-        !ip_path      TYPE string
-        !io_worksheet TYPE REF TO zcl_excel_worksheet
-      RAISING
-        zcx_excel .
+
+    CONSTANTS:
+      BEGIN OF namespace,
+        x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
+        vba_project      TYPE string VALUE 'http://schemas.microsoft.com/office/2006/relationships/vbaProject', "#EC NEEDED     for future incorporation of XLSM-reader
+        c                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/chart',
+        a                TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/main',
+        xdr              TYPE string VALUE 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing',
+        mc               TYPE string VALUE 'http://schemas.openxmlformats.org/markup-compatibility/2006',
+        r                TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+        chart            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
+        drawing          TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+        hyperlink        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+        image            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
+        office_document  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument',
+        printer_settings TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings',
+        shared_strings   TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings',
+        styles           TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
+        theme            TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
+        worksheet        TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
+        relationships    TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships',
+        core_properties  TYPE string VALUE 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties',
+        main             TYPE string VALUE 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+      END OF namespace .
+
   PRIVATE SECTION.
 
     DATA zip TYPE REF TO lcl_zip_archive .
-    DATA gid TYPE i .
+    DATA: gid TYPE i.
 
-    METHODS load_single_comment
-      IMPORTING
-        !io_node_comment  TYPE REF TO if_ixml_element
-      RETURNING
-        VALUE(eo_comment) TYPE REF TO zcl_excel_comment .
     METHODS create_zip_archive
       IMPORTING
         !i_xlsx_binary       TYPE xstring
@@ -358,7 +355,12 @@ CLASS zcl_excel_reader_2007 DEFINITION
       RETURNING
         VALUE(e_zip)         TYPE REF TO lcl_zip_archive
       RAISING
-        zcx_excel .
+        zcx_excel.
+    METHODS load_single_comment
+      IMPORTING
+        !io_node_comment  TYPE REF TO if_ixml_element
+      RETURNING
+        VALUE(eo_comment) TYPE REF TO zcl_excel_comment .
     METHODS read_from_applserver
       IMPORTING
         !i_filename         TYPE csequence
@@ -2277,7 +2279,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
              workbookviewid           TYPE string,
              showrowcolheaders        TYPE string,
              righttoleft              TYPE string,
-             topleftcell              TYPE string,
+             topleftcell       TYPE string,
            END OF lty_sheetview.
 
     TYPES: BEGIN OF lty_mergecell,
@@ -2348,14 +2350,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 
 
-    CONSTANTS: lc_xml_attr_true     TYPE string VALUE `true`,
-               lc_xml_attr_true_int TYPE string VALUE `1`,
-               lc_rel_drawing       TYPE string VALUE `http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing`,
-               lc_rel_vmldrawing    TYPE string VALUE `http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing`,
-               lc_rel_hyperlink     TYPE string VALUE `http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink`,
-               lc_rel_comments      TYPE string VALUE `http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments`,
-               lc_rel_printer       TYPE string VALUE `http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings`.
-    CONSTANTS lc_rel_table TYPE string VALUE `http://schemas.openxmlformats.org/officeDocument/2006/relationships/table`.
+    CONSTANTS: lc_xml_attr_true     TYPE string VALUE 'true',
+               lc_xml_attr_true_int TYPE string VALUE '1',
+               lc_rel_drawing       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+               lc_rel_vmldrawing    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing',
+               lc_rel_hyperlink     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+               lc_rel_comments      TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',
+               lc_rel_printer       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings'.
+    CONSTANTS lc_rel_table TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/table'.
 
     DATA: lo_ixml_worksheet           TYPE REF TO if_ixml_document,
           lo_ixml_cells               TYPE REF TO if_ixml_node_collection,
@@ -2504,7 +2506,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *                   in the "load_worksheet_drawing" shouldn't lead to an abortion of the reading
           TRY.
               me->load_worksheet_drawing( ip_path      = lv_path
-                                          io_worksheet = io_worksheet ).
+                                        io_worksheet = io_worksheet ).
             CATCH zcx_excel. "--> then ignore it
           ENDTRY.
 
