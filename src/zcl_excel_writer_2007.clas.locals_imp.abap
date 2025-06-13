@@ -1951,7 +1951,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
       uri  = gc_ns-microsoft_office
     ) IS NOT BOUND.
 
-
       DATA lo_element_shapelayout TYPE REF TO if_ixml_element.
       DATA lo_element_idmap TYPE REF TO if_ixml_element.
 
@@ -1971,7 +1970,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-
 
   METHOD create_shapetype.
 
@@ -2106,7 +2104,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
-
   ENDMETHOD.
 
   METHOD compare_shapes_with_comments.
@@ -2140,7 +2137,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
           e_row        = lv_row
       ).
 
-
       CLEAR es_shape.
       es_shape-column = lv_col - 1.  " Column is zero-based in the vml
       es_shape-row    = lv_row - 1.  " Row is zero-based in the vml
@@ -2159,7 +2155,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
     ENDWHILE.
 
   ENDMETHOD.
-
 
   METHOD actualize_anchor_in_xml.
 
@@ -2186,7 +2181,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD actualize_shapes_in_xmldoc.
 
 * Insert new <v:shape> nodes,
@@ -2203,7 +2197,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
     ENDLOOP.
 
   ENDMETHOD.
-
 
   METHOD create_xml_document.
 
@@ -2230,7 +2223,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD get_comment_anchor.
     ev_anchor =  number2string( io_comment->get_left_column( ) )
          && `, ` && number2string( io_comment->get_left_offset( ) )
@@ -2252,7 +2244,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
     ixml = cl_ixml=>create(  ).
   ENDMETHOD.
 
-
   METHOD actualize_shape_ids.
     DATA:
       lv_index   TYPE i VALUE 1,
@@ -2266,7 +2257,6 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
       ADD 1 TO lv_index.
     ENDLOOP.
   ENDMETHOD.
-
 
   METHOD create_shape_template.
 
