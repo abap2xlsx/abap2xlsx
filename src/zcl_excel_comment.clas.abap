@@ -83,14 +83,14 @@ CLASS zcl_excel_comment DEFINITION
         !is_font          TYPE zexcel_s_style_font OPTIONAL
         !it_rtf           TYPE zexcel_t_rtf OPTIONAL
         !ip_no_defaults   TYPE abap_bool OPTIONAL
-        !ip_left_column   TYPE i OPTIONAL
-        !ip_left_offset   TYPE i OPTIONAL
-        !ip_top_row       TYPE i OPTIONAL
-        !ip_top_offset    TYPE i OPTIONAL
-        !ip_right_column  TYPE i OPTIONAL
-        !ip_right_offset  TYPE i OPTIONAL
-        !ip_bottom_row    TYPE i OPTIONAL
-        !ip_bottom_offset TYPE i OPTIONAL .
+        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
+        !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
+        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
+        !ip_top_offset    TYPE i DEFAULT gc_default_box-top_offset
+        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column
+        !ip_right_offset  TYPE i DEFAULT gc_default_box-right_offset
+        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row
+        !ip_bottom_offset TYPE i DEFAULT gc_default_box-bottom_offset.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -214,31 +214,16 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     ENDIF.
 
 * Parameters of the containing box
-    IF ip_left_column IS SUPPLIED.
-      ls_box-left_column = ip_left_column.
-    ENDIF.
-    IF ip_left_offset IS SUPPLIED.
-      ls_box-left_offset = ip_left_offset.
-    ENDIF.
-    IF ip_top_row IS SUPPLIED.
-      ls_box-top_row = ip_top_row.
-    ENDIF.
-    IF ip_top_offset IS SUPPLIED.
-      ls_box-top_offset = ip_top_offset.
-    ENDIF.
-    IF ip_right_column IS SUPPLIED.
-      ls_box-right_column = ip_right_column.
-    ENDIF.
-    IF ip_right_offset IS SUPPLIED.
-      ls_box-right_offset = ip_right_offset.
-    ENDIF.
-    IF ip_bottom_row IS SUPPLIED.
-      ls_box-bottom_row = ip_bottom_row.
-    ENDIF.
-    IF ip_bottom_offset IS SUPPLIED.
-      ls_box-bottom_offset = ip_bottom_offset.
-    ENDIF.
+    ls_box-left_column   = ip_left_column.
+    ls_box-left_offset   = ip_left_offset.
+    ls_box-top_row       = ip_top_row.
+    ls_box-top_offset    = ip_top_offset.
+    ls_box-right_column  = ip_right_column.
+    ls_box-right_offset  = ip_right_offset.
+    ls_box-bottom_row    = ip_bottom_row.
+    ls_box-bottom_offset = ip_bottom_offset.
     set_box( ls_box ).
+
 
     IF is_font IS NOT INITIAL.
       ASSIGN is_font TO <ls_font>.
