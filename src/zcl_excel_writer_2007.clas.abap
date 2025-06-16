@@ -82,6 +82,12 @@ CLASS zcl_excel_writer_2007 DEFINITION
     METHODS create_relationships
       RETURNING
         VALUE(ep_content) TYPE xstring .
+    METHODS create_string_node
+      IMPORTING
+        !io_document TYPE REF TO if_ixml_document
+        !io_parent   TYPE REF TO if_ixml_element
+        !ip_value    TYPE string
+        !it_rtf      TYPE zexcel_t_rtf OPTIONAL .
     METHODS create_xl_charts
       IMPORTING
         !io_drawing       TYPE REF TO zcl_excel_drawing
@@ -1419,6 +1425,60 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 **********************************************************************
 * STEP 5: Create xstring stream
     ep_content = render_xml_document( lo_document ).
+  ENDMETHOD.
+
+
+  METHOD create_string_node.
+
+    CONSTANTS: lc_xml_node_t TYPE string VALUE 't',
+               lc_xml_node_r TYPE string VALUE 'r'.
+
+    DATA: lo_sub_element  TYPE REF TO if_ixml_element,
+          lo_sub2_element TYPE REF TO if_ixml_element,
+          lv_value        TYPE string.
+    FIELD-SYMBOLS <fs_rtf> LIKE LINE OF it_rtf.
+
+    IF it_rtf IS INITIAL.
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_t
+                                                           parent = io_document ).
+      IF boolc( contains( val = ip_value start = ` ` ) ) = abap_true OR
+         boolc( contains( val = ip_value end = ` ` ) ) = abap_true.
+        lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+      ENDIF.
+      lv_value = escape_string_value( ip_value ).
+      lo_sub_element->set_value( value = lv_value ).
+      io_parent->append_child( new_child = lo_sub_element ).
+    ELSE.
+      LOOP AT it_rtf ASSIGNING <fs_rtf>.
+        lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_r
+                                                             parent = io_document ).
+        TRY.
+            lv_value = substring( val = ip_value
+                                  off = <fs_rtf>-offset
+                                  len = <fs_rtf>-length ).
+          CATCH cx_sy_range_out_of_bounds.
+            EXIT.
+        ENDTRY.
+        lv_value = escape_string_value( lv_value ).
+        IF <fs_rtf>-font IS NOT INITIAL.
+          create_xl_styles_font_node( io_document = io_document
+                                      io_parent   = lo_sub_element
+                                      is_font     = <fs_rtf>-font
+                                      iv_use_rtf  = abap_true ).
+        ENDIF.
+        lo_sub2_element = io_document->create_simple_element( name   = lc_xml_node_t
+                                                              parent = lo_sub_element ).
+        IF <fs_rtf>-preserve = abap_true OR
+           boolc( contains( val = lv_value start = ` ` ) ) = abap_true OR
+           boolc( contains( val = lv_value end = ` ` ) ) = abap_true.
+          lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+        ENDIF.
+        lo_sub2_element->set_value( lv_value ).
+        lo_sub_element->append_child( new_child = lo_sub2_element ).
+        io_parent->append_child( new_child = lo_sub_element ).
+      ENDLOOP.
+    ENDIF.
+
   ENDMETHOD.
 
 
@@ -3685,45 +3745,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     LOOP AT shared_strings ASSIGNING <fs_sheet_string>.
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_si
                                                        parent = lo_document ).
-      IF <fs_sheet_string>-rtf_tab IS INITIAL.
-        lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_t
-                                                             parent = lo_document ).
-        IF boolc( contains( val = <fs_sheet_string>-string_value start = ` ` ) ) = abap_true
-              OR boolc( contains( val = <fs_sheet_string>-string_value end = ` ` ) ) = abap_true.
-          lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
-        ENDIF.
-        lv_value = escape_string_value( <fs_sheet_string>-string_value ).
-        lo_sub_element->set_value( value = lv_value ).
-      ELSE.
-        LOOP AT <fs_sheet_string>-rtf_tab ASSIGNING <fs_rtf>.
-          lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_r
-                                                               parent = lo_element ).
-          TRY.
-              lv_value = substring( val = <fs_sheet_string>-string_value
-                                    off = <fs_rtf>-offset
-                                    len = <fs_rtf>-length ).
-            CATCH cx_sy_range_out_of_bounds.
-              EXIT.
-          ENDTRY.
-          lv_value = escape_string_value( lv_value ).
-          IF <fs_rtf>-font IS NOT INITIAL.
-            lo_font_element = lo_document->create_simple_element( name   = lc_xml_node_rpr
-                                                                  parent = lo_sub_element ).
-            create_xl_styles_font_node( io_document = lo_document
-                                        io_parent   = lo_font_element
-                                        is_font     = <fs_rtf>-font
-                                        iv_use_rtf  = abap_true ).
-          ENDIF.
-          lo_sub2_element = lo_document->create_simple_element( name   = lc_xml_node_t
-                                                              parent = lo_sub_element ).
-          IF boolc( contains( val = lv_value start = ` ` ) ) = abap_true
-                OR boolc( contains( val = lv_value end = ` ` ) ) = abap_true.
-            lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
-          ENDIF.
-          lo_sub2_element->set_value( lv_value ).
-        ENDLOOP.
-      ENDIF.
-      lo_element->append_child( new_child = lo_sub_element ).
+      create_string_node( io_document = lo_document
+                          io_parent   = lo_element
+                          ip_value    = <fs_sheet_string>-string_value
+                          it_rtf      = <fs_sheet_string>-rtf_tab ).
       lo_element_root->append_child( new_child = lo_element ).
     ENDLOOP.
 
@@ -4653,7 +4678,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lo_document        TYPE REF TO if_ixml_document,
           lo_element_root    TYPE REF TO if_ixml_element,
           lo_element_fonts   TYPE REF TO if_ixml_element,
-          lo_element_font    TYPE REF TO if_ixml_element,
           lo_element_fills   TYPE REF TO if_ixml_element,
           lo_element_fill    TYPE REF TO if_ixml_element,
           lo_element_borders TYPE REF TO if_ixml_element,
@@ -4895,12 +4919,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     " create font elements
     LOOP AT lt_fonts INTO ls_font.
-      lo_element_font = lo_document->create_simple_element( name   = lc_xml_node_font
-                                                            parent = lo_document ).
       create_xl_styles_font_node( io_document = lo_document
-                                  io_parent   = lo_element_font
+                                  io_parent   = lo_element_fonts
                                   is_font     = ls_font ).
-      lo_element_fonts->append_child( new_child = lo_element_font ).
     ENDLOOP.
 
     " create fill elements
