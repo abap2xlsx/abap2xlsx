@@ -5517,7 +5517,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
   METHOD create_xl_styles_font_node.
 
-    CONSTANTS: lc_xml_node_b      TYPE string VALUE 'b',            "bold
+    CONSTANTS: lc_xml_node_font   TYPE string VALUE 'font',
+               lc_xml_node_rpr    TYPE string VALUE 'rPr',
+               lc_xml_node_b      TYPE string VALUE 'b',            "bold
                lc_xml_node_i      TYPE string VALUE 'i',            "italic
                lc_xml_node_u      TYPE string VALUE 'u',            "underline
                lc_xml_node_strike TYPE string VALUE 'strike',       "strikethrough
@@ -5528,84 +5530,91 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_scheme TYPE string VALUE 'scheme',
                lc_xml_attr_val    TYPE string VALUE 'val'.
 
-    DATA: lo_document     TYPE REF TO if_ixml_document,
-          lo_element_font TYPE REF TO if_ixml_element,
-          ls_font         TYPE zexcel_s_style_font,
+    DATA: lo_element_font TYPE REF TO if_ixml_element,
           lo_sub_element  TYPE REF TO if_ixml_element,
           lv_value        TYPE string.
 
-    lo_document = io_document.
-    lo_element_font = io_parent.
-    ls_font = is_font.
+    IF iv_use_rtf = abap_false.
+      lo_element_font = io_document->create_simple_element( name   = lc_xml_node_font
+                                                            parent = io_document ).
+    ELSE.
+      lo_element_font = io_document->create_simple_element( name   = lc_xml_node_rpr
+                                                            parent = io_document ).
+    ENDIF.
 
-    IF ls_font-bold EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_b
-                                                           parent = lo_document ).
+    "flags
+    IF is_font-bold EQ abap_true.
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_b
+                                                           parent = io_document ).
       lo_element_font->append_child( new_child = lo_sub_element ).
     ENDIF.
-    IF ls_font-italic EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_i
-                                                           parent = lo_document ).
+    IF is_font-italic EQ abap_true.
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_i
+                                                           parent = io_document ).
       lo_element_font->append_child( new_child = lo_sub_element ).
     ENDIF.
-    IF ls_font-underline EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_u
-                                                           parent = lo_document ).
-      lv_value = ls_font-underline_mode.
+    IF is_font-underline EQ abap_true.
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_u
+                                                           parent = io_document ).
+      lv_value = is_font-underline_mode.
       lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
                                         value = lv_value ).
       lo_element_font->append_child( new_child = lo_sub_element ).
     ENDIF.
-    IF ls_font-strikethrough EQ abap_true.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_strike
-                                                           parent = lo_document ).
+    IF is_font-strikethrough EQ abap_true.
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_strike
+                                                           parent = io_document ).
       lo_element_font->append_child( new_child = lo_sub_element ).
     ENDIF.
+
     "size
-    lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_sz
-                                                         parent = lo_document ).
-    lv_value = ls_font-size.
-    SHIFT lv_value RIGHT DELETING TRAILING space.
-    SHIFT lv_value LEFT DELETING LEADING space.
+    lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_sz
+                                                         parent = io_document ).
+    lv_value = is_font-size.
+    CONDENSE lv_value.
     lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
                                       value = lv_value ).
     lo_element_font->append_child( new_child = lo_sub_element ).
+
     "color
     create_xl_styles_color_node(
-        io_document        = lo_document
+        io_document        = io_document
         io_parent          = lo_element_font
-        is_color           = ls_font-color ).
+        is_color           = is_font-color ).
 
     "name
     IF iv_use_rtf = abap_false.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_name
-                                                           parent = lo_document ).
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_name
+                                                           parent = io_document ).
     ELSE.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_rfont
-                                                           parent = lo_document ).
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_rfont
+                                                           parent = io_document ).
     ENDIF.
-    lv_value = ls_font-name.
+    lv_value = is_font-name.
     lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
                                       value = lv_value ).
     lo_element_font->append_child( new_child = lo_sub_element ).
+
     "family
-    lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_family
-                                                         parent = lo_document ).
-    lv_value = ls_font-family.
-    SHIFT lv_value RIGHT DELETING TRAILING space.
-    SHIFT lv_value LEFT DELETING LEADING space.
+    lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_family
+                                                         parent = io_document ).
+    lv_value = is_font-family.
+    CONDENSE lv_value.
     lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
                                       value = lv_value ).
     lo_element_font->append_child( new_child = lo_sub_element ).
+
     "scheme
-    IF ls_font-scheme IS NOT INITIAL.
-      lo_sub_element = lo_document->create_simple_element( name   = lc_xml_node_scheme
-                                                           parent = lo_document ).
-      lv_value = ls_font-scheme.
+    IF is_font-scheme IS NOT INITIAL.
+      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_scheme
+                                                           parent = io_document ).
+      lv_value = is_font-scheme.
       lo_sub_element->set_attribute_ns( name  = lc_xml_attr_val
                                         value = lv_value ).
       lo_element_font->append_child( new_child = lo_sub_element ).
     ENDIF.
+
+    io_parent->append_child( new_child = lo_element_font ).
 
   ENDMETHOD.
 
