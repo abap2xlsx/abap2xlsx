@@ -1433,24 +1433,24 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     CONSTANTS: lc_xml_node_t TYPE string VALUE 't',
                lc_xml_node_r TYPE string VALUE 'r'.
 
-    DATA: lo_sub_element  TYPE REF TO if_ixml_element,
-          lo_sub2_element TYPE REF TO if_ixml_element,
-          lv_value        TYPE string.
+    DATA: lo_element_t TYPE REF TO if_ixml_element,
+          lo_element_r TYPE REF TO if_ixml_element,
+          lv_value     TYPE string.
     FIELD-SYMBOLS <fs_rtf> LIKE LINE OF it_rtf.
 
     IF it_rtf IS INITIAL.
-      lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_t
-                                                           parent = io_parent ).
+      lo_element_t = io_document->create_simple_element( name   = lc_xml_node_t
+                                                         parent = io_parent ).
       IF boolc( contains( val = ip_value start = ` ` ) ) = abap_true OR
          boolc( contains( val = ip_value end = ` ` ) ) = abap_true.
-        lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+        lo_element_t->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
       ENDIF.
       lv_value = escape_string_value( ip_value ).
-      lo_sub_element->set_value( value = lv_value ).
+      lo_element_t->set_value( value = lv_value ).
     ELSE.
       LOOP AT it_rtf ASSIGNING <fs_rtf>.
-        lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_r
-                                                             parent = io_parent ).
+        lo_element_r = io_document->create_simple_element( name   = lc_xml_node_r
+                                                           parent = io_parent ).
         TRY.
             lv_value = substring( val = ip_value
                                   off = <fs_rtf>-offset
@@ -1460,19 +1460,19 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ENDTRY.
         lv_value = escape_string_value( lv_value ).
         IF <fs_rtf>-font IS NOT INITIAL.
-          create_xl_styles_font_node( io_document = io_document
-                                      io_parent   = lo_sub_element
-                                      is_font     = <fs_rtf>-font
-                                      iv_use_rtf  = abap_true ).
+          create_xl_styles_font( io_document = io_document
+                                 io_parent   = lo_element_r
+                                 is_font     = <fs_rtf>-font
+                                 iv_use_rtf  = abap_true ).
         ENDIF.
-        lo_sub2_element = io_document->create_simple_element( name   = lc_xml_node_t
-                                                              parent = lo_sub_element ).
+        lo_element_t = io_document->create_simple_element( name   = lc_xml_node_t
+                                                           parent = lo_element_r ).
         IF <fs_rtf>-preserve = abap_true OR
            boolc( contains( val = lv_value start = ` ` ) ) = abap_true OR
            boolc( contains( val = lv_value end = ` ` ) ) = abap_true.
-          lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
+          lo_element_t->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
         ENDIF.
-        lo_sub2_element->set_value( lv_value ).
+        lo_element_t->set_value( lv_value ).
       ENDLOOP.
     ENDIF.
 
@@ -3639,9 +3639,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 ** Constant node name
     DATA: lc_xml_node_sst         TYPE string VALUE 'sst',
           lc_xml_node_si          TYPE string VALUE 'si',
-          lc_xml_node_t           TYPE string VALUE 't',
-          lc_xml_node_r           TYPE string VALUE 'r',
-          lc_xml_node_rpr         TYPE string VALUE 'rPr',
           " Node attributes
           lc_xml_attr_count       TYPE string VALUE 'count',
           lc_xml_attr_uniquecount TYPE string VALUE 'uniqueCount',
