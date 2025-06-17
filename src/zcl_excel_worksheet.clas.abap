@@ -396,8 +396,8 @@ CLASS zcl_excel_worksheet DEFINITION
         VALUE(ep_dimension_range) TYPE string
       RAISING
         zcx_excel .
-    "! <p class="shorttext synchronized" lang="en">Get a copy of the comments instance</p>
-    "! @parameter r_comments | <p class="shorttext synchronized" lang="en">Copied comments instance</p>
+    "! <p class="shorttext synchronized" lang="en">Get the comments instance</p>
+    "! @parameter r_comments | <p class="shorttext synchronized" lang="en">Comments instance of this worksheet</p>
     METHODS get_comments
       RETURNING
         VALUE(r_comments) TYPE REF TO zcl_excel_comments .

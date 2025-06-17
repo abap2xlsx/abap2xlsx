@@ -246,7 +246,7 @@
     <SEOCOMPOTX>
      <CMPNAME>GET_COMMENTS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get a copy of the comments instance</DESCRIPT>
+     <DESCRIPT>Get the comments instance</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>GET_DATA_VALIDATIONS_ITERATOR</CMPNAME>
@@ -614,7 +614,7 @@
      <CMPNAME>GET_COMMENTS</CMPNAME>
      <SCONAME>R_COMMENTS</SCONAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Copied comments instance</DESCRIPT>
+     <DESCRIPT>Comments instance of this worksheet</DESCRIPT>
     </SEOSUBCOTX>
    </DESCRIPTIONS_SUB>
   </asx:values>
