@@ -1460,10 +1460,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         ENDTRY.
         lv_value = escape_string_value( lv_value ).
         IF <fs_rtf>-font IS NOT INITIAL.
-          create_xl_styles_font( io_document = io_document
-                                 io_parent   = lo_element_r
-                                 is_font     = <fs_rtf>-font
-                                 iv_use_rtf  = abap_true ).
+          create_xl_styles_font_node( io_document = io_document
+                                      io_parent   = lo_element_r
+                                      is_font     = <fs_rtf>-font
+                                      iv_use_rtf  = abap_true ).
         ENDIF.
         lo_element_t = io_document->create_simple_element( name   = lc_xml_node_t
                                                            parent = lo_element_r ).
