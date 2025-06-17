@@ -2609,10 +2609,7 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD get_comments.
 
-* Create a copy of the comments attribute
-    CREATE OBJECT r_comments
-      EXPORTING
-        io_from = comments.
+    r_comments = comments.
 
   ENDMETHOD.                    "get_comments
 
