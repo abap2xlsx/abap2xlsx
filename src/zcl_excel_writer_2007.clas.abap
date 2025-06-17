@@ -1440,18 +1440,17 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     IF it_rtf IS INITIAL.
       lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_t
-                                                           parent = io_document ).
+                                                           parent = io_parent ).
       IF boolc( contains( val = ip_value start = ` ` ) ) = abap_true OR
          boolc( contains( val = ip_value end = ` ` ) ) = abap_true.
         lo_sub_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
       ENDIF.
       lv_value = escape_string_value( ip_value ).
       lo_sub_element->set_value( value = lv_value ).
-      io_parent->append_child( new_child = lo_sub_element ).
     ELSE.
       LOOP AT it_rtf ASSIGNING <fs_rtf>.
         lo_sub_element = io_document->create_simple_element( name   = lc_xml_node_r
-                                                             parent = io_document ).
+                                                             parent = io_parent ).
         TRY.
             lv_value = substring( val = ip_value
                                   off = <fs_rtf>-offset
@@ -1474,8 +1473,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_sub2_element->set_attribute( name = 'space' namespace = 'xml' value = 'preserve' ).
         ENDIF.
         lo_sub2_element->set_value( lv_value ).
-        lo_sub_element->append_child( new_child = lo_sub2_element ).
-        io_parent->append_child( new_child = lo_sub_element ).
       ENDLOOP.
     ENDIF.
 
@@ -3654,9 +3651,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     DATA: lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
-          lo_sub_element  TYPE REF TO if_ixml_element,
-          lo_sub2_element TYPE REF TO if_ixml_element,
-          lo_font_element TYPE REF TO if_ixml_element,
           lo_iterator     TYPE REF TO zcl_excel_collection_iterator,
           lo_worksheet    TYPE REF TO zcl_excel_worksheet.
 
