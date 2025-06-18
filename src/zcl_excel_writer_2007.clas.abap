@@ -263,13 +263,6 @@ CLASS zcl_excel_writer_2007 DEFINITION
     CONSTANTS c_xl_printersettings TYPE string VALUE 'xl/printerSettings/printerSettings#.bin'. "#EC NOTEXT
     TYPES: tv_charbool TYPE c LENGTH 5.
 
-    METHODS add_1_val_child_node
-      IMPORTING
-        io_document   TYPE REF TO if_ixml_document
-        io_parent     TYPE REF TO if_ixml_element
-        iv_elem_name  TYPE string
-        iv_attr_name  TYPE string
-        iv_attr_value TYPE string.
     METHODS flag2bool
       IMPORTING
         !ip_flag          TYPE flag
@@ -285,21 +278,6 @@ ENDCLASS.
 
 
 CLASS zcl_excel_writer_2007 IMPLEMENTATION.
-
-
-  METHOD add_1_val_child_node.
-
-    DATA: lo_child TYPE REF TO if_ixml_element.
-
-    lo_child = io_document->create_simple_element( name   = iv_elem_name
-                                                   parent = io_document ).
-    IF iv_attr_name IS NOT INITIAL.
-      lo_child->set_attribute_ns( name  = iv_attr_name
-                                  value = iv_attr_value ).
-    ENDIF.
-    io_parent->append_child( new_child = lo_child ).
-
-  ENDMETHOD.
 
 
   METHOD add_further_data_to_zip.
@@ -2404,23 +2382,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                " comments
                lc_xml_node_commentlist TYPE string VALUE 'commentList',
                lc_xml_node_comment     TYPE string VALUE 'comment',
-               lc_xml_node_text        TYPE string VALUE 'text',
-               lc_xml_node_r           TYPE string VALUE 'r',
-               lc_xml_node_rpr         TYPE string VALUE 'rPr',
-               lc_xml_node_b           TYPE string VALUE 'b',
-               lc_xml_node_sz          TYPE string VALUE 'sz',
-               lc_xml_node_color       TYPE string VALUE 'color',
-               lc_xml_node_rfont       TYPE string VALUE 'rFont',
-*             lc_xml_node_charset     TYPE string VALUE 'charset',
-               lc_xml_node_family      TYPE string VALUE 'family',
-               lc_xml_node_t           TYPE string VALUE 't',
                " comments attributes
                lc_xml_attr_ref         TYPE string VALUE 'ref',
-               lc_xml_attr_authorid    TYPE string VALUE 'authorId',
-               lc_xml_attr_val         TYPE string VALUE 'val',
-               lc_xml_attr_indexed     TYPE string VALUE 'indexed',
-               lc_xml_attr_xmlspacing  TYPE string VALUE 'xml:space'.
-
+               lc_xml_attr_authorid    TYPE string VALUE 'authorId'.
 
     DATA: lo_document            TYPE REF TO if_ixml_document,
           lo_element_root        TYPE REF TO if_ixml_element,
@@ -2429,20 +2393,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_element_commentlist TYPE REF TO if_ixml_element,
           lo_element_comment     TYPE REF TO if_ixml_element,
           lo_element_text        TYPE REF TO if_ixml_element,
-          lo_element_r           TYPE REF TO if_ixml_element,
-          lo_element_rpr         TYPE REF TO if_ixml_element,
-          lo_element_b           TYPE REF TO if_ixml_element,
-          lo_element_sz          TYPE REF TO if_ixml_element,
-          lo_element_color       TYPE REF TO if_ixml_element,
-          lo_element_rfont       TYPE REF TO if_ixml_element,
-*       lo_element_charset     TYPE REF TO if_ixml_element,
-          lo_element_family      TYPE REF TO if_ixml_element,
-          lo_element_t           TYPE REF TO if_ixml_element,
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
           lo_comments            TYPE REF TO zcl_excel_comments,
-          lo_comment             TYPE REF TO zcl_excel_comment.
-    DATA: lv_rel_id TYPE i,
-          lv_author TYPE string.
+          lo_comment             TYPE REF TO zcl_excel_comment,
+          lv_author              TYPE string.
 
 
 **********************************************************************
@@ -2491,30 +2445,10 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
       lo_element_text = lo_document->create_simple_element( name   = lc_xml_node_text
                                                             parent = lo_document ).
-      lo_element_r    = lo_document->create_simple_element( name   = lc_xml_node_r
-                                                            parent = lo_document ).
-      lo_element_rpr  = lo_document->create_simple_element( name   = lc_xml_node_rpr
-                                                            parent = lo_document ).
-
-      lo_element_b    = lo_document->create_simple_element( name   = lc_xml_node_b
-                                                            parent = lo_document ).
-      lo_element_rpr->append_child( new_child = lo_element_b ).
-
-      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_sz     iv_attr_name = lc_xml_attr_val     iv_attr_value = '9' ).
-      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_color  iv_attr_name = lc_xml_attr_indexed iv_attr_value = '81' ).
-      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_rfont  iv_attr_name = lc_xml_attr_val     iv_attr_value = 'Tahoma' ).
-      add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_family iv_attr_name = lc_xml_attr_val     iv_attr_value = '2' ).
-
-      lo_element_r->append_child( new_child = lo_element_rpr ).
-
-      lo_element_t    = lo_document->create_simple_element( name   = lc_xml_node_t
-                                                            parent = lo_document ).
-      lo_element_t->set_attribute_ns( name  = lc_xml_attr_xmlspacing
-                                      value = 'preserve' ).
-      lo_element_t->set_value( lo_comment->get_text( ) ).
-      lo_element_r->append_child( new_child = lo_element_t ).
-
-      lo_element_text->append_child( new_child = lo_element_r ).
+      create_string_node( io_document = lo_document
+                          io_parent   = lo_element_text
+                          ip_value    = lo_comment->get_text( )
+                          it_rtf      = lo_comment->get_rtf( ) ).
       lo_element_comment->append_child( new_child = lo_element_text ).
       lo_element_commentlist->append_child( new_child = lo_element_comment ).
     ENDWHILE.
