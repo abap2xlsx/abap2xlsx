@@ -2382,6 +2382,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                " comments
                lc_xml_node_commentlist TYPE string VALUE 'commentList',
                lc_xml_node_comment     TYPE string VALUE 'comment',
+               lc_xml_node_text        TYPE string VALUE 'text',
                " comments attributes
                lc_xml_attr_ref         TYPE string VALUE 'ref',
                lc_xml_attr_authorid    TYPE string VALUE 'authorId'.
