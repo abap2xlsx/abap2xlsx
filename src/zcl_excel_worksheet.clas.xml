@@ -244,6 +244,11 @@
      <DESCRIPT>Get columns iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GET_COMMENTS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get the comments instance</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>GET_DATA_VALIDATIONS_ITERATOR</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Get data validation iterator</DESCRIPT>
@@ -604,6 +609,14 @@
      <DESCRIPT>Top left range cell</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_COMMENTS</CMPNAME>
+     <SCONAME>R_COMMENTS</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Comments instance of this worksheet</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>
