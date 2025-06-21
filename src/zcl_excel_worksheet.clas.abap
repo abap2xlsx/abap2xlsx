@@ -1962,7 +1962,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     lo_style = excel->get_style_from_guid( ip_style ).
-    ls_font  = lo_style->font->get_structure( ).
+    IF lo_style IS BOUND.
+      ls_font  = lo_style->font->get_structure( ).
+    ENDIF.
 
     lv_next_rtf_offset = 0.
     LOOP AT ct_rtf ASSIGNING <rtf>.
