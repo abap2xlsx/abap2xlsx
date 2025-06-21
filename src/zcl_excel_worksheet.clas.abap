@@ -397,6 +397,8 @@ CLASS zcl_excel_worksheet DEFINITION
       RAISING
         zcx_excel .
     METHODS get_comments
+      IMPORTING
+        iv_copy_collection TYPE flag DEFAULT abap_true
       RETURNING
         VALUE(r_comments) TYPE REF TO zcl_excel_comments .
     METHODS get_drawings
@@ -2609,7 +2611,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD get_comments.
 
-    r_comments = comments.
+    IF iv_copy_collection = abap_true.
+* By default, get_comments copies the collection (backward compatibility)
+      CREATE OBJECT r_comments
+        EXPORTING
+          io_from = comments.
+    ELSE.
+      r_comments = comments.
+    ENDIF.
 
   ENDMETHOD.                    "get_comments
 
