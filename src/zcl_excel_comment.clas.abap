@@ -228,8 +228,9 @@ CLASS zcl_excel_comment IMPLEMENTATION.
          it_rtf IS INITIAL AND
          ip_no_defaults = abap_false.
         "Insert default RTF entry only
-        ls_rtf-font   = <ls_font>.
-        ls_rtf-length = strlen( me->text ).
+        ls_rtf-font     = <ls_font>.
+        ls_rtf-length   = strlen( me->text ).
+        ls_rtf-preserve = abap_true.
         APPEND ls_rtf TO me->mt_rtf.
       ENDIF.
     ENDIF.
