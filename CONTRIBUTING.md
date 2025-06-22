@@ -18,7 +18,7 @@ This is a set of guidelines for contributing to abap2xlsx. Mostly guidelines, no
 
 ### Discussion Board
 
-We use the [SAP Community Network](https://community.sap.com/) as our discussion board for general questions concerning the usage of the library. You can [search for all content containing abap2xlsx](https://community.sap.com/search/?ct=all&q=abap2xlxs) before you post a new question. You also can limit the search [using the tag: abap2xlsx](https://answers.sap.com/topics/abap2xlsx.html). Please use this link when you want to [post a new question](https://answers.sap.com/questions/ask.html?primaryTagId=833755570260738661924709785639136&topics=abap2xlsx&question=%5Babap2xlsx%5D%20) the tag *abap2xlsx* will be prefilled).
+We use the [SAP Community Network](https://community.sap.com/) as our discussion board for general questions concerning the usage of the library. You can [search for all content containing abap2xlsx](https://community.sap.com/t5/forums/searchpage/tab/message?q=abap2xlsx) before you post a new question. Please use this link when you want to [post a new question](https://community.sap.com/t5/forums/postpage/choose-node/true/board-id/technology-questions), select the SAP managed tag "ABAP Development" and the label "ABAP2XLSX".
 
 ### GitHub
 
