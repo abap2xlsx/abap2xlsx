@@ -210,9 +210,17 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     ls_box-left_offset   = ip_left_offset.
     ls_box-top_row       = ip_top_row.
     ls_box-top_offset    = ip_top_offset.
-    ls_box-right_column  = ip_right_column.
-    ls_box-right_offset  = ip_right_offset.
-    ls_box-bottom_row    = ip_bottom_row.
+    IF ip_right_column IS NOT INITIAL.
+      ls_box-right_column = ip_right_column.
+    ELSE.
+      ls_box-right_column = gc_default_box-right_column.
+    ENDIF.
+    ls_box-right_offset = ip_right_offset.
+    IF ip_bottom_row IS NOT INITIAL.
+      ls_box-bottom_row = ip_bottom_row.
+    ELSE.
+      ls_box-bottom_row = gc_default_box-bottom_row.
+    ENDIF.
     ls_box-bottom_offset = ip_bottom_offset.
     set_box( ls_box ).
 

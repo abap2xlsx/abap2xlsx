@@ -1990,19 +1990,19 @@ CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
 
       lo_element_shapetype->set_attribute_ns( name  = `id`         value = `_x0000_t202` ).
       lo_element_shapetype->set_attribute_ns( name  = `coordsize`  value = `21600,21600` ).
-      lo_element_shapetype->set_attribute_ns( name  = `o:spt`       value = `202` ).
+      lo_element_shapetype->set_attribute_ns( name  = `o:spt`      value = `202` ).
       lo_element_shapetype->set_attribute_ns( name  = `path`       value = `m,l,21600r21600,l21600,xe` ).
 
       lo_element_stroke = go_document->create_simple_element_ns( name   = `stroke`
                                                                  prefix = `v`
                                                                  parent = lo_element_shapetype ).
-      lo_element_stroke->set_attribute_ns( name  = `joinstyle`       value = `miter` ).
+      lo_element_stroke->set_attribute_ns( name  = `joinstyle`   value = `miter` ).
 
       lo_element_path   = go_document->create_simple_element_ns( name   = `path`
                                                                  prefix = `v`
                                                                  parent = lo_element_shapetype ).
       lo_element_path->set_attribute_ns( name  = `gradientshapeok` value = `t` ).
-      lo_element_path->set_attribute_ns( name  = `o:connecttype`    value = `rect` ).
+      lo_element_path->set_attribute_ns( name  = `o:connecttype`   value = `rect` ).
 
     ENDIF.
 
