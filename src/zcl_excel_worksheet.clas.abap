@@ -397,6 +397,8 @@ CLASS zcl_excel_worksheet DEFINITION
       RAISING
         zcx_excel .
     METHODS get_comments
+      IMPORTING
+        iv_copy_collection TYPE flag DEFAULT abap_true
       RETURNING
         VALUE(r_comments) TYPE REF TO zcl_excel_comments .
     METHODS get_drawings
@@ -1966,7 +1968,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     lo_style = excel->get_style_from_guid( ip_style ).
-    ls_font = lo_style->font->get_structure(  ).
+    IF lo_style IS BOUND.
+      ls_font  = lo_style->font->get_structure( ).
+    ENDIF.
 
     zcl_excel_common=>check_rtf(
     EXPORTING
@@ -2589,10 +2593,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
   METHOD get_comments.
 
-* Create a copy of the comments attribute
-    CREATE OBJECT r_comments
-      EXPORTING
-        io_from = comments.
+    IF iv_copy_collection = abap_true.
+* By default, get_comments copies the collection (backward compatibility)
+      CREATE OBJECT r_comments
+        EXPORTING
+          io_from = comments.
+    ELSE.
+      r_comments = comments.
+    ENDIF.
 
   ENDMETHOD.                    "get_comments
 

@@ -77,8 +77,10 @@ CLASS zcl_excel_comments IMPLEMENTATION.
     CREATE OBJECT comments.
 
     IF io_from IS BOUND.
-* Copy constructor: copy attributes from original
-* So the receiver may change the collection without affecting the original
+* Copy constructor: create new instance with copy of attributes from io_from
+* Copy all attributes of io_from to the new instance
+
+* The receiver may change the collection without affecting the original
       lo_iterator = io_from->comments->get_iterator( ).
       WHILE lo_iterator->has_next( ) = abap_true.
         lo_comment ?= lo_iterator->get_next( ).

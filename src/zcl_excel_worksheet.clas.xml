@@ -246,7 +246,7 @@
     <SEOCOMPOTX>
      <CMPNAME>GET_COMMENTS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Get a copy of the comments object</DESCRIPT>
+     <DESCRIPT>Get the comments instance</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>GET_DATA_VALIDATIONS_ITERATOR</CMPNAME>
