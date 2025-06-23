@@ -2596,7 +2596,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       WHILE lo_ixml_cell_elem IS BOUND.
         CLEAR: lv_cell_value,
                lv_cell_formula,
-               lv_style_guid.
+               lv_style_guid,
+               lt_rtf.
 
         fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_cell_elem CHANGING cp_structure = ls_cell ).
 
