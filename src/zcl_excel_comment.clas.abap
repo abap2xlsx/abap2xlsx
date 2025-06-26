@@ -143,7 +143,7 @@ CLASS zcl_excel_comment IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_font.
+  METHOD get_default_font.
     rs_font = s_font.
   ENDMETHOD.
 
@@ -203,7 +203,7 @@ CLASS zcl_excel_comment IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD set_font.
+  METHOD set_default_font.
     IF is_font IS NOT INITIAL.
       s_font = is_font.
     ENDIF.
