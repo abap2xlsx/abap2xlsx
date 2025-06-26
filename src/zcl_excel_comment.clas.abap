@@ -212,7 +212,8 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
   METHOD set_text.
     DATA: ls_nofont LIKE s_font,
-          ls_rtf    LIKE LINE OF mt_rtf.
+          ls_rtf    LIKE LINE OF mt_rtf,
+          ls_box    TYPE ty_box.
     FIELD-SYMBOLS <ls_font> LIKE s_font.
 
     IF is_font IS SUPPLIED.
