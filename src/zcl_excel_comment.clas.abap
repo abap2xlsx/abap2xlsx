@@ -30,10 +30,10 @@ CLASS zcl_excel_comment DEFINITION
       END OF gc_default_box .
 
     CLASS-METHODS class_constructor .
-    CLASS-METHODS get_font
+    CLASS-METHODS get_default_font
       RETURNING
         VALUE(rs_font) TYPE zexcel_s_style_font .
-    CLASS-METHODS set_font
+    CLASS-METHODS set_default_font
       IMPORTING
         !is_font TYPE zexcel_s_style_font .
     METHODS constructor .
@@ -85,7 +85,7 @@ CLASS zcl_excel_comment DEFINITION
         !ip_ref           TYPE string OPTIONAL
         !is_font          TYPE zexcel_s_style_font OPTIONAL
         !it_rtf           TYPE zexcel_t_rtf OPTIONAL
-        !ip_no_defaults   TYPE abap_bool OPTIONAL
+        !ip_no_def_font   TYPE abap_bool OPTIONAL
         !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
         !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
         !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
@@ -123,7 +123,7 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     ls_font-scheme        = zcl_excel_style_font=>c_scheme_none.
     ls_font-family        = zcl_excel_style_font=>c_family_swiss.
 
-    set_font( ls_font ).
+    set_default_font( ls_font ).
 
   ENDMETHOD.
 
@@ -211,12 +211,14 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD set_text.
-    DATA: ls_rtf LIKE LINE OF mt_rtf,
-          ls_box TYPE ty_box.
+    DATA: ls_nofont LIKE s_font,
+          ls_rtf    LIKE LINE OF mt_rtf.
     FIELD-SYMBOLS <ls_font> LIKE s_font.
 
-    IF is_font IS NOT INITIAL.
+    IF is_font IS SUPPLIED.
       ASSIGN is_font TO <ls_font>.
+    ELSEIF ip_no_def_font = abap_true.
+      ASSIGN ls_nofont TO <ls_font>.
     ELSE.
       ASSIGN s_font TO <ls_font>.
     ENDIF.
@@ -225,11 +227,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
       me->text = ip_text.
       CLEAR me->mt_rtf.
       IF me->text IS NOT INITIAL AND
-         it_rtf IS INITIAL AND
-         ip_no_defaults = abap_false.
+         it_rtf IS INITIAL.
         "Insert default RTF entry only
-        ls_rtf-font     = <ls_font>.
+        ls_rtf-offset   = 0.
         ls_rtf-length   = strlen( me->text ).
+        ls_rtf-font     = <ls_font>.
         ls_rtf-preserve = abap_true.
         APPEND ls_rtf TO me->mt_rtf.
       ENDIF.
@@ -238,14 +240,9 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     IF it_rtf IS NOT INITIAL.
       me->mt_rtf = it_rtf.
       TRY.
-          IF ip_no_defaults = abap_false.
-            zcl_excel_common=>check_rtf( EXPORTING ip_value = me->text
-                                                   is_font  = <ls_font>
-                                          CHANGING ct_rtf   = me->mt_rtf ).
-          ELSE.
-            zcl_excel_common=>check_rtf( EXPORTING ip_value = me->text
-                                          CHANGING ct_rtf   = me->mt_rtf ).
-          ENDIF.
+          zcl_excel_common=>check_rtf( EXPORTING ip_value    = me->text
+                                                 is_font     = <ls_font>
+                                        CHANGING ct_rtf      = me->mt_rtf ).
         CATCH zcx_excel.
       ENDTRY.
     ENDIF.
