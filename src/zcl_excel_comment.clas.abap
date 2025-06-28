@@ -45,6 +45,9 @@ CLASS zcl_excel_comment DEFINITION
     METHODS get_left_offset
       RETURNING
         VALUE(rp_result) TYPE i .
+    METHODS get_name
+      RETURNING
+        VALUE(r_name) TYPE string .
     METHODS get_ref
       RETURNING
         VALUE(rp_ref) TYPE string .
@@ -145,6 +148,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
   METHOD get_left_offset.
     rp_result = me->left_offset.
+  ENDMETHOD.
+
+
+  METHOD get_name.
+
   ENDMETHOD.
 
 
