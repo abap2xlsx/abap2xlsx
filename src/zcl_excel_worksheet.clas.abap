@@ -1964,15 +1964,10 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
         ls_stylemapping = me->excel->get_style_to_guid( ip_guid = ip_style ).
         MOVE-CORRESPONDING ls_stylemapping-complete_style-font TO ls_font.
       ENDIF.
-      IF ls_font IS NOT INITIAL.
-        zcl_excel_common=>check_rtf( EXPORTING ip_value = ip_value
-                                               is_font  = ls_font
-                                      CHANGING ct_rtf   = ct_rtf ).
-        RETURN.
-      ENDIF.
     ENDIF.
 
     zcl_excel_common=>check_rtf( EXPORTING ip_value = ip_value
+                                           is_font  = ls_font
                                   CHANGING ct_rtf   = ct_rtf ).
 
   ENDMETHOD.
