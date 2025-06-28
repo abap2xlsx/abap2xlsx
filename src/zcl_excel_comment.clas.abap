@@ -211,15 +211,14 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD set_text.
-    DATA: ls_nofont LIKE s_font,
-          ls_rtf    LIKE LINE OF mt_rtf,
-          ls_box    TYPE ty_box.
+    CONSTANTS     lc_nofont LIKE s_font VALUE IS INITIAL.
+    DATA          ls_rtf    LIKE LINE OF mt_rtf.
     FIELD-SYMBOLS <ls_font> LIKE s_font.
 
     IF is_font IS SUPPLIED.
       ASSIGN is_font TO <ls_font>.
     ELSEIF ip_no_def_font = abap_true.
-      ASSIGN ls_nofont TO <ls_font>.
+      ASSIGN lc_nofont TO <ls_font>.
     ELSE.
       ASSIGN s_font TO <ls_font>.
     ENDIF.
@@ -253,6 +252,7 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     ENDIF.
 
 * Parameters of the containing box
+    DATA ls_box TYPE ty_box.
     ls_box-left_column   = ip_left_column.
     ls_box-left_offset   = ip_left_offset.
     ls_box-top_row       = ip_top_row.
