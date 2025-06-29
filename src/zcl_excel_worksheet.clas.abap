@@ -397,6 +397,8 @@ CLASS zcl_excel_worksheet DEFINITION
       RAISING
         zcx_excel .
     METHODS get_comments
+      IMPORTING
+        iv_copy_collection TYPE flag DEFAULT abap_true
       RETURNING
         VALUE(r_comments) TYPE REF TO zcl_excel_comments .
     METHODS get_drawings
@@ -1962,7 +1964,9 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     ENDIF.
 
     lo_style = excel->get_style_from_guid( ip_style ).
-    ls_font  = lo_style->font->get_structure( ).
+    IF lo_style IS BOUND.
+      ls_font  = lo_style->font->get_structure( ).
+    ENDIF.
 
     lv_next_rtf_offset = 0.
     LOOP AT ct_rtf ASSIGNING <rtf>.
@@ -2606,16 +2610,15 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 
 
   METHOD get_comments.
-    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
-          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
 
-    CREATE OBJECT r_comments.
-
-    lo_iterator = comments->get_iterator( ).
-    WHILE lo_iterator->has_next( ) = abap_true.
-      lo_comment ?= lo_iterator->get_next( ).
-      r_comments->include( lo_comment ).
-    ENDWHILE.
+    IF iv_copy_collection = abap_true.
+* By default, get_comments copies the collection (backward compatibility)
+      CREATE OBJECT r_comments
+        EXPORTING
+          io_from = comments.
+    ELSE.
+      r_comments = comments.
+    ENDIF.
 
   ENDMETHOD.                    "get_comments
 
