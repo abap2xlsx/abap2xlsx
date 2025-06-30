@@ -12,7 +12,9 @@ CLASS zcl_excel_comments DEFINITION
       IMPORTING
         !ip_comment TYPE REF TO zcl_excel_comment .
     METHODS clear .
-    METHODS constructor .
+    METHODS constructor
+      IMPORTING
+        !io_from TYPE REF TO zcl_excel_comments OPTIONAL .
     METHODS get
       IMPORTING
         !ip_index         TYPE zexcel_active_worksheet
@@ -57,7 +59,23 @@ CLASS zcl_excel_comments IMPLEMENTATION.
 
 
   METHOD constructor.
+
+    DATA: lo_comment  TYPE REF TO zcl_excel_comment,
+          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
+
     CREATE OBJECT comments.
+
+    IF io_from IS BOUND.
+* Copy constructor: create new instance with copy of attributes from io_from
+* Copy all attributes of io_from to the new instance
+
+* The receiver may change the collection without affecting the original
+      lo_iterator = io_from->comments->get_iterator( ).
+      WHILE lo_iterator->has_next( ) = abap_true.
+        lo_comment ?= lo_iterator->get_next( ).
+        include( lo_comment ).
+      ENDWHILE.
+    ENDIF.
 
   ENDMETHOD.
 
