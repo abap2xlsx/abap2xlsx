@@ -199,19 +199,6 @@ CLASS zcl_excel_comment IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD set_box.
-    "Keeping backwards compatibility (do not use this obsolet method)
-    me->topleft_column = is_box-left_column + 1.
-    me->topleft_row    = is_box-top_row + 1.
-    me->width          = is_box-right_column - is_box-left_column.
-    me->height         = is_box-bottom_row - is_box-top_row.
-    me->left_offset    = is_box-left_offset.
-    me->top_offset     = is_box-top_offset.
-    me->right_offset   = is_box-right_offset.
-    me->bottom_offset  = is_box-bottom_offset.
-  ENDMETHOD.
-
-
   METHOD set_text.
     me->text = ip_text.
 
@@ -266,6 +253,18 @@ CLASS zcl_excel_comment IMPLEMENTATION.
       me->height         = ip_bottom_row - ip_top_row.
     ENDIF.
 
+  ENDMETHOD.
+
+  METHOD set_box.
+    "Keeping backwards compatibility (do not use this obsolet method)
+    me->topleft_column = is_box-left_column + 1.
+    me->topleft_row    = is_box-top_row + 1.
+    me->width          = is_box-right_column - is_box-left_column.
+    me->height         = is_box-bottom_row - is_box-top_row.
+    me->left_offset    = is_box-left_offset.
+    me->top_offset     = is_box-top_offset.
+    me->right_offset   = is_box-right_offset.
+    me->bottom_offset  = is_box-bottom_offset.
   ENDMETHOD.
 
 ENDCLASS.
