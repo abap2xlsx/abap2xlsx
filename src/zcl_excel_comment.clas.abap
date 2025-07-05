@@ -5,6 +5,7 @@ CLASS zcl_excel_comment DEFINITION
 
   PUBLIC SECTION.
 
+    "obsolet, do not use
     TYPES:
       BEGIN OF ty_box,
         left_column   TYPE i,
@@ -28,6 +29,7 @@ CLASS zcl_excel_comment DEFINITION
         bottom_row    TYPE i VALUE 15,
         bottom_offset TYPE i VALUE 9,
       END OF gc_default_box .
+    "end of obsolet
 
     METHODS constructor .
     METHODS get_bottom_offset
@@ -76,13 +78,13 @@ CLASS zcl_excel_comment DEFINITION
         !ip_topleft       TYPE string OPTIONAL
         !ip_width         TYPE i OPTIONAL
         !ip_height        TYPE i OPTIONAL
-        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
+        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column   "do not use
         !ip_left_offset   TYPE i OPTIONAL
-        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
+        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row       "do not use
         !ip_top_offset    TYPE i OPTIONAL
-        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column
+        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column  "do not use
         !ip_right_offset  TYPE i OPTIONAL
-        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row
+        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row    "do not use
         !ip_bottom_offset TYPE i OPTIONAL
       RAISING
         zcx_excel .
@@ -115,13 +117,24 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     " If visibility is set to hidden (this is the ABAP2XLSX standard):
     " The comment's position is adjusted right above to its referenced cell position.
 
-    me->width  = gc_default_box-right_column - gc_default_box-left_column.  "2
-    me->height = gc_default_box-bottom_row   - gc_default_box-top_row.      "4
+    CONSTANTS:
+      BEGIN OF lc_default_size, "resulting from previous defaults:
+        width  TYPE i VALUE 2,  "right_column - left_column (4 - 2)
+        height TYPE i VALUE 4,  "bottom_row - top_row (15 - 11)
+      END OF lc_default_size,
+      BEGIN OF lc_default_offset, "pixel offsets
+        left   TYPE i VALUE 15,
+        top    TYPE i VALUE 10,
+        right  TYPE i VALUE 31,
+        bottom TYPE i VALUE 9,
+      END OF lc_default_offset.
 
-    me->left_offset   = gc_default_box-left_offset.
-    me->top_offset    = gc_default_box-top_offset.
-    me->right_offset  = gc_default_box-right_offset.
-    me->bottom_offset = gc_default_box-bottom_offset.
+    me->width         = lc_default_size-width.
+    me->height        = lc_default_size-height.
+    me->left_offset   = lc_default_offset-left.
+    me->top_offset    = lc_default_offset-top.
+    me->right_offset  = lc_default_offset-right.
+    me->bottom_offset = lc_default_offset-bottom.
 
   ENDMETHOD.
 
