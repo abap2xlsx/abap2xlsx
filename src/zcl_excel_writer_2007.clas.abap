@@ -2403,15 +2403,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * STEP 4: Create authors
 * TO-DO: management of several authors
     lo_element_authors = lo_document->create_simple_element( name   = lc_xml_node_authors
-                                                             parent = lo_document ).
+                                                             parent = lo_element_root ).
 
     lo_element_author  = lo_document->create_simple_element( name   = lc_xml_node_author
-                                                             parent = lo_document ).
+                                                             parent = lo_element_authors ).
     lv_author = sy-uname.
     lo_element_author->set_value( lv_author ).
-
-    lo_element_authors->append_child( new_child = lo_element_author ).
-    lo_element_root->append_child( new_child = lo_element_authors ).
 
 **********************************************************************
 * STEP 5: Create comments
@@ -2426,40 +2423,32 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       lo_comment ?= lo_iterator->get_next( ).
 
       lo_element_comment = lo_document->create_simple_element( name   = lc_xml_node_comment
-                                                               parent = lo_document ).
+                                                               parent = lo_element_commentlist ).
       lo_element_comment->set_attribute_ns( name  = lc_xml_attr_ref
                                             value = lo_comment->get_ref( ) ).
       lo_element_comment->set_attribute_ns( name  = lc_xml_attr_authorid
                                             value = '0' ).  " TO-DO
 
       lo_element_text = lo_document->create_simple_element( name   = lc_xml_node_text
-                                                            parent = lo_document ).
+                                                            parent = lo_element_comment ).
       lo_element_r    = lo_document->create_simple_element( name   = lc_xml_node_r
-                                                            parent = lo_document ).
+                                                            parent = lo_element_text ).
       lo_element_rpr  = lo_document->create_simple_element( name   = lc_xml_node_rpr
-                                                            parent = lo_document ).
+                                                            parent = lo_element_r ).
 
       lo_element_b    = lo_document->create_simple_element( name   = lc_xml_node_b
-                                                            parent = lo_document ).
-      lo_element_rpr->append_child( new_child = lo_element_b ).
+                                                            parent = lo_element_rpr ).
 
       add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_sz     iv_attr_name = lc_xml_attr_val     iv_attr_value = '9' ).
       add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_color  iv_attr_name = lc_xml_attr_indexed iv_attr_value = '81' ).
       add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_rfont  iv_attr_name = lc_xml_attr_val     iv_attr_value = 'Tahoma' ).
       add_1_val_child_node( io_document = lo_document io_parent = lo_element_rpr iv_elem_name = lc_xml_node_family iv_attr_name = lc_xml_attr_val     iv_attr_value = '2' ).
 
-      lo_element_r->append_child( new_child = lo_element_rpr ).
-
       lo_element_t    = lo_document->create_simple_element( name   = lc_xml_node_t
-                                                            parent = lo_document ).
+                                                            parent = lo_element_r ).
       lo_element_t->set_attribute_ns( name  = lc_xml_attr_xmlspacing
                                       value = 'preserve' ).
       lo_element_t->set_value( lo_comment->get_text( ) ).
-      lo_element_r->append_child( new_child = lo_element_t ).
-
-      lo_element_text->append_child( new_child = lo_element_r ).
-      lo_element_comment->append_child( new_child = lo_element_text ).
-      lo_element_commentlist->append_child( new_child = lo_element_comment ).
     ENDWHILE.
 
     lo_element_root->append_child( new_child = lo_element_commentlist ).
