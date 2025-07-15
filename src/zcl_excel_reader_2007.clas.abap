@@ -344,7 +344,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS create_zip_archive
       IMPORTING
         !i_xlsx_binary       TYPE xstring
-        !i_use_alternate_zip TYPE seoclsname OPTIONAL
+        !i_use_alternate_zip TYPE clike OPTIONAL
       RETURNING
         VALUE(e_zip)         TYPE REF TO lcl_zip_archive
       RAISING
