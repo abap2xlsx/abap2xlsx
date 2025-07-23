@@ -3,7 +3,7 @@
 [![GitHub release](https://img.shields.io/github/release/abap2xlsx/abap2xlsx.svg)](https://github.com/abap2xlsx/abap2xlsx/releases/latest)
 [![License](https://img.shields.io/github/license/abap2xlsx/abap2xlsx.svg)](LICENSE)
 [![SAP Community](https://img.shields.io/badge/SAP%20Community-abap2xlsx-blue)](https://community.sap.com/t5/forums/searchpage/tab/message?q=abap2xlsx)
-[<img src="https://devin.ai/assets/askdeepwiki.png" alt="Ask https://DeepWiki.com" height="20"/>](https://deepwiki.com)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/abap2xlsx/abap2xlsx)
 
 > **A comprehensive ABAP library for reading and generating Excel spreadsheets (.xlsx) directly from SAP systems**
 
