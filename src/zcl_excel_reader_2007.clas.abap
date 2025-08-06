@@ -22,10 +22,6 @@ CLASS zcl_excel_reader_2007 DEFINITION
         id           TYPE string,
         type         TYPE string,
         target       TYPE string,
-        targetmode   TYPE string,
-        worksheet    TYPE REF TO zcl_excel_worksheet,
-        sheetid      TYPE string,     "ins #235 - repeat rows/cols - needed to identify correct sheet
-        localsheetid TYPE string,
       END OF t_relationship .
     TYPES:
       BEGIN OF t_fileversion,
@@ -38,7 +34,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
     TYPES:
       BEGIN OF t_sheet,
         name    TYPE string,
-        sheetid TYPE string,
+        sheetid TYPE string,            "currently not used
         id      TYPE string,
         state   TYPE string,
       END OF t_sheet .
@@ -1833,7 +1829,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lv_full_filename           TYPE string,
 
       lo_rels_workbook           TYPE REF TO if_ixml_document,
-      lt_worksheets              TYPE STANDARD TABLE OF t_relationship WITH NON-UNIQUE DEFAULT KEY,
+      lt_sheetrelations          TYPE STANDARD TABLE OF t_relationship WITH NON-UNIQUE DEFAULT KEY,
       lo_workbook                TYPE REF TO if_ixml_document,
       lv_workbook_index          TYPE i,
       lv_worksheet_path          TYPE string,
@@ -1844,6 +1840,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lo_worksheet               TYPE REF TO zcl_excel_worksheet,
       lo_range                   TYPE REF TO zcl_excel_range,
       lv_worksheet_title         TYPE zexcel_sheet_title,
+      lt_worksheets              LIKE TABLE OF lo_worksheet,
       lv_tabix                   TYPE i,            " #235 - repeat rows/cols.  Needed to link defined name to correct worksheet
 
       ls_range                   TYPE t_range,
@@ -1868,7 +1865,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * #229: Set active worksheet - end data declarations
 *--------------------------------------------------------------------*
-    FIELD-SYMBOLS: <worksheet> TYPE t_relationship.
 
 
 *--------------------------------------------------------------------*
@@ -1966,7 +1962,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *           thus we only store this information for use when parsing the workbookfile for sheetinformations
 *--------------------------------------------------------------------*
         WHEN lcv_worksheet.
-          APPEND ls_relationship TO lt_worksheets.
+          APPEND ls_relationship TO lt_sheetrelations.
 
 *--------------------------------------------------------------------*
 *   §2.2    Styles           - This holds the styles that are used in all worksheets
@@ -2000,12 +1996,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_workbook = me->get_ixml_from_zip_archive( iv_workbook_full_filename ).
 
 *--------------------------------------------------------------------*
-*   §3.1    Names and order of of worksheets
+*   §3.1    Names and  O R D E R  of worksheets
 *--------------------------------------------------------------------*
     lo_node           ?= lo_workbook->find_from_name_ns( name = 'sheet' uri = namespace-main ).
-    lv_workbook_index  = 1.
     WHILE lo_node IS BOUND.
 
+      lv_workbook_index = sy-index.
       me->fill_struct_from_attributes( EXPORTING
                                          ip_element   = lo_node
                                        CHANGING
@@ -2039,22 +2035,18 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 *       Load worksheetdata
 *--------------------------------------------------------------------*
-      READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY id = ls_sheet-id.
+      READ TABLE lt_sheetrelations INTO ls_relationship WITH KEY id = ls_sheet-id.  "rId
       IF sy-subrc = 0.
-        <worksheet>-sheetid = ls_sheet-sheetid.                                "ins #235 - repeat rows/cols - needed to identify correct sheet
-        <worksheet>-localsheetid = |{ lv_workbook_index - 1 }|.
-        CONCATENATE lv_path <worksheet>-target
+        CONCATENATE lv_path ls_relationship-target
             INTO lv_worksheet_path.
         me->load_worksheet( ip_path      = lv_worksheet_path
                             io_worksheet = lo_worksheet ).
-        <worksheet>-worksheet = lo_worksheet.
+        APPEND lo_worksheet TO lt_worksheets.    "in this order (§3.1) for localsheetid
       ENDIF.
 
       lo_node ?= lo_node->get_next( ).
-      ADD 1 TO lv_workbook_index.
 
     ENDWHILE.
-    SORT lt_worksheets BY sheetid.                                              " needed for localSheetid -referencing
 
 *--------------------------------------------------------------------*
 *   #284: Set active worksheet - Resolve referenced formulae to
@@ -2101,12 +2093,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lv_range_value = lo_node->get_value( ).
 
       IF ls_range-localsheetid IS NOT INITIAL.                                                              " issue #163+
-*      READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY id = ls_range-localsheetid.                "del issue #235 - repeat rows/cols " issue #163+
-*        lo_range = <worksheet>-worksheet->add_new_range( ).                                              "del issue #235 - repeat rows/cols " issue #163+
 *--------------------------------------------------------------------*
 * issue#235 - repeat rows/columns - begin
 *--------------------------------------------------------------------*
-        READ TABLE lt_worksheets ASSIGNING <worksheet> WITH KEY localsheetid = ls_range-localsheetid.
+        lv_tabix = ls_range-localsheetid + 1.
+        READ TABLE lt_worksheets INTO lo_worksheet INDEX lv_tabix.
         IF sy-subrc = 0.
           CASE ls_range-name.
 
@@ -2123,7 +2114,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                                                           e_row_end      = ls_area-row_end ).
                   ls_area-col_start = zcl_excel_common=>convert_column2int( lv_col_start_alpha ).
                   ls_area-col_end   = zcl_excel_common=>convert_column2int( lv_col_end_alpha ).
-                  lo_autofilter = io_excel->add_new_autofilter( io_sheet = <worksheet>-worksheet ) .
+                  lo_autofilter = io_excel->add_new_autofilter( io_sheet = lo_worksheet ) .
                   lo_autofilter->set_filter_area( is_area = ls_area ).
                 CATCH zcx_excel.
                   " we expected a range but it was not usable, so just ignore it
@@ -2134,8 +2125,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * repeat print rows/columns
 *--------------------------------------------------------------------*
             WHEN zif_excel_sheet_printsettings=>gcv_print_title_name.
-              lo_range = <worksheet>-worksheet->add_new_range( ).
-              lo_range->name = zif_excel_sheet_printsettings=>gcv_print_title_name.
+*             We don't need a range object here no more, because since the
+*             parameter i_allow_1dim_range is passed below anything works
+*             fine within worksheet's method print_title_set_range, which
+*             now creates the range object and sets name and value correctly.
 *--------------------------------------------------------------------*
 * This might be a temporary solution.  Maybe ranges get be reworked
 * to support areas consisting of multiple rectangles
@@ -2169,11 +2162,11 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                                                       e_row_start        = lv_row_start
                                                                       e_row_end          = lv_row_end ).
               IF lv_col_start_alpha IS NOT INITIAL.
-                <worksheet>-worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
                                                                                       iv_columns_to   = lv_col_end_alpha ).
               ENDIF.
               IF lv_row_start IS NOT INITIAL.
-                <worksheet>-worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
                                                                                    iv_rows_to   = lv_row_end ).
               ENDIF.
 
@@ -2185,16 +2178,16 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                                                       e_row_start        = lv_row_start
                                                                       e_row_end          = lv_row_end ).
               IF lv_col_start_alpha IS NOT INITIAL.
-                <worksheet>-worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_columns( iv_columns_from = lv_col_start_alpha
                                                                                       iv_columns_to   = lv_col_end_alpha ).
               ENDIF.
               IF lv_row_start IS NOT INITIAL.
-                <worksheet>-worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
+                lo_worksheet->zif_excel_sheet_printsettings~set_print_repeat_rows( iv_rows_from = lv_row_start
                                                                                    iv_rows_to   = lv_row_end ).
               ENDIF.
 
             WHEN OTHERS.
-              lo_range = <worksheet>-worksheet->add_new_range( ).
+              lo_range = lo_worksheet->add_new_range( ).
 
           ENDCASE.
         ENDIF.
@@ -2204,7 +2197,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ELSE.                                                                                                 " issue #163+
         lo_range = io_excel->add_new_range( ).                                                              " issue #163+
       ENDIF.                                                                                                " issue #163+
-*    lo_range = ip_excel->add_new_range( ).                                                               " issue #163-
       IF lo_range IS BOUND.                                                                                 "ins issue #235 - repeat rows/cols
         lo_range->name = ls_range-name.
         lo_range->set_range_value( lv_range_value ).
