@@ -466,9 +466,8 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_column          TYPE REF TO zcl_excel_column,
           outline_level_col  TYPE i VALUE 0.
 
-    lo_column_iterator = o_worksheet->get_columns_iterator( ).
     " Calculate col
-    IF lo_column_iterator->has_next( ) = abap_true.
+    IF o_worksheet->get_columns( )->is_empty( ) = abap_false.
       o_worksheet->calculate_column_widths( ).
     ENDIF.
 
@@ -503,6 +502,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     ENDIF.
 
     " outlineLevelCol
+    lo_column_iterator = o_worksheet->get_columns_iterator( ).
     WHILE lo_column_iterator->has_next( ) = abap_true.
       lo_column ?= lo_column_iterator->get_next( ).
       IF lo_column->get_outline_level( ) > outline_level_col.
