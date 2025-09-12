@@ -115,6 +115,6 @@ CLASS zcl_excel_autofilters IMPLEMENTATION.
 
 
   METHOD size.
-    DESCRIBE TABLE me->mt_autofilters LINES r_size.
+    r_size = lines( me->mt_autofilters ).
   ENDMETHOD.
 ENDCLASS.
