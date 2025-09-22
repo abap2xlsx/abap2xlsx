@@ -1492,14 +1492,14 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     "Get the number of columns for the current table
     lt_columns = it_field_catalog.
     DELETE lt_columns WHERE dynpfld NE abap_true.
-    DESCRIBE TABLE lt_columns LINES lv_columns.
+    lv_columns = lines( lt_columns ).
 
     "Calculate the top left row of the current table
     lv_column_int = zcl_excel_common=>convert_column2int( cs_settings-top_left_column ).
     lv_row_int    = cs_settings-top_left_row.
 
     "Get number of row for the current table
-    DESCRIBE TABLE ip_table LINES lv_rows.
+    lv_rows = lines( ip_table ).
 
     "Calculate the bottom right row for the current table
     lv_maxcol                       = lv_column_int + lv_columns - 1.

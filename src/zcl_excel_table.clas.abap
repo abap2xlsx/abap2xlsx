@@ -144,7 +144,7 @@ CLASS zcl_excel_table IMPLEMENTATION.
     ENDIF.
 
     ASSIGN table_data->* TO <fs_table>.
-    DESCRIBE TABLE <fs_table> LINES lv_table_lines.
+    lv_table_lines = lines( <fs_table> ).
     IF lv_table_lines = 0.
       lv_table_lines = 1. "table needs at least 1 data row
     ENDIF.
