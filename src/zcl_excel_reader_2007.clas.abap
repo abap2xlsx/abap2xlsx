@@ -139,6 +139,12 @@ CLASS zcl_excel_reader_2007 DEFINITION
         VALUE(r_ixml)   TYPE REF TO if_ixml_document
       RAISING
         zcx_excel .
+    METHODS load_comment_boxes
+      IMPORTING
+        !ip_path      TYPE string
+        !io_worksheet TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
     METHODS load_drawing_anchor
       IMPORTING
         !io_anchor_element   TYPE REF TO if_ixml_element
@@ -349,6 +355,11 @@ CLASS zcl_excel_reader_2007 DEFINITION
         VALUE(e_zip)         TYPE REF TO lcl_zip_archive
       RAISING
         zcx_excel .
+    METHODS load_single_comment
+      IMPORTING
+        !io_node_comment  TYPE REF TO if_ixml_element
+      RETURNING
+        VALUE(eo_comment) TYPE REF TO zcl_excel_comment .
     METHODS read_from_applserver
       IMPORTING
         !i_filename         TYPE csequence
@@ -2341,6 +2352,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     CONSTANTS: lc_xml_attr_true     TYPE string VALUE 'true',
                lc_xml_attr_true_int TYPE string VALUE '1',
                lc_rel_drawing       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+               lc_rel_vmldrawing    TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing',
                lc_rel_hyperlink     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
                lc_rel_comments      TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',
                lc_rel_printer       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings'.
@@ -2495,6 +2507,14 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               me->load_worksheet_drawing( ip_path      = lv_path
                                         io_worksheet = io_worksheet ).
             CATCH zcx_excel. "--> then ignore it
+          ENDTRY.
+
+        WHEN lc_rel_vmldrawing.
+* This file contains the dimensions of the boxes in which comments are displayed
+          TRY.
+              me->load_comment_boxes( ip_path      = lv_path
+                                      io_worksheet = io_worksheet ).
+            CATCH zcx_excel. "--> then ignore it (boxes will get default values)
           ENDTRY.
 
         WHEN lc_rel_printer.
@@ -3671,44 +3691,25 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD load_comments.
-    DATA: lo_comments_xml       TYPE REF TO if_ixml_document,
-          lo_node_comment       TYPE REF TO if_ixml_element,
-          lo_node_comment_child TYPE REF TO if_ixml_element,
-          lo_node_r_child_t     TYPE REF TO if_ixml_element,
-          lo_attr               TYPE REF TO if_ixml_attribute,
-          lo_comment            TYPE REF TO zcl_excel_comment,
-          lv_comment_text       TYPE string,
-          lv_node_value         TYPE string,
-          lv_attr_value         TYPE string.
 
-    lo_comments_xml = me->get_ixml_from_zip_archive( ip_path ).
+    DATA:
+      lo_comments_xml TYPE REF TO if_ixml_document,
+      lo_node_comment TYPE REF TO if_ixml_element,
+      lo_comment      TYPE REF TO zcl_excel_comment.
 
-    lo_node_comment ?= lo_comments_xml->find_from_name_ns( name = 'comment' uri = namespace-main ).
+    lo_comments_xml = get_ixml_from_zip_archive( i_filename = ip_path is_normalizing = abap_false ).
+    lo_node_comment = lo_comments_xml->find_from_name_ns( name = 'comment' uri = namespace-main ).
     WHILE lo_node_comment IS BOUND.
 
-      CLEAR lv_comment_text.
-      lo_attr = lo_node_comment->get_attribute_node_ns( name = 'ref' ).
-      lv_attr_value  = lo_attr->get_value( ).
-
-      lo_node_comment_child ?= lo_node_comment->get_first_child( ).
-      WHILE lo_node_comment_child IS BOUND.
-        " There will be rPr nodes here, but we do not support them
-        " in comments right now; see 'load_shared_strings' for handling.
-        " Extract the <t>...</t> part of each <r>-tag
-        lo_node_r_child_t ?= lo_node_comment_child->find_from_name_ns( name = 't' uri = namespace-main ).
-        IF lo_node_r_child_t IS BOUND.
-          lv_node_value = lo_node_r_child_t->get_value( ).
-          CONCATENATE lv_comment_text lv_node_value INTO lv_comment_text RESPECTING BLANKS.
-        ENDIF.
-        lo_node_comment_child ?= lo_node_comment_child->get_next( ).
-      ENDWHILE.
-
-      CREATE OBJECT lo_comment.
-      lo_comment->set_text( ip_ref = lv_attr_value ip_text = lv_comment_text ).
+      lo_comment = load_single_comment( lo_node_comment ).
       io_worksheet->add_comment( lo_comment ).
 
       lo_node_comment ?= lo_node_comment->get_next( ).
     ENDWHILE.
+
+* If the comment boxes had been loaded before the comments themselves,
+* the box dimensions have to be propagated now into the individual comments
+    io_worksheet->set_comment_boxes( ).
 
   ENDMETHOD.
 
@@ -4475,4 +4476,152 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
+  METHOD load_comment_boxes.
+
+    CONSTANTS:
+      BEGIN OF lc_namespace,
+        vml   TYPE string VALUE `urn:schemas-microsoft-com:vml`,
+        excel TYPE string VALUE `urn:schemas-microsoft-com:office:excel`,
+      END OF lc_namespace.
+
+    DATA:
+      lo_anchor       TYPE REF TO if_ixml_element,
+      lo_shape        TYPE REF TO if_ixml_element,
+      lo_shapes       TYPE REF TO if_ixml_node_collection,
+      lo_vml          TYPE REF TO if_ixml_document,
+      lv_vml          TYPE string,
+      ls_box          TYPE zcl_excel_comment=>ty_box,
+      lt_boxes        TYPE zcl_excel_comments=>ty_boxes,
+      lt_dims         TYPE stringtab,
+      lv_dims         TYPE string,
+      lv_dim          TYPE string,
+      lv_shape_index  TYPE i,
+      lv_total_shapes TYPE i.
+
+    FIELD-SYMBOLS:
+      <lv_dim> TYPE i.
+
+    lo_vml = get_ixml_from_zip_archive( ip_path ).
+
+    lo_shapes = lo_vml->get_elements_by_tag_name_ns(
+      name = `shape`
+      uri  = lc_namespace-vml
+    ).
+
+    lv_total_shapes = lo_shapes->get_length( ).
+    WHILE lv_shape_index < lv_total_shapes.
+      lo_shape ?= lo_shapes->get_item( lv_shape_index ).
+      CLEAR ls_box.
+      lo_anchor ?= lo_shape->find_from_name_ns( name = `Anchor` uri = lc_namespace-excel ).
+      IF lo_anchor IS BOUND.
+        lv_dims = lo_anchor->get_value( ).
+        SPLIT lv_dims AT `,` INTO TABLE lt_dims.
+        LOOP AT lt_dims INTO lv_dim.
+          ASSIGN COMPONENT sy-tabix OF STRUCTURE ls_box TO <lv_dim>.
+          CHECK sy-subrc EQ 0.
+          TRY.
+              <lv_dim> = lv_dim.
+            CATCH cx_sy_conversion_error.
+          ENDTRY.
+        ENDLOOP.
+        APPEND ls_box TO lt_boxes.
+      ENDIF.
+
+      ADD 1 TO lv_shape_index.
+    ENDWHILE.
+
+* Serialize lo_vml into a string lv_vml and pass it to the comments object
+    CALL TRANSFORMATION id
+      SOURCE XML lo_vml
+      RESULT XML lv_vml.
+
+    IF lt_boxes IS NOT INITIAL.
+      io_worksheet->set_comment_boxes( it_boxes = lt_boxes iv_full_vml = lv_vml ).
+    ENDIF.
+
+
+  ENDMETHOD.
+
+  METHOD load_single_comment.
+
+* Example
+*
+*    <comment ref="A1" authorId="0" shapeId="0" xr:uid="{F71DF43B-AD16-449F-8E98-D378C5CB6E57}">
+*      <text>
+*        <r>
+*          <rPr>
+*            <b/>
+*            <sz val="9"/>
+*            <color indexed="81"/>
+*            <rFont val="Segoe UI"/>
+*            <family val="2"/>
+*          </rPr>
+*          <t>Info:</t>
+*        </r>
+*        <r>
+*          <rPr>
+*            <sz val="9"/>
+*            <color indexed="81"/>
+*            <rFont val="Segoe UI"/>
+*            <family val="2"/>
+*          </rPr>
+*          <t xml:space="preserve"> Demo Text </t>
+*        </r>
+*        ...
+
+
+    DATA:
+      lo_attr         TYPE REF TO if_ixml_attribute,
+      lv_comment_text TYPE string,
+      lv_ref          TYPE string.
+
+    CREATE OBJECT eo_comment.
+
+    lo_attr = io_node_comment->get_attribute_node_ns( name = 'ref' ).
+    lv_ref  = lo_attr->get_value( ).
+
+    DATA:
+      lo_rs      TYPE REF TO if_ixml_node_collection,
+      lo_r       TYPE REF TO if_ixml_element,
+      lo_t       TYPE REF TO if_ixml_element,
+      lo_rpr     TYPE REF TO if_ixml_element,
+      lo_font    TYPE REF TO zcl_excel_style_font,
+      ls_rtf     TYPE zexcel_s_rtf,
+      lt_rtf     TYPE zexcel_t_rtf,
+      lv_text    TYPE string,
+      lv_part    TYPE string,
+      lv_r_index TYPE i,
+      lv_total_r TYPE i.
+
+    lo_rs = io_node_comment->get_elements_by_tag_name_ns( name = `r` uri = namespace-main ).
+    lv_total_r = lo_rs->get_length( ).
+    WHILE lv_r_index < lv_total_r.
+      CLEAR:
+        ls_rtf.
+      lo_r ?= lo_rs->get_item( lv_r_index ).
+      lo_rpr ?= lo_r->find_from_name_ns( name = `rPr` uri = namespace-main ).
+      IF lo_rpr IS BOUND.
+        lo_font = load_style_font( lo_rpr ).
+        ls_rtf-font  = lo_font->get_structure( ).
+      ENDIF.
+      lo_t ?= lo_r->find_from_name_ns( name = `t` uri = namespace-main ).
+      IF lo_t IS BOUND.
+        lv_part = lo_t->get_value( ).
+        IF lv_part IS NOT INITIAL.
+          ls_rtf-offset = strlen( lv_text ).
+          ls_rtf-length = strlen( lv_part ).
+          lv_text = lv_text && lv_part.
+          APPEND ls_rtf TO lt_rtf.
+        ENDIF.
+      ENDIF.
+      ADD 1 TO lv_r_index.
+    ENDWHILE.
+
+    TRY.
+        eo_comment->set_text_rtf( ip_ref = lv_ref ip_text = lv_text it_rtf = lt_rtf ).
+      CATCH zcx_excel.
+        " Only internal call here: program logic above should ensure consistency
+    ENDTRY.
+
+  ENDMETHOD.
 ENDCLASS.
