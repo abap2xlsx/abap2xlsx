@@ -22,7 +22,7 @@ This guide will walk you through installing and using abap2xlsx in your SAP syst
 
 ### Method 1: abapGit Online Installation (Recommended)
 
-abapGit is like a bridge between GitHub (where the code lives) and your SAP system. [1](#1-0) 
+abapGit is like a bridge between GitHub (where the code lives) and your SAP system.
 
 #### Step 1: Install abapGit
 
@@ -126,25 +126,25 @@ Follow the same package creation steps from Method 1, Step 2.
 
 ✅ **Check these objects exist and are active:**
 - Class `ZCL_EXCEL` (main workbook class)
-- Class `ZCL_EXCEL_WRITER_2007` (creates Excel files) [2](#1-1) 
+- Class `ZCL_EXCEL_WRITER_2007` (creates Excel files)
 - Class `ZCL_EXCEL_WORKSHEET` (manages worksheets)
 
 ### Method 3: SAPLink Installation (Legacy Systems Only)
 
-⚠️ **Only use this method for SAP systems older than SAP_ABA 702** [1](#1-0) 
+⚠️ **Only use this method for SAP systems older than SAP_ABA 702**
 
 #### Prerequisites
 - Install SAPLink from http://www.saplink.org
-- Install SAPLink plugins (complete nugg package recommended) [3](#1-2) 
+- Install SAPLink plugins (complete nugg package recommended)
 
 #### Installation Steps
 1. Download the `.nugg` file from the build folder
 2. Execute report `ZSAPLINK`
 3. Select "Import Nugget" and locate your file
-4. Check "overwrite originals" only if updating existing installation [4](#1-3) 
+4. Check "overwrite originals" only if updating existing installation
 
 #### Critical: Activation Order
-Objects must be activated in this specific sequence: [5](#1-4) 
+Objects must be activated in this specific sequence:
 
 1. All domains
 2. All data elements  
