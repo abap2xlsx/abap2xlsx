@@ -1654,7 +1654,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
           LOOP AT lt_comp_str ASSIGNING <ls_comp_str>.
             <ls_comp_str>-name = |{ <ls_comp_str>-name }{ is_component-suffix }|.
           ENDLOOP.
-        ENDIF
+        ENDIF.
 
         INSERT LINES OF lt_comp_str INTO TABLE xt_components.
       WHEN OTHERS. "cl_abap_typedescr=>kind_ref or  cl_abap_typedescr=>kind_class or  cl_abap_typedescr=>kind_intf.
