@@ -1650,7 +1650,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
         lt_comp_str = structure_recursive( is_component = is_component ).
 
         " When the structure has a suffix, all fields in the structure should finish with the suffix
-        loop at lt_comp_str assigning <ls_comp_str>.
+        LOOP AT lt_comp_str ASSIGNING <ls_comp_str>.
           <ls_comp_str>-name = |{ <ls_comp_str>-name }{ is_component-suffix }|.
         endloop.
 
