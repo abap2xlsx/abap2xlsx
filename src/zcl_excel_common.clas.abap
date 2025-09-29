@@ -1649,10 +1649,12 @@ CLASS zcl_excel_common IMPLEMENTATION.
       WHEN cl_abap_typedescr=>kind_struct. "S Structure
         lt_comp_str = structure_recursive( is_component = is_component ).
 
-        " When the structure has a suffix, all fields in the structure should finish with the suffix
-        LOOP AT lt_comp_str ASSIGNING <ls_comp_str>.
-          <ls_comp_str>-name = |{ <ls_comp_str>-name }{ is_component-suffix }|.
-        ENDLOOP.
+        IF is_component-suffix IS NOT INITIAL.
+          " When the structure has a suffix, all fields in the structure should finish with the suffix
+          LOOP AT lt_comp_str ASSIGNING <ls_comp_str>.
+            <ls_comp_str>-name = |{ <ls_comp_str>-name }{ is_component-suffix }|.
+          ENDLOOP.
+        ENDIF
 
         INSERT LINES OF lt_comp_str INTO TABLE xt_components.
       WHEN OTHERS. "cl_abap_typedescr=>kind_ref or  cl_abap_typedescr=>kind_class or  cl_abap_typedescr=>kind_intf.
