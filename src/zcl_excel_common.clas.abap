@@ -48,7 +48,7 @@ CLASS zcl_excel_common DEFINITION
         zcx_excel.
     CLASS-METHODS convert_columnrow2column_a_row
       IMPORTING
-        !i_columnrow TYPE clike
+        !i_columnrow  TYPE clike
       EXPORTING
         !e_column     TYPE zexcel_cell_column_alpha
         !e_column_int TYPE zexcel_cell_column
@@ -77,7 +77,7 @@ CLASS zcl_excel_common DEFINITION
         !e_row       TYPE zexcel_cell_row .
     CLASS-METHODS clone_ixml_with_namespaces
       IMPORTING
-        element TYPE REF TO if_ixml_element
+        element       TYPE REF TO if_ixml_element
       RETURNING
         VALUE(result) TYPE REF TO if_ixml_element.
     CLASS-METHODS date_to_excel_string
@@ -102,9 +102,22 @@ CLASS zcl_excel_common DEFINITION
         VALUE(ev_unescaped_string) TYPE string
       RAISING
         zcx_excel .
+    "! <p class="shorttext synchronized" lang="en">Convert date from Excel format to SAP</p>
+    "! @parameter ip_value | String being an Excel number representing a date (e.g. 45141 means 2023/08/03,
+    "!                       45141.58832 means 2023/08/03 14:07:11). Important: if the input is date +
+    "!                       time, use the additional parameter IP_EXACT = 'X'.
+    "! @parameter ip_exact | If the input value also contains the time i.e. a fractional part exists
+    "!                       (e.g. 45141.58832 means 2023/08/03 14:07:11), ip_exact = 'X' will
+    "!                       return the exact date (e.g. 2023/08/03), while ip_exact = ' ' (default) will
+    "!                       return the rounded-up date (e.g. 2023/08/04). NB: this rounding-up doesn't
+    "!                       happen if the time is before 12:00:00.
+    "! @parameter ep_value | Date corresponding to the input Excel number. It returns a null date if
+    "!                       the input value contains non-numeric characters.
+    "! @raising zcx_excel | The numeric input corresponds to a date before 1900/1/1 or after 9999/12/31.
     CLASS-METHODS excel_string_to_date
       IMPORTING
         !ip_value       TYPE zexcel_cell_value
+        !ip_exact       TYPE abap_bool DEFAULT abap_false
       RETURNING
         VALUE(ep_value) TYPE d
       RAISING
@@ -133,6 +146,7 @@ CLASS zcl_excel_common DEFINITION
     CLASS-METHODS number_to_excel_string
       IMPORTING
         VALUE(ip_value) TYPE numeric
+        ip_currency     TYPE waers_curc OPTIONAL
       RETURNING
         VALUE(ep_value) TYPE zexcel_cell_value .
     CLASS-METHODS recursive_class_to_struct
@@ -150,6 +164,11 @@ CLASS zcl_excel_common DEFINITION
     CLASS-METHODS time_to_excel_string
       IMPORTING
         !ip_value       TYPE t
+      RETURNING
+        VALUE(ep_value) TYPE zexcel_cell_value .
+    CLASS-METHODS utclong_to_excel_string
+      IMPORTING
+        !ip_utclong     TYPE any
       RETURNING
         VALUE(ep_value) TYPE zexcel_cell_value .
     TYPES: t_char10 TYPE c LENGTH 10.
@@ -498,8 +517,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
 
   METHOD convert_column_a_row2columnrow.
-    DATA: lv_row_alpha     TYPE string,
-          lv_column_alpha  TYPE zexcel_cell_column_alpha.
+    DATA: lv_row_alpha    TYPE string,
+          lv_column_alpha TYPE zexcel_cell_column_alpha.
 
     lv_row_alpha = i_row.
     lv_column_alpha = zcl_excel_common=>convert_column2alpha( i_column ).
@@ -654,12 +673,16 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD clone_ixml_with_namespaces.
 
+    TYPES: BEGIN OF ty_name_value,
+             name  TYPE string,
+             value TYPE string,
+           END OF ty_name_value.
+
     DATA: iterator    TYPE REF TO if_ixml_node_iterator,
           node        TYPE REF TO if_ixml_node,
-          xmlns       TYPE ihttpnvp,
-          xmlns_table TYPE TABLE OF ihttpnvp.
-    FIELD-SYMBOLS:
-      <xmlns> TYPE ihttpnvp.
+          xmlns       TYPE ty_name_value,
+          xmlns_table TYPE TABLE OF ty_name_value.
+    FIELD-SYMBOLS <xmlns> TYPE ty_name_value.
 
     iterator = element->create_iterator( ).
     result ?= element->clone( ).
@@ -846,7 +869,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     lv_value = ip_value.
 
 
-    FIND REGEX `\s|'` IN lv_value.  " \s finds regular and white spaces
+    FIND REGEX `\s|'|-` IN lv_value.  " \s finds regular and white spaces
     IF sy-subrc = 0.
       REPLACE ALL OCCURRENCES OF `'` IN lv_value WITH `''`.
       CONCATENATE `'` lv_value `'` INTO lv_value .
@@ -859,11 +882,16 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD excel_string_to_date.
     DATA: lv_date_int TYPE i.
+    DATA lv_error_text TYPE string.
 
     CHECK ip_value IS NOT INITIAL AND ip_value CN ' 0'.
 
     TRY.
-        lv_date_int = ip_value.
+        IF ip_exact = abap_false.
+          lv_date_int = ip_value.
+        ELSE.
+          lv_date_int = trunc( ip_value ).
+        ENDIF.
         IF lv_date_int NOT BETWEEN 1 AND 2958465.
           zcx_excel=>raise_text( 'Unable to interpret date' ).
         ENDIF.
@@ -875,7 +903,8 @@ CLASS zcl_excel_common IMPLEMENTATION.
           ep_value = ep_value + 1.
         ENDIF.
       CATCH cx_sy_conversion_error.
-        zcx_excel=>raise_text( 'Index out of bounds' ).
+        lv_error_text = |String "{ ip_value }" is not a valid Excel date|.
+        zcx_excel=>raise_text( lv_error_text ).
     ENDTRY.
   ENDMETHOD.
 
@@ -897,7 +926,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
     TRY.
 
-        lv_day_fraction = ip_value.
+        lv_day_fraction = frac( ip_value ).
         lv_seconds_in_day = lv_day_fraction * lc_seconds_in_day.
 
         ep_value = lv_seconds_in_day.
@@ -944,6 +973,15 @@ CLASS zcl_excel_common IMPLEMENTATION.
       <fcat>-scrtext_s = ls_salv_t_column_ref-r_column->get_short_text( ).
       <fcat>-scrtext_m = ls_salv_t_column_ref-r_column->get_medium_text( ).
       <fcat>-scrtext_l = ls_salv_t_column_ref-r_column->get_long_text( ).
+      <fcat>-currency_column = ls_salv_t_column_ref-r_column->get_currency_column( ).
+      " If currency column not in structure then clear the field again
+      IF <fcat>-currency_column IS NOT INITIAL.
+        READ TABLE lt_salv_t_column_ref WITH KEY columnname = <fcat>-currency_column TRANSPORTING NO FIELDS.
+        IF sy-subrc <> 0.
+          CLEAR <fcat>-currency_column.
+        ENDIF.
+      ENDIF.
+
       IF ip_conv_exit_length = abap_false.
         <fcat>-abap_type = lo_salv_column_table->get_ddic_inttype( ).
       ENDIF.
@@ -1007,7 +1045,11 @@ CLASS zcl_excel_common IMPLEMENTATION.
   METHOD number_to_excel_string.
     DATA: lv_value_c TYPE c LENGTH 100.
 
-    WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
+    IF ip_currency IS INITIAL.
+      WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN.
+    ELSE.
+      WRITE ip_value TO lv_value_c EXPONENT 0 NO-GROUPING NO-SIGN CURRENCY ip_currency.
+    ENDIF.
     REPLACE ALL OCCURRENCES OF ',' IN lv_value_c WITH '.'.
 
     ep_value = lv_value_c.
@@ -1691,4 +1733,20 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
 
   ENDMETHOD.
+
+  METHOD utclong_to_excel_string.
+    DATA lv_timestamp TYPE timestamp.
+    DATA lv_date TYPE d.
+    DATA lv_time TYPE t.
+
+    " The data type UTCLONG and the method UTCLONG2TSTMP_SHORT are not available before ABAP 7.54
+    "   -> Need of a dynamic call to avoid compilation error before ABAP 7.54
+
+    CALL METHOD cl_abap_tstmp=>('UTCLONG2TSTMP_SHORT')
+      EXPORTING utclong   = ip_utclong
+      RECEIVING timestamp = lv_timestamp.
+    CONVERT TIME STAMP lv_timestamp TIME ZONE 'UTC   ' INTO DATE lv_date TIME lv_time.
+    ep_value = |{ date_to_excel_string( lv_date ) + time_to_excel_string( lv_time ) }|.
+  ENDMETHOD.
+
 ENDCLASS.

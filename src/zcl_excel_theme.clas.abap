@@ -24,10 +24,10 @@ CLASS zcl_excel_theme DEFINITION
         VALUE(rv_xstring) TYPE xstring .
     METHODS set_color
       IMPORTING
-        VALUE(iv_type)         TYPE string
-        VALUE(iv_srgb)         TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL
-        VALUE(iv_syscolorname) TYPE string OPTIONAL
-        VALUE(iv_syscolorlast) TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL .
+        iv_type         TYPE string
+        iv_srgb         TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL
+        iv_syscolorname TYPE string OPTIONAL
+        iv_syscolorlast TYPE zcl_excel_theme_color_scheme=>t_srgb OPTIONAL .
     METHODS set_color_scheme_name
       IMPORTING
         iv_name TYPE string .
@@ -38,31 +38,31 @@ CLASS zcl_excel_theme DEFINITION
         iv_typeface TYPE string .
     METHODS set_latin_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS set_ea_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS set_cs_font
       IMPORTING
-        VALUE(iv_type)        TYPE string
-        VALUE(iv_typeface)    TYPE string
-        VALUE(iv_panose)      TYPE string OPTIONAL
-        VALUE(iv_pitchfamily) TYPE string OPTIONAL
-        VALUE(iv_charset)     TYPE string OPTIONAL .
+        iv_type        TYPE string
+        iv_typeface    TYPE string
+        iv_panose      TYPE string OPTIONAL
+        iv_pitchfamily TYPE string OPTIONAL
+        iv_charset     TYPE string OPTIONAL .
     METHODS set_font_scheme_name
       IMPORTING
-        VALUE(iv_name) TYPE string .
+        iv_name TYPE string .
     METHODS set_theme_name
       IMPORTING
-        VALUE(iv_name) TYPE string .
+        iv_name TYPE string .
   PROTECTED SECTION.
 
     DATA elements TYPE REF TO zcl_excel_theme_elements .
@@ -71,10 +71,7 @@ CLASS zcl_excel_theme DEFINITION
     DATA extlst TYPE REF TO zcl_excel_theme_extlst .
   PRIVATE SECTION.
 
-    DATA theme_changed TYPE abap_bool .
-    DATA theme_read TYPE abap_bool .
     DATA name TYPE string .
-    DATA xmls_a TYPE string .
 ENDCLASS.
 
 
@@ -100,7 +97,6 @@ CLASS zcl_excel_theme IMPLEMENTATION.
     lo_node_theme  = io_theme_xml->get_root_element( )."   find_from_name( name = c_theme ).
     IF lo_node_theme IS BOUND.
       name = lo_node_theme->get_attribute( name = c_theme_name ).
-      xmls_a = lo_node_theme->get_attribute( name = c_theme_xmlns ).
       lo_theme_children = lo_node_theme->get_children( ).
       lo_theme_iterator = lo_theme_children->create_iterator( ).
       lo_theme_element ?= lo_theme_iterator->get_next( ).
@@ -208,7 +204,6 @@ CLASS zcl_excel_theme IMPLEMENTATION.
     lo_document = lo_ixml->create_document( ).
     lo_document->set_encoding( lo_encoding ).
     lo_document->set_standalone( abap_true ).
-    lo_document->set_namespace_prefix( prefix = 'a' ).
 
     lo_element_root = lo_document->create_simple_element_ns( prefix = c_theme_prefix
                                                              name   = c_theme

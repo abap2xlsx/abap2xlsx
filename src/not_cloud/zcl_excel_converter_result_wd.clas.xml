@@ -18,18 +18,8 @@
      <DESCRIPT>Create wt_fcat for WD interface</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_WT_FCAT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create wt_fcat for WD interface</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_WT_FILT</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Create wt_filt for WD interface</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>CREATE_WT_FILT</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Create wt_filt for WD interface</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -38,18 +28,8 @@
      <DESCRIPT>Create wt_sort for WD interface</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_WT_SORT</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create wt_sort for WD interface</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>GET_COLUMNS_INFO</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Read data from WD columns object</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>GET_COLUMNS_INFO</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Read data from WD columns object</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -58,18 +38,8 @@
      <DESCRIPT>Get aggregation from field table</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>GET_FIELDS_INFO</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Get aggregation from field table</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WO_CONFIG</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Configuration of the ALV Output</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WO_CONFIG</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Configuration of the ALV Output</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -78,18 +48,8 @@
      <DESCRIPT>SALV_WD_T_COLUMN_REF</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WT_COLUMNS</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>SALV_WD_T_COLUMN_REF</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WT_FIELDS</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>SALV_WD_T_FIELD_REF</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WT_FIELDS</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>SALV_WD_T_FIELD_REF</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>

@@ -192,7 +192,7 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
 
 *      update merged cells before range
 
-      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from >=  lv_start_row AND row_to <= lv_stop_row.
+      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from >= lv_start_row AND row_to <= lv_stop_row. "#EC CI_SORTSEQ
         ls_merged_cell-row_from = ls_merged_cell-row_from + cv_diff.
         ls_merged_cell-row_to = ls_merged_cell-row_to + cv_diff.
 
@@ -216,7 +216,7 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
         APPEND ls_cell TO lt_tmp_cells_template.
       ENDLOOP.
 
-      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from >= <ls_range>-start AND row_to <= <ls_range>-stop.
+      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from >= <ls_range>-start AND row_to <= <ls_range>-stop. "#EC CI_SORTSEQ
         APPEND ls_merged_cell TO lt_tmp_merged_cells_template.
       ENDLOOP.
 
@@ -271,7 +271,7 @@ CLASS zcl_excel_fill_template IMPLEMENTATION.
 
       ct_cells = lt_cells_result.
 
-      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from > <ls_range>-stop.
+      LOOP AT ct_merged_cells INTO ls_merged_cell WHERE row_from > <ls_range>-stop. "#EC CI_SORTSEQ
         ls_merged_cell-row_from = ls_merged_cell-row_from + cv_diff.
         ls_merged_cell-row_to = ls_merged_cell-row_to + cv_diff.
 

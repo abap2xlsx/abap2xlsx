@@ -106,6 +106,13 @@ CLASS zcl_excel_reader_2007 DEFINITION
       END OF t_shared_string .
     TYPES:
       t_shared_strings TYPE STANDARD TABLE OF t_shared_string WITH DEFAULT KEY .
+    TYPES:
+      BEGIN OF t_table,
+        id     TYPE string,
+        target TYPE string,
+      END OF t_table .
+    TYPES:
+      t_tables TYPE HASHED TABLE OF t_table WITH UNIQUE KEY id .
 
     DATA shared_strings TYPE t_shared_strings .
     DATA styles TYPE t_style_refs .
@@ -268,12 +275,26 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !io_worksheet      TYPE REF TO zcl_excel_worksheet
       RAISING
         zcx_excel .
+    "! <p class="shorttext synchronized" lang="en">Load worksheet tables</p>
+    METHODS load_worksheet_tables
+      IMPORTING
+        io_ixml_worksheet TYPE REF TO if_ixml_document
+        io_worksheet      TYPE REF TO zcl_excel_worksheet
+        iv_dirname        TYPE string
+        it_tables         TYPE t_tables
+      RAISING
+        zcx_excel .
     CLASS-METHODS resolve_path
       IMPORTING
         !ip_path         TYPE string
       RETURNING
         VALUE(rp_result) TYPE string .
     METHODS resolve_referenced_formulae .
+    METHODS unescape_string_value
+      IMPORTING
+        i_value       TYPE string
+      RETURNING
+        VALUE(result) TYPE string.
     METHODS get_dxf_style_guid
       IMPORTING
         !io_ixml_dxf         TYPE REF TO if_ixml_element
@@ -285,7 +306,12 @@ CLASS zcl_excel_reader_2007 DEFINITION
         iv_path   TYPE string
         !ip_excel TYPE REF TO zcl_excel
       RAISING
-        zcx_excel .
+        zcx_excel.
+    METHODS provided_string_is_escaped
+      IMPORTING
+        !value            TYPE string
+      RETURNING
+        VALUE(is_escaped) TYPE abap_bool.
 
     CONSTANTS: BEGIN OF namespace,
                  x14ac            TYPE string VALUE 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
@@ -318,7 +344,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS create_zip_archive
       IMPORTING
         !i_xlsx_binary       TYPE xstring
-        !i_use_alternate_zip TYPE seoclsname OPTIONAL
+        !i_use_alternate_zip TYPE clike OPTIONAL
       RETURNING
         VALUE(e_zip)         TYPE REF TO lcl_zip_archive
       RAISING
@@ -366,9 +392,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     DATA: lt_row_data             TYPE ltt_row_data,
           ls_row_data             LIKE LINE OF lt_row_data,
           lt_collapse_rows        TYPE HASHED TABLE OF i WITH UNIQUE KEY table_line,
-
           lv_collapsed            TYPE abap_bool,
-
           lv_outline_level        TYPE i,
           lv_next_consecutive_row TYPE i,
           lt_outline_rows         TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
@@ -402,7 +426,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       lv_outline_level = sy-index.
       CLEAR lv_next_consecutive_row.
       CLEAR ls_outline_row.
-      LOOP AT lt_row_data ASSIGNING <ls_row_data> WHERE outline_level >= lv_outline_level.
+      LOOP AT lt_row_data ASSIGNING <ls_row_data> WHERE outline_level >= lv_outline_level. "#EC CI_SORTSEQ
 
         IF lv_next_consecutive_row    <> <ls_row_data>-row   " A gap --> close all open outlines
           AND lv_next_consecutive_row IS NOT INITIAL.        " First time in loop.
@@ -963,7 +987,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *   §1.1 - "simple" strings
 *                Example:  see above
 *--------------------------------------------------------------------*
-          <ls_shared_string>-value = lo_node_si_child->get_value( ).
+          <ls_shared_string>-value = unescape_string_value( lo_node_si_child->get_value( ) ).
         ELSE.
 *--------------------------------------------------------------------*
 *   §1.2 - rich text formatted strings
@@ -973,25 +997,31 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
           CLEAR: lv_current_offset.
           WHILE lo_node_si_child IS BOUND.                                             " actually these children of <si> are <r>-tags
-            CLEAR: ls_rtf.
+            lv_tag_name = lo_node_si_child->get_name( ).
+            IF lv_tag_name = 'r'.
 
-            " extracting rich text formating data
-            lo_node_r_child_rpr ?= lo_node_si_child->find_from_name_ns( name = 'rPr' uri = namespace-main ).
-            IF lo_node_r_child_rpr IS BOUND.
-              lo_font = load_style_font( lo_node_r_child_rpr ).
-              ls_rtf-font = lo_font->get_structure( ).
-            ENDIF.
-            ls_rtf-offset = lv_current_offset.
-            " extract the <t>...</t> part of each <r>-tag
-            lo_node_r_child_t ?= lo_node_si_child->find_from_name_ns( name = 't' uri = namespace-main ).
-            IF lo_node_r_child_t IS BOUND.
-              lv_node_value = lo_node_r_child_t->get_value( ).
-              CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
-              ls_rtf-length = strlen( lv_node_value ).
-            ENDIF.
+              CLEAR: ls_rtf.
 
-            lv_current_offset = strlen( <ls_shared_string>-value ).
-            APPEND ls_rtf TO <ls_shared_string>-rtf.
+              " extracting rich text formating data
+              lo_node_r_child_rpr ?= lo_node_si_child->find_from_name_ns( name = 'rPr' uri = namespace-main ).
+              IF lo_node_r_child_rpr IS BOUND.
+                lo_font = load_style_font( lo_node_r_child_rpr ).
+                ls_rtf-font = lo_font->get_structure( ).
+              ENDIF.
+              ls_rtf-offset = lv_current_offset.
+              " extract the <t>...</t> part of each <r>-tag
+              lo_node_r_child_t ?= lo_node_si_child->find_from_name_ns( name = 't' uri = namespace-main ).
+              IF lo_node_r_child_t IS BOUND.
+                lv_node_value = unescape_string_value( lo_node_r_child_t->get_value( ) ).
+                CONCATENATE <ls_shared_string>-value lv_node_value INTO <ls_shared_string>-value RESPECTING BLANKS.
+                ls_rtf-length = strlen( lv_node_value ).
+
+                IF ls_rtf-length > 0.
+                  lv_current_offset = strlen( <ls_shared_string>-value ).
+                  APPEND ls_rtf TO <ls_shared_string>-rtf.
+                ENDIF.
+              ENDIF.
+            ENDIF.
 
             lo_node_si_child ?= lo_node_si_child->get_next( ).
 
@@ -2164,6 +2194,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
               ENDIF.
 
             WHEN OTHERS.
+              lo_range = <worksheet>-worksheet->add_new_range( ).
 
           ENDCASE.
         ENDIF.
@@ -2227,12 +2258,16 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
            END OF lty_column.
 
     TYPES: BEGIN OF lty_sheetview,
-             showgridlines     TYPE zexcel_show_gridlines,
-             tabselected       TYPE string,
-             zoomscalenormal   TYPE string,
-             workbookviewid    TYPE string,
-             showrowcolheaders TYPE string,
-             righttoleft       TYPE string,
+             showgridlines            TYPE zexcel_show_gridlines,
+             tabselected              TYPE string,
+             zoomscale                TYPE string,
+             zoomscalenormal          TYPE string,
+             zoomscalepagelayoutview  TYPE string,
+             zoomscalesheetlayoutview TYPE string,
+             workbookviewid           TYPE string,
+             showrowcolheaders        TYPE string,
+             righttoleft              TYPE string,
+             topleftcell       TYPE string,
            END OF lty_sheetview.
 
     TYPES: BEGIN OF lty_mergecell,
@@ -2309,6 +2344,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                lc_rel_hyperlink     TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
                lc_rel_comments      TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',
                lc_rel_printer       TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings'.
+    CONSTANTS lc_rel_table TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/table'.
 
     DATA: lo_ixml_worksheet           TYPE REF TO if_ixml_document,
           lo_ixml_cells               TYPE REF TO if_ixml_node_collection,
@@ -2403,6 +2439,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lt_datavalidation_range     TYPE TABLE OF string,
           lt_rtf                      TYPE zexcel_t_rtf,
           ex                          TYPE REF TO cx_root.
+    DATA lt_tables TYPE t_tables.
+    DATA ls_table TYPE t_table.
 
     FIELD-SYMBOLS:
       <ls_shared_string> TYPE t_shared_string.
@@ -2473,6 +2511,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
             CATCH zcx_excel.
           ENDTRY.
 
+        WHEN lc_rel_table.
+          MOVE-CORRESPONDING ls_relationship TO ls_table.
+          INSERT ls_table INTO TABLE lt_tables.
+
         WHEN OTHERS.
       ENDCASE.
 
@@ -2496,6 +2538,16 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
+    " Read tables (must be done before loading sheet contents)
+    TRY.
+        me->load_worksheet_tables( io_ixml_worksheet = lo_ixml_worksheet
+                                   io_worksheet      = io_worksheet
+                                   iv_dirname        = lv_dirname
+                                   it_tables         = lt_tables ).
+      CATCH zcx_excel. " Ignore reading errors - pass everything we were able to identify
+    ENDTRY.
+
+    " Sheet contents
     lo_ixml_rows = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'row' uri = namespace-main ).
     lo_ixml_iterator = lo_ixml_rows->create_iterator( ).
     lo_ixml_row_elem ?= lo_ixml_iterator->get_next( ).
@@ -2511,6 +2563,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         lv_max_col = lv_index.
       ENDIF.
       lv_cell_row = ls_row-r.
+      lv_cell_column = ''.
       lo_row = io_worksheet->get_row( lv_cell_row ).
       IF ls_row-customheight = '1'.
         lo_row->set_row_height( ip_row_height = ls_row-ht ip_custom_height = abap_true ).
@@ -2543,9 +2596,30 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       WHILE lo_ixml_cell_elem IS BOUND.
         CLEAR: lv_cell_value,
                lv_cell_formula,
-               lv_style_guid.
+               lv_style_guid,
+               lt_rtf.
 
         fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_cell_elem CHANGING cp_structure = ls_cell ).
+
+        " Determine the column number
+        IF ls_cell-r IS NOT INITIAL.
+          " Note that the row should remain unchanged = the one defined by <row>
+          " i.e. in <row r="1"...><c r="A1" s="2"><v>..., ls_cell-r would be "A1",
+          "      the "1" of A1 should always be equal to the "1" of <row r="1"...
+          zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
+                                                              i_columnrow = ls_cell-r
+                                                            IMPORTING
+                                                              e_column    = lv_cell_column
+                                                              e_row       = lv_cell_row ).
+        ELSE.
+          " The column is the column after the last cell previously initialized in the same row.
+          " NB: the row is unchanged = the one defined by <row> e.g. "1" in <row r="1"...><c r="" s="2"><v>...
+          IF lv_cell_column IS INITIAL.
+            lv_cell_column = 'A'.
+          ELSE.
+            lv_cell_column = zcl_excel_common=>convert_column2alpha( zcl_excel_common=>convert_column2int( lv_cell_column ) + 1 ).
+          ENDIF.
+        ENDIF.
 
         lo_ixml_value_elem = lo_ixml_cell_elem->find_from_name_ns( name = 'v' uri = namespace-main ).
 
@@ -2595,11 +2669,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
           fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_formula_elem CHANGING cp_structure = ls_formula_attributes ).
           IF ls_formula_attributes-t = 'shared'.
-            zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
-                                                                i_columnrow = ls_cell-r
-                                                              IMPORTING
-                                                                e_column    = lv_cell_column
-                                                                e_row       = lv_cell_row ).
 
             TRY.
                 CLEAR ls_ref_formula.
@@ -2624,11 +2693,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         IF   lv_cell_value    IS NOT INITIAL
           OR lv_cell_formula  IS NOT INITIAL
           OR lv_style_guid    IS NOT INITIAL.
-          zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
-                                                              i_columnrow = ls_cell-r
-                                                            IMPORTING
-                                                              e_column    = lv_cell_column
-                                                              e_row       = lv_cell_row ).
           io_worksheet->set_cell( ip_column     = lv_cell_column  " cell_elem Column
                                   ip_row        = lv_cell_row     " cell_elem row_elem
                                   ip_value      = lv_cell_value   " cell_elem Value
@@ -2731,7 +2795,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
 * issue #367 - hide columns from
       IF ls_column-max = zcl_excel_common=>c_excel_sheet_max_col.     " Max = very right column
-        IF ls_column-hidden = 1     " all hidden
+        IF ( ls_column-hidden = lc_xml_attr_true
+          OR ls_column-hidden = lc_xml_attr_true_int ) " all hidden
           AND ls_column-min > 0.
           io_worksheet->zif_excel_sheet_properties~hide_columns_from = zcl_excel_common=>convert_column2alpha( ls_column-min ).
         ELSEIF ls_column-style > ''.
@@ -2762,7 +2827,13 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         OR ls_sheetview-righttoleft = lc_xml_attr_true_int.
       io_worksheet->zif_excel_sheet_properties~set_right_to_left( abap_true ).
     ENDIF.
-
+    io_worksheet->zif_excel_sheet_properties~zoomscale                 = ls_sheetview-zoomscale.
+    io_worksheet->zif_excel_sheet_properties~zoomscale_normal          = ls_sheetview-zoomscalenormal.
+    io_worksheet->zif_excel_sheet_properties~zoomscale_pagelayoutview  = ls_sheetview-zoomscalepagelayoutview.
+    io_worksheet->zif_excel_sheet_properties~zoomscale_sheetlayoutview = ls_sheetview-zoomscalesheetlayoutview.
+    IF ls_sheetview-topleftcell IS NOT INITIAL.
+      io_worksheet->set_sheetview_top_left_cell( ls_sheetview-topleftcell ).
+    ENDIF.
 
     "Add merge cell information
     lo_ixml_mergecells = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'mergeCell' uri = namespace-main ).
@@ -2854,6 +2925,21 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
         ls_odd_footer-left_value = lo_ixml_hf_value_elem->get_value( ).
       ENDIF.
 
+      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name_ns( name = 'oddHeader' uri = namespace-main ).
+      IF lo_ixml_hf_value_elem IS NOT INITIAL.
+        ls_odd_header-left_value = lo_ixml_hf_value_elem->get_value( ).
+      ENDIF.
+
+      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name_ns( name = 'evenFooter' uri = namespace-main ).
+      IF lo_ixml_hf_value_elem IS NOT INITIAL.
+        ls_even_footer-left_value = lo_ixml_hf_value_elem->get_value( ).
+      ENDIF.
+
+      lo_ixml_hf_value_elem = lo_ixml_headerfooter_elem->find_from_name_ns( name = 'evenHeader' uri = namespace-main ).
+      IF lo_ixml_hf_value_elem IS NOT INITIAL.
+        ls_even_header-left_value = lo_ixml_hf_value_elem->get_value( ).
+      ENDIF.
+
 *        2do§1   Header/footer
       " TODO.. get the rest.
 
@@ -2864,21 +2950,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
     ENDIF.
 
-    " Start fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
     " Read pane
     lo_ixml_pane_elem = lo_ixml_sheetview_elem->find_from_name_ns( name = 'pane' uri = namespace-main ).
     IF lo_ixml_pane_elem IS BOUND.
       fill_struct_from_attributes( EXPORTING ip_element = lo_ixml_pane_elem CHANGING cp_structure = ls_excel_pane ).
-      " Issue #194
-      " Replace REGEX with method from the common class
-      zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING
-                                                          i_columnrow = ls_excel_pane-topleftcell
-                                                        IMPORTING
-                                                          e_column    = lv_pane_cell_col_a    " Cell Column
-                                                          e_row       = lv_pane_cell_row ).   " Natural number
-      lv_pane_cell_col = zcl_excel_common=>convert_column2int( lv_pane_cell_col_a ).
-      SUBTRACT 1 FROM: lv_pane_cell_col,
-                       lv_pane_cell_row.
+      lv_pane_cell_col = ls_excel_pane-xsplit.
+      lv_pane_cell_row = ls_excel_pane-ysplit.
       IF    lv_pane_cell_col > 0
         AND lv_pane_cell_row > 0.
         io_worksheet->freeze_panes( ip_num_rows    = lv_pane_cell_row
@@ -2888,8 +2965,10 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ELSE.
         io_worksheet->freeze_panes( ip_num_columns = lv_pane_cell_col ).
       ENDIF.
+      IF ls_excel_pane-topleftcell IS NOT INITIAL.
+        io_worksheet->set_pane_top_left_cell( ls_excel_pane-topleftcell ).
+      ENDIF.
     ENDIF.
-    " End fix 194 Read attributes HIDDEN, OUTLINELEVEL, COLLAPSED in ZCL_EXCEL_READER_2007
 
     " Start fix 276 Read data validations
     lo_ixml_datavalidations = lo_ixml_worksheet->get_elements_by_tag_name_ns( name = 'dataValidation' uri = namespace-main ).
@@ -3865,6 +3944,130 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD load_worksheet_tables.
+
+    DATA lo_ixml_table_columns TYPE REF TO if_ixml_node_collection.
+    DATA lo_ixml_table_column  TYPE REF TO if_ixml_element.
+    DATA lo_ixml_table TYPE REF TO if_ixml_element.
+    DATA lo_ixml_table_style TYPE REF TO if_ixml_element.
+    DATA lt_field_catalog TYPE zexcel_t_fieldcatalog.
+    DATA ls_field_catalog TYPE zexcel_s_fieldcatalog.
+    DATA lo_ixml_iterator TYPE REF TO if_ixml_node_iterator.
+    DATA ls_table_settings TYPE zexcel_s_table_settings.
+    DATA lv_path TYPE string.
+    DATA lt_components TYPE abap_component_tab.
+    DATA ls_component TYPE abap_componentdescr.
+    DATA lo_rtti_table TYPE REF TO cl_abap_tabledescr.
+    DATA lv_dref_table TYPE REF TO data.
+    DATA lv_num_lines TYPE i.
+    DATA lo_line_type TYPE REF TO cl_abap_structdescr.
+
+    DATA: BEGIN OF ls_table,
+            id             TYPE string,
+            name           TYPE string,
+            displayname    TYPE string,
+            ref            TYPE string,
+            totalsrowshown TYPE string,
+          END OF ls_table.
+
+    DATA: BEGIN OF ls_table_style,
+            name              TYPE string,
+            showrowstripes    TYPE string,
+            showcolumnstripes TYPE string,
+          END OF ls_table_style.
+
+    DATA: BEGIN OF ls_table_column,
+            id   TYPE string,
+            name TYPE string,
+          END OF ls_table_column.
+
+    FIELD-SYMBOLS <ls_table> LIKE LINE OF it_tables.
+    FIELD-SYMBOLS <lt_table> TYPE STANDARD TABLE.
+    FIELD-SYMBOLS <ls_field> TYPE zexcel_s_fieldcatalog.
+
+    LOOP AT it_tables ASSIGNING <ls_table>.
+
+      CONCATENATE iv_dirname <ls_table>-target INTO lv_path.
+      lv_path = resolve_path( lv_path ).
+
+      lo_ixml_table = me->get_ixml_from_zip_archive( lv_path )->get_root_element( ).
+      fill_struct_from_attributes( EXPORTING
+                                     ip_element = lo_ixml_table
+                                   CHANGING
+                                     cp_structure = ls_table ).
+
+      lo_ixml_table_style ?= lo_ixml_table->find_from_name( 'tableStyleInfo' ).
+      fill_struct_from_attributes( EXPORTING
+                                     ip_element = lo_ixml_table_style
+                                   CHANGING
+                                     cp_structure = ls_table_style ).
+
+      ls_table_settings-table_name = ls_table-name.
+      ls_table_settings-table_style = ls_table_style-name.
+      ls_table_settings-show_column_stripes = boolc( ls_table_style-showcolumnstripes = '1' ).
+      ls_table_settings-show_row_stripes = boolc( ls_table_style-showrowstripes = '1' ).
+
+      zcl_excel_common=>convert_range2column_a_row(
+        EXPORTING
+          i_range        = ls_table-ref
+        IMPORTING
+          e_column_start = ls_table_settings-top_left_column
+          e_column_end   = ls_table_settings-bottom_right_column
+          e_row_start    = ls_table_settings-top_left_row
+          e_row_end      = ls_table_settings-bottom_right_row ).
+
+      lo_ixml_table_columns =  lo_ixml_table->get_elements_by_tag_name( name = 'tableColumn' ).
+      lo_ixml_iterator     =  lo_ixml_table_columns->create_iterator( ).
+      lo_ixml_table_column  ?= lo_ixml_iterator->get_next( ).
+      CLEAR lt_field_catalog.
+      WHILE lo_ixml_table_column IS BOUND.
+
+        CLEAR ls_table_column.
+        fill_struct_from_attributes( EXPORTING
+                                       ip_element = lo_ixml_table_column
+                                     CHANGING
+                                       cp_structure = ls_table_column ).
+
+        ls_field_catalog-position = lines( lt_field_catalog ) + 1.
+        ls_field_catalog-fieldname = |COMP_{ ls_field_catalog-position PAD = '0' ALIGN = RIGHT WIDTH = 4 }|.
+        ls_field_catalog-scrtext_l = ls_table_column-name.
+        ls_field_catalog-dynpfld = abap_true.
+        ls_field_catalog-abap_type = cl_abap_typedescr=>typekind_string.
+        APPEND ls_field_catalog TO lt_field_catalog.
+
+        lo_ixml_table_column ?= lo_ixml_iterator->get_next( ).
+
+      ENDWHILE.
+
+      CLEAR lt_components.
+      LOOP AT lt_field_catalog ASSIGNING <ls_field>.
+        CLEAR ls_component.
+        ls_component-name = <ls_field>-fieldname.
+        ls_component-type = cl_abap_elemdescr=>get_string( ).
+        APPEND ls_component TO lt_components.
+      ENDLOOP.
+
+      lo_line_type = cl_abap_structdescr=>get( lt_components ).
+      lo_rtti_table = cl_abap_tabledescr=>get( lo_line_type ).
+      CREATE DATA lv_dref_table TYPE HANDLE lo_rtti_table.
+      ASSIGN lv_dref_table->* TO <lt_table>.
+
+      lv_num_lines = ls_table_settings-bottom_right_row - ls_table_settings-top_left_row.
+      DO lv_num_lines TIMES.
+        APPEND INITIAL LINE TO <lt_table>.
+      ENDDO.
+
+      io_worksheet->bind_table(
+        EXPORTING
+          ip_table            = <lt_table>
+          it_field_catalog    = lt_field_catalog
+          is_table_settings   = ls_table_settings ).
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
   METHOD read_from_applserver.
 
     DATA: lv_filelength         TYPE i,
@@ -4028,7 +4231,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Get referenced Cells,  Build ranges for easy lookup
 *--------------------------------------------------------------------*
-    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref <> space.
+    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref <> space. "#EC CI_HASHSEQ
 
       CLEAR ls_referenced_cell.
       ls_referenced_cell-sheet      = ls_ref_formula-sheet.
@@ -4064,7 +4267,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * For each referencing cell determine the referenced cell
 * and resolve the formula
 *--------------------------------------------------------------------*
-    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref = space.
+    LOOP AT me->mt_ref_formulae INTO ls_ref_formula WHERE ref = space. "#EC CI_HASHSEQ
 
 
       CLEAR lv_current_cell.
@@ -4098,6 +4301,47 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
       ENDLOOP.
 
     ENDLOOP.
+  ENDMETHOD.
+
+
+  METHOD unescape_string_value.
+
+    DATA:
+      "Marks the Position before the searched Pattern occurs in the String
+      "For example in String A_X_TEST_X, the Table is filled with 1 and 8
+      lt_character_positions       TYPE TABLE OF i,
+      lv_character_position        TYPE i,
+      lv_character_position_plus_2 TYPE i,
+      lv_character_position_plus_6 TYPE i,
+      lv_unescaped_value           TYPE string.
+
+    " The text "_x...._", with "_x" not "_X". Each "." represents one character, being 0-9 a-f or A-F (case insensitive),
+    " is interpreted like Unicode character U+.... (e.g. "_x0041_" is rendered like "A") is for characters.
+    " To not interpret it, Excel replaces the first "_" with "_x005f_".
+    result = i_value.
+
+    IF provided_string_is_escaped( i_value ) = abap_true.
+      CLEAR lt_character_positions.
+      APPEND sy-fdpos TO lt_character_positions.
+      lv_character_position = sy-fdpos + 1.
+      WHILE result+lv_character_position CS '_x'.
+        ADD sy-fdpos TO lv_character_position.
+        APPEND lv_character_position TO lt_character_positions.
+        ADD 1 TO lv_character_position.
+      ENDWHILE.
+      SORT lt_character_positions BY table_line DESCENDING.
+      LOOP AT lt_character_positions INTO lv_character_position.
+        lv_character_position_plus_2 = lv_character_position + 2.
+        lv_character_position_plus_6 = lv_character_position + 6.
+        IF substring( val = result off = lv_character_position_plus_2 len = 4 ) CO '0123456789ABCDEFabcdef'.
+          IF substring( val = result off = lv_character_position_plus_6 len = 1 ) = '_'.
+            lv_unescaped_value = cl_abap_conv_in_ce=>uccp( to_upper( substring( val = result off = lv_character_position_plus_2 len = 4 ) ) ).
+            REPLACE SECTION OFFSET lv_character_position LENGTH 7 OF result WITH lv_unescaped_value.
+          ENDIF.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+
   ENDMETHOD.
 
 
@@ -4216,4 +4460,19 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                      iv_zcl_excel_classname = iv_zcl_excel_classname ).
 
   ENDMETHOD.
+  METHOD provided_string_is_escaped.
+
+    "Check if passed value is really an escaped Character
+    IF value CS '_x'.
+      is_escaped = abap_true.
+       TRY.
+          IF substring( val = value off = sy-fdpos + 6 len = 1 ) <> '_'.
+            is_escaped = abap_false.
+          ENDIF.
+        CATCH cx_sy_range_out_of_bounds.
+          is_escaped = abap_false.
+      ENDTRY.
+    ENDIF.
+  ENDMETHOD.
+
 ENDCLASS.

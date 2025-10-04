@@ -18,28 +18,18 @@
      <DESCRIPT>Create</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>CREATE_CSV</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Create CSV ; Delimited format</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CREATE_CSV</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Create CSV ; Delimited format</DESCRIPT>
+     <CMPNAME>C_DEFAULT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Constant for string &apos;DEFAULT&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>DELIMITER</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Delimiter</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>DELIMITER</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Delimiter</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -48,18 +38,8 @@
      <DESCRIPT>Text inclusure character</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>ENCLOSURE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Text inclusure character</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>EOL</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>End Of line</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>EOL</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>End Of line</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -68,18 +48,13 @@
      <DESCRIPT>Excel creator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>EXCEL</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Excel creator</DESCRIPT>
+     <CMPNAME>INITIAL_EXT_DATE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Initial External Date</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>SET_ACTIVE_SHEET_INDEX</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Activate worksheet by index before the CSV file creation</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_ACTIVE_SHEET_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Activate worksheet by index before the CSV file creation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -88,18 +63,8 @@
      <DESCRIPT>Activate worksheet by name before the CSV file creation</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_ACTIVE_SHEET_INDEX_BY_NAME</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Activate worksheet by name before the CSV file creation</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_DELIMITER</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Set Delimiter value</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>SET_DELIMITER</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Set Delimiter value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
@@ -108,19 +73,14 @@
      <DESCRIPT>Set Enclosure character</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_ENCLOSURE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set Enclosure character</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>SET_ENDOFLINE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Set End Of Line character</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>SET_ENDOFLINE</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Set End Of Line character</DESCRIPT>
+     <CMPNAME>SET_INITIAL_EXT_DATE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Set Initial External Date (replacing default &apos;00.00.0000&apos;)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>WORKSHEET_INDEX</CMPNAME>
@@ -128,21 +88,19 @@
      <DESCRIPT>Active Worksheet</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>WORKSHEET_INDEX</CMPNAME>
-     <LANGU>I</LANGU>
-     <DESCRIPT>Active Worksheet</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
      <CMPNAME>WORKSHEET_NAME</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Worksheets name</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CMPNAME>WORKSHEET_NAME</CMPNAME>
-     <LANGU>I</LANGU>
      <DESCRIPT>Worksheets name</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_INITIAL_EXT_DATE</CMPNAME>
+     <SCONAME>IP_VALUE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Input Value</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

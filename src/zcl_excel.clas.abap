@@ -97,6 +97,11 @@ CLASS zcl_excel DEFINITION
     METHODS get_styles_iterator
       RETURNING
         VALUE(eo_iterator) TYPE REF TO zcl_excel_collection_iterator .
+    METHODS get_style_from_guid
+      IMPORTING
+        !ip_guid        TYPE zexcel_cell_style
+      RETURNING
+        VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS get_style_index_in_styles
       IMPORTING
         !ip_guid        TYPE zexcel_cell_style
@@ -172,11 +177,6 @@ CLASS zcl_excel DEFINITION
     DATA theme TYPE REF TO zcl_excel_theme .
     DATA comments TYPE REF TO zcl_excel_comments .
 
-    METHODS get_style_from_guid
-      IMPORTING
-        !ip_guid        TYPE zexcel_cell_style
-      RETURNING
-        VALUE(eo_style) TYPE REF TO zcl_excel_style .
     METHODS stylemapping_dynamic_style
       IMPORTING
         !ip_style        TYPE REF TO zcl_excel_style
@@ -269,7 +269,7 @@ CLASS zcl_excel IMPLEMENTATION.
                    <style2> LIKE LINE OF t_stylemapping2.
     DATA: style TYPE REF TO zcl_excel_style.
 
-    LOOP AT me->t_stylemapping1 ASSIGNING <style1> WHERE added_to_iterator IS INITIAL.
+    LOOP AT me->t_stylemapping1 ASSIGNING <style1> USING KEY added_to_iterator WHERE added_to_iterator IS INITIAL.
       READ TABLE me->t_stylemapping2 ASSIGNING <style2> WITH TABLE KEY guid = <style1>-guid.
       CHECK sy-subrc = 0.  " Should always be true since these tables are being filled parallel
 

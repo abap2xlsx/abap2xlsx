@@ -135,10 +135,10 @@ CLASS zcl_excel_style_fill IMPLEMENTATION.
         gradtype-type = c_fill_gradient_path.
         gradtype-position1 = '0'.
         gradtype-position2 = '1'.
-        gradtype-bottom = '0.5'.
-        gradtype-top = '0.5'.
-        gradtype-left = '0.5'.
-        gradtype-right = '0.5'.
+        gradtype-bottom = '1'.
+        gradtype-top = '1'.
+        gradtype-left = '1'.
+        gradtype-right = '1'.
     ENDCASE.
 
   ENDMETHOD.                    "build_gradient
