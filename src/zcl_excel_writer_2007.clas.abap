@@ -553,6 +553,9 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_drawing ?= lo_iterator->get_next( ).
 
+      "do not add media from drawing with reference
+      CHECK lo_drawing->get_reference_guid( ) IS INITIAL.
+
       lv_content = lo_drawing->get_media( ).
       lv_value = lo_drawing->get_media_name( ).
       CONCATENATE 'xl/media/' lv_value INTO lv_value.
@@ -2607,7 +2610,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_drawing      TYPE REF TO zcl_excel_drawing.
 
     DATA: lv_value   TYPE string,
-          lv_counter TYPE i.
+          lv_guid    TYPE c LENGTH 32.
 
 **********************************************************************
 * STEP 1: Create [Content_Types].xml into the root of the ZIP
@@ -2624,16 +2627,16 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 * STEP 4: Create subnodes
 
     " Add sheet Relationship nodes here
-    lv_counter = 0.
     lo_drawings = io_worksheet->get_drawings( ).
     lo_iterator = lo_drawings->get_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_drawing ?= lo_iterator->get_next( ).
-      ADD 1 TO lv_counter.
 
-      lv_value = lv_counter.
-      CONDENSE lv_value.
-      CONCATENATE 'rId' lv_value INTO lv_value.
+      CHECK lo_drawing->get_reference_guid( ) IS INITIAL.
+
+      lv_guid = lo_drawing->get_guid( ).
+
+      CONCATENATE 'rId' lv_guid INTO lv_value.
 
       lo_element = lo_document->create_simple_element( name   = lc_xml_node_relationship
                                                    parent = lo_document ).
@@ -2825,7 +2828,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_row                  TYPE string, " zexcel_cell_row.
           lv_col_offset           TYPE string,
           lv_row_offset           TYPE string,
-          lv_value                TYPE string.
+          lv_value                TYPE string,
+          lv_guid                 TYPE c LENGTH 32.
 
     ls_position = io_drawing->get_position( ).
 
@@ -2957,9 +2961,13 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
         lo_element_pic->append_child( new_child = lo_element ).
 
 *     blipFill
-        lv_value = ip_index.
-        CONDENSE lv_value.
-        CONCATENATE 'rId' lv_value INTO lv_value.
+       "reference drawing
+        IF io_drawing->get_reference_guid( ) IS INITIAL.
+          lv_guid = io_drawing->get_guid( ).
+        ELSE.
+          lv_guid = io_drawing->get_reference_guid( ).
+        ENDIF.
+        CONCATENATE 'rId' lv_guid INTO lv_value.
 
         lo_element  = io_document->create_simple_element( name = lc_xml_node_blipfill
                                                           parent = io_document ).

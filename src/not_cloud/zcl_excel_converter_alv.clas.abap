@@ -152,7 +152,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
     ls_color-int       = 0.
     ls_color-inv       = 0.
     ls_color-fontcolor = 'FF000000'.
-    ls_color-fillcolor = 'FFE5EAF0'. " 229 234 240 gray
+    ls_color-fillcolor = 'FFDFEBF5'. " 223 235 245 gray
     INSERT ls_color INTO TABLE wt_colors.
 
     ls_color-col       = 2.
@@ -210,7 +210,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
     ls_color-int       = 0.
     ls_color-inv       = 0.
     ls_color-fontcolor = 'FF000000'. " 000 000 000 Black
-    ls_color-fillcolor = 'FFCEE7FB'. " 206 231 251 light blue
+    ls_color-fillcolor = 'FFCCE3E3'. " 204 227 227 light blue
     INSERT ls_color INTO TABLE wt_colors.
 
     ls_color-col       = 4.
@@ -239,7 +239,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
     ls_color-int       = 0.
     ls_color-inv       = 0.
     ls_color-fontcolor = 'FF000000'. " 000 000 000 Black
-    ls_color-fillcolor = 'FFCEF8AE'. " 206 248 174 Green
+    ls_color-fillcolor = 'FFC6F9C1'. " 198 249 193 Green
     INSERT ls_color INTO TABLE wt_colors.
 
     ls_color-col       = 5.
@@ -268,7 +268,7 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
     ls_color-int       = 0.
     ls_color-inv       = 0.
     ls_color-fontcolor = 'FF000000'. " 000 000 000 Black
-    ls_color-fillcolor = 'FFFDBBBC'. " 253 187 188 Red
+    ls_color-fillcolor = 'FFFF988C'. " 255 152 140 Red
     INSERT ls_color INTO TABLE wt_colors.
 
     ls_color-col       = 6.
@@ -290,6 +290,20 @@ CLASS zcl_excel_converter_alv IMPLEMENTATION.
     ls_color-inv       = 1.
     ls_color-fontcolor = 'FFFB6B6B'. " 251 107 107 int Red
     ls_color-fillcolor = 'FFFFFFFF'. " 255 255 255 White
+    INSERT ls_color INTO TABLE wt_colors.
+
+    ls_color-col       = 7.
+    ls_color-int       = 0.
+    ls_color-inv       = 0.
+    ls_color-fontcolor = 'FF000000'. " 000 000 000 Black
+    ls_color-fillcolor = 'FFF8E5C8'. " 246 229 204
+    INSERT ls_color INTO TABLE wt_colors.
+
+    ls_color-col       = 7.
+    ls_color-int       = 1.
+    ls_color-inv       = 0.
+    ls_color-fontcolor = 'FF000000'. " 000 000 000 Black
+    ls_color-fillcolor = 'FFFDBB71'. " 255 186 106
     INSERT ls_color INTO TABLE wt_colors.
 
   ENDMETHOD.
