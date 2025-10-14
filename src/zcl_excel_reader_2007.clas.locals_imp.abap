@@ -30,7 +30,7 @@
     PUBLIC SECTION.
       CLASS-METHODS create
         IMPORTING i_data TYPE xstring
-                  i_alternate_zip_class TYPE seoclsname
+                  i_alternate_zip_class TYPE clike
         RETURNING VALUE(r_zip) TYPE REF TO lcl_zip_archive
         RAISING zcx_excel.
       METHODS read REDEFINITION.
@@ -38,7 +38,7 @@
       DATA: alternate_zip TYPE REF TO object.
       METHODS constructor
         IMPORTING i_data TYPE xstring
-                  i_alternate_zip_class TYPE seoclsname
+                  i_alternate_zip_class TYPE clike
         RAISING zcx_excel.
   ENDCLASS.                    "lcl_alternate_zip_archive DEFINITION
 
