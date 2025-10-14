@@ -5,6 +5,7 @@ CLASS zcl_excel_comment DEFINITION
 
   PUBLIC SECTION.
 
+    "obsolet, do not use
     TYPES:
       BEGIN OF ty_box,
         left_column   TYPE i,
@@ -28,6 +29,7 @@ CLASS zcl_excel_comment DEFINITION
         bottom_row    TYPE i VALUE 15,
         bottom_offset TYPE i VALUE 9,
       END OF gc_default_box .
+    "end of obsolet
 
     METHODS constructor .
     METHODS get_bottom_offset
@@ -71,24 +73,36 @@ CLASS zcl_excel_comment DEFINITION
         !is_box TYPE ty_box .
     METHODS set_text
       IMPORTING
-        !ip_text          TYPE string
+        !ip_text          TYPE string OPTIONAL
         !ip_ref           TYPE string OPTIONAL
-        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
-        !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
-        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
-        !ip_top_offset    TYPE i DEFAULT gc_default_box-top_offset
-        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column
-        !ip_right_offset  TYPE i DEFAULT gc_default_box-right_offset
-        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row
-        !ip_bottom_offset TYPE i DEFAULT gc_default_box-bottom_offset.
+        !ip_topleft       TYPE string OPTIONAL
+        !ip_width         TYPE i OPTIONAL
+        !ip_height        TYPE i OPTIONAL
+        !ip_left_column   TYPE i DEFAULT gc_default_box-left_column   "do not use
+        !ip_left_offset   TYPE i OPTIONAL
+        !ip_top_row       TYPE i DEFAULT gc_default_box-top_row       "do not use
+        !ip_top_offset    TYPE i OPTIONAL
+        !ip_right_column  TYPE i DEFAULT gc_default_box-right_column  "do not use
+        !ip_right_offset  TYPE i OPTIONAL
+        !ip_bottom_row    TYPE i DEFAULT gc_default_box-bottom_row    "do not use
+        !ip_bottom_offset TYPE i OPTIONAL
+      RAISING
+        zcx_excel .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    DATA index TYPE string .
-    DATA ref TYPE string .
     DATA text TYPE string .
-    DATA gs_box TYPE ty_box .
+    DATA ref TYPE string .
+    DATA index TYPE string .
+    DATA topleft_column TYPE zexcel_cell_column .
+    DATA topleft_row TYPE zexcel_cell_row .
+    DATA width TYPE i .
+    DATA height TYPE i .
+    DATA left_offset TYPE i .
+    DATA top_offset TYPE i .
+    DATA right_offset TYPE i .
+    DATA bottom_offset TYPE i .
 
 ENDCLASS.
 
@@ -98,17 +112,40 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD constructor.
+    " If visibility in excel is set to on:
+    " The comment box will be placed at the specified coordinates starting at 0.
+    " If visibility is set to hidden (this is the ABAP2XLSX standard):
+    " The comment's position is adjusted right above to its referenced cell position.
+
+    CONSTANTS:
+      BEGIN OF lc_default_size, "resulting from previous defaults:
+        width  TYPE i VALUE 2,  "right_column - left_column (4 - 2)
+        height TYPE i VALUE 4,  "bottom_row - top_row (15 - 11)
+      END OF lc_default_size,
+      BEGIN OF lc_default_offset, "pixel offsets
+        left   TYPE i VALUE 15,
+        top    TYPE i VALUE 10,
+        right  TYPE i VALUE 31,
+        bottom TYPE i VALUE 9,
+      END OF lc_default_offset.
+
+    me->width         = lc_default_size-width.
+    me->height        = lc_default_size-height.
+    me->left_offset   = lc_default_offset-left.
+    me->top_offset    = lc_default_offset-top.
+    me->right_offset  = lc_default_offset-right.
+    me->bottom_offset = lc_default_offset-bottom.
 
   ENDMETHOD.
 
 
   METHOD get_bottom_offset.
-    rp_result = gs_box-bottom_offset.
+    rp_result = me->bottom_offset.
   ENDMETHOD.
 
 
   METHOD get_bottom_row.
-    rp_result = gs_box-bottom_row.
+    rp_result = me->topleft_row + me->height - 1.  "starting from 0
   ENDMETHOD.
 
 
@@ -118,12 +155,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_left_column.
-    rp_result = gs_box-left_column.
+    rp_result = me->topleft_column - 1.  "starting from 0
   ENDMETHOD.
 
 
   METHOD get_left_offset.
-    rp_result = gs_box-left_offset.
+    rp_result = me->left_offset.
   ENDMETHOD.
 
 
@@ -138,12 +175,12 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_right_column.
-    rp_result = gs_box-right_column.
+    rp_result = me->topleft_column + me->width - 1.  "starting from 0
   ENDMETHOD.
 
 
   METHOD get_right_offset.
-    rp_result = gs_box-right_offset.
+    rp_result = me->right_offset.
   ENDMETHOD.
 
 
@@ -153,48 +190,81 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
 
   METHOD get_top_offset.
-    rp_result = gs_box-top_offset.
+    rp_result = me->top_offset.
   ENDMETHOD.
 
 
   METHOD get_top_row.
-    rp_result = gs_box-top_row.
+    rp_result = me->topleft_row - 1.  "starting from 0
   ENDMETHOD.
 
 
   METHOD set_text.
     me->text = ip_text.
 
-    IF ip_ref IS SUPPLIED.
+    IF ip_ref IS NOT INITIAL AND ip_ref <> me->ref.
       me->ref = ip_ref.
+      IF ip_topleft IS INITIAL.
+        zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow  = me->ref
+                                                          IMPORTING e_column_int = me->topleft_column
+                                                                    e_row        = me->topleft_row ).
+        "By default the comment's box starts right above the referenced cell.
+        ADD 1 TO me->topleft_column.
+        IF me->topleft_row > 1.
+          SUBTRACT 1 FROM me->topleft_row.
+        ENDIF.
+      ENDIF.
     ENDIF.
 
-* Parameters of the containing box
-    DATA ls_box TYPE ty_box.
-    ls_box-left_column   = ip_left_column.
-    ls_box-left_offset   = ip_left_offset.
-    ls_box-top_row       = ip_top_row.
-    ls_box-top_offset    = ip_top_offset.
-    IF ip_right_column IS NOT INITIAL.
-      ls_box-right_column = ip_right_column.
-    ELSE.
-      ls_box-right_column = gc_default_box-right_column.
+    IF ip_topleft IS NOT INITIAL.
+      zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow  = ip_topleft
+                                                        IMPORTING e_column_int = me->topleft_column
+                                                                  e_row        = me->topleft_row ).
     ENDIF.
-    ls_box-right_offset = ip_right_offset.
-    IF ip_bottom_row IS NOT INITIAL.
-      ls_box-bottom_row = ip_bottom_row.
-    ELSE.
-      ls_box-bottom_row = gc_default_box-bottom_row.
+
+    IF ip_width > 0.
+      me->width = ip_width.
     ENDIF.
-    ls_box-bottom_offset = ip_bottom_offset.
-    set_box( ls_box ).
+    IF ip_height > 0.
+      me->height = ip_height.
+    ENDIF.
+
+    IF ip_left_offset IS SUPPLIED AND ip_left_offset >= 0.
+      me->left_offset = ip_left_offset.
+    ENDIF.
+    IF ip_top_offset IS SUPPLIED AND ip_top_offset >= 0.
+      me->top_offset = ip_top_offset.
+    ENDIF.
+    IF ip_right_offset IS SUPPLIED AND ip_right_offset >= 0.
+      me->right_offset = ip_right_offset.
+    ENDIF.
+    IF ip_bottom_offset IS SUPPLIED AND ip_bottom_offset >= 0.
+      me->bottom_offset = ip_bottom_offset.
+    ENDIF.
+
+    "Keeping backwards compatibility (do not use these obsolet parameters)
+    IF ip_left_column  IS SUPPLIED OR
+       ip_top_row      IS SUPPLIED OR
+       ip_right_column IS SUPPLIED OR
+       ip_bottom_row   IS SUPPLIED.
+      me->topleft_column = ip_left_column + 1.
+      me->topleft_row    = ip_top_row + 1.
+      me->width          = ip_right_column - ip_left_column.
+      me->height         = ip_bottom_row - ip_top_row.
+    ENDIF.
 
   ENDMETHOD.
 
   METHOD set_box.
-
-    gs_box = is_box.
-
+    "Keeping backwards compatibility (do not use this obsolet method)
+    me->topleft_column = is_box-left_column + 1.
+    me->topleft_row    = is_box-top_row + 1.
+    me->width          = is_box-right_column - is_box-left_column.
+    me->height         = is_box-bottom_row - is_box-top_row.
+    me->left_offset    = is_box-left_offset.
+    me->top_offset     = is_box-top_offset.
+    me->right_offset   = is_box-right_offset.
+    me->bottom_offset  = is_box-bottom_offset.
   ENDMETHOD.
 
 ENDCLASS.
