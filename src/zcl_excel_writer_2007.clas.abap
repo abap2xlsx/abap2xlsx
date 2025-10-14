@@ -2516,16 +2516,21 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
           lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
 
+    TYPES: BEGIN OF ty_temp,
+             row_index TYPE i,
+             str       TYPE string,
+           END OF ty_temp.
+
     DATA: lo_drawing      TYPE REF TO zcl_excel_drawing,
           lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           lv_value        TYPE string,
           lv_relation_id  TYPE i,
-          lt_temp         TYPE strtable,
+          lt_temp         TYPE STANDARD TABLE OF ty_temp WITH DEFAULT KEY,
           lt_drawings     TYPE zexcel_t_drawings.
 
-    FIELD-SYMBOLS: <fs_temp>     TYPE sstrtable,
+    FIELD-SYMBOLS: <fs_temp>     LIKE LINE OF lt_temp,
                    <fs_drawings> TYPE zexcel_s_drawings.
 
 
