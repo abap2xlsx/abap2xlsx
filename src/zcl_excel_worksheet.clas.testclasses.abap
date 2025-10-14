@@ -180,9 +180,9 @@ CLASS ltc_normalize_column_heading DEFINITION FOR TESTING
 
       assert
         IMPORTING
-          ip_scrtext_s   TYPE scrtext_s OPTIONAL
-          ip_scrtext_m   TYPE scrtext_m OPTIONAL
-          ip_scrtext_l   TYPE scrtext_l OPTIONAL
+          ip_scrtext_s   TYPE clike OPTIONAL
+          ip_scrtext_m   TYPE clike OPTIONAL
+          ip_scrtext_l   TYPE clike OPTIONAL
           ip_colname_exp TYPE zexcel_column_name OPTIONAL,
 
       assert_multi
