@@ -652,6 +652,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
   METHOD get_ixml_from_zip_archive.
 
+* The corresponding part of SAP note 2922674:
+* A workaround for the replacement of characters of the supplementary plane in SAP_BASIS 7.51 or lower is to convert
+* the UTF-8 value to ABAP variable type STRING using method CL_ABAP_CODEPAGE=>CONVERT_FROM and then to parse the
+* document using an iXML input stream created with factory method IF_IXML_STREAM_FACTORY=>CREATE_ISTREAM_STRING.
+* Do not use method IF_IXML_STREAM_FACTORY=>CREATE_ISTREAM_CSTRING in this context as it shows the unwanted behaviour.
+
     DATA: lv_content       TYPE xstring,
           lo_ixml          TYPE REF TO if_ixml,
           lo_streamfactory TYPE REF TO if_ixml_stream_factory,
@@ -665,7 +671,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lv_content        = me->get_from_zip_archive( i_filename ).
     lo_ixml           = cl_ixml=>create( ).
     lo_streamfactory  = lo_ixml->create_stream_factory( ).
-    lo_istream        = lo_streamfactory->create_istream_xstring( lv_content ).
+*   lo_istream        = lo_streamfactory->create_istream_xstring( lv_content ).
+    lo_istream        = lo_streamfactory->create_istream_string( cl_abap_codepage=>convert_from( lv_content ) ).
     r_ixml            = lo_ixml->create_document( ).
     lo_parser         = lo_ixml->create_parser( stream_factory = lo_streamfactory
                                                 istream        = lo_istream
