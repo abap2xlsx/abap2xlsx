@@ -164,24 +164,33 @@ CLASS zcl_excel DEFINITION
     DATA worksheets TYPE REF TO zcl_excel_worksheets .
   PRIVATE SECTION.
 
+*"* private components of class ZCL_EXCEL
+*"* do not include other source files here!!!
+    TYPES:
+      BEGIN OF mty_s_staticstyle,
+        complete_style  TYPE zexcel_s_cstyle_complete,
+        complete_stylex TYPE zexcel_s_cstylex_complete,
+        guid            TYPE zexcel_cell_style,
+      END OF mty_s_staticstyle .
+    TYPES:
+      mty_t_staticstyles TYPE HASHED TABLE OF mty_s_staticstyle WITH UNIQUE KEY complete_style complete_stylex .
+
     DATA autofilters TYPE REF TO zcl_excel_autofilters .
     DATA charts TYPE REF TO zcl_excel_drawings .
     DATA default_style TYPE zexcel_cell_style .
-*"* private components of class ZCL_EXCEL
-*"* do not include other source files here!!!
     DATA drawings TYPE REF TO zcl_excel_drawings .
     DATA ranges TYPE REF TO zcl_excel_ranges .
     DATA styles TYPE REF TO zcl_excel_styles .
-    DATA t_stylemapping1 TYPE zexcel_t_stylemapping1 .
-    DATA t_stylemapping2 TYPE zexcel_t_stylemapping2 .
+    DATA t_staticstyles TYPE mty_t_staticstyles .
+    DATA t_stylemapping TYPE zexcel_t_stylemapping2 .
     DATA theme TYPE REF TO zcl_excel_theme .
     DATA comments TYPE REF TO zcl_excel_comments .
 
     METHODS stylemapping_dynamic_style
       IMPORTING
-        !ip_style        TYPE REF TO zcl_excel_style
+        !io_style              TYPE REF TO zcl_excel_style
       RETURNING
-        VALUE(eo_style2) TYPE zexcel_s_stylemapping .
+        VALUE(rs_stylemapping) TYPE zexcel_s_stylemapping .
 ENDCLASS.
 
 
@@ -240,11 +249,10 @@ CLASS zcl_excel IMPLEMENTATION.
         io_clone_of = io_clone_of.
     styles->add( eo_style ).
 
-    DATA: style2 TYPE zexcel_s_stylemapping.
+    DATA ls_stylemapping LIKE LINE OF me->t_stylemapping.
 * Copy to new representations
-    style2 = stylemapping_dynamic_style( eo_style ).
-    INSERT style2 INTO TABLE t_stylemapping1.
-    INSERT style2 INTO TABLE t_stylemapping2.
+    ls_stylemapping = stylemapping_dynamic_style( eo_style ).
+    INSERT ls_stylemapping INTO TABLE me->t_stylemapping.
 * End of insertion # issue 139 - Dateretention of cellstyles
 
   ENDMETHOD.
@@ -265,21 +273,27 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD add_static_styles.
     " # issue 139
-    FIELD-SYMBOLS: <style1> LIKE LINE OF t_stylemapping1,
-                   <style2> LIKE LINE OF t_stylemapping2.
-    DATA: style TYPE REF TO zcl_excel_style.
+    DATA lo_style TYPE REF TO zcl_excel_style.
+    FIELD-SYMBOLS <ls_staticstyle> LIKE LINE OF me->t_staticstyles.
 
-    LOOP AT me->t_stylemapping1 ASSIGNING <style1> USING KEY added_to_iterator WHERE added_to_iterator = abap_false.
-      READ TABLE me->t_stylemapping2 ASSIGNING <style2> WITH TABLE KEY guid = <style1>-guid.
-      CHECK sy-subrc = 0.  " Should always be true since these tables are being filled parallel
+    "Loop at static styles in order of insertion
+    LOOP AT me->t_staticstyles ASSIGNING <ls_staticstyle>.
 
-      style = me->add_new_style( <style1>-guid ).
+      "Delete static style and its GUID from stylemapping
+      DELETE TABLE me->t_stylemapping WITH TABLE KEY guid = <ls_staticstyle>-guid.
 
-      zcl_excel_common=>recursive_struct_to_class( EXPORTING i_source  = <style1>-complete_style
-                                                             i_sourcex = <style1>-complete_stylex
-                                                   CHANGING  e_target  = style ).
+      "Add new dynamic style using static style's GUID again
+      lo_style = me->add_new_style( <ls_staticstyle>-guid ).
 
+      "Initialize the dynamic style using static style's data
+      zcl_excel_common=>recursive_struct_to_class( EXPORTING i_source  = <ls_staticstyle>-complete_style
+                                                             i_sourcex = <ls_staticstyle>-complete_stylex
+                                                   CHANGING  e_target  = lo_style ).
     ENDLOOP.
+
+    "Now all styles are dynamic
+    CLEAR me->t_staticstyles.
+
   ENDMETHOD.
 
 
@@ -454,22 +468,26 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD get_static_cellstyle_guid.
     " # issue 139
-    DATA: style LIKE LINE OF me->t_stylemapping1.
+    DATA: ls_staticstyle  LIKE LINE OF me->t_staticstyles,
+          ls_stylemapping LIKE LINE OF me->t_stylemapping.
 
-    READ TABLE me->t_stylemapping1 INTO style
-      WITH TABLE KEY dynamic_style_guid = style-guid  " no dynamic style  --> look for initial guid here
-                     complete_style     = ip_cstyle_complete
-                     complete_stylex    = ip_cstylex_complete.
+    READ TABLE me->t_staticstyles INTO ls_staticstyle
+               WITH TABLE KEY complete_style  = ip_cstyle_complete
+                              complete_stylex = ip_cstylex_complete.
     IF sy-subrc <> 0.
-      style-complete_style  = ip_cstyle_complete.
-      style-complete_stylex = ip_cstylex_complete.
-      style-guid = zcl_excel_obsolete_func_wrap=>guid_create( ). " ins issue #379 - replacement for outdated function call
-      INSERT style INTO TABLE me->t_stylemapping1.
-      INSERT style INTO TABLE me->t_stylemapping2.
+      "Add new static style
+      ls_staticstyle-complete_style  = ip_cstyle_complete.
+      ls_staticstyle-complete_stylex = ip_cstylex_complete.
+      ls_staticstyle-guid = zcl_excel_obsolete_func_wrap=>guid_create( ). " ins issue #379 - replacement for outdated function call
+      INSERT ls_staticstyle INTO TABLE me->t_staticstyles.
 
+      "Add corresponding stylemapping
+      MOVE-CORRESPONDING ls_staticstyle TO ls_stylemapping.
+      INSERT ls_stylemapping INTO TABLE me->t_stylemapping.
     ENDIF.
 
-    ep_guid = style-guid.
+    ep_guid = ls_staticstyle-guid.
+
   ENDMETHOD.
 
 
@@ -482,17 +500,12 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD get_style_from_guid.
 
-    DATA: lo_style    TYPE REF TO zcl_excel_style,
-          lo_iterator TYPE REF TO zcl_excel_collection_iterator.
+    FIELD-SYMBOLS <ls_stylemapping> LIKE LINE OF me->t_stylemapping.
 
-    lo_iterator = styles->get_iterator( ).
-    WHILE lo_iterator->has_next( ) = abap_true.
-      lo_style ?= lo_iterator->get_next( ).
-      IF lo_style->get_guid( ) = ip_guid.
-        eo_style = lo_style.
-        RETURN.
-      ENDIF.
-    ENDWHILE.
+    READ TABLE me->t_stylemapping ASSIGNING <ls_stylemapping> WITH TABLE KEY guid = ip_guid.
+    IF sy-subrc = 0 AND <ls_stylemapping>-added_to_iterator = abap_true.
+      eo_style = <ls_stylemapping>-o_style.
+    ENDIF.
 
   ENDMETHOD.
 
@@ -524,16 +537,14 @@ CLASS zcl_excel IMPLEMENTATION.
 
 
   METHOD get_style_to_guid.
-    DATA: lo_style TYPE REF TO zcl_excel_style.
     " # issue 139
-    READ TABLE me->t_stylemapping2 INTO ep_stylemapping WITH TABLE KEY guid = ip_guid.
+    READ TABLE me->t_stylemapping INTO ep_stylemapping WITH TABLE KEY guid = ip_guid.
     IF sy-subrc <> 0.
       zcx_excel=>raise_text( 'GUID not found' ).
     ENDIF.
 
-    IF ep_stylemapping-dynamic_style_guid IS NOT INITIAL.
-      lo_style = me->get_style_from_guid( ip_guid ).
-      zcl_excel_common=>recursive_class_to_struct( EXPORTING i_source = lo_style
+    IF ep_stylemapping-added_to_iterator = abap_true.
+      zcl_excel_common=>recursive_class_to_struct( EXPORTING i_source =  ep_stylemapping-o_style
                                                    CHANGING  e_target =  ep_stylemapping-complete_style
                                                              e_targetx = ep_stylemapping-complete_stylex ).
     ENDIF.
@@ -649,9 +660,9 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD stylemapping_dynamic_style.
     " # issue 139
-    eo_style2-dynamic_style_guid  = ip_style->get_guid( ).
-    eo_style2-guid                = eo_style2-dynamic_style_guid.
-    eo_style2-added_to_iterator   = abap_true.
+    rs_stylemapping-guid              = io_style->get_guid( ).
+    rs_stylemapping-o_style           = io_style.
+    rs_stylemapping-added_to_iterator = abap_true.
 
 * don't care about attributes here, since this data may change
 * dynamically
