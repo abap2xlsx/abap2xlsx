@@ -1639,6 +1639,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD structure_case.
     DATA: lt_comp_str        TYPE abap_component_tab.
+    FIELD-SYMBOLS: <ls_comp_str> TYPE abap_componentdescr.
 
     CASE is_component-type->kind.
       WHEN cl_abap_typedescr=>kind_elem. "E Elementary Type
@@ -1647,6 +1648,14 @@ CLASS zcl_excel_common IMPLEMENTATION.
         INSERT is_component INTO TABLE xt_components.
       WHEN cl_abap_typedescr=>kind_struct. "S Structure
         lt_comp_str = structure_recursive( is_component = is_component ).
+
+        IF is_component-suffix IS NOT INITIAL.
+          " When the structure has a suffix, all fields in the structure should finish with the suffix
+          LOOP AT lt_comp_str ASSIGNING <ls_comp_str>.
+            <ls_comp_str>-name = |{ <ls_comp_str>-name }{ is_component-suffix }|.
+          ENDLOOP.
+        ENDIF.
+
         INSERT LINES OF lt_comp_str INTO TABLE xt_components.
       WHEN OTHERS. "cl_abap_typedescr=>kind_ref or  cl_abap_typedescr=>kind_class or  cl_abap_typedescr=>kind_intf.
 * We skip it. for now.
