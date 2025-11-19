@@ -29,6 +29,13 @@ CLASS zcl_excel_comment DEFINITION
         bottom_offset TYPE i VALUE 9,
       END OF gc_default_box .
 
+    CLASS-METHODS class_constructor .
+    CLASS-METHODS get_default_font
+      RETURNING
+        VALUE(rs_font) TYPE zexcel_s_style_font .
+    CLASS-METHODS set_default_font
+      IMPORTING
+        !is_font TYPE zexcel_s_style_font .
     METHODS constructor .
     METHODS get_bottom_offset
       RETURNING
@@ -57,6 +64,9 @@ CLASS zcl_excel_comment DEFINITION
     METHODS get_right_offset
       RETURNING
         VALUE(rp_result) TYPE i .
+    METHODS get_rtf
+      RETURNING
+        VALUE(rt_rtf) TYPE zexcel_t_rtf .
     METHODS get_text
       RETURNING
         VALUE(rp_text) TYPE string .
@@ -73,6 +83,9 @@ CLASS zcl_excel_comment DEFINITION
       IMPORTING
         !ip_text          TYPE string
         !ip_ref           TYPE string OPTIONAL
+        !is_font          TYPE zexcel_s_style_font OPTIONAL
+        !it_rtf           TYPE zexcel_t_rtf OPTIONAL
+        !ip_no_def_font   TYPE abap_bool OPTIONAL
         !ip_left_column   TYPE i DEFAULT gc_default_box-left_column
         !ip_left_offset   TYPE i DEFAULT gc_default_box-left_offset
         !ip_top_row       TYPE i DEFAULT gc_default_box-top_row
@@ -89,12 +102,30 @@ CLASS zcl_excel_comment DEFINITION
     DATA ref TYPE string .
     DATA text TYPE string .
     DATA gs_box TYPE ty_box .
+    CLASS-DATA s_font TYPE zexcel_s_style_font .
+    DATA mt_rtf TYPE zexcel_t_rtf .
 
 ENDCLASS.
 
 
 
 CLASS zcl_excel_comment IMPLEMENTATION.
+
+
+  METHOD class_constructor.
+    DATA ls_font LIKE s_font.
+
+    ls_font-name          = 'Tahoma'.
+    ls_font-bold          = 'X'.
+    ls_font-size          = 9.
+    ls_font-color-indexed = 81.
+    ls_font-color-theme   = zcl_excel_style_color=>c_theme_not_set.
+    ls_font-scheme        = zcl_excel_style_font=>c_scheme_none.
+    ls_font-family        = zcl_excel_style_font=>c_family_swiss.
+
+    set_default_font( ls_font ).
+
+  ENDMETHOD.
 
 
   METHOD constructor.
@@ -109,6 +140,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
 
   METHOD get_bottom_row.
     rp_result = gs_box-bottom_row.
+  ENDMETHOD.
+
+
+  METHOD get_default_font.
+    rs_font = s_font.
   ENDMETHOD.
 
 
@@ -147,6 +183,11 @@ CLASS zcl_excel_comment IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD get_rtf.
+    rt_rtf = me->mt_rtf.
+  ENDMETHOD.
+
+
   METHOD get_text.
     rp_text = me->text.
   ENDMETHOD.
@@ -162,8 +203,49 @@ CLASS zcl_excel_comment IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD set_default_font.
+    IF is_font IS NOT INITIAL.
+      s_font = is_font.
+    ENDIF.
+  ENDMETHOD.
+
+
   METHOD set_text.
-    me->text = ip_text.
+    CONSTANTS     lc_nofont LIKE s_font VALUE IS INITIAL.
+    DATA          ls_rtf    LIKE LINE OF mt_rtf.
+    FIELD-SYMBOLS <ls_font> LIKE s_font.
+
+    IF is_font IS SUPPLIED.
+      ASSIGN is_font TO <ls_font>.
+    ELSEIF ip_no_def_font = abap_true.
+      ASSIGN lc_nofont TO <ls_font>.
+    ELSE.
+      ASSIGN s_font TO <ls_font>.
+    ENDIF.
+
+    IF ip_text IS SUPPLIED AND ip_text <> me->text.
+      me->text = ip_text.
+      CLEAR me->mt_rtf.
+      IF me->text IS NOT INITIAL AND
+         it_rtf IS INITIAL.
+        "Insert default RTF entry only
+        ls_rtf-offset   = 0.
+        ls_rtf-length   = strlen( me->text ).
+        ls_rtf-font     = <ls_font>.
+        ls_rtf-preserve = abap_true.
+        APPEND ls_rtf TO me->mt_rtf.
+      ENDIF.
+    ENDIF.
+
+    IF it_rtf IS NOT INITIAL.
+      me->mt_rtf = it_rtf.
+      TRY.
+          zcl_excel_common=>check_rtf( EXPORTING ip_value    = me->text
+                                                 is_font     = <ls_font>
+                                        CHANGING ct_rtf      = me->mt_rtf ).
+        CATCH zcx_excel.
+      ENDTRY.
+    ENDIF.
 
     IF ip_ref IS SUPPLIED.
       me->ref = ip_ref.
@@ -190,6 +272,7 @@ CLASS zcl_excel_comment IMPLEMENTATION.
     set_box( ls_box ).
 
   ENDMETHOD.
+
 
   METHOD set_box.
 
