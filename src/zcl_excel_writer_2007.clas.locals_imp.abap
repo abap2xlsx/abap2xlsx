@@ -306,10 +306,9 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
       lo_element_2 TYPE REF TO if_ixml_element,
       lo_element_3 TYPE REF TO if_ixml_element.
 
-    DATA: lv_value                    TYPE string,
-          lv_freeze_cell_row          TYPE zexcel_cell_row,
-          lv_freeze_cell_column       TYPE zexcel_cell_column,
-          lv_freeze_cell_column_alpha TYPE zexcel_cell_column_alpha.
+    DATA: lv_value              TYPE string,
+          lv_freeze_cell_row    TYPE zexcel_cell_row,
+          lv_freeze_cell_column TYPE zexcel_cell_column.
 
 
     lo_element = o_document->create_simple_element( name   = lc_xml_node_sheetviews
@@ -1827,6 +1826,482 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     o_excel_ref->create_xl_sheet_ignored_errors( io_worksheet    = o_worksheet
                                                  io_document     = o_document
                                                  io_element_root = o_element_root ).
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+CLASS lcl_vmldrawing_for_comments DEFINITION.
+  PUBLIC SECTION.
+    METHODS:
+      constructor,
+      create
+        IMPORTING
+          io_comments        TYPE REF TO zcl_excel_comments
+        RETURNING
+          VALUE(eo_document) TYPE REF TO if_ixml_document
+        RAISING
+          zcx_excel.
+  PRIVATE SECTION.
+    CONSTANTS:
+      BEGIN OF gc_ns,
+        microsoft_office TYPE string VALUE `urn:schemas-microsoft-com:office:office`,
+        vml              TYPE string VALUE `urn:schemas-microsoft-com:vml`,
+        excel            TYPE string VALUE `urn:schemas-microsoft-com:office:excel`,
+      END OF gc_ns.
+
+    TYPES:
+      BEGIN OF ty_shape_node,
+        row     TYPE i,
+        column  TYPE i,
+        node    TYPE REF TO if_ixml_element,
+        comment TYPE REF TO zcl_excel_comment,
+        new     TYPE flag,
+      END OF ty_shape_node,
+      ty_shape_nodes TYPE STANDARD TABLE OF ty_shape_node
+        WITH NON-UNIQUE DEFAULT KEY
+        WITH NON-UNIQUE SORTED KEY position
+          COMPONENTS row column.
+
+    DATA:
+      ixml              TYPE REF TO if_ixml,
+      go_document       TYPE REF TO if_ixml_document,
+      go_root_element   TYPE REF TO if_ixml_element,
+      go_shape_template TYPE REF TO if_ixml_element.
+
+    METHODS: get_comment_anchor
+      IMPORTING
+        io_comment       TYPE REF TO zcl_excel_comment
+      RETURNING
+        VALUE(ev_anchor) TYPE string,
+      number2string
+        IMPORTING
+          ip_number        TYPE numeric
+        RETURNING
+          VALUE(ep_string) TYPE string,
+      create_root_element
+        IMPORTING
+          io_document            TYPE REF TO if_ixml_document
+        RETURNING
+          VALUE(eo_element_root) TYPE REF TO if_ixml_element,
+      create_shapelayout,
+      create_shapetype,
+      create_shape_for_comment
+        IMPORTING
+          io_comment              TYPE REF TO zcl_excel_comment
+          iv_index                TYPE i
+        RETURNING
+          VALUE(eo_element_shape) TYPE REF TO if_ixml_element
+        RAISING
+          zcx_excel,
+      get_shape_nodes
+        RETURNING
+          VALUE(et_shape_nodes) TYPE ty_shape_nodes,
+      create_shapes_for_comments
+        IMPORTING
+          io_comments TYPE REF TO zcl_excel_comments
+        RAISING
+          zcx_excel,
+      compare_shapes_with_comments
+        IMPORTING
+          io_comments TYPE REF TO zcl_excel_comments
+        CHANGING
+          ct_shapes   TYPE lcl_vmldrawing_for_comments=>ty_shape_nodes
+        RAISING
+          zcx_excel,
+      actualize_anchor_in_xml
+        IMPORTING
+          ct_shapes TYPE lcl_vmldrawing_for_comments=>ty_shape_nodes,
+      actualize_shapes_in_xmldoc
+        IMPORTING
+          ct_shapes TYPE lcl_vmldrawing_for_comments=>ty_shape_nodes,
+      create_xml_document
+        IMPORTING
+          io_comments        TYPE REF TO zcl_excel_comments
+        RETURNING
+          VALUE(eo_document) TYPE REF TO if_ixml_document,
+      actualize_shape_ids
+        IMPORTING
+          it_shapes TYPE lcl_vmldrawing_for_comments=>ty_shape_nodes,
+      create_shape_template
+        RETURNING
+          VALUE(eo_shape) TYPE REF TO if_ixml_element.
+
+ENDCLASS.
+CLASS lcl_vmldrawing_for_comments IMPLEMENTATION.
+
+  METHOD create.
+
+* STEP 1: Create XML target document
+    eo_document = create_xml_document( io_comments ).
+
+* STEP 2: Create <o:shapeLayout>
+    create_shapelayout( ).
+
+* STEP 3: Create <v:shapetype>
+    create_shapetype( ).
+
+* STEP 4: Create a <v:shape> for each new comment
+    create_shapes_for_comments( io_comments  ).
+
+  ENDMETHOD.
+
+  METHOD create_shapelayout.
+
+* Dont' touch an eventually existing shapelayout
+    IF go_document->find_from_name_ns(
+      name = `shapelayout`
+      uri  = gc_ns-microsoft_office
+    ) IS NOT BOUND.
+
+      DATA lo_element_shapelayout TYPE REF TO if_ixml_element.
+      DATA lo_element_idmap TYPE REF TO if_ixml_element.
+
+* TO-DO: management of several authors
+      lo_element_shapelayout = go_document->create_simple_element(
+        name   = `o:shapelayout`
+        parent = go_root_element ).
+
+      lo_element_shapelayout->set_attribute_ns( name  = `v:ext`
+                                                value = `edit` ).
+
+      lo_element_idmap = go_document->create_simple_element( name   = `o:idmap`
+                                                             parent = lo_element_shapelayout ).
+      lo_element_idmap->set_attribute_ns( name  = `v:ext`  value = `edit` ).
+      lo_element_idmap->set_attribute_ns( name  = `data`  value = `1` ).
+
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD create_shapetype.
+
+    DATA lo_element_shapetype TYPE REF TO if_ixml_element.
+    DATA lo_element_stroke TYPE REF TO if_ixml_element.
+    DATA lo_element_path TYPE REF TO if_ixml_element.
+
+* Dont' touch an eventually existing shapetype
+    IF go_document->find_from_name_ns(
+      name = `shapetype`
+      uri  = gc_ns-vml
+    ) IS NOT BOUND.
+
+      lo_element_shapetype = go_document->create_simple_element_ns(
+        name   = `shapetype`
+        prefix = `v`
+        parent = go_root_element ).
+
+      lo_element_shapetype->set_attribute_ns( name  = `id`         value = `_x0000_t202` ).
+      lo_element_shapetype->set_attribute_ns( name  = `coordsize`  value = `21600,21600` ).
+      lo_element_shapetype->set_attribute_ns( name  = `o:spt`      value = `202` ).
+      lo_element_shapetype->set_attribute_ns( name  = `path`       value = `m,l,21600r21600,l21600,xe` ).
+
+      lo_element_stroke = go_document->create_simple_element_ns( name   = `stroke`
+                                                                 prefix = `v`
+                                                                 parent = lo_element_shapetype ).
+      lo_element_stroke->set_attribute_ns( name  = `joinstyle`   value = `miter` ).
+
+      lo_element_path   = go_document->create_simple_element_ns( name   = `path`
+                                                                 prefix = `v`
+                                                                 parent = lo_element_shapetype ).
+      lo_element_path->set_attribute_ns( name  = `gradientshapeok` value = `t` ).
+      lo_element_path->set_attribute_ns( name  = `o:connecttype`   value = `rect` ).
+
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD get_shape_nodes.
+
+    DATA:
+      lo_shape_nodes TYPE REF TO if_ixml_node_iterator,
+      lo_client_data TYPE REF TO if_ixml_element,
+      lo_row         TYPE REF TO if_ixml_element,
+      lo_column      TYPE REF TO if_ixml_element,
+      ls_shape       TYPE  ty_shape_node.
+
+    lo_shape_nodes = go_document->get_elements_by_tag_name_ns(
+      name = `shape`
+      uri  = gc_ns-vml
+    )->create_iterator(  ).
+
+    DO.
+      ls_shape-node ?= lo_shape_nodes->get_next(  ).
+      IF ls_shape-node IS NOT BOUND.
+        EXIT.
+      ENDIF.
+      lo_client_data = ls_shape-node->find_from_name_ns(
+        name = `ClientData`
+        uri  = gc_ns-excel
+      ).
+
+      IF lo_client_data IS BOUND.
+        lo_row = lo_client_data->find_from_name_ns(
+          name = `Row`
+          uri  = gc_ns-excel
+        ).
+        IF lo_row IS BOUND.
+          ls_shape-row = lo_row->get_value(  ).
+        ENDIF.
+        lo_column = lo_client_data->find_from_name_ns(
+          name = `Column`
+          uri  = gc_ns-excel
+        ).
+        IF lo_column IS BOUND.
+          ls_shape-column = lo_column->get_value(  ).
+        ENDIF.
+      ENDIF.
+      APPEND ls_shape TO et_shape_nodes.
+      CLEAR ls_shape.
+    ENDDO.
+
+  ENDMETHOD.
+
+  METHOD create_shapes_for_comments.
+
+    DATA lt_shapes TYPE ty_shape_nodes.
+    lt_shapes = get_shape_nodes(  ).
+
+    compare_shapes_with_comments(
+      EXPORTING
+        io_comments = io_comments
+      CHANGING
+        ct_shapes = lt_shapes ).
+
+    actualize_anchor_in_xml( lt_shapes ).
+
+    actualize_shape_ids( lt_shapes ).
+
+    actualize_shapes_in_xmldoc( lt_shapes ).
+
+  ENDMETHOD.
+
+  METHOD create_shape_for_comment.
+
+    IF go_shape_template IS NOT BOUND.
+      go_shape_template = create_shape_template( ).
+    ENDIF.
+
+    eo_element_shape ?= go_shape_template->clone(  ).
+
+    DATA:
+      lv_column TYPE i,
+      lv_row    TYPE i.
+    zcl_excel_common=>convert_columnrow2column_a_row( EXPORTING i_columnrow  = io_comment->get_ref( )
+                                                      IMPORTING e_column_int = lv_column
+                                                                e_row        = lv_row ).
+    DATA:
+      lo_client TYPE REF TO if_ixml_element,
+      lo_row    TYPE REF TO if_ixml_element,
+      lo_column TYPE REF TO if_ixml_element.
+
+    lo_client = eo_element_shape->find_from_name_ns( name = `ClientData` uri = gc_ns-excel ).
+    IF lo_client IS BOUND.
+      lo_row = lo_client->find_from_name_ns( name = `Row` uri = gc_ns-excel ).
+      IF lo_row IS BOUND.
+        lo_row->set_value( number2string( lv_row - 1 ) ).
+      ENDIF.
+      lo_column = lo_client->find_from_name_ns( name = `Column` uri = gc_ns-excel ).
+      IF lo_column IS BOUND.
+        lo_column->set_value( number2string( lv_column - 1 ) ).
+      ENDIF.
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD compare_shapes_with_comments.
+
+* Uses the <x:Row> / <x:Column> data of the <v:shape> elements
+* to identify the corresponding comment by its "ref"
+* (which is the position of the cell to which the comment refers)
+* For new comments, add a completely new shape element
+
+    FIELD-SYMBOLS <ls_shape> TYPE lcl_vmldrawing_for_comments=>ty_shape_node.
+
+    DATA:
+      eo_comment  TYPE REF TO zcl_excel_comment,
+      es_shape    TYPE ty_shape_node,
+      lo_iterator TYPE REF TO zcl_excel_collection_iterator,
+      lv_index    TYPE i,
+      lv_col      TYPE i,
+      lv_row      TYPE i,
+      lv_ref      TYPE string.
+
+    lo_iterator = io_comments->get_iterator( ).
+    WHILE lo_iterator->has_next( ) EQ abap_true.
+      lv_index = sy-index.
+      eo_comment ?= lo_iterator->get_next( ).
+      lv_ref = eo_comment->get_ref(  ).
+      zcl_excel_common=>convert_columnrow2column_a_row(
+        EXPORTING
+          i_columnrow  = lv_ref
+        IMPORTING
+          e_column_int = lv_col
+          e_row        = lv_row
+      ).
+
+      CLEAR es_shape.
+      es_shape-column = lv_col - 1.  " Column is zero-based in the vml
+      es_shape-row    = lv_row - 1.  " Row is zero-based in the vml
+      READ TABLE ct_shapes
+        ASSIGNING <ls_shape>
+        FROM es_shape USING KEY position.
+      IF sy-subrc NE 0.
+        APPEND es_shape TO ct_shapes ASSIGNING <ls_shape>.
+        <ls_shape>-new  = abap_true.
+        <ls_shape>-node = create_shape_for_comment(
+          io_comment = eo_comment
+          iv_index = lv_index ).
+      ENDIF.
+      <ls_shape>-comment = eo_comment.
+
+    ENDWHILE.
+
+  ENDMETHOD.
+
+  METHOD actualize_anchor_in_xml.
+
+* Read the current anchor value from the comment,
+* and update the corresponding <x:Anchor> element in the VML by this value
+
+    FIELD-SYMBOLS:
+      <ls_shape> TYPE ty_shape_node.
+    DATA:
+      lo_anchor TYPE REF TO if_ixml_element,
+      lo_client TYPE REF TO if_ixml_element,
+      lv_anchor TYPE string.
+    LOOP AT ct_shapes ASSIGNING <ls_shape>
+      WHERE comment IS BOUND.
+      lv_anchor = get_comment_anchor( <ls_shape>-comment ).
+      lo_client = <ls_shape>-node->find_from_name_ns( name = `ClientData` uri = gc_ns-excel ).
+      IF lo_client IS BOUND.
+        lo_anchor = lo_client->find_from_name_ns( name = `Anchor` uri = gc_ns-excel ).
+        IF lo_anchor IS BOUND.
+          lo_anchor->set_value( lv_anchor ).
+        ENDIF.
+      ENDIF.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD actualize_shapes_in_xmldoc.
+
+* Insert new <v:shape> nodes,
+* and remove obsolete <v:shape> nodes (whose comment has been deleted)
+
+    FIELD-SYMBOLS:
+      <ls_shape> TYPE ty_shape_node.
+    LOOP AT ct_shapes ASSIGNING <ls_shape>.
+      IF <ls_shape>-new EQ abap_true.
+        go_root_element->append_child( <ls_shape>-node ).
+      ELSEIF <ls_shape>-comment IS NOT BOUND.
+        <ls_shape>-node->remove_node(  ).
+      ENDIF.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD create_xml_document.
+
+    eo_document = go_document = ixml->create_document( ).
+    IF io_comments->gv_full_vml IS INITIAL.
+* Create a root element with empty content
+      go_root_element = create_root_element( go_document ).
+    ELSE.
+* If a VML already existed from a READ, use it (may contain additional and/or different stuff)
+      CALL TRANSFORMATION id
+        SOURCE XML io_comments->gv_full_vml
+        RESULT XML go_document.
+      go_root_element = go_document->get_root_element(  ).
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD create_root_element.
+
+    eo_element_root = io_document->create_simple_element( name   = `xml` parent = io_document ).
+    eo_element_root->set_attribute_ns( name  = `xmlns:v`  value = gc_ns-vml ).
+    eo_element_root->set_attribute_ns( name  = `xmlns:o`  value = gc_ns-microsoft_office ).
+    eo_element_root->set_attribute_ns( name  = `xmlns:x`  value = gc_ns-excel ).
+
+  ENDMETHOD.
+
+  METHOD get_comment_anchor.
+    ev_anchor =  number2string( io_comment->get_left_column( ) )
+         && `, ` && number2string( io_comment->get_left_offset( ) )
+         && `, ` && number2string( io_comment->get_top_row( ) )
+         && `, ` && number2string( io_comment->get_top_offset( ) )
+         && `, ` && number2string( io_comment->get_right_column( ) )
+         && `, ` && number2string( io_comment->get_right_offset( ) )
+         && `, ` && number2string( io_comment->get_bottom_row( ) )
+         && `, ` && number2string( io_comment->get_bottom_offset( ) ).
+    CONDENSE ev_anchor.
+  ENDMETHOD.
+
+  METHOD number2string.
+    ep_string = ip_number.
+    CONDENSE ep_string.
+  ENDMETHOD.
+
+  METHOD constructor.
+    ixml = cl_ixml=>create(  ).
+  ENDMETHOD.
+
+  METHOD actualize_shape_ids.
+    DATA:
+      lv_index   TYPE i VALUE 1,
+      lv_attr_id TYPE string.
+    FIELD-SYMBOLS:
+       <ls_shape> TYPE ty_shape_node.
+    LOOP AT it_shapes ASSIGNING <ls_shape> WHERE comment IS BOUND.
+      lv_attr_id = number2string( 1026 + lv_index ).
+      CONCATENATE `_x0000_s` lv_attr_id INTO lv_attr_id.
+      <ls_shape>-node->set_attribute_ns( name  = `id` value = lv_attr_id ).
+      ADD 1 TO lv_index.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD create_shape_template.
+
+    DATA lv_style TYPE string.
+    lv_style =
+      `position:absolute;`    &&
+      `margin-left:182.25pt;` &&
+      `margin-top:1.5pt;`     &&
+      `width:219.75pt;`       &&
+      `height:151.5pt;`       &&
+      `z-index:1;`            &&
+      `visibility:hidden;`    &&
+      `mso-wrap-style:tight;`.
+
+    DATA lv_shape TYPE string.
+    lv_shape =
+      `<xml xmlns:o ="` && gc_ns-microsoft_office && `" xmlns:v="` && gc_ns-vml && `" xmlns:x="` && gc_ns-excel && `">` &&
+      `  <v:shape fillcolor="infoBackground [80]" id="_x0000_s1027" o:insetmode="auto"`    &&
+      `           strokecolor="#217346" type="#_x0000_t202" style="` && lv_style && `">`   &&
+      `    <v:fill color2="infoBackground [80]"/>`                                         &&
+      `    <v:shadow color="none [81]" obscured="t"/>`                                     &&
+      `    <v:path o:connecttype="none"/>`                                                 &&
+      `    <v:textbox style="mso-direction-alt:auto">`                                     &&
+      `      <div style="text-align:left"/>`                                               &&
+      `    </v:textbox>`                                                                   &&
+      `    <x:ClientData ObjectType="Note">`                                               &&
+      `      <x:MoveWithCells/>`                                                           &&
+      `      <x:SizeWithCells/>`                                                           &&
+      `      <x:Anchor/>`                                                                  &&
+      `      <x:AutoFill>False</x:AutoFill>`                                               &&
+      `      <x:Row/>`                                                                     &&
+      `      <x:Column/>`                                                                  &&
+      `    </x:ClientData>`                                                                &&
+      `  </v:shape>`                                                                       &&
+      `</xml>`.
+
+    DATA lo_shapedoc TYPE REF TO if_ixml_document.
+    lo_shapedoc = ixml->create_document(  ).
+    CALL TRANSFORMATION id
+      SOURCE XML lv_shape
+      RESULT XML lo_shapedoc.
+    eo_shape = lo_shapedoc->get_root_element(  )->find_from_name_ns( name = `shape` uri = gc_ns-vml ).
 
   ENDMETHOD.
 
