@@ -904,9 +904,9 @@ CLASS zcl_excel_ole IMPLEMENTATION.
         error = l_error.
 
 
-    DESCRIBE TABLE lt_sema LINES datareal.
+    datareal = lines( lt_sema ).
     DESCRIBE TABLE <f_excel_tab> LINES datac.
-    DESCRIBE TABLE lt_vkey LINES vkeycount.
+    vkeycount = lines( lt_vkey ).
 
     IF datac = 0.
       RAISE inv_data_range.
@@ -993,7 +993,7 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 
 * calculate row position of data table
 
-    DESCRIBE TABLE it_listheader LINES li_commentary_rows.
+    li_commentary_rows = lines( it_listheader ).
 
 * if grid had title, add 1 empy line between title and table
 
@@ -1745,10 +1745,10 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 * collect vertical cells (col)  with the same number of decimal places
 * to increase perfomance in currency cell format
 
-    DESCRIBE TABLE currcells LINES lines.
+    lines = lines( currcells ).
     lines = lines - 1.
     DO lines TIMES.
-      DESCRIBE TABLE currcells LINES innerlines.
+      innerlines = lines( currcells ).
       innerlines = innerlines - 1.
       SORT currcells BY left top.
       CLEAR found.
@@ -1780,10 +1780,10 @@ CLASS zcl_excel_ole IMPLEMENTATION.
 * collect horizontal cells (row) with the same number of decimal places
 * to increase perfomance in currency cell format
 
-    DESCRIBE TABLE currcells LINES lines.
+    lines = lines( currcells ).
     lines = lines - 1.
     DO lines TIMES.
-      DESCRIBE TABLE currcells LINES innerlines.
+      innerlines = lines( currcells ).
       innerlines = innerlines - 1.
       SORT currcells BY top left.
       CLEAR found.

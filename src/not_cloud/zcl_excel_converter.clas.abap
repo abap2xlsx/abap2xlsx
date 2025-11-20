@@ -362,7 +362,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     ls_settings-top_left_row     = w_row_int.
     ls_settings-show_row_stripes = ws_layout-is_stripped.
 
-    DESCRIBE TABLE  wt_fieldcatalog  LINES lv_line.
+    lv_line = lines( wt_fieldcatalog ).
     lv_line = lv_line + 1 + w_col_int.
     ls_settings-bottom_right_column = zcl_excel_common=>convert_column2alpha( ip_column = lv_line ).
 
@@ -1213,7 +1213,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
 
     ASSIGN wo_data->* TO <fs_tab> .
 
-    DESCRIBE TABLE wt_fieldcatalog LINES l_cells.
+    l_cells = lines( wt_fieldcatalog ).
     DESCRIBE TABLE <fs_tab> LINES l_count.
     l_cells = l_cells * l_count.
 
@@ -1344,7 +1344,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     CLEAR: wt_sort_values,
            wt_subtotal_rows.
 
-    DESCRIBE TABLE wt_fieldcatalog LINES l_cells.
+    l_cells = lines( wt_fieldcatalog ).
     DESCRIBE TABLE <fs_tab> LINES l_count.
     l_cells = l_cells * l_count.
 
@@ -1367,7 +1367,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     ENDIF.
     l_row_int = i_row_int.
 * Let's check if we need to hide a sort level.
-    DESCRIBE TABLE wt_sort_values LINES l_line.
+    l_line = lines( wt_sort_values ).
     IF  l_line <= 1.
       CLEAR l_hidden.
     ELSE.
@@ -1696,7 +1696,7 @@ CLASS zcl_excel_converter IMPLEMENTATION.
       ls_area-col_start = w_col_int.  "if lt_values is empty
       lt_values = wo_autofilter->get_values( ) .
       SORT lt_values BY column ASCENDING.
-      DESCRIBE TABLE lt_values LINES l_lines.
+      l_lines = lines( lt_values ).
       READ TABLE lt_values INTO ls_values INDEX 1.
       IF sy-subrc = 0.
         ls_area-col_start = ls_values-column.
