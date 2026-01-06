@@ -856,7 +856,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     IF lt_range_merge IS NOT INITIAL.
       lo_element = o_document->create_simple_element( name   = lc_xml_node_mergecells
                                                       parent = o_document ).
-      DESCRIBE TABLE lt_range_merge LINES merge_count.
+      merge_count = lines( lt_range_merge ).
       lv_value = merge_count.
       CONDENSE lv_value.
       lo_element->set_attribute_ns( name  = lc_xml_attr_count
