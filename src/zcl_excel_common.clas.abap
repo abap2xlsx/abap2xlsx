@@ -1614,7 +1614,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
     SPLIT ip_file AT '.' INTO TABLE lt_hlp.
 
 ** get the extenstion from the last line of table
-    DESCRIBE TABLE lt_hlp LINES lf_anz.
+    lf_anz = lines( lt_hlp ).
     IF lf_anz <= 1.
       ep_file = ip_file.
       RETURN.
