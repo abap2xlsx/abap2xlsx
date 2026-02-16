@@ -663,6 +663,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           lv_content_mod   TYPE xstring,	
           lo_ixml          TYPE REF TO if_ixml,
           lo_streamfactory TYPE REF TO if_ixml_stream_factory,
+          lo_istream       TYPE REF TO if_ixml_istream,		  
           lo_parser        TYPE REF TO if_ixml_parser,
           lo_conv_in       TYPE REF TO cl_abap_conv_in_ce.
 
