@@ -1047,23 +1047,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
   METHOD is_unicode_system.
 
-    " Cache the result as static variable for performance
-    STATICS: sv_cached     TYPE abap_bool,
-             sv_is_unicode TYPE abap_bool.
-
-    IF sv_cached = abap_true.
-      rv_is_unicode = sv_is_unicode.
-      RETURN.
-    ENDIF.
-
-    IF cl_abap_char_utilities=>charsize > 1.
-      sv_is_unicode = abap_true.
-    ELSE.
-      sv_is_unicode = abap_false.
-    ENDIF.
-
-    sv_cached = abap_true.
-    rv_is_unicode = sv_is_unicode.
+    rv_is_unicode = boolc( cl_abap_char_utilities=>charsize > 1 ).
 
   ENDMETHOD.
 
