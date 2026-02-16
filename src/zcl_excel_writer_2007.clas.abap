@@ -302,20 +302,46 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD constructor.
+
     DATA: lt_unicode_point_codes TYPE TABLE OF string,
           lv_unicode_point_code  TYPE i.
+    DATA: lv_hex TYPE x LENGTH 1,
+          lv_char TYPE c LENGTH 1.
+    DATA: lv_result(5) TYPE c.
 
     me->ixml = cl_ixml=>create( ).
 
-    SPLIT '0,1,2,3,4,5,6,7,8,' " U+0000 to U+0008
-       && '11,12,'             " U+000B, U+000C
-       && '14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,' " U+000E to U+001F
-       && '65534,65535'        " U+FFFE, U+FFFF
-      AT ',' INTO TABLE lt_unicode_point_codes.
-    control_characters = ``.
-    LOOP AT lt_unicode_point_codes INTO lv_unicode_point_code.
-      control_characters = control_characters && cl_abap_conv_in_ce=>uccpi( lv_unicode_point_code ).
-    ENDLOOP.
+    IF zcl_excel_common=>is_unicode_system( ) = abap_true.
+      " Unicode system -
+        SPLIT '0,1,2,3,4,5,6,7,8,' " U+0000 to U+0008
+           && '11,12,'             " U+000B, U+000C
+           && '14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,' " U+000E to U+001F
+           && '65534,65535'        " U+FFFE, U+FFFF
+          AT ',' INTO TABLE lt_unicode_point_codes.
+        control_characters = ``.
+        LOOP AT lt_unicode_point_codes INTO lv_unicode_point_code.
+          control_characters = control_characters && cl_abap_conv_in_ce=>uccpi( lv_unicode_point_code ).
+        ENDLOOP.
+
+    ELSE.
+      " Non-Unicode system - only code points within single-byte range
+      " Skip U+FFFE and U+FFFF as they don't exist in non-Unicode systems
+      SPLIT '0,1,2,3,4,5,6,7,8,'
+         && '11,12,'
+         && '14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31'
+        AT ',' INTO TABLE lt_unicode_point_codes.
+      control_characters = ``.
+      LOOP AT lt_unicode_point_codes INTO lv_unicode_point_code.
+        TRY.
+            control_characters = control_characters && cl_abap_conv_in_ce=>uccpi( lv_unicode_point_code ).
+          CATCH cx_sy_conversion_codepage
+                cx_sy_codepage_converter_init
+                cx_parameter_invalid_range.
+            " Skip characters that can't be converted
+            CONTINUE.
+        ENDTRY.
+      ENDLOOP.
+    ENDIF.
 
   ENDMETHOD.
 
@@ -5637,7 +5663,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     IF io_table->settings-table_name IS NOT INITIAL AND lv_match EQ 0.
       " Name rules (https://support.microsoft.com/en-us/office/rename-an-excel-table-fbf49a4f-82a3-43eb-8ba2-44d21233b114)
       "   - You can't use "C", "c", "R", or "r" for the name, because they're already designated as a shortcut for selecting the column or row for the active cell when you enter them in the Name or Go To box.
-      "   - Don't use cell references — Names can't be the same as a cell reference, such as Z$100 or R1C1
+      "   - Don't use cell references - Names can't be the same as a cell reference, such as Z$100 or R1C1
       IF ( strlen( io_table->settings-table_name ) = 1 AND io_table->settings-table_name CO 'CcRr' )
          OR zcl_excel_common=>shift_formula(
               iv_reference_formula = io_table->settings-table_name
@@ -6102,9 +6128,16 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
 
   METHOD create_xml_document.
+
     DATA lo_encoding TYPE REF TO if_ixml_encoding.
-    lo_encoding = me->ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
-                                             character_set = 'utf-8' ).
+    IF zcl_excel_common=>is_unicode_system( ) = abap_true.
+      " Unicode system - standard conversion
+        lo_encoding = me->ixml->create_encoding( byte_order = if_ixml_encoding=>co_platform_endian
+                                                 character_set = 'utf-8' ).
+    ELSE.                           "non-Unicode system
+        lo_encoding = me->ixml->create_encoding( byte_order    = if_ixml_encoding=>co_platform_endian
+                                                 character_set = 'iso-8859-1' ).
+    ENDIF.
     ro_document = me->ixml->create_document( ).
     ro_document->set_encoding( lo_encoding ).
     ro_document->set_standalone( abap_true ).
