@@ -307,7 +307,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lv_unicode_point_code  TYPE i.
     DATA: lv_hex TYPE x LENGTH 1,
           lv_char TYPE c LENGTH 1.
-    DATA: lv_result(5) type C.
+    DATA: lv_result(5) TYPE C.
 
     me->ixml = cl_ixml=>create( ).
 
