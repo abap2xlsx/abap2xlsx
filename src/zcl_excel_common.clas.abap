@@ -216,6 +216,9 @@ CLASS zcl_excel_common DEFINITION
         VALUE(rp_in_range) TYPE abap_bool
       RAISING
         zcx_excel .
+    CLASS-METHODS is_unicode_system
+      RETURNING
+        VALUE(rv_is_unicode) TYPE abap_bool .		
 *"* protected components of class ZCL_EXCEL_COMMON
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_COMMON
@@ -1039,6 +1042,34 @@ CLASS zcl_excel_common IMPLEMENTATION.
        ip_row      <= lv_row_end.
       rp_in_range = abap_true.
     ENDIF.
+  ENDMETHOD.
+
+
+  METHOD is_unicode_system.
+
+    DATA: lv_unicode_check TYPE c LENGTH 5.
+
+    " Cache the result as static variable for performance
+    STATICS: sv_cached     TYPE abap_bool,
+             sv_is_unicode TYPE abap_bool.
+
+    IF sv_cached = abap_true.
+      rv_is_unicode = sv_is_unicode.
+      RETURN.
+    ENDIF.
+
+    CALL 'C_SAPGPARAM' ID 'NAME'  FIELD 'abap/unicode_check'
+                       ID 'VALUE' FIELD lv_unicode_check. "#EC CI_CCALL
+
+    IF lv_unicode_check CS 'on'.
+      sv_is_unicode = abap_true.
+    ELSE.
+      sv_is_unicode = abap_false.
+    ENDIF.
+
+    sv_cached = abap_true.
+    rv_is_unicode = sv_is_unicode.
+
   ENDMETHOD.
 
 

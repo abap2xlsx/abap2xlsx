@@ -659,10 +659,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 * Do not use method IF_IXML_STREAM_FACTORY=>CREATE_ISTREAM_CSTRING in this context as it shows the unwanted behaviour.
 
     DATA: lv_content       TYPE xstring,
+          lv_string        TYPE string,
+          lv_content_mod   TYPE xstring,	
           lo_ixml          TYPE REF TO if_ixml,
           lo_streamfactory TYPE REF TO if_ixml_stream_factory,
-          lo_istream       TYPE REF TO if_ixml_istream,
-          lo_parser        TYPE REF TO if_ixml_parser.
+          lo_parser        TYPE REF TO if_ixml_parser,
+          lo_conv_in       TYPE REF TO cl_abap_conv_in_ce.
 
 *--------------------------------------------------------------------*
 * Load XML file from archive into an input stream,
@@ -671,8 +673,50 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lv_content        = me->get_from_zip_archive( i_filename ).
     lo_ixml           = cl_ixml=>create( ).
     lo_streamfactory  = lo_ixml->create_stream_factory( ).
-*   lo_istream        = lo_streamfactory->create_istream_xstring( lv_content ).
-    lo_istream        = lo_streamfactory->create_istream_string( cl_abap_codepage=>convert_from( lv_content ) ).
+
+*--------------------------------------------------------------------*
+* Convert content - handle Unicode and non-Unicode systems
+*--------------------------------------------------------------------*
+    IF zcl_excel_common=>is_unicode_system( ) = abap_true.
+*     Unicode system - original logic unchanged
+      lo_istream = lo_streamfactory->create_istream_string( cl_abap_codepage=>convert_from( lv_content ) ).
+    ELSE.
+*     Non-Unicode system - convert via ISO-8859-1 and use xstring stream
+*     UTF-8 codepage (4110) is not available, so we must use a different approach
+      TRY.
+*         Read UTF-8 content as ISO-8859-1 (single-byte, won't fail on conversion)
+          lo_conv_in = cl_abap_conv_in_ce=>create(
+              input    = lv_content
+              encoding = 'ISO-8859-1' ).
+          lo_conv_in->read( IMPORTING data = lv_string ).
+
+*         Replace UTF-8 encoding declaration with ISO-8859-1 so iXML parser accepts it
+          REPLACE 'encoding="UTF-8"' IN lv_string WITH 'encoding="ISO-8859-1"' IGNORING CASE.
+
+*         Convert string back to xstring using function module
+          CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
+            EXPORTING
+              text     = lv_string
+              encoding = '1100'          " ISO-8859-1 codepage
+            IMPORTING
+              buffer   = lv_content_mod
+            EXCEPTIONS
+              failed   = 1
+              OTHERS   = 2.
+
+          IF sy-subrc = 0.
+            lo_istream = lo_streamfactory->create_istream_xstring( lv_content_mod ).
+          ELSE.
+*           Fallback if conversion failed
+            lo_istream = lo_streamfactory->create_istream_xstring( lv_content ).
+          ENDIF.
+
+        CATCH cx_root.
+*         Fallback - try original content directly
+          lo_istream = lo_streamfactory->create_istream_xstring( lv_content ).
+      ENDTRY.
+    ENDIF.
+
     r_ixml            = lo_ixml->create_document( ).
     lo_parser         = lo_ixml->create_parser( stream_factory = lo_streamfactory
                                                 istream        = lo_istream
