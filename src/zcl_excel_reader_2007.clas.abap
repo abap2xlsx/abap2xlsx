@@ -3984,8 +3984,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           END OF ls_table_style.
 
     DATA: BEGIN OF ls_table_column,
-            id   TYPE string,
-            name TYPE string,
+            id                TYPE string,
+            name              TYPE string,
+            totalsrowfunction TYPE string,
           END OF ls_table_column.
 
     FIELD-SYMBOLS <ls_table> LIKE LINE OF it_tables.
@@ -4037,8 +4038,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
         ls_field_catalog-position = lines( lt_field_catalog ) + 1.
         ls_field_catalog-fieldname = |COMP_{ ls_field_catalog-position PAD = '0' ALIGN = RIGHT WIDTH = 4 }|.
-        ls_field_catalog-scrtext_l = ls_table_column-name.
+        ls_field_catalog-column_name = ls_table_column-name.
         ls_field_catalog-dynpfld = abap_true.
+        ls_field_catalog-totals_function = ls_table_column-totalsrowfunction.
         ls_field_catalog-abap_type = cl_abap_typedescr=>typekind_string.
         APPEND ls_field_catalog TO lt_field_catalog.
 
