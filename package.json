@@ -10,8 +10,8 @@
     "url": "git+https://github.com/abap2xlsx/abap2xlsx.git"
   },
   "devDependencies": {
-    "@abaplint/cli": "^2.115.11",
-    "@abaplint/transpiler-cli": "^2.12.23",
-    "@abaplint/runtime": "^2.12.23"
+    "@abaplint/cli": "^2.119.1",
+    "@abaplint/transpiler-cli": "^2.13.14",
+    "@abaplint/runtime": "^2.13.14"
   }
 }
