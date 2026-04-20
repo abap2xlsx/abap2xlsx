@@ -216,6 +216,21 @@ CLASS zcl_excel_common DEFINITION
         VALUE(rp_in_range) TYPE abap_bool
       RAISING
         zcx_excel .
+
+    "! <p class="shorttext synchronized" lang="en">Adapt & check rtf infos referring to a string value</p>
+    "! @parameter ip_value | <p class="shorttext synchronized" lang="en">The string value to which the rtf infos refer</p>
+    "! @parameter is_font | <p class="shorttext synchronized" lang="en">Style for yet unformatted string parts</p>
+    "! @parameter ct_rtf | <p class="shorttext synchronized" lang="en">The rtf infos</p>
+    "! @raising zcx_excel | <p class="shorttext synchronized" lang="en">Inconsistency in passed data</p>
+    CLASS-METHODS check_rtf
+      IMPORTING
+        ip_value TYPE csequence
+        is_font  TYPE zexcel_s_style_font
+      CHANGING
+        ct_rtf   TYPE zexcel_t_rtf
+      RAISING
+        zcx_excel.
+
 *"* protected components of class ZCL_EXCEL_COMMON
 *"* do not include other source files here!!!
 *"* protected components of class ZCL_EXCEL_COMMON
@@ -1747,6 +1762,58 @@ CLASS zcl_excel_common IMPLEMENTATION.
       RECEIVING timestamp = lv_timestamp.
     CONVERT TIME STAMP lv_timestamp TIME ZONE 'UTC   ' INTO DATE lv_date TIME lv_time.
     ep_value = |{ date_to_excel_string( lv_date ) + time_to_excel_string( lv_time ) }|.
+  ENDMETHOD.
+
+
+  METHOD check_rtf.
+
+    DATA: lv_next_rtf_offset TYPE i,
+          lv_tabix           TYPE i,
+          lv_value           TYPE string,
+          lv_val_length      TYPE i,
+          ls_rtf             LIKE LINE OF ct_rtf.
+    FIELD-SYMBOLS: <rtf> LIKE LINE OF ct_rtf.
+    lv_next_rtf_offset = 0.
+    LOOP AT ct_rtf ASSIGNING <rtf>.
+      lv_tabix = sy-tabix.
+      IF lv_next_rtf_offset < <rtf>-offset.
+        IF is_font IS NOT INITIAL.
+          ls_rtf-offset = lv_next_rtf_offset.
+          ls_rtf-length = <rtf>-offset - lv_next_rtf_offset.
+          ls_rtf-font   = is_font.
+          INSERT ls_rtf INTO ct_rtf INDEX lv_tabix.
+        ELSE.
+          RAISE EXCEPTION TYPE zcx_excel
+            EXPORTING
+              error = |No font specified for filling gap in rtf block at index { lv_tabix }|.
+        ENDIF.
+      ELSEIF lv_next_rtf_offset > <rtf>-offset.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = 'Gaps or overlaps in RTF data offset/length specs'.
+      ENDIF.
+      lv_next_rtf_offset = <rtf>-offset + <rtf>-length.
+    ENDLOOP.
+
+    lv_value = ip_value.
+    lv_val_length = strlen( lv_value ).
+    IF lv_val_length > lv_next_rtf_offset.
+      IF is_font IS NOT INITIAL.
+        ls_rtf-offset = lv_next_rtf_offset.
+        ls_rtf-length = lv_val_length - lv_next_rtf_offset.
+        ls_rtf-font   = is_font.
+        INSERT ls_rtf INTO TABLE ct_rtf.
+      ELSE.
+        RAISE EXCEPTION TYPE zcx_excel
+          EXPORTING
+            error = |No font specified for rest of string after offset { lv_next_rtf_offset }|.
+      ENDIF.
+    ELSEIF lv_val_length < lv_next_rtf_offset.
+      RAISE EXCEPTION TYPE zcx_excel
+        EXPORTING
+          error = 'RTF specs length is not equal to value length'.
+    ENDIF.
+
   ENDMETHOD.
 
 ENDCLASS.

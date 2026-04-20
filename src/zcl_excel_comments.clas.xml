@@ -38,6 +38,11 @@
      <DESCRIPT>Returns an iterator</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GV_FULL_VML</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Full VML with graphics information for the comment boxes</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>INCLUDE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Adds an Element to the Collection</DESCRIPT>
@@ -53,11 +58,24 @@
      <DESCRIPT>Deletes an Element from the Collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>SET_BOXES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Propagate dimensions of the info boxes to the comments</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>SIZE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Specifies number of contained elements</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <SCONAME>IO_FROM</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Create new instance from this original</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

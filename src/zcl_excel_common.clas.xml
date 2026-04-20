@@ -56,6 +56,11 @@
      <DESCRIPT>Character to Hexadecimal</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>CHECK_RTF</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Adapt &amp; check rtf infos referring to a string value</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>CLASS_CONSTRUCTOR</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>CLASS_CONSTRUCTOR</DESCRIPT>
@@ -241,6 +246,32 @@
      <DESCRIPT>Unescape</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>CHECK_RTF</CMPNAME>
+     <SCONAME>CT_RTF</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>The rtf infos</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>CHECK_RTF</CMPNAME>
+     <SCONAME>IP_VALUE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>The string value to which the rtf infos refer</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>CHECK_RTF</CMPNAME>
+     <SCONAME>IS_FONT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Style for yet unformatted string parts</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>CHECK_RTF</CMPNAME>
+     <SCONAME>ZCX_EXCEL</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Inconsistency in passed data</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

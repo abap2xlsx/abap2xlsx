@@ -479,6 +479,11 @@
      <DESCRIPT>Ranges collection</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>REMOVE_COMMENT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Remove a comment (by position or by its instance)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>ROWS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Ranges collection</DESCRIPT>
@@ -507,6 +512,11 @@
      <CMPNAME>SET_COLUMN_WIDTH</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Set column width</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_COMMENT_BOXES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Set dimensions of info boxes for comments</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>SET_DEFAULT_EXCEL_DATE_FORMAT</CMPNAME>
@@ -611,10 +621,16 @@
    </DESCRIPTIONS>
    <DESCRIPTIONS_SUB>
     <SEOSUBCOTX>
-     <CMPNAME>GET_COMMENTS</CMPNAME>
-     <SCONAME>R_COMMENTS</SCONAME>
+     <CMPNAME>REMOVE_COMMENT</CMPNAME>
+     <SCONAME>IO_COMMENT</SCONAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Comments instance of this worksheet</DESCRIPT>
+     <DESCRIPT>The comment object (optional)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>REMOVE_COMMENT</CMPNAME>
+     <SCONAME>IP_REF</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Position (e.g. &apos;B17&apos;) (optional, default)</DESCRIPT>
     </SEOSUBCOTX>
    </DESCRIPTIONS_SUB>
   </asx:values>

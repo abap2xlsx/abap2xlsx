@@ -54,6 +54,11 @@
      <DESCRIPT>Create &apos;xl/charts/chart1.xml&apos;</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>CREATE_XL_COMMENTS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Create &apos;xl/comments1.xml&apos;</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_DRAWINGS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Create &apos;xl/drawings/drawing1.xml&apos;</DESCRIPT>
@@ -82,6 +87,11 @@
      <CMPNAME>CREATE_XL_DRAWING_ANCHOR</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Create &apos;xl/drawings/drawing1.xml&apos;</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_XL_DRAWING_FOR_COMMENTS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Create &apos;xl/drawings/vmlDrawing1.vml&apos; (style for comments)</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>CREATE_XL_RELATIONSHIPS</CMPNAME>
@@ -269,6 +279,20 @@
      <DESCRIPT>Styles mapping</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>RENDER_XML_DOCUMENT</CMPNAME>
+     <SCONAME>IO_DOCUMENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>XML Doc as object</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>RENDER_XML_DOCUMENT</CMPNAME>
+     <SCONAME>IV_DOCUMENT_AS_STRING</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>XML Doc as string</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>
