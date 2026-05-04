@@ -37,7 +37,15 @@ CLASS zcl_excel_writer_2007 DEFINITION
     DATA excel TYPE REF TO zcl_excel .
     DATA shared_strings TYPE zexcel_t_shared_string .
     DATA styles_cond_mapping TYPE zexcel_t_styles_cond_mapping .
-    DATA styles_mapping TYPE zexcel_t_styles_mapping .
+
+    TYPES: BEGIN OF ts_styles_mapping,
+             guid TYPE zexcel_cell_style,
+             style TYPE i,
+           END OF ts_styles_mapping.
+    TYPES tt_styles_mapping TYPE HASHED TABLE OF ts_styles_mapping WITH UNIQUE KEY guid.
+    "! Mapping of abap2xlsx-internal style GUIDs to style indexes as stored in the xlsx file.
+    DATA styles_mapping TYPE tt_styles_mapping .
+
     CONSTANTS c_xl_comments TYPE string VALUE 'xl/comments#.xml'. "#EC NOTEXT
     CONSTANTS cl_xl_drawing_for_comments TYPE string VALUE 'xl/drawings/vmlDrawing#.vml'. "#EC NOTEXT
     CONSTANTS c_xl_drawings_vml_rels TYPE string VALUE 'xl/drawings/_rels/vmlDrawing#.vml.rels'. "#EC NOTEXT
@@ -1220,7 +1228,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
                lc_xml_node_fgcolor     TYPE string VALUE 'fgColor',
                lc_xml_node_bgcolor     TYPE string VALUE 'bgColor'.
 
-    DATA: ls_styles_mapping     TYPE zexcel_s_styles_mapping,
+    DATA: ls_styles_mapping     TYPE ts_styles_mapping,
           ls_cellxfs            TYPE zexcel_s_cellxfs,
           ls_style_cond_mapping TYPE zexcel_s_styles_cond_mapping,
           lo_sub_element        TYPE REF TO if_ixml_element,
@@ -1238,7 +1246,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     READ TABLE me->styles_cond_mapping TRANSPORTING NO FIELDS WITH KEY guid = iv_cell_style.
     CHECK sy-subrc NE 0.
 
-    READ TABLE me->styles_mapping INTO ls_styles_mapping WITH KEY guid = iv_cell_style.
+    READ TABLE me->styles_mapping INTO ls_styles_mapping WITH TABLE KEY guid = iv_cell_style.
 
     READ TABLE me->styles_cond_mapping INTO ls_style_cond_mapping WITH KEY style = ls_styles_mapping-style.
     IF sy-subrc EQ 0.
@@ -4236,7 +4244,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lts_row_outlines       TYPE zcl_excel_worksheet=>mty_ts_outlines_row,
 
           ls_last_row            TYPE zexcel_s_cell_data,
-          ls_style_mapping       TYPE zexcel_s_styles_mapping,
+          ls_style_mapping       TYPE ts_styles_mapping,
 
           lo_element_2           TYPE REF TO if_ixml_element,
           lo_element_3           TYPE REF TO if_ixml_element,
@@ -4457,7 +4465,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 *--------------------------------------------------------------------*
       ENDIF.
       IF lv_style_guid IS NOT INITIAL.
-        READ TABLE styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
+        READ TABLE styles_mapping INTO ls_style_mapping WITH TABLE KEY guid = lv_style_guid.
 *end of change issue #157 - allow column cellstyles
         lv_value = ls_style_mapping-style.
         SHIFT lv_value RIGHT DELETING TRAILING space.
@@ -4662,7 +4670,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           ls_alignment      TYPE zexcel_s_style_alignment,
           lt_cellxfs        TYPE zexcel_t_cellxfs,
           ls_cellxfs        TYPE zexcel_s_cellxfs,
-          ls_styles_mapping TYPE zexcel_s_styles_mapping,
+          ls_styles_mapping TYPE ts_styles_mapping,
           lt_colors         TYPE zexcel_t_style_color_argb,
           ls_color          LIKE LINE OF lt_colors.
 
@@ -4718,7 +4726,33 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ls_built_in_num_format-num_format = <ls_reader_built_in>-format->format_code.
       INSERT ls_built_in_num_format INTO TABLE lt_built_in_num_formats.
     ENDLOOP.
-* Compress styles
+
+    "----------------------------------------------------------------------------------------
+    " Compress styles
+    "----------------------------------------------------------------------------------------
+    " Input:
+    "   A style contains multiple areas (fonts, fills etc.) with different settings. In the internal
+    "   model they are represented as objects, and can be identified with a GUID.
+    " Output:
+    "   In the .xlsx files styles are referenced by their 0 based index. A style (cellXfs) references settings
+    "   in different areas by the 0 based index of the area entry, and has flags (applyFont, applyFill etc.) to indicate
+    "   if a 0 index means 'don't use' or the first entry within the area.
+    " Compression of individual areas:
+    "   If the settings of a given area (e.g. font) are fully identical in two styles, we only write
+    "   the area into the output the first time, and will reference this instance (index) of the area in other styles with the same settings.
+    "   For example a cell with a blue border and red text and a cell with green border and red text will have two different
+    "   styles, reference two different 'border' areas,  but reference the same single 'font' area.
+    " Compression of styles:
+    "   If - after area compression has been applied - two styles reference the same areas, the two styles are practically
+    "   identical and will be compressed to a single style in the output (in the cellXfs array).
+    "   For example two different style objects use blue border and red text, then it is enough to write a single cellXfs entry.
+    "   There might be a lot of internal style guids used by the cell, but if all these styles are effectively the same, there will
+    "   only be a single cellXfs in the .xlsx file.
+    " Important variables:
+    "   lt_fonts, lt_fills etc. - areas that will be written to file
+    "   lt_cellxfs - styles that will be written to file
+    "   styles_mapping - mapping table that stored which file GUID points to which compressed style in the file
+
     lo_iterator = excel->get_styles_iterator( ).
     WHILE lo_iterator->has_next( ) EQ abap_true.
       lo_style ?= lo_iterator->get_next( ).
@@ -4853,8 +4887,12 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ENDIF.
       SUBTRACT 1 FROM ls_styles_mapping-style.
       ls_styles_mapping-guid = lo_style->get_guid( ).
-      APPEND ls_styles_mapping TO me->styles_mapping.
+      INSERT ls_styles_mapping INTO TABLE me->styles_mapping.
     ENDWHILE.
+
+    "----------------------------------------------------------------------------------------
+    " Write style components to XML
+    "----------------------------------------------------------------------------------------
 
     " create numfmt elements
     LOOP AT lt_numfmts INTO ls_numfmt.

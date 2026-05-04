@@ -531,7 +531,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lv_value           TYPE string,
           lv_column          TYPE zexcel_cell_column,
           lv_style_guid      TYPE zexcel_cell_style,
-          ls_style_mapping   TYPE zexcel_s_styles_mapping,
+          ls_style_mapping   TYPE zcl_excel_writer_2007=>ts_styles_mapping,
           lo_column_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_column          TYPE REF TO zcl_excel_column.
 
@@ -604,7 +604,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           " Style
           lv_style_guid = lo_column->get_column_style_guid( ).                      "ins issue #157 -  set column style
           CLEAR ls_style_mapping.
-          READ TABLE o_excel_ref->styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
+          READ TABLE o_excel_ref->styles_mapping INTO ls_style_mapping WITH TABLE KEY guid = lv_style_guid.
           IF sy-subrc = 0.                                                                                     "ins issue #295
             lv_value = ls_style_mapping-style.                                                                 "ins issue #295
             SHIFT lv_value RIGHT DELETING TRAILING space.
@@ -663,7 +663,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_width
                                           value = lc_xml_attr_defaultwidth ).
           lv_style_guid = o_worksheet->zif_excel_sheet_properties~get_style( ).
-          READ TABLE o_excel_ref->styles_mapping INTO ls_style_mapping WITH KEY guid = lv_style_guid.
+          READ TABLE o_excel_ref->styles_mapping INTO ls_style_mapping WITH TABLE KEY guid = lv_style_guid.
           lv_value = ls_style_mapping-style.
           CONDENSE lv_value.
           lo_element_2->set_attribute_ns( name  = lc_xml_attr_style

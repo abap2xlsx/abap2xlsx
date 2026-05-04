@@ -498,6 +498,12 @@ CLASS zcl_excel IMPLEMENTATION.
 
 
   METHOD get_style_index_in_styles.
+
+    " ATTENTION: This method is obsolete!
+    " As of 2026/02 this method was only used in ZCL_EXCEL_WRITER_HuGE_FILE within the abap2xlsx codebase, however it was used incorrectly.
+    " This method returns the runtime internal index of a given style by its guid. However, the writer classes will compress styles while writing
+    " the output, and need the index after compression, not the index of the internal runtime objects.
+
     DATA: index TYPE i.
     DATA: lo_iterator TYPE REF TO zcl_excel_collection_iterator,
           lo_style    TYPE REF TO zcl_excel_style.

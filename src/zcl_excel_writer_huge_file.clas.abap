@@ -303,7 +303,8 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
                                        WITH NON-UNIQUE DEFAULT KEY,
       missing_column              LIKE LINE OF t_missing_columns,
       lo_link                     TYPE REF TO zcl_excel_hyperlink,
-      lo_drawings                 TYPE REF TO zcl_excel_drawings.
+      lo_drawings                 TYPE REF TO zcl_excel_drawings,
+      ls_style_mapping            TYPE ts_styles_mapping.
 
     FIELD-SYMBOLS:
       <sheet_content> TYPE zexcel_s_cell_data,
@@ -487,8 +488,15 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         <col>-collapsed = lc_true.
       ENDIF.
       <col>-outlinelevel = lo_column->get_outline_level( ).
+      "Look up style index
+      <col>-style = -1.
       lv_style_guid = lo_column->get_column_style_guid( ).
-      <col>-style = me->excel->get_style_index_in_styles( lv_style_guid ) - 1.
+      IF lv_style_guid IS NOT INITIAL.
+        READ TABLE styles_mapping INTO ls_style_mapping WITH TABLE KEY guid = lv_style_guid.
+        IF sy-subrc = 0.
+            <col>-style = ls_style_mapping-style.
+        ENDIF.
+      ENDIF.
 *
 * Missing columns
 *
@@ -528,8 +536,15 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
       ELSE.
         <col>-width = lc_default_col_width.
       ENDIF.
+      "Look up style index
+      <col>-style = -1.
       lv_style_guid = io_worksheet->zif_excel_sheet_properties~get_style( ).
-      <col>-style = me->excel->get_style_index_in_styles( lv_style_guid ) - 1.
+      IF lv_style_guid IS NOT INITIAL.
+        READ TABLE styles_mapping INTO ls_style_mapping WITH TABLE KEY guid = lv_style_guid.
+        IF sy-subrc = 0.
+            <col>-style = ls_style_mapping-style.
+        ENDIF.
+      ENDIF.
     ENDLOOP.
 
 *
@@ -770,7 +785,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
     FIELD-SYMBOLS:
       <cell>    TYPE ty_cell,
       <content> TYPE zexcel_s_cell_data,
-      <style>   TYPE zexcel_s_styles_mapping.
+      <style>   TYPE zcl_excel_writer_2007=>ts_styles_mapping.
 
     CLEAR cells.
 
@@ -789,7 +804,7 @@ CLASS zcl_excel_writer_huge_file IMPLEMENTATION.
         lv_cell_style = <content>-cell_style.
         UNASSIGN <style>.
         IF lv_cell_style IS NOT INITIAL.
-          READ TABLE styles_mapping ASSIGNING <style> WITH KEY guid = lv_cell_style.
+          READ TABLE styles_mapping ASSIGNING <style> WITH TABLE KEY guid = lv_cell_style.
         ENDIF.
       ENDIF.
 *
