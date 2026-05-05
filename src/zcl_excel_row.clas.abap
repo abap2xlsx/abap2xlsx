@@ -1,7 +1,8 @@
 CLASS zcl_excel_row DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
 *"* public components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
@@ -63,6 +64,11 @@ CLASS zcl_excel_row DEFINITION
 *"* protected components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
   PROTECTED SECTION.
+    "! Returns a deep copy of this row.
+    "! The row index is kept, the index must be 'free' in the target worksheet into which the row will be inserted.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_row .
 *"* private components of class ZCL_EXCEL_ROW
 *"* do not include other source files here!!!
   PRIVATE SECTION.
@@ -92,6 +98,19 @@ CLASS zcl_excel_row IMPLEMENTATION.
     " set row dimension as unformatted by default
     me->xf_index = 0.
     me->custom_height = abap_false.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    CREATE OBJECT eo_clone
+      EXPORTING
+        ip_index = me->row_index.
+    eo_clone->row_height    = me->row_height.
+    eo_clone->visible       = me->visible.
+    eo_clone->outline_level = me->outline_level.
+    eo_clone->collapsed     = me->collapsed.
+    eo_clone->xf_index      = me->xf_index.
+    eo_clone->custom_height = me->custom_height.
   ENDMETHOD.
 
 

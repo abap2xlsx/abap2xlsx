@@ -1,6 +1,7 @@
 CLASS zcl_excel_worksheet DEFINITION
   PUBLIC
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel.
 
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_WORKSHEET
@@ -76,8 +77,31 @@ CLASS zcl_excel_worksheet DEFINITION
     TYPES:
         mty_ts_merge TYPE SORTED TABLE OF mty_merge WITH UNIQUE KEY table_line.
 
-    TYPES:
+        TYPES:
       ty_area TYPE c LENGTH 1 .
+
+    "! Flags controlling which "categories" of worksheet contents are NOT copied during a clone
+    "! operation - using a default value (initial structure) gives a fulle clone.
+    TYPES:
+      BEGIN OF ts_clone_options,
+        skip_cells              TYPE abap_bool, "! Cell values, formulas, RTF, per-cell styles & cell-table refs
+        skip_column_dimensions  TYPE abap_bool, "! Column widths, visibility, outline level, column-style
+        skip_row_dimensions     TYPE abap_bool, "! Row heights, visibility, outline level, row-style
+        skip_merged_cells       TYPE abap_bool, "! Cell merging information
+        skip_drawings           TYPE abap_bool, "! Images and drawings
+        skip_charts             TYPE abap_bool, "! Charts
+        skip_comments           TYPE abap_bool, "! Comments
+        skip_hyperlinks         TYPE abap_bool, "! Hyperlinks
+        skip_data_validations   TYPE abap_bool, "! Data validation settings
+        skip_conditional_styles TYPE abap_bool, "! Condition styles
+        skip_tables             TYPE abap_bool, "! Tables
+        skip_autofilter         TYPE abap_bool, "! Autofilters
+        skip_named_ranges       TYPE abap_bool, "! Worksheet-local named ranges
+        skip_freeze_panes       TYPE abap_bool, "! Freeze panes + active/top-left cell
+        skip_page_setup         TYPE abap_bool, "! Sheet setup (margins/orientation/...), page breaks, print titles
+        skip_sheet_properties   TYPE abap_bool, "! Tabcolor, gridlines, RTL, zoom, hidden, default style, default formats
+        skip_sheet_protection   TYPE abap_bool, "! Protection flags, password
+      END OF ts_clone_options.
 
     CONSTANTS c_break_column TYPE zexcel_break VALUE 2 ##NO_TEXT.
     CONSTANTS c_break_none TYPE zexcel_break VALUE 0 ##NO_TEXT.
@@ -704,6 +728,31 @@ CLASS zcl_excel_worksheet DEFINITION
         !ir_table     TYPE REF TO zcl_excel_table
         !ip_fieldname TYPE zexcel_fieldname
         !ip_header    TYPE abap_bool
+      RAISING
+        zcx_excel .
+
+    "! Populate this (freshly created) worksheet with a deep copy of the
+    "! contents of <em>io_source</em>, which must belong to the same workbook.
+    "!
+    "! The copy is generally "disconnected": subsequent changes on the new worksheet do
+    "! should not affect the source worksheet.
+    "! However, there are exceptions from this rule:
+    "!  - Style GUIDs that live in the workbook-wide  styles collection are intentionally
+    "!    shared - you may follow up with <em>add_new_style</em> to fork a style if independent
+    "!    in edits are required.
+    "!  - Drawings are copied 'by reference'.
+    "!
+    "! You can use the <em>is_options</em> input parameter to skip certain types of artifacts from
+    "! being copied.
+    "!
+    "! @parameter io_source | The source worksheet to copy from.
+    "! @parameter is_options | Skip-flags controlling which categories are copied.
+    "! @raising zcx_excel | If <em>io_source</em> belongs to another workbook or
+    "!                     a structural conflict is detected.
+    METHODS clone_from
+      IMPORTING
+        !io_source  TYPE REF TO zcl_excel_worksheet
+        !is_options TYPE ts_clone_options OPTIONAL
       RAISING
         zcx_excel .
   PRIVATE SECTION.
@@ -2116,6 +2165,325 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
     upper_cell-cell_column  = 1.
 
   ENDMETHOD.                    "CONSTRUCTOR
+
+
+  METHOD clone_from.
+    " Deep-copy implementation. Order matters:
+    "   1) tables  - cell-level table refs need remapping
+    "   2) cells   - sheet_content + table-ref remap
+    "   3) everything else (independent of cells)
+
+    DATA: lo_iter            TYPE REF TO zcl_excel_collection_iterator,
+          lo_old_column      TYPE REF TO zcl_excel_column,
+          lo_new_column      TYPE REF TO zcl_excel_column,
+          lo_old_row         TYPE REF TO zcl_excel_row,
+          lo_new_row         TYPE REF TO zcl_excel_row,
+          lo_old_table       TYPE REF TO zcl_excel_table,
+          lo_new_table       TYPE REF TO zcl_excel_table,
+          lo_old_drawing     TYPE REF TO zcl_excel_drawing,
+          lo_new_drawing     TYPE REF TO zcl_excel_drawing,
+          lo_old_comment     TYPE REF TO zcl_excel_comment,
+          lo_old_hyperlink   TYPE REF TO zcl_excel_hyperlink,
+          lo_old_dv          TYPE REF TO zcl_excel_data_validation,
+          lo_old_style_cond  TYPE REF TO zcl_excel_style_cond,
+          lo_old_range       TYPE REF TO zcl_excel_range,
+          lo_new_range       TYPE REF TO zcl_excel_range,
+          lo_old_autofilter  TYPE REF TO zcl_excel_autofilter,
+          lo_new_autofilter  TYPE REF TO zcl_excel_autofilter,
+          lv_old_sheet_token TYPE string,
+          lv_new_sheet_token TYPE string,
+          lv_value           TYPE zexcel_range_value,
+          lv_table_id        TYPE i.
+
+    TYPES: BEGIN OF ty_table_map_line,
+             old TYPE REF TO zcl_excel_table,
+             new TYPE REF TO zcl_excel_table,
+           END OF ty_table_map_line.
+    TYPES: ty_table_map TYPE HASHED TABLE OF ty_table_map_line WITH UNIQUE KEY old.
+    DATA: lt_table_map TYPE ty_table_map,
+          ls_table_map TYPE ty_table_map_line.
+
+    FIELD-SYMBOLS: <ls_cell>     LIKE LINE OF me->sheet_content,
+                   <ls_table_map> LIKE LINE OF lt_table_map.
+
+    "--------------------------------------------------------------------
+    " Same-workbook safeguard
+    "--------------------------------------------------------------------
+    IF io_source IS NOT BOUND.
+      zcx_excel=>raise_text( 'Source worksheet not bound' ).
+    ENDIF.
+    IF io_source = me.
+      zcx_excel=>raise_text( 'Source and target worksheet must be different' ).
+    ENDIF.
+    IF io_source->excel <> me->excel.
+      zcx_excel=>raise_text( 'Source worksheet belongs to another workbook' ).
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Sheet properties (interface zif_excel_sheet_properties + simple flags)
+    "--------------------------------------------------------------------
+    IF is_options-skip_sheet_properties = abap_false.
+      me->zif_excel_sheet_properties~hidden                    = io_source->zif_excel_sheet_properties~hidden.
+      me->zif_excel_sheet_properties~show_zeros                = io_source->zif_excel_sheet_properties~show_zeros.
+      me->zif_excel_sheet_properties~style                     = io_source->zif_excel_sheet_properties~style.
+      me->zif_excel_sheet_properties~zoomscale                 = io_source->zif_excel_sheet_properties~zoomscale.
+      me->zif_excel_sheet_properties~zoomscale_normal          = io_source->zif_excel_sheet_properties~zoomscale_normal.
+      me->zif_excel_sheet_properties~zoomscale_pagelayoutview  = io_source->zif_excel_sheet_properties~zoomscale_pagelayoutview.
+      me->zif_excel_sheet_properties~zoomscale_sheetlayoutview = io_source->zif_excel_sheet_properties~zoomscale_sheetlayoutview.
+      me->zif_excel_sheet_properties~summarybelow              = io_source->zif_excel_sheet_properties~summarybelow.
+      me->zif_excel_sheet_properties~summaryright              = io_source->zif_excel_sheet_properties~summaryright.
+      me->zif_excel_sheet_properties~selected                  = io_source->zif_excel_sheet_properties~selected.
+      me->zif_excel_sheet_properties~hide_columns_from         = io_source->zif_excel_sheet_properties~hide_columns_from.
+
+      me->print_gridlines           = io_source->print_gridlines.
+      me->show_gridlines            = io_source->show_gridlines.
+      me->show_rowcolheaders        = io_source->show_rowcolheaders.
+      me->tabcolor                  = io_source->tabcolor.
+      me->right_to_left             = io_source->right_to_left.
+      me->default_excel_date_format = io_source->default_excel_date_format.
+      me->default_excel_time_format = io_source->default_excel_time_format.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Sheet protection (interface zif_excel_sheet_protection)
+    "--------------------------------------------------------------------
+    IF is_options-skip_sheet_protection = abap_false.
+      me->zif_excel_sheet_protection~auto_filter           = io_source->zif_excel_sheet_protection~auto_filter.
+      me->zif_excel_sheet_protection~delete_columns        = io_source->zif_excel_sheet_protection~delete_columns.
+      me->zif_excel_sheet_protection~delete_rows           = io_source->zif_excel_sheet_protection~delete_rows.
+      me->zif_excel_sheet_protection~format_cells          = io_source->zif_excel_sheet_protection~format_cells.
+      me->zif_excel_sheet_protection~format_columns        = io_source->zif_excel_sheet_protection~format_columns.
+      me->zif_excel_sheet_protection~format_rows           = io_source->zif_excel_sheet_protection~format_rows.
+      me->zif_excel_sheet_protection~insert_columns        = io_source->zif_excel_sheet_protection~insert_columns.
+      me->zif_excel_sheet_protection~insert_hyperlinks     = io_source->zif_excel_sheet_protection~insert_hyperlinks.
+      me->zif_excel_sheet_protection~insert_rows           = io_source->zif_excel_sheet_protection~insert_rows.
+      me->zif_excel_sheet_protection~objects               = io_source->zif_excel_sheet_protection~objects.
+      me->zif_excel_sheet_protection~password              = io_source->zif_excel_sheet_protection~password.
+      me->zif_excel_sheet_protection~pivot_tables          = io_source->zif_excel_sheet_protection~pivot_tables.
+      me->zif_excel_sheet_protection~protected             = io_source->zif_excel_sheet_protection~protected.
+      me->zif_excel_sheet_protection~scenarios             = io_source->zif_excel_sheet_protection~scenarios.
+      me->zif_excel_sheet_protection~select_locked_cells   = io_source->zif_excel_sheet_protection~select_locked_cells.
+      me->zif_excel_sheet_protection~select_unlocked_cells = io_source->zif_excel_sheet_protection~select_unlocked_cells.
+      me->zif_excel_sheet_protection~sheet                 = io_source->zif_excel_sheet_protection~sheet.
+      me->zif_excel_sheet_protection~sort                  = io_source->zif_excel_sheet_protection~sort.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Page setup, page breaks, print titles
+    "--------------------------------------------------------------------
+    IF is_options-skip_page_setup = abap_false.
+      IF io_source->sheet_setup IS BOUND.
+        me->sheet_setup = io_source->sheet_setup->clone( ).
+      ENDIF.
+      IF io_source->mo_pagebreaks IS BOUND.
+        me->mo_pagebreaks = io_source->mo_pagebreaks->clone( ).
+      ENDIF.
+      IF io_source->print_title_col_from IS NOT INITIAL.
+        me->zif_excel_sheet_printsettings~set_print_repeat_columns(
+          iv_columns_from = io_source->print_title_col_from
+          iv_columns_to   = io_source->print_title_col_to ).
+      ENDIF.
+      IF io_source->print_title_row_from IS NOT INITIAL.
+        me->zif_excel_sheet_printsettings~set_print_repeat_rows(
+          iv_rows_from = io_source->print_title_row_from
+          iv_rows_to   = io_source->print_title_row_to ).
+      ENDIF.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Freeze panes / active cell / view
+    "--------------------------------------------------------------------
+    IF is_options-skip_freeze_panes = abap_false.
+      IF io_source->freeze_pane_cell_column IS NOT INITIAL OR
+         io_source->freeze_pane_cell_row    IS NOT INITIAL.
+        me->freeze_panes( ip_num_columns = io_source->freeze_pane_cell_column
+                          ip_num_rows    = io_source->freeze_pane_cell_row ).
+      ENDIF.
+      me->pane_top_left_cell      = io_source->pane_top_left_cell.
+      me->sheetview_top_left_cell = io_source->sheetview_top_left_cell.
+      me->active_cell             = io_source->active_cell.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Column dimensions (must include style references too)
+    "--------------------------------------------------------------------
+    IF is_options-skip_column_dimensions = abap_false.
+      lo_iter = io_source->columns->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_column ?= lo_iter->get_next( ).
+        lo_new_column = lo_old_column->clone( io_worksheet = me ).
+        me->columns->add( lo_new_column ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Row dimensions + outlines
+    "--------------------------------------------------------------------
+    IF is_options-skip_row_dimensions = abap_false.
+      lo_iter = io_source->rows->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_row ?= lo_iter->get_next( ).
+        lo_new_row = lo_old_row->clone( ).
+        me->rows->add( lo_new_row ).
+      ENDWHILE.
+      me->mt_row_outlines = io_source->mt_row_outlines.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Tables - clone first so cell-level table refs can be remapped
+    "--------------------------------------------------------------------
+    IF is_options-skip_tables = abap_false.
+      lo_iter = io_source->tables->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_table ?= lo_iter->get_next( ).
+        lo_new_table = lo_old_table->clone( ).
+        lv_table_id = me->excel->get_next_table_id( ).
+        lo_new_table->set_id( iv_id = lv_table_id ).
+        me->tables->add( lo_new_table ).
+        ls_table_map-old = lo_old_table.
+        ls_table_map-new = lo_new_table.
+        INSERT ls_table_map INTO TABLE lt_table_map.
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Cells (sheet_content). cell_style GUIDs are workbook-scoped and so
+    " are intentionally shared. Cells that referred to a source-table get
+    " remapped to the matching cloned table; if the table was not cloned
+    " (skip_tables) the dangling reference is cleared
+    "--------------------------------------------------------------------
+    IF is_options-skip_cells = abap_false.
+      me->sheet_content     = io_source->sheet_content.
+      me->lower_cell        = io_source->lower_cell.
+      me->upper_cell        = io_source->upper_cell.
+      me->column_formulas   = io_source->column_formulas.
+      me->mt_ignored_errors = io_source->mt_ignored_errors.
+
+      LOOP AT me->sheet_content ASSIGNING <ls_cell> WHERE table IS BOUND.
+        READ TABLE lt_table_map ASSIGNING <ls_table_map> WITH TABLE KEY old = <ls_cell>-table.
+        IF sy-subrc = 0.
+          <ls_cell>-table = <ls_table_map>-new.
+        ELSE.
+          CLEAR: <ls_cell>-table,
+                 <ls_cell>-table_fieldname,
+                 <ls_cell>-table_header.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+
+    "-------------------------------------------------------------------
+    " Merged cells
+    "--------------------------------------------------------------------
+    IF is_options-skip_merged_cells = abap_false.
+      me->mt_merged_cells = io_source->mt_merged_cells.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Drawings (images)
+    "--------------------------------------------------------------------
+    IF is_options-skip_drawings = abap_false.
+      lo_iter = io_source->drawings->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_drawing ?= lo_iter->get_next( ).
+        lo_new_drawing = lo_old_drawing->clone( ).
+        me->drawings->add( lo_new_drawing ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Charts
+    "--------------------------------------------------------------------
+    IF is_options-skip_charts = abap_false.
+      lo_iter = io_source->charts->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_drawing ?= lo_iter->get_next( ).
+        lo_new_drawing = lo_old_drawing->clone( ).
+        me->charts->add( lo_new_drawing ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Comments
+    "--------------------------------------------------------------------
+    IF is_options-skip_comments = abap_false.
+      lo_iter = io_source->comments->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_comment ?= lo_iter->get_next( ).
+        me->comments->add( lo_old_comment->clone( ) ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Hyperlinks - cell coordinates are unchanged so the cloned hyperlink
+    " targets the same cell on the new worksheet.
+    "--------------------------------------------------------------------
+    IF is_options-skip_hyperlinks = abap_false.
+      lo_iter = io_source->hyperlinks->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_hyperlink ?= lo_iter->get_next( ).
+        me->hyperlinks->add( lo_old_hyperlink->clone( ) ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Data validations
+    "--------------------------------------------------------------------
+    IF is_options-skip_data_validations = abap_false.
+      lo_iter = io_source->data_validations->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_dv ?= lo_iter->get_next( ).
+        me->data_validations->add( lo_old_dv->clone( ) ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Conditional formatting rules
+    "--------------------------------------------------------------------
+    IF is_options-skip_conditional_styles = abap_false.
+      lo_iter = io_source->styles_cond->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_style_cond ?= lo_iter->get_next( ).
+        me->styles_cond->add( lo_old_style_cond->clone( ) ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Worksheet-local named ranges. Patch the embedded sheet name (if any)
+    " so the cloned range points at this worksheet rather than the source.
+    " The implicit print-titles range is skipped here because it was already
+    " recreated in the page-setup branch above (when not skipped there).
+    "--------------------------------------------------------------------
+    IF is_options-skip_named_ranges = abap_false.
+      lv_old_sheet_token = zcl_excel_common=>escape_string( io_source->get_title( ) ) && '!'.
+      lv_new_sheet_token = zcl_excel_common=>escape_string( me->get_title( ) )         && '!'.
+      lo_iter = io_source->ranges->get_iterator( ).
+      WHILE lo_iter->has_next( ) = abap_true.
+        lo_old_range ?= lo_iter->get_next( ).
+        IF lo_old_range->name = zif_excel_sheet_printsettings=>gcv_print_title_name AND
+           is_options-skip_page_setup = abap_false.
+          CONTINUE.
+        ENDIF.
+        lo_new_range = lo_old_range->clone( ).
+        lv_value     = lo_new_range->get_value( ).
+        REPLACE ALL OCCURRENCES OF lv_old_sheet_token IN lv_value WITH lv_new_sheet_token.
+        lo_new_range->set_range_value( lv_value ).
+        me->ranges->add( lo_new_range ).
+      ENDWHILE.
+    ENDIF.
+
+    "--------------------------------------------------------------------
+    " Autofilter (lives on the workbook, keyed by worksheet).
+    "--------------------------------------------------------------------
+    IF is_options-skip_autofilter = abap_false.
+      lo_old_autofilter = me->excel->get_autofilters_reference( )->get( io_source ).
+      IF lo_old_autofilter IS BOUND.
+        lo_new_autofilter = lo_old_autofilter->clone( io_sheet = me ).
+        me->excel->get_autofilters_reference( )->add_existing(
+          io_autofilter = lo_new_autofilter ).
+      ENDIF.
+    ENDIF.
+
+  ENDMETHOD.
 
 
   METHOD convert_to_table.

@@ -1,7 +1,8 @@
 CLASS zcl_excel_range DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
 *"* public components of class ZCL_EXCEL_RANGE
 *"* do not include other source files here!!!
@@ -30,6 +31,13 @@ CLASS zcl_excel_range DEFINITION
 *"* protected components of class ZABAP_EXCEL_WORKSHEET
 *"* do not include other source files here!!!
   PROTECTED SECTION.
+    "! Returns a deep copy of this range. The caller is responsible for
+    "! retargeting the range value (e.g. patching the sheet name) when the
+    "! clone is bound to a different worksheet.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_range .
+
 *"* private components of class ZCL_EXCEL_RANGE
 *"* do not include other source files here!!!
   PRIVATE SECTION.
@@ -58,6 +66,14 @@ CLASS zcl_excel_range IMPLEMENTATION.
 
   METHOD set_range_value.
     me->value = ip_value.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    CREATE OBJECT eo_clone.
+    eo_clone->name  = me->name.
+    eo_clone->guid  = me->guid. "In theory unused
+    eo_clone->value = me->value.
   ENDMETHOD.
 
 

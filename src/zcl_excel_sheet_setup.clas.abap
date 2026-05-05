@@ -1,7 +1,8 @@
 CLASS zcl_excel_sheet_setup DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_SHEET_SETUP
@@ -150,6 +151,10 @@ CLASS zcl_excel_sheet_setup DEFINITION
         !ep_even_header TYPE zexcel_s_worksheet_head_foot
         !ep_even_footer TYPE zexcel_s_worksheet_head_foot .
   PROTECTED SECTION.
+    "! Returns a deep copy of this sheet setup.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_sheet_setup .
 
 *"* protected components of class ZCL_EXCEL_SHEET_SETUP
 *"* do not include other source files here!!!
@@ -474,5 +479,42 @@ CLASS zcl_excel_sheet_setup IMPLEMENTATION.
     IF ip_right IS SUPPLIED.  margin_right  = lv_coef * ip_right. ENDIF.
     IF ip_top IS SUPPLIED.    margin_top    = lv_coef * ip_top. ENDIF.
 
+  ENDMETHOD.
+
+
+  METHOD clone.
+    CREATE OBJECT eo_clone.
+    eo_clone->black_and_white          = me->black_and_white.
+    eo_clone->cell_comments            = me->cell_comments.
+    eo_clone->copies                   = me->copies.
+    eo_clone->diff_oddeven_headerfooter = me->diff_oddeven_headerfooter.
+    eo_clone->draft                    = me->draft.
+    eo_clone->errors                   = me->errors.
+    eo_clone->even_footer              = me->even_footer.
+    eo_clone->even_header              = me->even_header.
+    eo_clone->first_page_number        = me->first_page_number.
+    eo_clone->fit_to_height            = me->fit_to_height.
+    eo_clone->fit_to_page              = me->fit_to_page.
+    eo_clone->fit_to_width             = me->fit_to_width.
+    eo_clone->horizontal_centered      = me->horizontal_centered.
+    eo_clone->horizontal_dpi           = me->horizontal_dpi.
+    eo_clone->margin_bottom            = me->margin_bottom.
+    eo_clone->margin_footer            = me->margin_footer.
+    eo_clone->margin_header            = me->margin_header.
+    eo_clone->margin_left              = me->margin_left.
+    eo_clone->margin_right             = me->margin_right.
+    eo_clone->margin_top               = me->margin_top.
+    eo_clone->odd_footer               = me->odd_footer.
+    eo_clone->odd_header               = me->odd_header.
+    eo_clone->orientation              = me->orientation.
+    eo_clone->page_order               = me->page_order.
+    eo_clone->paper_height             = me->paper_height.
+    eo_clone->paper_size               = me->paper_size.
+    eo_clone->paper_width              = me->paper_width.
+    eo_clone->scale                    = me->scale.
+    eo_clone->use_first_page_num       = me->use_first_page_num.
+    eo_clone->use_printer_defaults     = me->use_printer_defaults.
+    eo_clone->vertical_centered        = me->vertical_centered.
+    eo_clone->vertical_dpi             = me->vertical_dpi.
   ENDMETHOD.
 ENDCLASS.

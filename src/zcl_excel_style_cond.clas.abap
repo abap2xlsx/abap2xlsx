@@ -1,7 +1,8 @@
 CLASS zcl_excel_style_cond DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
   PUBLIC SECTION.
     CLASS zcl_excel_style_conditional DEFINITION LOAD .
@@ -125,6 +126,13 @@ CLASS zcl_excel_style_cond DEFINITION
 *"* protected components of class ZABAP_EXCEL_STYLE_FONT
 *"* do not include other source files here!!!
   PROTECTED SECTION.
+    "! Returns a (semi-)deep copy of this conditional style.
+    "! The cell-style guid (ip_guid) is preserved. Cell styles are workbook-scoped, the copied conditional
+    "! format will reference the existing style.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_style_cond .
+
   PRIVATE SECTION.
 
     DATA mv_rule_range TYPE string .
@@ -239,5 +247,23 @@ CLASS zcl_excel_style_cond IMPLEMENTATION.
                    ip_stop_row     = ip_stop_row
                    ip_stop_column  = ip_stop_column ).
 
+  ENDMETHOD.
+
+
+  METHOD clone.
+    "Constructor regenerates own guid
+    CREATE OBJECT eo_clone
+      EXPORTING
+        ip_dimension_range = me->mv_rule_range.
+    eo_clone->mode_cellis        = me->mode_cellis.
+    eo_clone->mode_textfunction  = me->mode_textfunction.
+    eo_clone->mode_colorscale    = me->mode_colorscale.
+    eo_clone->mode_databar       = me->mode_databar.
+    eo_clone->mode_expression    = me->mode_expression.
+    eo_clone->mode_iconset       = me->mode_iconset.
+    eo_clone->mode_top10         = me->mode_top10.
+    eo_clone->mode_above_average = me->mode_above_average.
+    eo_clone->priority           = me->priority.
+    eo_clone->rule               = me->rule.
   ENDMETHOD.
 ENDCLASS.

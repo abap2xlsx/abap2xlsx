@@ -48,6 +48,36 @@ CLASS zcl_excel DEFINITION
         VALUE(eo_worksheet) TYPE REF TO zcl_excel_worksheet
       RAISING
         zcx_excel .
+    "! Creates a new worksheet that is a deep copy of <em>io_source</em>.
+    "!
+    "! Behaviour mirrors <em>add_new_worksheet</em>: the new sheet is appended,
+    "! becomes the active sheet, and is returned.
+    "!
+    "! The copy is generally "disconnected": subsequent changes on the new worksheet do
+    "! should not affect the source worksheet.
+    "! However, there are exceptions from this rule:
+    "!  - Style GUIDs that live in the workbook-wide  styles collection are intentionally
+    "!    shared - you may follow up with <em>add_new_style</em> to fork a style if independent
+    "!    in edits are required.
+    "!  - Drawings are copied 'by reference'.
+    "!
+    "! Use the optional <em>is_options</em> structure (skip-flags, default = include everything)
+    "! to limit which categories of content are copied; see <em>zcl_excel_worksheet=&gt;ts_clone_options</em>.
+    "!
+    "! @parameter io_source | The source worksheet (must belong to this workbook).
+    "! @parameter iv_title | Title of the new worksheet.
+    "! @parameter is_options | Skip-flags controlling what to copy.
+    "! @parameter eo_worksheet | The newly created cloned worksheet.
+    "! @raising zcx_excel | If the source is invalid or no unique title can be derived.
+    METHODS clone_worksheet
+      IMPORTING
+        !io_source          TYPE REF TO zcl_excel_worksheet
+        !iv_title           TYPE zexcel_sheet_title
+        !is_options         TYPE zcl_excel_worksheet=>ts_clone_options OPTIONAL
+      RETURNING
+        VALUE(eo_worksheet) TYPE REF TO zcl_excel_worksheet
+      RAISING
+        zcx_excel .
     METHODS add_static_styles .
     METHODS constructor .
     METHODS delete_worksheet
@@ -260,6 +290,32 @@ CLASS zcl_excel IMPLEMENTATION.
 
     worksheets->add( eo_worksheet ).
     worksheets->active_worksheet = worksheets->size( ).
+  ENDMETHOD.
+
+
+  METHOD clone_worksheet.
+
+    DATA lo_existing TYPE REF TO zcl_excel_worksheet.
+
+    IF io_source IS NOT BOUND.
+      zcx_excel=>raise_text( 'Source worksheet not bound' ).
+    ENDIF.
+    IF io_source->excel <> me.
+      zcx_excel=>raise_text( 'Source worksheet belongs to another workbook' ).
+    ENDIF.
+    IF iv_title IS INITIAL.
+      zcx_excel=>raise_text( 'Title is mandatory' ).
+    ELSE.
+      lo_existing = get_worksheet_by_name( iv_title ).
+      IF lo_existing IS NOT INITIAL.
+        zcx_excel=>raise_text( 'Worksheet with this name already exists' ).
+      ENDIF.
+    ENDIF.
+
+    eo_worksheet = me->add_new_worksheet( ip_title = iv_title ).
+    eo_worksheet->clone_from( io_source  = io_source
+                              is_options = is_options ).
+
   ENDMETHOD.
 
 

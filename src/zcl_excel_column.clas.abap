@@ -1,7 +1,8 @@
 CLASS zcl_excel_column DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
 *"* public components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
@@ -85,6 +86,16 @@ CLASS zcl_excel_column DEFINITION
 *"* protected components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
   PROTECTED SECTION.
+    "! Returns a deep copy of this column attached to the supplied worksheet.
+    "! The column index is kept, the index must be 'free' in the target worksheet.
+    METHODS clone
+      IMPORTING
+        !io_worksheet   TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_column
+      RAISING
+        zcx_excel .
+
 *"* private components of class ZCL_EXCEL_COLUMN
 *"* do not include other source files here!!!
   PRIVATE SECTION.
@@ -124,6 +135,26 @@ CLASS zcl_excel_column IMPLEMENTATION.
 
   METHOD get_auto_size.
     r_auto_size = me->auto_size.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    DATA: lv_index_alpha TYPE zexcel_cell_column_alpha.
+
+    lv_index_alpha = zcl_excel_common=>convert_column2alpha( me->column_index ).
+    CREATE OBJECT eo_clone
+      EXPORTING
+        ip_index     = lv_index_alpha
+        ip_excel     = io_worksheet->excel
+        ip_worksheet = io_worksheet.
+
+    eo_clone->width         = me->width.
+    eo_clone->auto_size     = me->auto_size.
+    eo_clone->visible       = me->visible.
+    eo_clone->outline_level = me->outline_level.
+    eo_clone->collapsed     = me->collapsed.
+    eo_clone->xf_index      = me->xf_index.
+    eo_clone->style_guid    = me->style_guid.
   ENDMETHOD.
 
 

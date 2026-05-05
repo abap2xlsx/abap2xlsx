@@ -1,7 +1,8 @@
 CLASS zcl_excel_autofilters DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet.
 
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_AUTOFILTERS
@@ -9,6 +10,7 @@ CLASS zcl_excel_autofilters DEFINITION
 
     CONSTANTS c_autofilter TYPE string VALUE '_xlnm._FilterDatabase'. "#EC NOTEXT
 
+    "! Adds a new (empty) autofilter associated with a worksheet to the collection.
     METHODS add
       IMPORTING
         !io_sheet            TYPE REF TO zcl_excel_worksheet
@@ -16,7 +18,9 @@ CLASS zcl_excel_autofilters DEFINITION
         VALUE(ro_autofilter) TYPE REF TO zcl_excel_autofilter
       RAISING
         zcx_excel .
+
     METHODS clear .
+
     METHODS get
       IMPORTING
         !io_worksheet        TYPE REF TO zcl_excel_worksheet
@@ -36,6 +40,14 @@ CLASS zcl_excel_autofilters DEFINITION
 *"* protected components of class ZABAP_EXCEL_WORKSHEETS
 *"* do not include other source files here!!!
   PROTECTED SECTION.
+
+    "! Adds a pre-built autofilter (e.g. a clone) into the collection.
+    METHODS add_existing
+      IMPORTING
+        !io_autofilter TYPE REF TO zcl_excel_autofilter
+      RAISING
+        zcx_excel .
+
   PRIVATE SECTION.
 
     TYPES:
@@ -80,6 +92,26 @@ CLASS zcl_excel_autofilters IMPLEMENTATION.
   METHOD clear.
 
     CLEAR me->mt_autofilters.
+
+  ENDMETHOD.
+
+
+  METHOD add_existing.
+
+    DATA: ls_autofilter LIKE LINE OF me->mt_autofilters.
+
+    DATA lo_worksheet TYPE REF TO zcl_excel_worksheet.
+
+    lo_worksheet = io_autofilter->get_worksheet( ).
+
+    READ TABLE me->mt_autofilters TRANSPORTING NO FIELDS WITH TABLE KEY worksheet = lo_worksheet.
+    IF sy-subrc = 0.
+      RAISE EXCEPTION TYPE zcx_excel. " sheet already has an autofilter
+    ENDIF.
+
+    ls_autofilter-worksheet  = lo_worksheet.
+    ls_autofilter-autofilter = io_autofilter.
+    INSERT ls_autofilter INTO TABLE me->mt_autofilters.
 
   ENDMETHOD.
 

@@ -1,6 +1,7 @@
 CLASS zcl_excel_worksheet_pagebreaks DEFINITION
   PUBLIC
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
   PUBLIC SECTION.
 
@@ -22,6 +23,10 @@ CLASS zcl_excel_worksheet_pagebreaks DEFINITION
       RETURNING
         VALUE(rt_pagebreaks) TYPE tt_pagebreak_at .
   PROTECTED SECTION.
+    "! Returns a deep copy of this page-break collection.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_worksheet_pagebreaks .
 
     DATA mt_pagebreaks TYPE tt_pagebreak_at .
   PRIVATE SECTION.
@@ -46,5 +51,11 @@ CLASS zcl_excel_worksheet_pagebreaks IMPLEMENTATION.
 
   METHOD get_all_pagebreaks.
     rt_pagebreaks = me->mt_pagebreaks.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    CREATE OBJECT eo_clone.
+    eo_clone->mt_pagebreaks = me->mt_pagebreaks.
   ENDMETHOD.
 ENDCLASS.

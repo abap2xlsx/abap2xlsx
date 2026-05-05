@@ -1,7 +1,8 @@
 CLASS zcl_excel_data_validation DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
   PUBLIC SECTION.
 *"* public components of class ZCL_EXCEL_DATA_VALIDATION
@@ -50,6 +51,11 @@ CLASS zcl_excel_data_validation DEFINITION
 *"* protected components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
   PROTECTED SECTION.
+   "! Returns a deep copy of this data validation rule.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_data_validation .
+
   PRIVATE SECTION.
 *"* private components of class ZCL_EXCEL_DATA_VALIDATION
 *"* do not include other source files here!!!
@@ -78,5 +84,27 @@ CLASS zcl_excel_data_validation IMPLEMENTATION.
 * inizialize dimension range
     cell_row     = 1.
     cell_column  = 'A'.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    CREATE OBJECT eo_clone.
+    eo_clone->errorstyle       = me->errorstyle.
+    eo_clone->operator         = me->operator.
+    eo_clone->allowblank       = me->allowblank.
+    eo_clone->cell_column      = me->cell_column.
+    eo_clone->cell_column_to   = me->cell_column_to.
+    eo_clone->cell_row         = me->cell_row.
+    eo_clone->cell_row_to      = me->cell_row_to.
+    eo_clone->showerrormessage = me->showerrormessage.
+    eo_clone->showinputmessage = me->showinputmessage.
+    eo_clone->type             = me->type.
+    eo_clone->formula1         = me->formula1.
+    eo_clone->formula2         = me->formula2.
+    eo_clone->showdropdown     = me->showdropdown.
+    eo_clone->errortitle       = me->errortitle.
+    eo_clone->error            = me->error.
+    eo_clone->prompttitle      = me->prompttitle.
+    eo_clone->prompt           = me->prompt.
   ENDMETHOD.
 ENDCLASS.

@@ -1,7 +1,8 @@
 CLASS zcl_excel_drawing DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
   PUBLIC SECTION.
     CONSTANTS c_graph_pie TYPE zexcel_graph_type VALUE 1.   "#EC NOTEXT
@@ -121,6 +122,12 @@ CLASS zcl_excel_drawing DEFINITION
       IMPORTING
         VALUE(ip_chart) TYPE REF TO if_ixml_document .
   PROTECTED SECTION.
+    "! Returns a deep copy of this drawing with a new GUID. The graph reference,
+    "! if any, is shared (shallow copy) since drawing configuration is large and
+    "! is generally treated as immutable per drawing.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_drawing .
   PRIVATE SECTION.
 
 *"* private components of class ZCL_EXCEL_DRAWING
@@ -166,6 +173,34 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     anchor = anchor_one_cell.
     from_loc-col = 1.
     from_loc-row = 1.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    "Create a new drawing instance; constructor will regenerate guid.
+    CREATE OBJECT eo_clone
+      EXPORTING
+        ip_type  = me->type
+        ip_title = me->title.
+
+    "Copy public attributes
+    eo_clone->graph_type = me->graph_type.
+    eo_clone->title      = me->title.
+    eo_clone->graph      = me->graph.   " shallow share of chart graph configuration
+
+    "Copy private attributes
+    eo_clone->anchor        = me->anchor.
+    eo_clone->media         = me->media.
+    eo_clone->media_key_www = me->media_key_www.
+    eo_clone->media_source  = me->media_source.
+    eo_clone->media_type    = me->media_type.
+    eo_clone->io            = me->io.
+    eo_clone->from_loc      = me->from_loc.
+    eo_clone->to_loc        = me->to_loc.
+    eo_clone->size          = me->size.
+
+    "Note: do NOT copy media_name / index here - they are reassigned by
+    "zcl_excel_drawings=>add when this clone is added to a drawings collection.
   ENDMETHOD.
 
 

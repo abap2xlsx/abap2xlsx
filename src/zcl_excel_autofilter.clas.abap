@@ -1,7 +1,8 @@
 CLASS zcl_excel_autofilter DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
 *"* public components of class ZCL_EXCEL_AUTOFILTER
 *"* do not include other source files here!!!
@@ -31,6 +32,11 @@ CLASS zcl_excel_autofilter DEFINITION
     METHODS constructor
       IMPORTING
         !io_sheet TYPE REF TO zcl_excel_worksheet .
+
+    METHODS get_worksheet
+      RETURNING
+        VALUE(ro_sheet) TYPE REF TO zcl_excel_worksheet.
+
     METHODS get_filter_area
       RETURNING
         VALUE(rs_area) TYPE zexcel_s_autofilter_area
@@ -93,6 +99,14 @@ CLASS zcl_excel_autofilter DEFINITION
         !is_filter          TYPE ts_filter
       RETURNING
         VALUE(rv_is_hidden) TYPE abap_bool .
+
+    "! Returns a deep copy of this autofilter, bound to the supplied worksheet.
+    METHODS clone
+      IMPORTING
+        !io_sheet       TYPE REF TO zcl_excel_worksheet
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_autofilter .
+
 *"* private components of class ZCL_EXCEL_AUTOFILTER
 *"* do not include other source files here!!!
   PRIVATE SECTION.
@@ -112,6 +126,18 @@ CLASS zcl_excel_autofilter IMPLEMENTATION.
 
   METHOD constructor.
     worksheet = io_sheet.
+  ENDMETHOD.
+
+  METHOD get_worksheet.
+    ro_sheet = worksheet.
+  ENDMETHOD.
+
+  METHOD clone.
+    CREATE OBJECT eo_clone
+      EXPORTING
+        io_sheet = io_sheet.
+    eo_clone->filter_area = me->filter_area.
+    eo_clone->mt_filters  = me->mt_filters.
   ENDMETHOD.
 
 

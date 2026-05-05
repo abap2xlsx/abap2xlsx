@@ -1,7 +1,8 @@
 CLASS zcl_excel_table DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PUBLIC
+  GLOBAL FRIENDS zcl_excel_worksheet .
 
 *"* public components of class ZCL_EXCEL_TABLE
 *"* do not include other source files here!!!
@@ -115,11 +116,14 @@ CLASS zcl_excel_table DEFINITION
         zcx_excel .
 *"* protected components of class ZCL_EXCEL_TABLE
 *"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_TABLE
-*"* do not include other source files here!!!
-*"* protected components of class ZCL_EXCEL_TABLE
-*"* do not include other source files here!!!
   PROTECTED SECTION.
+    "! Returns a deep copy of this table without an id; the caller is
+    "! responsible for assigning the id (via set_id) and adding the clone
+    "! to a worksheet's tables collection.
+    METHODS clone
+      RETURNING
+        VALUE(eo_clone) TYPE REF TO zcl_excel_table .
+
   PRIVATE SECTION.
 
     DATA id TYPE i .
@@ -159,6 +163,19 @@ CLASS zcl_excel_table IMPLEMENTATION.
 
   METHOD get_id.
     ov_id = id.
+  ENDMETHOD.
+
+
+  METHOD clone.
+    CREATE OBJECT eo_clone.
+    eo_clone->fieldcat   = me->fieldcat.
+    eo_clone->settings   = me->settings.
+    eo_clone->name       = me->name.
+    "table_data is a generic data reference - share the reference; cloning the
+    "underlying ABAP internal table generically is rarely desired (table content
+    "lives in cells anyway). Caller may overwrite via set_data when needed.
+    eo_clone->table_data = me->table_data.
+    "Intentionally leave id initial - caller assigns via set_id.
   ENDMETHOD.
 
 
