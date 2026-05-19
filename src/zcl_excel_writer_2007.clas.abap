@@ -2516,16 +2516,21 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lc_xml_node_rid_image_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
           lc_xml_node_rid_chart_tp  TYPE string VALUE 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart'.
 
+    TYPES: BEGIN OF ty_temp,
+             row_index TYPE i,
+             str       TYPE string,
+           END OF ty_temp.
+
     DATA: lo_drawing      TYPE REF TO zcl_excel_drawing,
           lo_document     TYPE REF TO if_ixml_document,
           lo_element_root TYPE REF TO if_ixml_element,
           lo_element      TYPE REF TO if_ixml_element,
           lv_value        TYPE string,
           lv_relation_id  TYPE i,
-          lt_temp         TYPE strtable,
+          lt_temp         TYPE STANDARD TABLE OF ty_temp WITH DEFAULT KEY,
           lt_drawings     TYPE zexcel_t_drawings.
 
-    FIELD-SYMBOLS: <fs_temp>     TYPE sstrtable,
+    FIELD-SYMBOLS: <fs_temp>     LIKE LINE OF lt_temp,
                    <fs_drawings> TYPE zexcel_s_drawings.
 
 
@@ -3597,7 +3602,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
 
     DELETE lt_cell_data WHERE cell_formula IS NOT INITIAL. " delete formula content
 
-    DESCRIBE TABLE lt_cell_data LINES lv_count.
+    lv_count = lines( lt_cell_data ).
     lv_count_str = lv_count.
 
     " separating plain and rich text format strings
@@ -3619,7 +3624,7 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     SORT lt_cell_data BY cell_value rtf_tab.
     FREE lt_cell_data_rtf.
 
-    DESCRIBE TABLE lt_cell_data LINES lv_uniquecount.
+    lv_uniquecount = lines( lt_cell_data ).
     lv_uniquecount_str = lv_uniquecount.
 
     SHIFT lv_uniquecount_str RIGHT DELETING TRAILING space.
@@ -5117,25 +5122,25 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
     ENDLOOP.
 
     " update attribute "count"
-    DESCRIBE TABLE lt_fonts LINES lv_fonts_count.
+    lv_fonts_count = lines( lt_fonts ).
     lv_value = lv_fonts_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_fonts->set_attribute_ns( name  = lc_xml_attr_count
                                         value = lv_value ).
-    DESCRIBE TABLE lt_fills LINES lv_fills_count.
+    lv_fills_count = lines( lt_fills ).
     lv_value = lv_fills_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_fills->set_attribute_ns( name  = lc_xml_attr_count
                                         value = lv_value ).
-    DESCRIBE TABLE lt_borders LINES lv_borders_count.
+    lv_borders_count = lines( lt_borders ).
     lv_value = lv_borders_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.
     lo_element_borders->set_attribute_ns( name  = lc_xml_attr_count
                                           value = lv_value ).
-    DESCRIBE TABLE lt_cellxfs LINES lv_cellxfs_count.
+    lv_cellxfs_count = lines( lt_cellxfs ).
     lv_value = lv_cellxfs_count.
     SHIFT lv_value RIGHT DELETING TRAILING space.
     SHIFT lv_value LEFT DELETING LEADING space.

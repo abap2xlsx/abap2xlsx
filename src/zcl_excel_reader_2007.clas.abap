@@ -344,7 +344,7 @@ CLASS zcl_excel_reader_2007 DEFINITION
     METHODS create_zip_archive
       IMPORTING
         !i_xlsx_binary       TYPE xstring
-        !i_use_alternate_zip TYPE seoclsname OPTIONAL
+        !i_use_alternate_zip TYPE clike OPTIONAL
       RETURNING
         VALUE(e_zip)         TYPE REF TO lcl_zip_archive
       RAISING
@@ -652,6 +652,12 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
   METHOD get_ixml_from_zip_archive.
 
+* The corresponding part of SAP note 2922674:
+* A workaround for the replacement of characters of the supplementary plane in SAP_BASIS 7.51 or lower is to convert
+* the UTF-8 value to ABAP variable type STRING using method CL_ABAP_CODEPAGE=>CONVERT_FROM and then to parse the
+* document using an iXML input stream created with factory method IF_IXML_STREAM_FACTORY=>CREATE_ISTREAM_STRING.
+* Do not use method IF_IXML_STREAM_FACTORY=>CREATE_ISTREAM_CSTRING in this context as it shows the unwanted behaviour.
+
     DATA: lv_content       TYPE xstring,
           lo_ixml          TYPE REF TO if_ixml,
           lo_streamfactory TYPE REF TO if_ixml_stream_factory,
@@ -665,7 +671,8 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lv_content        = me->get_from_zip_archive( i_filename ).
     lo_ixml           = cl_ixml=>create( ).
     lo_streamfactory  = lo_ixml->create_stream_factory( ).
-    lo_istream        = lo_streamfactory->create_istream_xstring( lv_content ).
+*   lo_istream        = lo_streamfactory->create_istream_xstring( lv_content ).
+    lo_istream        = lo_streamfactory->create_istream_string( cl_abap_codepage=>convert_from( lv_content ) ).
     r_ixml            = lo_ixml->create_document( ).
     lo_parser         = lo_ixml->create_parser( stream_factory = lo_streamfactory
                                                 istream        = lo_istream
@@ -3977,8 +3984,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           END OF ls_table_style.
 
     DATA: BEGIN OF ls_table_column,
-            id   TYPE string,
-            name TYPE string,
+            id                TYPE string,
+            name              TYPE string,
+            totalsrowfunction TYPE string,
           END OF ls_table_column.
 
     FIELD-SYMBOLS <ls_table> LIKE LINE OF it_tables.
@@ -4030,8 +4038,9 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
 
         ls_field_catalog-position = lines( lt_field_catalog ) + 1.
         ls_field_catalog-fieldname = |COMP_{ ls_field_catalog-position PAD = '0' ALIGN = RIGHT WIDTH = 4 }|.
-        ls_field_catalog-scrtext_l = ls_table_column-name.
+        ls_field_catalog-column_name = ls_table_column-name.
         ls_field_catalog-dynpfld = abap_true.
+        ls_field_catalog-totals_function = ls_table_column-totalsrowfunction.
         ls_field_catalog-abap_type = cl_abap_typedescr=>typekind_string.
         APPEND ls_field_catalog TO lt_field_catalog.
 

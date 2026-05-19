@@ -34,7 +34,7 @@ Changes are handled via the usual pull request mechanism; clear, short PRs for b
 
 ### Review process
 
-With the possible exception of the original authors it is recommended that contributors go through the PR process, even when they have push access. A different contributor will then review the PR, provide feedback on possible reworks or even merge it directly if all is in order. It is also possible to review changes and have someone else merge them, of course.
+With the possible exception of the original authors it is recommended that contributors go through the PR process, even when they have push access. A different contributor will then review the PR, provide feedback on possible reworks or even merge it directly if all is in order. It is also possible to review changes and have someone else merge them, of course. Some [automated tests](./docs/contributing/automated-tests.md) must be executed to verify that the merged code doesn't break anything.
 
 ### Keeping PR up to date
 

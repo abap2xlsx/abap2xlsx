@@ -226,17 +226,20 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     add_print_options( ).
     " pageMargins node
     add_page_margins( ).
-* pageSetup node
+    " pageSetup node
     add_page_setup( ).
-* { headerFooter necessary?   >
+    " headerFooter
     add_header_footer( ).
     add_page_breaks( ).
-* drawing
-    add_drawing( ).
-    add_drawing_for_comments( ).
-    add_drawing_for_header_footer( ).
-* ignoredErrors
+    " ignoredErrors
     add_ignored_errors( ).
+    " drawing
+    add_drawing( ).
+    " legacyDrawing
+    add_drawing_for_comments( ).
+    " legacyDrawingHF
+    add_drawing_for_header_footer( ).
+    " table parts
     add_table_parts( ).
   ENDMETHOD.
   METHOD add_sheetpr.
@@ -853,7 +856,7 @@ CLASS lcl_create_xl_sheet IMPLEMENTATION.
     IF lt_range_merge IS NOT INITIAL.
       lo_element = o_document->create_simple_element( name   = lc_xml_node_mergecells
                                                       parent = o_document ).
-      DESCRIBE TABLE lt_range_merge LINES merge_count.
+      merge_count = lines( lt_range_merge ).
       lv_value = merge_count.
       CONDENSE lv_value.
       lo_element->set_attribute_ns( name  = lc_xml_attr_count
