@@ -120,6 +120,12 @@ CLASS zcl_excel_drawing DEFINITION
     METHODS load_chart_attributes
       IMPORTING
         VALUE(ip_chart) TYPE REF TO if_ixml_document .
+    METHODS set_reference_drawing
+      IMPORTING
+        !ip_ref TYPE REF TO zcl_excel_drawing.
+    METHODS get_reference_guid
+      RETURNING
+        VALUE(ep_guid) TYPE zexcel_guid.
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -141,6 +147,7 @@ CLASS zcl_excel_drawing DEFINITION
     DATA from_loc TYPE zexcel_drawing_location .
     DATA to_loc TYPE zexcel_drawing_location .
     DATA size TYPE zexcel_drawing_size .
+    DATA reference_drawing TYPE REF TO zcl_excel_drawing.
     CONSTANTS c_ixml_iid_element TYPE i VALUE 130.
 
 ENDCLASS.
@@ -1132,5 +1139,13 @@ CLASS ZCL_EXCEL_DRAWING IMPLEMENTATION.
     me->to_loc = ip_to.
     me->anchor = lv_anchor.
 
+  ENDMETHOD.
+  METHOD set_reference_drawing.
+    reference_drawing = ip_ref.
+  ENDMETHOD.
+  METHOD get_reference_guid.
+    IF reference_drawing IS BOUND.
+      ep_guid = reference_drawing->get_guid( ).
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.
