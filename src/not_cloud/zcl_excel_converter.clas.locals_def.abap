@@ -40,12 +40,3 @@ TYPES: BEGIN OF ts_styles,
        END OF ts_styles,
        tt_styles TYPE HASHED TABLE OF ts_styles WITH UNIQUE KEY primary_key COMPONENTS type alignment inttype decimals
                                                 WITH NON-UNIQUE SORTED KEY guid COMPONENTS guid .
-
-TYPES: BEGIN OF ts_color_styles,
-         guid_old  TYPE zexcel_cell_style,
-         fontcolor TYPE zexcel_style_color_argb,
-         fillcolor TYPE zexcel_style_color_argb,
-         style_new TYPE REF TO zcl_excel_style,
-       END OF ts_color_styles,
-
-       tt_color_styles TYPE HASHED TABLE OF ts_color_styles  WITH UNIQUE KEY guid_old fontcolor fillcolor.

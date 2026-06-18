@@ -54,36 +54,6 @@ CLASS zcl_excel_converter DEFINITION
 *"* do not include other source files here!!!
   PROTECTED SECTION.
 
-    TYPES:
-      BEGIN OF t_relationship,
-        id     TYPE string,
-        type   TYPE string,
-        target TYPE string,
-      END OF t_relationship .
-    TYPES:
-      BEGIN OF t_fileversion,
-        appname      TYPE string,
-        lastedited   TYPE string,
-        lowestedited TYPE string,
-        rupbuild     TYPE string,
-        codename     TYPE string,
-      END OF t_fileversion .
-    TYPES:
-      BEGIN OF t_sheet,
-        name    TYPE string,
-        sheetid TYPE string,
-        id      TYPE string,
-      END OF t_sheet .
-    TYPES:
-      BEGIN OF t_workbookpr,
-        codename            TYPE string,
-        defaultthemeversion TYPE string,
-      END OF t_workbookpr .
-    TYPES:
-      BEGIN OF t_sheetpr,
-        codename TYPE string,
-      END OF t_sheetpr .
-
     DATA w_row_int TYPE zexcel_cell_row VALUE 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
     DATA w_col_int TYPE zexcel_cell_column VALUE 1. "#EC NOTEXT .  .  .  .  .  .  .  .  .  . " .
 *"* private components of class ZCL_EXCEL_CONVERTER
@@ -114,7 +84,6 @@ CLASS zcl_excel_converter DEFINITION
     CONSTANTS c_type_nor TYPE c VALUE 'N'.                  "#EC NOTEXT
     CONSTANTS c_type_sub TYPE c VALUE 'S'.                  "#EC NOTEXT
     CONSTANTS c_type_tot TYPE c VALUE 'T'.                  "#EC NOTEXT
-    DATA wt_color_styles TYPE tt_color_styles .
     CLASS-DATA ws_option TYPE zexcel_s_converter_option .
     CLASS-DATA ws_indx TYPE indx .
 
@@ -133,12 +102,14 @@ CLASS zcl_excel_converter DEFINITION
       RAISING
         zcx_excel .
     METHODS clean_fieldcatalog .
-    METHODS create_color_style
+    METHODS complete_cell
       IMPORTING
-        !i_style        TYPE zexcel_cell_style
-        !is_colors      TYPE zexcel_s_converter_col
-      RETURNING
-        VALUE(ro_style) TYPE REF TO zcl_excel_style .
+        !ip_table_row TYPE i
+        !ip_fieldname TYPE fieldname
+        !ip_column    TYPE simple
+        !ip_row       TYPE zexcel_cell_row
+      RAISING
+        zcx_excel .
     METHODS create_formular_subtotal
       IMPORTING
         !i_row_int_start   TYPE zexcel_cell_row
@@ -206,13 +177,6 @@ CLASS zcl_excel_converter DEFINITION
         !it_table  TYPE STANDARD TABLE
       RAISING
         zcx_excel .
-    METHODS get_color_style
-      IMPORTING
-        !i_row         TYPE zexcel_cell_row
-        !i_fieldname   TYPE fieldname
-        !i_style       TYPE zexcel_cell_style
-      RETURNING
-        VALUE(r_style) TYPE zexcel_cell_style .
     METHODS get_function_number
       IMPORTING
         !i_totals_function       TYPE zexcel_table_totals_function
@@ -348,12 +312,14 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           ls_field_catalog TYPE zexcel_s_fieldcatalog,
           ls_fcat          TYPE zexcel_s_converter_fcat,
           lo_column        TYPE REF TO zcl_excel_column,
+          lv_row_int       TYPE zexcel_cell_row,
           lv_col_int       TYPE zexcel_cell_column,
           lv_col_alpha     TYPE zexcel_cell_column_alpha,
           ls_settings      TYPE zexcel_s_table_settings,
+          lv_table_row     TYPE i,
           lv_line          TYPE i.
 
-    FIELD-SYMBOLS: <fs_tab>         TYPE ANY TABLE.
+    FIELD-SYMBOLS: <fs_tab> TYPE ANY TABLE.
 
     ASSIGN wo_data->* TO <fs_tab> .
 
@@ -386,6 +352,15 @@ CLASS zcl_excel_converter IMPLEMENTATION.
     LOOP AT wt_fieldcatalog INTO ls_fcat.
       lv_col_int = w_col_int + ls_fcat-position - 1.
       lv_col_alpha = zcl_excel_common=>convert_column2alpha( lv_col_int ).
+      lv_row_int = w_row_int + 1.  "Skip header
+      DO lines( <fs_tab> ) TIMES.
+        lv_table_row = sy-index.
+        complete_cell( ip_table_row = lv_table_row
+                       ip_fieldname = ls_fcat-columnname
+                       ip_column    = lv_col_alpha
+                       ip_row       = lv_row_int ).
+        ADD 1 TO lv_row_int.
+      ENDDO.
 * Freeze panes
       IF ls_fcat-fix_column = abap_true.
         ADD 1 TO r_freeze_col.
@@ -521,22 +496,30 @@ CLASS zcl_excel_converter IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD create_color_style.
-    DATA: ls_styles TYPE ts_styles.
-    DATA: lo_style TYPE REF TO zcl_excel_style.
-    READ TABLE wt_styles INTO ls_styles WITH KEY guid COMPONENTS guid = i_style.
-    IF sy-subrc = 0.
-      lo_style                 = wo_excel->add_new_style( ).
-      lo_style->font->bold                 = ls_styles-style->font->bold.
-      lo_style->alignment->horizontal      = ls_styles-style->alignment->horizontal.
-      lo_style->number_format->format_code = ls_styles-style->number_format->format_code.
+  METHOD complete_cell.
 
-      lo_style->font->color-rgb      = is_colors-fontcolor.
-      lo_style->fill->filltype       = zcl_excel_style_fill=>c_fill_solid.
-      lo_style->fill->fgcolor-rgb    = is_colors-fillcolor.
+* Now let's check for colors
+    DATA: ls_colors TYPE zexcel_s_converter_col.
 
-      ro_style = lo_style.
+    IF wt_colors IS NOT INITIAL.
+* Field has color
+      READ TABLE wt_colors INTO ls_colors WITH KEY rownumber  = ip_table_row
+                                                   columnname = ip_fieldname.
+      IF sy-subrc <> 0.
+* Full line has color
+        READ TABLE wt_colors INTO ls_colors WITH KEY rownumber  = ip_table_row
+                                                     columnname = space.
+      ENDIF.
+      IF sy-subrc = 0.
+        wo_worksheet->change_cell_style( ip_column           = ip_column
+                                         ip_row              = ip_row
+                                         ip_font_color_rgb   = ls_colors-fontcolor
+                                         ip_fill_filltype    = zcl_excel_style_fill=>c_fill_solid
+                                         ip_fill_fgcolor_rgb = ls_colors-fillcolor ).
+      ENDIF.
     ENDIF.
+
+* todo: hyperlink support
   ENDMETHOD.
 
 
@@ -978,64 +961,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_color_style.
-    DATA: ls_colors       TYPE zexcel_s_converter_col,
-          ls_color_styles TYPE ts_color_styles,
-          lo_style        TYPE REF TO zcl_excel_style.
-
-    r_style = i_style. " Default we change nothing
-
-    IF wt_colors IS NOT INITIAL.
-* Full line has color
-      READ TABLE wt_colors INTO ls_colors WITH KEY rownumber   = i_row
-                                                   columnname  = space.
-      IF sy-subrc = 0.
-        READ TABLE wt_color_styles INTO ls_color_styles WITH KEY guid_old  = i_style
-                                                                 fontcolor = ls_colors-fontcolor
-                                                                 fillcolor = ls_colors-fillcolor.
-        IF sy-subrc = 0.
-          r_style = ls_color_styles-style_new->get_guid( ).
-        ELSE.
-          lo_style = create_color_style( i_style          = i_style
-                                         is_colors        = ls_colors ) .
-          r_style = lo_style->get_guid( ) .
-          ls_color_styles-guid_old  = i_style.
-          ls_color_styles-fontcolor = ls_colors-fontcolor.
-          ls_color_styles-fillcolor = ls_colors-fillcolor.
-          ls_color_styles-style_new = lo_style.
-          INSERT ls_color_styles INTO TABLE wt_color_styles.
-        ENDIF.
-      ELSE.
-* Only field has color
-        READ TABLE wt_colors INTO ls_colors WITH KEY rownumber   = i_row
-                                                     columnname  = i_fieldname.
-        IF sy-subrc = 0.
-          READ TABLE wt_color_styles INTO ls_color_styles WITH KEY guid_old  = i_style
-                                                                   fontcolor = ls_colors-fontcolor
-                                                                   fillcolor = ls_colors-fillcolor.
-          IF sy-subrc = 0.
-            r_style = ls_color_styles-style_new->get_guid( ).
-          ELSE.
-            lo_style = create_color_style( i_style          = i_style
-                                           is_colors        = ls_colors ) .
-            ls_color_styles-guid_old  = i_style.
-            ls_color_styles-fontcolor = ls_colors-fontcolor.
-            ls_color_styles-fillcolor = ls_colors-fillcolor.
-            ls_color_styles-style_new = lo_style.
-            INSERT ls_color_styles INTO TABLE wt_color_styles.
-            r_style = ls_color_styles-style_new->get_guid( ).
-          ENDIF.
-        ELSE.
-          r_style = i_style.
-        ENDIF.
-      ENDIF.
-    ELSE.
-      r_style = i_style.
-    ENDIF.
-
-  ENDMETHOD.
-
-
   METHOD get_file.
     DATA: lo_excel_writer         TYPE REF TO zif_excel_writer.
 
@@ -1201,7 +1126,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           l_s_color     TYPE abap_bool,
           lo_column     TYPE REF TO zcl_excel_column,
           l_formula     TYPE zexcel_cell_formula,
-          l_style       TYPE zexcel_cell_style,
           l_cells       TYPE i,
           l_count       TYPE i,
           l_table_row   TYPE i.
@@ -1247,27 +1171,25 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         IF sy-subrc = 0.
 * Now let's write the cell values
           IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
-            l_style = get_color_style( i_row       = l_table_row
-                                       i_fieldname = <fs_sfcat>-columnname
-                                       i_style     = <fs_sfcat>-style_stripped  ).
             wo_worksheet->set_cell( ip_column    = l_col_alpha
                                     ip_row       = l_row_int
                                     ip_value     = <fs_fldval>
-                                    ip_style     = l_style
+                                    ip_style     = <fs_sfcat>-style_stripped
                                     ip_conv_exit_length = ws_option-conv_exit_length ).
             CLEAR l_s_color.
           ELSE.
-            l_style = get_color_style( i_row       = l_table_row
-                                       i_fieldname = <fs_sfcat>-columnname
-                                       i_style     = <fs_sfcat>-style_normal  ).
             wo_worksheet->set_cell( ip_column    = l_col_alpha
                                     ip_row       = l_row_int
                                     ip_value     = <fs_fldval>
-                                    ip_style     = l_style
+                                    ip_style     = <fs_sfcat>-style_normal
                                     ip_conv_exit_length = ws_option-conv_exit_length  ).
             l_s_color = abap_true.
           ENDIF.
         ENDIF.
+        complete_cell( ip_table_row = l_table_row
+                       ip_fieldname = <fs_sfcat>-columnname
+                       ip_column    = l_col_alpha
+                       ip_row       = l_row_int ).
         READ TABLE wt_filter TRANSPORTING NO FIELDS WITH TABLE KEY rownumber  = l_table_row
                                                                    columnname = <fs_sfcat>-columnname.
         IF sy-subrc = 0.
@@ -1320,7 +1242,6 @@ CLASS zcl_excel_converter IMPLEMENTATION.
           lo_column         TYPE REF TO zcl_excel_column,
           lo_row            TYPE REF TO zcl_excel_row,
           l_formula         TYPE zexcel_cell_formula,
-          l_style           TYPE zexcel_cell_style,
           l_text            TYPE string,
           ls_sort_values    TYPE ts_sort_values,
           ls_subtotal_rows  TYPE ts_subtotal_rows,
@@ -1548,26 +1469,24 @@ CLASS zcl_excel_converter IMPLEMENTATION.
         ENDIF.
 * Now let's write the cell values
         IF ws_layout-is_stripped = abap_true AND l_s_color = abap_true.
-          l_style = get_color_style( i_row       = l_table_row
-                                     i_fieldname = <fs_sfcat>-columnname
-                                     i_style     = <fs_sfcat>-style_stripped  ).
           wo_worksheet->set_cell( ip_column    = l_col_alpha
                                   ip_row       = l_row_int
                                   ip_value     = <fs_fldval>
-                                  ip_style     = l_style
+                                  ip_style     = <fs_sfcat>-style_stripped
                                   ip_conv_exit_length = ws_option-conv_exit_length ).
           CLEAR l_s_color.
         ELSE.
-          l_style = get_color_style( i_row       = l_table_row
-                                     i_fieldname = <fs_sfcat>-columnname
-                                     i_style     = <fs_sfcat>-style_normal  ).
           wo_worksheet->set_cell( ip_column    = l_col_alpha
                                   ip_row       = l_row_int
                                   ip_value     = <fs_fldval>
-                                  ip_style     = l_style
+                                  ip_style     = <fs_sfcat>-style_normal
                                   ip_conv_exit_length = ws_option-conv_exit_length   ).
           l_s_color = abap_true.
         ENDIF.
+        complete_cell( ip_table_row = l_table_row
+                       ip_fieldname = <fs_sfcat>-columnname
+                       ip_column    = l_col_alpha
+                       ip_row       = l_row_int ).
         READ TABLE wt_filter TRANSPORTING NO FIELDS WITH TABLE KEY rownumber  = l_table_row
                                                                    columnname = <fs_sfcat>-columnname.
         IF sy-subrc = 0.
