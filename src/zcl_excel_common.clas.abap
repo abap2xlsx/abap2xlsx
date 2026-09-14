@@ -1208,6 +1208,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
           lv_compare_1     TYPE string,
           lv_compare_2     TYPE string,
           lv_level         TYPE i,         " Level of groups [..[..]..] or {..}
+          lv_col_only      TYPE abap_bool, " A:A - column without a row
+          lv_row_only      TYPE abap_bool, " 1:1 - row without a column
+          lv_prev          TYPE i,         " Offset of the character before a reference
 
           lv_errormessage  TYPE string.
 
@@ -1404,9 +1407,38 @@ CLASS zcl_excel_common IMPLEMENTATION.
           ENDIF.
 
 *--------------------------------------------------------------------*
+* Whole column (A:A) or whole row (1:1) reference
+*--------------------------------------------------------------------*
+* Such a reference has only one of the two coordinates. It counts as a
+* reference when the token is nothing but that coordinate and a colon is
+* glued to it on one side - that is what tells it from a name like F_1
+* or from the sheets in Sheet1:Sheet3!A1.
+*--------------------------------------------------------------------*
+          CLEAR: lv_col_only,
+                 lv_row_only.
+          lv_compare_2 = lv_ref_cell_addr.
+          CONDENSE lv_compare_2.
+          IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS INITIAL AND lv_compare_2 = lv_tcol1.
+            lv_col_only = abap_true.
+          ELSEIF lv_tcol1 IS INITIAL AND lv_trow1 IS NOT INITIAL AND lv_compare_2 = lv_trow1.
+            lv_row_only = abap_true.
+          ENDIF.
+          IF ( lv_col_only = abap_true OR lv_row_only = abap_true ) AND lv_tchar <> ':'.
+            lv_prev = lv_offset1 - 1.
+            IF lv_prev < 0.
+              CLEAR: lv_col_only,
+                     lv_row_only.
+            ELSEIF lv_ref_formula+lv_prev(1) <> ':'.
+              CLEAR: lv_col_only,
+                     lv_row_only.
+            ENDIF.
+          ENDIF.
+
+*--------------------------------------------------------------------*
 * Check for invalid cell address
 *--------------------------------------------------------------------*
-          IF lv_tcol1 IS INITIAL OR lv_trow1 IS INITIAL.
+          IF ( lv_tcol1 IS INITIAL OR lv_trow1 IS INITIAL )
+            AND lv_col_only = abap_false AND lv_row_only = abap_false.
             CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
             lv_cnt = lv_cnt + 1.
             lv_offset1 = lv_cnt.
@@ -1430,7 +1462,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Check for valid row
 *--------------------------------------------------------------------*
-          IF lv_trow1 GT 1048576.
+          IF lv_col_only = abap_false AND lv_trow1 GT 1048576.
             CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
             lv_cnt = lv_cnt + 1.
             lv_offset1 = lv_cnt.
@@ -1466,24 +1498,28 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Check for valid column
 *--------------------------------------------------------------------*
-          TRY.
-              lv_tcoln = zcl_excel_common=>convert_column2int( lv_tcol1 ) + iv_shift_cols.
-            CATCH zcx_excel.
-              CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
-              lv_cnt = lv_cnt + 1.
-              lv_offset1 = lv_cnt.
-              lv_cnt2 = lv_cnt + 1.
-              lv_numchars = 1.
-              CONTINUE.
-          ENDTRY.
+          IF lv_row_only = abap_false.
+            TRY.
+                lv_tcoln = zcl_excel_common=>convert_column2int( lv_tcol1 ) + iv_shift_cols.
+              CATCH zcx_excel.
+                CONCATENATE lv_cur_form lv_substr1 INTO lv_cur_form.
+                lv_cnt = lv_cnt + 1.
+                lv_offset1 = lv_cnt.
+                lv_cnt2 = lv_cnt + 1.
+                lv_numchars = 1.
+                CONTINUE.
+            ENDTRY.
+          ENDIF.
 *--------------------------------------------------------------------*
 * Check whether there is a referencing problem
 *--------------------------------------------------------------------*
-          lv_trow2 = lv_trow1 + iv_shift_rows.
-          " Remove the space used for the sign
-          CONDENSE lv_trow2.
-          IF   ( lv_tcoln < 1 AND lv_abscol <> '$' )   " Maybe we should add here max-column and max row-tests as well.
-            OR ( lv_trow2 < 1 AND lv_absrow <> '$' ).  " Check how EXCEL behaves in this case
+          IF lv_col_only = abap_false.
+            lv_trow2 = lv_trow1 + iv_shift_rows.
+            " Remove the space used for the sign
+            CONDENSE lv_trow2.
+          ENDIF.
+          IF   ( lv_tcoln < 1 AND lv_abscol <> '$' AND lv_row_only = abap_false )   " Maybe we should add here max-column and max row-tests as well.
+            OR ( lv_trow2 < 1 AND lv_absrow <> '$' AND lv_col_only = abap_false ).  " Check how EXCEL behaves in this case
 *--------------------------------------------------------------------*
 * Referencing problem encountered --> set error
 *--------------------------------------------------------------------*
@@ -1496,7 +1532,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Adjust column
 *--------------------------------------------------------------------*
-            IF lv_abscol EQ '$'.
+            IF lv_row_only = abap_true.
+              " nothing to write: the reference has no column
+            ELSEIF lv_abscol EQ '$'.
               CONCATENATE lv_cur_form lv_abscol lv_tcol1 INTO lv_cur_form.
             ELSEIF iv_shift_cols EQ 0.
               CONCATENATE lv_cur_form lv_tcol1 INTO lv_cur_form.
@@ -1516,7 +1554,9 @@ CLASS zcl_excel_common IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Adjust row
 *--------------------------------------------------------------------*
-            IF lv_absrow EQ '$'.
+            IF lv_col_only = abap_true.
+              " nothing to write: the reference has no row
+            ELSEIF lv_absrow EQ '$'.
               CONCATENATE lv_cur_form lv_absrow lv_trow1 INTO lv_cur_form.
             ELSEIF iv_shift_rows = 0.
               CONCATENATE lv_cur_form lv_trow1 INTO lv_cur_form.
