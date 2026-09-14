@@ -119,7 +119,12 @@ CLASS lcl_excel_common_test DEFINITION FOR TESTING
       shift_formula_notcols FOR TESTING,
       shift_formula_name FOR TESTING,
       shift_formula_refcolumn1 FOR TESTING,
-      shift_formula_refcolumn2 FOR TESTING.
+      shift_formula_refcolumn2 FOR TESTING,
+      shift_formula_whole_column FOR TESTING,
+      shift_formula_whole_row FOR TESTING,
+      shift_formula_whole_col_abs FOR TESTING,
+      shift_formula_whole_col_sheet FOR TESTING,
+      shift_formula_3d_reference FOR TESTING.
     METHODS is_cell_in_range_ulc_in FOR TESTING.
     METHODS is_cell_in_range_lrc_in FOR TESTING.
     METHODS is_cell_in_range_leftside_out FOR TESTING.
@@ -1580,6 +1585,81 @@ CLASS lcl_excel_common_test IMPLEMENTATION.
       iv_shift_cols        = 1
       iv_shift_rows        = 1
       iv_expected          = 'Tbl[[#This Row],[Air]]+B2' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_whole_column.
+
+    " Whole column reference: the column moves, there is no row to move
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(A:A)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 0
+      iv_expected          = 'SUM(B:B)' ).
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(A:C)'
+      iv_shift_cols        = 2
+      iv_shift_rows        = 0
+      iv_expected          = 'SUM(C:E)' ).
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(A:A)'
+      iv_shift_cols        = 0
+      iv_shift_rows        = 5
+      iv_expected          = 'SUM(A:A)' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_whole_row.
+
+    " Whole row reference: the row moves, there is no column to move
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(1:1)'
+      iv_shift_cols        = 0
+      iv_shift_rows        = 1
+      iv_expected          = 'SUM(2:2)' ).
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(1:1)'
+      iv_shift_cols        = 3
+      iv_shift_rows        = 0
+      iv_expected          = 'SUM(1:1)' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_whole_col_abs.
+
+    " Absolute whole columns stay, relative ones move
+    macro_shift_formula(
+      iv_reference_formula = 'SUM($A:$A)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 0
+      iv_expected          = 'SUM($A:$A)' ).
+    macro_shift_formula(
+      iv_reference_formula = 'SUMIF($AC:$AC,"<>",Q:Q)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 0
+      iv_expected          = 'SUMIF($AC:$AC,"<>",R:R)' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_whole_col_sheet.
+
+    " Whole column on another sheet
+    macro_shift_formula(
+      iv_reference_formula = 'Sheet2!A:A'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 0
+      iv_expected          = 'Sheet2!B:B' ).
+
+  ENDMETHOD.
+
+  METHOD shift_formula_3d_reference.
+
+    " Sheet1:Sheet3 is a range of sheets, not of columns
+    macro_shift_formula(
+      iv_reference_formula = 'SUM(Sheet1:Sheet3!A1)'
+      iv_shift_cols        = 1
+      iv_shift_rows        = 1
+      iv_expected          = 'SUM(Sheet1:Sheet3!B2)' ).
 
   ENDMETHOD.
 
