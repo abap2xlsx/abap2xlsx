@@ -2309,9 +2309,23 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Start of convert content
 *--------------------------------------------------------------------*
+    IF iv_end_row <> 0 AND iv_begin_row > iv_end_row.
+      RETURN.
+    ENDIF.
+
     READ TABLE me->sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = iv_begin_row.
     IF sy-subrc EQ 0.
       lv_index = sy-tabix.
+    ELSE.
+      LOOP AT me->sheet_content ASSIGNING <ls_sheet_content>
+        WHERE cell_row > iv_begin_row.
+        lv_index = sy-tabix.
+        EXIT.
+      ENDLOOP.
+    ENDIF.
+
+    IF lv_index = 0.
+      RETURN.
     ENDIF.
 
     LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> FROM lv_index.
