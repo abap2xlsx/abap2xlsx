@@ -136,6 +136,7 @@ CLASS zcl_excel DEFINITION
     METHODS get_worksheet_by_name
       IMPORTING
         !ip_sheet_name      TYPE zexcel_sheet_title
+        !iv_match_case      TYPE abap_bool DEFAULT abap_false
       RETURNING
         VALUE(eo_worksheet) TYPE REF TO zcl_excel_worksheet .
     METHODS set_active_sheet_index
@@ -579,16 +580,29 @@ CLASS zcl_excel IMPLEMENTATION.
 
   METHOD get_worksheet_by_name.
 
-    DATA: lv_index TYPE zexcel_active_worksheet,
-          l_size   TYPE i.
+    DATA: lv_index       TYPE zexcel_active_worksheet,
+          l_size         TYPE i,
+          lv_title       TYPE zexcel_sheet_title,
+          lv_search_name TYPE zexcel_sheet_title.
 
     l_size = get_worksheets_size( ).
+
+    IF iv_match_case = abap_false.
+      lv_search_name = to_upper( ip_sheet_name ).
+    ENDIF.
 
     DO l_size TIMES.
       lv_index = sy-index.
       eo_worksheet = me->worksheets->get( lv_index ).
-      IF eo_worksheet->get_title( ) = ip_sheet_name.
-        RETURN.
+      IF iv_match_case = abap_true.
+        IF eo_worksheet->get_title( ) = ip_sheet_name.
+          RETURN.
+        ENDIF.
+      ELSE.
+        lv_title = to_upper( eo_worksheet->get_title( ) ).
+        IF lv_title = lv_search_name.
+          RETURN.
+        ENDIF.
       ENDIF.
     ENDDO.
 
