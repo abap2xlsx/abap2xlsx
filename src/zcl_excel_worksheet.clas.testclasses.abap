@@ -40,6 +40,8 @@ CLASS lcl_excel_worksheet_test DEFINITION FOR TESTING
     METHODS delete_merge6 FOR TESTING RAISING cx_static_check.
     METHODS get_dimension_range FOR TESTING RAISING cx_static_check.
     METHODS get_rows_iterator FOR TESTING RAISING cx_static_check.
+    METHODS convert_to_table_empty_start FOR TESTING RAISING cx_static_check.
+    METHODS convert_to_table_no_data FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -770,6 +772,70 @@ CLASS lcl_excel_worksheet_test IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
       act = lv_index
       exp = 0 ).
+  ENDMETHOD.
+
+  METHOD convert_to_table_empty_start.
+    DATA: lr_data TYPE REF TO data,
+          lt_fcat TYPE zexcel_t_fieldcatalog,
+          ls_fcat TYPE zexcel_s_fieldcatalog.
+    FIELD-SYMBOLS: <lt_data> TYPE STANDARD TABLE,
+                   <ls_data> TYPE any,
+                   <lv_val>  TYPE any.
+
+    f_cut->set_cell( ip_column = 1 ip_row = 1 ip_value = 'Header' ).
+    f_cut->set_cell( ip_column = 1 ip_row = 3 ip_value = 'Row3' ).
+
+    ls_fcat-fieldname = 'COL_1'.
+    ls_fcat-position  = 1.
+    ls_fcat-dynpfld   = abap_true.
+    APPEND ls_fcat TO lt_fcat.
+
+    f_cut->convert_to_table(
+      EXPORTING
+        it_field_catalog = lt_fcat
+        iv_begin_row     = 2
+      IMPORTING
+        er_data          = lr_data ).
+
+    ASSIGN lr_data->* TO <lt_data>.
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( <lt_data> )
+      exp = 1
+      msg = 'Should only contain row 3 when row 2 is empty' ).
+
+    READ TABLE <lt_data> ASSIGNING <ls_data> INDEX 1.
+    ASSIGN COMPONENT 1 OF STRUCTURE <ls_data> TO <lv_val>.
+    cl_abap_unit_assert=>assert_equals(
+      act = <lv_val>
+      exp = 'Row3'
+      msg = 'First row must be Row3' ).
+  ENDMETHOD.
+
+  METHOD convert_to_table_no_data.
+    DATA: lr_data TYPE REF TO data,
+          lt_fcat TYPE zexcel_t_fieldcatalog,
+          ls_fcat TYPE zexcel_s_fieldcatalog.
+    FIELD-SYMBOLS: <lt_data> TYPE STANDARD TABLE.
+
+    f_cut->set_cell( ip_column = 1 ip_row = 1 ip_value = 'Header' ).
+
+    ls_fcat-fieldname = 'COL_1'.
+    ls_fcat-position  = 1.
+    ls_fcat-dynpfld   = abap_true.
+    APPEND ls_fcat TO lt_fcat.
+
+    f_cut->convert_to_table(
+      EXPORTING
+        it_field_catalog = lt_fcat
+        iv_begin_row     = 2
+      IMPORTING
+        er_data          = lr_data ).
+
+    ASSIGN lr_data->* TO <lt_data>.
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( <lt_data> )
+      exp = 0
+      msg = 'Should return empty table when starting row has no content and no following rows' ).
   ENDMETHOD.
 
 ENDCLASS.       "lcl_Excel_Worksheet_Test
