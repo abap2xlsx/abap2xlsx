@@ -1,8 +1,10 @@
 *"* use this source file for your ABAP unit test classes
 
 CLASS ltc_unescape_string_value DEFINITION DEFERRED.
+CLASS ltc_get_max_column_from_spans DEFINITION DEFERRED.
 CLASS zcl_excel_reader_2007 DEFINITION LOCAL FRIENDS
-    ltc_unescape_string_value.
+    ltc_unescape_string_value
+    ltc_get_max_column_from_spans.
 
 
 CLASS ltc_unescape_string_value DEFINITION
@@ -65,6 +67,47 @@ CLASS ltc_unescape_string_value IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
     exp = value
     act = value ).
+  ENDMETHOD.
+
+ENDCLASS.
+
+
+CLASS ltc_get_max_column_from_spans DEFINITION
+      FOR TESTING
+      DURATION SHORT
+      RISK LEVEL HARMLESS.
+  PRIVATE SECTION.
+
+    METHODS single_range FOR TESTING.
+    METHODS multiple_ranges FOR TESTING.
+    METHODS empty FOR TESTING.
+
+    METHODS run_cut
+      IMPORTING
+        input TYPE string
+        exp   TYPE i.
+
+ENDCLASS.
+
+
+CLASS ltc_get_max_column_from_spans IMPLEMENTATION.
+
+  METHOD single_range.
+    run_cut( input = '1:67' exp = 67 ).
+  ENDMETHOD.
+
+  METHOD multiple_ranges.
+    " Issue #1364
+    run_cut( input = '1:67 1028:1028' exp = 1028 ).
+  ENDMETHOD.
+
+  METHOD empty.
+    " LibreOffice doesn't write SPANS
+    run_cut( input = '' exp = 0 ).
+  ENDMETHOD.
+
+  METHOD run_cut.
+    cl_abap_unit_assert=>assert_equals( act = zcl_excel_reader_2007=>get_max_column_from_spans( input ) exp = exp msg = |input: { input }| ).
   ENDMETHOD.
 
 ENDCLASS.
