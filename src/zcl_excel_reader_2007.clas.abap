@@ -289,6 +289,11 @@ CLASS zcl_excel_reader_2007 DEFINITION
         !ip_path         TYPE string
       RETURNING
         VALUE(rp_result) TYPE string .
+    CLASS-METHODS get_max_column_from_spans
+      IMPORTING
+        !ip_spans         TYPE string
+      RETURNING
+        VALUE(rp_max_col) TYPE i .
     METHODS resolve_referenced_formulae .
     METHODS unescape_string_value
       IMPORTING
@@ -680,6 +685,26 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
     lo_parser->set_normalizing( is_normalizing ).
     lo_parser->set_validating( mode = if_ixml_parser=>co_no_validation ).
     lo_parser->parse( ).
+
+  ENDMETHOD.
+
+
+  METHOD get_max_column_from_spans.
+    " SPANS may contain several space-separated ranges, e.g. "1:67 1028:1028"
+    DATA: lt_spans   TYPE TABLE OF string,
+          lv_span    TYPE string,
+          lv_min_col TYPE string,
+          lv_max_col TYPE string,
+          lv_col     TYPE i.
+
+    SPLIT ip_spans AT space INTO TABLE lt_spans.
+    LOOP AT lt_spans INTO lv_span.
+      SPLIT lv_span AT ':' INTO lv_min_col lv_max_col.
+      lv_col = lv_max_col.
+      IF lv_col > rp_max_col.
+        rp_max_col = lv_col.
+      ENDIF.
+    ENDLOOP.
 
   ENDMETHOD.
 
@@ -2422,8 +2447,6 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
           ls_row                      TYPE lty_row,
           lv_max_col                  TYPE i,     "for use with SPANS element
 *              lv_min_col                     TYPE i,     "for use with SPANS element                    " not in use currently
-          lv_max_col_s                TYPE char10,     "for use with SPANS element
-          lv_min_col_s                TYPE char10,     "for use with SPANS element
           lo_row                      TYPE REF TO zcl_excel_row,
 *---    End of current code aligning -------------------------------------------------------------------
 
@@ -2564,8 +2587,7 @@ CLASS zcl_excel_reader_2007 IMPLEMENTATION.
                                      ip_element = lo_ixml_row_elem
                                    CHANGING
                                      cp_structure = ls_row ).
-      SPLIT ls_row-spans AT ':' INTO lv_min_col_s lv_max_col_s.
-      lv_index = lv_max_col_s.
+      lv_index = get_max_column_from_spans( ls_row-spans ).
       IF lv_index > lv_max_col.
         lv_max_col = lv_index.
       ENDIF.
