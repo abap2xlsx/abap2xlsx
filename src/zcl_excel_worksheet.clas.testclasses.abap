@@ -1825,3 +1825,88 @@ CLASS ltc_set_cell_value_types IMPLEMENTATION.
   ENDMETHOD.
 
 ENDCLASS.
+
+
+CLASS ltc_convert_to_table DEFINITION FOR TESTING
+    RISK LEVEL HARMLESS
+    DURATION SHORT.
+
+  PRIVATE SECTION.
+
+    DATA worksheet TYPE REF TO zcl_excel_worksheet.
+
+    METHODS setup RAISING cx_static_check.
+    METHODS begin_row_filled FOR TESTING RAISING cx_static_check.
+    METHODS begin_row_empty FOR TESTING RAISING cx_static_check.
+    METHODS begin_row_after_content FOR TESTING RAISING cx_static_check.
+
+    METHODS assert_values
+      IMPORTING
+        ir_data TYPE REF TO data
+        it_exp  TYPE string_table.
+
+ENDCLASS.
+
+
+CLASS ltc_convert_to_table IMPLEMENTATION.
+
+  METHOD setup.
+    DATA lo_excel TYPE REF TO zcl_excel.
+
+    CREATE OBJECT lo_excel.
+    worksheet = lo_excel->get_active_worksheet( ).
+    worksheet->set_cell( ip_columnrow = 'A1' ip_value = 'Header' ).
+  ENDMETHOD.
+
+  METHOD begin_row_filled.
+    DATA lr_data TYPE REF TO data.
+    DATA lt_exp  TYPE string_table.
+
+    worksheet->set_cell( ip_columnrow = 'A2' ip_value = 'Row 2' ).
+    worksheet->set_cell( ip_columnrow = 'A3' ip_value = 'Row 3' ).
+
+    worksheet->convert_to_table( EXPORTING iv_begin_row = 2 IMPORTING er_data = lr_data ).
+
+    APPEND 'Row 2' TO lt_exp.
+    APPEND 'Row 3' TO lt_exp.
+    assert_values( ir_data = lr_data it_exp = lt_exp ).
+  ENDMETHOD.
+
+  METHOD begin_row_empty.
+    " Issue #1359: rows before the begin row must not be returned
+    DATA lr_data TYPE REF TO data.
+    DATA lt_exp  TYPE string_table.
+
+    worksheet->set_cell( ip_columnrow = 'A3' ip_value = 'Row 3' ).
+
+    worksheet->convert_to_table( EXPORTING iv_begin_row = 2 IMPORTING er_data = lr_data ).
+
+    APPEND 'Row 3' TO lt_exp.
+    assert_values( ir_data = lr_data it_exp = lt_exp ).
+  ENDMETHOD.
+
+  METHOD begin_row_after_content.
+    DATA lr_data TYPE REF TO data.
+    DATA lt_exp  TYPE string_table.
+
+    worksheet->convert_to_table( EXPORTING iv_begin_row = 2 IMPORTING er_data = lr_data ).
+
+    assert_values( ir_data = lr_data it_exp = lt_exp ).
+  ENDMETHOD.
+
+  METHOD assert_values.
+    DATA lt_act TYPE string_table.
+    FIELD-SYMBOLS <lt_data>  TYPE STANDARD TABLE.
+    FIELD-SYMBOLS <ls_data>  TYPE data.
+    FIELD-SYMBOLS <lv_value> TYPE data.
+
+    ASSIGN ir_data->* TO <lt_data>.
+    LOOP AT <lt_data> ASSIGNING <ls_data>.
+      ASSIGN COMPONENT 'COL_1' OF STRUCTURE <ls_data> TO <lv_value>.
+      APPEND <lv_value> TO lt_act.
+    ENDLOOP.
+
+    cl_abap_unit_assert=>assert_equals( act = lt_act exp = it_exp ).
+  ENDMETHOD.
+
+ENDCLASS.

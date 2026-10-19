@@ -2309,10 +2309,12 @@ CLASS zcl_excel_worksheet IMPLEMENTATION.
 *--------------------------------------------------------------------*
 * Start of convert content
 *--------------------------------------------------------------------*
-    READ TABLE me->sheet_content TRANSPORTING NO FIELDS WITH KEY cell_row = iv_begin_row.
-    IF sy-subrc EQ 0.
+    " Start with the first cell at or after the begin row, which may be empty
+    lv_index = lines( me->sheet_content ) + 1.
+    LOOP AT me->sheet_content TRANSPORTING NO FIELDS WHERE cell_row >= iv_begin_row.
       lv_index = sy-tabix.
-    ENDIF.
+      EXIT.
+    ENDLOOP.
 
     LOOP AT me->sheet_content ASSIGNING <ls_sheet_content> FROM lv_index.
       AT NEW cell_row.
