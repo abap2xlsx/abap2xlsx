@@ -917,7 +917,7 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
     TRY.
 
-        ep_value = ip_value.      
+        ep_value = ip_value.
 
       CATCH cx_sy_conversion_no_number cx_sy_conversion_error.
         lv_error_text = |String "{ ip_value }" is not a number|.
