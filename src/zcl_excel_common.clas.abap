@@ -910,12 +910,19 @@ CLASS zcl_excel_common IMPLEMENTATION.
 
 
   METHOD excel_string_to_number.
+    DATA lv_error_text TYPE string.
 
 * If we encounter anything more complicated in EXCEL we might have to extend this
 * But currently this works fine - even for numbers in scientific notation
 
-    ep_value = ip_value.
+    TRY.
 
+        ep_value = ip_value.
+
+      CATCH cx_sy_conversion_no_number cx_sy_conversion_error.
+        lv_error_text = |String "{ ip_value }" is not a number|.
+        zcx_excel=>raise_text( lv_error_text ).
+    ENDTRY.
   ENDMETHOD.
 
 
